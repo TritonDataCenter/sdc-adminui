@@ -27,6 +27,7 @@ define(function(require) {
 
         onModelError: function(model, xhr, error) {
             this.$(".alert").html(xhr.responseText);
+            this.$(".alert").show();
             console.log('error', xhr);
         },
 
@@ -37,6 +38,7 @@ define(function(require) {
 
         onRender: function() {
             this.$el.modal();
+            this.$('.alert').hide();
         }
     });
 });
