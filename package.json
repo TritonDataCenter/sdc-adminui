@@ -2,7 +2,7 @@
   "author": "Kevin Chan",
   "name": "adminui",
   "description": "Joyent SDC Operations Portal",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "git": "git@git.joyent.com:adminui.git"
   },
