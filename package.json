@@ -1,0 +1,20 @@
+{
+  "author": "Kevin Chan",
+  "name": "adminui",
+  "description": "Joyent SDC Operations Portal",
+  "version": "0.0.1",
+  "repository": {
+    "git": "git@git.joyent.com:adminui.git"
+  },
+  "engines": {
+    "node": "0.6.x"
+  },
+  "dependencies": {
+    "express": "2.x",
+    "handlebars": "1.0.5beta",
+    "hbs": "~1.0.0",
+    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#34fffb9c8b2b22dd507ab23f95de3a1dfb7139fa"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
