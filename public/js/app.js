@@ -20,7 +20,7 @@ define(function(require, exports) {
     reception: function() {
       if (this.authenticated == false) {
         console.log("Unauthenticated");
-        this.navigate('signin', {trigger: true});
+        this.navigate('signin', {trigger:true});
       } else {
         console.log("Authenticated: Showing App");
         this.showApp();
@@ -40,7 +40,6 @@ define(function(require, exports) {
   function initialize() {
     var app = new App();
     Backbone.history.start({pushState: true});
-    app.navigate();
 
     return app;
   }

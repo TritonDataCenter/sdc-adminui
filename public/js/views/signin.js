@@ -19,18 +19,17 @@ define(function(require) {
 
       this.app = options.app;
       this.model = User;
-      this.model.on("error", function(err) {
+
+      this.model.on('error', function(err) {
         this.showMessage(err.message);
         this.focusField();
       }, this);
 
-      this.model.on("ok", function(user) {
+      this.model.on('ok', function(user) {
         this.remove();
         this.app.authenticated = true;
-        this.app.navigate("/", {trigger:true, replace:true});
+        this.app.navigate('', {trigger:true, replace:true});
       }, this)
-
-      this.$el.html(this.template());
 
       this.render();
       this.focusField();
@@ -69,7 +68,8 @@ define(function(require) {
     },
 
     render: function() {
-      this.app.view.$el.append(this.el);
+      this.$el.html(this.template());
+      this.app.view.$el.html(this.$el);
 
       return this;
     }

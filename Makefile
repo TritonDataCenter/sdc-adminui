@@ -42,5 +42,12 @@ all:
 test: $(TAP)
 	TAP=1 $(TAP) test/*.test.js
 
+./node_modules/.bin/supervisor:
+	$(NPM) install --dev
+
+.PHONY: dev
+dev: ./node_modules/.bin/supervisor
+	@exec ./node_modules/.bin/supervisor main.js
+
 include ./Makefile.deps
 include ./Makefile.targ
