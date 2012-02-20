@@ -2,7 +2,8 @@
 
 Repository: <git@git.joyent.com:adminui.git> 
 Browsing: <https://mo.joyent.com/adminui> 
-Who: Kevin Chan Docs: 
+Who: Kevin Chan
+Docs: <https://mo.joyent.com/docs/adminui>
 Tickets/bugs: <https://devhub.joyent.com/jira/browse/ADMINUI>
 
 # Overview
