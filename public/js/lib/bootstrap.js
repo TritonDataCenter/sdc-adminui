@@ -1,5 +1,3 @@
-define(['jquery'], function (jQuery) {
-
 /* ===================================================
  * bootstrap-transition.js v2.0.1
  * http://twitter.github.com/bootstrap/javascript.html#transitions
@@ -19,7 +17,7 @@ define(['jquery'], function (jQuery) {
  * limitations under the License.
  * ========================================================== */
 
-return !function( $ ) {
+!function( $ ) {
 
   $(function () {
 
@@ -236,7 +234,9 @@ return !function( $ ) {
 
   $(function () {
     $('body').on('click.button.data-api', '[data-toggle^=button]', function ( e ) {
-      $(e.currentTarget).button('toggle')
+      var $btn = $(e.target)
+      if (!$btn.hasClass('btn')) $btn = $btn.closest('.btn')
+      $btn.button('toggle')
     })
   })
 
@@ -1718,5 +1718,3 @@ return !function( $ ) {
   })
 
 }( window.jQuery );
-
-});

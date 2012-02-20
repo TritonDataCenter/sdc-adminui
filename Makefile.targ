@@ -156,7 +156,8 @@ check-manifests: $(SMF_MANIFESTS:%=%.smfchk)
 	$(XMLLINT) --path $(dir $(SMF_DTD)) --dtdvalid $(SMF_DTD) $^
 
 .PHONY: check
-check: check-jsl check-jsstyle check-bash check-manifests
+# check: check-jsl check-jsstyle check-bash check-manifests
+check: check-jsl check-jsstyle check-bash
 	@echo check ok
 
 .PHONY: clean

@@ -1,0 +1,28 @@
+{
+    "host": "0.0.0.0",
+    "port": 4000,
+    "ufds": {
+        "url": "ldaps://10.99.99.21",
+        "bindDN": "cn=root",
+        "bindPassword": "secret",
+        "cache": {
+            "size": 1000,
+            "expiry": 300
+        }
+    },
+    "mapi": {
+        "url": "http://10.99.99.8:8080",
+        "username": "admin",
+        "password": "tot@ls3crit",
+        "cache": {
+            "size": 1000,
+            "expiry": 300
+        }
+    },
+    "ca": {
+        "url": "http://10.99.99.24:23181"
+    },
+    "datacenters": {
+        "coal": "http://127.0.0.1"
+    }
+}

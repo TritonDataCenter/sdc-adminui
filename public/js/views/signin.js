@@ -1,8 +1,11 @@
+/**
+ * views/signin
+ */
 define(function(require) {
-
   var Backbone = require('backbone')
   var _ = require('underscore');
   var template = require('text!tpl/signin.html');
+  var User = require('models/user');
 
   return Backbone.View.extend({
     template: Handlebars.compile(template),
@@ -14,30 +17,62 @@ define(function(require) {
     initialize: function(options) {
       _.bindAll(this);
 
+      this.app = options.app;
+      this.model = User;
+      this.model.on("error", function(err) {
+        this.showMessage(err.message);
+        this.focusField();
+      }, this);
+
+      this.model.on("ok", function(user) {
+        this.remove();
+        this.app.authenticated = true;
+        this.app.navigate("/", {trigger:true, replace:true});
+      }, this)
+
+      this.$el.html(this.template());
+
       this.render();
+      this.focusField();
+      this.hideMessage();
+    },
+
+    showMessage: function(msg) {
+      this.$(".alert .msg").html(msg);
+      this.$(".alert").show();
+    },
+
+    hideMessage: function() {
+      this.$(".alert").hide();
+    },
+
+    username: function() {
+      return this.$("input[name=username]");
+    },
+
+    password: function() {
+      return this.$("input[name=password]");
     },
 
     focusField: function() {
-      var username = this.$("input[name=username]");
-      var password = this.$("input[name=password]");
-
-      if (username.val().length === 0) {
-        username.focus();
+      if (this.username().val().length === 0) {
+        this.username().focus();
       } else {
-        password.focus();
+        this.password().focus();
       }
     },
 
     authenticate: function(e) {
       e.preventDefault();
-      console.log("Authenticate");
+      this.hideMessage();
+      this.model.authenticate(this.username().val(), this.password().val());
     },
 
     render: function() {
-      $(this.el).html(this.template());
-      this.focusField();
+      this.app.view.$el.append(this.el);
+
       return this;
     }
 
-  })
+  });
 });

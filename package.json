@@ -11,9 +11,10 @@
   },
   "dependencies": {
     "express": "2.x",
+    "tap": "latest",
     "handlebars": "1.0.5beta",
     "hbs": "~1.0.0",
-    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#34fffb9c8b2b22dd507ab23f95de3a1dfb7139fa"
+    "sdc-clients":"git+ssh://git@git.joyent.com:node-sdc-clients.git#f5ad86429513cc04ae97df1518142952e43b91b6"
   },
   "devDependencies": {},
   "optionalDependencies": {}
