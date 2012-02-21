@@ -22,7 +22,7 @@ define(function(require) {
 
       this.model.on('error', function(err) {
         this.showMessage(err.message);
-        this.focusField();
+        this.focus();
       }, this);
 
       this.model.on('ok', function(user) {
@@ -32,7 +32,6 @@ define(function(require) {
       }, this)
 
       this.render();
-      this.focusField();
       this.hideMessage();
     },
 
@@ -53,7 +52,7 @@ define(function(require) {
       return this.$("input[name=password]");
     },
 
-    focusField: function() {
+    focus: function() {
       if (this.username().val().length === 0) {
         this.username().focus();
       } else {
@@ -69,7 +68,6 @@ define(function(require) {
 
     render: function() {
       this.$el.html(this.template());
-      this.app.view.$el.html(this.$el);
 
       return this;
     }

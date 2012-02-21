@@ -33,7 +33,9 @@ define(function(require, exports) {
 
     signin: function() {
       console.log("Showing SigninView")
-      new SigninView({app: this });
+      var signinView = new SigninView({ app: this });
+      this.view.$el.append(signinView.el);
+      signinView.focus();
     }
   });
 
