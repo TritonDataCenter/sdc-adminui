@@ -5,7 +5,6 @@ define(function(require) {
   var Backbone = require('backbone')
   var _ = require('underscore');
   var template = require('text!tpl/signin.html');
-  var User = require('models/user');
 
   return Backbone.View.extend({
     template: Handlebars.compile(template),
@@ -18,18 +17,13 @@ define(function(require) {
       _.bindAll(this);
 
       this.app = options.app;
-      this.model = User;
+      this.model = this.app.user;
 
-      this.model.on('error', function(err) {
-        this.showMessage(err.message);
-        this.focus();
+      this.model.bind('change:authenticated', function(user, value) {
+        if (value === true) {
+          this.remove();
+        }
       }, this);
-
-      this.model.on('ok', function(user) {
-        this.remove();
-        this.app.authenticated = true;
-        this.app.navigate('', {trigger:true, replace:true});
-      }, this)
 
       this.render();
       this.hideMessage();

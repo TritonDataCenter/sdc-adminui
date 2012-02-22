@@ -1,41 +1,50 @@
 define(function(require, exports) {
   var _ = require('underscore'),
     Backbone = require('backbone'),
-    SigninView = require('views/signin');
-
-  var AppView = Backbone.View.extend({});
+    AppView = require('views/app'),
+    SigninView = require('views/signin'),
+    User = require('models/user');
 
   var App = Backbone.Router.extend({
 
     initialize: function(options) {
-      this.view = new AppView({el: $("#app")});
-      this.authenticated = false;
+
+      // holds the state of the currently logged in user
+      this.user = new User();
+
+      // The current root view being presented
+      this.view = null;
+
+      // The dom element in which the root views are drawn to
+      this.container = $("#chrome");
+
+      this.user.bind('change:authenticated', function(user, value) {
+        if (value === true) {
+          this.showApp();
+        } else {
+          this.showSignin();
+        }
+      }, this);
     },
 
     routes: {
-      '': 'reception',
-      'signin': 'signin'
+      '*default': 'reception'
     },
 
     reception: function() {
-      if (this.authenticated == false) {
-        console.log("Unauthenticated");
-        this.navigate('signin', {trigger:true});
-      } else {
-        console.log("Authenticated: Showing App");
-        this.showApp();
-      }
+      this.user.authenticate();
     },
 
     showApp: function() {
-      console.log("Showing App");
+      this.view = new AppView();
+      this.container.html(this.view.render().el)
     },
 
-    signin: function() {
+    showSignin: function() {
       console.log("Showing SigninView")
-      var signinView = new SigninView({ app: this });
-      this.view.$el.append(signinView.el);
-      signinView.focus();
+      this.view = new SigninView({ app: this });
+      this.container.html(this.view.el);
+      this.view.focus();
     }
   });
 
