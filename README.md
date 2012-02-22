@@ -89,5 +89,11 @@ Implementation plan:
  * Start with UFDS integration - as this is one of the few new APIs available
    and is less likely to change. Focus on Groups/Users/Customers. 
 
+# Security Guidelines
+
+ * Ensure that minimum number of required services are listening on interfaces.
+   For example, if front-ending node with nginx (dont know why you would) then
+   please bind adminui to localhost rather than 0.0.0.0:randomport
+
 # TODO
 
