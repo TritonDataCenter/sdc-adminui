@@ -5,6 +5,12 @@ markdown2extras: wiki-tables, code-friendly
 
 # ADMINUI (Operations Portal) 7
 
+ * Repository: git clone git@git.joyent.com:adminui.git
+ * Browsing: <https://mo.joyent.com/adminui>
+ * Docs: <https://mo.joyent.com/docs/adminui>
+ * Who: Kevin Chan
+ * Tickets/bugs: <https://devhub.joyent.com/jira/browse/ADMINUI>
+
 # Introduction
 
 AdminUI is being rewritten for several reasons. Those include:
