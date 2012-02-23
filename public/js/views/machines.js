@@ -1,5 +1,5 @@
 /**
- * views/dashboard.js
+ * views/machines.js
  *
  * Dashboard View
  */
@@ -9,9 +9,9 @@ define(function(require) {
     Backbone = require('backbone');
 
   return Backbone.View.extend({
-    name: 'dashboard',
+    name: 'machines',
     render: function() {
-      this.$el.html("<h3>Dashboard</h3>");
+      this.$el.html("<h3>Machines</h3>");
 
       return this;
     }

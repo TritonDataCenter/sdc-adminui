@@ -1,3 +1,7 @@
+#topnav {
+  padding-top: 10px;
+}
+
 #signin { margin: 0 auto; width: 300px;}
 #signin input { width: 290px; }
 #signin .header { margin-bottom: 30px; text-align: center; }

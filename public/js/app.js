@@ -28,16 +28,17 @@ define(function(require, exports) {
     },
 
     routes: {
-      '*default': 'reception'
+      '': 'reception',
+      ':page': 'showApp'
     },
 
     reception: function() {
       this.user.authenticate();
     },
 
-    showApp: function() {
-      this.view = new AppView();
-      this.container.html(this.view.render().el)
+    showApp: function(page) {
+      this.view = new AppView({contentView:page});
+      this.container.html(this.view.render().el);
     },
 
     showSignin: function() {

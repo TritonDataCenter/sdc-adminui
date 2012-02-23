@@ -1,19 +1,48 @@
+<div class="navbar">
+  <div class="navbar-inner">
+    <div id="topnav" class="container">
+      <a id="logo" class="brand" href="#">SmartDataCenter 7</a>
+      <ul class="nav pull-right">
+        <li>
+        <form class="navbar-search">
+          <input type="text" class="search-query" placeholder="Search">
+        </form>
+        </li>
+        <li class="divider-vertical"></li>
+        <li><a href="#"><i class="icon-cog icon-white"></i> Settings</a></li>
+        <li class="divider-vertical"></li>
+        <li><a href="#"><i class="icon-user icon-white"></i> Admin User</a></li>
+        <li><a href="#"><i class="icon-off icon-white"></i> Sign Out</a></li>
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
 <div class="container">
-  <header class="page-header">
-  <h1>App</h1>
-  </header>
   <div class="row">
     <div id="sidebar" class="span3">
-      <ul class="nav">
-        <li><a data-view="Dashboard">Dashboard</a></li>
-        <li><a>Machines</a></li>
-        <li><a>Compute Nodes</a></li>
-        <li><a>Networks</a></li>
-        <li><a>Physical Assets</a></li>
-        <li><a>Settings & Resources</a></li>
+      <ul class="nav nav-pills nav-stacked">
+        <li data-view="dashboard"><a href="#"><i class="icon-picture"></i> Dashboard</a></li>
+
+        <li class="nav-header">Compute</li>
+
+        <li data-view="machines"><a href="#"><i class="icon-book"></i> Machines</a></li>
+        <li><a href="#"><i class="icon-book"></i> Compute Nodes</a></li>
+        <li><a href="#"><i class="icon-list"></i> Networks</a></li>
+        <li><a href="#"><i class="icon-picture"></i> Images</a></li>
+
+        <li class="nav-header"></li>
+
+        <li><a href="#"><i class="icon-user"></i> Users &amp; Customers</a></li>
+
+        <li class="nav-header">Explore</li>
+        <li><a href="#"><i class="icon-book"></i> Image Library</a></li>
       </ul>
     </div>
-    <div class="span9" id="content">
+    <div class="span9">
+      <div id="content"></div>
     </div>
   </div>
 </div>

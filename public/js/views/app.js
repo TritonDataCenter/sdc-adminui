@@ -13,17 +13,8 @@ define(function(require) {
     Backbone = require('backbone'),
     template = require('text!tpl/app.html');
 
+  var SidebarView = require('views/sidebar');
   var DashboardView = require('views/dashboard');
-  var SidebarView = Backbone.View.extend({
-    events: {
-      'click li>a':'select'
-    },
-    select: function(e) {
-      e.preventDefault();
-      console.log(e);
-      return false;
-    }
-  });
 
   return Backbone.View.extend({
     template: Handlebars.compile(template),
@@ -35,11 +26,33 @@ define(function(require) {
       this.$el.html(this.template);
 
       this.sidebarView = options.sidebarView || new SidebarView({el: this.$("#sidebar")});
-      this.contentView = options.contentView || new DashboardView();
+      this.sidebarView.on('sidebar:selected', this.changeView);
+
+      this.changeView(options.contentView || 'dashboard')
+    },
+
+    changeView: function(viewname) {
+      var self = this;
+
+      require([['views', viewname].join('/')], function(viewModule) {
+        var newView = new viewModule;
+
+        if (self.contentView) {
+          self.contentView.remove();
+        }
+
+        self.contentView = newView;
+        self.render();
+
+        Backbone.history.navigate(newView.name);
+      });
     },
 
     render: function() {
-      this.$("#content").html(this.contentView.render().el);
+      if (this.contentView) {
+        this.$("#content").html(this.contentView.render().el);
+        this.sidebarView.highlight(this.contentView.name);
+      }
 
       return this;
     }
