@@ -1,9 +1,225 @@
 ---
-title: ADMINUI
+title: ADMINUI 7
 markdown2extras: wiki-tables, code-friendly
-apisections:
 ---
 
-# ADMINUI (Operator Portal)
+# Introduction
 
-Nothing here yet... Move along
+AdminUI is being rewritten for several reasons. Those include:
+
+ * Multiple APIs highlights the need for concurrent requests
+ * The reliance on many APIs and a lack of old MAPI backend means a rewrite is
+   required. This is easier than writing a MAPI shim
+ * The old AdminUI did not present data in a meaningful way at scale (ie lists
+   are useless when you have 10,000 vms)
+ * Simplifies stack (eliminate caproxy/consoleproxy/etc)
+ * Allows the addition of realtime notifications via the UI
+ * JS everywhere
+ * Escape gem hell (and embrace npm limbo)
+
+
+
+Key Features
+===
+
+### Groups and User Management
+
+ * UFDS Editor for Groups / Users / etc
+
+## Dataset API Browser
+
+ * Dataset API Browser
+
+## Configuration Browser
+
+ * Configuration Browser (its unclear where configs will be stored, but my hope
+   is we'll agree on a config DN and use UFDS)
+
+## Self-configuring
+
+ * AdminUI must be able to configure itself through AdminUI. This means that
+   launching AdminUI without a config should not result in a broken AdminUI, but
+   should instead print a message saying "to configure auth edit this file and
+   relaunch". This is a minor nit-pick but its important that any tuning of
+   endpoints happen through the app itself - not another config file.
+
+## Aggregated Views
+
+ * Datacenters no longer *drives* the application flow. Instead,
+   a DC is just one of the properties operators can filter/search on.
+
+## Revamped search / navigation
+
+ * Search is the major method of navigating. This suggests a common search
+   pattern requirement across APIs, like what CA has, but it's not a
+   requirement. QL.IO is useful to look at for inspiration here.
+   Search means being able to start typing in: 
+     - username
+     - email address
+     - uuid (regardless of type)
+     - dataset URN
+     - IP address / MAC address
+
+## Others (WIP)
+
+ * Old Pages
+     - Networks page (we may still use a list)
+     - Network details page
+     - Nic Tags 
+     - Platform Images 
+     - VM Details page
+     - Image/Dataset details page
+     - Image/Dataset browser
+     - UFDS browser
+     - DN Details page
+     - DN Config wizard (we need to talk about how this will work)
+     - Package Editor (packages stored in UFDS - we need to pick a DN w/ cavage)
+
+
+
+# New features (?)
+
+## Realtime notifications system.
+
+Possibly integrated with AMON. For example:
+    - A CN becomes unavailable - anyone in AdminUI should be immediately notified 
+    - Actions performed by other administrators (possible feed of these but
+      thats another story)
+    - If another support person / administrator is currently on the same
+      resource as the person using the interface, then you should see a message
+      saying "one other person is viewing this page" which will tell you who it
+      is. This way, you can attempt to avoid having multiple people perform
+      actions on a machine
+    - Real time status updates on resources. If a machine transitions state from
+      "setting up" to "running" we should try and update people without
+      reloading the page like its 2004.
+    - If the machine details have been changed prior to someone attempting to
+      make a change, then they can be notified (we can set dirty 'state' on
+      resource)
+
+## Saved Filters
+ * Saving Searches/filters, setting them as default (per user basis)
+
+## Batch Operations
+ * Perform batch actions on a resulting query resulset (ie: reboot all matched nodes)
+
+# Implementation
+
+ * The old design can go away - do not hold onto the past
+ * Twitter bootstrap to start - this will give us a common toolkit we can pass
+   to a UI/UX person when we feel we need to modify something heavily - but also
+   lets us do adminui customizations much much easier
+ * Start with UFDS integration - as this is one of the few new APIs available
+   and is less likely to change. Focus on Groups/Users/Customers. 
+
+## Security Considerations
+
+ * Ensure that minimum number of required services are listening on interfaces.
+   For example, if front-ending node with nginx (dont know why you would) then
+   please bind adminui to localhost rather than 0.0.0.0:randomport
+
+## Supported Browsers
+
+This guide outlines features and design ideas for the different bits and pieces
+of adminUI functionality. 
+
+The following browsers will be officially supported
+
+ * Firefox
+ * Chrome
+ * IE9+
+ * Safari
+
+# Per page Details/Ideas
+
+## Dashboard
+
+ * Dashboard should visualize:
+   - Number of running machines groupd by packages
+   - Number of running machines grouped by image
+   - Number of Workflows per day stacked with failures on top
+   - Scatter plot of utilization of compute nodes in the entire DC
+   - Recent workflows (?)
+   - Realtime ticker for total number of machines
+
+## Machines
+
+ * Lists should be avoided unless we can reduce scope considerably (ie
+   restricted to a per CN or per Customer view)
+ * When lists are in use should be able to sort machines by status
+ * Console access is available to all administrators for all machines, (both vm
+    and zone)
+ * Operators should be able to disable MAC and IP anti-spoof on a machine
+ * Operations should be able to provision machines on behalf of any user
+ * Machine provisions should allow user-specifiable keys / overrides
+ * Provisioning should check dataset requirements (mix/max)
+ * machine details should show which dataset the machine is running
+ * machine details should show if the dataset is still available / deleted
+
+## Networks
+
+## Users & Groups
+
+ * Should be able to add / edit / see customer limits plugins (need details)
+ * Operator should be able to tag customers in UFDS
+ * Customer details should show all IP addresses "owned" by that customer
+ * Customer labels should be "family name" and "given name"
+ * Operators should be able to comment on customers. hidden from customer.
+
+## Images
+
+ * If it is possible for an import to become "stuck" then a cancel operation
+   should be available to the operator
+ * Should provide an interface for browsing the DSAPI endpoints
+ * Should support more than one DSAPI endpoint
+ * Should provide an interface for adding / removing DSAPI endpoints
+
+## Platform
+
+ * Operators should be able to see a list of available platform images
+ * Operators should be which compute nodes are running which images
+ * Operators should be able to select a new platform image for a compute node
+ * Operators shoudl be able to select a new default platform image
+ * Operators should be able to select a new platform image per server role
+ * When changing any of the images, a notification is required that will ask
+   "This change will affect server role(s) foo bar baz. Do you want to
+   continue?"
+
+## Compute Nodes
+
+ * Storage should display all disks, their status (good/bad/etc), size, vendor,
+ * model, type (ata/sata/sas), spindle/ssd, etc.
+ * All network interfaces should be displayed with ifname, mac, speed, state,
+   duplex and IPv4 and IPv6 addresses/netmasks
+
+## Compute Nodes - Setup
+
+ * Setting up a compute node should involve setting NIC tags and Storage Pool
+ * NIC tags will probably remain the same
+ * Storage is significantly simplified:
+   - Pools will *always* use the default name "zpool"
+   - No customized / secondary pools are allowed
+   - Disk selector is necessary for pool confirugration
+   - Disk information displayed includes Vendor, Device Name, Device Size, Model
+     Name, Removable?, and type (ATA/SATA/SAS). 
+   - The user will be able to select a "role" for a disk that will let them
+     assign the disk to either the zpool / hot standby / CACHE / ZIL
+
+## Configuration
+
+## Search
+
+ * Search is a significant component of AdminUI, as it will be the main method
+   of interacting with the system
+ * Search should be able to search ALL resources within the system by hitting
+   all of the different APIs and having them return their resources
+ * No drop down list for "scoping" search. It should just search all resources.
+   If we need to have filters then we can create a search DSL similar to gmail.
+ * Customer search should support: UUID, First name, Last name, email address
+ * Search should work across all datacenters configured in the system
+
+## Analytics
+
+ * Operator can create instrumentations with the predicate = customer 
+ * Operator can create instrumentations with the predicate = compute node
+ * Operator can create instrumentations with the predicate = machine
