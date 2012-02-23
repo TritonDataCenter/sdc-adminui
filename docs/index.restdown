@@ -113,7 +113,10 @@ Possibly integrated with AMON. For example:
 # Implementation
 
  * The old design can go away - do not hold onto the past
- * Twitter bootstrap to start - this will give us a common toolkit we can pass
+ * Backbone.js to drive the frontend
+ * Node.js on the backend (currently express but restify is still under
+   consideration)
+ * Twitter bootstrap for UI chrome to start - this will give us a common toolkit we can pass
    to a UI/UX person when we feel we need to modify something heavily - but also
    lets us do adminui customizations much much easier
  * Start with UFDS integration - as this is one of the few new APIs available
