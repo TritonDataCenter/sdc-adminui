@@ -1,7 +1,8 @@
 /**
- * views/app
+ * views/chrome
  *
- * This module manages the layout for the standard two pane view
+ * This module manages the Chrome(layout)
+ * Providing a two pane layout
  *
  *          |                           |
  * sidebar  |          content          |
@@ -11,7 +12,7 @@
 define(function(require) {
   var _ = require('underscore'),
     Backbone = require('backbone'),
-    template = require('text!tpl/app.html');
+    template = require('text!tpl/chrome.html');
 
   var SidebarView = require('views/sidebar');
   var DashboardView = require('views/dashboard');

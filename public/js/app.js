@@ -1,7 +1,7 @@
 define(function(require, exports) {
   var _ = require('underscore'),
     Backbone = require('backbone'),
-    AppView = require('views/app'),
+    AppView = require('views/chrome'),
     SigninView = require('views/signin'),
     User = require('models/user');
 
@@ -37,7 +37,7 @@ define(function(require, exports) {
     },
 
     showApp: function(page) {
-      this.view = new AppView({contentView:page});
+      this.view = new AppView({ contentView: page });
       this.container.html(this.view.render().el);
     },
 
@@ -48,6 +48,7 @@ define(function(require, exports) {
       this.view.focus();
     }
   });
+
 
   function initialize() {
     var app = new App();
