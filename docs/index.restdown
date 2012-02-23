@@ -7,6 +7,8 @@ markdown2extras: wiki-tables, code-friendly
 
 AdminUI is being rewritten for several reasons. Those include:
 
+ * Move to a workflow that does not revolve around managing a single datacenter,
+   but an entire multi-dc cloud environment
  * Multiple APIs highlights the need for concurrent requests
  * The reliance on many APIs and a lack of old MAPI backend means a rewrite is
    required. This is easier than writing a MAPI shim
@@ -15,12 +17,9 @@ AdminUI is being rewritten for several reasons. Those include:
  * Simplifies stack (eliminate caproxy/consoleproxy/etc)
  * Allows the addition of realtime notifications via the UI
  * JS everywhere
- * Escape gem hell (and embrace npm limbo)
 
 
-
-Key Features
-===
+# Key Features
 
 ### Groups and User Management
 
