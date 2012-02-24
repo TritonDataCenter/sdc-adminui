@@ -15,38 +15,45 @@ define(function(require) {
     template = require('text!tpl/chrome.html');
 
   var SidebarView = require('views/sidebar');
-  var DashboardView = require('views/dashboard');
+
+
+  var views = {
+    'dashboard': require('views/dashboard'),
+    'machines': require('views/machines'),
+    'users' : require('views/users')
+  };
 
   return Backbone.View.extend({
     template: Handlebars.compile(template),
 
     initialize: function(options) {
       _.bindAll(this);
+      var self = this;
+
       options = options || {};
 
       this.$el.html(this.template);
 
       this.sidebarView = options.sidebarView || new SidebarView({el: this.$("#sidebar")});
-      this.sidebarView.on('sidebar:selected', this.changeView);
+      this.sidebarView.on('sidebar:selected', function(viewname) {
+        var view = views[viewname];
+        self.changeView(view);
+      });
 
-      this.changeView(options.contentView || 'dashboard')
+      this.changeView(views[options.contentView || 'dashboard']);
     },
 
-    changeView: function(viewname) {
-      var self = this;
+    changeView: function(viewModule) {
+      var newView = new viewModule;
 
-      require([['views', viewname].join('/')], function(viewModule) {
-        var newView = new viewModule;
+      if (this.contentView) {
+        this.contentView.remove();
+      }
 
-        if (self.contentView) {
-          self.contentView.remove();
-        }
+      this.contentView = newView;
+      this.render();
 
-        self.contentView = newView;
-        self.render();
-
-        Backbone.history.navigate(newView.name);
-      });
+      Backbone.history.navigate(newView.name);
     },
 
     render: function() {

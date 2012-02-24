@@ -47,7 +47,7 @@ test: $(TAP)
 
 .PHONY: dev
 dev: ./node_modules/.bin/supervisor
-	@exec ./node_modules/.bin/supervisor main.js
+	@exec ./node_modules/.bin/supervisor -w ./lib main.js
 
 include ./Makefile.deps
 include ./Makefile.targ

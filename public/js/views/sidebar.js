@@ -10,12 +10,10 @@ define(function(require) {
     onSelect: function(e) {
       e.preventDefault();
       var li = $(e.currentTarget);
-      li.addClass('active');
-
       var viewToHighlight = li.attr("data-view");
       this.highlight(viewToHighlight);
 
-      this.trigger("sidebar:selected", viewToHighlight);
+      this.trigger("sidebar:selected", viewToHighlight, this);
     },
 
     highlight: function(view) {

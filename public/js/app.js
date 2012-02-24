@@ -5,6 +5,16 @@ define(function(require, exports) {
     SigninView = require('views/signin'),
     User = require('models/user');
 
+  Backbone.sync = function(method, model, options) {
+    options.error = function(xhr, ajaxOptions, thrownError) {
+      if (xhr.status == 401) {
+        window.location = '/';
+      }
+    }
+    sync(method, model, options);
+  };
+
+
   var App = Backbone.Router.extend({
 
     initialize: function(options) {
