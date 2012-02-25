@@ -1,4 +1,6 @@
-define(function(require, exports) {
+define(function(require) {
+  'use strict'
+
   var _ = require('underscore'),
     Backbone = require('backbone'),
     AppView = require('views/chrome'),
@@ -19,6 +21,8 @@ define(function(require, exports) {
 
     initialize: function(options) {
 
+      this.dispatcher = _.extend(Backbone.Events, {});
+
       // holds the state of the currently logged in user
       this.user = new User();
 
@@ -27,6 +31,11 @@ define(function(require, exports) {
 
       // The dom element in which the root views are drawn to
       this.container = $("#chrome");
+
+      this.dispatcher.bind('signout', function() {
+        console.log("signout");
+        this.user.signout();
+      }, this);
 
       this.user.bind('change:authenticated', function(user, value) {
         if (value === true) {
@@ -38,21 +47,25 @@ define(function(require, exports) {
     },
 
     routes: {
-      '': 'reception',
-      ':page': 'showApp'
+      '*default': 'reception'
     },
 
-    reception: function() {
+    reception: function(page) {
+      this.pageToShow = page || 'dashboard';
       this.user.authenticate();
     },
 
-    showApp: function(page) {
-      this.view = new AppView({ contentView: page });
+    showApp: function() {
+      this.view = new AppView({
+        dispatcher: this.dispatcher,
+        contentView: this.pageToShow
+      });
+
       this.container.html(this.view.render().el);
     },
 
     showSignin: function() {
-      console.log("Showing SigninView")
+      console.log("Showing SigninView");
       this.view = new SigninView({ app: this });
       this.container.html(this.view.el);
       this.view.focus();

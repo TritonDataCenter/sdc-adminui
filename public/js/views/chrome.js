@@ -15,7 +15,7 @@ define(function(require) {
     template = require('text!tpl/chrome.html');
 
   var SidebarView = require('views/sidebar');
-
+  var TopbarView = require('views/topbar');
 
   var views = {
     'dashboard': require('views/dashboard'),
@@ -34,7 +34,12 @@ define(function(require) {
 
       this.$el.html(this.template);
 
-      this.sidebarView = options.sidebarView || new SidebarView({el: this.$("#sidebar")});
+      this.topbarView = new TopbarView({el: this.$("#topnav")});
+      this.topbarView.on('signout', function(e) {
+        options.dispatcher.trigger('signout');
+      });
+
+      this.sidebarView = new SidebarView({el: this.$("#sidebar")});
       this.sidebarView.on('sidebar:selected', function(viewname) {
         var view = views[viewname];
         self.changeView(view);

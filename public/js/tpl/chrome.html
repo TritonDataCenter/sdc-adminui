@@ -1,19 +1,32 @@
 <div class="navbar">
   <div class="navbar-inner">
+
     <div id="topnav" class="container">
-      <a id="logo" class="brand" href="#">Operations Portal &nbsp;<strong>7</strong></a>
-      <ul class="nav pull-right">
-        <li>
-          <form class="navbar-search">
-            <input type="text" class="search-query" placeholder="Search">
-          </form>
-        </li>
-        <li class="divider-vertical"></li>
-        <li><a href="#"><i class="icon-cog icon-white"></i> Settings</a></li>
-        <li class="divider-vertical"></li>
-        <li><a href="#"><i class="icon-user icon-white"></i> Admin User</a></li>
-        <li><a href="#"><i class="icon-off icon-white"></i> Sign Out</a></li>
-      </ul>
+
+      <a class="btn btn-navbar" data-toggle="collapse"
+        data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <div id="logo" class="brand">Operations Portal &nbsp;<strong>7</strong></div>
+
+
+      <!-- Collapsed at 940px or less -->
+      <div class="nav-collapse">
+        <!-- .nav, .navbar-search, .navbar-form, etc -->
+
+        <form class="navbar-search pull-left">
+          <input type="text" class="search-query" placeholder="Search">
+        </form>
+
+        <ul class="nav pull-right">
+          <li><a href="#"><i class="icon-cog icon-white"></i></a></li>
+          <li><a href="#"><i class="icon-user icon-white"></i> Kevin</a></li>
+          <li><a data-trigger='signout'><i class="icon-off icon-white"></i> Sign Out</a></li>
+        </ul>
+      </div>
 
     </div>
   </div>
@@ -22,6 +35,7 @@
 
 <div class="container">
   <div class="row">
+
     <div id="sidebar" class="span3">
       <ul class="nav nav-pills nav-stacked">
         <li data-view="dashboard"><a href="#"><i class="icon-home"></i> Dashboard</a></li>
@@ -41,6 +55,7 @@
         <li><a href="#"><i class="icon-book"></i> SDC Images Library</a></li>
       </ul>
     </div>
+
     <div class="span9">
       <div id="content"></div>
     </div>

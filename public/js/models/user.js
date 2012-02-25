@@ -6,10 +6,15 @@ define(function(require) {
   var Backbone = require('backbone');
 
   var User = Backbone.Model.extend({
+    defaults: {
+      authenticated: null
+    },
+
     _checkExistingAuth: function() {
       var self = this;
 
       console.log("Checking Existing Identity")
+
       $.get("/auth", function(res) {
         console.log(res);
         if (Object.keys(res).length === 0) {
@@ -47,6 +52,17 @@ define(function(require) {
       } else {
         this._newAuth(username, password);
       }
+    },
+
+    signout: function() {
+      $.ajax({
+        url: "/auth",
+        success: function() { 
+          this.set({authenticated: false});
+        },
+        type: "DELETE",
+        context: this
+      });
     }
   });
 

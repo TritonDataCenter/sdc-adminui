@@ -11,7 +11,7 @@ define(function(require) {
   return Backbone.View.extend({
     name: 'machines',
     render: function() {
-      this.$el.html("<h3>Machines</h3>");
+      this.$el.html("<h2>Machines</h2>");
 
       return this;
     }

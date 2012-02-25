@@ -1,4 +1,6 @@
 define(function(require) {
+  'use strict'
+
   var _ = require('underscore'),
     Backbone = require('backbone');
 
@@ -19,7 +21,9 @@ define(function(require) {
     highlight: function(view) {
       this.$("li").removeClass('active');
       this.$("li i").removeClass("icon-white");
+
       var li = this.$('li[data-view='+view+']');
+
       li.addClass('active');
       li.find("i").addClass("icon-white");
     }
