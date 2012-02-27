@@ -27,46 +27,50 @@ define(function(require) {
     template: Handlebars.compile(template),
 
     initialize: function(options) {
-      _.bindAll(this);
+      _.bindAll(this, 'render', 'presentView');
+
       var self = this;
 
-      options = options || {};
+      this.options = options || {};
 
-      this.$el.html(this.template);
-
-      this.topbarView = new TopbarView({el: this.$("#topnav")});
-      this.topbarView.on('signout', function(e) {
-        options.dispatcher.trigger('signout');
-      });
-
-      this.sidebarView = new SidebarView({el: this.$("#sidebar")});
-      this.sidebarView.on('sidebar:selected', function(viewname) {
-        var view = views[viewname];
-        self.changeView(view);
-      });
-
-      this.changeView(views[options.contentView || 'dashboard']);
+      this.dispatcher = options.dispatcher;
+      if (typeof(options.contentView) === undefined) {
+        options.contentView = 'dashboard'
+      }
     },
 
-    changeView: function(viewModule) {
-      var newView = new viewModule;
+    presentView: function(viewModule) {
+      if (typeof(viewModule) == 'string') {
+        viewModule = views[viewModule];
+      }
 
       if (this.contentView) {
         this.contentView.remove();
       }
 
-      this.contentView = newView;
-      this.render();
+      this.contentView = new viewModule
 
-      Backbone.history.navigate(newView.name);
+      this.$("#content").html(this.contentView.render().el)
+      this.sidebarView.highlight(this.contentView.name);
+
+      if (typeof(this.contentView.focus) === 'function') {
+        this.contentView.focus();
+      }
+
+      console.log("PresentView Done");
+      Backbone.history.navigate(this.contentView.name);
     },
 
     render: function() {
-      if (this.contentView) {
-        this.$("#content").html(this.contentView.render().el);
-        this.sidebarView.highlight(this.contentView.name);
-      }
+      this.$el.html(this.template);
 
+      this.topbarView = new TopbarView({el: this.$("#topnav")});
+      this.topbarView.on('signout', function(e) {
+        this.dispatcher.trigger('signout');
+      }, this);
+
+      this.sidebarView = new SidebarView({el: this.$("#sidebar")});
+      this.sidebarView.bind('sidebar:selected', this.presentView);
       return this;
     }
   });

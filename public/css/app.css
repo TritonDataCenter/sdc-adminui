@@ -5,8 +5,8 @@
 #signin .header { margin-bottom: 30px; text-align: center; }
 
 #content .page-header { overflow: hidden; }
-#content h2 { font-family: 'Helvetica Neue'; font-weight: 200;}
+#content h2 { font-weight: 300; }
 
 #users-counters { text-align: center; }
-#users-counters h5 { font-size: 36px; margin-top: 1em;}
-#users-counters p { margin-top: 1.5em; margin-bottom: 2em; text-transform: uppercase; }
+#users-counters h5 { font-weight: 300; font-size: 36px; margin-top: 1em;}
+#users-counters p { margin-top: 1.5em; margin-bottom: 2em; text-transform: uppercase; color: #666;}

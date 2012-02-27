@@ -56,12 +56,12 @@ define(function(require) {
     },
 
     showApp: function() {
+      console.log("start-showapp");
       this.view = new AppView({
-        dispatcher: this.dispatcher,
-        contentView: this.pageToShow
+        dispatcher: this.dispatcher
       });
-
       this.container.html(this.view.render().el);
+      this.view.presentView(this.pageToShow);
     },
 
     showSignin: function() {
