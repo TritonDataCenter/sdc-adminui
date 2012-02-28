@@ -23,6 +23,14 @@ define(function(require) {
 
       this.dispatcher = _.extend(Backbone.Events, {});
 
+      this.socket = io.connect();;
+
+      this.socket.on("connect", function() {
+        console.log("[WS] Connected");
+      });
+
+
+
       // holds the state of the currently logged in user
       this.user = new User();
 

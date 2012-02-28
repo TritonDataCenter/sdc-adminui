@@ -8,6 +8,6 @@ var server = require('./lib/app').createServer({
 
 server.start(function () {
   console.log('=== Server started on %s:%s',
-              server.address().address,
-              server.address().port);
+    server.address().address,
+    server.address().port);
 });
