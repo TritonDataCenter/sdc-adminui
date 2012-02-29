@@ -1,10 +1,7 @@
-define(function(require) {
+ADMINUI.Views.Sidebar = (function() {
   'use strict'
 
-  var _ = require('underscore'),
-    Backbone = require('backbone');
-
-  var SidebarView = Backbone.View.extend({
+  return Backbone.View.extend({
     events: {
       'click li':'onSelect'
     },
@@ -12,10 +9,10 @@ define(function(require) {
     onSelect: function(e) {
       e.preventDefault();
       var li = $(e.currentTarget);
-      var viewToHighlight = li.attr("data-view");
-      this.highlight(viewToHighlight);
+      var view = li.attr("data-view");
+      this.highlight(view);
 
-      this.trigger("sidebar:selected", viewToHighlight, this);
+      this.trigger("sidebar:selected", view, this);
     },
 
     highlight: function(view) {
@@ -28,7 +25,4 @@ define(function(require) {
       li.find("i").addClass("icon-white");
     }
   });
-
-  return SidebarView;
-});
-
+})();

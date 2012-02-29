@@ -1,12 +1,7 @@
 /**
  * views/machines.js
- *
- * Dashboard View
  */
-define(function(require) {
-
-  var _ = require('underscore'),
-    Backbone = require('backbone');
+ADMINUI.Views.Machines = (function(ADMINUI) {
 
   return Backbone.View.extend({
     name: 'machines',
@@ -16,4 +11,5 @@ define(function(require) {
       return this;
     }
   })
-});
+
+})(ADMINUI);

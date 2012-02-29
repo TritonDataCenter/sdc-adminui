@@ -1,11 +1,10 @@
 /**
  * models/user
  */
-define(function(require) {
-  var _ = require('underscore');
-  var Backbone = require('backbone');
+(function(ADMINUI) {
 
-  var User = Backbone.Model.extend({
+  ADMINUI.Models.User = Backbone.Model.extend({
+
     defaults: {
       authenticated: null
     },
@@ -16,7 +15,6 @@ define(function(require) {
       console.log("Checking Existing Identity")
 
       $.get("/auth", function(res) {
-        console.log(res);
         if (Object.keys(res).length === 0) {
           console.log("No Existing Identity");
           self.set({authenticated: false});
@@ -30,16 +28,20 @@ define(function(require) {
 
     _newAuth: function(user, pass) {
       var self = this;
+
+      if (user.length == 0 || pass.length == 0) {
+        this.trigger('error', 'Username and Password Required');
+        return false;
+      }
+
       var data = { username: user, password: pass }
 
       $.post("/auth", data, function(res) {
-        console.log(res);
         if (res.code && res.message) {
           self.set({authenticated: false});
+          self.trigger('error', res.message);
         } else {
           self.set({authenticated: true});
-          self.set(res);
-          self.trigger('error', res);
         }
       });
     },
@@ -57,7 +59,7 @@ define(function(require) {
     signout: function() {
       $.ajax({
         url: "/auth",
-        success: function() { 
+        success: function() {
           this.set({authenticated: false});
         },
         type: "DELETE",
@@ -66,6 +68,4 @@ define(function(require) {
     }
   });
 
-
-  return User;
-})
+})(ADMINUI);

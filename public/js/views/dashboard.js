@@ -3,10 +3,7 @@
  *
  * Dashboard View
  */
-define(function(require) {
-
-  var _ = require('underscore'),
-    Backbone = require('backbone');
+ADMINUI.Views.Dashboard = (function() {
 
   return Backbone.View.extend({
     name: 'dashboard',
@@ -15,5 +12,6 @@ define(function(require) {
 
       return this;
     }
-  })
-});
+  });
+
+})();

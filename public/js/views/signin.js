@@ -1,28 +1,28 @@
 /**
  * views/signin
- */
-define(function(require) {
-  var Backbone = require('backbone')
-  var _ = require('underscore');
-  var template = require('text!tpl/signin.html');
-
-  return Backbone.View.extend({
-    template: Handlebars.compile(template),
+*/
+(function(ADMINUI) {
+  ADMINUI.Views.Signin = Backbone.View.extend({
+    template: Handlebars.compile($("#template-signin").html()),
 
     events: {
-      'submit form': "authenticate"
+      'submit form': 'authenticate',
+      'click .alert a.close': 'hideMessage',
     },
 
     initialize: function(options) {
       _.bindAll(this);
-
-      this.app = options.app;
-      this.model = this.app.user;
+      this.model = options.model;
 
       this.model.bind('change:authenticated', function(user, value) {
         if (value === true) {
           this.remove();
         }
+      }, this);
+
+      this.model.bind('error', function(message) {
+        this.showMessage(message);
+        this.password().val('');
       }, this);
 
       this.render();
@@ -34,8 +34,12 @@ define(function(require) {
       this.$(".alert").show();
     },
 
-    hideMessage: function() {
+    hideMessage: function(e) {
+      if (e) {
+        e.stopPropagation();
+      }
       this.$(".alert").hide();
+      this.focus();
     },
 
     username: function() {
@@ -67,4 +71,4 @@ define(function(require) {
     }
 
   });
-});
+})(ADMINUI);

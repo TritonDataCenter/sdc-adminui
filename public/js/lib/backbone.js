@@ -5,7 +5,6 @@
 //     For all details and documentation:
 //     http://backbonejs.org
 
-define(['jquery', 'underscore'], function(jQuery, _) {
 (function(){
 
   // Initial Setup
@@ -1289,5 +1288,3 @@ define(['jquery', 'underscore'], function(jQuery, _) {
   };
 
 }).call(this);
-return Backbone;
-})

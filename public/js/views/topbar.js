@@ -1,18 +1,26 @@
-define(function(require) {
+/***
+ * Events triggered
+ * ================
+ * - signout
+ **/
+ADMINUI.Views.Topbar = (function() {
   'use strict'
-
-  var _ = require('underscore'),
-    Backbone = require('backbone');
 
   return Backbone.View.extend({
     events: {
       'click a[data-trigger=signout]': 'signout'
     },
-    initialize: function(options) {
 
+    initialize: function(options) {
+      _.bindAll(this.focusSearch);
     },
+
+    focusSearch: function() {
+      this.$('.search-query').val('').focus();
+    },
+
     signout: function() {
       this.trigger("signout");
     }
   });
-})
+})();

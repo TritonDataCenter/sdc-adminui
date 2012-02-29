@@ -1,13 +1,11 @@
-define(function(require) {
-  'use strict'
-
-  var _ = require('underscore'),
-    Backbone = require('backbone');
-
-  var template = require('text!tpl/users.html');
+ADMINUI.Views.Users = (function() {
 
   return Backbone.View.extend({
+
+    template: Handlebars.compile($("#template-users").html()),
+
     name: 'users',
+
     events: {
       'submit .form-search': 'onSearch'
     },
@@ -21,8 +19,8 @@ define(function(require) {
     },
 
     render: function() {
-      this.$el.html(template);
+      this.$el.html(this.template());
       return this;
     }
   });
-});
+})();

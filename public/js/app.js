@@ -1,26 +1,9 @@
-define(function(require) {
+(function(ADMINUI) {
   'use strict'
-
-  var _ = require('underscore'),
-    Backbone = require('backbone'),
-    AppView = require('views/chrome'),
-    SigninView = require('views/signin'),
-    User = require('models/user');
-
-  Backbone.sync = function(method, model, options) {
-    options.error = function(xhr, ajaxOptions, thrownError) {
-      if (xhr.status == 401) {
-        window.location = '/';
-      }
-    }
-    sync(method, model, options);
-  };
-
 
   var App = Backbone.Router.extend({
 
     initialize: function(options) {
-
       this.dispatcher = _.extend(Backbone.Events, {});
 
       this.socket = io.connect();;
@@ -29,10 +12,12 @@ define(function(require) {
         console.log("[WS] Connected");
       });
 
-
+      this.socket.on("message", function(msg) {
+        console.log("[WS] Message ", msg);
+      });
 
       // holds the state of the currently logged in user
-      this.user = new User();
+      this.user = new ADMINUI.Models.User();
 
       // The current root view being presented
       this.view = null;
@@ -41,7 +26,6 @@ define(function(require) {
       this.container = $("#chrome");
 
       this.dispatcher.bind('signout', function() {
-        console.log("signout");
         this.user.signout();
       }, this);
 
@@ -65,31 +49,23 @@ define(function(require) {
 
     showApp: function() {
       console.log("start-showapp");
-      this.view = new AppView({
-        dispatcher: this.dispatcher
-      });
+
+      this.view = new ADMINUI.Views.App({ dispatcher: this.dispatcher });
       this.container.html(this.view.render().el);
       this.view.presentView(this.pageToShow);
     },
 
     showSignin: function() {
       console.log("Showing SigninView");
-      this.view = new SigninView({ app: this });
+      this.view = new ADMINUI.Views.Signin({
+        dispatcher: this.dispatcher,
+        model: this.user
+      });
+
       this.container.html(this.view.el);
       this.view.focus();
     }
   });
 
-
-  function initialize() {
-    var app = new App();
-    Backbone.history.start({pushState: true});
-
-    return app;
-  }
-
-  return {
-    initialize: initialize
-  }
-
-});
+  ADMINUI.App = App;
+})(ADMINUI);

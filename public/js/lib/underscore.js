@@ -6,8 +6,6 @@
 //     For all details and documentation:
 //     http://documentcloud.github.com/underscore
 //
-define('underscore', function() {
-
 (function() {
 
   // Baseline setup
@@ -999,6 +997,3 @@ define('underscore', function() {
   };
 
 }).call(this);
-
-  return _;
-})
