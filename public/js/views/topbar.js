@@ -3,24 +3,28 @@
  * ================
  * - signout
  **/
-ADMINUI.Views.Topbar = (function() {
-  'use strict'
 
-  return Backbone.View.extend({
-    events: {
-      'click a[data-trigger=signout]': 'signout'
-    },
+'use strict'
 
-    initialize: function(options) {
-      _.bindAll(this.focusSearch);
-    },
+var Topbar = module.exports = Backbone.View.extend({
+  template: Handlebars.compile($("#template-topbar").html()),
+  events: {
+    'click a[data-trigger=signout]': 'signout'
+  },
 
-    focusSearch: function() {
-      this.$('.search-query').val('').focus();
-    },
+  initialize: function(options) {
+    _.bindAll(this.focusSearch);
+  },
 
-    signout: function() {
-      this.trigger("signout");
-    }
-  });
-})();
+  focusSearch: function() {
+    this.$('.search-query').val('').focus();
+  },
+
+  signout: function() {
+    this.trigger("signout");
+  },
+  render: function() {
+    this.$el.append(this.template());
+    return this;
+  }
+});

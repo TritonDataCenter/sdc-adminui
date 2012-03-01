@@ -2,16 +2,12 @@
  * views/dashboard.js
  *
  * Dashboard View
- */
-ADMINUI.Views.Dashboard = (function() {
+*/
+var Dashboard = module.exports = Backbone.View.extend({
+  name: 'dashboard',
 
-  return Backbone.View.extend({
-    name: 'dashboard',
-    render: function() {
-      this.$el.html("<h2>Dashboard</h2>");
-
-      return this;
-    }
-  });
-
-})();
+  render: function() {
+    this.$el.html("<h2>Dashboard</h2>");
+    return this;
+  }
+});

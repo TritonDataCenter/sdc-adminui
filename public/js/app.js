@@ -1,71 +1,69 @@
-(function(ADMINUI) {
-  'use strict'
+var User = require('models/user');
+var AppView = require('views/app');
+var SigninView = require('views/signin');
 
-  var App = Backbone.Router.extend({
+module.exports = Backbone.Router.extend({
 
-    initialize: function(options) {
-      this.dispatcher = _.extend(Backbone.Events, {});
+  initialize: function(options) {
+    this.dispatcher = _.extend(Backbone.Events, {});
 
-      this.socket = io.connect();;
+    this.socket = io.connect();;
 
-      this.socket.on("connect", function() {
-        console.log("[WS] Connected");
-      });
+    this.socket.on("connect", function() {
+      console.log("[WS] Connected");
+    });
 
-      this.socket.on("message", function(msg) {
-        console.log("[WS] Message ", msg);
-      });
+    this.socket.on("message", function(msg) {
+      console.log("[WS] Message ", msg);
+    });
 
-      // holds the state of the currently logged in user
-      this.user = new ADMINUI.Models.User();
+    // holds the state of the currently logged in user
+    this.user = new User;
 
-      // The current root view being presented
-      this.view = null;
+    // The current root view being presented
+    this.view = null;
 
-      // The dom element in which the root views are drawn to
-      this.container = $("#chrome");
+    // The dom element in which the root views are drawn to
+    this.container = $("#chrome");
 
-      this.dispatcher.bind('signout', function() {
-        this.user.signout();
-      }, this);
+    this.dispatcher.bind('signout', function() {
+      this.user.signout();
+    }, this);
 
-      this.user.bind('change:authenticated', function(user, value) {
-        if (value === true) {
-          this.showApp();
-        } else {
-          this.showSignin();
-        }
-      }, this);
-    },
+    this.user.bind('change:authenticated', function(user, value) {
+      if (value === true) {
+        this.showApp();
+      } else {
+        this.showSignin();
+      }
+    }, this);
+  },
 
-    routes: {
-      '*default': 'reception'
-    },
+  routes: {
+    '*default': 'reception'
+  },
 
-    reception: function(page) {
-      this.pageToShow = page || 'dashboard';
-      this.user.authenticate();
-    },
+  reception: function(page) {
+    this.pageToShow = page || 'dashboard';
+    this.user.authenticate();
+  },
 
-    showApp: function() {
-      console.log("start-showapp");
+  showApp: function() {
+    this.view = new AppView({
+      dispatcher: this.dispatcher
+    });
 
-      this.view = new ADMINUI.Views.App({ dispatcher: this.dispatcher });
-      this.container.html(this.view.render().el);
-      this.view.presentView(this.pageToShow);
-    },
+    this.container.html(this.view.render().el);
+    this.view.presentView(this.pageToShow || 'dashboard');
+  },
 
-    showSignin: function() {
-      console.log("Showing SigninView");
-      this.view = new ADMINUI.Views.Signin({
-        dispatcher: this.dispatcher,
-        model: this.user
-      });
+  showSignin: function() {
+    this.view = new SigninView({
+      dispatcher: this.dispatcher,
+      model: this.user
+    });
 
-      this.container.html(this.view.el);
-      this.view.focus();
-    }
-  });
-
-  ADMINUI.App = App;
-})(ADMINUI);
+    this.container.html(this.view.render().el);
+    this.view.focus();
+  }
+});

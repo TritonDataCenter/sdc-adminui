@@ -1,28 +1,33 @@
-ADMINUI.Views.Sidebar = (function() {
-  'use strict'
+'use strict'
 
-  return Backbone.View.extend({
-    events: {
-      'click li':'onSelect'
-    },
 
-    onSelect: function(e) {
-      e.preventDefault();
-      var li = $(e.currentTarget);
-      var view = li.attr("data-view");
-      this.highlight(view);
+var Sidebar = module.exports = Backbone.View.extend({
+  template: Handlebars.compile($("#template-sidebar").html()),
 
-      this.trigger("sidebar:selected", view, this);
-    },
+  events: {
+    'click li':'onSelect'
+  },
 
-    highlight: function(view) {
-      this.$("li").removeClass('active');
-      this.$("li i").removeClass("icon-white");
+  render: function() {
+    this.$el.html(this.template());
+  },
 
-      var li = this.$('li[data-view='+view+']');
+  onSelect: function(e) {
+    e.preventDefault();
+    var li = $(e.currentTarget);
+    var view = li.attr("data-view");
+    this.highlight(view);
 
-      li.addClass('active');
-      li.find("i").addClass("icon-white");
-    }
-  });
-})();
+    this.trigger("sidebar:selected", view, this);
+  },
+
+  highlight: function(view) {
+    this.$("li").removeClass('active');
+    this.$("li i").removeClass("icon-white");
+
+    var li = this.$('li[data-view='+view+']');
+
+    li.addClass('active');
+    li.find("i").addClass("icon-white");
+  }
+});

@@ -38,9 +38,9 @@ SMF_MANIFESTS	 = smf/manifests/adminui.xml
 all:
 	$(NPM) rebuild
 
-.PHONY: test
-test: $(TAP)
-	TAP=1 $(TAP) test/*.test.js
+# .PHONY: test
+# test: $(TAP)
+# # TAP=1 $(TAP) test/*.test.js
 
 ./node_modules/.bin/supervisor:
 	$(NPM) install --dev

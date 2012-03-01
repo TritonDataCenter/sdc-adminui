@@ -1,10 +1,9 @@
-ADMINUI = {
-  Views: {},
-  Models: {},
-  Collections: {}
-};
-
-jQuery(function($) {
-  ADMINUI.instance = new ADMINUI.App();
-  Backbone.history.start({pushState:true});
-})
+module.exports = {
+  bootstrap: function() {
+    $(function($) {
+      var App = require('app');
+      new App();
+      Backbone.history.start({pushState:true});
+    })
+  }
+}

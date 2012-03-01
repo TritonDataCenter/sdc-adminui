@@ -14,79 +14,76 @@
 */
 
 
-(function(ADMINUI) {
-  var AppView = Backbone.View.extend({
+var Topbar = require('views/topbar');
+var Sidebar = require('views/sidebar');
 
-    template: Handlebars.compile($('#template-chrome').html()),
+var AppView = module.exports = Backbone.View.extend({
 
-    initialize: function(options) {
-      _.bindAll(this, 'render', 'presentView', 'onKeypress');
+  template: Handlebars.compile($('#template-chrome').html()),
 
-      var self = this;
+  initialize: function(options) {
+    _.bindAll(this, 'render', 'presentView', 'onKeypress');
 
-      this.options = options || {};
-      this.dispatcher = options.dispatcher;
+    var self = this;
 
-      this.views = {
-        'dashboard': ADMINUI.Views.Dashboard,
-        'machines': ADMINUI.Views.Machines,
-        'users': ADMINUI.Views.Users
-      };
+    this.options = options || {};
+    this.dispatcher = options.dispatcher;
 
-      if (typeof(options.contentView) === 'undefined') {
-        options.contentView = 'dashboard'
-      }
+    this.views = {
+      'dashboard': require('views/dashboard'),
+      'machines': require('views/machines'),
+      'users': require('views/users')
+    };
 
-      $(document).bind('keypress', this.onKeypress);
-    },
+    $(document).bind('keypress', this.onKeypress);
+  },
 
-    onKeypress: function(e) {
-      var code = e.charCode || e.keyChar;
+  onKeypress: function(e) {
+    var code = (e.charCode || e.keyChar);
 
-      if (e.charCode == 47) {
-        this.topbarView.focusSearch();
-      }
-    },
-
-    presentView: function(viewModule) {
-      if (typeof(viewModule) == 'undefined')
-        return;
-
-      if (typeof(viewModule) == 'string')
-        viewModule = this.views[viewModule];
-
-      if (this.contentView) {
-        this.contentView.remove();
-      }
-
-      this.contentView = new viewModule;
-
-      this.$("#content").html(this.contentView.render().el)
-      this.sidebarView.highlight(this.contentView.name);
-
-      if (typeof(this.contentView.focus) === 'function') {
-        this.contentView.focus();
-      }
-
-      console.log("PresentView Done");
-      Backbone.history.navigate(this.contentView.name);
-    },
-
-    render: function() {
-      this.$el.html(this.template);
-
-      this.topbarView = new ADMINUI.Views.Topbar({ el: this.$("#topnav") });
-      this.topbarView.on('signout', function(e) {
-        this.dispatcher.trigger('signout');
-      }, this);
-
-      this.sidebarView = new ADMINUI.Views.Sidebar({el: this.$("#sidebar")});
-      this.sidebarView.bind('sidebar:selected', this.presentView);
-
-      return this;
+    if (e.charCode == 47) {
+      this.topbarView.focusSearch();
     }
-  });
+  },
 
-  ADMINUI.Views.App = AppView;
+  presentView: function(viewModule) {
+    if (typeof(viewModule) == 'undefined')
+      return;
 
-})(ADMINUI);
+    if (typeof(viewModule) == 'string')
+      viewModule = this.views[viewModule];
+
+    if (this.contentView) {
+      this.contentView.remove();
+    }
+
+    this.contentView = new viewModule;
+
+    this.$("#content").html(this.contentView.render().el)
+    this.sidebarView.highlight(this.contentView.name);
+
+    if (typeof(this.contentView.focus) === 'function') {
+      this.contentView.focus();
+    }
+
+    console.log("PresentView Done");
+    Backbone.history.navigate(this.contentView.name);
+  },
+
+  render: function() {
+    this.$el.html(this.template);
+
+    this.topbarView = new Topbar({ el: this.$("#topbar") });
+    this.topbarView.on('signout', function(e) {
+      this.dispatcher.trigger('signout');
+    }, this);
+
+
+    this.sidebarView = new Sidebar({el: this.$("#sidebar")});
+    this.sidebarView.bind('sidebar:selected', this.presentView);
+
+    this.topbarView.render();
+    this.sidebarView.render();
+    return this;
+  }
+});

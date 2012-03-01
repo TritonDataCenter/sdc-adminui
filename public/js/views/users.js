@@ -1,26 +1,33 @@
-ADMINUI.Views.Users = (function() {
+'use strict';
 
-  return Backbone.View.extend({
+var CreateUserView = require('views/users-create');
 
-    template: Handlebars.compile($("#template-users").html()),
+var UsersView = module.exports = Backbone.View.extend({
 
-    name: 'users',
+  template: Handlebars.compile($("#template-users").html()),
 
-    events: {
-      'submit .form-search': 'onSearch'
-    },
+  name: 'users',
 
-    focus: function() {
-      this.$(".form-search input[type=text]").focus();
-    },
+  events: {
+    'click button[data-event=new-user]': 'newUser',
+    'submit .form-search': 'onSearch'
+  },
 
-    onSearch: function(e) {
-      return false;
-    },
+  initialize: function() {
+    _.bindAll(this, 'newUser');
+  },
 
-    render: function() {
-      this.$el.html(this.template());
-      return this;
-    }
-  });
-})();
+  newUser: function() {
+    this.createView = new CreateUserView();
+    this.createView.render();
+  },
+
+  onSearch: function(e) {
+    return false;
+  },
+
+  render: function() {
+    this.$el.html(this.template());
+    return this;
+  }
+});

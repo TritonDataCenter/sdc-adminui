@@ -1,74 +1,71 @@
 /**
  * views/signin
 */
-(function(ADMINUI) {
-  ADMINUI.Views.Signin = Backbone.View.extend({
-    template: Handlebars.compile($("#template-signin").html()),
 
-    events: {
-      'submit form': 'authenticate',
-      'click .alert a.close': 'hideMessage',
-    },
+var Signin = module.exports = Backbone.View.extend({
+  template: Handlebars.compile($("#template-signin").html()),
 
-    initialize: function(options) {
-      _.bindAll(this);
-      this.model = options.model;
+  events: {
+    'submit form': 'authenticate',
+    'click .alert a.close': 'hideMessage',
+  },
 
-      this.model.bind('change:authenticated', function(user, value) {
-        if (value === true) {
-          this.remove();
-        }
-      }, this);
+  initialize: function(options) {
+    _.bindAll(this);
+    this.model = options.model;
 
-      this.model.bind('error', function(message) {
-        this.showMessage(message);
-        this.password().val('');
-      }, this);
-
-      this.render();
-      this.hideMessage();
-    },
-
-    showMessage: function(msg) {
-      this.$(".alert .msg").html(msg);
-      this.$(".alert").show();
-    },
-
-    hideMessage: function(e) {
-      if (e) {
-        e.stopPropagation();
+    this.model.bind('change:authenticated', function(user, value) {
+      if (value === true) {
+        this.remove();
       }
-      this.$(".alert").hide();
-      this.focus();
-    },
+    }, this);
 
-    username: function() {
-      return this.$("input[name=username]");
-    },
+    this.model.bind('error', function(message) {
+      this.showMessage(message);
+      this.password().val('');
+    }, this);
+  },
 
-    password: function() {
-      return this.$("input[name=password]");
-    },
+  showMessage: function(msg) {
+    this.$(".alert .msg").html(msg);
+    this.$(".alert").show();
+  },
 
-    focus: function() {
-      if (this.username().val().length === 0) {
-        this.username().focus();
-      } else {
-        this.password().focus();
-      }
-    },
-
-    authenticate: function(e) {
-      e.preventDefault();
-      this.hideMessage();
-      this.model.authenticate(this.username().val(), this.password().val());
-    },
-
-    render: function() {
-      this.$el.html(this.template());
-
-      return this;
+  hideMessage: function(e) {
+    if (e) {
+      e.stopPropagation();
     }
+    this.$(".alert").hide();
+    this.focus();
+  },
 
-  });
-})(ADMINUI);
+  username: function() {
+    return this.$("input[name=username]");
+  },
+
+  password: function() {
+    return this.$("input[name=password]");
+  },
+
+  focus: function() {
+    if (this.username().val().length === 0) {
+      this.username().focus();
+    } else {
+      this.password().focus();
+    }
+  },
+
+  authenticate: function(e) {
+    e.preventDefault();
+    this.hideMessage();
+    this.model.authenticate(this.username().val(), this.password().val());
+  },
+
+  render: function() {
+    this.$el.html(this.template());
+    this.hideMessage();
+
+    return this;
+  }
+
+});
