@@ -142,6 +142,12 @@ The following browsers will be officially supported
 
 # Per page Details/Ideas
 
+## Reports
+
+ * JPC likes "at a glance" lists for doing their job. See:
+   - http://cl.ly/1w2k3A3T263V1b0W3K0p
+   - http://cl.ly/323F3p301I3d0W2w312W
+
 ## Dashboard
 
  * Dashboard should visualize:
@@ -201,6 +207,8 @@ The following browsers will be officially supported
  * model, type (ata/sata/sas), spindle/ssd, etc.
  * All network interfaces should be displayed with ifname, mac, speed, state,
    duplex and IPv4 and IPv6 addresses/netmasks
+ * Rack position should be editable and shown as a "number" with units separate
+ * Rack position should indicate what position
 
 ## Compute Nodes - Setup
 
@@ -233,3 +241,4 @@ The following browsers will be officially supported
  * Operator can create instrumentations with the predicate = customer 
  * Operator can create instrumentations with the predicate = compute node
  * Operator can create instrumentations with the predicate = machine
+
