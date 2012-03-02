@@ -4,6 +4,6 @@ module.exports = {
       var App = require('app');
       new App();
       Backbone.history.start({pushState:true});
-    })
+    });
   }
 }

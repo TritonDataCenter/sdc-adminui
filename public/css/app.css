@@ -1,3 +1,5 @@
+.modal>form { margin: 0; }
+
 #topnav a { cursor: pointer; }
 
 #signin { margin: 0 auto; width: 300px;}

@@ -2,10 +2,11 @@
  * models/user
 */
 var User = module.exports = Backbone.Model.extend({
-
   defaults: {
     authenticated: null
   },
+
+  url: "/users",
 
   _checkExistingAuth: function() {
     var self = this;

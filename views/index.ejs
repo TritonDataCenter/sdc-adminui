@@ -12,6 +12,36 @@
   <body>
     <div id="chrome"></div>
 
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/application.js"></script>
+    <script>require('main').bootstrap();</script>
+
+    <!-- {{{ template chrome -->
+    <script type="text/x-handlebars" id="template-chrome">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div id="topbar" class="container">
+            <!-- #template-topnav -->
+          </div>
+        </div>
+      </div>
+
+
+      <div class="container">
+        <div class="row">
+
+          <div id="sidebar" class="span3">
+          </div>
+
+          <div class="span9">
+            <div id="content"></div>
+          </div>
+        </div>
+      </div>
+    </script>
+    <!-- }}} -->
+
+    <!-- {{{ template topbar -->
     <script type="text/x-handlebars" id="template-topbar">
       <a class="btn btn-navbar" data-toggle="collapse"
         data-target=".nav-collapse">
@@ -38,7 +68,9 @@
         </ul>
       </div>
     </script>
+    <!-- }}} -->
 
+    <!-- {{{ template sidebar -->
     <script type="text/x-handlebars" id="template-sidebar">
       <ul class="nav nav-pills nav-stacked">
         <li data-view="dashboard"><a href="#"><i class="icon-home"></i> Dashboard</a></li>
@@ -58,85 +90,9 @@
         <li><a href="#"><i class="icon-book"></i> SDC Images Library</a></li>
       </ul>
     </script>
+    <!-- }}} -->
 
-    <script type="text/x-handlebars" id="template-chrome">
-      <div class="navbar">
-        <div class="navbar-inner">
-          <div id="topbar" class="container">
-            <!-- #template-topnav -->
-          </div>
-        </div>
-      </div>
-
-
-      <div class="container">
-        <div class="row">
-
-          <div id="sidebar" class="span3">
-          </div>
-
-          <div class="span9">
-            <div id="content"></div>
-          </div>
-        </div>
-      </div>
-    </script>
-
-    <script type="x-handlebars" id="template-users-create">
-      <div class="modal fade" id="myModal">
-        <div class="modal-header">
-          <a class="close" data-dismiss="modal">×</a>
-          <h3>Create User</h3>
-        </div>
-        <div class="modal-body">
-          <form class="form-horizontal">
-            <fieldset>
-              <div class="control-group">
-                <label class="control-label">Username</label>
-                <div class="controls">
-                  <input type="text" class="span3">
-                </div>
-              </div>
-
-              <div class="control-group">
-                <label class="control-label">Email Address</label>
-                <div class="controls">
-                  <input type="text" placeholder="user@example.com">
-                </div>
-              </div>
-
-              <div class="control-group">
-                <label class="control-label">Name</label>
-                <div class="controls">
-                  <input type="text" placeholder="first or given name" class="span2">
-                  <input type="text" placeholder="last name" class="span2 add-on">
-                </div>
-              </div>
-
-              <div class="control-group">
-                <label class="control-label">Company</label>
-                <div class="controls">
-                  <input type="text" placeholder="Joyent">
-                </div>
-              </div>
-
-              <div class="control-group">
-                <label class="control-label">Phone Number</label>
-                <div class="controls">
-                  <input type="text" placeholder="Joyent">
-                </div>
-              </div>
-
-            </fieldset>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <a href="#" class="btn btn-primary">Create User</a>
-          <a href="#" data-dismiss="modal" class="btn">Close</a>
-        </div>
-      </div>
-    </script>
-
+    <!-- {{{ template users -->
     <script type="x-handlebars" id="template-users">
       <div class="page-header">
         <h2 class="pull-left">Users &amp; Groups</h2>
@@ -186,8 +142,79 @@
           </div>
         </div>
       </div>
-    </script><!-- }}} -->
+    </script>
+    <!-- }}} -->
 
+    <!-- {{{ template users-create -->
+    <script type="x-handlebars" id="template-users-create">
+      <div class="modal fade" id="myModal">
+        <form>
+          <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>Create User</h3>
+          </div>
+
+          <div class="modal-body">
+            <div class="alert alert-block alert-error hide"></div>
+
+            <div class="form-horizontal">
+            <fieldset>
+
+              <div class="control-group">
+                <label class="control-label">Login</label>
+                <div class="controls">
+                  <input type="text" name="login" class="span3">
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Password</label>
+                <div class="controls">
+                  <input type="password" name="password" class="span3">
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Email Address</label>
+                <div class="controls">
+                  <input type="text" name="email" placeholder="user@example.com">
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Name</label>
+                <div class="controls">
+                  <input type="text" name="first_name" placeholder="first or given name" class="span2">
+                  <input type="text" name="last_name" placeholder="last name" class="span2 add-on">
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Company</label>
+                <div class="controls">
+                  <input type="text" name="company_name" placeholder="Joyent">
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Phone Number</label>
+                <div class="controls">
+                  <input type="text" name="phone" placeholder="Joyent">
+                </div>
+              </div>
+            </fieldset>
+            </div>
+          </div> <!-- .modal-body -->
+          <div class="modal-footer">
+            <button type='submit' class="create btn btn-primary">Create User</button>
+            <button data-dismiss="modal" class="btn">Close</button>
+          </div>
+        </form>
+      </div>
+    </script>
+    <!-- }}} -->
+
+    <!-- {{{ template signin -->
     <script type="x-handlebars" id="template-signin">
       <div id="signin" class="well">
         <div class="header">
@@ -213,28 +240,7 @@
         </form>
       </div>
     </script>
+    <!-- }}} -->
 
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/lib/jquery-1.7.1.js"></script>
-    <script src="/js/lib/bootstrap.js"></script>
-    <script src="/js/lib/underscore.js"></script>
-    <script src="/js/lib/backbone.js"></script>
-    <script src="/js/lib/handlebars-1.0.0.beta.6.js"></script>
-
-    <script src="/js/main.js"></script>
-
-    <script src="/js/models/user.js"></script>
-    <script src="/js/views/app.js"></script>
-    <script src="/js/views/signin.js"></script>
-    <script src="/js/views/sidebar.js"></script>
-    <script src="/js/views/topbar.js"></script>
-
-    <script src="/js/views/dashboard.js"></script>
-    <script src="/js/views/machines.js"></script>
-    <script src="/js/views/users.js"></script>
-    <script src="/js/views/users-detail.js"></script>
-
-    <script src="/js/app.js"></script>
   </body>
 </html>
