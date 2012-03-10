@@ -2,7 +2,7 @@
     "host": "0.0.0.0",
     "port": 4000,
     "ufds": {
-        "url": "ldaps://10.99.99.21",
+        "url": "ldaps://10.99.99.22",
         "bindDN": "cn=root",
         "bindPassword": "secret",
         "cache": {

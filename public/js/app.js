@@ -1,3 +1,6 @@
+console.log(_);
+_.str = require('lib/underscore.string');
+
 var User = require('models/user');
 var AppView = require('views/app');
 var SigninView = require('views/signin');
@@ -6,16 +9,6 @@ module.exports = Backbone.Router.extend({
 
   initialize: function(options) {
     this.dispatcher = _.extend(Backbone.Events, {});
-
-    this.socket = io.connect();;
-
-    this.socket.on("connect", function() {
-      console.log("[WS] Connected");
-    });
-
-    this.socket.on("message", function(msg) {
-      console.log("[WS] Message ", msg);
-    });
 
     // holds the state of the currently logged in user
     this.user = new User;

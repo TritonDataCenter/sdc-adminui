@@ -17,7 +17,8 @@
     "sdc-clients":"git+ssh://git@git.joyent.com:node-sdc-clients.git#f5ad86429513cc04ae97df1518142952e43b91b6",
     "stitch": "~0.3",
     "node-uuid":"1.3.3",
-    "bunyan":"~0.6"
+    "bunyan":"~0.6",
+    "restify":"1.2.0"
   },
   "devDependencies": {
     "tap": "latest",

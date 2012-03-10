@@ -29,11 +29,6 @@ var AppView = module.exports = Backbone.View.extend({
     this.options = options || {};
     this.dispatcher = options.dispatcher;
 
-    this.views = {
-      'dashboard': require('views/dashboard'),
-      'machines': require('views/machines'),
-      'users': require('views/users')
-    };
 
     $(document).bind('keypress', this.onKeypress);
   },
@@ -51,7 +46,7 @@ var AppView = module.exports = Backbone.View.extend({
       return;
 
     if (typeof(viewModule) == 'string')
-      viewModule = this.views[viewModule];
+      viewModule = require(_.str.sprintf('views/%s', viewModule));
 
     if (this.contentView) {
       this.contentView.remove();

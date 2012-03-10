@@ -12,7 +12,6 @@
   <body>
     <div id="chrome"></div>
 
-    <script src="/socket.io/socket.io.js"></script>
     <script src="/application.js"></script>
     <script>require('main').bootstrap();</script>
 
@@ -87,10 +86,14 @@
         <li data-view="users"><a href="#"><i class="icon-user"></i> Users &amp; Grouops</a></li>
 
         <li class="nav-header">Explore</li>
-        <li><a href="#"><i class="icon-book"></i> SDC Images Library</a></li>
+        <li data-view="images"><a href="#"><i class="icon-book"></i> SDC Images Library</a></li>
       </ul>
     </script>
     <!-- }}} -->
+
+
+
+
 
     <!-- {{{ template users -->
     <script type="x-handlebars" id="template-users">
@@ -213,6 +216,45 @@
       </div>
     </script>
     <!-- }}} -->
+
+
+
+
+    <!-- {{{ template images -->
+    <script type="x-handlebars" id="template-images">
+      <div id="sdc-images">
+        <div class="page-header">
+          <h2>SDC Image Library</h2>
+        </div>
+        <div id="sdc-images-list"></div>
+      </div>
+    </script>
+    <!-- }}} -->
+
+    <!-- {{{ template images-list -->
+    <script type="x-handlebars" id="template-images-list">
+      <h3>{{os}}</h3>
+      <ul class="thumbnails"></ul>
+    </script>
+    <!-- }}} -->
+
+    <!-- {{{ template images-list-item -->
+    <script type="x-handlebars" id="template-images-list-item">
+      <li class="span3">
+      <div class="item">
+        <h4 class="name pull-left">{{name}} <small class="label">{{version}}</small></h4>
+        <p class="description">{{description}}</p>
+        <button class="btn btn-small btn-info more-info pull-right">
+          <i class="icon-search icon-white"></i> More Info
+        </button>
+      </div>
+      </li>
+    </script>
+    <!-- }}} --->
+
+
+
+
 
     <!-- {{{ template signin -->
     <script type="x-handlebars" id="template-signin">
