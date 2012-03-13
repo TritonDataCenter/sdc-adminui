@@ -1,6 +1,6 @@
 var Image = require('models/image');
 
-var Images = module.exports = new (Backbone.Collection.extend({
+var Images = module.exports = Backbone.Collection.extend({
   model: Image,
 
   url: '/imglib/datasets',
@@ -12,11 +12,11 @@ var Images = module.exports = new (Backbone.Collection.extend({
         return i.get(field) === v;
       });
 
-      var collection = new Backbone.Collection(filtered);
+      var collection = new Images(filtered);
       collection.groupedBy = collection.at(0).get(field);
       return collection;
     }, this);
 
-    return callback(_(grouped));
+    return _(grouped);
   },
-}));
+});

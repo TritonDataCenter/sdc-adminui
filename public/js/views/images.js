@@ -1,4 +1,6 @@
 var Images = require('models/images');
+var images = new Images();
+
 'use strict';
 
 var ImagesView = module.exports = Backbone.View.extend({
@@ -15,15 +17,13 @@ var ImagesView = module.exports = Backbone.View.extend({
     this.listViews = new Backbone.Collection();
     this.listViews.on('add', this.addListView);
 
-    Images.on('reset', function() {
-      Images.groupBy('os', function(cols) {
-        cols.each(function(col) {
-          self.listViews.add(new ListView({ collection: col }));
-        })
+    images.on('reset', function() {
+       images.groupBy('os').each(function(col) {
+        self.listViews.add(new ListView({ collection: col }));
       });
     });
 
-    Images.fetch();
+    images.fetch();
   },
 
   addListView: function(list) {
@@ -36,14 +36,21 @@ var ImagesView = module.exports = Backbone.View.extend({
 }, Backbone.Model);
 
 
+
+
+
 var ListView = Backbone.View.extend({
   template: Handlebars.compile($("#template-images-list").html()),
   initialize: function(options) {
     _.bindAll(this, 'addOne', 'addAll');
 
     this.os = this.collection.groupedBy;
-    this.collection.on('add', this.addOne);
-    this.collection.on('reset', this.addAll);
+    this.collection = _(this.collection.groupBy('name').map(function(n) {
+      var vers = n.models.sort(function(a, b) {
+        return a.get('version') < b.get('version');
+      });
+      return vers[0];
+    }));
   },
 
   addOne: function(image) {
@@ -63,6 +70,9 @@ var ListView = Backbone.View.extend({
   }
 
 });
+
+
+
 
 var ListItemView = Backbone.View.extend({
   template: Handlebars.compile($("#template-images-list-item").html()),
