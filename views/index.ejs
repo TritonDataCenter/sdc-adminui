@@ -149,7 +149,7 @@
 
     <!-- {{{ template users-create -->
     <script type="x-handlebars" id="template-users-create">
-      <div class="modal fade" id="myModal">
+      <div class="modal fade">
         <form>
           <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
@@ -248,6 +248,33 @@
         </button>
       </div>
       </li>
+    </script>
+    <!-- }}} -->
+
+
+
+
+    <!-- {{{ template images-detail -->
+    <script type="x-handlebars" id="template-images-detail">
+      <div class="modal fade">
+        <div class="modal-header">
+          <h2>{{name}} {{version}}</h2>
+        </div>
+        <div class="modal-body">
+          <p>{{description}}</p>
+          <table class="table table-condensed">
+            <tr>
+              <th>URN</th>
+              <td>{{urn}}</td>
+            </tr>
+            <tr>
+              <th>Platform</th>
+              <td>{{platform_type}}</td>
+            </tr>
+          </table>
+        </div>
+
+      </div>
     </script>
     <!-- }}} --->
 

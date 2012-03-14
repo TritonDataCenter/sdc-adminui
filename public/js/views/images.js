@@ -76,8 +76,25 @@ var ListView = Backbone.View.extend({
 
 var ListItemView = Backbone.View.extend({
   template: Handlebars.compile($("#template-images-list-item").html()),
+  events: {
+    'click button': 'presentDetailView'
+  },
+  presentDetailView: function() {
+    var view = new ImageDetailView({model: this.model});
+    view.render();
+  },
   render: function() {
     this.setElement(this.template(this.model.toJSON()));
+    return this;
+  }
+});
+
+
+var ImageDetailView = Backbone.View.extend({
+  template: Handlebars.compile($("#template-images-detail").html()),
+  render: function() {
+    var elm = $(this.template(this.model.toJSON()));
+    elm.modal();
     return this;
   }
 });
