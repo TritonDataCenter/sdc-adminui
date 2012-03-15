@@ -79,10 +79,12 @@ var ListItemView = Backbone.View.extend({
   events: {
     'click button': 'presentDetailView'
   },
+
   presentDetailView: function() {
-    var view = new ImageDetailView({model: this.model});
+    var view = new ImageDetailView({ model: this.model });
     view.render();
   },
+
   render: function() {
     this.setElement(this.template(this.model.toJSON()));
     return this;
