@@ -50,12 +50,16 @@ AdminUI is being rewritten for several reasons. Those include:
    relaunch". This is a minor nit-pick but its important that any tuning of
    endpoints happen through the app itself - not another config file.
 
-## Aggregated Views
+## Aggregated Views / Multiple Datacenters
 
  * Datacenters no longer *drives* the application flow. Instead,
    a DC is just one of the properties operators can filter/search on.
+ * The interface must be able to support adding and removing multiple API
+   endpoints.
+ * The interface must include the ability to filter by endpoint (this is an
+   advanced filter / scoping mechanism)
 
-## Revamped search / navigation
+## Revamped search / Navigation
 
  * Search is the major method of navigating. This suggests a common search
    pattern requirement across APIs, like what CA has, but it's not a
