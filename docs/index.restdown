@@ -246,3 +246,8 @@ The following browsers will be officially supported
  * Operator can create instrumentations with the predicate = compute node
  * Operator can create instrumentations with the predicate = machine
 
+## Datacenters
+
+ * Because of the way configuration management works for CloudAPI, renaming a
+   datacenter is not a trivial task. This _used_ to be a feature in SDC6, but
+   please hold off implementing it in SDC7.
