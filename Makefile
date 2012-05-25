@@ -17,7 +17,6 @@
 #
 # Tools
 #
-NPM		:= npm
 TAP		:= ./node_modules/.bin/tap
 
 #
@@ -29,25 +28,32 @@ JSL_CONF_NODE	 = tools/jsl.node.conf
 JSL_FILES_NODE   = $(JS_FILES)
 JSSTYLE_FILES	 = $(JS_FILES)
 JSSTYLE_FLAGS    = -o indent=2,doxygen,unparenthesized-return=0
-SMF_MANIFESTS	 = smf/manifests/adminui.xml
+REPO_MODULES	 = src/node-dummy
+SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
+
+include ./tools/mk/Makefile.defs
+include ./tools/mk/Makefile.node.defs
+include ./tools/mk/Makefile.node_deps.defs
+include ./tools/mk/Makefile.smf.defs
 
 #
 # Repo-specific targets
 #
 .PHONY: all
-all:
+all: $(SMF_MANIFESTS) | $(TAP) $(REPO_DEPS)
 	$(NPM) rebuild
 
-# .PHONY: test
-# test: $(TAP)
-# # TAP=1 $(TAP) test/*.test.js
+$(TAP): | $(NPM_EXEC)
+	$(NPM) install
 
-./node_modules/.bin/supervisor:
-	$(NPM) install --dev
+CLEAN_FILES += $(TAP) ./node_modules/tap
 
-.PHONY: dev
-dev: ./node_modules/.bin/supervisor
-	@exec ./node_modules/.bin/supervisor -w ./lib main.js
+.PHONY: test
+test: $(TAP)
+	TAP=1 $(TAP) test/*.test.js
 
-include ./Makefile.deps
-include ./Makefile.targ
+include ./tools/mk/Makefile.deps
+include ./tools/mk/Makefile.node.targ
+include ./tools/mk/Makefile.node_deps.targ
+include ./tools/mk/Makefile.smf.targ
+include ./tools/mk/Makefile.targ
