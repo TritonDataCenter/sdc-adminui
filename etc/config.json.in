@@ -1,29 +1,29 @@
 {
-    "host": "0.0.0.0",
-    "port": 4000,
-    "ufds": {
-        "url": "ldaps://10.99.99.21",
+  "host": "0.0.0.0",
+  "port": 4000,
+  "ufds": {
+    "url": "ldaps://10.99.99.14",
+      "bindDN": "cn=root",
+    "bindPassword": "secret",
+    "cache": {
+      "size": 1000,
+      "expiry": 300
+    }
+  },
+  "datacenters": {
+    "coal": {
+      "ufds": {
+        "url": "ldaps://10.99.99.14",
         "bindDN": "cn=root",
         "bindPassword": "secret",
         "cache": {
-            "size": 1000,
-            "expiry": 300
+          "size": 1000,
+          "expiry": 300
         }
-    },
-    "zapi": {
-        "url": "http://10.99.99.8:8080",
-        "username": "admin",
-        "password": "tot@ls3crit"
-    },
-    "cnapi": {
-        "url": "http://10.99.99.8:8080",
-        "username": "admin",
-        "password": "tot@ls3crit"
-    },
-    "ca": {
-        "url": "http://10.99.99.24:23181"
-    },
-    "datacenters": {
-        "coal": "http://127.0.0.1"
+      },
+      "zapi": { "url": "http://10.99.99.19" },
+      "napi": { "url": "http://10.99.99.11" },
+      "cnapi": { "url": "http://10.99.99.17" }
     }
+  }
 }

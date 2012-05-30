@@ -76,7 +76,7 @@
         <li class="nav-header">Compute</li>
 
         <li data-view="machines"><a href="#"><i class="icon-book"></i> Machines</a></li>
-        <li><a href="#"><i class="icon-book"></i> Compute Nodes</a></li>
+        <li data-view="compute-nodes"><a href="#"><i class="icon-book"></i> Compute Nodes</a></li>
         <li><a href="#"><i class="icon-list"></i> Networks</a></li>
         <li><a href="#"><i class="icon-picture"></i> Images</a></li>
 
@@ -217,7 +217,40 @@
     <!-- }}} -->
 
 
+    <!-- {{{ template compute-nodes-list-item}}} -->
+    <script type="x-handlebars" id="template-compute-nodes-list-item">
+      <tr>
+        <td class="status">{{status}}</td>
+        <td class="name">{{hostname}}</td>
+        <td class="mem-avail">{{memory_available_bytes}}</td>
+        <td class="mem-total">{{memory_total_bytes}}</td>
+      </tr>
+    </script>
+    <!-- }}} -->
 
+    <!-- {{{ template compute-nodes}}} -->
+    <script type="x-handlebars" id="template-compute-nodes">
+      <div id="compute-nodes">
+        <div class="page-header">
+          <h2>Compute Nodes</h2>
+        </div>
+        <div id="compute-nodes-list">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Hostname</th>
+                <th>Available Memory</th>
+                <th>Total Memory</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </script>
+    <!-- }}} -->
 
     <!-- {{{ template images -->
     <script type="x-handlebars" id="template-images">
