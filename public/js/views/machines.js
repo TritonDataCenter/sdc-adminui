@@ -2,9 +2,7 @@
  * views/machines.js
 */
 
-var Machines = Backbone.Collection.extend({
-  url: "/machines"
-});
+var Machines = require('models/Machines');
 
 var MachinesListItem = Backbone.View.extend({
   template: Handlebars.compile($("#template-machines-list-item").html()),
