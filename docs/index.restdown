@@ -11,6 +11,19 @@ markdown2extras: wiki-tables, code-friendly
  * Who: Kevin Chan
  * Tickets/bugs: <https://devhub.joyent.com/jira/browse/ADMINUI>
 
+# Install & Run
+
+  git clone git@git.joyent.com:adminui.git
+  cd adminui
+  make all
+  
+  cp etc/config.json.in etc/config.json
+  # Modify etc/config.json if you don't use the default coal answers file
+  
+  node server.js
+  
+  open http://localhost:4000
+
 # Introduction
 
 AdminUI is being rewritten for several reasons. Those include:
@@ -29,9 +42,9 @@ AdminUI is being rewritten for several reasons. Those include:
 
 # Key Features
 
-### Groups and User Management
+## Groups and User Management
 
- * UFDS Editor for Groups / Users / etc
+ * UI for managing Groups / Users / etc
 
 ## Dataset API Browser
 
@@ -44,7 +57,7 @@ AdminUI is being rewritten for several reasons. Those include:
 
 ## Self-configuring
 
- * AdminUI must be able to configure itself through AdminUI. This means that
+ * [ADMINUI-874] AdminUI must be able to configure itself through AdminUI. This means that
    launching AdminUI without a config should not result in a broken AdminUI, but
    should instead print a message saying "to configure auth edit this file and
    relaunch". This is a minor nit-pick but its important that any tuning of
@@ -109,22 +122,14 @@ Possibly integrated with AMON. For example:
       resource)
 
 ## Saved Filters
+
  * Saving Searches/filters, setting them as default (per user basis)
 
 ## Batch Operations
+
  * Perform batch actions on a resulting query resulset (ie: reboot all matched nodes)
 
 # Implementation
-
- * The old design can go away - do not hold onto the past
- * Backbone.js to drive the frontend
- * Node.js on the backend (currently express but restify is still under
-   consideration)
- * Twitter bootstrap for UI chrome to start - this will give us a common toolkit we can pass
-   to a UI/UX person when we feel we need to modify something heavily - but also
-   lets us do adminui customizations much much easier
- * Start with UFDS integration - as this is one of the few new APIs available
-   and is less likely to change. Focus on Groups/Users/Customers. 
 
 ## Security Considerations
 
@@ -144,7 +149,7 @@ The following browsers will be officially supported
  * IE9+
  * Safari
 
-# Per page Details/Ideas
+# Per page Design/Details/Ideas
 
 ## Reports
 
@@ -170,11 +175,17 @@ The following browsers will be officially supported
  * Console access is available to all administrators for all machines, (both vm
     and zone)
  * Operators should be able to disable MAC and IP anti-spoof on a machine
- * Operations should be able to provision machines on behalf of any user
  * Machine provisions should allow user-specifiable keys / overrides
+
+### Provisioning
+ * ADMINUI-875
+ * Operations should be able to provision machines on behalf of any user
  * Provisioning should check dataset requirements (mix/max)
- * machine details should show which dataset the machine is running
- * machine details should show if the dataset is still available / deleted
+
+### Machine Details
+ * should show which dataset the machine is running
+ * should show if the dataset is still available / deleted
+
 
 ## Networks
 
