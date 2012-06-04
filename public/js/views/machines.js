@@ -2,20 +2,22 @@
  * views/machines.js
 */
 
-var Machines = require('models/Machines');
+var Machines = require('models/vms');
+var BaseView = require('views/base');
 
-var MachinesListItem = Backbone.View.extend({
-  template: Handlebars.compile($("#template-machines-list-item").html()),
+var MachinesListItem = BaseView.extend({
+  template: 'vms-list-item',
+
   render: function() {
     this.setElement(this.template(this.model.attributes));
     return this;
   }
 });
 
-var MachinesView = module.exports = Backbone.View.extend({
+var MachinesView = module.exports = BaseView.extend({
   name: 'machines',
 
-  template: Handlebars.compile($("#template-compute-nodes").html()),
+  template: 'vms',
 
   initialize: function(options) {
     this.setElement(this.template());
@@ -32,15 +34,15 @@ var MachinesView = module.exports = Backbone.View.extend({
   }
 });
 
-var MachinesList = Backbone.View.extend({
+var MachinesList = BaseView.extend({
   initialize: function() {
     _.bindAll(this, 'addOne', 'addAll');
 
     this.collection.bind('all', this.addAll);
     this.collection.fetch();
   },
-  addOne: function(machine) {
-    var view = new MachinesListItem({model:machine});
+  addOne: function(model) {
+    var view = new MachinesListItem({model:model});
     this.$el.append(view.render().el);
   },
   addAll: function() {

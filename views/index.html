@@ -16,7 +16,7 @@
     <script>require('main').bootstrap();</script>
 
     <!-- {{{ template chrome -->
-    <script type="text/x-handlebars" id="template-chrome">
+    <script type="text/text/template" id="template-chrome">
       <div class="navbar">
         <div class="navbar-inner">
           <div id="topbar" class="container">
@@ -40,7 +40,7 @@
     <!-- }}} -->
 
     <!-- {{{ template topbar -->
-    <script type="text/x-handlebars" id="template-topbar">
+    <script type="text/text/template" id="template-topbar">
       <a class="btn btn-navbar" data-toggle="collapse"
         data-target=".nav-collapse">
         <span class="icon-bar"></span>
@@ -69,7 +69,7 @@
     <!-- }}} -->
 
     <!-- {{{ template sidebar -->
-    <script type="text/x-handlebars" id="template-sidebar">
+    <script type="text/text/template" id="template-sidebar">
       <ul class="nav nav-pills nav-stacked">
         <li data-view="dashboard"><a href="#"><i class="icon-home"></i> Dashboard</a></li>
 
@@ -77,7 +77,7 @@
 
         <li data-view="machines"><a href="#"><i class="icon-book"></i> Machines</a></li>
         <li data-view="compute-nodes"><a href="#"><i class="icon-book"></i> Compute Nodes</a></li>
-        <li><a href="#"><i class="icon-list"></i> Networks</a></li>
+        <li data-view="networks"><a href="#"><i class="icon-list"></i> Networks</a></li>
         <li><a href="#"><i class="icon-picture"></i> Images</a></li>
 
         <li class="nav-header"></li>
@@ -93,9 +93,8 @@
 
 
 
-
     <!-- {{{ template users -->
-    <script type="x-handlebars" id="template-users">
+    <script type="text/template" id="template-users">
       <div class="page-header">
         <h2 class="pull-left">Users &amp; Groups</h2>
         <div class="pull-right">
@@ -146,9 +145,8 @@
       </div>
     </script>
     <!-- }}} -->
-
     <!-- {{{ template users-create -->
-    <script type="x-handlebars" id="template-users-create">
+    <script type="text/template" id="template-users-create">
       <div class="modal fade">
         <form>
           <div class="modal-header">
@@ -216,20 +214,8 @@
     </script>
     <!-- }}} -->
 
-
-    <!-- {{{ template compute-nodes-list-item}}} -->
-    <script type="x-handlebars" id="template-compute-nodes-list-item">
-      <tr>
-        <td class="status">{{status}}</td>
-        <td class="name">{{hostname}}</td>
-        <td class="mem-avail">{{memory_available_bytes}}</td>
-        <td class="mem-total">{{memory_total_bytes}}</td>
-      </tr>
-    </script>
-    <!-- }}} -->
-
-    <!-- {{{ template compute-nodes}}} -->
-    <script type="x-handlebars" id="template-compute-nodes">
+    <!-- {{{ template compute-nodes -->
+    <script type="text/template" id="template-compute-nodes">
       <div id="compute-nodes">
         <div class="page-header">
           <h2>Compute Nodes</h2>
@@ -251,9 +237,92 @@
       </div>
     </script>
     <!-- }}} -->
+    <!-- {{{ template compute-nodes-list-item -->
+    <script type="text/template" id="template-compute-nodes-list-item">
+      <tr>
+        <td class="status"><%- status %></td>
+        <td class="name"><%- hostname %></td>
+        <td class="mem-avail"><%- memory_available_bytes %></td>
+        <td class="mem-total"><%- memory_total_bytes %></td>
+      </tr>
+    </script>
+    <!-- }}} -->
+
+    <!-- {{{ template networks-->
+    <script type="text/template" id="template-networks">
+      <div id="compute-nodes">
+        <div class="page-header">
+          <h2>Networks</h2>
+        </div>
+        <div id="networks-list">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Network</th>
+                <th>Netmask</th>
+                <th>IP Range</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </script>
+    <!-- }}} -->
+    <!-- {{{ template networks-list-item -->
+    <script type="text/template" id="template-compute-nodes-list-item">
+      <tr>
+        <td class="name"><%- name%></td>
+        <td class="network"><%- network %></td>
+        <td class="netmask"><%- netmask %></td>
+        <td class="range"><%- start_ip %> - <%- end_ip %></td>
+      </tr>
+    </script>
+    <!-- }}} -->
+
+    <!-- {{{ template vms -->
+    <script id="template-vms" type="text/template">
+      <div id="vms">
+        <div class="page-header">
+          <h2>Virtual Machines</h2>
+        </div>
+        <div id="vms-list">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Name</th>
+                <th>UUID</th>
+                <th>Memory</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </script>
+    <!-- }}} -->
+    <!-- {{{ template vms-list-item -->
+    <script id="template-vms-list-item" type="text/template">
+      <tr>
+        <td class="status">
+          <% if (state == 'running') { %>
+            <%- state %>
+          <% } %>
+        </td>
+        <td class="name"><%= alias %></td>
+        <td class="uuid"><%= uuid %></td>
+        <td class="memory"><%= ram %> MB</td>
+      </tr>
+    </script>
+    <!-- }}} -->
+
 
     <!-- {{{ template images -->
-    <script type="x-handlebars" id="template-images">
+    <script type="text/template" id="template-images">
       <div id="sdc-images">
         <div class="page-header">
           <h2>SDC Image Library</h2>
@@ -262,16 +331,14 @@
       </div>
     </script>
     <!-- }}} -->
-
     <!-- {{{ template images-list -->
-    <script type="x-handlebars" id="template-images-list">
+    <script type="text/template" id="template-images-list">
       <h3>{{os}}</h3>
       <ul class="thumbnails"></ul>
     </script>
     <!-- }}} -->
-
     <!-- {{{ template images-list-item -->
-    <script type="x-handlebars" id="template-images-list-item">
+    <script type="text/template" id="template-images-list-item">
       <li class="span5">
       <div class="item">
         <h4 class="name">{{name}} <small class="label">{{version}}</small></h4>
@@ -283,9 +350,8 @@
       </li>
     </script>
     <!-- }}} -->
-
     <!-- {{{ template images-detail -->
-    <script type="x-handlebars" id="template-images-detail">
+    <script type="text/template" id="template-images-detail">
       <div class="modal">
         <div class="modal-header">
           <a class="close" data-dismiss="modal">×</a>
@@ -347,7 +413,7 @@
 
 
     <!-- {{{ template signin -->
-    <script type="x-handlebars" id="template-signin">
+    <script type="text/template" id="template-signin">
       <div id="signin" class="well">
         <div class="header">
           <h1>Operations Portal</h1>

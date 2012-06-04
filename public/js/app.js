@@ -1,4 +1,3 @@
-console.log(_);
 _.str = require('lib/underscore.string');
 
 var User = require('models/user');
