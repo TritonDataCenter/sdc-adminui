@@ -65,11 +65,14 @@ release: all deps docs $(SMF_MANIFESTS)
 	@touch $(TMPDIR)/site/.do-not-delete-me
 	cp -r $(ROOT)/build \
     $(ROOT)/lib \
+    $(ROOT)/public \
+    $(ROOT)/views \
     $(ROOT)/server.js \
     $(ROOT)/Makefile \
     $(ROOT)/node_modules \
     $(ROOT)/package.json \
     $(ROOT)/smf \
+    $(ROOT)/etc \
     $(ROOT)/tools \
     $(TMPDIR)/root/opt/smartdc/adminui/
 	(cd $(TMPDIR) && $(TAR) -jcf $(ROOT)/$(RELEASE_TARBALL) root site)
