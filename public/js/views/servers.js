@@ -3,17 +3,17 @@
 */
 
 var BaseView = require('views/base');
-var ComputeNodes = require('models/compute-nodes');
+var Servers = require('models/servers');
 
-var ComputeNodesListItem = BaseView.extend({
-  template: 'compute-nodes-list-item',
+var ServersListItem = BaseView.extend({
+  template: 'servers-list-item',
   render: function() {
     this.setElement(this.template(this.model.attributes));
     return this;
   }
 });
 
-var ComputeNodesList = BaseView.extend({
+var ServersList = BaseView.extend({
   initialize: function() {
     _.bindAll(this, 'addOne', 'addAll');
 
@@ -21,7 +21,7 @@ var ComputeNodesList = BaseView.extend({
     this.collection.fetch();
   },
   addOne: function(cn) {
-    var view = new ComputeNodesListItem({model:cn});
+    var view = new ServersListItem({model:cn});
     this.$el.append(view.render().el);
   },
   addAll: function() {
@@ -32,14 +32,14 @@ var ComputeNodesList = BaseView.extend({
   }
 });
 
-var ComputeNodesView = module.exports = BaseView.extend({
-  name: 'compute-nodes',
-  template: 'compute-nodes',
+var ServersView = module.exports = BaseView.extend({
+  name: 'servers',
+  template: 'servers',
   initialize: function(options) {
     this.setElement(this.template());
-    this.collection = new ComputeNodes();
+    this.collection = new Servers();
 
-    this.listView = new ComputeNodesList({
+    this.listView = new ServersList({
       collection: this.collection,
       el: this.$("tbody")
     });

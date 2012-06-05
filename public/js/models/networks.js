@@ -1,5 +1,5 @@
 var Networks = Backbone.Collection.extend({
-  url:"/networks"
+  url:"/_/networks"
 })
 
 module.exports = Networks;

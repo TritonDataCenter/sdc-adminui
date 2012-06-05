@@ -76,7 +76,7 @@
         <li class="nav-header">Compute</li>
 
         <li data-view="machines"><a href="#"><i class="icon-book"></i> Machines</a></li>
-        <li data-view="compute-nodes"><a href="#"><i class="icon-book"></i> Compute Nodes</a></li>
+        <li data-view="servers"><a href="#"><i class="icon-book"></i> Servers</a></li>
         <li data-view="networks"><a href="#"><i class="icon-list"></i> Networks</a></li>
         <li><a href="#"><i class="icon-picture"></i> Images</a></li>
 
@@ -214,13 +214,13 @@
     </script>
     <!-- }}} -->
 
-    <!-- {{{ template compute-nodes -->
-    <script type="text/template" id="template-compute-nodes">
-      <div id="compute-nodes">
+    <!-- {{{ template servers -->
+    <script type="text/template" id="template-servers">
+      <div id="servers">
         <div class="page-header">
           <h2>Compute Nodes</h2>
         </div>
-        <div id="compute-nodes-list">
+        <div id="servers-list">
           <table class="table table-striped">
             <thead>
               <tr>
@@ -237,8 +237,8 @@
       </div>
     </script>
     <!-- }}} -->
-    <!-- {{{ template compute-nodes-list-item -->
-    <script type="text/template" id="template-compute-nodes-list-item">
+    <!-- {{{ template servers-list-item -->
+    <script type="text/template" id="template-servers-list-item">
       <tr>
         <td class="status"><%- status %></td>
         <td class="name"><%- hostname %></td>
@@ -250,7 +250,7 @@
 
     <!-- {{{ template networks-->
     <script type="text/template" id="template-networks">
-      <div id="compute-nodes">
+      <div id="servers">
         <div class="page-header">
           <h2>Networks</h2>
         </div>

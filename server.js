@@ -1,8 +1,19 @@
 var path = require('path');
-var CFG = path.join(__dirname, '/etc/config.json');
+var assert = require('assert');
+var fs = require('fs');
 
+
+
+function loadConfig(file) {
+  assert.ok(file);
+
+  var _f = fs.readFileSync(file, 'utf8');
+  return JSON.parse(_f);
+}
+
+var cfgFile = path.join(__dirname, '/etc/config.json');
 var server = require('./lib/app').createServer({
-  config: CFG,
+  config: loadConfig(cfgFile),
   log: console
 });
 

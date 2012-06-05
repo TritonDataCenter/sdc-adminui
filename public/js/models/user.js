@@ -11,7 +11,7 @@ var User = module.exports = Backbone.Model.extend({
   _checkExistingAuth: function() {
     var self = this;
 
-    $.get("/auth", function(res) {
+    $.get("/_/auth", function(res) {
       if (Object.keys(res).length === 0) {
         console.log("No Existing Identity");
         self.set({authenticated: false});
@@ -33,7 +33,7 @@ var User = module.exports = Backbone.Model.extend({
 
     var data = { username: user, password: pass }
 
-    $.post("/auth", data, function(res) {
+    $.post("/_/auth", data, function(res) {
       if (res.code && res.message) {
         self.set({authenticated: false});
         self.trigger('error', res.message);
@@ -55,7 +55,7 @@ var User = module.exports = Backbone.Model.extend({
 
   signout: function() {
     $.ajax({
-      url: "/auth",
+      url: "/_/auth",
       success: function() {
         this.set({authenticated: false});
       },
