@@ -40,7 +40,7 @@ function translateZoneConfig(zc) {
   var dc = cfg.datacenters[zc.datacenter_name] = {};
 
   dc.dcapi = { url: fmt("%s", zc.dcapi_url) };
-  dc.zapi = { url: fmt("http://%s", zc.zapi_admin_ips) };
+  dc.vmapi = { url: fmt("http://%s", zc.vmapi_admin_ips) };
   dc.cnapi = { url: fmt("http://%s", zc.cnapi_admin_ips) };
   dc.napi = { url: fmt("http://%s", zc.napi_admin_ips) };
 
