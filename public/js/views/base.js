@@ -7,6 +7,18 @@ var View = Backbone.View.extend({
     // super
     Backbone.View.prototype.constructor.call(this, args);
   },
+
+  delegateEvents: function(events) {
+    Backbone.View.prototype.delegateEvents.call(this, events);
+
+    this.appEvents = this.appEvents || {}
+
+    for (var evt in this.appEvents) {
+      var handler = this.appEvents[evt];
+      this.eventBus.bind(evt, _.bind(this[handler], this));
+    }
+  },
+
   _getTemplate: function(template) {
     var contents = $("#template-"+template).html();
     if (contents == null) {

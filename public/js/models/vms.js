@@ -1,3 +1,3 @@
-var Machines = module.exports = Backbone.Collection.extend({
+var Vms = module.exports = Backbone.Collection.extend({
   url: "/_/vms"
 });

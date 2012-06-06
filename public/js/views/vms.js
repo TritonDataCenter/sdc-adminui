@@ -2,10 +2,10 @@
  * views/machines.js
 */
 
-var Machines = require('models/vms');
+var Vms = require('models/vms');
 var BaseView = require('views/base');
 
-var MachinesListItem = BaseView.extend({
+var VmsListItem = BaseView.extend({
   template: 'vms-list-item',
 
   render: function() {
@@ -14,19 +14,30 @@ var MachinesListItem = BaseView.extend({
   }
 });
 
-var MachinesView = module.exports = BaseView.extend({
-  name: 'machines',
+var VmsView = module.exports = BaseView.extend({
+  name: 'vms',
 
   template: 'vms',
 
+  appEvents: {
+  },
+
+  events: {
+    'click .provision-button':'provision'
+  },
+
   initialize: function(options) {
     this.setElement(this.template());
-    this.collection = new Machines();
+    this.collection = new Vms();
 
-    this.listView = new MachinesList({
+    this.listView = new VmsList({
       collection: this.collection,
       el: this.$('tbody')
     });
+  },
+
+  provision: function() {
+    console.log("provision");
   },
 
   render: function() {
@@ -34,7 +45,7 @@ var MachinesView = module.exports = BaseView.extend({
   }
 });
 
-var MachinesList = BaseView.extend({
+var VmsList = BaseView.extend({
   initialize: function() {
     _.bindAll(this, 'addOne', 'addAll');
 
@@ -42,7 +53,7 @@ var MachinesList = BaseView.extend({
     this.collection.fetch();
   },
   addOne: function(model) {
-    var view = new MachinesListItem({model:model});
+    var view = new VmsListItem({model:model});
     this.$el.append(view.render().el);
   },
   addAll: function() {

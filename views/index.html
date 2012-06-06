@@ -38,7 +38,6 @@
       </div>
     </script>
     <!-- }}} -->
-
     <!-- {{{ template topbar -->
     <script type="text/text/template" id="template-topbar">
       <a class="btn btn-navbar" data-toggle="collapse"
@@ -67,7 +66,6 @@
       </div>
     </script>
     <!-- }}} -->
-
     <!-- {{{ template sidebar -->
     <script type="text/text/template" id="template-sidebar">
       <ul class="nav nav-pills nav-stacked">
@@ -75,7 +73,7 @@
 
         <li class="nav-header">Compute</li>
 
-        <li data-view="machines"><a href="#"><i class="icon-book"></i> Machines</a></li>
+        <li data-view="vms"><a href="#"><i class="icon-book"></i> Machines</a></li>
         <li data-view="servers"><a href="#"><i class="icon-book"></i> Servers</a></li>
         <li data-view="networks"><a href="#"><i class="icon-list"></i> Networks</a></li>
         <li><a href="#"><i class="icon-picture"></i> Images</a></li>
@@ -89,7 +87,6 @@
       </ul>
     </script>
     <!-- }}} -->
-
 
 
 
@@ -286,14 +283,17 @@
     <script id="template-vms" type="text/template">
       <div id="vms">
         <div class="page-header">
-          <h2>Virtual Machines</h2>
+          <h2 class="pull-left">Virtual Machines</h2>
+          <button 
+              class="provision-button pull-right btn btn-primary btn-large">
+              <i class="icon-plus icon-white"></i> Provision</button>
         </div>
         <div id="vms-list">
           <table class="table table-striped">
             <thead>
               <tr>
                 <th>Status</th>
-                <th>Name</th>
+                <th>Alias</th>
                 <th>UUID</th>
                 <th>Memory</th>
               </tr>
@@ -313,10 +313,35 @@
             <%- state %>
           <% } %>
         </td>
-        <td class="name"><%= alias %></td>
+        <td class="alias"><%= alias %></td>
         <td class="uuid"><%= uuid %></td>
         <td class="memory"><%= ram %> MB</td>
       </tr>
+    </script>
+    <!-- }}} -->
+
+    <!-- {{{ template provision-vm -->
+    <script id="template-provision-vm" type="text/template">
+      <div id="servers">
+        <div class="page-header">
+          <h2>Provision a Machine</h2>
+        </div>
+
+        <div id="provision">
+          <form class="form-horizontal">
+            <fieldset>
+              <legend>Legend text</legend>
+              <div class="control-group">
+                <label class="control-label" for="input01">Text input</label>
+                <div class="controls">
+                  <input type="text" class="input-xlarge" id="input01">
+                  <p class="help-block">Supporting help text</p>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
     </script>
     <!-- }}} -->
 
@@ -331,6 +356,7 @@
       </div>
     </script>
     <!-- }}} -->
+
     <!-- {{{ template images-list -->
     <script type="text/template" id="template-images-list">
       <h3>{{os}}</h3>

@@ -4,10 +4,16 @@ var User = require('models/user');
 var AppView = require('views/app');
 var SigninView = require('views/signin');
 
+var BaseView = require('views/base');
+
+var eventBus = _.extend(Backbone.Events, {});
+// Attach eventBus to BaseView prototype
+BaseView.prototype.eventBus = eventBus;
+
 module.exports = Backbone.Router.extend({
 
   initialize: function(options) {
-    this.dispatcher = _.extend(Backbone.Events, {});
+    this.eventBus = eventBus;
 
     // holds the state of the currently logged in user
     this.user = new User;
@@ -18,16 +24,8 @@ module.exports = Backbone.Router.extend({
     // The dom element in which the root views are drawn to
     this.container = $("#chrome");
 
-    this.dispatcher.bind('signout', function() {
+    this.eventBus.bind('signout', function() {
       this.user.signout();
-    }, this);
-
-    this.user.bind('change:authenticated', function(user, value) {
-      if (value === true) {
-        this.showApp();
-      } else {
-        this.showSignin();
-      }
     }, this);
   },
 
@@ -37,7 +35,7 @@ module.exports = Backbone.Router.extend({
 
   reception: function(page) {
     this.pageToShow = page || 'dashboard';
-    this.user.authenticate();
+    this.showApp();
   },
 
   showApp: function() {

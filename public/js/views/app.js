@@ -16,19 +16,24 @@
 
 var Topbar = require('views/topbar');
 var Sidebar = require('views/sidebar');
+var BaseView = require('views/base');
 
-var AppView = module.exports = Backbone.View.extend({
+var AppView = module.exports = BaseView.extend({
 
-  template: Handlebars.compile($('#template-chrome').html()),
+  template: 'chrome',
 
+  appEvents: {
+    'hide': 'hideApp'
+  },
+  hideApp: function() {
+    this.$el.hide();
+  },
   initialize: function(options) {
     _.bindAll(this, 'render', 'presentView', 'onKeypress');
 
     var self = this;
 
     this.options = options || {};
-    this.dispatcher = options.dispatcher;
-
 
     $(document).bind('keypress', this.onKeypress);
   },
@@ -66,7 +71,7 @@ var AppView = module.exports = Backbone.View.extend({
   },
 
   render: function() {
-    this.$el.html(this.template);
+    this.$el.html(this.template());
 
     this.topbarView = new Topbar({ el: this.$("#topbar") });
     this.topbarView.on('signout', function(e) {
