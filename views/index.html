@@ -28,12 +28,8 @@
 
       <div class="container">
         <div class="row">
-
-          <div id="sidebar" class="span2">
-          </div>
-
-          <div id="content" class="span10">
-          </div>
+          <div id="sidebar" class="span2"></div>
+          <div id="content" class="span10"></div>
         </div>
       </div>
     </script>
@@ -324,20 +320,73 @@
     <script id="template-provision-vm" type="text/template">
       <div id="servers">
         <div class="page-header">
-          <h2>Provision a Machine</h2>
+          <h2>Provision a Virtual Machine</h2>
         </div>
 
         <div id="provision">
           <form class="form-horizontal">
+            <div class="alert alert-block alert-error">
+              <strong>OH SNAP!</strong> <span class="message"></span>
+            </div>
+
             <fieldset>
-              <legend>Legend text</legend>
               <div class="control-group">
-                <label class="control-label" for="input01">Text input</label>
+                <label class="control-label" for="input01">Owner</label>
                 <div class="controls">
-                  <input type="text" class="input-xlarge" id="input01">
-                  <p class="help-block">Supporting help text</p>
+                  <input type="text" placeholder="search by username" class="input-xlarge" name="owner">
+                  <p class="help-inline">Required</p>
                 </div>
               </div>
+
+              <div class="control-group">
+                <label class="control-label">Alias</label>
+                <div class="controls">
+                  <input type="text" class="input-xlarge">
+                  <span class="help-inline">Optional</span>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Memory</label>
+                <div class="controls">
+                  <select name="memory">
+                    <option value="512">512 MB</option>
+                    <option value="1 GB">1 GB</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Networks</label>
+                <div class="network-checkboxes controls">
+                  <label class="checkbox"> <input type="checkbox" name="networks[]"><span class="name">My Network<span></label>
+                  <p class="help-block">Must select at least one network</p>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Brand</label>
+                <div class="controls">
+                  <select name="brand">
+                    <option value="joyent">joyent</option>
+                    <option value="joyent-minimal">joyent-minimal</option>
+                    <option value="kvm">kvm</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Image</label>
+                <div class="controls">
+                  <input name="image" type="text" class="input-xlarge" id="input01">
+                  <p class="help-block">Image to provision machine with</p>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Provision</button>
+              </div>
+
             </fieldset>
           </form>
         </div>

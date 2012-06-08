@@ -3,7 +3,11 @@ var Image = require('models/image');
 var Images = module.exports = Backbone.Collection.extend({
   model: Image,
 
-  url: '/imglib/datasets',
+  url: '/_/images',
+
+  parse: function(resp, xhr) {
+    return resp;
+  },
 
   groupBy: function(field, callback) {
     var values = _.unique(this.pluck(field));

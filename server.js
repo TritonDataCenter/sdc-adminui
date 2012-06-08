@@ -11,14 +11,18 @@ function loadConfig(file) {
   return JSON.parse(_f);
 }
 
+var log = require('bunyan').createLogger({
+  name: 'adminui',
+  level: 'debug'
+});
+
+
 var cfgFile = path.join(__dirname, '/etc/config.json');
 var server = require('./lib/app').createServer({
   config: loadConfig(cfgFile),
-  log: console
+  log: log
 });
 
 server.start(function () {
-  console.log('=== Server started on %s:%s',
-    server.address().address,
-    server.address().port);
+  log.info('Server started on %s:%s', server.address().address, server.address().port);
 });

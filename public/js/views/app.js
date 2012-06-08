@@ -46,7 +46,7 @@ var AppView = module.exports = BaseView.extend({
     }
   },
 
-  presentView: function(viewModule) {
+  presentView: function(viewModule, args) {
     if (typeof(viewModule) == 'undefined')
       return;
 
@@ -66,7 +66,7 @@ var AppView = module.exports = BaseView.extend({
       this.contentView.focus();
     }
 
-    console.log("PresentView Done");
+    console.log("Presented View " + this.contentView.name);
     Backbone.history.navigate(this.contentView.name);
   },
 

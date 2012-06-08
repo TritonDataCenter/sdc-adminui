@@ -19,9 +19,6 @@ var VmsView = module.exports = BaseView.extend({
 
   template: 'vms',
 
-  appEvents: {
-  },
-
   events: {
     'click .provision-button':'provision'
   },
@@ -37,7 +34,7 @@ var VmsView = module.exports = BaseView.extend({
   },
 
   provision: function() {
-    console.log("provision");
+    this.eventBus.trigger('wants-view', 'provision-vm', {});
   },
 
   render: function() {

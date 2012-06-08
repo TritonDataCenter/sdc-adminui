@@ -7,13 +7,13 @@ var SigninView = require('views/signin');
 var BaseView = require('views/base');
 
 var eventBus = _.extend(Backbone.Events, {});
+
 // Attach eventBus to BaseView prototype
 BaseView.prototype.eventBus = eventBus;
 
 module.exports = Backbone.Router.extend({
 
   initialize: function(options) {
-    this.eventBus = eventBus;
 
     // holds the state of the currently logged in user
     this.user = new User;
@@ -24,8 +24,13 @@ module.exports = Backbone.Router.extend({
     // The dom element in which the root views are drawn to
     this.container = $("#chrome");
 
+    this.eventBus = eventBus;
     this.eventBus.bind('signout', function() {
       this.user.signout();
+    }, this);
+
+    this.eventBus.on('wants-view', function(view, args) {
+      this.view.presentView(view, args);
     }, this);
   },
 
@@ -34,24 +39,16 @@ module.exports = Backbone.Router.extend({
   },
 
   reception: function(page) {
+    if (! this.view) {
+      this.view = new AppView();
+      this.container.html(this.view.render().el);
+    }
     this.pageToShow = page || 'dashboard';
-    this.showApp();
-  },
-
-  showApp: function() {
-    this.view = new AppView({
-      dispatcher: this.dispatcher
-    });
-
-    this.container.html(this.view.render().el);
     this.view.presentView(this.pageToShow || 'dashboard');
   },
 
   showSignin: function() {
-    this.view = new SigninView({
-      dispatcher: this.dispatcher,
-      model: this.user
-    });
+    this.view = new SigninView({ model: this.user });
 
     this.container.html(this.view.render().el);
     this.view.focus();
