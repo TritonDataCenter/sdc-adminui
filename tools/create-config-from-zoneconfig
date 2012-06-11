@@ -26,6 +26,10 @@ function translateZoneConfig(zc) {
   var cfg = {}
   cfg.host = '0.0.0.0';
   cfg.port = 80;
+  cfg.sslport = 443;
+  var ssl = {};
+  cfg.ssl.certificate = "/opt/smartdc/adminui/etc/ssl/default.pem"
+  cfg.ssl.key = "/opt/smartdc/adminui/etc/ssl/default.pem"
   cfg.ufds = {
     "url": fmt("ldaps://%s", zc.ufds_admin_ips),
     "bindDN": fmt('%s', zc.ufds_root_dn),

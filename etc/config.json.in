@@ -1,8 +1,13 @@
 {
   "host": "0.0.0.0",
   "port": 4000,
+  "sslport": 4443,
+  "ssl":{
+    "certificate":"/opt/smartdc/adminui/etc/ssl/default.pem",
+    "key":"/opt/smartdc/adminui/etc/ssl/default.key"
+  },
   "ufds": {
-    "url": "ldaps://10.99.99.14",
+    "url": "ldaps://10.99.99.13",
       "bindDN": "cn=root",
     "bindPassword": "secret",
     "cache": {
@@ -10,10 +15,11 @@
       "expiry": 300
     }
   },
+  "dsapi": { "url": "https://datasets.joyent.com/" },
   "datacenters": {
     "coal": {
       "ufds": {
-        "url": "ldaps://10.99.99.14",
+        "url": "ldaps://10.99.99.13",
         "bindDN": "cn=root",
         "bindPassword": "secret",
         "cache": {
@@ -21,9 +27,9 @@
           "expiry": 300
         }
       },
-      "vmapi": { "url": "http://10.99.99.19" },
-      "napi": { "url": "http://10.99.99.11" },
-      "cnapi": { "url": "http://10.99.99.17" }
+      "vmapi": { "url": "http://10.99.99.18" },
+      "napi": { "url": "http://10.99.99.10" },
+      "cnapi": { "url": "http://10.99.99.16" }
     }
   }
 }
