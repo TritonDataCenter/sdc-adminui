@@ -32,26 +32,37 @@ var View = module.exports = Base.extend({
     this.$form = null;
 
     this.networks = new Networks();
-    this.networks.on('reset', function(networks) {
-      this.addNetworks(networks);
-    }, this);
-    this.networks.fetch();
 
     this.imagesSource = [];
     this.usersSource = [];
 
     this.usersCollection = new Users();
+    this.imagesCollection = new Images();
+  },
+
+  viewWillAppear: function() {
+    Base.prototype.viewWillAppear.call(this);
+
     this.usersCollection.on('reset', function(users) {
       users.each(function(u) { this.usersSource.push(u); }, this);
     }, this);
 
-    this.usersCollection.searchByLogin('');
-
-    this.imagesCollection = new Images();
     this.imagesCollection.on('reset', function(images) {
       images.each(function(img) { this.imagesSource.push(img); }, this);
     }, this);
+
+    this.networks.on('reset', function(networks) {
+      this.addNetworks(networks);
+    }, this);
+
     this.imagesCollection.fetch();
+    this.usersCollection.searchByLogin('');
+    this.networks.fetch();
+  },
+
+  viewDidAppear: function() {
+    Base.prototype.viewDidAppear.call(this);
+    this.$("input:first").focus();
   },
 
   render: function() {
@@ -160,8 +171,10 @@ var View = module.exports = Base.extend({
     var vm = new Vm();
     vm.set(this.extractFormValues())
     vm.save(null, {
-      success: function() {
+      success: function(m, obj) {
         alert('Machine being provisioned. This will get fancier.. trust me!');
+        console.log(obj);
+        self.eventBus.publish('watch-job', obj);
       },
       error: function(m, xhr) {
         var err = JSON.parse(xhr.responseText)

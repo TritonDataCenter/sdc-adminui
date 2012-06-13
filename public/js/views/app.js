@@ -25,48 +25,52 @@ var AppView = module.exports = BaseView.extend({
   appEvents: {
     'hide': 'hideApp'
   },
+
   hideApp: function() {
     this.$el.hide();
   },
+
   initialize: function(options) {
-    _.bindAll(this, 'render', 'presentView', 'onKeypress');
+    _.bindAll(this, 'render', 'presentView');
 
     var self = this;
 
     this.options = options || {};
-
-    $(document).bind('keypress', this.onKeypress);
   },
 
-  onKeypress: function(e) {
-    var code = (e.charCode || e.keyChar);
-
-    if (e.charCode == 47) {
-      this.topbarView.focusSearch();
-    }
-  },
-
-  presentView: function(viewModule, args) {
-    if (typeof(viewModule) == 'undefined')
+  presentView: function(viewName, args) {
+    if (typeof(viewName) == 'undefined')
       return;
 
-    if (typeof(viewModule) == 'string')
-      viewModule = require(_.str.sprintf('views/%s', viewModule));
+    var viewModule;
+    if (typeof(viewName) == 'string')
+      viewModule = require(_.str.sprintf('views/%s', viewName));
 
     if (this.contentView) {
+      if (typeof(this.contentView.viewWillDisappear) === 'function') {
+        this.contentView.viewWillDisappear.call(this.contentView);
+      }
+
       this.contentView.remove();
+
+      if (typeof(this.contentView.viewDidDisappear) === 'function') {
+        this.contentView.viewDidDisappear.call(this.contentView);
+      }
     }
 
-    this.contentView = new viewModule;
+    var view = this.contentView = new viewModule(args);
 
-    this.$("#content").html(this.contentView.render().el)
+    if (typeof(view.viewWillAppear) === 'function') {
+      this.contentView.viewWillAppear.call(this.contentView);
+    }
+
+    this.$("#content").html(this.contentView.render().el);
     this.sidebarView.highlight(this.contentView.name);
 
-    if (typeof(this.contentView.focus) === 'function') {
-      this.contentView.focus();
+    if (typeof(this.contentView.viewDidAppear) === 'function') {
+      this.contentView.viewDidAppear.call(this.contentView);
     }
 
-    console.log("Presented View " + this.contentView.name);
     Backbone.history.navigate(this.contentView.name);
   },
 

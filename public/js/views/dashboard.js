@@ -3,11 +3,13 @@
  *
  * Dashboard View
 */
-var Dashboard = module.exports = Backbone.View.extend({
-  name: 'dashboard',
 
+var View = require('views/base');
+var Dashboard = module.exports = View.extend({
+  name: 'dashboard',
+  template: 'dashboard',
   render: function() {
-    this.$el.html("<h2>Dashboard</h2>");
+    this.setElement(this.template());
     return this;
   }
 });

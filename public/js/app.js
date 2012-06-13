@@ -1,12 +1,14 @@
 _.str = require('lib/underscore.string');
 
+window.$a = {};
+
 var User = require('models/user');
 var AppView = require('views/app');
 var SigninView = require('views/signin');
 
 var BaseView = require('views/base');
 
-var eventBus = _.extend(Backbone.Events, {});
+var eventBus = window.$a.eventBus = _.extend(Backbone.Events, {});
 
 // Attach eventBus to BaseView prototype
 BaseView.prototype.eventBus = eventBus;

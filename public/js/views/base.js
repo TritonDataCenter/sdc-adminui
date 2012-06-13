@@ -19,6 +19,19 @@ var View = Backbone.View.extend({
     }
   },
 
+  viewWillAppear: function() { },
+
+  viewDidAppear: function() { },
+
+  viewWillDisappear: function() {
+    for (var evt in this.appEvents) {
+      var handler = this.appEvents[evt];
+      this.eventBus.unbind(evt);
+    }
+  },
+
+  viewDidDisappear: function() { },
+
   _getTemplate: function(template) {
     var contents = $("#template-"+template).html();
     if (contents == null) {
