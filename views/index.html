@@ -5,9 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="/css/bootstrap.css" rel="stylesheet">
-    <link href="/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="/css/app.css" rel="stylesheet">
+    <link href="/app.css" rel="stylesheet">
   </head>
   <body>
     <div id="chrome"></div>
@@ -17,10 +15,10 @@
 
     <!-- {{{ template chrome -->
     <script type="text/text/template" id="template-chrome">
-      <div class="navbar">
+      <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
           <div id="topbar" class="container">
-            <!-- #template-topnav -->
+            <!-- #template-topnav-->
           </div>
         </div>
       </div>
@@ -28,40 +26,49 @@
 
       <div class="container">
         <div class="row">
-          <div id="sidebar" class="span2"></div>
-          <div id="content" class="span10"></div>
+          <div id="sidebar" class="span3"></div>
+          <div id="content" class="span13"></div>
         </div>
       </div>
     </script>
     <!-- }}} -->
-    <!-- {{{ template topbar -->
-    <script type="text/text/template" id="template-topbar">
-      <a class="btn btn-navbar" data-toggle="collapse"
-        data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
 
+    <!-- {{{ template topbar -->
+    <script type="text/template" id="template-topbar">
       <div id="logo" class="brand">Operations Portal &nbsp;<strong>7</strong></div>
 
+      <form class="navbar-search pull-left">
+        <input type="text" class="search-query" placeholder="Search">
+      </form>
 
-      <!-- Collapsed at 940px or less -->
-      <div class="nav-collapse">
-        <!-- .nav, .navbar-search, .navbar-form, etc -->
+      <ul class="nav pull-right">
+        <li class="dropdown">
+          <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span class="badge">0</span></a>
+          <ul id="notifier-feed" class="dropdown-menu"></ul>
+        </li>
 
-        <form class="navbar-search pull-left">
-          <input type="text" class="search-query" placeholder="Search">
-        </form>
-
-        <ul class="nav pull-right">
-          <li><a href="#"><i class="icon-cog icon-white"></i></a></li>
-          <li><a href="#"><i class="icon-user icon-white"></i> Kevin</a></li>
-          <li><a data-trigger='signout'><i class="icon-off icon-white"></i> Sign Out</a></li>
-        </ul>
-      </div>
+        <li><a href="#"><i class="icon-user icon-white"></i> Kevin</a></li>
+        <li><a href="#"><i class="icon-cog icon-white"></i></a></li>
+        <li><a data-trigger='signout'><i class="icon-off icon-white"></i> Sign Out</a></li>
+      </ul>
     </script>
     <!-- }}} -->
+
+    <script type="text/template" id="template-notifier-job">
+      <div class="job <%= (execution === 'succeeded') ? 'success' : '' %>">
+      <h3 class="name"><%= name %></h3>
+      <div class="uuid"><%= uuid %></div>
+      <% _.each(chainResults, function(res) { %>
+        <div class="task 
+          <%= res.error.length ? 'error' : 'success' %>
+          ">
+          <div class="name"><%= res.name %></div>
+          <div class="result"><%= res.result %></div>
+        </div>
+        <% }); %>
+    </div>
+    </script>
+
     <!-- {{{ template sidebar -->
     <script type="text/text/template" id="template-sidebar">
       <ul class="nav nav-pills nav-stacked">
@@ -69,7 +76,7 @@
 
         <li class="nav-header">Compute</li>
 
-        <li data-view="vms"><a href="#"><i class="icon-book"></i> Machines</a></li>
+        <li data-view="vms"><a href="#"><i class="icon-book"></i> Virtual Machines</a></li>
         <li data-view="servers"><a href="#"><i class="icon-book"></i> Servers</a></li>
         <li data-view="networks"><a href="#"><i class="icon-list"></i> Networks</a></li>
         <li><a href="#"><i class="icon-picture"></i> Images</a></li>
@@ -85,6 +92,11 @@
     <!-- }}} -->
 
 
+    <!-- {{{ template dashboard -->
+    <script type="text/template" id="template-dashboard">
+      <div class="page-header"><h2 class="pull-left">Dashboard</h2></div>
+    </script>
+    <!-- }}} -->
 
     <!-- {{{ template users -->
     <script type="text/template" id="template-users">
@@ -331,17 +343,20 @@
 
             <fieldset>
               <div class="control-group">
-                <label class="control-label" for="input01">Owner</label>
+                <label class="control-label" for="input-owner">Owner</label>
                 <div class="controls">
-                  <input type="text" placeholder="search by username" class="input-xlarge" name="owner">
+                  <input id="input-owner" type="text" placeholder="enter a username" class="input-xlarge" name="owner">
                   <p class="help-inline">Required</p>
                 </div>
               </div>
 
               <div class="control-group">
-                <label class="control-label">Alias</label>
+                <label class="control-label" for="input-alias">Alias</label>
                 <div class="controls">
-                  <input type="text" class="input-xlarge">
+                  <input id="input-alias"
+                    name="alias"
+                    placeholder="name as it appears to the customer"
+                    type="text" class="input-xlarge">
                   <span class="help-inline">Optional</span>
                 </div>
               </div>
