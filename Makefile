@@ -31,8 +31,10 @@ JSSTYLE_FLAGS    = -o indent=2,doxygen,unparenthesized-return=0
 REPO_MODULES	 = 
 SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
 
+NODE_PREBUILT_VERSION=v0.6.19
+
 include ./tools/mk/Makefile.defs
-include ./tools/mk/Makefile.node.defs
+include ./tools/mk/Makefile.node_prebuilt.defs
 include ./tools/mk/Makefile.node_deps.defs
 include ./tools/mk/Makefile.smf.defs
 
@@ -91,7 +93,7 @@ publish: release
 
 
 include ./tools/mk/Makefile.deps
-include ./tools/mk/Makefile.node.targ
+include ./tools/mk/Makefile.node_prebuilt.targ
 include ./tools/mk/Makefile.node_deps.targ
 include ./tools/mk/Makefile.smf.targ
 include ./tools/mk/Makefile.targ
