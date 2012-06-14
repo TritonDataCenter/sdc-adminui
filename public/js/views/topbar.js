@@ -96,7 +96,7 @@ var Topbar = module.exports = View.extend({
     this.$el.append(this.template());
     this.notifier = new NotifierView({el: this.$("#notifier-feed")});
     this.notifier.render();
-    $a.eventBus.trigger('watch-job', {job_uuid:"a0a00582-b69b-4511-a3a4-6afc53e32ca2", vm_uuid:"6020ae91-63df-44ea-ad8e-c8d92a72f924"})
+    // $a.eventBus.trigger('watch-job', {job_uuid:"a0a00582-b69b-4511-a3a4-6afc53e32ca2", vm_uuid:"6020ae91-63df-44ea-ad8e-c8d92a72f924"})
     return this;
   }
 });

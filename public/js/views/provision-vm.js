@@ -83,6 +83,8 @@ var View = module.exports = Base.extend({
       valuer: function(obj) { return obj.get('uuid'); }
     });
 
+    this.checkFields();
+
     return this;
   },
 
