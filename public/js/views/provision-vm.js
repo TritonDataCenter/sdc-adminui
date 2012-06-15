@@ -176,7 +176,11 @@ var View = module.exports = Base.extend({
       success: function(m, obj) {
         alert('Machine being provisioned. This will get fancier.. trust me!');
         console.log(obj);
-        self.eventBus.publish('watch-job', obj);
+        self.eventBus.trigger('watch-job', {
+          job_uuid:obj.job_uuid,
+          name:'Provision Machine'
+        });
+        self.eventBus.trigger('wants-view', 'vms', {});
       },
       error: function(m, xhr) {
         var err = JSON.parse(xhr.responseText)

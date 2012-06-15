@@ -22,14 +22,14 @@
           </div>
         </div>
       </div>
-
-
       <div class="container">
-        <div class="row">
-          <div id="sidebar" class="span3"></div>
-          <div id="content" class="span13"></div>
-        </div>
+
+      <div class="row">
+        <div id="sidebar" class="span3"></div>
+        <div id="content" class="span13"></div>
       </div>
+    </div>
+
     </script>
     <!-- }}} -->
 
@@ -43,8 +43,46 @@
 
       <ul class="nav pull-right">
         <li class="dropdown">
-          <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span class="badge">0</span></a>
-          <ul id="notifier-feed" class="dropdown-menu"></ul>
+          <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+            <i class="icon-tasks icon-white"></i>
+            <span class="badge badge-warning">4</span>
+            <b class="caret"></b>
+          </a>
+
+          <ul class="dropdown-menu notifications">
+            <li>
+              <div class="details">
+                <div class="name">Reboot</div>
+                <div class="current-step">Rebooted</div>
+                <div class="execution">Succeeded</div>
+              </div>
+              <div class="progress"><div class="bar" style="width:15%"></div></div>
+            </li>
+            <li>
+              <div class="details">
+                <div class="name">Provision</div>
+                <div class="current-step">Retrieveing Network Interfaces</div>
+                <div class="execution">Processing</div>
+              </div>
+              <div class="progress"><div class="bar" style="width:10%"></div></div>
+            </li>
+            <li>
+              <div class="details">
+                <div class="name">Reboot</div>
+                <div class="current-step">Sending Reboot Command</div>
+                <div class="execution">Processing</div>
+              </div>
+              <div class="progress"><div class="bar" style="width:85%"></div></div>
+            </li>
+            <li>
+              <div class="details">
+                <div class="name">Provision</div>
+                <div class="current-step">Finding Server</div>
+                <div class="execution">Failed</div>
+              </div>
+              <div class="progress"><div class="bar" style="width:45%"></div></div>
+            </li>
+          </ul>
         </li>
 
         <li><a href="#"><i class="icon-user icon-white"></i> Kevin</a></li>
@@ -58,14 +96,14 @@
       <div class="job <%= (execution === 'succeeded') ? 'success' : '' %>">
       <h3 class="name"><%= name %></h3>
       <div class="uuid"><%= uuid %></div>
+
       <% _.each(chainResults, function(res) { %>
-        <div class="task 
-          <%= res.error.length ? 'error' : 'success' %>
-          ">
-          <div class="name"><%= res.name %></div>
-          <div class="result"><%= res.result %></div>
+        <div class="task <%= res.error.length ? 'error' : 'success' %> ">
+          <div class="name pull-left"><%= res.name %></div>
+          <div class="result pull-left"><%= res.result %></div>
         </div>
-        <% }); %>
+      <% }); %>
+
     </div>
     </script>
 

@@ -2,7 +2,7 @@
 @import "variables.less";
 
 body {
-  padding-top: 64px;
+  padding-top: 38px;
 }
 
 .modal {
@@ -11,6 +11,9 @@ body {
 
 .navbar-inner { height: 39px;}
 #topnav a { cursor: pointer; }
+
+#sidebar { margin-top: 1em;}
+#content { margin-top: 1em;}
 
 #signin { margin: 0 auto; width: 300px;}
 #signin input { width: 290px; }
@@ -40,4 +43,22 @@ body {
   li .task { padding: .3em 0;}
   li .task .name { font-weight: bold; }
   li .task.success { color: @successText; }
+}
+
+.notifications {
+  width: 440px;
+
+  text-align: left;
+
+  ul {
+    text-align: left;
+    list-style: none; margin: 0;
+  }
+
+  li { padding: 1em; border-bottom: 1px solid #eee; }
+  li .progress { margin-bottom: 0;}
+  li .details>* { display: inline-block; font-size: 11px; }
+  li .details .name { text-transform: uppercase; width: 100px; }
+  li .details .current-step { width: 240px; }
+  li .details .execution { width: 40px; font-weight: bold;}
 }
