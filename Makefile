@@ -32,6 +32,7 @@ REPO_MODULES	 =
 SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
 
 NODE_PREBUILT_VERSION=v0.6.19
+NODE_PREBUILT_TAG=zone
 
 include ./tools/mk/Makefile.defs
 include ./tools/mk/Makefile.node_prebuilt.defs
