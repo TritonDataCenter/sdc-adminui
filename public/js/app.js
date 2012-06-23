@@ -26,6 +26,11 @@ module.exports = Backbone.Router.extend({
     // The dom element in which the root views are drawn to
     this.container = $("#chrome");
 
+    if (! this.view) {
+      this.view = new AppView();
+      this.container.html(this.view.render().el);
+    }
+
     this.eventBus = eventBus;
     this.eventBus.bind('signout', function() {
       this.user.signout();
@@ -37,16 +42,19 @@ module.exports = Backbone.Router.extend({
   },
 
   routes: {
-    '*default': 'reception'
+    'vms/:uuid': 'showVm',
+    '*default': 'defaultAction',
   },
 
-  reception: function(page) {
-    if (! this.view) {
-      this.view = new AppView();
-      this.container.html(this.view.render().el);
-    }
-    this.pageToShow = page || 'dashboard';
-    this.view.presentView(this.pageToShow || 'dashboard');
+  defaultAction: function(page) {
+    console.log('[route] defaultAction:'+page)
+    page = page || 'dashboard';
+    this.view.presentView(page);
+  },
+
+  showVm: function(uuid) {
+    console.log('[route] showVm:'+uuid)
+    this.view.presentView('vm', { uuid: uuid });
   },
 
   showSignin: function() {

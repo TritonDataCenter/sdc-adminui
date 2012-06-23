@@ -34,7 +34,6 @@ var AppView = module.exports = BaseView.extend({
     _.bindAll(this, 'render', 'presentView');
 
     var self = this;
-
     this.options = options || {};
   },
 
@@ -60,9 +59,7 @@ var AppView = module.exports = BaseView.extend({
 
     var view = this.contentView = new viewModule(args);
 
-    if (typeof(view.viewWillAppear) === 'function') {
-      this.contentView.viewWillAppear.call(this.contentView);
-    }
+    (typeof(view.viewWillAppear) === 'function') && this.contentView.viewWillAppear.call(this.contentView);
 
     this.$("#content").html(this.contentView.render().el);
     this.sidebarView.highlight(this.contentView.name);
@@ -71,17 +68,19 @@ var AppView = module.exports = BaseView.extend({
       this.contentView.viewDidAppear.call(this.contentView);
     }
 
-    Backbone.history.navigate(this.contentView.name);
+    if (typeof(this.contentView.uri) === 'function') {
+      Backbone.history.navigate(this.contentView.uri());
+    } else if (typeof(this.contentView.uri) === 'string') {
+      Backbone.history.navigate(this.contentView.uri);
+    } else {
+      Backbone.history.navigate(this.contentView.name);
+    }
   },
 
   render: function() {
     this.$el.html(this.template());
 
     this.topbarView = new Topbar({ el: this.$("#topbar") });
-    this.topbarView.on('signout', function(e) {
-      this.dispatcher.trigger('signout');
-    }, this);
-
 
     this.sidebarView = new Sidebar({el: this.$("#sidebar")});
     this.sidebarView.bind('sidebar:selected', this.presentView);

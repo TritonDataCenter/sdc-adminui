@@ -63,6 +63,7 @@ var NotifierView = View.extend({
 
   addOne: function(job) {
     this.$badge.html(this.jobs.length);
+
     var jobItem = new JobItemView({model:job});
     this.$el.append(jobItem.render().el);
   },

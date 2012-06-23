@@ -10,17 +10,15 @@ body {
 }
 
 .navbar-inner { height: 39px;}
+.page-header { clear: both; overflow: hidden; }
 #topnav a { cursor: pointer; }
 
-#sidebar { margin-top: 1em;}
+#sidebar { margin-top: 2em;}
 #content { margin-top: 1em;}
 
 #signin { margin: 0 auto; width: 300px;}
 #signin input { width: 290px; }
 #signin .header { margin-bottom: 30px; text-align: center; }
-
-#content .page-header { overflow: hidden; }
-#content h2 { font-weight: 300; }
 
 #users-counters { text-align: center; }
 #users-counters h5 { font-weight: 300; font-size: 36px; margin-top: 1em;}
@@ -45,6 +43,10 @@ body {
   li .task.success { color: @successText; }
 }
 
+#vms-list tr {
+cursor:pointer;
+}
+
 .notifications {
   width: 440px;
 
@@ -61,4 +63,24 @@ body {
   li .details .name { text-transform: uppercase; width: 100px; }
   li .details .current-step { width: 240px; }
   li .details .execution { width: 40px; font-weight: bold;}
+}
+
+
+.vms-details {
+  .uuid {
+    font-size: 10px;
+    color: @grayLight;
+    font-style: italic;
+    font-family: monospace;
+  }
+  table.overview {
+    .table;
+    tbody th { width: 100px; }
+  }
+  .vm-uuid,
+  .server-uuid,
+  .image-uuid {
+    .uuid;
+    .pull-right;
+  }
 }

@@ -7,6 +7,9 @@ var Servers = require('models/servers');
 
 var ServersListItem = BaseView.extend({
   template: 'servers-list-item',
+  uri: function() {
+    return 'servers'
+  },
   render: function() {
     this.setElement(this.template(this.model.attributes));
     return this;

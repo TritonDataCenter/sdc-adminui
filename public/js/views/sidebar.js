@@ -14,6 +14,7 @@ var Sidebar = module.exports = Backbone.View.extend({
 
   onSelect: function(e) {
     e.preventDefault();
+
     var li = $(e.currentTarget);
     var view = li.attr("data-view");
     this.highlight(view);

@@ -1,5 +1,13 @@
 var Image = module.exports = Backbone.Model.extend({
+  urlRoot:'/_/images',
+  idAttribute: 'uuid',
   defaults: {
+    'name':null
+  },
+  nameWithVersion: function() {
+    var name = this.get('name');
+    var version = this.get('version');
+    return [name, version].join(' ')
   },
   toJSON: function() {
     var attrs = this.attributes;

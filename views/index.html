@@ -129,59 +129,60 @@
     </script>
     <!-- }}} -->
 
-
     <!-- {{{ template dashboard -->
     <script type="text/template" id="template-dashboard">
-      <div class="page-header"><h2 class="pull-left">Dashboard</h2></div>
+      <div class="page-header"><h1>Dashboard</h1></div>
     </script>
     <!-- }}} -->
 
     <!-- {{{ template users -->
     <script type="text/template" id="template-users">
-      <div class="page-header">
-        <h2 class="pull-left">Users &amp; Groups</h2>
-        <div class="pull-right">
-          <button data-event="new-user" class="btn btn-primary btn-large">
-            <i class="icon-plus icon-white"></i>
-            New User
-          </button>
+      <div class="page-users-and-groups">
+        <div class="page-header">
+          <11 class="pull-left">Users &amp; Groups</h1>
+          <div class="pull-right">
+            <button data-event="new-user" class="btn btn-primary btn-large">
+              <i class="icon-plus icon-white"></i>
+              New User
+            </button>
+          </div>
         </div>
-      </div>
 
-      <ul id="users-counters" class="thumbnails">
-        <li class="span3">
+        <ul id="users-counters" class="thumbnails">
+          <li class="span4">
           <div class="thumbnail">
             <h5>256,291</h5>
             <p>Accounts in Total</p>
           </div>
-        </li>
+          </li>
 
-        <li class="span3">
+          <li class="span4">
           <div class="thumbnail">
             <h5>259</h5>
             <p>Created in the Past 24 hours</p>
           </div>
-        </li>
+          </li>
 
-        <li class="span3">
+          <li class="span4">
           <div class="thumbnail">
             <h5>16,256</h5>
             <p>Created in the Past Month</p>
           </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
 
-      <div class="container">
-        <div class="row">
-          <div class="span6">
-            <div class="well">
-              <h4>Top Users by resource consumption</h4>
+        <div class="container">
+          <div class="row">
+            <div class="span7">
+              <div class="well">
+                <h4>Top Users by resource consumption</h4>
+              </div>
             </div>
-          </div>
 
-          <div class="span3">
-            <div class="well">
-              <h4>Recently Added Users</h4>
+            <div class="span7">
+              <div class="well">
+                <h4>Recently Added Users</h4>
+              </div>
             </div>
           </div>
         </div>
@@ -260,9 +261,7 @@
     <!-- {{{ template servers -->
     <script type="text/template" id="template-servers">
       <div id="servers">
-        <div class="page-header">
-          <h2>Compute Nodes</h2>
-        </div>
+        <div class="page-header"><h1>Compute Nodes</h1></div>
         <div id="servers-list">
           <table class="table table-striped">
             <thead>
@@ -295,7 +294,7 @@
     <script type="text/template" id="template-networks">
       <div id="servers">
         <div class="page-header">
-          <h2>Networks</h2>
+          <h1>Networks</h1>
         </div>
         <div id="networks-list">
           <table class="table table-striped">
@@ -325,15 +324,92 @@
     </script>
     <!-- }}} -->
 
+    <!-- {{{ template vm --->
+    <script id="template-vm" type="text/template">
+      <div class="page-vm">
+        <div class="page-header">
+          <h1>Virtual Machine <small><%- vm.get('uuid') %></small> </h1>
+        </div>
+
+        <div class="vms-details">
+          <h2>Overview</h2>
+          <table class="overview">
+            <tr>
+              <th>Name</th>
+              <td>
+                <span class="alias"><%- vm.get('alias') %></span>
+                <span class="vm-uuid"><%- vm.get('uuid') %></span>
+            </tr>
+            <tr>
+              <th>Owner</th>
+              <td><%= vm.get('owner_uuid') %></td>
+            </tr>
+            <tr>
+              <th>Image</th>
+              <td>
+                <span class="image-name-version"><%- image.nameWithVersion() %></span>
+                <span class="image-uuid"><%- vm.get('image_uuid') %></span>
+              </td>
+            </tr>
+            <tr>
+              <th>Server</th>
+              <td>
+                <span class="server-hostname"><%= server.get('hostname') %></span>
+                <span class="server-uuid"><%= vm.get('server_uuid') %></span>
+              </td>
+            </tr>
+            <tr>
+              <th>Memory</th>
+              <td><%= vm.get('ram') %> MB</td>
+            </tr>
+            <tr>
+              <th>Swap</th>
+              <td><%= vm.get('max_swap') %> MB</td>
+            </tr>
+          </table>
+
+          <h2>Network Interfaces</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>IP</th>
+                <th>MAC Address</th>
+                <th>Netmask</th>
+                <th>Gateway</th>
+                <th>Tag</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            <% _.each(vm.get('nics'), function(nic) { %>
+              <tr>
+              <td><%= nic.interface %></td>
+              <td><%= nic.ip %></td>
+              <td><%= nic.mac %></td>
+              <td><%= nic.netmask %></td>
+              <td><%= nic.gateway %></td>
+              <td><%= nic.nic_tag %></td>
+            </tr>
+            <% }) %>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
+    </script>
+    <!-- }}} -->
     <!-- {{{ template vms -->
     <script id="template-vms" type="text/template">
-      <div id="vms">
+      <div class="page vms">
         <div class="page-header">
-          <h2 class="pull-left">Virtual Machines</h2>
-          <button 
-              class="provision-button pull-right btn btn-primary btn-large">
-              <i class="icon-plus icon-white"></i> Provision</button>
+          <h1 class="pull-left">Virtual Machines</h1>
+          <button class="provision-button pull-right btn btn-primary btn-large">
+            <i class="icon-plus icon-white"></i> Provision
+          </button>
         </div>
+
         <div id="vms-list">
           <table class="table table-striped">
             <thead>
@@ -351,13 +427,18 @@
       </div>
     </script>
     <!-- }}} -->
+
     <!-- {{{ template vms-list-item -->
     <script id="template-vms-list-item" type="text/template">
       <tr>
         <td class="status">
-          <% if (state == 'running') { %>
+          <span class="label 
+            <% if (state == 'running') { %>label-success<% } %>
+            <% if (state == 'stopped') { %><% } %>
+            <% if (state == 'destroyed') { %>label-inverse<% } %>
+            ">
             <%- state %>
-          <% } %>
+          </span>
         </td>
         <td class="alias"><%= alias %></td>
         <td class="uuid"><%= uuid %></td>
@@ -368,82 +449,80 @@
 
     <!-- {{{ template provision-vm -->
     <script id="template-provision-vm" type="text/template">
-      <div id="servers">
+      <div class="page provision">
         <div class="page-header">
-          <h2>Provision a Virtual Machine</h2>
+          <h1>Provision a Virtual Machine</h1>
         </div>
 
-        <div id="provision">
-          <form class="form-horizontal">
-            <div class="alert alert-block alert-error">
-              <strong>OH SNAP!</strong> <span class="message"></span>
+        <form class="form-horizontal">
+          <div class="alert alert-block alert-error">
+            <strong>OH SNAP!</strong> <span class="message"></span>
+          </div>
+
+          <fieldset>
+            <div class="control-group">
+              <label class="control-label" for="input-owner">Owner</label>
+              <div class="controls">
+                <input id="input-owner" type="text" placeholder="enter a username" class="input-xlarge" name="owner">
+                <p class="help-inline">Required</p>
+              </div>
             </div>
 
-            <fieldset>
-              <div class="control-group">
-                <label class="control-label" for="input-owner">Owner</label>
-                <div class="controls">
-                  <input id="input-owner" type="text" placeholder="enter a username" class="input-xlarge" name="owner">
-                  <p class="help-inline">Required</p>
+            <div class="control-group">
+              <label class="control-label" for="input-alias">Alias</label>
+              <div class="controls">
+                <input id="input-alias"
+                name="alias"
+                placeholder="name as it appears to the customer"
+                type="text" class="input-xlarge">
+                <span class="help-inline">Optional</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Memory</label>
+              <div class="controls">
+                <select name="memory">
+                  <option value="512">512 MB</option>
+                  <option value="1 GB">1 GB</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Networks</label>
+              <div class="network-checkboxes controls">
+                <label class="checkbox"> <input type="checkbox" name="networks[]"><span class="name">My Network<span></label>
+                    <p class="help-block">Must select at least one network</p>
+                  </div>
                 </div>
-              </div>
 
-              <div class="control-group">
-                <label class="control-label" for="input-alias">Alias</label>
-                <div class="controls">
-                  <input id="input-alias"
-                    name="alias"
-                    placeholder="name as it appears to the customer"
-                    type="text" class="input-xlarge">
-                  <span class="help-inline">Optional</span>
+                <div class="control-group">
+                  <label class="control-label">Brand</label>
+                  <div class="controls">
+                    <select name="brand">
+                      <option value="joyent">joyent</option>
+                      <option value="joyent-minimal">joyent-minimal</option>
+                      <option value="kvm">kvm</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
 
-              <div class="control-group">
-                <label class="control-label">Memory</label>
-                <div class="controls">
-                  <select name="memory">
-                    <option value="512">512 MB</option>
-                    <option value="1 GB">1 GB</option>
-                  </select>
+                <div class="control-group">
+                  <label class="control-label">Image</label>
+                  <div class="controls">
+                    <input name="image" type="text" class="input-xlarge" id="input01">
+                    <p class="help-inline">Required</p>
+                    <p class="help-block">Image to provision machine with</p>
+                  </div>
                 </div>
-              </div>
 
-              <div class="control-group">
-                <label class="control-label">Networks</label>
-                <div class="network-checkboxes controls">
-                  <label class="checkbox"> <input type="checkbox" name="networks[]"><span class="name">My Network<span></label>
-                  <p class="help-block">Must select at least one network</p>
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Provision</button>
                 </div>
-              </div>
 
-              <div class="control-group">
-                <label class="control-label">Brand</label>
-                <div class="controls">
-                  <select name="brand">
-                    <option value="joyent">joyent</option>
-                    <option value="joyent-minimal">joyent-minimal</option>
-                    <option value="kvm">kvm</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="control-group">
-                <label class="control-label">Image</label>
-                <div class="controls">
-                  <input name="image" type="text" class="input-xlarge" id="input01">
-                  <p class="help-inline">Required</p>
-                  <p class="help-block">Image to provision machine with</p>
-                </div>
-              </div>
-
-              <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Provision</button>
-              </div>
-
-            </fieldset>
-          </form>
-        </div>
+              </fieldset>
+            </form>
       </div>
     </script>
     <!-- }}} -->
@@ -453,7 +532,7 @@
     <script type="text/template" id="template-images">
       <div id="sdc-images">
         <div class="page-header">
-          <h2>SDC Image Library</h2>
+          <h1>SDC Image Library</h1>
         </div>
         <div id="sdc-images-list"></div>
       </div>
@@ -484,7 +563,7 @@
       <div class="modal">
         <div class="modal-header">
           <a class="close" data-dismiss="modal">×</a>
-          <h2>{{name}} {{version}}</h2>
+          <h3>{{name}} {{version}}</h2>
         </div>
         <div class="modal-body">
           <p>{{description}}</p>
@@ -545,7 +624,7 @@
     <script type="text/template" id="template-signin">
       <div id="signin" class="well">
         <div class="header">
-          <h1>Operations Portal</h1>
+          <h2>Operations Portal</h2>
           <h4>SmartDataCenter 6</h4>
         </div>
 
