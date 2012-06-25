@@ -284,8 +284,8 @@
       <tr>
         <td class="status"><%- status %></td>
         <td class="name"><%- hostname %></td>
-        <td class="mem-avail"><%- memory_available_bytes %></td>
-        <td class="mem-total"><%- memory_total_bytes %></td>
+        <td class="mem-avail"><%- _.str.sprintf("%0.2f", memory_available_bytes/1024/1024) %> MB</td>
+        <td class="mem-total"><%- _.str.sprintf("%0.2f", memory_total_bytes/1024/1024) %> MB</td>
       </tr>
     </script>
     <!-- }}} -->
