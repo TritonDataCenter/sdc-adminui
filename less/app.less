@@ -66,6 +66,14 @@ cursor:pointer;
 }
 
 
+#servers-list {
+  .memory .percent {
+    display: inline-block;
+    width: 60px;
+  }
+  .memory .breakdown { font-size: 11px; }
+}
+
 .vms-details {
   .uuid {
     font-size: 10px;
@@ -79,6 +87,7 @@ cursor:pointer;
   }
   .vm-uuid,
   .server-uuid,
+  .owner-uuid,
   .image-uuid {
     .uuid;
     .pull-right;

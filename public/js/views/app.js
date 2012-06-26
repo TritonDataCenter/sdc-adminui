@@ -62,7 +62,12 @@ var AppView = module.exports = BaseView.extend({
     (typeof(view.viewWillAppear) === 'function') && this.contentView.viewWillAppear.call(this.contentView);
 
     this.$("#content").html(this.contentView.render().el);
-    this.sidebarView.highlight(this.contentView.name);
+
+    if (typeof(this.contentView.sidebar) === 'string') {
+      this.sidebarView.highlight(this.contentView.sidebar);
+    } else {
+      this.sidebarView.highlight(this.contentView.name);
+    }
 
     if (typeof(this.contentView.viewDidAppear) === 'function') {
       this.contentView.viewDidAppear.call(this.contentView);

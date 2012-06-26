@@ -2,6 +2,7 @@ var BaseView = require('views/base');
 var Vm = require('models/vm');
 var Image = require('models/image');
 var Server = require('models/server');
+var User = require('models/user');
 
 /**
  * VmView
@@ -11,12 +12,14 @@ var Server = require('models/server');
  */
 var VmView = BaseView.extend({
   template: 'vm',
+  sidebar: 'vms',
 
   uri: function() {
     return _.str.sprintf('vms/%s', this.vm.get('uuid'));
   },
 
   initialize: function(options) {
+    _.bindAll(this);
     this.vm = options.vm || new Vm();
 
     if (options.uuid) {
@@ -27,10 +30,13 @@ var VmView = BaseView.extend({
       alert('no uuid or vm error');
     }
 
+    this.owner = new User();
     this.image = new Image();
     this.server = new Server();
+
     this.image.on('change', this.render, this);
     this.server.on('change', this.render, this);
+    this.owner.on('change', this.render, this);
 
     this.image.set({ uuid: this.vm.get('image_uuid') });
     this.image.get('updated_at') || this.image.fetch();
@@ -38,11 +44,18 @@ var VmView = BaseView.extend({
     this.server.set({ uuid: this.vm.get('server_uuid') });
     this.server.get('last_modified') || this.server.fetch();
 
+    this.owner.set({ uuid: this.vm.get('owner_uuid') });
+    this.owner.get('cn') || this.owner.fetch();
 
     this.vm.on('change:image_uuid', function(m) {
       this.image.set({uuid: m.get('image_uuid')});
       this.image.fetch();
     }, this);
+
+    this.vm.on('change:owner_uuid', function(m) {
+      this.owner.set({uuid: m.get('owner_uuid')});
+      this.owner.fetch();
+    }, this),
 
     this.vm.on('change:server_uuid', function(m) {
       this.server.set({uuid: m.get('server_uuid')});
@@ -60,7 +73,8 @@ var VmView = BaseView.extend({
     return this.template({
       vm: this.vm,
       image: this.image,
-      server: this.server
+      server: this.server,
+      owner: this.owner
     });
   },
 

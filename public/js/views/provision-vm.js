@@ -13,6 +13,8 @@ var Vm = require('models/vm');
 var View = module.exports = Base.extend({
   name: 'provision-vm',
 
+  sidebar: 'vms',
+
   template: 'provision-vm',
 
   events: {

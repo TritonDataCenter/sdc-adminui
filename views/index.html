@@ -268,8 +268,7 @@
               <tr>
                 <th>Status</th>
                 <th>Hostname</th>
-                <th>Available Memory</th>
-                <th>Total Memory</th>
+                <th>Memory Utilization</th>
               </tr>
             </thead>
             <tbody>
@@ -279,13 +278,26 @@
       </div>
     </script>
     <!-- }}} -->
+
     <!-- {{{ template servers-list-item -->
     <script type="text/template" id="template-servers-list-item">
       <tr>
-        <td class="status"><%- status %></td>
+        <td class="status">
+          <span class="
+            <%- (status == 'running') ? 'label label-success' : '' %>
+            <%- (status == 'warn') ? 'label label-warn' : '' %>
+            ">
+            <%- status %>
+          </span>
+        </td>
         <td class="name"><%- hostname %></td>
-        <td class="mem-avail"><%- _.str.sprintf("%0.2f", memory_available_bytes/1024/1024) %> MB</td>
-        <td class="mem-total"><%- _.str.sprintf("%0.2f", memory_total_bytes/1024/1024) %> MB</td>
+        <td class="memory">
+          <span class="percent"><%- _.str.sprintf("%0.1f", (memory_total_bytes-memory_available_bytes) / memory_total_bytes * 100) %>%</span>
+
+          <span class="breakdown"><%- _.str.sprintf("%0.1f", memory_available_bytes/1024/1024) %> /
+            <%- _.str.sprintf("%0.1f", memory_total_bytes/1024/1024) %> MB</span>
+
+        </td>
       </tr>
     </script>
     <!-- }}} -->
@@ -339,10 +351,20 @@
               <td>
                 <span class="alias"><%- vm.get('alias') %></span>
                 <span class="vm-uuid"><%- vm.get('uuid') %></span>
+              </td>
             </tr>
             <tr>
               <th>Owner</th>
-              <td><%= vm.get('owner_uuid') %></td>
+              <td>
+                <span class="owner-name"><%- owner.get('cn') || '' %></span>
+                <span class="owner-uuid"><%- vm.get('owner_uuid') %></span>
+              </td>
+            </tr>
+            <tr>
+              <th>IP <%- vm.ips().length > 1 ? 'Addresses' : 'Address' %></th>
+              <td>
+                <%- vm.ips().join('<br/>') %>
+              </td>
             </tr>
             <tr>
               <th>Image</th>
@@ -354,17 +376,17 @@
             <tr>
               <th>Server</th>
               <td>
-                <span class="server-hostname"><%= server.get('hostname') %></span>
-                <span class="server-uuid"><%= vm.get('server_uuid') %></span>
+                <span class="server-hostname"><%- server.get('hostname') || '' %></span>
+                <span class="server-uuid"><%- vm.get('server_uuid') %></span>
               </td>
             </tr>
             <tr>
               <th>Memory</th>
-              <td><%= vm.get('ram') %> MB</td>
+              <td><%- vm.get('ram') %> MB</td>
             </tr>
             <tr>
               <th>Swap</th>
-              <td><%= vm.get('max_swap') %> MB</td>
+              <td><%- vm.get('max_swap') %> MB</td>
             </tr>
           </table>
 
