@@ -23,6 +23,10 @@ var server = require('./lib/app').createServer({
   log: log
 });
 
+process.on('uncaughtException', function(e) {
+  log.fatal(e);
+});
+
 server.start(function () {
   log.info('Server started on %s:%s', server.address().address, server.address().port);
 });

@@ -7,9 +7,19 @@ var Servers = require('models/servers');
 
 var ServersListItem = BaseView.extend({
   template: 'servers-list-item',
+
+  events: {
+    'click *':'navigateToServerDetails'
+  },
+
   uri: function() {
     return 'servers'
   },
+
+  navigateToServerDetails: function() {
+    this.eventBus.trigger('wants-view', 'server', { server:this.model });
+  },
+
   render: function() {
     this.setElement(this.template(this.model.attributes));
     return this;

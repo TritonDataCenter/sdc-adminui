@@ -12,6 +12,7 @@ var User = require('models/user');
  */
 var VmView = BaseView.extend({
   template: 'vm',
+
   sidebar: 'vms',
 
   uri: function() {

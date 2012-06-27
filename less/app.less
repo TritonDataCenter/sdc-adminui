@@ -43,9 +43,7 @@ body {
   li .task.success { color: @successText; }
 }
 
-#vms-list tr {
-cursor:pointer;
-}
+#vms-list tr { cursor:pointer; }
 
 .notifications {
   width: 440px;
@@ -66,12 +64,25 @@ cursor:pointer;
 }
 
 
-#servers-list {
+.servers-list {
+  tr td { cursor: pointer; }
   .memory .percent {
     display: inline-block;
     width: 60px;
   }
   .memory .breakdown { font-size: 11px; }
+}
+
+.server-details {
+  table.overview {
+    .table;
+    tbody th { width: 140px; }
+  }
+  table.hardware {
+    .table;
+    tbody th { width: 140px; }
+  }
+  table.disks { .table;}
 }
 
 .vms-details {

@@ -43,6 +43,7 @@ module.exports = Backbone.Router.extend({
 
   routes: {
     'vms/:uuid': 'showVm',
+    'servers/:uuid': 'showServer',
     '*default': 'defaultAction',
   },
 
@@ -55,6 +56,11 @@ module.exports = Backbone.Router.extend({
   showVm: function(uuid) {
     console.log('[route] showVm:'+uuid)
     this.view.presentView('vm', { uuid: uuid });
+  },
+
+  showServer: function(uuid) {
+    console.log('[route] showServer:'+uuid)
+    this.view.presentView('server', { uuid: uuid });
   },
 
   showSignin: function() {
