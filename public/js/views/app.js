@@ -92,6 +92,15 @@ var AppView = module.exports = BaseView.extend({
 
     this.topbarView.render();
     this.sidebarView.render();
+
+    var indicator = this.$('.network-activity-indicator');
+    indicator.hide();
+    indicator.hide().ajaxStart(function() {
+      indicator.fadeIn(100);
+    });
+    indicator.ajaxStop(function() {
+      indicator.fadeOut(100);
+    });
     return this;
   }
 });
