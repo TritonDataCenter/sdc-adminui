@@ -372,10 +372,12 @@
         </td>
         <td class="name"><%- hostname %></td>
         <td class="memory">
+          <% if (typeof(memory_total_bytes) !== 'undefined') { %>
           <span class="percent"><%- _.str.sprintf("%0.1f", (memory_total_bytes-memory_available_bytes) / memory_total_bytes * 100) %>%</span>
 
           <span class="breakdown"><%- _.str.sprintf("%0.1f", memory_available_bytes/1024/1024) %> /
             <%- _.str.sprintf("%0.1f", memory_total_bytes/1024/1024) %> MB</span>
+          <% } %>
 
         </td>
       </tr>
