@@ -72,9 +72,6 @@
 #	NODE_INSTALL		where node should install its built items
 #				(default: "$BUILD/node")
 #
-#	NPM_FLAGS		extra flags to pass to npm invocations
-#				(default: empty)
-#
 #
 # Dev Notes:
 #
@@ -103,7 +100,6 @@ BUILD		?= build
 NODE_INSTALL	?= $(BUILD)/node
 DISTCLEAN_FILES	+= $(NODE_INSTALL) \
 	$(BUILD)/prebuilt-node-* $(BUILD)/prebuilt-npm-*
-
 
 NODE_PREBUILT_BRANCH ?= master
 NODE_PREBUILT_CC := $(CC)
@@ -146,4 +142,4 @@ NPM_EXEC	:= $(BUILD)/prebuilt-npm-$(NODE_PREBUILT_NAME)
 # from a dir other than the project top.
 NODE		:= $(TOP)/$(NODE_INSTALL)/bin/node
 NODE_WAF	:= $(TOP)/$(NODE_INSTALL)/bin/node-waf
-NPM		:= PATH=$(TOP)/$(NODE_INSTALL)/bin:$(PATH) $(TOP)/$(NODE_INSTALL)/bin/npm $(NPM_FLAGS)
+NPM		:= PATH=$(TOP)/$(NODE_INSTALL)/bin:$(PATH) node $(TOP)/$(NODE_INSTALL)/bin/npm
