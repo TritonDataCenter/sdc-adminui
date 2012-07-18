@@ -16,9 +16,35 @@ body {
   position: fixed;
   width: 100%;
   top: 40px;
-  background: #FFDB70;
-  height: 4px;
+  background: #fcff00;
+  height: 2px;
+
 }
+
+.network-activity-indicator.error { background: #ff1e00; }
+
+.cavager {
+  width: 840px;
+  height: 700px;
+  position: absolute;
+  color: #fff;
+  left: 50%;
+  margin-left: -420px;
+  top: 42px;
+  background: #000 url(/img/cavager.gif) top right no-repeat;
+  overflow: hidden;
+
+  .title { padding: 20px; font-size: 18px; }
+  .details {
+    font-family: monaco;
+    padding: 20px;
+    font-size: 10px;
+    white-space: pre;
+    overflow: scroll;
+    height: 650px;
+  }
+}
+
 #topnav a { cursor: pointer; }
 
 #sidebar { margin-top: 2em;}
@@ -93,7 +119,14 @@ body {
   table.disks { .table;}
 }
 
+.page-vm {
+  .dropdown-menu .delete {
+    color: red;
+  }
+}
+
 .vms-details {
+  .server-hostname { cursor: pointer; }
   .uuid {
     font-size: 10px;
     color: @grayLight;

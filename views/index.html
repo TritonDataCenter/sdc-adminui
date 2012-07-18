@@ -108,6 +108,22 @@
     </div>
     </script>
 
+    <script type="text/template" id="template-cavager">
+      <div class="cavager">
+        <div class="title">
+          <strong>HTTP STATUS <%= xhr.status %></strong> WE HAVE A PROBLEM!!! 
+        </div>
+
+        <div class="details">
+Response Body
+<%= xhr.responseText %>
+
+Request
+<%= JSON.stringify(settings, null, 2) %>
+        </div>
+      </div>
+    </script>
+
     <!-- {{{ template sidebar -->
     <script type="text/text/template" id="template-sidebar">
       <ul class="nav nav-pills nav-stacked">
@@ -269,7 +285,8 @@
               <tr>
                 <th>Status</th>
                 <th>Hostname</th>
-                <th>Memory Utilization</th>
+                <th>Memory Used</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -279,6 +296,7 @@
       </div>
     </script>
     <!-- }}} -->
+
     <!-- {{{ template server -->
     <script id="template-server" type="text/template">
       <div class="page-server">
@@ -380,6 +398,11 @@
           <% } %>
 
         </td>
+        <td>
+          <% if (setup == 'false') { %>
+            <button class="setup btn btn-mini">Setup</button>
+          <% } %>
+        </td>
       </tr>
     </script>
     <!-- }}} -->
@@ -422,7 +445,22 @@
     <script id="template-vm" type="text/template">
       <div class="page-vm">
         <div class="page-header">
-          <h1>Virtual Machine <small><%- vm.get('uuid') %></small> </h1>
+          <h1 class="pull-left">Virtual Machine <small><%- vm.get('uuid') %></small> </h1>
+        </div>
+
+        <div class="btn-group pull-right">
+          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+            Actions
+            <span class="caret"></span>
+          </a>
+
+          <ul class="dropdown-menu">
+            <li><a href="#" class="start">Start</a></li>
+            <li><a href="#" class="stop">Stop</a></li>
+            <li><a href="#" class="reboot">Reboot</a></li>
+            <li class="divider"></li>
+            <li><a class="delete" class="delete" href="#">Delete</a></li>
+          </ul>
         </div>
 
         <div class="vms-details">
@@ -458,7 +496,7 @@
             <tr>
               <th>Server</th>
               <td>
-                <span class="server-hostname"><%- server.get('hostname') || '' %></span>
+                <a class="server-hostname"><%- server.get('hostname') || '' %></a>
                 <span class="server-uuid"><%- vm.get('server_uuid') %></span>
               </td>
             </tr>
@@ -720,9 +758,6 @@
       </div>
     </script>
     <!-- }}} --->
-
-
-
 
     <!-- {{{ template signin -->
     <script type="text/template" id="template-signin">

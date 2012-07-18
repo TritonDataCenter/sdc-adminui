@@ -9,11 +9,17 @@ var ServersListItem = BaseView.extend({
   template: 'servers-list-item',
 
   events: {
-    'click *':'navigateToServerDetails'
+    'click td':'navigateToServerDetails',
+    'click button.setup':'setupServer'
   },
 
   uri: function() {
     return 'servers'
+  },
+
+  setupServer: function(e) {
+    console.log('setup server');
+    e.stopPropagation();
   },
 
   navigateToServerDetails: function() {

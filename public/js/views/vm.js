@@ -15,6 +15,13 @@ var VmView = BaseView.extend({
 
   sidebar: 'vms',
 
+  events: {
+    'click .server-hostname': 'clickedServerHostname',
+    'click .start': 'clickedStartVm',
+    'click .stop': 'clickedStopVm',
+    'click .reboot': 'clickedRebootVm'
+  },
+
   uri: function() {
     return _.str.sprintf('vms/%s', this.vm.get('uuid'));
   },
@@ -77,6 +84,34 @@ var VmView = BaseView.extend({
       server: this.server,
       owner: this.owner
     });
+  },
+
+  clickedStartVm: function(e) {
+    var self = this;
+    this.vm.start(function(res) {
+      res.name = 'Start VM';
+      self.eventBus.trigger('watch-job', job);
+    });
+  },
+
+  clickedStopVm: function(e) {
+    var self = this;
+    this.vm.stop(function(res) {
+      res.name = 'Stop VM';
+      self.eventBus.trigger('watch-job', job);
+    });
+  },
+
+  clickedRebootVm: function(e) {
+    var self = this;
+    this.vm.reboot(function(job) {
+      job.name = 'Reboot VM'
+      self.eventBus.trigger('watch-job', job);
+    });
+  },
+
+  clickedServerHostname: function() {
+    this.eventBus.trigger('wants-view', 'server', { server:this.server });
   },
 
   render: function() {

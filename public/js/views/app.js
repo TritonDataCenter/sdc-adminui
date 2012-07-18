@@ -99,7 +99,19 @@ var AppView = module.exports = BaseView.extend({
       indicator.fadeIn(100);
     });
     indicator.ajaxStop(function() {
-      indicator.fadeOut(100);
+      if (! indicator.hasClass('error')) {
+        indicator.fadeOut(100);
+      }
+    });
+
+    var Cavager = require('views/cavager');
+
+    indicator.ajaxError(function(e, xhr, settings, exception) {
+      indicator.addClass('error');
+      indicator.fadeIn(100);
+      var cavager = new Cavager({xhr: xhr, settings:settings});
+      var html = $(document.body).append($(cavager.render().el));
+      html.hide().slideDown();
     });
     return this;
   }
