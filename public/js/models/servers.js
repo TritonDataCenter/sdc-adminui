@@ -1,5 +1,7 @@
+var Server = require('models/server');
 var Servers = Backbone.Collection.extend({
-  url: "/_/servers"
+  url: "/_/servers",
+  model: Server
 });
 
 

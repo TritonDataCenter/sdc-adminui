@@ -18,8 +18,13 @@ var ServersListItem = BaseView.extend({
   },
 
   setupServer: function(e) {
-    console.log('setup server');
     e.stopPropagation();
+
+    console.log('Setup server');
+    this.model.setup(function(res) {
+      console.log('Setup Server returned');
+      console.log(res);
+    });
   },
 
   navigateToServerDetails: function() {

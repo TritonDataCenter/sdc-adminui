@@ -4,6 +4,8 @@ var Image = require('models/image');
 var Server = require('models/server');
 var User = require('models/user');
 
+var VMDeleteModal = require('views/vm-delete-modal');
+
 /**
  * VmView
  *
@@ -19,7 +21,8 @@ var VmView = BaseView.extend({
     'click .server-hostname': 'clickedServerHostname',
     'click .start': 'clickedStartVm',
     'click .stop': 'clickedStopVm',
-    'click .reboot': 'clickedRebootVm'
+    'click .reboot': 'clickedRebootVm',
+    'click .delete': 'clickedDeleteVm'
   },
 
   uri: function() {
@@ -108,6 +111,14 @@ var VmView = BaseView.extend({
       job.name = 'Reboot VM'
       self.eventBus.trigger('watch-job', job);
     });
+  },
+
+  clickedDeleteVm: function(e) {
+    var vmDeleteView = new VMDeleteModal({
+      vm: this.vm,
+      owner: this.owner
+    });
+    vmDeleteView.render();
   },
 
   clickedServerHostname: function() {

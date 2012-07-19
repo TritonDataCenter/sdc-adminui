@@ -8,12 +8,14 @@ var ServerView = BaseView.extend({
 
   initialize: function(options) {
     _.bindAll(this);
+
     this.server = options.server || new Server();
 
     if (options.uuid) {
       this.server.set({uuid: options.uuid});
       this.server.fetch();
     }
+
     this.server.on('change', this.render);
     this.setElement(this.compileTemplate());
   },
