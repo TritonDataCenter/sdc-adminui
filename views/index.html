@@ -108,6 +108,7 @@
     </div>
     </script>
 
+    <!-- {{{ template cavager -->
     <script type="text/template" id="template-cavager">
       <div class="cavager">
         <div class="title">
@@ -123,6 +124,7 @@ Request
         </div>
       </div>
     </script>
+    <!-- }}} -->
 
     <!-- {{{ template sidebar -->
     <script type="text/text/template" id="template-sidebar">
@@ -206,6 +208,7 @@ Request
       </div>
     </script>
     <!-- }}} -->
+
     <!-- {{{ template users-create -->
     <script type="text/template" id="template-users-create">
       <div class="modal fade">
@@ -305,7 +308,6 @@ Request
         </div>
 
         <div class="server-details">
-          <h2>Overview</h2>
           <table class="overview">
             <tbody>
               <tr>
@@ -430,6 +432,7 @@ Request
       </div>
     </script>
     <!-- }}} -->
+
     <!-- {{{ template networks-list-item -->
     <script type="text/template" id="template-networks-list-item">
       <tr>
@@ -445,13 +448,12 @@ Request
     <script id="template-vm" type="text/template">
       <div class="page-vm">
         <div class="page-header">
-          <h1 class="pull-left">Virtual Machine <small><%- vm.get('uuid') %></small> </h1>
+          <h1>Virtual Machine <small><%- vm.get('uuid') %></small></h1>
         </div>
 
-        <div class="btn-group pull-right">
+        <div class="btn-group pull-right actions">
           <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-            Actions
-            <span class="caret"></span>
+            Actions <span class="caret"></span>
           </a>
 
           <ul class="dropdown-menu">
@@ -464,8 +466,11 @@ Request
         </div>
 
         <div class="vms-details">
-          <h2>Overview</h2>
           <table class="overview">
+            <tr>
+              <th>Status</th>
+              <td><span class="state"><%= vm.get('state') %></span></td>
+            </tr>
             <tr>
               <th>Name</th>
               <td>
@@ -571,7 +576,7 @@ Request
     <!-- }}} -->
  
     <script type="text/template" id="template-vm-delete-modal">
-      <div class="modal hide">
+      <div class="modal hide fade">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">×</button>
           <h3>Are you sure you want to delete this VM?</h3>

@@ -1,16 +1,12 @@
 @import "bootstrap.less";
 @import "variables.less";
 
-body {
-  padding-top: 38px;
-}
+body { padding-top: 38px; }
 
-.modal {
-  form { margin: 0; }
-}
+.modal { form { margin: 0; } }
 
-.navbar-inner { height: 39px;}
-.page-header { clear: both; overflow: hidden; }
+.navbar-inner { height: 39px; }
+.page-header { clear: both; overflow: hidden; border-bottom: none; }
 
 .network-activity-indicator {
   position: fixed;
@@ -128,9 +124,13 @@ body {
   .dropdown-menu .delete {
     color: red;
   }
+  .actions {
+    margin-top: -60px;
+  }
 }
 
 .vms-details {
+  .state { text-transform: uppercase; }
   .server-hostname { cursor: pointer; }
   .uuid {
     font-size: 10px;
