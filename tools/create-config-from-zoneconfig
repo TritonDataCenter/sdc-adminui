@@ -24,12 +24,15 @@ function parseZoneConfig(zonecfg) {
 
 function translateZoneConfig(zc) {
   var cfg = {}
+
   cfg.host = '0.0.0.0';
   cfg.port = 80;
+
   cfg.sslport = 443;
   cfg.ssl = {};
   cfg.ssl.certificate = "/opt/smartdc/adminui/etc/ssl/default.pem";
   cfg.ssl.key = "/opt/smartdc/adminui/etc/ssl/default.pem";
+
   cfg.ufds = {
     "url": fmt("ldaps://%s", zc.ufds_admin_ips),
     "bindDN": fmt('%s', zc.ufds_root_dn),
@@ -38,6 +41,12 @@ function translateZoneConfig(zc) {
       "size": 1000,
       "expiry": 300
     }
+  }
+
+  cfg.redis = {
+    "host": zc.redis_admin_ips,
+    "port": zc.redis_port,
+    "db": 3
   }
 
   var dcs = cfg.datacenters = {};
