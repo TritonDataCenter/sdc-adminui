@@ -28,6 +28,8 @@ _.str = require('lib/underscore.string');
 
 window.$a = {};
 
+var PING_INTERVAL = 2*60*1000
+
 var User = require('models/user');
 var AppView = require('views/app');
 var SigninView = require('views/signin');
@@ -42,7 +44,6 @@ BaseView.prototype.eventBus = eventBus;
 module.exports = Backbone.Router.extend({
 
   initialize: function(options) {
-
     // The current root view being presented
     this.view = null;
 
@@ -95,6 +96,12 @@ module.exports = Backbone.Router.extend({
     });
 
     this.user.set('token', window.sessionStorage.getItem('api-token'));
+
+    setInterval(function() {
+      $.get('/_/ping', function() {
+        console.log('.');
+      });
+    }, PING_INTERVAL);
   },
 
   initChrome: function() {
