@@ -43,9 +43,6 @@ module.exports = Backbone.Router.extend({
 
   initialize: function(options) {
 
-    // holds the state of the currently logged in user
-    this.user = new User;
-
     // The current root view being presented
     this.view = null;
 
@@ -62,6 +59,42 @@ module.exports = Backbone.Router.extend({
     this.eventBus.on('wants-view', function(view, args) {
       this.view.presentView(view, args);
     }, this);
+
+
+    // holds the state of the currently logged in user
+    this.user = new User;
+
+    this.user.on('change:token', function(user) {
+      var token = user.get('token');
+      window.sessionStorage.setItem('api-token', token);
+      if (token !== null) {
+        $.ajaxSetup({ headers:{'x-adminui-token': token} });
+
+        if (this.chromeInitialized === false) {
+          if (typeof(Backbone.history.fragment) !== 'undefined') {
+            Backbone.history.loadUrl( Backbone.history.fragment )
+          } else {
+            this.showVms();
+          }
+        }
+      }
+    }, this);
+
+    var self = this;
+    $(document).ajaxError(function(e, xhr, settings, exception) {
+      if (xhr.status == 403) {
+        self.showSignin.call(self);
+        return;
+      }
+
+      if (xhr.status == 409) {
+        console.log('409 Conflict');
+        console.log(xhr.responseText);
+        return;
+      }
+    });
+
+    this.user.set('token', window.sessionStorage.getItem('api-token'));
   },
 
   initChrome: function() {
@@ -107,13 +140,7 @@ module.exports = Backbone.Router.extend({
   showSignin: function() {
     console.log('[route] showSignin');
     this.view = new SigninView({ model: this.user });
-
-    this.user.on('change:token', function(user) {
-      if (user.get('token') !== null) {
-        $.ajaxSetup({ headers:{'x-adminui-token': user.get('token')} });
-        this.showVms();
-      }
-    }, this);
+    this.chromeInitialized = false;
 
     this.container.html(this.view.render().el);
     this.view.focus();

@@ -98,36 +98,18 @@ var AppView = module.exports = BaseView.extend({
     this.sidebarView.render();
 
     var indicator = this.$('.network-activity-indicator');
+
     indicator.hide();
     indicator.hide().ajaxStart(function() {
       indicator.fadeIn(100);
     });
+
     indicator.ajaxStop(function() {
       if (! indicator.hasClass('error')) {
         indicator.fadeOut(100);
       }
     });
 
-    var Cavager = require('views/cavager');
-
-    $(document).ajaxError(function(e, xhr, settings, exception) {
-      if (xhr.status == 403) {
-        Backbone.history.navigate('signin', true);
-        return;
-      }
-      
-      if (xhr.status == 409) {
-        console.log('409 Conflict');
-        console.log(xhr.responseText);
-        return;
-      }
-
-      indicator.addClass('error');
-      indicator.fadeIn(100);
-      var cavager = new Cavager({xhr: xhr, settings:settings});
-      var html = $(document.body).append($(cavager.render().el));
-      html.hide().slideDown();
-    });
     return this;
   }
 });
