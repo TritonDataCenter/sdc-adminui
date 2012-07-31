@@ -31,19 +31,17 @@ var User = module.exports = Backbone.Model.extend({
 
     var data = { username: user, password: pass }
 
-    $.post("/_/auth", data, function(res) {
-      if (res.code && res.message) {
-        self.set({authenticated: false});
-        self.trigger('error', res.message);
-      } else {
-        self.set({authenticated: true});
-      }
+    $.post("/_/auth", data, function(data) {
+      self.set(data.user);
+      self.set('token', data.token);
+      console.log(self);
+    }).error(function(xhr) {
+      var err = JSON.parse(xhr.responseText);
+      self.trigger('error', err.message);
     });
   },
 
   authenticate: function(username, password) {
-    var self = this;
-
     if (arguments.length === 0) {
       this._checkExistingAuth();
     } else {

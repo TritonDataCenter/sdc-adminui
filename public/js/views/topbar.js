@@ -88,6 +88,7 @@ var Topbar = module.exports = View.extend({
   },
 
   initialize: function(options) {
+    this.user = options.user;
   },
 
   signout: function() {
@@ -95,7 +96,7 @@ var Topbar = module.exports = View.extend({
   },
 
   render: function() {
-    this.$el.append(this.template());
+    this.$el.append(this.template({user:this.user}));
     this.notifier = new NotifierView({
       el: this.$("#notifier-feed"),
       badge: this.$('.badge')

@@ -3,7 +3,6 @@ var assert = require('assert');
 var fs = require('fs');
 
 
-
 function loadConfig(file) {
   assert.ok(file);
 
@@ -18,7 +17,7 @@ var log = require('bunyan').createLogger({
 
 
 var cfgFile = path.join(__dirname, '/etc/config.json');
-var server = require('./lib/app').createServer({
+var server = require('./lib/adminui').createServer({
   config: loadConfig(cfgFile),
   log: log
 });

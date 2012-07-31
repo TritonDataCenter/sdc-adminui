@@ -35,6 +35,7 @@ var AppView = module.exports = BaseView.extend({
 
     var self = this;
     this.options = options || {};
+    this.user = options.user;
   },
 
   presentView: function(viewName, args) {
@@ -85,7 +86,10 @@ var AppView = module.exports = BaseView.extend({
   render: function() {
     this.$el.html(this.template());
 
-    this.topbarView = new Topbar({ el: this.$("#topbar") });
+    this.topbarView = new Topbar({
+      el: this.$("#topbar"),
+      user: this.user
+    });
 
     this.sidebarView = new Sidebar({el: this.$("#sidebar")});
     this.sidebarView.bind('sidebar:selected', this.presentView);
@@ -106,7 +110,18 @@ var AppView = module.exports = BaseView.extend({
 
     var Cavager = require('views/cavager');
 
-    indicator.ajaxError(function(e, xhr, settings, exception) {
+    $(document).ajaxError(function(e, xhr, settings, exception) {
+      if (xhr.status == 403) {
+        Backbone.history.navigate('signin', true);
+        return;
+      }
+      
+      if (xhr.status == 409) {
+        console.log('409 Conflict');
+        console.log(xhr.responseText);
+        return;
+      }
+
       indicator.addClass('error');
       indicator.fadeIn(100);
       var cavager = new Cavager({xhr: xhr, settings:settings});

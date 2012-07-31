@@ -7,7 +7,6 @@ var Signin = module.exports = Backbone.View.extend({
 
   events: {
     'submit form': 'authenticate',
-    'click .alert a.close': 'hideMessage',
   },
 
   initialize: function(options) {
@@ -32,9 +31,6 @@ var Signin = module.exports = Backbone.View.extend({
   },
 
   hideMessage: function(e) {
-    if (e) {
-      e.stopPropagation();
-    }
     this.$(".alert").hide();
     this.focus();
   },

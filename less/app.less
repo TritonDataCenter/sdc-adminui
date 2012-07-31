@@ -3,7 +3,32 @@
 
 body { padding-top: 38px; }
 
-.modal { form { margin: 0; } }
+#logo { color: #fff; cursor: default; }
+
+#signin {
+  .modal {
+    width: 320px;
+    margin-left: -160px;
+    form { margin: 0; }
+
+    .title {
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 18px;
+      font-family: "Helvetica Neue";
+      padding: 20px;
+      text-align: center;
+    }
+    .alert { text-align: center; .border-radius(0); }
+    form {
+      overflow: hidden;
+      padding: 20px;
+      padding-top: 0;
+      input { .input-xlarge; }
+      button { .pull-right; }
+    }
+  }
+}
 
 .navbar-inner { height: 39px; }
 .page-header { clear: both; overflow: hidden; border-bottom: none; }
@@ -45,10 +70,6 @@ body { padding-top: 38px; }
 
 #sidebar { margin-top: 2em;}
 #content { margin-top: 1em;}
-
-#signin { margin: 0 auto; width: 300px;}
-#signin input { width: 290px; }
-#signin .header { margin-bottom: 30px; text-align: center; }
 
 #users-counters { text-align: center; }
 #users-counters h5 { font-weight: 300; font-size: 36px; margin-top: 1em;}

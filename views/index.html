@@ -36,11 +36,7 @@
 
     <!-- {{{ template topbar -->
     <script type="text/template" id="template-topbar">
-      <div id="logo" class="brand">Operations Portal &nbsp;<strong>7</strong></div>
-
-      <form class="navbar-search pull-left">
-        <input type="text" class="search-query" placeholder="Search">
-      </form>
+      <div id="logo" class="brand">Operations Portal</div>
 
       <ul class="nav pull-right">
         <li class="dropdown">
@@ -86,7 +82,7 @@
           </ul>
         </li>
 
-        <li><a href="#"><i class="icon-user icon-white"></i> Kevin</a></li>
+        <li><a href="#"><i class="icon-user icon-white"></i> <%= user.cn %></a></li>
         <li><a href="#"><i class="icon-cog icon-white"></i></a></li>
         <li><a data-trigger='signout'><i class="icon-off icon-white"></i> Sign Out</a></li>
       </ul>
@@ -547,6 +543,7 @@ Request
 
     </script>
     <!-- }}} -->
+
     <!-- {{{ template vms -->
     <script id="template-vms" type="text/template">
       <div class="page vms">
@@ -574,7 +571,27 @@ Request
       </div>
     </script>
     <!-- }}} -->
- 
+
+    <!-- {{{ template vms-list-item -->
+    <script id="template-vms-list-item" type="text/template">
+      <tr>
+        <td class="status">
+          <span class="label 
+            <% if (state == 'running') { %>label-success<% } %>
+            <% if (state == 'stopped') { %><% } %>
+            <% if (state == 'destroyed') { %>label-inverse<% } %>
+            ">
+            <%- state %>
+          </span>
+        </td>
+        <td class="alias"><%= alias %></td>
+        <td class="uuid"><%= uuid %></td>
+        <td class="memory"><%= ram %> MB</td>
+      </tr>
+    </script>
+    <!-- }}} -->
+
+    <!-- {{{ template vm-delete-modal --->
     <script type="text/template" id="template-vm-delete-modal">
       <div class="modal hide fade">
         <div class="modal-header">
@@ -597,24 +614,6 @@ Request
           <a href="#" class="btn btn-danger delete">YES, Delete It</a>
         </div>
       </div>
-    </script>
-
-    <!-- {{{ template vms-list-item -->
-    <script id="template-vms-list-item" type="text/template">
-      <tr>
-        <td class="status">
-          <span class="label 
-            <% if (state == 'running') { %>label-success<% } %>
-            <% if (state == 'stopped') { %><% } %>
-            <% if (state == 'destroyed') { %>label-inverse<% } %>
-            ">
-            <%- state %>
-          </span>
-        </td>
-        <td class="alias"><%= alias %></td>
-        <td class="uuid"><%= uuid %></td>
-        <td class="memory"><%= ram %> MB</td>
-      </tr>
     </script>
     <!-- }}} -->
 
@@ -716,6 +715,7 @@ Request
       <ul class="thumbnails"></ul>
     </script>
     <!-- }}} -->
+
     <!-- {{{ template images-list-item -->
     <script type="text/template" id="template-images-list-item">
       <li class="span5">
@@ -729,6 +729,7 @@ Request
       </li>
     </script>
     <!-- }}} -->
+
     <!-- {{{ template images-detail -->
     <script type="text/template" id="template-images-detail">
       <div class="modal">
@@ -790,28 +791,29 @@ Request
 
     <!-- {{{ template signin -->
     <script type="text/template" id="template-signin">
-      <div id="signin" class="well">
-        <div class="header">
-          <h2>Operations Portal</h2>
-          <h4>SmartDataCenter 6</h4>
-        </div>
-
-        <div class="alert alert-error">
-          <span class="msg"></span>
-          <a class="close" data-dismiss="alert" href="#">&times;</a>
-        </div>
-
-        <form>
-          <label>Username</label>
-          <input class="input-large" type="text" name="username">
-
-          <label>Password</label>
-          <input class="input-large" type="password" name="password">
-
-          <div class="controls">
-            <button type="submit" class="btn btn-large btn-primary">Sign In</button>
+      <div id="signin">
+        <div class="modal-backdrop"></div>
+        <div class="modal">
+          <div class="title">
+            Operations Portal
           </div>
-        </form>
+
+          <div class="alert alert-error">
+            <span class="msg"></span>
+          </div>
+
+          <form>
+            <label>Username</label>
+            <input class="input-large" type="text" name="username">
+
+            <label>Password</label>
+            <input class="input-large" type="password" name="password">
+
+            <div class="controls">
+              <button type="submit" class="btn btn-large btn-primary">Sign In</button>
+            </div>
+          </form>
+        </div>
       </div>
     </script>
     <!-- }}} -->

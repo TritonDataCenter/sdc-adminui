@@ -25,6 +25,7 @@ _.str = require('lib/underscore.string');
       }
   });
 })();
+
 window.$a = {};
 
 var User = require('models/user');
@@ -33,7 +34,7 @@ var SigninView = require('views/signin');
 
 var BaseView = require('views/base');
 
-var eventBus = window.$a.eventBus = _.extend(Backbone.Events, {});
+var eventBus = _.extend(Backbone.Events, {});
 
 // Attach eventBus to BaseView prototype
 BaseView.prototype.eventBus = eventBus;
@@ -51,22 +52,29 @@ module.exports = Backbone.Router.extend({
     // The dom element in which the root views are drawn to
     this.container = $("#chrome");
 
-    if (! this.view) {
-      this.view = new AppView();
-      this.container.html(this.view.render().el);
-    }
-
     this.eventBus = eventBus;
     this.eventBus.bind('signout', function() {
       this.user.signout();
     }, this);
+
+    this.chromeInitialized = false;
 
     this.eventBus.on('wants-view', function(view, args) {
       this.view.presentView(view, args);
     }, this);
   },
 
+  initChrome: function() {
+    if (this.chromeInitialized === false) {
+      this.view = new AppView({ user: this.user });
+      this.container.html(this.view.render().el);
+      this.chromeInitialized = true;
+    }
+  },
+
   routes: {
+    'signin': 'showSignin',
+    'vms': 'showVms',
     'vms/:uuid': 'showVm',
     'servers/:uuid': 'showServer',
     '*default': 'defaultAction',
@@ -75,21 +83,37 @@ module.exports = Backbone.Router.extend({
   defaultAction: function(page) {
     console.log('[route] defaultAction:'+page)
     page = page || 'dashboard';
+    this.initChrome();
     this.view.presentView(page);
+  },
+
+  showVms: function() {
+    this.initChrome();
+    this.view.presentView('vms');
   },
 
   showVm: function(uuid) {
     console.log('[route] showVm:'+uuid)
+    this.initChrome();
     this.view.presentView('vm', { uuid: uuid });
   },
 
   showServer: function(uuid) {
     console.log('[route] showServer:'+uuid)
+    this.initChrome();
     this.view.presentView('server', { uuid: uuid });
   },
 
   showSignin: function() {
+    console.log('[route] showSignin');
     this.view = new SigninView({ model: this.user });
+
+    this.user.on('change:token', function(user) {
+      if (user.get('token') !== null) {
+        $.ajaxSetup({ headers:{'x-adminui-token': user.get('token')} });
+        this.showVms();
+      }
+    }, this);
 
     this.container.html(this.view.render().el);
     this.view.focus();
