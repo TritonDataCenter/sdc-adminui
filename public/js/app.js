@@ -66,7 +66,7 @@ module.exports = Backbone.Router.extend({
       var token = user.get('token');
 
       if (token === null) {
-        window.sessionStorage.setItem('api-token', null);
+        window.sessionStorage.removeItem('api-token');
         $.ajaxSetup({ headers:{} });
       } else {
         window.sessionStorage.setItem('api-token', token);
@@ -83,6 +83,7 @@ module.exports = Backbone.Router.extend({
     var self = this;
     $(document).ajaxError(function(e, xhr, settings, exception) {
       if (xhr.status == 403) {
+        window.sessionStorage.removeItem('api-token');
         self.showSignin.call(self);
         return;
       }
@@ -163,7 +164,7 @@ module.exports = Backbone.Router.extend({
   },
 
   signout: function() {
-    this.user.unset('token');
+    this.user.set('token', null);
     this.showSignin();
   }
 });

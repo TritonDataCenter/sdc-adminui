@@ -12,20 +12,21 @@ function loadConfig(file) {
 
 var log = require('bunyan').createLogger({
   name: 'adminui',
-  level: 'debug'
+  level: 'info'
 });
 
 
 var cfgFile = path.join(__dirname, '/etc/config.json');
-var server = require('./lib/adminui').createServer({
-  config: loadConfig(cfgFile),
+var cfg = loadConfig(cfgFile);
+
+var adminui = require('./lib/adminui').createServer({
+  config: cfg,
   log: log
 });
+
+adminui.listen();
 
 process.on('uncaughtException', function(e) {
   log.fatal(e);
 });
 
-server.start(function () {
-  log.info('Server started on %s:%s', server.address().address, server.address().port);
-});

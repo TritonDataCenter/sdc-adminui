@@ -15,7 +15,7 @@
 
 
 var Topbar = require('views/topbar');
-var Sidebar = require('views/sidebar');
+var MainNav = require('views/mainnav');
 var BaseView = require('views/base');
 
 var AppView = module.exports = BaseView.extend({
@@ -65,9 +65,9 @@ var AppView = module.exports = BaseView.extend({
     this.$("#content").html(this.contentView.render().el);
 
     if (typeof(this.contentView.sidebar) === 'string') {
-      this.sidebarView.highlight(this.contentView.sidebar);
+      this.mainNavView.highlight(this.contentView.sidebar);
     } else {
-      this.sidebarView.highlight(this.contentView.name);
+      this.mainNavView.highlight(this.contentView.name);
     }
 
     if (typeof(this.contentView.viewDidAppear) === 'function') {
@@ -91,11 +91,11 @@ var AppView = module.exports = BaseView.extend({
       user: this.user
     });
 
-    this.sidebarView = new Sidebar({el: this.$("#sidebar")});
-    this.sidebarView.bind('sidebar:selected', this.presentView);
+    this.mainNavView = new MainNav({el: this.$("#main-nav")});
+    this.mainNavView.bind('sidebar:selected', this.presentView);
 
     this.topbarView.render();
-    this.sidebarView.render();
+    this.mainNavView.render();
 
     var indicator = this.$('.network-activity-indicator');
 

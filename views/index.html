@@ -22,13 +22,17 @@
           </div>
         </div>
       </div>
+
       <div class="container">
+        <div class="row">
+          <div id="main-nav" class="span12"></div>
+        </div>
 
         <div class="row">
-          <div id="sidebar" class="span3"></div>
-          <div id="content" class="span13"></div>
+          <div id="content" class="span12"></div>
         </div>
       </div>
+
       <div class="network-activity-indicator"></div>
 
     </script>
@@ -124,21 +128,13 @@ Request
 
     <!-- {{{ template sidebar -->
     <script type="text/text/template" id="template-sidebar">
-      <ul class="nav nav-pills nav-stacked">
+      <ul class="nav nav-pills">
         <li data-view="dashboard"><a href="#"><i class="icon-home"></i> Dashboard</a></li>
-
-        <li class="nav-header">Compute</li>
-
         <li data-view="vms"><a href="#"><i class="icon-book"></i> Virtual Machines</a></li>
         <li data-view="servers"><a href="#"><i class="icon-book"></i> Servers</a></li>
         <li data-view="networks"><a href="#"><i class="icon-list"></i> Networks</a></li>
         <li><a href="#"><i class="icon-picture"></i> Images</a></li>
-
-        <li class="nav-header"></li>
-
         <li data-view="users"><a href="#"><i class="icon-user"></i> Users &amp; Grouops</a></li>
-
-        <li class="nav-header">Explore</li>
         <li data-view="images"><a href="#"><i class="icon-book"></i>Image Library</a></li>
       </ul>
     </script>
@@ -146,7 +142,12 @@ Request
 
     <!-- {{{ template dashboard -->
     <script type="text/template" id="template-dashboard">
-      <div class="page-header"><h1>Dashboard</h1></div>
+      <div class="page-dashboard">
+        <div class="page-header"><h1>Dashboard</h1></div>
+        <div class="well">
+          Nothing to see here, move along...
+        </div>
+      </div>
     </script>
     <!-- }}} -->
 
@@ -154,7 +155,7 @@ Request
     <script type="text/template" id="template-users">
       <div class="page-users-and-groups">
         <div class="page-header">
-          <11 class="pull-left">Users &amp; Groups</h1>
+          <h1 class="pull-left">Users &amp; Groups</h1>
           <div class="pull-right">
             <button data-event="new-user" class="btn btn-primary btn-large">
               <i class="icon-plus icon-white"></i>
@@ -704,7 +705,19 @@ Request
         <div class="page-header">
           <h1>SDC Image Library</h1>
         </div>
-        <div id="sdc-images-list"></div>
+
+        <div class="row">
+          <div id="sdc-images-desc" class="span12">
+            <div class="well">
+              <h2>What is this?</h2>
+              <p>
+              SDC Image library is a repository of software appliances used to
+              create Virtual Machines in SmartDataCenter.
+              </p>
+            </div>
+          </div>
+          <div id="sdc-images-list" class="span12"></div>
+        </div>
       </div>
     </script>
     <!-- }}} -->
@@ -718,7 +731,7 @@ Request
 
     <!-- {{{ template images-list-item -->
     <script type="text/template" id="template-images-list-item">
-      <li class="span5">
+      <li class="span6">
       <div class="item">
         <h4 class="name">{{name}} <small class="label">{{version}}</small></h4>
         <p class="description">{{description}}</p>

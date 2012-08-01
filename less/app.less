@@ -1,34 +1,10 @@
 @import "bootstrap.less";
 @import "variables.less";
+@import "signin.less";
 
-body { padding-top: 38px; }
+body { padding-top: 60px; }
 
 #logo { color: #fff; cursor: default; }
-
-#signin {
-  .modal {
-    width: 320px;
-    margin-left: -160px;
-    form { margin: 0; }
-
-    .title {
-      font-weight: bold;
-      text-transform: uppercase;
-      font-size: 18px;
-      font-family: "Helvetica Neue";
-      padding: 20px;
-      text-align: center;
-    }
-    .alert { text-align: center; .border-radius(0); }
-    form {
-      overflow: hidden;
-      padding: 20px;
-      padding-top: 0;
-      input { .input-xlarge; }
-      button { .pull-right; }
-    }
-  }
-}
 
 .navbar-inner { height: 39px; }
 .page-header { clear: both; overflow: hidden; border-bottom: none; }
@@ -44,32 +20,9 @@ body { padding-top: 38px; }
 
 .network-activity-indicator.error { background: #ff1e00; }
 
-.cavager {
-  width: 840px;
-  height: 700px;
-  position: absolute;
-  color: #fff;
-  left: 50%;
-  margin-left: -420px;
-  top: 42px;
-  background: #000 url(/img/cavager.gif) top right no-repeat;
-  overflow: hidden;
-
-  .title { padding: 20px; font-size: 18px; }
-  .details {
-    font-family: monaco;
-    padding: 20px;
-    font-size: 10px;
-    white-space: pre;
-    overflow: scroll;
-    height: 650px;
-  }
-}
-
 #topnav a { cursor: pointer; }
 
-#sidebar { margin-top: 2em;}
-#content { margin-top: 1em;}
+#content {}
 
 #users-counters { text-align: center; }
 #users-counters h5 { font-weight: 300; font-size: 36px; margin-top: 1em;}

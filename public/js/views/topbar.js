@@ -92,7 +92,7 @@ var Topbar = module.exports = View.extend({
   },
 
   signout: function() {
-
+    this.eventBus.trigger('signout');
   },
 
   render: function() {
