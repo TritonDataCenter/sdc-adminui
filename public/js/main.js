@@ -1,9 +1,12 @@
 module.exports = {
   bootstrap: function() {
-    $(function($) {
-      var App = require('app');
-      window.$a = new App();
-      Backbone.history.start({pushState:true});
+    jQuery(function($) {
+      var Application = require('app');
+
+      window.$a = {}
+      window.$a.app = new Application();
+
+      Backbone.history.start({pushState: true});
     });
   }
 }

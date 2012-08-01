@@ -1,4 +1,5 @@
 _.str = require('lib/underscore.string');
+
 (function() {
   /* Extend jQuery with functions for PUT and DELETE requests. */
 
@@ -26,8 +27,6 @@ _.str = require('lib/underscore.string');
   });
 })();
 
-window.$a = {};
-
 var PING_INTERVAL = 2*60*1000
 
 var User = require('models/user');
@@ -44,42 +43,42 @@ BaseView.prototype.eventBus = eventBus;
 module.exports = Backbone.Router.extend({
 
   initialize: function(options) {
-    // The current root view being presented
-    this.view = null;
+    _.bindAll(this);
 
     // The dom element in which the root views are drawn to
     this.container = $("#chrome");
 
+    // The current root view being presented
+    this.view = null;
+
     this.eventBus = eventBus;
-    this.eventBus.bind('signout', function() {
-      this.user.signout();
-    }, this);
 
     this.chromeInitialized = false;
 
     this.eventBus.on('wants-view', function(view, args) {
       this.view.presentView(view, args);
     }, this);
-
+    this.eventBus.on('signout', this.signout);
 
     // holds the state of the currently logged in user
     this.user = new User;
-
     this.user.on('change:token', function(user) {
       var token = user.get('token');
-      window.sessionStorage.setItem('api-token', token);
-      if (token !== null) {
+
+      if (token === null) {
+        window.sessionStorage.setItem('api-token', null);
+        $.ajaxSetup({ headers:{} });
+      } else {
+        window.sessionStorage.setItem('api-token', token);
         $.ajaxSetup({ headers:{'x-adminui-token': token} });
 
-        if (this.chromeInitialized === false) {
-          if (typeof(Backbone.history.fragment) !== 'undefined') {
-            Backbone.history.loadUrl( Backbone.history.fragment )
-          } else {
-            this.showVms();
-          }
+        if (typeof(Backbone.history.fragment) !== 'undefined') {
+          Backbone.history.loadUrl( Backbone.history.fragment )
         }
       }
     }, this);
+
+    this.user.set('token', window.sessionStorage.getItem('api-token'));
 
     var self = this;
     $(document).ajaxError(function(e, xhr, settings, exception) {
@@ -95,12 +94,8 @@ module.exports = Backbone.Router.extend({
       }
     });
 
-    this.user.set('token', window.sessionStorage.getItem('api-token'));
-
     setInterval(function() {
-      $.get('/_/ping', function() {
-        console.log('.');
-      });
+      $.get('/_/ping', function() { console.log('.'); });
     }, PING_INTERVAL);
   },
 
@@ -122,26 +117,40 @@ module.exports = Backbone.Router.extend({
 
   defaultAction: function(page) {
     console.log('[route] defaultAction:'+page)
-    page = page || 'dashboard';
+
+    if (this.authenticated()) {
+      page = page || 'dashboard';
+      this.presentView(page);
+    }
+  },
+
+  authenticated: function() {
+    if (! this.user.authenticated()) {
+      console.log('[app] not authenticated, showing sign in');
+      this.showSignin();
+      return false;
+    } else {
+      return true;
+    }
+  },
+
+  presentView: function(view, args) {
     this.initChrome();
-    this.view.presentView(page);
+    this.view.presentView(view, args);
   },
 
   showVms: function() {
-    this.initChrome();
-    this.view.presentView('vms');
+    this.authenticated() && this.presentView('vms');
   },
 
   showVm: function(uuid) {
     console.log('[route] showVm:'+uuid)
-    this.initChrome();
-    this.view.presentView('vm', { uuid: uuid });
+    this.authenticated() && this.presentView('vm', { uuid: uuid });
   },
 
   showServer: function(uuid) {
-    console.log('[route] showServer:'+uuid)
-    this.initChrome();
-    this.view.presentView('server', { uuid: uuid });
+    console.log('[route] showServer: '+uuid)
+    this.authenticated() && this.presentView('server', { uuid: uuid });
   },
 
   showSignin: function() {
@@ -151,5 +160,10 @@ module.exports = Backbone.Router.extend({
 
     this.container.html(this.view.render().el);
     this.view.focus();
+  },
+
+  signout: function() {
+    this.user.unset('token');
+    this.showSignin();
   }
 });
