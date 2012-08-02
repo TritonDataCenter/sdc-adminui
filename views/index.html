@@ -448,7 +448,7 @@ Request
         </div>
 
         <div class="btn-group pull-right actions">
-          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+          <a class="btn dropdown-toggle btn-primary btn-large" data-toggle="dropdown" href="#">
             Actions <span class="caret"></span>
           </a>
 
@@ -465,7 +465,7 @@ Request
           <table class="overview">
             <tr>
               <th>Status</th>
-              <td><span class="state"><%= vm.get('state') %></span></td>
+              <td><span class="state"><%- vm.get('state') %></span></td>
             </tr>
             <tr>
               <th>Name</th>
@@ -484,7 +484,7 @@ Request
             <tr>
               <th>IP <%- vm.ips().length > 1 ? 'Addresses' : 'Address' %></th>
               <td>
-                <%- vm.ips().join('<br/>') %>
+                <%= vm.ips().join('<br/>') %>
               </td>
             </tr>
             <tr>
