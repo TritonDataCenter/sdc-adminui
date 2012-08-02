@@ -40,21 +40,19 @@ var View = module.exports = Base.extend({
 
     this.usersCollection = new Users();
     this.imagesCollection = new Images();
-  },
-
-  viewWillAppear: function() {
-    Base.prototype.viewWillAppear.call(this);
 
     this.usersCollection.on('reset', function(users) {
+      this.userSource = [];
       users.each(function(u) { this.usersSource.push(u); }, this);
     }, this);
 
     this.imagesCollection.on('reset', function(images) {
+      this.imagesSource = [];
       images.each(function(img) { this.imagesSource.push(img); }, this);
     }, this);
 
     this.networks.on('reset', function(networks) {
-      this.addNetworks(networks);
+      this.populateNetworks(networks);
     }, this);
 
     this.imagesCollection.fetch();
@@ -68,7 +66,7 @@ var View = module.exports = Base.extend({
   },
 
   render: function() {
-    this.setElement(this.template());
+    this.$el.html(this.template());
     this.$form = this.$('form');
     this.populateMemoryValues();
     this.hideError();
@@ -90,9 +88,9 @@ var View = module.exports = Base.extend({
     return this;
   },
 
-  addNetworks: function(networks) {
+  populateNetworks: function(networks) {
     var container = this.$('.network-checkboxes');
-    var elm = container.find('label');
+    var elm = container.find('label:first').clone();
     container.find('label').remove();
     networks.each(function(n) {
       console.log(n);

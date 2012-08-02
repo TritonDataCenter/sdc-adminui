@@ -33,9 +33,13 @@ var AppView = module.exports = BaseView.extend({
   initialize: function(options) {
     _.bindAll(this, 'render', 'presentView');
 
-    var self = this;
     this.options = options || {};
     this.user = options.user;
+
+    this.mainNavView = new MainNav();
+    this.mainNavView.bind('sidebar:selected', this.presentView);
+
+    this.topbarView = new Topbar({ user: this.user });
   },
 
   presentView: function(viewName, args) {
@@ -51,7 +55,7 @@ var AppView = module.exports = BaseView.extend({
         this.contentView.viewWillDisappear.call(this.contentView);
       }
 
-      this.contentView.remove();
+      this.contentView.$el.empty();
 
       if (typeof(this.contentView.viewDidDisappear) === 'function') {
         this.contentView.viewDidDisappear.call(this.contentView);
@@ -62,13 +66,7 @@ var AppView = module.exports = BaseView.extend({
 
     (typeof(view.viewWillAppear) === 'function') && this.contentView.viewWillAppear.call(this.contentView);
 
-    this.$("#content").html(this.contentView.render().el);
-
-    if (typeof(this.contentView.sidebar) === 'string') {
-      this.mainNavView.highlight(this.contentView.sidebar);
-    } else {
-      this.mainNavView.highlight(this.contentView.name);
-    }
+    this.contentView.setElement(this.$('#content')).render();
 
     if (typeof(this.contentView.viewDidAppear) === 'function') {
       this.contentView.viewDidAppear.call(this.contentView);
@@ -81,21 +79,19 @@ var AppView = module.exports = BaseView.extend({
     } else {
       Backbone.history.navigate(this.contentView.name);
     }
+
+    if (typeof(this.contentView.sidebar) === 'string') {
+      this.mainNavView.highlight(this.contentView.sidebar);
+    } else {
+      this.mainNavView.highlight(this.contentView.name);
+    }
   },
 
   render: function() {
     this.$el.html(this.template());
 
-    this.topbarView = new Topbar({
-      el: this.$("#topbar"),
-      user: this.user
-    });
-
-    this.mainNavView = new MainNav({el: this.$("#main-nav")});
-    this.mainNavView.bind('sidebar:selected', this.presentView);
-
-    this.topbarView.render();
-    this.mainNavView.render();
+    this.topbarView.setElement(this.$("#topbar")).render();
+    this.mainNavView.setElement(this.$("#main-nav")).render();
 
     var indicator = this.$('.network-activity-indicator');
 

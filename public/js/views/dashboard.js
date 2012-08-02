@@ -9,7 +9,8 @@ var Dashboard = module.exports = View.extend({
   name: 'dashboard',
   template: 'dashboard',
   render: function() {
-    this.setElement(this.template());
+    this.$el.html(this.template());
+
     return this;
   }
 });

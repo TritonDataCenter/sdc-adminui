@@ -1,10 +1,11 @@
 'use strict';
 
 var CreateUserView = require('views/users-create');
+var BaseView = require('views/base');
 
-var UsersView = module.exports = Backbone.View.extend({
+var UsersView = module.exports = BaseView.extend({
 
-  template: Handlebars.compile($("#template-users").html()),
+  template: "users",
 
   name: 'users',
 

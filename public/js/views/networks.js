@@ -10,8 +10,9 @@ var NetworksList = BaseView.extend({
   },
 
   addOne: function(model) {
-    var view = new NetworksListItem({model:model});
+    var view = new NetworksListItem({ model:model });
     this.$el.append(view.render().el);
+    console.log(this.$el);
   },
 
   addAll: function() {
@@ -27,16 +28,15 @@ var NetworksView = BaseView.extend({
   name: "networks",
   template: 'networks',
   initialize: function(options) {
-    this.setElement(this.template());
+
     this.collection = new Networks();
 
-    this.listView = new NetworksList({
-      collection: this.collection,
-      el: this.$("tbody")
-    });
+    this.listView = new NetworksList({ collection: this.collection });
   },
 
   render: function() {
+    this.$el.html(this.template());
+    this.listView.setElement(this.$('tbody')).render();
     return this;
   }
 });

@@ -7,6 +7,7 @@ var Servers = require('models/servers');
 
 var ServersListItem = BaseView.extend({
   template: 'servers-list-item',
+  tagName: 'tr',
 
   events: {
     'click td':'navigateToServerDetails',
@@ -21,6 +22,7 @@ var ServersListItem = BaseView.extend({
     e.stopPropagation();
 
     console.log('Setup server');
+
     this.model.setup(function(res) {
       console.log('Setup Server returned');
       console.log(res);
@@ -38,19 +40,23 @@ var ServersListItem = BaseView.extend({
 });
 
 var ServersList = BaseView.extend({
+
   initialize: function() {
     _.bindAll(this, 'addOne', 'addAll');
 
     this.collection.bind('all', this.addAll);
     this.collection.fetch();
   },
+
   addOne: function(cn) {
     var view = new ServersListItem({model:cn});
     this.$el.append(view.render().el);
   },
+
   addAll: function() {
     this.collection.each(this.addOne);
   },
+
   render: function() {
     return this;
   }
@@ -58,17 +64,20 @@ var ServersList = BaseView.extend({
 
 var ServersView = module.exports = BaseView.extend({
   name: 'servers',
-  template: 'servers',
-  initialize: function(options) {
-    this.setElement(this.template());
-    this.collection = new Servers();
 
-    this.listView = new ServersList({
-      collection: this.collection,
-      el: this.$("tbody")
-    });
+  template: 'servers',
+
+  initialize: function(options) {
+    this.collection = new Servers();
+    this.listView = new ServersList({ collection: this.collection });
   },
+
   render: function() {
+    console.log(this.$el);
+    this.$el.html(this.template());
+
+    this.listView.setElement(this.$("tbody")).render();
+
     return this;
   }
 });

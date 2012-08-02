@@ -133,7 +133,6 @@ Request
         <li data-view="vms"><a href="#"><i class="icon-book"></i> Virtual Machines</a></li>
         <li data-view="servers"><a href="#"><i class="icon-book"></i> Servers</a></li>
         <li data-view="networks"><a href="#"><i class="icon-list"></i> Networks</a></li>
-        <li><a href="#"><i class="icon-picture"></i> Images</a></li>
         <li data-view="users"><a href="#"><i class="icon-user"></i> Users &amp; Grouops</a></li>
         <li data-view="images"><a href="#"><i class="icon-book"></i>Image Library</a></li>
       </ul>
@@ -277,15 +276,15 @@ Request
 
     <!-- {{{ template servers -->
     <script type="text/template" id="template-servers">
-      <div id="servers">
+      <div class="page-servers">
         <div class="page-header"><h1>Servers</h1></div>
         <div class="servers-list">
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Status</th>
+                <th class="status">Status</th>
                 <th>Hostname</th>
-                <th>Memory Used</th>
+                <th class="ram">RAM Usage</th>
                 <th></th>
               </tr>
             </thead>
@@ -559,10 +558,10 @@ Request
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Status</th>
-                <th>Alias</th>
-                <th>UUID</th>
-                <th>Memory</th>
+                <th class="status">Status</th>
+                <th class="alias">Alias</th>
+                <th class="uuid">UUID</th>
+                <th class="memory">Memory</th>
               </tr>
             </thead>
             <tbody>
@@ -663,37 +662,39 @@ Request
             <div class="control-group">
               <label class="control-label">Networks</label>
               <div class="network-checkboxes controls">
-                <label class="checkbox"> <input type="checkbox" name="networks[]"><span class="name">My Network<span></label>
-                    <p class="help-block">Must select at least one network</p>
-                  </div>
-                </div>
+                <label class="checkbox">
+                  <input type="checkbox" name="networks[]" /><span class="name">My Network<span>
+                </label>
+                <p class="help-block">Must select at least one network</p>
+              </div>
+            </div>
 
-                <div class="control-group">
-                  <label class="control-label">Brand</label>
-                  <div class="controls">
-                    <select name="brand">
-                      <option value="joyent">joyent</option>
-                      <option value="joyent-minimal">joyent-minimal</option>
-                      <option value="kvm">kvm</option>
-                    </select>
-                  </div>
-                </div>
+            <div class="control-group">
+              <label class="control-label">Brand</label>
+              <div class="controls">
+                <select name="brand">
+                  <option value="joyent">joyent</option>
+                  <option value="joyent-minimal">joyent-minimal</option>
+                  <option value="kvm">kvm</option>
+                </select>
+              </div>
+            </div>
 
-                <div class="control-group">
-                  <label class="control-label">Image</label>
-                  <div class="controls">
-                    <input name="image" type="text" class="input-xlarge" id="input01">
-                    <p class="help-inline">Required</p>
-                    <p class="help-block">Image to provision machine with</p>
-                  </div>
-                </div>
+            <div class="control-group">
+              <label class="control-label">Image</label>
+              <div class="controls">
+                <input name="image" type="text" class="input-xlarge" id="input01">
+                <p class="help-inline">Required</p>
+                <p class="help-block">Image to provision machine with</p>
+              </div>
+            </div>
 
-                <div class="form-actions">
-                  <button type="submit" class="btn btn-primary">Provision</button>
-                </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Provision</button>
+            </div>
 
-              </fieldset>
-            </form>
+          </fieldset>
+        </form>
       </div>
     </script>
     <!-- }}} -->

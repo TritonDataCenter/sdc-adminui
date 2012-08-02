@@ -42,13 +42,9 @@ var VmsView = module.exports = BaseView.extend({
   },
 
   initialize: function(options) {
-    this.setElement(this.template());
     this.collection = new Vms();
 
-    this.listView = new VmsList({
-      collection: this.collection,
-      el: this.$('tbody')
-    });
+    this.listView = new VmsList({ collection: this.collection });
   },
 
   provision: function() {
@@ -56,6 +52,10 @@ var VmsView = module.exports = BaseView.extend({
   },
 
   render: function() {
+    this.$el.html(this.template());
+
+    this.listView.setElement(this.$('tbody')).render();
+
     return this;
   }
 });
