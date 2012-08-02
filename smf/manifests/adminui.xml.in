@@ -1,32 +1,54 @@
 <?xml version="1.0"?>
 <!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
 <!--
-	Copyright (c) 2012, Joyent, Inc. All rights reserved.
- 	This is a sample SMF manifest. If you want to actually use it, you'll
- 	need to replace @@PREFIX@@ in the *generated* file with the path to
-	whereever this package gets installed.
+  Copyright (c) 2012, Joyent, Inc. All rights reserved.
+  This is a sample SMF manifest. If you want to actually use it, you'll
+  need to replace @@PREFIX@@ in the *generated* file with the path to
+  whereever this package gets installed.
  -->
 
 <service_bundle type="manifest" name="smartdc-app-adminui">
-<service name="smartdc/application/adminui" type="service" version="1">
+  <service name="smartdc/application/adminui" type="service" version="1">
 
-<dependency name="network" grouping="require_all" restart_on="error" type="service">
-	<service_fmri value="svc:/network/physical" />
-</dependency>
-<dependency name="filesystem" grouping="require_all" restart_on="error" type="service">
-	<service_fmri value="svc:/system/filesystem/local" />
-</dependency>
+    <dependency name="network" grouping="require_all" restart_on="error" type="service">
+      <service_fmri value="svc:/network/physical" />
+    </dependency>
 
-<exec_method type="method" name="start" exec="@@NODE@@ @@PREFIX@@/server.js &amp;" timeout_seconds="30" />
-<exec_method type="method" name="stop" exec=":kill" timeout_seconds="30" />
+    <dependency name="filesystem" grouping="require_all" restart_on="error" type="service">
+      <service_fmri value="svc:/system/filesystem/local" />
+    </dependency>
 
-<instance name="default" enabled="true" />
+    <exec_method type="method" name="start" 
+      exec="node @@PREFIX@@/server.js &amp;" 
+      timeout_seconds="30">
+      <method_context working_directory="@@PREFIX@@">
+        <method_credential user="nobody" group="nobody" privileges="basic,net_privaddr"/>
+        <method_environment>
+          <envvar name="PATH" value="@@PREFIX@@/build/node/bin:/opt/local/bin:/usr/bin:/usr/sbin:/bin"/>
+          <envvar name="LD_PRELOAD_32" value="/usr/lib/extendedFILE.so.1" />
+        </method_environment>
+      </method_context>
+    </exec_method>
 
-<stability value='Unstable' />
+    <exec_method name='stop' type='method' exec=':kill' timeout_seconds='30'>
+      <method_context working_directory="@@PREFIX@@" />
+    </exec_method>
 
-<template>
-	<common_name><loctext xml:lang="C">Joyent AdminUIService</loctext></common_name>
-</template>
+    <exec_method type="method"
+      name="restart"
+      exec=":kill"
+      timeout_seconds="30">
+      <method_context working_directory="@@PREFIX@@" />
+    </exec_method>
 
-</service>
+
+    <instance name="default" enabled="true" />
+
+    <stability value='Stable' />
+
+    <template>
+      <common_name><loctext xml:lang="C">SmartDataCenter AdminUI Daemon</loctext></common_name>
+    </template>
+
+  </service>
 </service_bundle>
