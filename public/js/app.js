@@ -27,7 +27,7 @@ _.str = require('lib/underscore.string');
   });
 })();
 
-var PING_INTERVAL = 60*1000
+var PING_INTERVAL = 60*1000;
 
 var User = require('models/user');
 var AppView = require('views/app');
