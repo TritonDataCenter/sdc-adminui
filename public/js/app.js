@@ -27,7 +27,7 @@ _.str = require('lib/underscore.string');
   });
 })();
 
-var PING_INTERVAL = 2*60*1000
+var PING_INTERVAL = 60*1000
 
 var User = require('models/user');
 var AppView = require('views/app');
@@ -80,6 +80,10 @@ module.exports = Backbone.Router.extend({
 
     this.user.set('token', window.sessionStorage.getItem('api-token'));
 
+    setInterval(function() {
+      $.get('/_/ping', function() { console.log('.'); });
+    }, PING_INTERVAL);
+
     var self = this;
     $(document).ajaxError(function(e, xhr, settings, exception) {
       if (xhr.status == 403) {
@@ -94,10 +98,6 @@ module.exports = Backbone.Router.extend({
         return;
       }
     });
-
-    setInterval(function() {
-      $.get('/_/ping', function() { console.log('.'); });
-    }, PING_INTERVAL);
   },
 
   initChrome: function() {

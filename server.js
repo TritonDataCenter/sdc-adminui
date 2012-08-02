@@ -19,12 +19,15 @@ var log = require('bunyan').createLogger({
 var cfgFile = path.join(__dirname, '/etc/config.json');
 var cfg = loadConfig(cfgFile);
 
+log.info('Initializing AdminUI');
 var adminui = require('./lib/adminui').createServer({
   config: cfg,
   log: log
 });
 
-adminui.listen();
+adminui.listen(function() {
+  log.info('Ready to rock!');
+});
 
 process.on('uncaughtException', function(e) {
   log.fatal(e);
