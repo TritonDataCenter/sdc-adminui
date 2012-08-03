@@ -284,7 +284,7 @@ Request
               <tr>
                 <th class="status">Status</th>
                 <th>Hostname</th>
-                <th class="ram">RAM Usage</th>
+                <th class="memory">RAM Usage</th>
                 <th></th>
               </tr>
             </thead>
@@ -317,6 +317,10 @@ Request
               <tr>
                 <th>Hostname</th>
                 <td><%- server.get('hostname') %></td>
+              </tr>
+              <tr>
+                <th>Platform Version</th>
+                <td><%- server.get('sysinfo')['Live Image'] %></td>
               </tr>
             </tbody>
           </table>
@@ -560,8 +564,8 @@ Request
               <tr>
                 <th class="status">Status</th>
                 <th class="alias">Alias</th>
-                <th class="uuid">UUID</th>
                 <th class="memory">Memory</th>
+                <th class="uuid">UUID</th>
               </tr>
             </thead>
             <tbody>
@@ -585,8 +589,8 @@ Request
           </span>
         </td>
         <td class="alias"><%= alias %></td>
-        <td class="uuid"><%= uuid %></td>
         <td class="memory"><%= ram %> MB</td>
+        <td class="uuid"><%= uuid %></td>
       </tr>
     </script>
     <!-- }}} -->

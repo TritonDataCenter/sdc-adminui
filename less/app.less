@@ -50,11 +50,11 @@ body { padding-top: 60px; }
 #vms-list tr {
   cursor: pointer;
 
-  
   th.status { width: 100px; }
   th.alias { width: 200px; }
-  th.memory, td.memory { width: 100px; }
+  th.memory, td.memory { width: 100px; text-align: right; padding-right: 30px; }
 
+  th.uuid { width: 300px; }
   td.uuid {
     color: @grayLight;
     font-style: italic;
@@ -83,13 +83,13 @@ body { padding-top: 60px; }
 
 .servers-list {
   tr td { cursor: pointer; }
+
   .status { width: 100px; }
-  .memory { width: 200px; }
-  .memory .percent {
-    display: inline-block;
-    width: 60px;
+  .memory {
+    width: 200px;
+    .percent { display: inline-block; width: 60px; }
+    .breakdown { font-size: 11px; }
   }
-  .memory .breakdown { font-size: 11px; }
 }
 
 .server-details {
