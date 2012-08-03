@@ -48,6 +48,20 @@ module.exports = Backbone.Router.extend({
     // The dom element in which the root views are drawn to
     this.container = $("#chrome");
 
+    this.sock = new SockJS(window.location.origin + '/!/');
+
+    this.sock.onopen = function() {
+      console.log('open');
+    };
+
+    this.sock.onmessage = function(e) {
+      console.log('message', e.data);
+    };
+
+    this.sock.onclose = function() {
+      console.log('close');
+    };
+
     // The current root view being presented
     this.view = null;
 
