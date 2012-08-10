@@ -49,7 +49,7 @@ var CreateProbeController = BaseView.extend({
     this.probe.save({}, {
       success: function() {
         self.probeConfigView.hide();
-        self.eventBus.trigger('probe:added', probe);
+        self.eventBus.trigger('probe:added', self.probe);
       },
       error: function() {
         alert('Error saving probe');

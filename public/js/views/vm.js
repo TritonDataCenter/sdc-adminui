@@ -162,6 +162,7 @@ var VmView = BaseView.extend({
   },
 
   renderProbes: function() {
+    this.$('.probes tbody').empty();
     this.probes.each(function(m) {
       this.$('.probes tbody')
       .append('<tr>'
