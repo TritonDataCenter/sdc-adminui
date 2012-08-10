@@ -134,3 +134,48 @@ body { padding-top: 60px; }
     .pull-right;
   }
 }
+
+
+.select-monitor {
+  .modal;
+  .modal-header { overflow: hidden; }
+}
+
+.probe-log-scan-config {
+  .modal;
+  width: 540px;
+  margin-left: -270px;
+}
+
+.probe-type-select {
+  .modal;
+  .box {
+    display: block;
+    overflow: hidden;
+    clear: both;
+    height: 4em;
+    padding: 10px;
+    background: #f3f3f3;
+    border: 1px solid white;
+    border-color: darken(#f3f3f3, 10%);
+    color: #555;
+    .name { width: 120px; .pull-left; font-weight: bold;}
+    .desc { width: 360px; .pull-right; }
+    .border-radius(3px);
+  }
+
+  .box:hover {
+    color: #fff;
+    background: @blue;
+    border-color: darken(@blue, 10%);
+    cursor: pointer;
+  }
+
+  .box+.box {
+    margin-top: 0.5em;
+  }
+}
+
+.probes {
+  .name { width: 400px; }
+}

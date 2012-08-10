@@ -27,9 +27,9 @@ _.str = require('lib/underscore.string');
   });
 })();
 
-var PING_INTERVAL = 60*1000;
-
 var User = require('models/user');
+
+var Pinger = require('ping');
 var AppView = require('views/app');
 var SigninView = require('views/signin');
 
@@ -72,6 +72,7 @@ module.exports = Backbone.Router.extend({
     this.eventBus.on('wants-view', function(view, args) {
       this.view.presentView(view, args);
     }, this);
+
     this.eventBus.on('signout', this.signout);
 
     // holds the state of the currently logged in user
@@ -91,12 +92,10 @@ module.exports = Backbone.Router.extend({
         }
       }
     }, this);
-
     this.user.set('token', window.sessionStorage.getItem('api-token'));
 
-    setInterval(function() {
-      $.get('/_/ping', function() { console.log('.'); });
-    }, PING_INTERVAL);
+    this.pinger = new Pinger();
+    this.pinger.start();
 
     var self = this;
     $(document).ajaxError(function(e, xhr, settings, exception) {
@@ -125,13 +124,14 @@ module.exports = Backbone.Router.extend({
   routes: {
     'signin': 'showSignin',
     'vms': 'showVms',
+    'monitoring': 'showMonitoring',
     'vms/:uuid': 'showVm',
     'servers/:uuid': 'showServer',
-    '*default': 'defaultAction',
+    '*default': 'defaultAction'
   },
 
   defaultAction: function(page) {
-    console.log('[route] defaultAction:'+page)
+    console.log('[route] defaultAction:' + page)
 
     if (this.authenticated()) {
       page = page || 'dashboard';
@@ -147,6 +147,10 @@ module.exports = Backbone.Router.extend({
     } else {
       return true;
     }
+  },
+
+  showMonitoring: function() {
+    this.authenticated() && this.presentView('monitoring');
   },
 
   presentView: function(view, args) {

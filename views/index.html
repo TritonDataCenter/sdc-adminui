@@ -95,6 +95,7 @@
     </script>
     <!-- }}} -->
 
+    <!-- {{{ template notifier-job -->
     <script type="text/template" id="template-notifier-job">
       <div class="job <%= (execution === 'succeeded') ? 'success' : '' %>">
       <h3 class="name"><%= name %></h3>
@@ -109,24 +110,7 @@
 
     </div>
     </script>
-
-    <!-- {{{ template cavager -->
-    <script type="text/template" id="template-cavager">
-      <div class="cavager">
-        <div class="title">
-          <strong>HTTP STATUS <%= xhr.status %></strong> WE HAVE A PROBLEM!!! 
-        </div>
-
-        <div class="details">
-Response Body
-<%= xhr.responseText %>
-
-Request
-<%= JSON.stringify(settings, null, 2) %>
-        </div>
-      </div>
-    </script>
-    <!-- }}} -->
+    <!--}}} -->
 
     <!-- {{{ template sidebar -->
     <script type="text/text/template" id="template-sidebar">
@@ -136,7 +120,7 @@ Request
         <li data-view="servers"><a href="#"><i class="icon-book"></i> Servers</a></li>
         <li data-view="networks"><a href="#"><i class="icon-list"></i> Networks</a></li>
         <li data-view="users"><a href="#"><i class="icon-user"></i> Users &amp; Grouops</a></li>
-        <li data-view="images"><a href="#"><i class="icon-book"></i>Image Library</a></li>
+        <li data-view="monitoring"><a href="#"><i class="icon-book"></i> Monitoring</a></li>
       </ul>
     </script>
     <!-- }}} -->
@@ -464,6 +448,8 @@ Request
             <li><a href="#" class="reboot">Reboot</a></li>
             <li class="divider"></li>
             <li><a class="delete" href="#">Delete</a></li>
+            <li class="divider"></li>
+            <li><a href="#" class="create-probe">Create Probe</a></li>
           </ul>
         </div>
 
@@ -517,6 +503,7 @@ Request
             </tr>
           </table>
 
+
           <h2>Network Interfaces</h2>
           <table class="table">
             <thead>
@@ -544,6 +531,21 @@ Request
             </tbody>
 
           </table>
+
+          <div class="probes">
+            <h2>Probes</h2>
+            <table class="table">
+              <thead>
+              <tr>
+                <th class='name'>Name</th>
+                <th class='type'>Type</th>
+                <th class='monitor'>Monitor</th>
+              </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -578,7 +580,7 @@ Request
     </script>
     <!-- }}} -->
 
-    <!-- {{{ template vms-list-item -->
+   <!-- {{{ template vms-list-item -->
     <script id="template-vms-list-item" type="text/template">
       <tr>
         <td class="status">
@@ -705,6 +707,110 @@ Request
     </script>
     <!-- }}} -->
 
+    <script type="text/template" id="template-monitoring-log-scan-probe">
+      <div class="probe-log-scan-config">
+        <div class="modal-header">
+          <h2>Create Logscan Probe</h2>
+        </div>
+
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <div class="control-group">
+              <label class="control-label">Probe name</label>
+              <div class="controls">
+                <input type="text" name="name" class="input-large" value="<%= name%>">
+                <p class="help-block">
+                Probe names must begin with an alpha charactor and only include alphanumeric, '_', '.', and '-'
+                </p>
+              </div>
+            </div>
+
+
+            <fieldset>
+              <legend>Probe Configuration</legend>
+              <div class="control-group">
+                <label class="control-label">Log File Path</label>
+                <div class="controls">
+                  <input type="text" name="path" class="input-large" value="<%= path %>">
+                  <p class="help-block">Path to file on the VM to perform log scan on</p>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Regular Expression</label>
+                <div class="controls">
+                  <input type="text" name="regex" class="input-large" value="<% regex %>">
+                  <p class="help-block"> Regular expression pattern to match against each log line.  </p>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Period</label>
+                <div class="controls">
+                  <div class="input-append">
+                    <input type="text" name="period" placeholder="60"
+                    class="span1" value="" size="4">
+                    <span class="add-on">seconds</span>
+                  </div>
+
+                  <p class="help-block">Time window in which threshold number of matches must be found to alarm.  </p>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Threshold</label>
+                <div class="controls">
+                  <div class="input-append threshold-control">
+                    <input type="text" name="threshold" class="span1" value="" placeholder="1" size="4">
+                    <span class="add-on">times</span>
+                  </div>
+                  <p class="help-block">Number of times a match must be found
+                  within period to alarm.</p>
+                </div>
+              </div>
+            </fieldset>
+
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <div class="buttons">
+            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+            <button class="btn btn-primary">Continue</button>
+          </div>
+        </div>
+
+      </div>
+    </script>
+
+    <script type="text/template" id="template-probe-selection">
+      <div class="probe-type-select">
+        <div class="modal-header">
+          <h2>Select Probe Type</h2>
+        </div>
+
+        <div class="modal-body">
+          <a class="box" data-probe-type="log-scan">
+            <div class="name">Log Scan</div>
+            <div class="desc">Watches a specific file, line by line, for a
+              particular pattern</div>
+          </a>
+          <a class="box" data-probe-type='machine-up'>
+            <div class="name">Machine up</div>
+            <div class="desc">Watches for a VM going up or down. This probe does
+              not require an amon service to be running inside the VM being monitored.</div>
+          </a>
+          <a class="box" data-probe-type='http'>
+            <div class="name">HTTP</div>
+            <div class="desc">Watches for response (body text and status code) from specific HTTP(S) URL.</div>
+          </a>
+          <a class="box" data-probe-type='icmp'>
+            <div class="name">ICMP Ping</div>
+            <div class="desc">Sends ICMP packets to a machine and alarms based on latency and reachability.</div>
+          </a>
+        </div>
+      </div>
+    </script>
 
     <!-- {{{ template images -->
     <script type="text/template" id="template-images">
@@ -838,5 +944,12 @@ Request
     </script>
     <!-- }}} -->
 
+    <!-- {{{ template amon-main -->
+    <script type="text/template" id="template-monitoring">
+      <div class="page monitoring">
+        <div class="page-header"><h1>Monitoring</h1></div>
+      </div>
+    </script>
+    <!-- }}} -->
   </body>
 </html>

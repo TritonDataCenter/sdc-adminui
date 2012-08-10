@@ -3,8 +3,10 @@ var Vm = require('models/vm');
 var Image = require('models/image');
 var Server = require('models/server');
 var User = require('models/user');
+var Probes = require('models/probes');
 
 var VMDeleteModal = require('views/vm-delete-modal');
+var CreateProbeController = require('controllers/create-probe');
 
 /**
  * VmView
@@ -17,12 +19,17 @@ var VmView = BaseView.extend({
 
   sidebar: 'vms',
 
+  appEvents: {
+    'probe:added': 'onProbeAdded'
+  },
+
   events: {
     'click .server-hostname': 'clickedServerHostname',
     'click .start': 'clickedStartVm',
     'click .stop': 'clickedStopVm',
     'click .reboot': 'clickedRebootVm',
-    'click .delete': 'clickedDeleteVm'
+    'click .delete': 'clickedDeleteVm',
+    'click .create-probe': 'clickedCreateProbe'
   },
 
   uri: function() {
@@ -31,6 +38,7 @@ var VmView = BaseView.extend({
 
   initialize: function(options) {
     _.bindAll(this);
+
     this.vm = options.vm || new Vm();
 
     if (options.uuid) {
@@ -44,11 +52,13 @@ var VmView = BaseView.extend({
     this.owner = new User();
     this.image = new Image();
     this.server = new Server();
+    this.probes = new Probes();
 
-    this.image.on('change', this.render, this);
-    this.server.on('change', this.render, this);
-    this.owner.on('change', this.render, this);
+    this.image.on('change', this.renderImage, this);
+    this.server.on('change', this.renderServer, this);
+    this.owner.on('change', this.renderOwner, this);
 
+    this.probes.on('reset', this.renderProbes, this);
     this.image.set({ uuid: this.vm.get('image_uuid') });
     this.image.get('updated_at') || this.image.fetch();
 
@@ -58,15 +68,18 @@ var VmView = BaseView.extend({
     this.owner.set({ uuid: this.vm.get('owner_uuid') });
     this.owner.get('cn') || this.owner.fetch();
 
+
     this.vm.on('change:image_uuid', function(m) {
       this.image.set({uuid: m.get('image_uuid')});
       this.image.fetch();
     }, this);
 
     this.vm.on('change:owner_uuid', function(m) {
+      this.fetchProbes();
       this.owner.set({uuid: m.get('owner_uuid')});
       this.owner.fetch();
-    }, this),
+    }, this);
+
 
     this.vm.on('change:server_uuid', function(m) {
       this.server.set({uuid: m.get('server_uuid')});
@@ -76,6 +89,7 @@ var VmView = BaseView.extend({
     this.vm.on('change', this.render, this);
 
     this.vm.fetch();
+
 
     this.setElement(this.compileTemplate());
   },
@@ -95,6 +109,10 @@ var VmView = BaseView.extend({
       res.name = 'Start VM';
       self.eventBus.trigger('watch-job', job);
     });
+  },
+
+  clickedCreateProbe: function() {
+    var createProbeController = new CreateProbeController({ vm: this.vm });
   },
 
   clickedStopVm: function(e) {
@@ -125,10 +143,58 @@ var VmView = BaseView.extend({
     this.eventBus.trigger('wants-view', 'server', { server:this.server });
   },
 
-  render: function() {
-    this.$el.html(this.compileTemplate());
+  renderImage: function() {
+    this.$('.image-name-version').html(this.image.nameWithVersion());
+    this.$('.image-uuid').html(this.image.get('uuid'));
+
     return this;
   },
+
+  renderServer: function() {
+    this.$('.server-hostname').html(this.server.get('hostname'));
+    this.$('.server-uuid').html(this.server.get('uuid'));
+  },
+
+  renderOwner: function() {
+    this.$('.owner-name').html(this.owner.get('cn'));
+    this.$('.owner-uuid').html(this.owner.get('uuid'));
+    return this;
+  },
+
+  renderProbes: function() {
+    this.probes.each(function(m) {
+      this.$('.probes tbody')
+      .append('<tr>'
+              +'<td>'+m.get('name') +'</td>'
+              +'<td>'+m.get('type') +'</td>'
+              +'<td>'+m.get('monitor')
+              +'</tr>');
+    }, this);
+  },
+
+  render: function() {
+    this.$el.html(this.compileTemplate());
+
+    this.renderImage();
+    this.fetchProbes();
+    return this;
+  },
+
+  onProbeAdded: function(probe) {
+    this.fetchProbes();
+  },
+
+  fetchProbes: function() {
+    if (this.vm.get('owner_uuid') && this.vm.get('uuid')) {
+      this.probes.fetch({
+        data: $.param({
+          user: this.vm.get('owner_uuid'),
+          machine: this.vm.get('uuid')
+        })
+      });
+    }
+  }
+
 });
 
 module.exports = VmView;
