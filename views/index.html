@@ -707,6 +707,29 @@
     </script>
     <!-- }}} -->
 
+    <script type="text/template" id="template-monitoring-machine-up-probe">
+      <div class="probe-machine-up-config">
+        <div class="modal-header">
+          <h2>Create machine-up Probe</h2>
+        </div>
+        <div class="modal-body">
+          <p>
+          Watch for a VM (i.e. a virtual machine or zone) going up or down.
+          Alarms for this probe will "clear", i.e. an alarm created for a
+          machine going down will be automatically closed by the event sent when
+          the machine comes back up.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <div class="buttons">
+            <a class="btn" data-dismiss="modal">Cancel</a>
+            <button class="btn btn-primary">Create Probe</button>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <!-- template monitoring-log-scan-probe {{{ -->
     <script type="text/template" id="template-monitoring-log-scan-probe">
       <div class="probe-log-scan-config">
         <div class="modal-header">
@@ -781,8 +804,9 @@
         </div>
 
       </div>
-    </script>
+    </script> <!-- }}} -->
 
+    <!-- template probe-type-selection {{{ -->
     <script type="text/template" id="template-probe-selection">
       <div class="probe-type-select">
         <div class="modal-header">
@@ -810,7 +834,7 @@
           </a>
         </div>
       </div>
-    </script>
+    </script> <!-- }}} -->
 
     <!-- {{{ template images -->
     <script type="text/template" id="template-images">

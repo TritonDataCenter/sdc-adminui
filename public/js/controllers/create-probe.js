@@ -3,7 +3,8 @@ var SelectProbeTypeView = require('views/monitoring/select-probe-type');
 var SelectMonitorView = require('views/monitoring/select-monitor');
 
 var ProbeConfigViews = {
-  'log-scan': require('views/monitoring/config-log-scan')
+  'log-scan': require('views/monitoring/config-log-scan'),
+  'machine-up': require('views/monitoring/config-machine-up')
 }
 
 
@@ -37,7 +38,8 @@ var CreateProbeController = BaseView.extend({
   },
 
   showProbeConfig: function(p) {
-    this.probeConfigView = new (ProbeConfigViews[p]);
+    var ProbeConfigView = (ProbeConfigViews[p])
+    this.probeConfigView = new ProbeConfigView({vm:this.vm});
     this.probeConfigView.render().$el.modal();
     this.probeConfigView.on('done', this.onDoneProbeConfig);
     this.probeConfigView.focus();
