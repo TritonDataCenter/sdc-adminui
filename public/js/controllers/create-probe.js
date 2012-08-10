@@ -32,6 +32,7 @@ var CreateProbeController = BaseView.extend({
 
   onSelectProbe: function(p) {
     this.probe.set({type: p});
+    this.selectionView.$el.modal('hide');
     this.showProbeConfig(p);
   },
 

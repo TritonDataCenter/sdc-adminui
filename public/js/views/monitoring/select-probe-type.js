@@ -19,7 +19,7 @@ var ProbeSelection = BaseView.extend({
   },
 
   render: function() {
-    this.$el.html(this.template());
+    this.setElement(this.template());
     return this;
   }
 });

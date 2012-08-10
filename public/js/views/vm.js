@@ -132,10 +132,7 @@ var VmView = BaseView.extend({
   },
 
   clickedDeleteVm: function(e) {
-    var vmDeleteView = new VMDeleteModal({
-      vm: this.vm,
-      owner: this.owner
-    });
+    var vmDeleteView = new VMDeleteModal({ vm: this.vm, owner: this.owner });
     vmDeleteView.render();
   },
 
