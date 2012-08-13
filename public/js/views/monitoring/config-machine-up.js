@@ -24,7 +24,7 @@ var View = BaseView.extend({
   },
 
   render: function() {
-    this.$el.html(this.template(this.config.toJSON()));
+    this.setElement(this.template(this.config.toJSON()));
     this.delegateEvents();
 
     return this;

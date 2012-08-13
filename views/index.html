@@ -461,7 +461,7 @@
             <tr>
               <th>Name</th>
               <td>
-                <span class="alias"><%- vm.get('alias') %></span>
+                <span class="alias"><%- vm.get('alias') || '' %></span>
                 <span class="vm-uuid"><%- vm.get('uuid') %></span>
               </td>
             </tr>
@@ -469,7 +469,7 @@
               <th>Owner</th>
               <td>
                 <span class="owner-name"><%- owner.get('cn') || '' %></span>
-                <span class="owner-uuid"><%- vm.get('owner_uuid') %></span>
+                <span class="owner-uuid"><%- vm.get('owner_uuid') || '' %></span>
               </td>
             </tr>
             <tr>
@@ -494,11 +494,11 @@
             </tr>
             <tr>
               <th>Memory</th>
-              <td><%- vm.get('ram') %> MB</td>
+              <td><%- vm.get('ram') || '' %> MB</td>
             </tr>
             <tr>
               <th>Swap</th>
-              <td><%- vm.get('max_swap') %> MB</td>
+              <td><%- vm.get('max_swap') || '' %> MB</td>
             </tr>
           </table>
 
