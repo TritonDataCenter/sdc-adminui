@@ -11,7 +11,7 @@ var ConfigHttpProbe = BaseView.extend({
 	},
 
 	initialize: function(options) {
-		this.config = {type:'http'};
+		this.params = {type: 'http', config: {}};
 		this.defaults = {};
 	},
 
@@ -45,19 +45,19 @@ var ConfigHttpProbe = BaseView.extend({
 	},
 
 	onUrlChange: function() {
-		this.config.url = _.str.sprintf("%s%s", this.$protocol.val(), this.$url.val());
+		this.params.config.url = _.str.sprintf("%s%s", this.$protocol.val(), this.$url.val());
 	},
 
 	onUsernameChange: function() {
-		this.config.username = this.$username.val();
+		this.params.config.username = this.$username.val();
 	},
 
 	onPasswordChange: function() {
-		this.config.password = this.$password.val();
+		this.params.config.password = this.$password.val();
 	},
 
 	onIntervalChange: function() {
-		this.config.interval = this.$interval.val();
+		this.params.config.interval = this.$interval.val();
 	}
 });
 

@@ -22,4 +22,4 @@ var Probe = module.exports = Backbone.Model.extend({
     }
 });
 
-Probe.types = ['machine-up', 'log-scan'];
+Probe.types = ['machine-up', 'log-scan', 'icmp'];

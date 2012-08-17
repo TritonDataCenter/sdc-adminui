@@ -26,7 +26,7 @@ module.exports = BaseView.extend({
     var self = this;
     this.$el.modal('hide');
     this.vm.delete(function(job) {
-      job.name = 'Delete VM'
+      job.name = 'Delete VM';
       self.eventBus.trigger('watch-job', job);
       console.log(job);
     });

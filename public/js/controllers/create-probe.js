@@ -5,7 +5,8 @@ var SelectMonitorView = require('views/monitoring/select-monitor');
 var ProbeConfigViews = {
   'log-scan': require('views/monitoring/config-log-scan'),
   'machine-up': require('views/monitoring/config-machine-up'),
-  'http': require('views/monitoring/config-http')
+  'http': require('views/monitoring/config-http'),
+  'icmp': require('views/monitoring/config-icmp')
 };
 
 var Probe = require('models/probe');
@@ -16,12 +17,6 @@ var CreateProbeController = BaseView.extend({
 
     this.probe = options.probe || new Probe();
     this.vm = options.vm;
-    this.probe.set({
-      user: this.vm.get('owner_uuid'),
-      agent: this.vm.get('uuid'),
-      machine: this.vm.get('uuid')
-    });
-
     this.showSelectProbeView();
   },
 
@@ -41,7 +36,7 @@ var CreateProbeController = BaseView.extend({
     var ProbeConfigView = (ProbeConfigViews[p]);
     
     this.probeConfigView = new ProbeConfigView({
-      vm:this.vm,
+      vm: this.vm,
       probe: this.probe
     });
 
@@ -51,21 +46,28 @@ var CreateProbeController = BaseView.extend({
   },
 
 
-  onDoneProbeConfig: function(config) {
+  onDoneProbeConfig: function(cfg) {
+    console.log('onDoneProbeConfig', cfg);
     var self = this;
-    var valid = this.probe.set(config);
+    console.log(this.probe);
+    this.probe.set({
+      user: this.vm.get('owner_uuid'),
+      type: cfg.type,
+      name: cfg.name,
+      agent: cfg.agent,
+      config: cfg.config
+    });
+    console.log(this.probe);
 
-    if (valid) {
-      this.probe.save({}, {
-        success: function() {
-          self.probeConfigView.hide();
-          self.eventBus.trigger('probe:added', self.probe);
-        },
-        error: function() {
-          alert('Error saving probe');
-        }
-      });
-    }
+    this.probe.save({}, {
+      success: function() {
+        self.probeConfigView.$el.modal('hide');
+        self.eventBus.trigger('probe:added', self.probe);
+      },
+      error: function() {
+        alert('Error saving probe');
+      }
+    });
   }
 });
 
