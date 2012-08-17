@@ -1,6 +1,6 @@
 var BaseView = require('views/base');
 var Vm = require('models/vm');
-var Image = require('models/image');
+var Img = require('models/image');
 var Server = require('models/server');
 var User = require('models/user');
 var Probes = require('models/probes');
@@ -39,18 +39,13 @@ var VmView = BaseView.extend({
   initialize: function(options) {
     _.bindAll(this);
 
-    this.vm = options.vm || new Vm();
-
-    if (options.uuid) {
-      this.vm.set({uuid: options.uuid});
-    } else if (options.vm) {
+    if (options.uuid)
+      this.vm = new Vm({uuid: options.uuid});
+    if (options.vm)
       this.vm = options.vm;
-    } else {
-      alert('no uuid or vm error');
-    }
 
     this.owner = new User();
-    this.image = new Image();
+    this.image = new Img();
     this.server = new Server();
     this.probes = new Probes();
 
@@ -60,13 +55,18 @@ var VmView = BaseView.extend({
 
     this.probes.on('reset', this.renderProbes, this);
     this.image.set({ uuid: this.vm.get('image_uuid') });
-    this.image.get('updated_at') || this.image.fetch();
+    if (! this.image.get('updated_at'))
+      this.image.fetch();
 
     this.server.set({ uuid: this.vm.get('server_uuid') });
-    this.server.get('last_modified') || this.server.fetch();
+    if (! this.server.get('last_modified')) {
+      this.server.fetch();
+    }
 
     this.owner.set({ uuid: this.vm.get('owner_uuid') });
-    this.owner.get('cn') || this.owner.fetch();
+    if (! this.owner.get('cn')) {
+      this.owner.fetch();
+    }
 
 
     this.vm.on('change:image_uuid', function(m) {
@@ -80,18 +80,13 @@ var VmView = BaseView.extend({
       this.owner.fetch();
     }, this);
 
-
     this.vm.on('change:server_uuid', function(m) {
       this.server.set({uuid: m.get('server_uuid')});
       this.server.fetch();
     }, this);
 
-    this.vm.on('change', this.render, this);
-
+    this.vm.on('change:alias', this.render, this);
     this.vm.fetch();
-
-
-    this.setElement(this.compileTemplate());
   },
 
   compileTemplate: function() {
@@ -126,7 +121,7 @@ var VmView = BaseView.extend({
   clickedRebootVm: function(e) {
     var self = this;
     this.vm.reboot(function(job) {
-      job.name = 'Reboot VM'
+      job.name = 'Reboot VM';
       self.eventBus.trigger('watch-job', job);
     });
   },
@@ -162,16 +157,16 @@ var VmView = BaseView.extend({
     this.$('.probes tbody').empty();
     this.probes.each(function(m) {
       this.$('.probes tbody')
-      .append('<tr>'
-              +'<td>'+m.get('name') +'</td>'
-              +'<td>'+m.get('type') +'</td>'
-              +'<td>'+m.get('monitor')
-              +'</tr>');
+      .append(
+        _.str.sprintf('<tr><td>%s</td><td>%s</td><td>%s</tr>',
+          m.get('name'), m.get('type'), m.get('monitor'))
+        );
     }, this);
   },
 
   render: function() {
     this.$el.html(this.compileTemplate());
+    console.log('render');
 
     this.renderImage();
     this.fetchProbes();

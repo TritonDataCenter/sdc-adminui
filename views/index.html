@@ -427,7 +427,7 @@
     </script>
     <!-- }}} -->
 
-    <!-- {{{ template vm --->
+    <!-- {{{ template vm -->
     <script id="template-vm" type="text/template">
       <div class="page-vm">
         <div class="page-header">
@@ -596,7 +596,7 @@
     </script>
     <!-- }}} -->
 
-    <!-- {{{ template vm-delete-modal --->
+    <!-- {{{ template vm-delete-modal -->
     <script type="text/template" id="template-vm-delete-modal">
       <div class="modal hide fade">
         <div class="modal-header">
@@ -704,6 +704,103 @@
     </script>
     <!-- }}} -->
 
+    <script type="text/template" id="template-monitoring-http-probe">
+      <div class="probe-http-config">
+        <div class="modal-header"><h2>Create HTTP Probe</h2></div>
+        <div class="modal-body">
+
+          <form class="form-horizontal">
+            <fieldset>
+              <div class="control-group control-group-name">
+                <label class="control-label">Probe Name</label>
+                <div class="controls">
+                  <input type="text" name="name">
+                </div>
+              </div>
+
+              <div class="control-group control-group-url">
+                <label class="control-label">URL</label>
+                <div class="controls">
+                  <div class="input-append">
+                    <select class="protocol" name="protocol">
+                      <option value="http">http://</option>
+                      <option value="https">https://</option>
+                    </select>
+                    <input type="text" name="url" class="input-xlarge">
+                  </div>
+                </div>
+              </div>
+
+            </fieldset>
+
+            <hr>
+
+            <fieldset>
+              <div class="control-group">
+                <label class="control-label"></label>
+                <a data-toggle="collapse" data-target=".advanced-options">Advanced Options</a>
+              </div>
+
+              <div class="collapse advanced-options">
+                <div class="control-group control-group-method">
+                  <label class="control-label">HTTP Method</label>
+                  <div class="controls">
+                    <select name="method">
+                      <option value="GET">GET</option>
+                      <option value="POST">POST</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label">Username</label>
+                  <div class="controls">
+                    <input name="username" type="text" class="input large">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label">Password</label>
+                  <div class="controls">
+                    <input name="password" type="text" class="input large">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label">Check Interval</label>
+                  <div class="controls">
+                    <div class="input-append">
+                    <input name="interval" type="text" class="input span1" placeholder="90">
+                    <span class="add-on">seconds</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label">Maximum Response Time</label>
+                  <div class="controls">
+                    <div class="input-append">
+                      <input name="max-response-time" type="text" class="input span1">
+                      <span class="add-on">ms</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </fieldset>
+
+          </form>
+        </div> <!-- modal-body -->
+        <div class="modal-footer">
+          <div class="actions">
+            <a class="btn" data-dismiss="modal">Cancel</a>
+            <button class="btn btn-primary">Create Probe</button>
+          </div>
+        </div>
+      </div>
+    </script>
+
     <script type="text/template" id="template-monitoring-machine-up-probe">
       <div class="probe-machine-up-config">
         <div class="modal-header">
@@ -711,10 +808,10 @@
         </div>
         <div class="modal-body">
           <p>
-          Watch for a VM (i.e. a virtual machine or zone) going up or down.
-          Alarms for this probe will "clear", i.e. an alarm created for a
-          machine going down will be automatically closed by the event sent when
-          the machine comes back up.
+            Watch for a VM (i.e. a virtual machine or zone) going up or down.
+            Alarms for this probe will "clear", i.e. an alarm created for a
+            machine going down will be automatically closed by the event sent when
+            the machine comes back up.
           </p>
         </div>
         <div class="modal-footer">
@@ -735,10 +832,11 @@
 
         <div class="modal-body">
           <form class="form-horizontal">
-            <div class="control-group">
-              <label class="control-label">Probe name</label>
+
+            <div class="control-group control-group-name">
+              <label class="control-label">Name of Probe</label>
               <div class="controls">
-                <input type="text" name="name" class="input-large" value="<%= name%>">
+                <input type="text" name="name" class="input-xlarge">
                 <p class="help-block">
                 Probe names must begin with an alpha charactor and only include alphanumeric, '_', '.', and '-'
                 </p>
@@ -748,23 +846,27 @@
 
             <fieldset>
               <legend>Probe Configuration</legend>
-              <div class="control-group">
+              <div class="control-group control-group-path">
                 <label class="control-label">Log File Path</label>
                 <div class="controls">
-                  <input type="text" name="path" class="input-large" value="<%= path %>">
+                  <input type="text" name="path" class="input-xlarge">
                   <p class="help-block">Path to file on the VM to perform log scan on</p>
                 </div>
               </div>
 
-              <div class="control-group">
-                <label class="control-label">Regular Expression</label>
+              <div class="control-group control-group-regex">
+                <label class="control-label">Match String</label>
                 <div class="controls">
-                  <input type="text" name="regex" class="input-large" value="<% regex %>">
-                  <p class="help-block"> Regular expression pattern to match against each log line.  </p>
+                  <input type="text" name="regex" class="input-xlarge">
+                  <p class="help-block">
+                  <label class="checkbox"><input type="checkbox" name="is-egex">
+                    Pattern is a regular expression
+                  </label>
+                  </p>
                 </div>
               </div>
 
-              <div class="control-group">
+              <div class="control-group control-group-period">
                 <label class="control-label">Period</label>
                 <div class="controls">
                   <div class="input-append">
@@ -777,7 +879,7 @@
                 </div>
               </div>
 
-              <div class="control-group">
+              <div class="control-group control-group-threshold">
                 <label class="control-label">Threshold</label>
                 <div class="controls">
                   <div class="input-append threshold-control">

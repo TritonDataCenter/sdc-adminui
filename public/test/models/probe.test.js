@@ -2,18 +2,20 @@ module('models/probe');
 
 var Probe = require('models/probe');
 
-test('probe name', function() {
-  var probe = new Probe();
-  equal(false, probe.set({name: ''}), 'empty string');
-  equal(false, probe.set({name: null}), 'null value');
+test('validate', function() {
+    var p = new Probe();
+
+    ok( p.validate({}).name, 'error on name');
+    ok( p.validate({}).type, 'error on type');
+    ok( p.validate({name:'', type:''}).name, 'errors on name');
+    ok( p.validate({name:null, type: null}).name, 'errors on name');
+    ok( p.validate({name:'', type:''}).type, 'errors on type');
+    ok( p.validate({name:null, type: null}).type, 'errors on type');
 });
 
-test('log-scan', function() {
-  var probe = new Probe({
-    type:'log-scan',
-    name:'my-log-scan-probe'
-  });
+test('validate probe type', function() {
+    var p = new Probe();
 
-  equal(false, probe.set({ path:'bad_path' }), 'fails on proper path');
-  ok( probe.set({path: '/var/log/messages'}) , 'passes on proper path');
+    equal( undefined, p.validate({type:'log-scan'}).type, 'does not error on valid type');
+    ok( p.validate({type:'no-such-probe'}).type, 'errors on no such probe');
 });

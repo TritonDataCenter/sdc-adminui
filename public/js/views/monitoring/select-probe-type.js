@@ -13,7 +13,7 @@ var ProbeSelection = BaseView.extend({
 
   selectedProbeType: function(e) {
     var elm = $(e.currentTarget);
-    var probe = elm.attr('data-probe-type')
+    var probe = elm.attr('data-probe-type');
     this.trigger('select', probe);
     this.$el.modal('hide');
   },

@@ -1,69 +1,160 @@
-var BaseView = require('views/base');
+var regexEscape = require('utils/regexp');
 
+var BaseView = require('views/base');
 var View = BaseView.extend({
 
-  template: 'monitoring-log-scan-probe',
+    template: 'monitoring-log-scan-probe',
 
-  events: {
-    'input input[name=threshold]': 'thresholdChanged',
-    'input input[name=period]': 'periodChanged',
-    'input input[name=regex]': 'regexChanged',
-    'input input[name=path]': 'pathChanged',
-    'input input[name=name]': 'nameChanged',
-    'click button': 'done'
-  },
+    events: {
+        'keyup input[name=name]': 'nameChanged',
+        'keyup input[name=path]': 'pathChanged',
 
-  initialize: function(options) {
-    _.bindAll(this);
+        'keyup input[name=regex]': 'regexChanged',
+        'change input[name=is-regex]': 'isRegexChanged',
 
-    this.config = new Backbone.Model();
-    this.config.set({
-      period: 60,
-      threshold: 1,
-      path: '',
-      regex: ''
-    });
-  },
+        'keyup input[name=threshold]': 'thresholdChanged',
+        'keyup input[name=period]': 'periodChanged',
+        'click button': 'done'
+    },
 
-  focus: function() {
-    this.$el.find('input:first').focus();
-    return this;
-  },
+    initialize: function(options) {
+        _.bindAll(this);
 
-  render: function() {
-    this.$el.html(this.template(this.config.toJSON()));
-    this.delegateEvents();
+        this.defaults = {
+          period: 60,
+          threshold: 1,
+          path: '',
+          regex: ''
+        };
+        this.config = {};
+    },
 
-    return this;
-  },
+    bindElements: function() {
+        this.$name = this.$('input[name=name]');
+        this.$threshold = this.$('input[name=threshold]');
+        this.$regex = this.$('input[name=regex]');
+        this.$path = this.$('input[name=path]');
+    },
 
-  done: function() {
-    this.trigger('done', this.config.toJSON());
-  },
+    focus: function() {
+        this.$el.find('input:first').focus();
+        this.bindElements();
 
-  hide: function() {
-    this.$el.modal('hide');
-  },
+        return this;
+    },
 
-  pathChanged: function() {
-    this.config.set('path', this.$('input[name=path]').val());
-  },
+    render: function() {
+        this.setElement(this.template());
 
-  thresholdChanged: function() {
-    this.config.set('threshold', this.$('input[name=threshold]').val());
-  },
+        return this;
+    },
 
-  periodChanged: function() {
-    this.config.set('period', this.$('input[name=period]').val());
-  },
+    done: function() {
+        this.trigger('done', _.defaults(this.config, this.defaults));
+    },
 
-  nameChanged: function() {
-    this.config.set('name', this.$('input[name=name]').val());
-  },
+    hide: function() {
+        this.$el.modal('hide');
+    },
 
-  regexChanged: function() {
-    this.config.set('regex', this.$('input[name=regex]').val());
-  }
+    showError: function(field, msg) {
+        this.$('.control-group-'+field).addClass('error');
+    },
+
+    hideError: function(field) {
+        this.$('.control-group-'+field).removeClass('error');
+    },
+
+    nameChanged: function() {
+        var vRes = this._validateName();
+        if (true === vRes) {
+          this.hideError('name');
+          this.config.name = this.$name.val();
+        } else {
+            this.showError('name', vRes);
+        }
+    },
+
+    pathChanged: function() {
+        if (true === this._validatePath()) {
+            this.hideError('path');
+            this.config.path = this.$path.val();
+        } else {
+            this.showError('path', 'Path likely to be invalid.');
+        }
+    },
+
+    thresholdChanged: function() {
+        var regex = /^\d+$/;
+        var value = this.$threshold.val();
+        if (value.length === 0) {
+            delete this.config.threshold;
+            this.hideError();
+            return;
+        }
+
+        if (regex.test(value)) {
+            this.config.threshold = Number(value);
+            this.hideError('threshold');
+        } else {
+            this.showError('threshold', 'Threshold should be a number');
+        }
+    },
+
+    periodChanged: function() {
+        var res = this._validateThreshold();
+
+        if (res === true) {
+            this.config.period = this.$period.val();
+            this.hideError('period');
+        } else {
+            this.showError('period', res);
+        }
+    },
+
+    isRegexChanged: function() {
+        this.config.isRegex = true;
+    },
+
+    regexChanged: function() {
+        var res = this._validateThreshold();
+
+        if (res === true) {
+            this.config.regex = this.$regex.val();
+
+            if (this.config.isRegex) {
+                this.config.regex = regexEscape(this.config.regex);
+            }
+
+            this.hideError('regex');
+        } else {
+            delete this.config.regex;
+            this.showError('regex', res);
+        }
+    },
+
+    _validatePath: function() {
+        var regex = /^\/.+/;
+        if (regex.test(this.$path.val())) {
+            return true;
+        } else {
+            return 'path liekly to be invalid.';
+        }
+    },
+
+    _validateName: function() {
+        if (this.$name.val().length === 0) {
+            return 'probe name is required';
+        }
+
+        var regex = /^[a-zA-Z0-9][a-zA-Z0-9\-\_\.]/;
+
+        if (false === regex.test(this.$name.val())) {
+            return "Probe names must begin with an alpha charactor and only include alphanumeric, '_', '.', and '-'";
+        }
+
+        return true;
+    }
 
 });
 

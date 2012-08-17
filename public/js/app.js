@@ -76,7 +76,7 @@ module.exports = Backbone.Router.extend({
     this.eventBus.on('signout', this.signout);
 
     // holds the state of the currently logged in user
-    this.user = new User;
+    this.user = new User();
     this.user.on('change:token', function(user) {
       var token = user.get('token');
 
@@ -88,7 +88,7 @@ module.exports = Backbone.Router.extend({
         $.ajaxSetup({ headers:{'x-adminui-token': token} });
 
         if (typeof(Backbone.history.fragment) !== 'undefined') {
-          Backbone.history.loadUrl( Backbone.history.fragment )
+          Backbone.history.loadUrl(Backbone.history.fragment);
         }
       }
     }, this);
@@ -124,14 +124,14 @@ module.exports = Backbone.Router.extend({
   routes: {
     'signin': 'showSignin',
     'vms': 'showVms',
-    'monitoring': 'showMonitoring',
     'vms/:uuid': 'showVm',
+    'monitoring': 'showMonitoring',
     'servers/:uuid': 'showServer',
     '*default': 'defaultAction'
   },
 
   defaultAction: function(page) {
-    console.log('[route] defaultAction:' + page)
+    console.log(_.str.sprintf('[route] defaultAction: %s', page));
 
     if (this.authenticated()) {
       page = page || 'dashboard';
@@ -150,7 +150,8 @@ module.exports = Backbone.Router.extend({
   },
 
   showMonitoring: function() {
-    this.authenticated() && this.presentView('monitoring');
+    if (this.authenticated())
+      this.presentView('monitoring');
   },
 
   presentView: function(view, args) {
@@ -159,12 +160,14 @@ module.exports = Backbone.Router.extend({
   },
 
   showVms: function() {
-    this.authenticated() && this.presentView('vms');
+    if (this.authenticated())
+      this.presentView('vms');
   },
 
   showVm: function(uuid) {
-    console.log('[route] showVm:'+uuid)
-    this.authenticated() && this.presentView('vm', { uuid: uuid });
+    console.log(_.str.sprintf('[route] showVm: %s', uuid));
+    if (this.authenticated())
+      this.presentView('vm', { uuid: uuid });
   },
 
   showServer: function(uuid) {

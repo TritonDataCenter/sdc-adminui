@@ -1,12 +1,12 @@
-var BaseView = require('views/base')
+var BaseView = require('views/base');
 var SelectProbeTypeView = require('views/monitoring/select-probe-type');
 var SelectMonitorView = require('views/monitoring/select-monitor');
 
 var ProbeConfigViews = {
   'log-scan': require('views/monitoring/config-log-scan'),
-  'machine-up': require('views/monitoring/config-machine-up')
-}
-
+  'machine-up': require('views/monitoring/config-machine-up'),
+  'http': require('views/monitoring/config-http')
+};
 
 var Probe = require('models/probe');
 
@@ -15,7 +15,7 @@ var CreateProbeController = BaseView.extend({
     _.bindAll(this);
 
     this.probe = options.probe || new Probe();
-    this.vm = options.vm
+    this.vm = options.vm;
     this.probe.set({
       user: this.vm.get('owner_uuid'),
       agent: this.vm.get('uuid'),
@@ -38,8 +38,13 @@ var CreateProbeController = BaseView.extend({
   },
 
   showProbeConfig: function(p) {
-    var ProbeConfigView = (ProbeConfigViews[p])
-    this.probeConfigView = new ProbeConfigView({vm:this.vm});
+    var ProbeConfigView = (ProbeConfigViews[p]);
+    
+    this.probeConfigView = new ProbeConfigView({
+      vm:this.vm,
+      probe: this.probe
+    });
+
     this.probeConfigView.render().$el.modal();
     this.probeConfigView.on('done', this.onDoneProbeConfig);
     this.probeConfigView.focus();
@@ -48,16 +53,19 @@ var CreateProbeController = BaseView.extend({
 
   onDoneProbeConfig: function(config) {
     var self = this;
-    this.probe.set(config);
-    this.probe.save({}, {
-      success: function() {
-        self.probeConfigView.hide();
-        self.eventBus.trigger('probe:added', self.probe);
-      },
-      error: function() {
-        alert('Error saving probe');
-      }
-    });
+    var valid = this.probe.set(config);
+
+    if (valid) {
+      this.probe.save({}, {
+        success: function() {
+          self.probeConfigView.hide();
+          self.eventBus.trigger('probe:added', self.probe);
+        },
+        error: function() {
+          alert('Error saving probe');
+        }
+      });
+    }
   }
 });
 
