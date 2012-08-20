@@ -747,14 +747,14 @@
         <div class="modal-body">
 
             <fieldset>
-              <div class="control-group control-group-name">
+              <div class="control-group name">
                 <label class="control-label">Probe Name</label>
                 <div class="controls">
                   <input type="text" name="name">
                 </div>
               </div>
 
-              <div class="control-group control-group-url">
+              <div class="control-group url">
                 <label class="control-label">URL</label>
                 <div class="controls">
                   <div class="input-append">
@@ -778,31 +778,21 @@
               </div>
 
               <div class="collapse advanced-options">
-                <div class="control-group control-group-method">
-                  <label class="control-label">HTTP Method</label>
-                  <div class="controls">
-                    <select name="method">
-                      <option value="GET">GET</option>
-                      <option value="POST">POST</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="control-group">
+                <div class="control-group username">
                   <label class="control-label">Username</label>
                   <div class="controls">
                     <input name="username" type="text" class="input large">
                   </div>
                 </div>
 
-                <div class="control-group">
+                <div class="control-group password">
                   <label class="control-label">Password</label>
                   <div class="controls">
                     <input name="password" type="text" class="input large">
                   </div>
                 </div>
 
-                <div class="control-group">
+                <div class="control-group interval">
                   <label class="control-label">Check Interval</label>
                   <div class="controls">
                     <div class="input-append">
@@ -812,7 +802,7 @@
                   </div>
                 </div>
 
-                <div class="control-group">
+                <div class="control-group max-response-time">
                   <label class="control-label">Maximum Response Time</label>
                   <div class="controls">
                     <div class="input-append">
@@ -825,13 +815,13 @@
               </div>
 
             </fieldset>
-        </div> <!-- modal-body -->
-        <div class="modal-footer">
-          <div class="actions">
-            <a class="btn" data-dismiss="modal">Cancel</a>
-            <button class="btn btn-primary">Create Probe</button>
+          </div> <!-- modal-body -->
+          <div class="modal-footer">
+            <div class="actions">
+              <a class="btn" data-dismiss="modal">Cancel</a>
+              <button class="btn btn-primary">Create Probe</button>
+            </div>
           </div>
-        </div>
         </form>
       </div>
     </script>

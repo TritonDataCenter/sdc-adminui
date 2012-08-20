@@ -12,11 +12,11 @@ var View = BaseView.extend({
     _.bindAll(this);
     options = options || {};
 
-    this.config = new Backbone.Model();
-    this.config.set({
+    this.params = {
+      type: 'machine-up',
       agent: options.vm.get('uuid'),
       name: _.str.sprintf('machine-up-%s', options.vm.get('alias'))
-    });
+    };
   },
 
   focus: function() {
@@ -24,14 +24,14 @@ var View = BaseView.extend({
   },
 
   render: function() {
-    this.setElement(this.template(this.config.toJSON()));
+    this.setElement(this.template());
     this.delegateEvents();
 
     return this;
   },
 
   done: function() {
-    this.trigger('done', this.config.toJSON());
+    this.trigger('done', this.params);
   },
 
   hide: function() {
