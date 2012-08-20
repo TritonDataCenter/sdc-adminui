@@ -7,16 +7,19 @@ var ConfigHttpProbe = BaseView.extend({
 		'click button.btn-primary': 'onComplete',
 		'submit form': 'onComplete',
 
-		'keyup input[name=name]': 'onNameChange',
-		'keyup input[name=url]': 'onUrlChange',
-		'keyup input[name=username]': 'onUsernameChange',
-		'keyup input[name=password]': 'onPasswordChange',
-		'keyup input[name=interval]': 'onIntervalChange',
-		'keyup input[name=max-response-tine]': 'onMaxResponseTimeChange'
+		'keyup input[name=name]': 'validateName',
+		'keyup input[name=url]': 'validateUrl',
+		'keyup input[name=username]': 'validateUsername',
+		'keyup input[name=password]': 'validatePassword',
+		'keyup input[name=interval]': 'validateInterval',
+		'keyup input[name=max-response-tine]': 'validateMaxResponseTime'
 	},
 
 	initialize: function(options) {
 		this.params = {type: 'http', config: {}};
+
+		// XXX There should probably be a way to select which agent to run this probe...
+		this.params.agent  = options.vm.get('uuid');
 	},
 
 	focus: function() {
@@ -26,6 +29,7 @@ var ConfigHttpProbe = BaseView.extend({
 	bindElements: function() {
 		this.$url = this.$('input[name=url]');
 		this.$urlGroup = this.$('.control-group.url');
+		this.$protocol = this.$('select[name=protocol]');
 
 		this.$name = this.$('input[name=name]');
 		this.$nameGroup = this.$('.control-group.name');
@@ -33,10 +37,14 @@ var ConfigHttpProbe = BaseView.extend({
 		this.$maxResponseTime = this.$('input[name=max-response-time]');
 		this.$maxResponseTimeGroup = this.$('.control-group.max-response-time');
 
+		this.$username = this.$('input[name=username]');
+		this.$usernameGroup = this.$('.control-group.username');
+
+		this.$password = this.$('input[name=password]');
+		this.$passwordGroup = this.$('.control-group.password');
+
 		this.$interval = this.$('input[name=interval]');
 		this.$intervalGroup = this.$('.control-group.interval');
-
-		this.$protocol = this.$('input[name=protocol]');
 	},
 
 	render: function() {
@@ -51,9 +59,28 @@ var ConfigHttpProbe = BaseView.extend({
      * Input Callbacks
      */
      
-	onComplete: function() {
-		this.params.config.url = _.str.sprintf("%s%s", this.$protocol.val(), this.$url.val());
+	onComplete: function(e) {
+		e.preventDefault();
+		e.stopPropagation();
 
+		if (this.validateUrl() &&
+			this.validateName() &&
+			this.validateUsername() &&
+			this.validatePassword() &&
+			this.validateInterval() &&
+			this.validateMaxResponseTime()) {
+
+			this.populateParams();
+			this.trigger('done', this.params);
+		}
+	},
+
+	populateParams: function() {
+		this.params.config.url = _.str.sprintf("%s://%s", this.$protocol.val(), this.$url.val());
+
+		if (this.$name.val().length) {
+			this.params.name = this.$name.val();
+		}
 		if (this.$interval.val().length) {
 			this.params.config.interval = Number(this.$interval.val());
 		}
@@ -66,49 +93,48 @@ var ConfigHttpProbe = BaseView.extend({
 		if (this.$maxResponseTime.val().length) {
 			this.params.config.maxResponseTime = this.$maxResponseTime.val();
 		}
-
-		this.trigger('done', this.params);
 	},
 
-	onUrlChange: function() {
+	validateUrl: function() {
 		if (this.$url.val().length === 0) {
 			this.$urlGroup.addClass('error');
 		} else {
 			this.$urlGroup.removeClass('error');
+			return true;
 		}
 	},
 
-	onNameChange: function() {
+	validateName: function() {
 		if (this.$name.val().length === 0) {
 			this.$nameGroup.addClass('error');
 		} else {
 			this.$nameGroup.removeClass('error');
+			return true;
 		}
 	},
 
-	onUsernameChange: function() {
-	},
+	validateUsername: function() { return true; },
 
-	onPasswordChange: function() {
-	},
+	validatePassword: function() { return true; },
 
-
-	onMaxResponseTimeChange: function() {
+	validateMaxResponseTime: function() {
 		var val = this.$maxResponseTime.val();
 		if (val.length > 0 && /^\d+$/.test(val) === false) {
 			this.$maxResponseTimeGroup.addClass('error');
 		} else {
 			this.$maxResponseTimeGroup.removeClass('error');
+			return true;
 		}
 
 	},
 
-	onIntervalChange: function() {
+	validateInterval: function() {
 		var val = this.$interval.val();
 		if (val.length > 0 && /^\d+$/.test(val) === false) {
 			this.$intervalGroup.addClass('error');
 		} else {
 			this.$intervalGroup.removeClass('error');
+			return true;
 		}
 	}
 });
