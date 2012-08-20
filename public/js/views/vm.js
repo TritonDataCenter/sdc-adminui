@@ -158,8 +158,8 @@ var VmView = BaseView.extend({
     this.probes.each(function(m) {
       this.$('.probes tbody')
       .append(
-        _.str.sprintf('<tr><td>%s</td><td>%s</td><td>%s</tr>',
-          m.get('name'), m.get('type'), m.get('monitor'))
+        _.str.sprintf('<tr><td>%s</td><td>%s</td></tr>',
+          m.get('name'), m.get('type'))
         );
     }, this);
   },

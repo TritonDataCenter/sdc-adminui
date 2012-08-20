@@ -536,7 +536,6 @@
               <tr>
                 <th class='name'>Name</th>
                 <th class='type'>Type</th>
-                <th class='monitor'>Monitor</th>
               </tr>
               </thead>
               <tbody>
@@ -706,20 +705,9 @@
 
     <script type="text/template" id="template-monitoring-icmp-probe">
       <div class="probe-icmp-config">
+      <form>
         <div class="modal-header"><h2>Create ICMP Probe</h2></div>
         <div class="modal-body">
-          <form>
-            <div class="control-group name">
-              <div class="control-label">Name</div>
-              <div class="controls">
-                <div class="input-append"> 
-                  <input type="text" name="name" class="input input-large">
-                  <p class="help-inline">Required</p>
-                  <p class="help-block">Name of probe</p>
-                </div>
-              </div>
-            </div>
-
             <div class="control-group host">
               <div class="control-label">Host</div>
               <div class="controls">
@@ -730,12 +718,25 @@
                 </div>
               </div>
             </div>
-          </form>
+
+            <hr>
+
+            <div class="control-group name">
+              <div class="control-label">Name</div>
+              <div class="controls">
+                <div class="input-append"> 
+                  <input type="text" name="name" class="input input-large">
+                  <p class="help-inline">Required</p>
+                  <p class="help-block">Name of probe</p>
+                </div>
+              </div>
+            </div>
         </div>
         <div class="modal-footer">
           <a class="btn" data-dismiss="modal">Cancel</a>
-          <button class="btn btn-primary">Create Probe</button>
+          <button class="btn btn-primary" type="submit">Create Probe</button>
         </div>
+        </form>
       </div>
     </script>
 

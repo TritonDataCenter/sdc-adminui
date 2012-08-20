@@ -19,7 +19,6 @@ var ICMPProbe = BaseView.extend({
 	initialize: function(options) {
 		_.bindAll(this);
 
-		this.defaults = {};
 		this.params = {
 			type: 'icmp',
 			agent: options.vm.get('uuid'),
@@ -55,14 +54,23 @@ var ICMPProbe = BaseView.extend({
 
 	onHostChange: function() {
 		this.validateHost();
+		this.$name.val(_.str.sprintf('icmp-%s', this.$host.val()));
 	},
 
 	onComplete: function(e) {
+		console.log('onComplete');
 		e.preventDefault();
+		e.stopPropagation();
 
 		if (this.validateName() && this.validateHost()) {
-			this.trigger('done', _.defaults(this.params, this.defaults));
+			this.trigger('done', this.getParams());
 		}
+	},
+
+	getParams: function() {
+		this.params.name = this.$name.val();
+		this.params.config.host = this.$host.val();
+		return this.params;
 	},
 
 	validateName: function() {
@@ -72,7 +80,6 @@ var ICMPProbe = BaseView.extend({
 			return false;
 		} else {
 			this.$nameControlGroup.removeClass('error');
-			this.params.name = val;
 			return true;
 		}
 	},
@@ -84,7 +91,6 @@ var ICMPProbe = BaseView.extend({
 			return false;
 		} else {
 			this.$hostControlGroup.removeClass('error');
-			this.params.config.host = val;
 			return true;
 		}
 	}
