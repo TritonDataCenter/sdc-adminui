@@ -6,7 +6,7 @@ var Signin = module.exports = Backbone.View.extend({
   template: Handlebars.compile($("#template-signin").html()),
 
   events: {
-    'submit form': 'authenticate',
+    'submit form': 'authenticate'
   },
 
   initialize: function(options) {
@@ -31,16 +31,20 @@ var Signin = module.exports = Backbone.View.extend({
   },
 
   hideMessage: function(e) {
-    this.$(".alert").hide();
-    this.focus();
+      this.$(".alert").hide();
+      this.focus();
   },
 
   username: function() {
-    return this.$("input[name=username]");
+      return this.$("input[name=username]");
   },
 
   password: function() {
-    return this.$("input[name=password]");
+      return this.$("input[name=password]");
+  },
+
+  onShow: function() {
+      this.focus();
   },
 
   focus: function() {

@@ -5,6 +5,7 @@ var ConfigHttpProbe = BaseView.extend({
 
 	events: {
 		'click button.btn-primary': 'onComplete',
+		'submit form': 'onComplete',
 		'keyup input[name=url]': 'onUrlChange',
 		'keyup input[name=username]': 'onUsernameChange',
 		'keyup input[name=password]': 'onPasswordChange'

@@ -4,26 +4,26 @@ _.str = require('lib/underscore.string');
   /* Extend jQuery with functions for PUT and DELETE requests. */
 
   function _ajax_request(url, data, callback, type, method) {
-      if (jQuery.isFunction(data)) {
-          callback = data;
-          data = {};
-      }
-      return jQuery.ajax({
-          type: method,
-          url: url,
-          data: data,
-          success: callback,
-          dataType: type
-          });
+    if (jQuery.isFunction(data)) {
+      callback = data;
+      data = {};
+    }
+    return jQuery.ajax({
+      type: method,
+      url: url,
+      data: data,
+      success: callback,
+      dataType: type
+    });
   }
 
   jQuery.extend({
-      put: function(url, data, callback, type) {
-          return _ajax_request(url, data, callback, type, 'PUT');
-      },
-      delete_: function(url, data, callback, type) {
-          return _ajax_request(url, data, callback, type, 'DELETE');
-      }
+    put: function(url, data, callback, type) {
+      return _ajax_request(url, data, callback, type, 'PUT');
+    },
+    delete_: function(url, data, callback, type) {
+      return _ajax_request(url, data, callback, type, 'DELETE');
+    }
   });
 })();
 
@@ -51,7 +51,7 @@ module.exports = Backbone.Router.extend({
     this.sock = new SockJS(window.location.origin + '/!/');
 
     this.sock.onopen = function() {
-      console.log('open');
+      console.log('socket open');
     };
 
     this.sock.onmessage = function(e) {
@@ -113,14 +113,6 @@ module.exports = Backbone.Router.extend({
     });
   },
 
-  initChrome: function() {
-    if (this.chromeInitialized === false) {
-      this.view = new AppView({ user: this.user });
-      this.container.html(this.view.render().el);
-      this.chromeInitialized = true;
-    }
-  },
-
   routes: {
     'signin': 'showSignin',
     'vms': 'showVms',
@@ -128,6 +120,14 @@ module.exports = Backbone.Router.extend({
     'monitoring': 'showMonitoring',
     'servers/:uuid': 'showServer',
     '*default': 'defaultAction'
+  },
+
+  initChrome: function() {
+    if (this.chromeInitialized === false) {
+      this.view = new AppView({ user: this.user });
+      this.container.html(this.view.render().el);
+      this.chromeInitialized = true;
+    }
   },
 
   defaultAction: function(page) {
@@ -171,8 +171,10 @@ module.exports = Backbone.Router.extend({
   },
 
   showServer: function(uuid) {
-    console.log('[route] showServer: '+uuid)
-    this.authenticated() && this.presentView('server', { uuid: uuid });
+    console.log(_.str.sprintf('[route] showServer: %s', uuid));
+    if (this.authenticated()) {
+      this.presentView('server', { uuid: uuid });
+    }
   },
 
   showSignin: function() {
@@ -181,7 +183,7 @@ module.exports = Backbone.Router.extend({
     this.chromeInitialized = false;
 
     this.container.html(this.view.render().el);
-    this.view.focus();
+    this.view.onShow();
   },
 
   signout: function() {
