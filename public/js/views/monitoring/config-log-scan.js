@@ -102,7 +102,7 @@ var View = BaseView.extend({
     },
 
     periodChanged: function() {
-        var res = this._validateThreshold();
+        var res = this._validatePeriod();
 
         if (res === true) {
             this.config.period = this.$period.val();
@@ -140,6 +140,15 @@ var View = BaseView.extend({
         } else {
             return 'path liekly to be invalid.';
         }
+    },
+
+    _validatePeriod: function() {
+        if (this.$period.val().length) {
+            if (/^\d+$/.test(this.$period.val())) {
+                return "Period should be a number";
+            }
+        }
+        return true;
     },
 
     _validateName: function() {

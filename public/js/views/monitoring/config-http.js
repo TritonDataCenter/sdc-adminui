@@ -34,9 +34,6 @@ var ConfigHttpProbe = BaseView.extend({
 		this.$name = this.$('input[name=name]');
 		this.$nameGroup = this.$('.control-group.name');
 
-		this.$maxResponseTime = this.$('input[name=max-response-time]');
-		this.$maxResponseTimeGroup = this.$('.control-group.max-response-time');
-
 		this.$username = this.$('input[name=username]');
 		this.$usernameGroup = this.$('.control-group.username');
 
@@ -45,6 +42,9 @@ var ConfigHttpProbe = BaseView.extend({
 
 		this.$interval = this.$('input[name=interval]');
 		this.$intervalGroup = this.$('.control-group.interval');
+
+		this.$maxResponseTime = this.$('input[name=max-response-time]');
+		this.$maxResponseTimeGroup = this.$('.control-group.max-response-time');
 	},
 
 	render: function() {
@@ -58,7 +58,6 @@ var ConfigHttpProbe = BaseView.extend({
 	/**
      * Input Callbacks
      */
-     
 	onComplete: function(e) {
 		e.preventDefault();
 		e.stopPropagation();
