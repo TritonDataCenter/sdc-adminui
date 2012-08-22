@@ -1,0 +1,116 @@
+<div class="page-vm">
+  <div class="page-header">
+    <h1>Virtual Machine <small><%- vm.get('uuid') %></small></h1>
+  </div>
+
+  <div class="btn-group pull-right actions">
+    <a class="btn dropdown-toggle btn-primary btn-large" data-toggle="dropdown" href="#">
+      Actions <span class="caret"></span>
+    </a>
+
+    <ul class="dropdown-menu">
+      <li><a href="#" class="start">Start</a></li>
+      <li><a href="#" class="stop">Stop</a></li>
+      <li><a href="#" class="reboot">Reboot</a></li>
+      <li class="divider"></li>
+      <li><a class="delete" href="#">Delete</a></li>
+      <li class="divider"></li>
+      <li><a href="#" class="create-probe">Create Probe</a></li>
+    </ul>
+  </div>
+
+  <div class="vms-details">
+    <table class="overview">
+      <tr>
+        <th>Status</th>
+        <td><span class="state"><%- vm.get('state') %></span></td>
+      </tr>
+      <tr>
+        <th>Name</th>
+        <td>
+          <span class="alias"><%- vm.get('alias') || '' %></span>
+          <span class="vm-uuid"><%- vm.get('uuid') %></span>
+        </td>
+      </tr>
+      <tr>
+        <th>Owner</th>
+        <td>
+          <span class="owner-name"><%- owner.get('cn') || '' %></span>
+          <span class="owner-uuid"><%- vm.get('owner_uuid') || '' %></span>
+        </td>
+      </tr>
+      <tr>
+        <th>IP <%- vm.ips().length > 1 ? 'Addresses' : 'Address' %></th>
+        <td>
+          <%= vm.ips().join('<br/>') %>
+        </td>
+      </tr>
+      <tr>
+        <th>Image</th>
+        <td>
+          <span class="image-name-version"><%- image.nameWithVersion() %></span>
+          <span class="image-uuid"><%- vm.get('image_uuid') %></span>
+        </td>
+      </tr>
+      <tr>
+        <th>Server</th>
+        <td>
+          <a class="server-hostname"><%- server.get('hostname') || '' %></a>
+          <span class="server-uuid"><%- vm.get('server_uuid') %></span>
+        </td>
+      </tr>
+      <tr>
+        <th>Memory</th>
+        <td><%- vm.get('ram') || '' %> MB</td>
+      </tr>
+      <tr>
+        <th>Swap</th>
+        <td><%- vm.get('max_swap') || '' %> MB</td>
+      </tr>
+    </table>
+
+
+    <h2>Network Interfaces</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>IP</th>
+          <th>MAC Address</th>
+          <th>Netmask</th>
+          <th>Gateway</th>
+          <th>Tag</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      <% _.each(vm.get('nics'), function(nic) { %>
+        <tr>
+        <td><%= nic.interface %></td>
+        <td><%= nic.ip %></td>
+        <td><%= nic.mac %></td>
+        <td><%= nic.netmask %></td>
+        <td><%= nic.gateway %></td>
+        <td><%= nic.nic_tag %></td>
+      </tr>
+      <% }) %>
+      </tbody>
+
+    </table>
+
+    <div class="probes">
+      <h2>Probes</h2>
+      <table class="table">
+        <thead>
+        <tr>
+          <th class='name'>Name</th>
+          <th class='type'>Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

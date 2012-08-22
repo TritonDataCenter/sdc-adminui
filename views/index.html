@@ -218,127 +218,6 @@
     </script>
     <!-- }}} -->
 
-    <!-- {{{ template vm -->
-    <script id="template-vm" type="text/template">
-      <div class="page-vm">
-        <div class="page-header">
-          <h1>Virtual Machine <small><%- vm.get('uuid') %></small></h1>
-        </div>
-
-        <div class="btn-group pull-right actions">
-          <a class="btn dropdown-toggle btn-primary btn-large" data-toggle="dropdown" href="#">
-            Actions <span class="caret"></span>
-          </a>
-
-          <ul class="dropdown-menu">
-            <li><a href="#" class="start">Start</a></li>
-            <li><a href="#" class="stop">Stop</a></li>
-            <li><a href="#" class="reboot">Reboot</a></li>
-            <li class="divider"></li>
-            <li><a class="delete" href="#">Delete</a></li>
-            <li class="divider"></li>
-            <li><a href="#" class="create-probe">Create Probe</a></li>
-          </ul>
-        </div>
-
-        <div class="vms-details">
-          <table class="overview">
-            <tr>
-              <th>Status</th>
-              <td><span class="state"><%- vm.get('state') %></span></td>
-            </tr>
-            <tr>
-              <th>Name</th>
-              <td>
-                <span class="alias"><%- vm.get('alias') || '' %></span>
-                <span class="vm-uuid"><%- vm.get('uuid') %></span>
-              </td>
-            </tr>
-            <tr>
-              <th>Owner</th>
-              <td>
-                <span class="owner-name"><%- owner.get('cn') || '' %></span>
-                <span class="owner-uuid"><%- vm.get('owner_uuid') || '' %></span>
-              </td>
-            </tr>
-            <tr>
-              <th>IP <%- vm.ips().length > 1 ? 'Addresses' : 'Address' %></th>
-              <td>
-                <%= vm.ips().join('<br/>') %>
-              </td>
-            </tr>
-            <tr>
-              <th>Image</th>
-              <td>
-                <span class="image-name-version"><%- image.nameWithVersion() %></span>
-                <span class="image-uuid"><%- vm.get('image_uuid') %></span>
-              </td>
-            </tr>
-            <tr>
-              <th>Server</th>
-              <td>
-                <a class="server-hostname"><%- server.get('hostname') || '' %></a>
-                <span class="server-uuid"><%- vm.get('server_uuid') %></span>
-              </td>
-            </tr>
-            <tr>
-              <th>Memory</th>
-              <td><%- vm.get('ram') || '' %> MB</td>
-            </tr>
-            <tr>
-              <th>Swap</th>
-              <td><%- vm.get('max_swap') || '' %> MB</td>
-            </tr>
-          </table>
-
-
-          <h2>Network Interfaces</h2>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>IP</th>
-                <th>MAC Address</th>
-                <th>Netmask</th>
-                <th>Gateway</th>
-                <th>Tag</th>
-              </tr>
-            </thead>
-            <tbody>
-
-            <% _.each(vm.get('nics'), function(nic) { %>
-              <tr>
-              <td><%= nic.interface %></td>
-              <td><%= nic.ip %></td>
-              <td><%= nic.mac %></td>
-              <td><%= nic.netmask %></td>
-              <td><%= nic.gateway %></td>
-              <td><%= nic.nic_tag %></td>
-            </tr>
-            <% }) %>
-            </tbody>
-
-          </table>
-
-          <div class="probes">
-            <h2>Probes</h2>
-            <table class="table">
-              <thead>
-              <tr>
-                <th class='name'>Name</th>
-                <th class='type'>Type</th>
-              </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-    </script>
-    <!-- }}} -->
-
     <!-- {{{ template vms -->
     <script id="template-vms" type="text/template">
       <div class="page vms">
@@ -385,33 +264,6 @@
       </tr>
     </script>
     <!-- }}} -->
-
-    <!-- {{{ template vm-delete-modal -->
-    <script type="text/template" id="template-vm-delete-modal">
-      <div class="modal hide fade">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">×</button>
-          <h3>Are you sure you want to delete this VM?</h3>
-        </div>
-        <div class="modal-body">
-          <p>
-            The Virtual Machine &nbsp; <strong><%= vm.get('alias') %></strong> <small><%= vm.get('uuid') %></small> &nbsp;
-            owned by <strong><%= owner.get('cn') %></strong> <small><%= owner.get('uuid') %></small>
-            will be deleted. All data for this Virtual 
-            Machine, including any snapshots created will be deleted <em>permanently</em>.
-          </p>
-          <p>
-            <strong>This operation cannot be undone.</strong>
-          </p>
-        </div>
-        <div class="modal-footer">
-          <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-          <a href="#" class="btn btn-danger delete">YES, Delete It</a>
-        </div>
-      </div>
-    </script>
-    <!-- }}} -->
-
 
     <script type="text/template" id="template-monitoring-icmp-probe">
       <div class="probe-icmp-config">
@@ -637,36 +489,6 @@
           </div>
         </div>
 
-      </div>
-    </script> <!-- }}} -->
-
-    <!-- template probe-type-selection {{{ -->
-    <script type="text/template" id="template-probe-selection">
-      <div class="probe-type-select">
-        <div class="modal-header">
-          <h2>Select Probe Type</h2>
-        </div>
-
-        <div class="modal-body">
-          <a class="box" data-probe-type="log-scan">
-            <div class="name">Log Scan</div>
-            <div class="desc">Watches a specific file, line by line, for a
-              particular pattern</div>
-          </a>
-          <a class="box" data-probe-type='machine-up'>
-            <div class="name">Machine up</div>
-            <div class="desc">Watches for a VM going up or down. This probe does
-              not require an amon service to be running inside the VM being monitored.</div>
-          </a>
-          <a class="box" data-probe-type='http'>
-            <div class="name">HTTP</div>
-            <div class="desc">Watches for response (body text and status code) from specific HTTP(S) URL.</div>
-          </a>
-          <a class="box" data-probe-type='icmp'>
-            <div class="name">ICMP Ping</div>
-            <div class="desc">Sends ICMP packets to a machine and alarms based on latency and reachability.</div>
-          </a>
-        </div>
       </div>
     </script> <!-- }}} -->
 

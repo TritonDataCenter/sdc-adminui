@@ -1,0 +1,26 @@
+<div class="probe-type-select">
+	<div class="modal-header">
+		<h2>Select Probe Type</h2>
+	</div>
+
+	<div class="modal-body">
+		<a class="box" data-probe-type="log-scan">
+			<div class="name">Log Scan</div>
+			<div class="desc">Watches a specific file, line by line, for a
+				particular pattern</div>
+		</a>
+		<a class="box" data-probe-type='machine-up'>
+			<div class="name">Machine up</div>
+			<div class="desc">Watches for a VM going up or down. This probe does
+				not require an amon service to be running inside the VM being monitored.</div>
+		</a>
+		<a class="box" data-probe-type='http'>
+			<div class="name">HTTP</div>
+			<div class="desc">Watches for response (body text and status code) from specific HTTP(S) URL.</div>
+		</a>
+		<a class="box" data-probe-type='icmp'>
+			<div class="name">ICMP Ping</div>
+			<div class="desc">Sends ICMP packets to a machine and alarms based on latency and reachability.</div>
+		</a>
+	</div>
+</div>

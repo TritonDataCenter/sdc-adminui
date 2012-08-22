@@ -1,6 +1,8 @@
-define(['views/base'], function(BaseView) {
+define(function(require) {
+    var BaseView = require('views/base');
+    var tplProbeSelection  = require('text!tpl/probe-selection.html');
     return BaseView.extend({
-        template: 'probe-selection',
+        template: tplProbeSelection,
 
         initialize: function(options) {
             _.bindAll(this);

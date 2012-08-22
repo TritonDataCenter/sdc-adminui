@@ -32,7 +32,9 @@ define(['backbone'], function(Backbone) {
             }
         },
 
-        viewDidDisappear: function() { },
+        viewDidDisappear: function() {
+            this.undelegateEvents();
+        },
 
         _getTemplate: function(template) {
             if (template[0] === '<') {

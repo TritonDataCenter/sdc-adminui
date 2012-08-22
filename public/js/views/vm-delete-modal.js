@@ -1,6 +1,10 @@
-define(['views/base'], function(BaseView) {
+
+define(function(require) {
+    var BaseView = require('views/base');
+    var tplVmDelete = require('text!tpl/vm-delete.html');
+
     return BaseView.extend({
-        template: 'vm-delete-modal',
+        template: tplVmDelete,
 
         events: {
             'click .delete': 'clickedDelete'
@@ -9,7 +13,6 @@ define(['views/base'], function(BaseView) {
         initialize: function(options) {
             this.vm = options.vm;
             this.owner = options.owner;
-
             var tpl = $(this.compileTemplate());
             this.setElement(tpl);
         },
@@ -22,17 +25,20 @@ define(['views/base'], function(BaseView) {
         },
 
         render: function() {
+            var self = this;
+            this.$el.on('hidden', function() {
+                self.trigger('close');
+            });
             this.$el.modal();
             return this;
         },
-        
+
         clickedDelete: function(e) {
             var self = this;
             this.$el.modal('hide');
             this.vm.delete(function(job) {
                 job.name = 'Delete VM';
                 self.eventBus.trigger('watch-job', job);
-                console.log(job);
             });
         }
     });

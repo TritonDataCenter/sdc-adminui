@@ -9,6 +9,7 @@ define(function(require) {
     var VMDeleteModal = require('views/vm-delete-modal');
     var CreateProbeController = require('controllers/create-probe');
 
+    var tplVm = require('text!tpl/vm.html');
 
     /**
      * VmView
@@ -17,7 +18,7 @@ define(function(require) {
      * options.vm vm attrs
      */
      var VmView = BaseView.extend({
-        template: 'vm',
+        template: tplVm,
 
         sidebar: 'vms',
 
@@ -130,6 +131,9 @@ define(function(require) {
 
         clickedDeleteVm: function(e) {
             var vmDeleteView = new VMDeleteModal({ vm: this.vm, owner: this.owner });
+            vmDeleteView.on('close', function() {
+                vmDeleteView.remove();
+            });
             vmDeleteView.render();
         },
 
