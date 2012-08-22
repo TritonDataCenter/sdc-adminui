@@ -1,34 +1,39 @@
-'use strict'
+define(function(require) {
+    
+    var BaseView = require('views/base');
 
+    var Mainnav = BaseView.extend({
 
-var Sidebar = module.exports = Backbone.View.extend({
-  template: Handlebars.compile($("#template-sidebar").html()),
+        template: require('text!tpl/mainnav.html'),
 
-  events: {
-    'click li':'onSelect'
-  },
+        events: {
+            'click li':'onSelect'
+        },
 
-  render: function() {
-    this.$el.html(this.template());
-  },
+        render: function() {
+            this.$el.html(this.template());
+        },
 
-  onSelect: function(e) {
-    e.preventDefault();
+        onSelect: function(e) {
+            e.preventDefault();
 
-    var li = $(e.currentTarget);
-    var view = li.attr("data-view");
-    this.highlight(view);
+            var li = $(e.currentTarget);
+            var view = li.attr("data-view");
+            this.highlight(view);
 
-    this.trigger("sidebar:selected", view, this);
-  },
+            this.trigger("sidebar:selected", view, this);
+        },
 
-  highlight: function(view) {
-    this.$("li").removeClass('active');
-    this.$("li i").removeClass("icon-white");
+        highlight: function(view) {
+            this.$("li").removeClass('active');
+            this.$("li i").removeClass("icon-white");
 
-    var li = this.$('li[data-view='+view+']');
+            var li = this.$('li[data-view='+view+']');
 
-    li.addClass('active');
-    li.find("i").addClass("icon-white");
-  }
+            li.addClass('active');
+            li.find("i").addClass("icon-white");
+        }
+    });
+
+    return Mainnav;
 });

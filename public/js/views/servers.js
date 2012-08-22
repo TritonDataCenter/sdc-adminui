@@ -1,83 +1,89 @@
-/**
- * views/servers.js
-*/
+define(function(require) {
+    /**
+    * views/servers.js
+    */
 
-var BaseView = require('views/base');
-var Servers = require('models/servers');
 
-var ServersListItem = BaseView.extend({
-  template: 'servers-list-item',
-  tagName: 'tr',
+    var BaseView = require('views/base');
+    var Servers = require('models/servers');
+    var tplServers = require('text!tpl/servers.html');
 
-  events: {
-    'click td':'navigateToServerDetails',
-    'click button.setup':'setupServer'
-  },
+    var ServersListItem = BaseView.extend({
+        template: 'servers-list-item',
+        tagName: 'tr',
 
-  uri: function() {
-    return 'servers'
-  },
+        events: {
+            'click td':'navigateToServerDetails',
+            'click button.setup':'setupServer'
+        },
 
-  setupServer: function(e) {
-    e.stopPropagation();
+        uri: function() {
+            return 'servers';
+        },
 
-    console.log('Setup server');
+        setupServer: function(e) {
+            e.stopPropagation();
 
-    this.model.setup(function(res) {
-      console.log('Setup Server returned');
-      console.log(res);
+            console.log('Setup server');
+
+            this.model.setup(function(res) {
+                console.log('Setup Server returned');
+                console.log(res);
+            });
+        },
+
+        navigateToServerDetails: function() {
+            this.eventBus.trigger('wants-view', 'server', { server:this.model });
+        },
+
+        render: function() {
+            this.setElement(this.template(this.model.attributes));
+            return this;
+        }
     });
-  },
 
-  navigateToServerDetails: function() {
-    this.eventBus.trigger('wants-view', 'server', { server:this.model });
-  },
+    var ServersList = BaseView.extend({
 
-  render: function() {
-    this.setElement(this.template(this.model.attributes));
-    return this;
-  }
-});
+        initialize: function() {
+            _.bindAll(this, 'addOne', 'addAll');
 
-var ServersList = BaseView.extend({
+            this.collection.bind('all', this.addAll);
+            this.collection.fetch();
+        },
 
-  initialize: function() {
-    _.bindAll(this, 'addOne', 'addAll');
+        addOne: function(cn) {
+            var view = new ServersListItem({model:cn});
+            this.$el.append(view.render().el);
+        },
 
-    this.collection.bind('all', this.addAll);
-    this.collection.fetch();
-  },
+        addAll: function() {
+            this.collection.each(this.addOne);
+        },
 
-  addOne: function(cn) {
-    var view = new ServersListItem({model:cn});
-    this.$el.append(view.render().el);
-  },
+        render: function() {
+            return this;
+        }
+    });
 
-  addAll: function() {
-    this.collection.each(this.addOne);
-  },
+    var ServersView = BaseView.extend({
+        name: 'servers',
 
-  render: function() {
-    return this;
-  }
-});
+        template: tplServers,
 
-var ServersView = module.exports = BaseView.extend({
-  name: 'servers',
+        initialize: function(options) {
+            this.collection = new Servers();
+            this.listView = new ServersList({ collection: this.collection });
+        },
 
-  template: 'servers',
+        render: function() {
+            console.log(this.$el);
+            this.$el.html(this.template());
 
-  initialize: function(options) {
-    this.collection = new Servers();
-    this.listView = new ServersList({ collection: this.collection });
-  },
+            this.listView.setElement(this.$("tbody")).render();
 
-  render: function() {
-    console.log(this.$el);
-    this.$el.html(this.template());
+            return this;
+        }
+    });
 
-    this.listView.setElement(this.$("tbody")).render();
-
-    return this;
-  }
+    return ServersView;
 });

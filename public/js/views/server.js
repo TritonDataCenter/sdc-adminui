@@ -1,37 +1,41 @@
-var BaseView = require('views/base');
-var Server = require('models/server');
+define(function(require) {
 
-var ServerView = BaseView.extend({
-  sidebar: 'servers',
+    var Server = require('models/server');
+    var BaseView = require('views/base');
 
-  template: 'server',
+    var ServerView = BaseView.extend({
+        sidebar: 'servers',
 
-  initialize: function(options) {
-    _.bindAll(this);
+        template: require('text!tpl/server.html'),
 
-    this.server = options.server || new Server();
+        initialize: function(options) {
+            _.bindAll(this);
 
-    if (options.uuid) {
-      this.server.set({uuid: options.uuid});
-      this.server.fetch();
-    }
+            this.server = options.server || new Server();
 
-    this.server.on('change', this.render);
-    this.setElement(this.compileTemplate());
-  },
+            if (options.uuid) {
+                this.server.set({uuid: options.uuid});
+                this.server.fetch();
+            }
 
-  uri: function() {
-    return _.str.sprintf('servers/%s', this.server.get('uuid'));
-  },
+            this.server.on('change', this.render);
+            this.setElement(this.compileTemplate());
+        },
 
-  compileTemplate: function() {
-    return this.template({
-      server: this.server
+        uri: function() {
+            return _.str.sprintf('servers/%s', this.server.get('uuid'));
+        },
+
+        compileTemplate: function() {
+            return this.template({
+                server: this.server
+            });
+        },
+        render: function() {
+            this.$el.html(this.compileTemplate());
+            return this;
+        }
     });
-  },
-  render: function() {
-    this.$el.html(this.compileTemplate());
-    return this;
-  }
+
+    return ServerView;
 });
-module.exports = ServerView;

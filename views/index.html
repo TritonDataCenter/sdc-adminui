@@ -9,88 +9,7 @@
   </head>
   <body>
     <div id="chrome"></div>
-
-    <script src="/app.js"></script>
-    <script>require('main').bootstrap();</script>
-
-    <!-- {{{ template chrome -->
-    <script type="text/text/template" id="template-chrome">
-      <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-          <div id="topbar" class="container">
-            <!-- #template-topnav-->
-          </div>
-        </div>
-      </div>
-
-      <div class="container">
-        <div class="row">
-          <div id="main-nav" class="span12"></div>
-        </div>
-
-        <div class="row">
-          <div id="content" class="span12"></div>
-        </div>
-      </div>
-
-      <div class="network-activity-indicator"></div>
-    </script>
-    <!-- }}} -->
-
-    <!-- {{{ template topbar -->
-    <script type="text/template" id="template-topbar">
-      <div id="logo" class="brand">Operations Portal</div>
-
-      <ul class="nav pull-right">
-        <li class="dropdown">
-          <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-            <i class="icon-tasks icon-white"></i>
-            <span class="badge badge-warning">4</span>
-            <b class="caret"></b>
-          </a>
-
-          <ul class="dropdown-menu notifications">
-            <li>
-              <div class="details">
-                <div class="name">Reboot</div>
-                <div class="current-step">Rebooted</div>
-                <div class="execution">Succeeded</div>
-              </div>
-              <div class="progress"><div class="bar" style="width:15%"></div></div>
-            </li>
-            <li>
-              <div class="details">
-                <div class="name">Provision</div>
-                <div class="current-step">Retrieveing Network Interfaces</div>
-                <div class="execution">Processing</div>
-              </div>
-              <div class="progress"><div class="bar" style="width:10%"></div></div>
-            </li>
-            <li>
-              <div class="details">
-                <div class="name">Reboot</div>
-                <div class="current-step">Sending Reboot Command</div>
-                <div class="execution">Processing</div>
-              </div>
-              <div class="progress"><div class="bar" style="width:85%"></div></div>
-            </li>
-            <li>
-              <div class="details">
-                <div class="name">Provision</div>
-                <div class="current-step">Finding Server</div>
-                <div class="execution">Failed</div>
-              </div>
-              <div class="progress"><div class="bar" style="width:45%"></div></div>
-            </li>
-          </ul>
-        </li>
-
-        <li><a href="#"><i class="icon-user icon-white"></i> <%= user.cn %></a></li>
-        <li><a href="#"><i class="icon-cog icon-white"></i></a></li>
-        <li><a data-trigger='signout'><i class="icon-off icon-white"></i> Sign Out</a></li>
-      </ul>
-    </script>
-    <!-- }}} -->
+    <script data-main="/js/main" src="/js/require-jquery.js"></script>
 
     <!-- {{{ template notifier-job -->
     <script type="text/template" id="template-notifier-job">
@@ -108,29 +27,6 @@
     </div>
     </script>
     <!--}}} -->
-
-    <!-- {{{ template sidebar -->
-    <script type="text/text/template" id="template-sidebar">
-      <ul class="nav nav-pills">
-        <li data-view="dashboard"><a href="/dashboard"><i class="icon-home"></i> Dashboard</a></li>
-        <li data-view="vms"><a href="/vms"><i class="icon-book"></i> Virtual Machines</a></li>
-        <li data-view="servers"><a href="/servers"><i class="icon-book"></i> Servers</a></li>
-        <li data-view="networks"><a href="/networks"><i class="icon-list"></i> Networks</a></li>
-        <li data-view="users"><a href="/users"><i class="icon-user"></i> Users &amp; Groups</a></li>
-      </ul>
-    </script>
-    <!-- }}} -->
-
-    <!-- {{{ template dashboard -->
-    <script type="text/template" id="template-dashboard">
-      <div class="page-dashboard">
-        <div class="page-header"><h1>Dashboard</h1></div>
-        <div class="well">
-          Nothing to see here, move along...
-        </div>
-      </div>
-    </script>
-    <!-- }}} -->
 
     <!-- {{{ template users -->
     <script type="text/template" id="template-users">
@@ -256,110 +152,6 @@
     </script>
     <!-- }}} -->
 
-    <!-- {{{ template servers -->
-    <script type="text/template" id="template-servers">
-      <div class="page-servers">
-        <div class="page-header"><h1>Servers</h1></div>
-        <div class="servers-list">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th class="status">Status</th>
-                <th>Hostname</th>
-                <th class="memory">RAM Usage</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </script>
-    <!-- }}} -->
-
-    <!-- {{{ template server -->
-    <script id="template-server" type="text/template">
-      <div class="page-server">
-        <div class="page-header">
-          <h1>Server <small><%- server.get('uuid') %></small> </h1>
-        </div>
-
-        <div class="server-details">
-          <table class="overview">
-            <tbody>
-              <tr>
-                <th>Datacenter</th>
-                <td><%- server.get('datacenter') %></td>
-              </tr>
-              <tr>
-                <th>UUID</th>
-                <td><%- server.get('uuid') %></td>
-              </tr>
-              <tr>
-                <th>Hostname</th>
-                <td><%- server.get('hostname') %></td>
-              </tr>
-              <tr>
-                <th>Platform Version</th>
-                <td><%- server.get('sysinfo')['Live Image'] %></td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="row">
-            <div class="span9">
-              <h2>Hardware</h2>
-              <table class="hardware">
-                <tbody>
-                  <tr>
-                    <th>CPU Type</th>
-                    <td><%- server.get('sysinfo')['CPU Type'] || '' %></td>
-                  </tr>
-                  <tr>
-                    <th>Cores</th>
-                    <td><%- server.get('sysinfo')['CPU Total Cores'] || '' %></td>
-                  </tr>
-                  <tr>
-                    <th>Serial Number</th>
-                    <td><%- server.get('sysinfo')['Serial Number'] || '' %></td>
-                  </tr>
-                  <tr>
-                    <th>Total Memory</th>
-                    <td><%- server.get('sysinfo')['MiB of Memory'] || '' %> MiB</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="span4">
-              <h2>Disks</h2>
-
-              <table class="disks">
-                <thead>
-                  <tr>
-                    <th>Device</th>
-                    <th>Size</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% var disks = server.get('sysinfo')['Disks'] || {}; %>
-                  <% _.each(disks, function(disk, name) { %>
-                    <tr>
-                      <td><%- name %></td>
-                      <td><%- disk['Size in GB'] %> GB</td>
-                    </tr>
-                    <% }); %>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </script>
-    <!-- }}} -->
-
 
     <!-- {{{ template servers-list-item -->
     <script type="text/template" id="template-servers-list-item">
@@ -393,7 +185,7 @@
 
     <!-- {{{ template networks-->
     <script type="text/template" id="template-networks">
-      <div id="servers">
+      <div id="networks">
         <div class="page-header">
           <h1>Networks</h1>
         </div>
@@ -1061,35 +853,6 @@
       </div>
     </script>
     <!-- }}} --->
-
-    <!-- {{{ template signin -->
-    <script type="text/template" id="template-signin">
-      <div id="signin">
-        <div class="modal-backdrop"></div>
-        <div class="modal">
-          <div class="title">
-            Operations Portal
-          </div>
-
-          <div class="alert alert-error">
-            <span class="msg"></span>
-          </div>
-
-          <form>
-            <label>Username</label>
-            <input class="input-large" type="text" name="username">
-
-            <label>Password</label>
-            <input class="input-large" type="password" name="password">
-
-            <div class="controls">
-              <button type="submit" class="btn btn-large btn-primary">Sign In</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </script>
-    <!-- }}} -->
 
     <!-- {{{ template amon-main -->
     <script type="text/template" id="template-monitoring">

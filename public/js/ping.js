@@ -1,18 +1,20 @@
-var Pinger = function(options) {
-  this.options = options || {};
-  this.options.interval = this.options.interval || (60 * 1000);
-};
+define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
+    var Pinger = function(options) {
+        this.options = options || {};
+        this.options.interval = this.options.interval || (60 * 1000);
+    };
 
-_.extend(Pinger, Backbone.Events);
+    _.extend(Pinger, Backbone.Events);
 
-Pinger.prototype.start = function() {
-  this.timer = setInterval(function() {
-    $.get('/_/ping', function() { console.log('.'); });
-  }, this.options.interval);
-};
+    Pinger.prototype.start = function() {
+        this.timer = setInterval(function() {
+            $.get('/_/ping', function() { console.log('.'); });
+        }, this.options.interval);
+    };
 
-Pinger.prototype.stop = function() {
-  clearInterval(this.timer);
-};
+    Pinger.prototype.stop = function() {
+        clearInterval(this.timer);
+    };
 
-module.exports = Pinger;
+    return Pinger;
+});

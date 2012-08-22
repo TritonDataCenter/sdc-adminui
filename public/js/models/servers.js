@@ -1,8 +1,8 @@
-var Server = require('models/server');
-var Servers = Backbone.Collection.extend({
-  url: "/_/servers",
-  model: Server
+define(function(require) {
+	var Server = require('models/server');
+	var Servers = Backbone.Collection.extend({
+		url: "/_/servers",
+		model: Server
+	});
+	return Servers;
 });
-
-
-module.exports = Servers;

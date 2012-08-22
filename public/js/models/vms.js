@@ -1,5 +1,6 @@
-var Vm = require('models/vm');
-var Vms = module.exports = Backbone.Collection.extend({
-  model: Vm,
-  url: "/_/vms"
+define(['backbone', 'models/vm'], function(Backbone, Vm) {
+	return Backbone.Collection.extend({
+		model: Vm,
+		url: "/_/vms"
+	});
 });

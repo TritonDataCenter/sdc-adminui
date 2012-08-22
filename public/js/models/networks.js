@@ -1,5 +1,5 @@
-var Networks = Backbone.Collection.extend({
-  url:"/_/networks"
-})
-
-module.exports = Networks;
+define(function(require) {
+	return Backbone.Collection.extend({
+		url: "/_/networks"
+	});
+});

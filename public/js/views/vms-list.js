@@ -1,25 +1,25 @@
-var VmsListItem = require('views/vms-list-item');
+define(['underscore', 'views/base', 'views/vms-list-item'], function(_, BaseView, VmsListItem) {
+  'use strict';
 
-var BaseView = require('views/base');
+  return BaseView.extend({
+    initialize: function() {
+      _.bindAll(this, 'addOne', 'addAll');
 
-var VmsList = module.exports = BaseView.extend({
-  initialize: function() {
-    _.bindAll(this, 'addOne', 'addAll');
+      this.collection.bind('all', this.addAll);
+      this.collection.fetch();
+    },
 
-    this.collection.bind('all', this.addAll);
-    this.collection.fetch();
-  },
+    addOne: function(model) {
+      var view = new VmsListItem({ model: model });
+      this.$el.append(view.render().el);
+    },
 
-  addOne: function(model) {
-    var view = new VmsListItem({ model: model });
-    this.$el.append(view.render().el);
-  },
+    addAll: function() {
+      this.collection.each(this.addOne);
+    },
 
-  addAll: function() {
-    this.collection.each(this.addOne);
-  },
-
-  render: function() {
-    return this;
-  }
+    render: function() {
+      return this;
+    }
+  });
 });

@@ -1,27 +1,25 @@
-var BaseView = require('views/base');
+define(['views/base'], function(BaseView) {
+    return BaseView.extend({
+        template: 'probe-selection',
 
-var ProbeSelection = BaseView.extend({
-  template: 'probe-selection',
+        initialize: function(options) {
+            _.bindAll(this);
+        },
 
-  initialize: function(options) {
-    _.bindAll(this);
-  },
+        events: {
+            'click a': 'selectedProbeType'
+        },
 
-  events: {
-    'click a': 'selectedProbeType'
-  },
+        selectedProbeType: function(e) {
+            var elm = $(e.currentTarget);
+            var probe = elm.attr('data-probe-type');
+            this.trigger('select', probe);
+            this.$el.modal('hide');
+        },
 
-  selectedProbeType: function(e) {
-    var elm = $(e.currentTarget);
-    var probe = elm.attr('data-probe-type');
-    this.trigger('select', probe);
-    this.$el.modal('hide');
-  },
-
-  render: function() {
-    this.setElement(this.template());
-    return this;
-  }
+        render: function() {
+            this.setElement(this.template());
+            return this;
+        }
+    });
 });
-
-module.exports = ProbeSelection;

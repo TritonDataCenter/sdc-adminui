@@ -1,0 +1,50 @@
+<div id="logo" class="brand">Operations Portal</div>
+
+<ul class="nav pull-right">
+	<li class="dropdown">
+		<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+			<i class="icon-tasks icon-white"></i>
+			<span class="badge badge-warning">4</span>
+			<b class="caret"></b>
+		</a>
+
+		<ul class="dropdown-menu notifications">
+			<li>
+				<div class="details">
+					<div class="name">Reboot</div>
+					<div class="current-step">Rebooted</div>
+					<div class="execution">Succeeded</div>
+				</div>
+				<div class="progress"><div class="bar" style="width:15%"></div></div>
+			</li>
+			<li>
+				<div class="details">
+					<div class="name">Provision</div>
+					<div class="current-step">Retrieveing Network Interfaces</div>
+					<div class="execution">Processing</div>
+				</div>
+				<div class="progress"><div class="bar" style="width:10%"></div></div>
+			</li>
+			<li>
+				<div class="details">
+					<div class="name">Reboot</div>
+					<div class="current-step">Sending Reboot Command</div>
+					<div class="execution">Processing</div>
+				</div>
+				<div class="progress"><div class="bar" style="width:85%"></div></div>
+			</li>
+			<li>
+				<div class="details">
+					<div class="name">Provision</div>
+					<div class="current-step">Finding Server</div>
+					<div class="execution">Failed</div>
+				</div>
+				<div class="progress"><div class="bar" style="width:45%"></div></div>
+			</li>
+		</ul>
+	</li>
+
+	<li><a href="#"><i class="icon-user icon-white"></i> <%= user.cn %></a></li>
+	<li><a href="#"><i class="icon-cog icon-white"></i></a></li>
+	<li><a data-trigger='signout'><i class="icon-off icon-white"></i> Sign Out</a></li>
+</ul>

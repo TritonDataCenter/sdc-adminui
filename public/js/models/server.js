@@ -1,14 +1,17 @@
-var Server = module.exports = Backbone.Model.extend({
-  urlRoot: '/_/servers',
+define(['backbone'], function() {
+	var Server = Backbone.Model.extend({
+		urlRoot: '/_/servers',
 
-  idAttribute: 'uuid',
-  
-  defaults: {
-    'sysinfo':{}
-  },
+		idAttribute: 'uuid',
 
-  setup: function(callback) {
-    $.post(this.url(), {action:'setup'}, callback);
-  }
+		defaults: {
+			'sysinfo':{}
+		},
 
+		setup: function(callback) {
+			$.post(this.url(), {action:'setup'}, callback);
+		}
+
+	});
+	return Server;
 });

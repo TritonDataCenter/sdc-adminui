@@ -4,13 +4,19 @@
  * Dashboard View
 */
 
-var View = require('views/base');
-var Dashboard = module.exports = View.extend({
-  name: 'dashboard',
-  template: 'dashboard',
-  render: function() {
-    this.$el.html(this.template());
+define(function(require) {
+	var BaseView = require('views/base');
+	var Dashboard = BaseView.extend({
 
-    return this;
-  }
+		name: 'dashboard',
+
+		template: require('text!tpl/dashboard.html'),
+
+		render: function() {
+			this.$el.html(this.template());
+
+			return this;
+		}
+	});
+	return Dashboard;
 });

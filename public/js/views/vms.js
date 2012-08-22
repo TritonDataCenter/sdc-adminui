@@ -1,39 +1,39 @@
-/**
- * views/vms.js
-*/
-var BaseView = require('views/base');
+define(function(require) {
+    /**
+     * views/vms.js
+     */
+    var BaseView = require('views/base');
+    var Vms = require('models/vms');
+    var VmsList = require('views/vms-list');
 
-var Vms = require('models/vms');
-var VmsList = require('views/vms-list');
+    return BaseView.extend({
+        name: 'vms',
 
+        template: 'vms',
 
-var VmsView = module.exports = BaseView.extend({
-  name: 'vms',
+        url: function() {
+            return 'vms';
+        },
 
-  template: 'vms',
+        events: {
+            'click .provision-button':'provision'
+        },
 
-  url: function() {
-    return 'vms'
-  },
+        initialize: function(options) {
+            this.collection = new Vms();
+            this.listView = new VmsList({ collection: this.collection });
+        },
 
-  events: {
-    'click .provision-button':'provision'
-  },
+        provision: function() {
+            this.eventBus.trigger('wants-view', 'provision-vm', {});
+        },
 
-  initialize: function(options) {
-    this.collection = new Vms();
-    this.listView = new VmsList({ collection: this.collection });
-  },
+        render: function() {
+            this.$el.html(this.template());
 
-  provision: function() {
-    this.eventBus.trigger('wants-view', 'provision-vm', {});
-  },
+            this.listView.setElement(this.$('tbody')).render();
 
-  render: function() {
-    this.$el.html(this.template());
-
-    this.listView.setElement(this.$('tbody')).render();
-
-    return this;
-  }
+            return this;
+        }
+    });
 });

@@ -1,71 +1,80 @@
 /**
- * views/signin
-*/
+ * views/signin !!
+ */
 
-var Signin = module.exports = Backbone.View.extend({
-  template: Handlebars.compile($("#template-signin").html()),
+define([
+    'views/base',
+    'text!tpl/signin.html'
+    ],
+    function(BaseView, tplSignin) {
 
-  events: {
-    'submit form': 'authenticate'
-  },
+    var View = BaseView.extend({
+        template: tplSignin,
 
-  initialize: function(options) {
-    _.bindAll(this);
-    this.model = options.model;
+        events: {
+          'submit form': 'authenticate'
+        },
 
-    this.model.bind('change:authenticated', function(user, value) {
-      if (value === true) {
-        this.remove();
-      }
-    }, this);
+        initialize: function(options) {
+            _.bindAll(this);
+            this.model = options.model;
 
-    this.model.bind('error', function(message) {
-      this.showMessage(message);
-      this.password().val('');
-    }, this);
-  },
+            this.model.bind('change:authenticated', function(user, value) {
+                if (value === true) {
+                    this.remove();
+                }
+            }, this);
 
-  showMessage: function(msg) {
-    this.$(".alert .msg").html(msg);
-    this.$(".alert").show();
-  },
+            this.model.bind('error', function(message) {
+                this.showMessage(message);
+                this.password().val('');
+            }, this);
+        },
 
-  hideMessage: function(e) {
-      this.$(".alert").hide();
-      this.focus();
-  },
+        showMessage: function(msg) {
+            this.$(".alert .msg").html(msg);
+            this.$(".alert").show();
+        },
 
-  username: function() {
-      return this.$("input[name=username]");
-  },
+        hideMessage: function(e) {
+            this.$(".alert").hide();
+            this.focus();
+        },
 
-  password: function() {
-      return this.$("input[name=password]");
-  },
+        username: function() {
+            return this.$("input[name=username]");
+        },
 
-  onShow: function() {
-      this.focus();
-  },
+        password: function() {
+            return this.$("input[name=password]");
+        },
 
-  focus: function() {
-    if (this.username().val().length === 0) {
-      this.username().focus();
-    } else {
-      this.password().focus();
-    }
-  },
+        onShow: function() {
+            this.focus();
+        },
 
-  authenticate: function(e) {
-    e.preventDefault();
-    this.hideMessage();
-    this.model.authenticate(this.username().val(), this.password().val());
-  },
+        focus: function() {
+            if (this.username().val().length === 0) {
+                this.username().focus();
+            } else {
+                this.password().focus();
+            }
+        },
 
-  render: function() {
-    this.$el.html(this.template());
-    this.hideMessage();
+        authenticate: function(e) {
+            e.preventDefault();
+            this.hideMessage();
+            this.model.authenticate(this.username().val(), this.password().val());
+        },
 
-    return this;
-  }
+        render: function() {
+            this.$el.html(this.template());
+            this.hideMessage();
 
+            return this;
+        }
+
+    });
+
+    return View;
 });

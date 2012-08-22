@@ -1,10 +1,12 @@
-var User = require('models/image');
+define(['backbone','models/user'], function() {
+	var Users = Backbone.Collection.extend({
+		model: User,
+		url: '/_/users',
 
-var Users = module.exports = Backbone.Collection.extend({
-  model: User,
-  url: '/_/users',
+		searchByLogin: function(login) {
+			this.fetch({data: $.param({'login':login}) });
+		}
+	});
 
-  searchByLogin: function(login) {
-    this.fetch({data: $.param({'login':login}) });
-  }
+	return Users;
 });

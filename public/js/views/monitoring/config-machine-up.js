@@ -1,42 +1,40 @@
-var BaseView = require('views/base');
+define(['views/base'], function(BaseView) {
+  return BaseView.extend({
+    template: 'monitoring-machine-up-probe',
 
-var View = BaseView.extend({
+    events: {
+      'click button': 'done'
+    },
 
-  template: 'monitoring-machine-up-probe',
+    initialize: function(options) {
+      _.bindAll(this);
+      options = options || {};
 
-  events: {
-    'click button': 'done'
-  },
+      this.params = {
+        type: 'machine-up',
+        agent: options.vm.get('uuid'),
+        name: _.str.sprintf('machine-up-%s', options.vm.get('alias'))
+      };
+    },
 
-  initialize: function(options) {
-    _.bindAll(this);
-    options = options || {};
+    focus: function() {
+      return this;
+    },
 
-    this.params = {
-      type: 'machine-up',
-      agent: options.vm.get('uuid'),
-      name: _.str.sprintf('machine-up-%s', options.vm.get('alias'))
-    };
-  },
+    render: function() {
+      this.setElement(this.template());
+      this.delegateEvents();
 
-  focus: function() {
-    return this;
-  },
+      return this;
+    },
 
-  render: function() {
-    this.setElement(this.template());
-    this.delegateEvents();
+    done: function() {
+      this.trigger('done', this.params);
+    },
 
-    return this;
-  },
+    hide: function() {
+      this.$el.modal('hide');
+    }
+  });
 
-  done: function() {
-    this.trigger('done', this.params);
-  },
-
-  hide: function() {
-    this.$el.modal('hide');
-  }
 });
-
-module.exports = View;

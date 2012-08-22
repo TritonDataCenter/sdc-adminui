@@ -1,8 +1,9 @@
-var Probe = require('models/probe');
-
-var Probes = Backbone.Collection.extend({
-  url: '/_/amon/probes',
-  model: Probe
+define([
+	'backbone',
+	'models/probe'
+	], function(Backbone, Probe) {
+	return Backbone.Collection.extend({
+		url: '/_/amon/probes',
+		model: Probe
+	});
 });
-
-module.exports = Probes;
