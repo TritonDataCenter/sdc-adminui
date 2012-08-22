@@ -1,4 +1,5 @@
-define(['backbone','models/user'], function() {
+define(function(require) {
+	var User = require('models/user');
 	var Users = Backbone.Collection.extend({
 		model: User,
 		url: '/_/users',
