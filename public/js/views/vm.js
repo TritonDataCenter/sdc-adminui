@@ -8,6 +8,7 @@ define(function(require) {
     var Probes = require('models/probes');
     var VMDeleteModal = require('views/vm-delete-modal');
     var CreateProbeController = require('controllers/create-probe');
+    var ProbesView = require('views/probes');
 
     var tplVm = require('text!tpl/vm.html');
 
@@ -50,13 +51,11 @@ define(function(require) {
             this.owner = new User();
             this.image = new Img();
             this.server = new Server();
-            this.probes = new Probes();
 
             this.image.on('change', this.renderImage, this);
             this.server.on('change', this.renderServer, this);
             this.owner.on('change', this.renderOwner, this);
 
-            this.probes.on('reset', this.renderProbes, this);
             this.image.set({ uuid: this.vm.get('image_uuid') });
             if (! this.image.get('updated_at'))
                 this.image.fetch();
@@ -78,7 +77,6 @@ define(function(require) {
             }, this);
 
             this.vm.on('change:owner_uuid', function(m) {
-                this.fetchProbes();
                 this.owner.set({uuid: m.get('owner_uuid')});
                 this.owner.fetch();
             }, this);
@@ -90,6 +88,7 @@ define(function(require) {
 
             this.vm.on('change:alias', this.render, this);
             this.vm.fetch();
+
         },
 
         compileTemplate: function() {
@@ -131,9 +130,6 @@ define(function(require) {
 
         clickedDeleteVm: function(e) {
             var vmDeleteView = new VMDeleteModal({ vm: this.vm, owner: this.owner });
-            vmDeleteView.on('close', function() {
-                vmDeleteView.remove();
-            });
             vmDeleteView.render();
         },
 
@@ -156,25 +152,19 @@ define(function(require) {
         renderOwner: function() {
             this.$('.owner-name').html(this.owner.get('cn'));
             this.$('.owner-uuid').html(this.owner.get('uuid'));
-            return this;
-        },
 
-        renderProbes: function() {
-            this.$('.probes tbody').empty();
-            this.probes.each(function(m) {
-                this.$('.probes tbody')
-                .append(
-                    _.str.sprintf('<tr><td>%s</td><td>%s</td></tr>',
-                        m.get('name'), m.get('type'))
-                    );
-            }, this);
+            return this;
         },
 
         render: function() {
             this.$el.html(this.compileTemplate());
 
             this.renderImage();
-            this.fetchProbes();
+            this.probesView = new ProbesView({vm:this.vm});
+            this.probesView.setElement(this.$('.probes'));
+            this.probesView.render();
+            this.probesView.load();
+
             return this;
         },
 

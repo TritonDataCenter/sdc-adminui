@@ -27,9 +27,10 @@ define(function(require) {
         render: function() {
             var self = this;
             this.$el.on('hidden', function() {
-                self.trigger('close');
+                self.$el.remove();
             });
             this.$el.modal();
+
             return this;
         },
 
@@ -42,5 +43,4 @@ define(function(require) {
             });
         }
     });
-
 });
