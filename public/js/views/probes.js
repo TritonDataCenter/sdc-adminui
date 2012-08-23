@@ -7,13 +7,31 @@ define(function(require) {
 
 	var ProbeItemView = BaseView.extend({
 		template: require('text!tpl/probe-item.html'),
-		initialize: function(options) {
-			this.probe = options.probe;
-			console.log(options.probe);
+		events: {
+			'click .delete-probe': 'deleteProbe'
 		},
+		
+		initialize: function(options) {
+			_.bindAll(this);
+
+			this.probe = options.probe;
+			this.probe.on('remove', this.remove);
+		},
+
 		render: function() {
 			this.setElement(this.template({probe: this.probe}));
 			return this;
+		},
+
+		deleteProbe: function() {
+			this.probe.destroy();
+		},
+
+		remove: function() {
+			this.$el.addClass('alert');
+			this.$el.fadeOut(function() {
+				BaseView.prototype.remove.call(this);
+			}.bind(this));
 		}
 	});
 
@@ -21,8 +39,13 @@ define(function(require) {
 
 		template: probesTpl,
 
+		appEvents: {
+			'probe:added': 'load'
+		},
+
 		initialize: function(options) {
 			_.bindAll(this);
+
 			this.probes = new Probes();
 			this.vm = options.vm;
 			this.probes.on('reset', this.addAll);
@@ -33,6 +56,7 @@ define(function(require) {
 		},
 
 		addAll: function() {
+			this.$('tbody').empty();
 			this.probes.each(this.addOne);
 		},
 

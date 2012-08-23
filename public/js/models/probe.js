@@ -2,6 +2,15 @@ define(['backbone'], function(Backbone) {
 
     var Probe = Backbone.Model.extend({
         urlRoot: '/_/amon/probes',
+        idAttribute: 'uuid',
+
+        url: function() {
+            if (this.isNew()) {
+                return this.urlRoot;
+            } else {
+                return _.str.sprintf('/_/amon/probes/%s/%s', this.get('user'), this.get('uuid'));
+            }
+        },
 
         validate: function(attrs) {
             var errors = {};

@@ -23,10 +23,6 @@ define(function(require) {
 
         sidebar: 'vms',
 
-        appEvents: {
-            'probe:added': 'onProbeAdded'
-        },
-
         events: {
             'click .server-hostname': 'clickedServerHostname',
             'click .start': 'clickedStartVm',
@@ -166,21 +162,6 @@ define(function(require) {
             this.probesView.load();
 
             return this;
-        },
-
-        onProbeAdded: function(probe) {
-            this.fetchProbes();
-        },
-
-        fetchProbes: function() {
-            if (this.vm.get('owner_uuid') && this.vm.get('uuid')) {
-                this.probes.fetch({
-                    data: $.param({
-                        user: this.vm.get('owner_uuid'),
-                        machine: this.vm.get('uuid')
-                    })
-                });
-            }
         }
 
     });

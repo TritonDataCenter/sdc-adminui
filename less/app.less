@@ -4,10 +4,9 @@
 
 body { padding-top: 60px; }
 
-#logo { color: #fff; cursor: default; }
+#logo { cursor: default; }
 
-.navbar-inner { height: 39px; }
-.page-header { clear: both; overflow: hidden; border-bottom: none; }
+.page-header { .clearfix; overflow: hidden; border-bottom: none; }
 
 .network-activity-indicator {
   position: fixed;
@@ -15,7 +14,6 @@ body { padding-top: 60px; }
   top: 40px;
   background: #fcff00;
   height: 2px;
-
 }
 
 .network-activity-indicator.error { background: #ff1e00; }
@@ -109,7 +107,7 @@ body { padding-top: 60px; }
     color: red;
   }
   .actions {
-    margin-top: -60px;
+    margin-top: -82px;
   }
 }
 
@@ -197,5 +195,6 @@ body { padding-top: 60px; }
 }
 
 .probes {
+  table { .table-bordered; }
   .name { width: 400px; }
 }
