@@ -423,9 +423,6 @@
               <label class="control-label">Name of Probe</label>
               <div class="controls">
                 <input type="text" name="name" class="input-xlarge">
-                <p class="help-block">
-                Probe names must begin with an alpha charactor and only include alphanumeric, '_', '.', and '-'
-                </p>
               </div>
             </div>
 
@@ -440,12 +437,12 @@
                 </div>
               </div>
 
-              <div class="control-group control-group-regex">
-                <label class="control-label">Match String</label>
+              <div class="control-group control-group-pattern">
+                <label class="control-label">Pattern</label>
                 <div class="controls">
-                  <input type="text" name="regex" class="input-xlarge">
+                  <input type="text" name="pattern" class="input-xlarge">
                   <p class="help-block">
-                  <label class="checkbox"><input type="checkbox" name="is-egex">
+                  <label class="checkbox"><input type="checkbox" name="is-regex">
                     Pattern is a regular expression
                   </label>
                   </p>

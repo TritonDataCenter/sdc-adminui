@@ -7,8 +7,8 @@ define(['views/base'], function(BaseView) {
         events: {
             'keyup input[name=name]': 'nameChanged',
             'keyup input[name=path]': 'pathChanged',
+            'keyup input[name=pattern]': 'patternChanged',
 
-            'keyup input[name=regex]': 'regexChanged',
             'change input[name=is-regex]': 'isRegexChanged',
 
             'keyup input[name=threshold]': 'thresholdChanged',
@@ -19,25 +19,24 @@ define(['views/base'], function(BaseView) {
         initialize: function(options) {
             _.bindAll(this);
 
-            this.defaults = {
-                period: 60,
-                threshold: 1,
-                path: '',
-                regex: ''
-            };
-            
-            this.config = {};
+            this.params = {};
+            this.params.type = 'log-scan';
+            this.params.machine = options.vm.get('uuid');
+            this.params.config = {};
+            this.params.config.match = {};
         },
 
         bindElements: function() {
             this.$name = this.$('input[name=name]');
-            this.$threshold = this.$('input[name=threshold]');
-            this.$regex = this.$('input[name=regex]');
             this.$path = this.$('input[name=path]');
+            this.$threshold = this.$('input[name=threshold]');
+            this.$isRegex = this.$('input[name=is-regex]');
+            this.$pattern = this.$('input[name=pattern]');
+            this.$period = this.$('input[name=period]');
         },
 
         focus: function() {
-            this.$el.find('input:first').focus();
+            this.$('input:first').focus();
             this.bindElements();
 
             return this;
@@ -49,8 +48,11 @@ define(['views/base'], function(BaseView) {
             return this;
         },
 
+
+
+
         done: function() {
-            this.trigger('done', _.defaults(this.config, this.defaults));
+            this.trigger('done', this.params);
         },
 
         hide: function() {
@@ -69,7 +71,7 @@ define(['views/base'], function(BaseView) {
             var vRes = this._validateName();
             if (true === vRes) {
                 this.hideError('name');
-                this.config.name = this.$name.val();
+                this.params.name = this.$name.val();
             } else {
                 this.showError('name', vRes);
             }
@@ -78,9 +80,21 @@ define(['views/base'], function(BaseView) {
         pathChanged: function() {
             if (true === this._validatePath()) {
                 this.hideError('path');
-                this.config.path = this.$path.val();
+                this.params.config.path = this.$path.val();
             } else {
                 this.showError('path', 'Path likely to be invalid.');
+            }
+        },
+
+        patternChanged: function() {
+            if (true === this._validatePattern()) {
+                this.hideError('pattern');
+                console.log(this.$pattern.val());
+                this.params.config.match.pattern = this.$pattern.val();
+                console.log(this.params);
+
+            } else {
+                this.showError('pattern', 'Pattern is required');
             }
         },
 
@@ -88,13 +102,13 @@ define(['views/base'], function(BaseView) {
             var regex = /^\d+$/;
             var value = this.$threshold.val();
             if (value.length === 0) {
-                delete this.config.threshold;
+                delete this.params.config.threshold;
                 this.hideError();
                 return;
             }
 
             if (regex.test(value)) {
-                this.config.threshold = Number(value);
+                this.params.config.threshold = Number(value);
                 this.hideError('threshold');
             } else {
                 this.showError('threshold', 'Threshold should be a number');
@@ -105,7 +119,7 @@ define(['views/base'], function(BaseView) {
             var res = this._validatePeriod();
 
             if (res === true) {
-                this.config.period = this.$period.val();
+                this.params.config.period = this.$period.val();
                 this.hideError('period');
             } else {
                 this.showError('period', res);
@@ -113,22 +127,20 @@ define(['views/base'], function(BaseView) {
         },
 
         isRegexChanged: function() {
-            this.config.isRegex = true;
+            if (this.$isRegex.is(':checked')) {
+                this.params.config.match.type = 'regex';
+            } else {
+                this.params.config.match.type = 'substring';
+            }
         },
 
         regexChanged: function() {
             var res = this._validateThreshold();
 
             if (res === true) {
-                this.config.regex = this.$regex.val();
-
-                if (this.config.isRegex) {
-                    this.config.regex = regexEscape(this.config.regex);
-                }
-
+                this.params.config.match.pattern = this.$pattern.val();
                 this.hideError('regex');
             } else {
-                delete this.config.regex;
                 this.showError('regex', res);
             }
         },
@@ -142,6 +154,15 @@ define(['views/base'], function(BaseView) {
             }
         },
 
+        _validatePattern: function() {
+            console.log('validate-pattern');
+            if (this.$pattern.val().length) {
+                return true;
+            } else {
+                return "Pattern must be provided";
+            }
+        },
+
         _validatePeriod: function() {
             if (this.$period.val().length) {
                 if (/^\d+$/.test(this.$period.val())) {
@@ -151,15 +172,18 @@ define(['views/base'], function(BaseView) {
             return true;
         },
 
+        _validateThreshold: function() {
+            if (this.$threshold.val().length) {
+                if (/^\d+$/.test(this.$threshold.val())) {
+                    return "Threshold should be a number";
+                }
+            }
+            return true;
+        },
+
         _validateName: function() {
             if (this.$name.val().length === 0) {
                 return 'probe name is required';
-            }
-
-            var regex = /^[a-zA-Z0-9][a-zA-Z0-9\-\_\.]/;
-
-            if (false === regex.test(this.$name.val())) {
-                return "Probe names must begin with an alpha charactor and only include alphanumeric, '_', '.', and '-'";
             }
 
             return true;
