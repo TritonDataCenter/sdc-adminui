@@ -20,12 +20,22 @@ define(function(require) {
 
 			this.probe = options.probe;
 			this.probe.on('remove', this.remove);
+			this.probe.on('alarm', this.renderAlarm);
 		},
 
 		render: function() {
 			this.setElement(this.template({probe: this.probe}));
 			this.$('.delete-probe').tooltip();
 			return this;
+		},
+
+		renderAlarm: function(alarm) {
+			this.$('.status').removeClass().addClass('status');
+			if (alarm.get('closed') === true) {
+				this.$('.status').addClass('clsoed');
+			} else {
+				this.$('.status').addClass('open');
+			}
 		},
 
 		deleteProbe: function() {
@@ -55,15 +65,31 @@ define(function(require) {
 			this.probes.on('reset', this.addAll);
 
 			this.alarms = new Alarms();
+			this.alarms.on('reset', this.triggerAlarms);
+			
 			this.vm = options.vm;
 		},
 
+
 		load: function() {
-			this.alarms.fetchAlarms(this.vm);
 			this.probes.fetchProbes(this.vm);
 		},
 
+		triggerAlarms: function(alarms) {
+			this.probes.each(function(p) {
+				alarms.each(function(a) {
+					var faults = a.get('faults');
+					_(faults).each(function(f) {
+						if (f.probe == p.get('uuid')) {
+							p.trigger('alarm', a);
+						}
+					});
+				});
+			});
+		},
+
 		addAll: function() {
+			this.alarms.fetchAlarms(this.vm);
 			this.$list.empty();
 			if (this.probes.length === 0) {
 				this.$blank.show();

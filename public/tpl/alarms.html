@@ -1,0 +1,18 @@
+<h3 class="title">Alarms</h3>
+
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Probe</th>
+			<th>Events</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% _.each(alarms, function(alarm) { %>
+		<tr>
+			<td><%= alarm.probe || alarm.probeGroup %></td>
+			<td><%= alarm.numEvents %></td>
+		</tr>
+		<% }); %>
+	</tbody>
+</table>

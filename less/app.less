@@ -212,8 +212,11 @@ body { padding-top: 60px; }
       display: inline-block;
       width: 20px;
       margin-right: 10px;
-      background: #ddd;
-      .border-radius(3px);
+      background: @grayLight;
+      .border-radius(10px);
+    }
+    .status.open {
+      background: @yellow;
     }
     .name { display: inline-block; width: 220px; font-weight:bold; }
     .type { display: inline-block; width: 140px; }

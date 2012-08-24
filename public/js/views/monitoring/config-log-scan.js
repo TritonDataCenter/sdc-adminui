@@ -1,8 +1,10 @@
-define(['views/base'], function(BaseView) {
+define(function(require) {
+    var BaseView = require('views/base');
+    var tplLogScan = require('text!tpl/probe-log-scan.html');
 
     return BaseView.extend({
 
-        template: 'monitoring-log-scan-probe',
+        template: tplLogScan,
 
         events: {
             'keyup input[name=name]': 'nameChanged',
@@ -33,19 +35,25 @@ define(['views/base'], function(BaseView) {
             this.$isRegex = this.$('input[name=is-regex]');
             this.$pattern = this.$('input[name=pattern]');
             this.$period = this.$('input[name=period]');
+            this.$completeButton = this.$('button');
         },
 
         focus: function() {
             this.$('input:first').focus();
-            this.bindElements();
 
             return this;
         },
 
         render: function() {
             this.setElement(this.template());
+            this.bindElements();
+            this.initialState();
 
             return this;
+        },
+
+        initialState: function() {
+            this.$completeButton.addClass('disabled');
         },
 
 
