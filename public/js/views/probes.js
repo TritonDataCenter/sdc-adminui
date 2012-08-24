@@ -1,12 +1,16 @@
 define(function(require) {
 
 	var Probes = require('models/probes');
+	var Alarms = require('models/alarms');
+
 	var BaseView = require('views/base');
 
 	var probesTpl = require('text!tpl/probes.html');
 
 	var ProbeItemView = BaseView.extend({
+
 		template: require('text!tpl/probe-item.html'),
+
 		events: {
 			'click .delete-probe': 'deleteProbe'
 		},
@@ -20,6 +24,7 @@ define(function(require) {
 
 		render: function() {
 			this.setElement(this.template({probe: this.probe}));
+			this.$('.delete-probe').tooltip();
 			return this;
 		},
 
@@ -47,26 +52,36 @@ define(function(require) {
 			_.bindAll(this);
 
 			this.probes = new Probes();
-			this.vm = options.vm;
 			this.probes.on('reset', this.addAll);
+
+			this.alarms = new Alarms();
+			this.vm = options.vm;
 		},
 
 		load: function() {
+			this.alarms.fetchAlarms(this.vm);
 			this.probes.fetchProbes(this.vm);
 		},
 
 		addAll: function() {
-			this.$('tbody').empty();
-			this.probes.each(this.addOne);
+			this.$list.empty();
+			if (this.probes.length === 0) {
+				this.$blank.show();
+			} else {
+				this.probes.each(this.addOne);
+			}
 		},
 
 		addOne: function(probe) {
 			var itemView = new ProbeItemView({probe: probe});
-			this.$('tbody').append(itemView.render().el);
+			this.$list.append(itemView.render().el);
 		},
 
 		render: function() {
 			this.$el.html(this.template());
+			this.$list = this.$('ul');
+			this.$blank = this.$('.blank');
+			this.$blank.hide();
 			return this;
 		}
 	});

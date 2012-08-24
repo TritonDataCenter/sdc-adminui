@@ -1,7 +1,6 @@
-<tr>
-	<td><%= probe.get('name') %></td>
-	<td><%= probe.get('type') %></td>
-	<td>
-		<a class="delete-probe"><i class="icon-trash"/></a>
-	</td>
-</tr>
+<li>
+	<a class="delete-probe pull-right" data-placement="right" data-api="tooltip" title="Delete this Probe"><i class="icon-trash"/></a>
+	<div class="status">&nbsp;</div>
+	<div class="name"><%= probe.get('name') %></div>
+	<div class="type"><%= probe.get('type') %></div>
+</li>

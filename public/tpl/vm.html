@@ -20,11 +20,24 @@
   </div>
 
   <div class="vms-details">
+
+    <div class="row dash">
+      <div class="state span2">
+        <div class="value">
+          <span class=""><%- vm.get('state') || '' %> </span>
+        </div>
+        <div class="title">status</div>
+      </div>
+
+      <div class="memory span2">
+        <div class="value">
+          <%- vm.get('ram') || '' %> MB
+        </div>
+        <div class="title">memory</div>
+      </div>
+    </div>
+
     <table class="overview">
-      <tr>
-        <th>Status</th>
-        <td><span class="state"><%- vm.get('state') %></span></td>
-      </tr>
       <tr>
         <th>Name</th>
         <td>
@@ -58,10 +71,6 @@
           <a class="server-hostname"><%- server.get('hostname') || '' %></a>
           <span class="server-uuid"><%- vm.get('server_uuid') %></span>
         </td>
-      </tr>
-      <tr>
-        <th>Memory</th>
-        <td><%- vm.get('ram') || '' %> MB</td>
       </tr>
       <tr>
         <th>Swap</th>
@@ -98,7 +107,9 @@
 
     </table>
 
-    <div class="probes"></div>
+    <div class="row">
+      <div class="probes span6"></div>
+    </div>
   </div>
 </div>
 

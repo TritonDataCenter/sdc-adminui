@@ -71,6 +71,7 @@ function(
                 type: cfg.type,
                 name: cfg.name,
                 agent: cfg.agent,
+                machine: cfg.machine,
                 config: cfg.config
             });
 
