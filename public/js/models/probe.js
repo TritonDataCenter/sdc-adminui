@@ -3,7 +3,7 @@ define(['backbone'], function(Backbone) {
     var Probe = Backbone.Model.extend({
         urlRoot: '/_/amon/probes',
         idAttribute: 'uuid',
-
+        
         url: function() {
             if (this.isNew()) {
                 return this.urlRoot;

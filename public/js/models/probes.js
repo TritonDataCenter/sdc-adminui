@@ -10,14 +10,9 @@ function(Backbone, Probe) {
 
 		model: Probe,
 
-		fetchProbes: function(vm) {
-			if (vm.get('owner_uuid') && vm.get('uuid')) {
-				var params = $.param({
-					user: vm.get('owner_uuid'),
-					machine: vm.get('uuid')
-				});
-				this.fetch({ data: params });
-			}
+		fetchProbes: function(userUuid) {
+			var params = $.param({ user: userUuid });
+			this.fetch({ data: params });
 		}
 	});
 });

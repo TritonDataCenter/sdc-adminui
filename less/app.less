@@ -79,68 +79,73 @@ body { padding-top: 60px; }
 }
 
 
-.servers-list {
-  tr td { cursor: pointer; }
+#page-servers {
+  .servers-list {
+    tr td { cursor: pointer; }
 
-  .status { width: 100px; }
-  .memory {
-    width: 200px;
-    .percent { display: inline-block; width: 60px; }
-    .breakdown { font-size: 11px; }
-  }
-}
-
-.server-details {
-  table.overview {
-    .table;
-    tbody th { width: 140px; }
-  }
-  table.hardware {
-    .table;
-    tbody th { width: 140px; }
-  }
-  table.disks { .table;}
-}
-
-.page-vm {
-  .dropdown-menu .delete {
-    color: red;
-  }
-  .actions {
-    margin-top: -82px;
-  }
-}
-
-.vms-details {
-  .dash {
-    &>div {
-      padding: 20px;
+    .status { width: 100px; }
+    .memory {
+      width: 200px;
+      .percent { display: inline-block; width: 60px; }
+      .breakdown { font-size: 11px; }
     }
-    text-align: center;
-    text-transform: uppercase;
-    .title { font-weight: bold; .muted;  font-size: 12px; }
-    .value { font-size: 24px; font-weight: bold;}
   }
+}
 
-  .state { }
-  .server-hostname { cursor: pointer; }
-  .uuid {
-    font-size: 10px;
-    color: @grayLight;
-    font-style: italic;
-    font-family: monospace;
+#page-server {
+  .server-details {
+    table.overview {
+      .table;
+      tbody th { width: 140px; }
+    }
+    table.hardware {
+      .table;
+      tbody th { width: 140px; }
+    }
+    table.disks { .table;}
   }
-  table.overview {
-    .table;
-    tbody th { width: 100px; }
+}
+
+#page-vm {
+  .dropdown-menu .delete { color: red; }
+
+  .actions { margin-top: -82px; }
+
+  .vms-details {
+    .dash {
+      &>div {
+        padding: 20px;
+      }
+      text-align: center;
+      text-transform: uppercase;
+      .title { font-weight: bold; .muted;  font-size: 12px; }
+      .value { font-size: 24px; font-weight: bold;}
+    }
+
+    .state { }
+    .server-hostname { cursor: pointer; }
+    .uuid {
+      font-size: 10px;
+      color: @grayLight;
+      font-style: italic;
+      font-family: monospace;
+    }
+    .overview {
+      .table;
+      tbody th { width: 100px; }
+    }
+    .vm-uuid,
+    .server-uuid,
+    .owner-uuid,
+    .image-uuid {
+      .uuid;
+      .pull-right;
+    }
   }
-  .vm-uuid,
-  .server-uuid,
-  .owner-uuid,
-  .image-uuid {
-    .uuid;
-    .pull-right;
-  }
+}
+
+#page-vms {
+  .provision-button { margin-top: 14px;}
 }
 
 
@@ -202,6 +207,33 @@ body { padding-top: 60px; }
   .box+.box {
     margin-top: 0.5em;
   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.alarms {
+  .alarms-list { float: left; width: 500px;}
+  .alarms-list>li { 
+    display: block;
+    background: #eee;
+     padding: 10px 20px;
+     overflow: hidden;
+     .actions { float: right; text-align: right; width: 100px;}
+     .details { float: left; }
+   }
+  .faults {  }
 }
 
 .probes {

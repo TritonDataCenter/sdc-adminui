@@ -10,9 +10,6 @@ define(function(require) {
     var CreateProbeController = require('controllers/create-probe');
 
 
-    var ProbesView = require('views/probes');
-    var AlarmsView = require('views/alarms');
-
     var tplVm = require('text!tpl/vm.html');
 
     /**
@@ -159,14 +156,6 @@ define(function(require) {
             this.$el.html(this.compileTemplate());
 
             this.renderImage();
-            this.probesView = new ProbesView({vm:this.vm});
-            this.probesView.setElement(this.$('.probes')).render();
-            this.probesView.load();
-
-            this.alarmsView = new AlarmsView({vm:this.vm});
-            this.alarmsView.setElement(this.$('.alarms')).render();
-            this.alarmsView.load();
-
             return this;
         }
 

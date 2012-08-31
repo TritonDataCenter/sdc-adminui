@@ -1,18 +1,29 @@
-<h3 class="title">Alarms</h3>
+<ul class="unstyled alarms-list">
+	<% alarms.each(function(alarm) { %>
+	<li>
+		<div class="details">
+			<h6>
+				<% if (alarm.probeGroup) { %>
+				<%= alarm.probeGroup.get('name') %>
+				<% } else { %>
+				<%= alarm.probe.get('name') %>
+				<% } %>
+			</h6>
 
-<table class="table table-bordered">
-	<thead>
-		<tr>
-			<th>Probe</th>
-			<th>Events</th>
-		</tr>
-	</thead>
-	<tbody>
-		<% _.each(alarms, function(alarm) { %>
-		<tr>
-			<td><%= alarm.probe || alarm.probeGroup %></td>
-			<td><%= alarm.numEvents %></td>
-		</tr>
+			<ul class="unstyled faults">
+				<% _.each(alarm.get('faults'), function(fault) { %>
+				<li>
+					<%= fault.probe.get('name') %>
+				</li>
+				<% }); %>
+			</ul>
+		</div>
+
+		<div class="actions">
+			<button class="btn btn-link">
+				<i class="icon-remove"></i> 
+				Close</button>
+		</div>
 		<% }); %>
-	</tbody>
-</table>
+	</li>
+</ul>

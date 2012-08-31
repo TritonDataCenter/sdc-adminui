@@ -114,6 +114,8 @@ define(['jquery',
       'signin': 'showSignin',
       'vms': 'showVms',
       'vms/:uuid': 'showVm',
+      'users/:uuid': 'showUser',
+
       'monitoring': 'showMonitoring',
       'servers/:uuid': 'showServer',
       '*default': 'defaultAction'
@@ -165,6 +167,12 @@ define(['jquery',
       console.log(_.str.sprintf('[route] showVm: %s', uuid));
       if (this.authenticated())
         this.presentView('vm', { uuid: uuid });
+    },
+
+    showUser: function(uuid) {
+      if (this.authenticated()) {
+        this.presentView('user', {uuid: uuid});
+      }
     },
 
     showServer: function(uuid) {
