@@ -223,17 +223,67 @@ body { padding-top: 60px; }
 
 
 
+
+
+
+
 .alarms {
   .alarms-list { float: left; width: 500px;}
   .alarms-list>li { 
     display: block;
-    background: #eee;
-     padding: 10px 20px;
-     overflow: hidden;
-     .actions { float: right; text-align: right; width: 100px;}
-     .details { float: left; }
-   }
-  .faults {  }
+    overflow: hidden;
+    .border-radius(2px);
+
+    .probe-name { font-weight: bold;}
+    .time-last-event { font-size: 10px; text-transform: uppercase;}
+
+    .summary {
+      background: lighten(@red, 54%);
+      padding: 18px;
+    }
+
+    .details {
+      background: lighten(@red, 62%);
+      padding: 18px;
+      overflow: hidden;
+      padding-left: 30px;
+    }
+
+
+    .actions {
+      float: right;
+      a { color: @white; font-size: 12px;}
+      margin-top: -30px;
+    }
+
+    .fault-count { 
+      position: relative;
+      background: #fff;
+      .border-radius(10px);
+      color: #000;
+      padding: 0 8px;
+      float: right;
+      left: -40px;
+      top: 12px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+
+    .faults>li+li { margin-top: .5em;}
+
+    .faults>li {
+      .fault-time { font-size: 11px; color: @grayLight; float: right;}
+      .fault-name { font-weight: bold; font-size: 12px; float: left; }
+      .fault-message { 
+        clear: both;
+        font-size: 11px;
+        background: lighten(@red, 62%);
+        padding: 4px; 
+        .border-radius(2px);
+      }
+    }
+  }
 }
 
 .probes {

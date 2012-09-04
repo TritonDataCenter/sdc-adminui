@@ -8,6 +8,14 @@ define(function(require) {
 	var AlarmsView = BaseView.extend({
 		template: require('text!tpl/alarms.html'),
 
+		events: {
+			'click .summary': 'showDetails'
+		},
+
+		showDetails: function(e) {
+			$(e.currentTarget).siblings('.details').toggle('slide');
+		},
+
 		initialize: function(options) {
 			_.bindAll(this);
 
@@ -28,34 +36,41 @@ define(function(require) {
 			this.probes.on('reset', this.render);
 		},
 
-		render: function() {
-			if (this.probes.length && this.alarms.length && this.probeGroups.length) {
+		dataReady: function() {
+			return this.probes.length && this.alarms.length && this.probeGroups.length;
+		},
 
-				this.alarms.each(function(a) {
-					if (a.get('probeGroup')) {
-						a.probeGroup = this.probeGroups.find(function(pg) {
-							return pg.get('uuid') == a.get('probeGroup');
+		render: function() {
+			if (! this.dataReady()) {
+				return;
+			}
+
+			this.alarms.each(function(a) {
+				if (a.get('probeGroup')) {
+					a.probeGroup = this.probeGroups.find(function(pg) {
+						return pg.get('uuid') == a.get('probeGroup');
+					});
+				}
+
+				_(a.get('faults')).each(function(f) {
+					var faultProbe = f.probe;
+					if (faultProbe) {
+						f.probe = this.probes.find(function(p) {
+							return p.get('uuid') == faultProbe;
 						});
 					}
-
-					_(a.get('faults')).each(function(f) {
-						var faultProbe = f.probe;
-						if (faultProbe) {
-							f.probe = this.probes.find(function(p) {
-								return p.get('uuid') == faultProbe;
-							});
-						}
-					}, this);
 				}, this);
+			}, this);
 
-				console.log(this.alarms);
+			console.log(this.alarms);
 
-				this.$el.html(this.template({
-					probes: this.probes,
-					probeGroups: this.probeGroups,
-					alarms: this.alarms
-				}));
-			}
+			this.$el.html(this.template({
+				probes: this.probes,
+				probeGroups: this.probeGroups,
+				alarms: this.alarms
+			}));
+
+			this.$('.details').hide();
 		}
 	});
 

@@ -1,77 +1,77 @@
 <div id="page-server">
-    <div class="page-header">
-        <h1>Server <small><%- server.get('uuid') %></small> </h1>
-    </div>
+  <div class="page-header">
+    <h1>Server <small><%- server.get('uuid') %></small> </h1>
+  </div>
 
-    <div class="server-details">
-        <table class="overview">
-            <tbody>
-                <tr>
-                    <th>Datacenter</th>
-                    <td><%- server.get('datacenter') %></td>
-                </tr>
-                <tr>
-                    <th>UUID</th>
-                    <td><%- server.get('uuid') %></td>
-                </tr>
-                <tr>
-                    <th>Hostname</th>
-                    <td><%- server.get('hostname') %></td>
-                </tr>
-                <tr>
-                    <th>Platform Version</th>
-                    <td><%- server.get('sysinfo')['Live Image'] %></td>
-                </tr>
-            </tbody>
+  <div class="server-details">
+    <table class="overview">
+      <tbody>
+        <tr>
+          <th>Datacenter</th>
+          <td><%- server.get('datacenter') %></td>
+        </tr>
+        <tr>
+          <th>UUID</th>
+          <td><%- server.get('uuid') %></td>
+        </tr>
+        <tr>
+          <th>Hostname</th>
+          <td><%- server.get('hostname') %></td>
+        </tr>
+        <tr>
+          <th>Platform Version</th>
+          <td><%- server.get('sysinfo')['Live Image'] %></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="row">
+      <div class="span9">
+        <h2>Hardware</h2>
+        <table class="hardware">
+          <tbody>
+            <tr>
+              <th>CPU Type</th>
+              <td><%- server.get('sysinfo')['CPU Type'] || '' %></td>
+            </tr>
+            <tr>
+              <th>Cores</th>
+              <td><%- server.get('sysinfo')['CPU Total Cores'] || '' %></td>
+            </tr>
+            <tr>
+              <th>Serial Number</th>
+              <td><%- server.get('sysinfo')['Serial Number'] || '' %></td>
+            </tr>
+            <tr>
+              <th>Total Memory</th>
+              <td><%- server.get('sysinfo')['MiB of Memory'] || '' %> MiB</td>
+            </tr>
+          </tbody>
         </table>
+      </div>
 
-        <div class="row">
-            <div class="span9">
-                <h2>Hardware</h2>
-                <table class="hardware">
-                    <tbody>
-                        <tr>
-                            <th>CPU Type</th>
-                            <td><%- server.get('sysinfo')['CPU Type'] || '' %></td>
-                        </tr>
-                        <tr>
-                            <th>Cores</th>
-                            <td><%- server.get('sysinfo')['CPU Total Cores'] || '' %></td>
-                        </tr>
-                        <tr>
-                            <th>Serial Number</th>
-                            <td><%- server.get('sysinfo')['Serial Number'] || '' %></td>
-                        </tr>
-                        <tr>
-                            <th>Total Memory</th>
-                            <td><%- server.get('sysinfo')['MiB of Memory'] || '' %> MiB</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+      <div class="span4">
+        <h2>Disks</h2>
 
-            <div class="span4">
-                <h2>Disks</h2>
-
-                <table class="disks">
-                    <thead>
-                        <tr>
-                            <th>Device</th>
-                            <th>Size</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% var disks = server.get('sysinfo')['Disks'] || {}; %>
-                        <% _.each(disks, function(disk, name) { %>
-                        <tr>
-                            <td><%- name %></td>
-                            <td><%- disk['Size in GB'] %> GB</td>
-                        </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
+        <table class="disks">
+          <thead>
+            <tr>
+              <th>Device</th>
+              <th>Size</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% var disks = server.get('sysinfo')['Disks'] || {}; %>
+            <% _.each(disks, function(disk, name) { %>
+            <tr>
+              <td><%- name %></td>
+              <td><%- disk['Size in GB'] %> GB</td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
     </div>
+
+  </div>
 </div>

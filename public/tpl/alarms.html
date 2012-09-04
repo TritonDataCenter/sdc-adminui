@@ -1,28 +1,38 @@
 <ul class="unstyled alarms-list">
 	<% alarms.each(function(alarm) { %>
 	<li>
-		<div class="details">
-			<h6>
+		<div class="summary">
+			<div class="fault-count">
+				<%= alarm.get('numEvents') %>
+			</div>
+
+			<div class="probe-name">
 				<% if (alarm.probeGroup) { %>
 				<%= alarm.probeGroup.get('name') %>
 				<% } else { %>
 				<%= alarm.probe.get('name') %>
 				<% } %>
-			</h6>
+			</div>
 
+			<div class="time-last-event">
+				<%= new Date(alarm.get('timeLastEvent')) %>
+			</div>
+
+			<div class="actions">
+				<a><i class="icon-remove"></i></a>
+			</div>
+		</div>
+
+		<div class="details">
 			<ul class="unstyled faults">
 				<% _.each(alarm.get('faults'), function(fault) { %>
 				<li>
-					<%= fault.probe.get('name') %>
+					<div class="fault-name"><%= fault.probe.get('name') %></div>
+					<div class="fault-time"><%= new Date(fault.event.time) %></div>
+					<div class="fault-message"><%= fault.event.data.message %></div>
 				</li>
 				<% }); %>
 			</ul>
-		</div>
-
-		<div class="actions">
-			<button class="btn btn-link">
-				<i class="icon-remove"></i> 
-				Close</button>
 		</div>
 		<% }); %>
 	</li>
