@@ -101,7 +101,7 @@ define(function(require) {
             this.$el.html(this.template());
 
             this.topbarView.setElement(this.$("#topbar")).render();
-            this.mainNavView.setElement(this.$("#main-nav")).render();
+            this.mainNavView.setElement(this.$(".main-nav")).render();
 
             var indicator = this.$('.network-activity-indicator');
 

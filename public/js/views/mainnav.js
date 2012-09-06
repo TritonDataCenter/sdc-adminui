@@ -3,15 +3,12 @@ define(function(require) {
     var BaseView = require('views/base');
 
     var Mainnav = BaseView.extend({
-
-        template: require('text!tpl/mainnav.html'),
-
         events: {
             'click li':'onSelect'
         },
 
         render: function() {
-            this.$el.html(this.template());
+            return this;
         },
 
         onSelect: function(e) {

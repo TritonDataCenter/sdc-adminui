@@ -1,6 +1,13 @@
-<div id="logo" class="brand">Operations Portal</div>
+<ul class="nav pull-left main-nav">
+	<li data-view="dashboard"><a href="/dashboard">Dashboard</a></li>
+	<li data-view="vms"><a href="/vms">Virtual Machines</a></li>
+	<li data-view="servers"><a href="/servers">Servers</a></li>
+	<li data-view="networks"><a href="/networks">Networks</a></li>
+	<li data-view="users"><a href="/users">Users &amp; Groups</a></li>
+</ul>
 
 <ul class="nav pull-right">
+
 	<li class="dropdown">
 		<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 			<i class="icon-tasks icon-white"></i>
@@ -44,7 +51,5 @@
 		</ul>
 	</li>
 
-	<li><a href="#"><i class="icon-user"></i> <%= user.cn %></a></li>
-	<li><a href="#"><i class="icon-cog"></i></a></li>
 	<li><a data-trigger='signout'><i class="icon-off"></i> Sign Out</a></li>
 </ul>
