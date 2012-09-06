@@ -6,11 +6,14 @@ define(function(require) {
     var Server = require('models/server');
     var User = require('models/user');
     var Probes = require('models/probes');
+
     var VMDeleteModal = require('views/vm-delete-modal');
+    var TagsList = require('views/tags-list');
     var CreateProbeController = require('controllers/create-probe');
 
 
     var tplVm = require('text!tpl/vm.html');
+
 
     /**
      * VmView
@@ -85,6 +88,7 @@ define(function(require) {
             this.vm.on('change:alias', this.render, this);
             this.vm.fetch();
 
+            this.tagsListView = new TagsList({vm:this.vm});
         },
 
         compileTemplate: function() {
@@ -140,6 +144,10 @@ define(function(require) {
             return this;
         },
 
+        renderTags: function() {
+            this.tagsListView.setElement(this.$('.tags')).render();
+        },
+
         renderServer: function() {
             this.$('.server-hostname').html(this.server.get('hostname'));
             this.$('.server-uuid').html(this.server.get('uuid'));
@@ -156,6 +164,7 @@ define(function(require) {
             this.$el.html(this.compileTemplate());
 
             this.renderImage();
+            this.renderTags();
             return this;
         }
 

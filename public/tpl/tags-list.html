@@ -1,0 +1,10 @@
+<table class="table table-bordered">
+	<tbody>
+		<% _.each(tags, function(tagValue, tagName) { %>
+		<tr>
+			<td><%= tagName %></td>
+			<td><%= tagValue %></td>
+		</tr>
+		<% }) %>
+	</tbody>
+</table>
