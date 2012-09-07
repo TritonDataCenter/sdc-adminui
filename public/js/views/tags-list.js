@@ -4,6 +4,7 @@ define(function(require) {
 
 	var TagsList = BaseView.extend({
 		template: require('text!tpl/tags-list.html'),
+
 		initialize: function(options) {
 			_.bindAll(this);
 
@@ -17,6 +18,10 @@ define(function(require) {
 			var tags = this.vm.get('tags');
 			this.$el.html(this.template({tags: tags}));
 			return this;
+		},
+
+		editMetadata: function() {
+			console.log("edit");
 		}
 
 	});
