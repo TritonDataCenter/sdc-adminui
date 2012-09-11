@@ -53,7 +53,6 @@ define(function(require) {
 
 
 		render: function() {
-			console.log(this.tag);
 			var tpl = this.template({
 				editing: this.model.get('editing'),
 				tag: this.tag
@@ -100,6 +99,7 @@ define(function(require) {
 				tags[tag.name] = tag.value;
 				this.vm.set({tags: tags});
 				this.vm.save();
+				this.render();
 			}, this);
 
 			addView.render();
@@ -114,6 +114,12 @@ define(function(require) {
 			var tags = this.vm.get('tags');
 			_(tags).each(function(tv, tn) {
 				var view = new EditingView({ name: tn, value: tv });
+				view.on('save', function(tag) {
+					delete tags[tn];
+					tags[tag.name] = tag.value;
+					console.log(tags);
+					this.vm.save({tags:tags});
+				}, this)
 				this.$('tbody').append(view.$el);
 				view.render();
 			}, this);

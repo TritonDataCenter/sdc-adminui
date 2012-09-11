@@ -3,9 +3,11 @@ requirejs.config({
     paths: {
         "underscore": "lib/underscore",
         "underscore.string": "lib/underscore.string",
+        "knockback": "lib/knockback",
         "backbone": "lib/backbone",
         "handlebars": "lib/handlebars",
         "bootstrap": 'lib/bootstrap',
+        "knockout": 'lib/knockout-min',
         "kevinykchan-bootstrap-typeahead": 'lib/kevinykchan-bootstrap-typeahead',
         "jquery": "require-jquery",
         "jquery.serializeObject": "lib/jquery.serializeObject",
@@ -22,11 +24,12 @@ requirejs.config({
             }
         },
         "bootstrap": ['jquery'],
-        'kevinykchan-bootstrap-typeahead': ["bootstrap"],
+        "kevinykchan-bootstrap-typeahead": ["bootstrap"],
         "backbone": {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
-        }
+        },
+        "knockback": ['underscore']
     },
     deps: [
         'jquery',
@@ -35,7 +38,9 @@ requirejs.config({
         'kevinykchan-bootstrap-typeahead',
         'handlebars',
         'underscore',
-        'backbone']
+        'backbone',
+        'knockout',
+        'knockback']
 });
 
 require(['app'], function(Application) {
