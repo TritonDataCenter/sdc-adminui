@@ -1,36 +1,12 @@
 <table class="table table-bordered">
 	<tbody>
-		<% _.each(tags, function(tagValue, tagName) { %>
-		<tr>
-			<td class="key">
-				<spcn class="editable"><%= tagName %></span>
-				<div class="row-actions">
-					<a>edit</a>
-				</div>
-			</td>
-			<td class="value">
-				<span data-key="<%= tagName %>" class="editable"><%= tagValue %></span>
-				<div class="row-actions">
-					<a>edit</a>
-				</div>
-			</td>
-		</tr>
-		<% }) %>
-		<tr class="editing">
-			<td class="key"><input value="some_key"/></td>
-			<td class="value">
-				<input value="some-value"/>
-				<div class="editing-actions">
-					<button class="btn btn-mini btn-primary">Save</button>
-					<button class="btn btn-link">Cancel</button>
-				</div>
-			</td>
-		</tr>
 	</tbody>
 
 	<tfoot>
 		<tr>
-			<td colspan="3"><button class="btn-link">Add a tag</button></td>
+			<td colspan="3">
+				<button class="btn-link add-tag">Add a tag</button>
+			</td>
 		</tr> 
 	</tfoot>
 </table>

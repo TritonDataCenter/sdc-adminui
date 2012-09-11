@@ -359,38 +359,50 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 
 
 
-.table { 
-  tr.editing {
-    input {
-      border: 1px solid #eee; width: 150px;
-      padding: 4px;
-      width: 100%;
+.tags {
+  .table { 
+    td.key { width: 140px;}
+    tr.editing {
+      input {
+        width: 150px;
+        border: none;
+        background: lighten(@yellow, 40%);
+        width: 120px;
+        padding: 2px 6px;
+        border: none;
+        margin: 0;
+        font-size: 12px;
+      }
+      
+      .editing-actions {
+        float: right; 
+        button {
+          line-height: 14px;
+          font-size: 12px;
+        }
+      }
     }
-    .editing-actions { float: right;}
-  }
-  tfoot td {
-    padding: 1px;
-  }
 
-  .row-actions {
-    visibility: hidden; 
-    float: right;
-  }
+    tfoot td {
+      padding: 1px;
+    }
+
+    .row-actions {
+      opacity: 0.7;
+      visibility: hidden; 
+      float: right;
+    }
 
 
-  td:hover {
-  }
+    td:hover {}
 
-  td:hover .row-actions {
-    visibility: visible;
-    a { 
-      cursor: pointer;
-      text-transform: uppercase;
-      font-size: 10px;
-      text-decoration: underline;
-      margin-left: 5px;
-      display: block;
-      padding: 0;
+    td:hover .row-actions {
+      visibility: visible;
+      a { 
+        cursor: pointer;
+        margin-left: 5px;
+        color: #111;
+      }
     }
   }
 }
