@@ -8,7 +8,8 @@ define(function(require) {
 		events: {
 			'click .edit': 'edit',
 			'click .cancel': 'cancel',
-			'click .save': 'save'
+			'click .save': 'save',
+			'click .remove': 'del'
 		},
 
 		initialize: function(options) {
@@ -38,6 +39,10 @@ define(function(require) {
 		cancel: function() {
 			this.model.set({editing: false});
 			this.trigger('cancel');
+		},
+
+		del: function() {
+			this.trigger('remove', this.tag);
 		},
 
 		edit: function() {
@@ -117,9 +122,15 @@ define(function(require) {
 				view.on('save', function(tag) {
 					delete tags[tn];
 					tags[tag.name] = tag.value;
-					console.log(tags);
 					this.vm.save({tags:tags});
 				}, this)
+
+				view.on('remove', function(tag) {
+					delete tags[tag.name];
+					this.vm.save({tags:tags});
+					view.$el.fadeOut(200,function() { view.remove(); });
+				}, this);
+
 				this.$('tbody').append(view.$el);
 				view.render();
 			}, this);

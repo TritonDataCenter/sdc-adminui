@@ -29,7 +29,7 @@ requirejs.config({
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
         },
-        "knockback": ['underscore']
+        "knockback": ["underscore", "backbone"]
     },
     deps: [
         'jquery',
