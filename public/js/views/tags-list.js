@@ -116,18 +116,21 @@ define(function(require) {
 		render: function() {
 			this.$el.html(this.template());
 
-			var tags = this.vm.get('tags');
-			_(tags).each(function(tv, tn) {
+			_(this.vm.get('tags')).each(function(tv, tn) {
 				var view = new EditingView({ name: tn, value: tv });
 				view.on('save', function(tag) {
+					var tags = this.vm.get('tags');
 					delete tags[tn];
 					tags[tag.name] = tag.value;
-					this.vm.save({tags:tags});
+					this.vm.set({tags:tags});
+					this.vm.saveTags();
 				}, this)
 
 				view.on('remove', function(tag) {
+					var tags = this.vm.get('tags');
 					delete tags[tag.name];
-					this.vm.save({tags:tags});
+					this.vm.set({tags:tags});
+					this.vm.saveTags();
 					view.$el.fadeOut(200,function() { view.remove(); });
 				}, this);
 
