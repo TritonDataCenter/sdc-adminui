@@ -1,0 +1,16 @@
+<table class="table editable">
+<tbody data-bind="foreach: metadata" class="unstyled table table-bordered">
+	<tr>
+		<td class="key">
+			<span data-bind="text: key" type="text"></span>
+		</td>
+		<td class="value">
+			<span class="value" data-bind="text: value" type="text"></span>
+			<div class="row-actions">
+				<a class="edit"><i class="icon-edit"></i> Edit</a>
+				<a class="remove"><i class="icon-trash"></i></a>
+			</div>
+		</td>
+	</tr>
+</tbody>
+</table>

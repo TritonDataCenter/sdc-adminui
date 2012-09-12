@@ -9,6 +9,7 @@ define(function(require) {
 
     var VMDeleteModal = require('views/vm-delete-modal');
     var TagsList = require('views/tags-list');
+    var MetadataList = require('views/metadata');
     var CreateProbeController = require('controllers/create-probe');
 
 
@@ -75,6 +76,7 @@ define(function(require) {
                 this.image.fetch();
             }, this);
 
+
             this.vm.on('change:owner_uuid', function(m) {
                 this.owner.set({uuid: m.get('owner_uuid')});
                 this.owner.fetch();
@@ -88,6 +90,7 @@ define(function(require) {
             this.vm.on('change:alias', this.render, this);
             this.vm.fetch();
 
+            this.metadataListView = new MetadataList({vm:this.vm});
             this.tagsListView = new TagsList({vm:this.vm});
         },
 
@@ -148,6 +151,10 @@ define(function(require) {
             this.tagsListView.setElement(this.$('.tags')).render();
         },
 
+        renderMetadata: function() {
+            this.metadataListView.setElement(this.$('.metadata')).render();
+        },
+
         renderServer: function() {
             this.$('.server-hostname').html(this.server.get('hostname'));
             this.$('.server-uuid').html(this.server.get('uuid'));
@@ -165,6 +172,7 @@ define(function(require) {
 
             this.renderImage();
             this.renderTags();
+            this.renderMetadata();
             return this;
         }
 

@@ -357,52 +357,56 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 }
 
 
-
-
 .tags {
-  .table { 
-    td.key { width: 140px;}
-    tr.editing {
-      input {
-        width: 150px;
-        border: none;
-        background: lighten(@yellow, 40%);
-        width: 120px;
-        padding: 2px 6px;
-        border: none;
-        margin: 0;
+  td.key { width: 140px;}
+}
+.metadata {
+  td.key { width: 140px;}
+  td.value { font-family: monospace; font-size: 11px; line-height: 1em; }
+}
+
+
+.table.editable { 
+  tr.editing {
+    input {
+      width: 150px;
+      border: none;
+      background: lighten(@yellow, 40%);
+      width: 120px;
+      padding: 2px 6px;
+      border: none;
+      margin: 0;
+      font-size: 12px;
+    }
+
+    .editing-actions {
+      float: right; 
+      button {
+        line-height: 14px;
         font-size: 12px;
       }
-      
-      .editing-actions {
-        float: right; 
-        button {
-          line-height: 14px;
-          font-size: 12px;
-        }
-      }
     }
+  }
 
-    tfoot td {
-      padding: 1px;
-    }
+  tfoot td {
+    padding: 1px;
+  }
 
-    .row-actions {
-      opacity: 0.7;
-      visibility: hidden; 
-      float: right;
-    }
+  .row-actions {
+    opacity: 0.7;
+    visibility: hidden; 
+    float: right;
+  }
 
 
-    td:hover {}
+  td:hover {}
 
-    td:hover .row-actions {
-      visibility: visible;
-      a { 
-        cursor: pointer;
-        margin-left: 5px;
-        color: #111;
-      }
+  td:hover .row-actions {
+    visibility: visible;
+    a { 
+      cursor: pointer;
+      margin-left: 5px;
+      color: #111;
     }
   }
 }

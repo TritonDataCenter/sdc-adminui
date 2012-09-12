@@ -9,7 +9,8 @@ define(function(require) {
 			'click .edit': 'edit',
 			'click .cancel': 'cancel',
 			'click .save': 'save',
-			'click .remove': 'del'
+			'click .remove': 'del',
+			'keyup input': 'checkFields'
 		},
 
 		initialize: function(options) {
@@ -52,18 +53,43 @@ define(function(require) {
 		save: function() {
 			this.tag.name = this.$('input[name=name]').val();
 			this.tag.value = this.$('input[name=value]').val();
+			if ((! this.tag.name.length) || (!this.tag.value.length)) {
+				return false;
+			}
 			this.trigger('save', this.tag);
 			this.model.set({editing:false});
 		},
 
+		checkFields: function(e) {
+			if (this.$('input[name=name]').val().length &&
+				this.$('input[name=value]').val().length) {
+				this.enableSave();
+			} else {
+				this.disableSave();
+			}
+		},
+
+		enableSave: function() {
+			this.$('button.save').removeAttr('disabled');
+		},
+
+		disableSave: function() {
+			this.$('button.save').attr('disabled', 'disabled');
+		},
 
 		render: function() {
-			var tpl = this.template({
-				editing: this.model.get('editing'),
-				tag: this.tag
-			});
-			this.$el.html(tpl);
-			this.focus();
+			this.$el.html(
+				this.template({
+					editing: this.model.get('editing'),
+					tag: this.tag
+				})
+			);
+
+			if (this.model.get('editing')) {
+				this.checkFields();
+				this.focus();
+			}
+
 			return this;
 		},
 
@@ -103,7 +129,7 @@ define(function(require) {
 				var tags = this.vm.get('tags');
 				tags[tag.name] = tag.value;
 				this.vm.set({tags: tags});
-				this.vm.save();
+				this.vm.saveTags();
 				this.render();
 			}, this);
 
@@ -124,7 +150,7 @@ define(function(require) {
 					tags[tag.name] = tag.value;
 					this.vm.set({tags:tags});
 					this.vm.saveTags();
-				}, this)
+				}, this);
 
 				view.on('remove', function(tag) {
 					var tags = this.vm.get('tags');
