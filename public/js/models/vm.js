@@ -29,6 +29,10 @@ define(function(require) {
     $.put(this.url() + '/tags', this.get('tags'), cb);
   };
 
+  Vm.prototype.saveCustomerMetadata = function(cb) {
+    $.put(this.url() + '/customer_metadata', this.get('customer_metadata'), cb);
+  };
+
   Vm.prototype.ips = function() {
     return this.get('nics').map(function(n) {
       return n.ip;

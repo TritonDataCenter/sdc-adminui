@@ -1,16 +1,28 @@
-<table class="table editable">
-<tbody data-bind="foreach: metadata" class="unstyled table table-bordered">
-	<tr>
-		<td class="key">
-			<span data-bind="text: key" type="text"></span>
-		</td>
-		<td class="value">
-			<span class="value" data-bind="text: value" type="text"></span>
-			<div class="row-actions">
-				<a class="edit"><i class="icon-edit"></i> Edit</a>
-				<a class="remove"><i class="icon-trash"></i></a>
-			</div>
-		</td>
-	</tr>
-</tbody>
+<table class="table table-bordered editable">
+	<tbody data-bind="foreach: metadata" class="unstyled">
+		<tr>
+			<td class="key">
+				<span data-bind="text: key" type="text"></span>
+			</td>
+			<td class="value">
+				<!-- ko if: multiline -->
+				<a class="view" data-bind="click: showAction">View Contents</a>
+				<!-- /ko -->
+				<!-- ko ifnot: multiline -->
+				<span class="value" data-bind="text: value" type="text"></span>
+				<!-- /ko -->
+				<div class="row-actions">
+					<a class="edit" data-bind="click: editAction"><i class="icon-edit"></i> Edit</a>
+					<a class="remove"><i class="icon-trash" data-bind="click: removeAction"></i></a>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="2">
+				<button class="btn btn-link" data-bind="click: addAction">Add Metadata</a>
+			</td>
+		</tr>
+	</tfoot>
 </table>

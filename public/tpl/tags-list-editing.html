@@ -1,5 +1,5 @@
 <% if (editing) { %>
-<% console.log('editing') %>
+
 	<td class="key">
 		<input name="name" value="<%= tag.name %>">
 	</td>
@@ -16,6 +16,7 @@
 	<td class="key">
 		<span><%= tag.name %></span>
 	</td>
+
 	<td class="value">
 		<span data-key="<%= name %>" class="editable"><%= tag.value %></span>
 		<div class="row-actions">

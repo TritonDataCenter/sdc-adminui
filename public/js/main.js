@@ -3,11 +3,11 @@ requirejs.config({
     paths: {
         "underscore": "lib/underscore",
         "underscore.string": "lib/underscore.string",
+        "knockout": 'lib/knockout-min',
         "knockback": "lib/knockback",
         "backbone": "lib/backbone",
         "handlebars": "lib/handlebars",
         "bootstrap": 'lib/bootstrap',
-        "knockout": 'lib/knockout-min',
         "kevinykchan-bootstrap-typeahead": 'lib/kevinykchan-bootstrap-typeahead',
         "jquery": "require-jquery",
         "jquery.serializeObject": "lib/jquery.serializeObject",

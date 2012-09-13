@@ -362,14 +362,54 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 }
 .metadata {
   td.key { width: 140px;}
-  td.value { font-family: monospace; font-size: 11px; line-height: 1em; }
+  td.value { 
+    a.view { cursor: pointer; }
+    span.value {
+      font-family: monospace;
+    }
+  }
 }
 
+.metadata-view {
+  .modal-body {
+    background: @grayDarker;
+    color: @grayLighter;
+    #font > .monospace(11px, normal, 1.2);
+    white-space: pre;
+  }
+}
+.metadata-edit {
+  input { 
+    border: none;
+    .box-sizing(border-box);
+    width: 100%;
+    padding: 5px;
+    background: lighten(@yellow, 42%);
+  }
+  input:hover {
+    background: lighten(@yellow, 38%);
+  }
+  input:focus {
+    background: @white;
+  }
+  .modal-body {
+    overflow-x: hidden;
+    background: @grayDarker;
+    textarea { 
+      .box-sizing(border-box);
+      background: @grayDark;
+      color: @grayLighter;
+      width: 100%; border: none; 
+      padding: 5px;
+      #font > .monospace(11px, normal, 1.2);
+      height: 360px;
+    }
+  }
+}
 
 .table.editable { 
   tr.editing {
     input {
-      width: 150px;
       border: none;
       background: lighten(@yellow, 40%);
       width: 120px;
