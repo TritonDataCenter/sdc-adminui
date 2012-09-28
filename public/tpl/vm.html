@@ -40,7 +40,10 @@
       <tr>
         <th>Name</th>
         <td>
-          <span class="alias"><%- vm.get('alias') || '' %></span>
+          <span class="alias">
+            <span class="value"><%- vm.get('alias') || '' %></span>
+            <a class="rename" href="#">rename</a>
+          </span>
           <span class="vm-uuid"><%- vm.get('uuid') %></span>
         </td>
       </tr>

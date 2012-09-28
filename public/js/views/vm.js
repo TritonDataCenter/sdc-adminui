@@ -33,7 +33,8 @@ define(function(require) {
             'click .stop': 'clickedStopVm',
             'click .reboot': 'clickedRebootVm',
             'click .delete': 'clickedDeleteVm',
-            'click .create-probe': 'clickedCreateProbe'
+            'click .create-probe': 'clickedCreateProbe',
+            'click .rename': 'clickedRename'
         },
 
         uri: function() {
@@ -138,6 +139,39 @@ define(function(require) {
 
         clickedServerHostname: function() {
             this.eventBus.trigger('wants-view', 'server', { server:this.server });
+        },
+
+        clickedRename: function() {
+          var self = this;
+          var renameBtn = this.$('.alias .rename');
+          var value = this.$('.alias .value');
+
+          renameBtn.hide();
+          value.hide();
+
+          var input = $('<input type="text">').val(this.vm.get('alias'))
+          var save = $('<button class="btn btn-primary btn-mini">').html('Save');
+          var cancel = $('<button class="btn btn-cancel btn-mini">').html('Cancel');
+          this.$('.alias').append(input);
+          this.$('.alias').append(save)
+          this.$('.alias').append(cancel)
+          cancel.click(cancelAction);
+          save.click(saveAction);
+          input.focus();
+
+          function saveAction() {
+            value.html(input.val());
+            self.vm.set({alias: input.val()});
+            self.vm.saveAlias();
+            cancelAction();
+          }
+          function cancelAction() {
+            renameBtn.show();
+            input.remove();
+            save.remove();
+            cancel.remove();
+            value.show();
+          }
         },
 
         renderImage: function() {

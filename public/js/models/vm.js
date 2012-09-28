@@ -29,6 +29,10 @@ define(function(require) {
     $.put(this.url() + '/tags', this.get('tags'), cb);
   };
 
+  Vm.prototype.saveAlias = function(cb) {
+    $.put(this.url(), {alias: this.get('alias') }, cb);
+  };
+
   Vm.prototype.saveCustomerMetadata = function(cb) {
     $.put(this.url() + '/customer_metadata', this.get('customer_metadata'), cb);
   };
