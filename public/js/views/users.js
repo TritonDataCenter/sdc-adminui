@@ -3,10 +3,11 @@ define(function(require) {
 
   var CreateUserView = require('views/users-create');
   var BaseView = require('views/base');
+  var tplUsers = require('text!tpl/users.html');
 
   return BaseView.extend({
 
-    template: "users",
+    template: tplUsers,
 
     name: 'users',
 
