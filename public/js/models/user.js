@@ -1,8 +1,10 @@
 /**
  * models/user
 */
+
 define(['backbone'], function(Backbone) {
     return Backbone.Model.extend({
+
     defaults: {
       token: null
     },

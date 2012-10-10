@@ -1,3 +1,20 @@
 <div id="user">
-	<h1>User</h1>
+  <div class="page-header">
+    <h1>
+      <span data-bind="text: cn"></span>
+      <span data-bind="text: sn"></span>
+      <small class="uuid" data-bind="text: uuid"></small>
+    </h1>
+  </div>
+
+  <table class="table table-bordered">
+    <tr>
+      <th>Email</th>
+      <td><span data-bind="text: email"></span></td>
+    </tr>
+    <tr>
+      <th>Login</th>
+      <td><span data-bind="text: login"></span></td>
+    </tr>
+  </table>
 </div>
