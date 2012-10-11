@@ -1,6 +1,8 @@
 define(function(require) {
   var ko = require('knockout');
   var BaseView = require('views/base');
+  var VmsList = require('views/vms-list');
+  var Vms = require('models/vms');
 
   var User = require('models/user');
 
@@ -18,10 +20,14 @@ define(function(require) {
       }
       this.user.fetch();
       this.user.on('reset', this.render);
+
+      this.vms = new Vms({params: {owner_uuid: this.user.get('uuid')}});
+      this.vmsList = new VmsList({ collection: this.vms });
     },
 
     render: function() {
       this.$el.html(this.template({user: this.user}));
+      this.vmsList.setElement(this.$('.vms-list')).render();
 
       var viewModel = kb.viewModel(
         this.user,

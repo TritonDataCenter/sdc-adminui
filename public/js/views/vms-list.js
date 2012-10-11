@@ -1,10 +1,12 @@
-define(['underscore', 'views/base', 'views/vms-list-item'], function(_, BaseView, VmsListItem) {
+define(['underscore',
+       'views/base',
+       'models/vms',
+       'views/vms-list-item'], function(_, BaseView, VmsListItem) {
   'use strict';
 
   return BaseView.extend({
-    initialize: function() {
+    initialize: function(options) {
       _.bindAll(this, 'addOne', 'addAll');
-
       this.collection.bind('all', this.addAll);
       this.collection.fetch();
     },
