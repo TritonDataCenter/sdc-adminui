@@ -27,7 +27,7 @@ define(function(require) {
 
     render: function() {
       this.$el.html(this.template({user: this.user}));
-      this.vmsList.setElement(this.$('.vms-list')).render();
+      this.vmsList.setElement(this.$('.vms-list tbody')).render();
 
       var viewModel = kb.viewModel(
         this.user,

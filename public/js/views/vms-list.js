@@ -1,7 +1,10 @@
-define(['underscore',
-       'views/base',
-       'models/vms',
-       'views/vms-list-item'], function(_, BaseView, VmsListItem) {
+define([
+  'underscore',
+  'views/base',
+  'models/vms',
+  'views/vms-list-item'
+], function(_, BaseView, Vms, VmsListItem) {
+
   'use strict';
 
   return BaseView.extend({
@@ -13,6 +16,7 @@ define(['underscore',
 
     addOne: function(model) {
       var view = new VmsListItem({ model: model });
+      console.log(view);
       this.$el.append(view.render().el);
     },
 
