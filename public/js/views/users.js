@@ -44,9 +44,19 @@ define(function(require) {
       return false;
     },
 
+    loadUserCounts: function() {
+      var users = new Users();
+      users.userCount(this.updateCount);
+    },
+
+    updateCount: function(c) {
+      this.$('.total-accounts').html(c);
+    },
+
     render: function() {
       this.$el.html(this.template());
       this.$findField = this.$('.findField');
+      this.loadUserCounts();
       return this;
     }
   });
