@@ -1,4 +1,4 @@
-<div class="page provision">
+<div class="page" id="page-provision">
 	<div class="page-header">
 		<h1>Provision a Virtual Machine</h1>
 	</div>
@@ -29,12 +29,16 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label">Memory</label>
+				<label class="control-label">Package</label>
 				<div class="controls">
-					<select name="memory">
-						<option value="512">512 MB</option>
-						<option value="1 GB">1 GB</option>
-					</select>
+					<select name="package"></select>
+				</div>
+				<div class="package-details">
+					<strong>Memory</strong> <span name="max_physical_memory"></span> MB<br>
+					<strong>Swap</strong> <span name="max_swap"></span> MB<br>
+					<strong>V-CPUs</strong> <span name="vcpus"></span><br>
+					<strong>Disk Quota</strong> <span name="quota"></span><br>
+					<strong>Disk IO Priority</strong> <span name="zfs_io_priority"></span>
 				</div>
 			</div>
 

@@ -5,9 +5,35 @@
 */
 
 define(function(require) {
+
+  var PackageSelectOption = Backbone.Marionette.ItemView.extend({
+    attributes: function() {
+      return {
+        name: this.model.get('name'),
+        value: this.model.get('uuid')
+      }
+    },
+    tagName: 'option',
+    template: Handlebars.compile('{{name}} {{version}}')
+  });
+
+  var PackageSelect = Backbone.Marionette.CollectionView.extend({
+    itemView: PackageSelectOption,
+    tagName: 'select',
+    events: {
+      'change': 'onChange'
+    },
+    onChange: function(e) {
+      var uuid = $(e.target).val();
+      this.trigger('select', this.collection.get(uuid));
+    }
+  });
+
   var Base = require('views/base');
   var Images = require('models/images');
   var Users = require('models/users');
+  var Package = require('models/package');
+  var Packages = require('models/packages');
   var Networks = require('models/networks');
   var Vm = require('models/vm');
 
@@ -36,13 +62,27 @@ define(function(require) {
 
       this.$form = null;
 
-      this.networks = new Networks();
+
+      this.packages = new Packages();
+      this.packageSelect = new PackageSelect({ collection: this.packages });
+      this.selectedPackage = new Package();
+
+      this.packages.on('reset', function(collection) {
+        this.selectedPackage.set(collection.models[0].attributes);
+      }, this);
+
+      this.packageSelect.on('select', function(package) {
+          this.selectedPackage.set(package.attributes);
+      }, this);
+
+      this.packageBinder = new Backbone.ModelBinder();
 
       this.imagesSource = [];
       this.usersSource = [];
 
       this.usersCollection = new Users();
       this.imagesCollection = new Images();
+      this.networks = new Networks();
 
       this.usersCollection.on('reset', function(users) {
         this.userSource = [];
@@ -61,6 +101,7 @@ define(function(require) {
       this.imagesCollection.fetch();
       this.usersCollection.searchByLogin('');
       this.networks.fetch();
+      this.packages.fetchActive();
     },
 
     viewDidAppear: function() {
@@ -70,8 +111,11 @@ define(function(require) {
 
     render: function() {
       this.$el.html(this.template());
+
+      this.packageSelect.setElement(this.$('select[name=package]')).render();
+      this.packageBinder.bind(this.selectedPackage, this.$('.package-details'));
+
       this.$form = this.$('form');
-      this.populateMemoryValues();
       this.hideError();
 
       this.$("input[name=image]").typeahead({
@@ -91,15 +135,19 @@ define(function(require) {
       return this;
     },
 
+    renderPackageDetails: function(package) {
+      this.$('.vcpus').html(package.get('vcpus'));
+      this.$('.zfs_io_priority').html(package.get('zfs_io_priority'));
+    },
+
     populateNetworks: function(networks) {
       var container = this.$('.network-checkboxes');
       var elm = container.find('label:first').clone();
       container.find('label').remove();
       networks.each(function(n) {
-        console.log(n);
         elm.find('.name').html(
           [n.get('name'),
-          n.get('network')].join(' - ')
+          n.get('subnet')].join(' - ')
         );
         elm.find('input').val(n.get('uuid'));
         elm.clone().prependTo(container);
@@ -107,23 +155,9 @@ define(function(require) {
     },
 
 
-    populateMemoryValues: function() {
-      var select = this.$("select[name=memory]");
-      select.empty();
-      _.each(this.memoryValues, function(m, k, v) {
-        var option = $("<option />");
-        var label = m[0];
-        var value = m[1];
-        option.html(label);
-        option.attr("value", value);
-        select.append(option);
-      });
-    },
-
     checkFields: function() {
       this.hideError();
       var values = this.extractFormValues();
-      console.log(values);
       if (!values.owner_uuid.length || !values.networks.length || !values.image_uuid.length) {
         this.disableProvisionButton();
       } else {
@@ -151,6 +185,20 @@ define(function(require) {
         brand: formData.brand,
         alias: formData.alias
       };
+
+      var package = this.packages.get(formData.package);
+
+      if (package) {
+        values['billing_id'] = package.get('uuid');
+        values['package_name'] = package.get('name');
+        values['package_version'] = package.get('version');
+        values['cpu_cap'] = package.get('cpu_cap');
+        values['max_lwps'] = package.get('max_lwps');
+        values['max_swap'] = package.get('max_swap')
+        values['quota'] = package.get('quota');
+        values['vcpus'] = package.get('vcpus');
+        values['zfs_io_priority'] = package.get('zfs_io_priority');
+      }
 
       var networksChecked = this.$form.find('.network-checkboxes input[type=checkbox]:checked');
       values.networks = _.map(networksChecked, function(obj) {

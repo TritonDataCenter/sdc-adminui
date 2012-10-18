@@ -6,6 +6,10 @@ requirejs.config({
         "knockout": 'lib/knockout-min',
         "knockback": "lib/knockback",
         "backbone": "lib/backbone",
+        "backbone.marionette": "lib/backbone.marionette",
+        "backbone.modelbinder": "lib/Backbone.ModelBinder",
+        "backbone.eventbinder": "lib/Backbone.eventbinder",
+        "backbone.wreqr": "lib/backbone.wreqr",
         "handlebars": "lib/handlebars",
         "bootstrap": 'lib/bootstrap',
         "kevinykchan-bootstrap-typeahead": 'lib/kevinykchan-bootstrap-typeahead',
@@ -29,6 +33,8 @@ requirejs.config({
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
         },
+        "backbone.marionette": ['backbone', "backbone.wreqr", "backbone.eventbinder"],
+        "backbone.modelbinder": ['backbone'],
         "knockback": ["underscore", "backbone"]
     },
     deps: [
@@ -36,9 +42,14 @@ requirejs.config({
         'jquery.serializeObject',
         'bootstrap',
         'kevinykchan-bootstrap-typeahead',
+
         'handlebars',
         'underscore',
         'backbone',
+
+        'backbone.marionette',
+        'backbone.modelbinder',
+
         'knockout',
         'knockback']
 });
