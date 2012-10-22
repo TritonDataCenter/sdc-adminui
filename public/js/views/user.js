@@ -6,32 +6,32 @@ define(function(require) {
 
   var User = require('models/user');
 
-  var UserView = BaseView.extend({
+  var UserView = Marionette.ItemView.extend({
     template: require('text!tpl/user.html'),
-
+    uri: function() {
+      return _.str.sprintf('/users/%s', this.model.get('uuid'));
+    },
     sidebar: 'users',
 
     initialize: function(options) {
-      console.log(options.user);
       if (options.user) {
-        this.user = options.user;
+        this.model = options.user;
       } else {
-        this.user = new User({uuid:options.uuid});
+        this.model = new User({uuid:options.uuid});
       }
-      this.user.fetch();
-      this.user.on('reset', this.render);
+      this.model.fetch();
+      this.bindTo(this.model, 'reset', this.render, this);
 
-      this.vms = new Vms({params: {owner_uuid: this.user.get('uuid')}});
+      this.vms = new Vms({params: {owner_uuid: this.model.get('uuid')}});
+      this.vms.fetch();
       this.vmsList = new VmsList({ collection: this.vms });
     },
 
-    render: function() {
-      this.$el.html(this.template({user: this.user}));
+    onRender: function() {
       this.vmsList.setElement(this.$('.vms-list tbody')).render();
 
       var viewModel = kb.viewModel(
-        this.user,
-        {
+        this.model, {
           keys: ['uuid', 'cn', 'sn', 'email', 'login', 'memberof', 'member']
         }
       );
@@ -41,10 +41,6 @@ define(function(require) {
       }, this);
 
       kb.applyBindings(viewModel, this.el);
-    },
-
-    uri: function() {
-      return _.str.sprintf('/users/%s', this.user.get('uuid'));
     }
   });
 

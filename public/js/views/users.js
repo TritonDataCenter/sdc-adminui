@@ -6,6 +6,7 @@ define(function(require) {
   var Users = require('models/users');
   var UserView = require('views/user');
   var tplUsers = require('text!tpl/users.html');
+  var app = require('adminui');
 
   return Backbone.Marionette.ItemView.extend({
 
@@ -21,22 +22,17 @@ define(function(require) {
       'submit .form-search': 'onSearch'
     },
 
-    initialize: function() {
-      _.bindAll(this, 'newUser');
-    },
-
     newUser: function() {
       this.createView = new CreateUserView();
       this.createView.render();
     },
 
     findUser: function() {
-      var self = this;
       var val = this.$findField.val();
       var users = new Users();
       users.searchByLogin(val, function(res) {
         var user = res.at(0);
-        self.eventBus.trigger('wants-view', 'user', { user: user });
+        app.vent.trigger('showview', 'user', { user: user });
       });
     },
 

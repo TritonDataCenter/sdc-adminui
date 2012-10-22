@@ -1,13 +1,28 @@
-define([
-  'underscore',
-  'views/base',
-  'models/vms',
-  'views/vms-list-item'
-], function(_, BaseView, Vms, VmsListItem) {
+define(function(require) {
 
-  'use strict';
+  var ItemTemplate = require('text!tpl/vms-list-item.html');
+  var adminui = require('adminui');
+
+  var ItemView = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: ItemTemplate,
+
+    events: {'click *': 'navigateToVmDetails'},
+
+    initialize: function() {
+      _.bindAll(this);
+    },
+
+    uri: function() {
+      return 'vms';
+    },
+
+    navigateToVmDetails: function() {
+      adminui.vent.trigger('showview', 'vm', {vm:this.model});
+    }
+  });
 
   return Backbone.Marionette.CollectionView.extend({
-    itemView: VmsListItem
+    itemView: ItemView
   });
 });
