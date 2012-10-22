@@ -90,11 +90,32 @@ define(function(require) {
 	    	if (this.app.chrome.currentView !== this.appView) {
 	    		this.app.chrome.show(this.appView);
 	    	}
+	    	
 	    	require([_.str.sprintf('views/%s', viewName)], function(ViewClass) {
 	    		var view = new ViewClass(args);
-	    		console.log('Showing: ' + viewName);
+
 	    		this.appView.content.show(view, args);
+	    		this.applySidebar(view);
+	    		this.applyUrl(view);
 	    	}.bind(this));
+	    },
+
+	    applySidebar: function(view) {
+	    	if (typeof(view.sidebar) === 'string') {
+	    		this.app.vent.trigger('mainnav:highlight', view.sidebar);
+	    	} else {
+	    		this.app.vent.trigger('mainnav:highlight', view.name);
+	    	}
+	    },
+
+	    applyUrl: function(view) {
+	    	if (typeof(view.uri) === 'function') {
+	    		Backbone.history.navigate(view.uri());
+	    	} else if (typeof(view.uri) === 'string') {
+	    		Backbone.history.navigate(view.uri);
+	    	} else {
+	    		Backbone.history.navigate(view.name);
+	    	}
 	    },
 
 	    showVms: function() {

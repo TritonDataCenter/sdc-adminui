@@ -1,5 +1,5 @@
 define(function(require) {
-
+    
     var BaseView = require('views/base');
     var Vm = require('models/vm');
     var Img = require('models/image');
@@ -11,7 +11,7 @@ define(function(require) {
     var TagsList = require('views/tags-list');
     var MetadataList = require('views/metadata');
     var CreateProbeController = require('controllers/create-probe');
-
+    var adminui = require('adminui');
 
     var tplVm = require('text!tpl/vm.html');
 
@@ -43,6 +43,7 @@ define(function(require) {
 
         initialize: function(options) {
             _.bindAll(this);
+            this.vent = adminui.vent;
 
             if (options.uuid)
                 this.vm = new Vm({uuid: options.uuid});
@@ -138,7 +139,7 @@ define(function(require) {
         },
 
         clickedServerHostname: function() {
-            this.eventBus.trigger('wants-view', 'server', { server:this.server });
+            this.vent.trigger('showview', 'server', { server:this.server });
         },
 
         clickedRename: function() {

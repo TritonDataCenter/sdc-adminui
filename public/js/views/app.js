@@ -56,12 +56,6 @@ define(function(require) {
             } else {
                 Backbone.history.navigate(view.name);
             }
-
-            if (typeof(view.sidebar) === 'string') {
-                adminui.vent.trigger('mainnav:highlight', view.sidebar);
-            } else {
-                adminui.vent.trigger('mainnav:highlight', view.name);
-            }
         },
 
         onRender: function() {

@@ -13,6 +13,8 @@ define(function(require) {
   var Networks = require('models/networks');
   var Vm = require('models/vm');
 
+  var adminui = require('adminui');
+
 
   var PackageSelectOption = Backbone.Marionette.ItemView.extend({
     attributes: function() {
@@ -56,6 +58,7 @@ define(function(require) {
     },
 
     initialize: function(options) {
+      this.vent = adminui.vent;
       this.packages = new Packages();
       this.packageSelect = new PackageSelect({ collection: this.packages });
       this.selectedPackage = new Package();
@@ -215,7 +218,7 @@ define(function(require) {
             job_uuid:obj.job_uuid,
             name:'Provision Machine'
           });
-          self.eventBus.trigger('wants-view', 'vms', {});
+          this.vent.trigger('showview', 'vms', {});
         },
         error: function(m, xhr) {
           var err = JSON.parse(xhr.responseText);

@@ -7,6 +7,7 @@ define(function(require) {
   var JobItemView = Backbone.View.extend({
     tagName: 'li',
     template: "notifier-job",
+
     initialize: function() {
       _.bindAll(this);
       this.model.bind("change", this.render);
@@ -85,7 +86,8 @@ define(function(require) {
     },
 
     signout: function() {
-      this.trigger('signout');
+      var app = require('adminui');
+      app.vent.trigger('signout');
     },
 
     serializeData: function() {
