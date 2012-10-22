@@ -2,38 +2,51 @@ define(function(require) {
 
     var Server = require('models/server');
     var BaseView = require('views/base');
+    var ServerTemplate = require('text!tpl/server.html')
 
-    var ServerView = BaseView.extend({
+    var ServerView = Backbone.Marionette.ItemView.extend({
         sidebar: 'servers',
 
-        template: require('text!tpl/server.html'),
+        template: ServerTemplate,
 
         initialize: function(options) {
-            _.bindAll(this);
-
-            this.server = options.server || new Server();
+            this.model = options.server || new Server();
 
             if (options.uuid) {
-                this.server.set({uuid: options.uuid});
-                this.server.fetch();
+                this.model.set({uuid: options.uuid});
+                this.model.fetch();
             }
+            this.bindTo(this.model, 'change', this.render, this);
+        },
 
-            this.server.on('change', this.render);
-            this.setElement(this.compileTemplate());
+        templateHelpers: {
+            platform_version: function() {
+                return this.sysinfo['Live Image'];
+            },
+            cpu_type: function() {
+                return this.sysinfo['CPU Type'];
+            },
+            cpu_cores: function() {
+                return this.sysinfo['CPU Physical Cores'];
+            },
+            serial_number: function() {
+                return this.sysinfo['Serial Number'];
+            },
+            total_memory: function() {
+                return this.sysinfo['MiB of Memory'];
+            }
+        },
+
+        serializeData: function() {
+            var data = Marionette.ItemView.prototype.serializeData.call(this);
+            data.disks = _.map(data.sysinfo['Disks'], function(v, k) {
+                return {name: k, size: v['Size in GB']};
+            });
+            return data;
         },
 
         uri: function() {
-            return _.str.sprintf('servers/%s', this.server.get('uuid'));
-        },
-
-        compileTemplate: function() {
-            return this.template({
-                server: this.server
-            });
-        },
-        render: function() {
-            this.$el.html(this.compileTemplate());
-            return this;
+            return _.str.sprintf('servers/%s', this.model.get('uuid'));
         }
     });
 

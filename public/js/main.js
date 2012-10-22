@@ -46,7 +46,6 @@ requirejs.config({
         'handlebars',
         'underscore',
         'backbone',
-
         'backbone.marionette',
         'backbone.modelbinder',
 
@@ -54,11 +53,8 @@ requirejs.config({
         'knockback']
 });
 
-require(['app'], function(Application) {
-    $(function($) {
-        window.$a = {};
-        window.$a.app = new Application();
-
-        Backbone.history.start({pushState: true});
-    });
+require(['adminui', 'router'], function(adminui, Router) {
+    var router = new Router({app: adminui});
+    adminui.start({router: router});
+    window.$a = adminui;
 });

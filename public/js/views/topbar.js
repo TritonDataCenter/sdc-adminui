@@ -1,31 +1,16 @@
-define(['views/base', 'text!tpl/topbar.html'], function(BaseView, topbarTpl) {
+define(function(require) {
+  var Job = require('models/job');
+  var topbarTpl = require('text!tpl/topbar.html');
+  var Mainnav = require('views/mainnav');
+  var Marionette = require('backbone.marionette');
 
-  var Job = Backbone.Model.extend({
-    defaults: {
-      "name": ""
-    },
-    urlRoot: "/_/jobs",
-    idAttribute: "uuid",
-    startWatching: function() {
-      var self = this;
-      this._interval = setInterval(function() {
-        self.fetch();
-      }, 1000);
-    },
-    stopWatching: function() {
-      clearInterval(this._interval);
-    }
-  });
-
-
-
-
-  var JobItemView = BaseView.extend({
+  var JobItemView = Backbone.View.extend({
     tagName: 'li',
     template: "notifier-job",
     initialize: function() {
       _.bindAll(this);
       this.model.bind("change", this.render);
+
     },
 
     render: function() {
@@ -53,7 +38,7 @@ define(['views/base', 'text!tpl/topbar.html'], function(BaseView, topbarTpl) {
 
 
 
-  var NotifierView = BaseView.extend({
+  var NotifierView = Backbone.View.extend({
     initialize: function(options) {
       _.bindAll(this);
       this.$badge = options.badge;
@@ -84,10 +69,12 @@ define(['views/base', 'text!tpl/topbar.html'], function(BaseView, topbarTpl) {
   });
 
 
-
-
-  var Topbar = BaseView.extend({
+  var Topbar = Backbone.Marionette.Layout.extend({
     template: topbarTpl,
+
+    regions: {
+      mainnav: "#mainnav" 
+    },
 
     events: {
       'click a[data-trigger=signout]': 'signout'
@@ -98,17 +85,23 @@ define(['views/base', 'text!tpl/topbar.html'], function(BaseView, topbarTpl) {
     },
 
     signout: function() {
-      this.eventBus.trigger('signout');
+      this.trigger('signout');
     },
 
-    render: function() {
-      this.$el.append(this.template({user:this.user}));
+    serializeData: function() {
+      return { user: this.user };
+    },
+
+    onRender: function() {
+      this.mainnavView = new Mainnav({ el: this.$("#mainnav") });
+      this.mainnav.attachView(this.mainnavView);
+      
       this.notifier = new NotifierView({
         el: this.$("#notifier-feed"),
         badge: this.$('.badge')
       });
+
       this.notifier.render();
-      // $a.eventBus.trigger('watch-job', {job_uuid:"a0a00582-b69b-4511-a3a4-6afc53e32ca2", vm_uuid:"6020ae91-63df-44ea-ad8e-c8d92a72f924"})
       return this;
     }
   });

@@ -97,117 +97,6 @@
     <!-- }}} -->
 
 
-    <!-- {{{ template servers-list-item -->
-    <script type="text/template" id="template-servers-list-item">
-      <tr>
-        <td class="status">
-          <span class="
-            <%- (status == 'running') ? 'label label-success' : '' %>
-            <%- (status == 'warn') ? 'label label-warn' : '' %>
-            ">
-            <%- status %>
-          </span>
-        </td>
-        <td class="name"><%- hostname %></td>
-        <td class="memory">
-          <% if (typeof(memory_total_bytes) !== 'undefined') { %>
-          <span class="percent"><%- _.str.sprintf("%0.1f", (memory_total_bytes-memory_available_bytes) / memory_total_bytes * 100) %>%</span>
-
-          <span class="breakdown"><%- _.str.sprintf("%0.1f", memory_available_bytes/1024/1024) %> /
-            <%- _.str.sprintf("%0.1f", memory_total_bytes/1024/1024) %> MB</span>
-          <% } %>
-
-        </td>
-        <td>
-          <% if (setup == 'false') { %>
-            <button class="setup btn btn-mini">Setup</button>
-          <% } %>
-        </td>
-      </tr>
-    </script>
-    <!-- }}} -->
-
-    <!-- {{{ template networks-->
-    <script type="text/template" id="template-networks">
-      <div id="networks">
-        <div class="page-header">
-          <h1>Networks</h1>
-        </div>
-        <div id="networks-list">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Network</th>
-                <th>Netmask</th>
-                <th>IP Range</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </script>
-    <!-- }}} -->
-
-    <!-- {{{ template networks-list-item -->
-    <script type="text/template" id="template-networks-list-item">
-      <tr>
-        <td class="name"><%- name%></td>
-        <td class="subnet"><%- subnet %></td>
-        <td class="netmask"><%- netmask %></td>
-        <td class="range"><%- provision_start_ip %> - <%- provision_end_ip %></td>
-      </tr>
-    </script>
-    <!-- }}} -->
-
-    <!-- {{{ template vms -->
-    <script id="template-vms" type="text/template">
-      <div id="page-vms">
-        <div class="page-header">
-          <h1 class="pull-left">Virtual Machines</h1>
-          <button class="provision-button pull-right btn btn-primary btn-large">
-            <i class="icon-plus icon-white"></i> Provision
-          </button>
-        </div>
-
-        <div class="vms-list">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th class="status">Status</th>
-                <th class="alias">Alias</th>
-                <th class="memory">Memory</th>
-                <th class="uuid">UUID</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </script>
-    <!-- }}} -->
-
-   <!-- {{{ template vms-list-item -->
-    <script id="template-vms-list-item" type="text/template">
-      <tr>
-        <td class="status">
-          <span class="label 
-            <% if (state == 'running') { %>label-success<% } %>
-            <% if (state == 'stopped') { %><% } %>
-            <% if (state == 'destroyed') { %>label-inverse<% } %>
-            ">
-            <%- state %>
-          </span>
-        </td>
-        <td class="alias"><%= alias %></td>
-        <td class="memory"><%= ram %> MB</td>
-        <td class="uuid"><%= uuid %></td>
-      </tr>
-    </script>
-    <!-- }}} -->
 
     <script type="text/template" id="template-monitoring-icmp-probe">
       <div class="probe-icmp-config">
@@ -381,7 +270,8 @@
     <!-- {{{ template images-list -->
     <script type="text/template" id="template-images-list">
       <h3>{{os}}</h3>
-      <ul class="thumbnails"></ul>
+      <ul class="thumbnails">
+      </ul>
     </script>
     <!-- }}} -->
 
@@ -466,4 +356,4 @@
     </script>
     <!-- }}} -->
   </body>
-</html>t 
+</html>

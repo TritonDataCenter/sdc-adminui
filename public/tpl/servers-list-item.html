@@ -1,0 +1,26 @@
+<td class="status">
+  <span class="
+    label
+    {{#if running}}
+    label-success
+    {{else}}
+    label-warn
+    {{/if}}
+    ">
+    {{status}}
+  </span>
+</td>
+<td class="name">{{hostname}}</td>
+<td class="memory">
+  {{#if memory_total_bytes}}
+  <span class="percent">{{memory_percent}} %</span>
+
+  <span class="breakdown">{{memory_available_mb}} / {{memory_total_mb}} MB</span>
+
+  {{/if}}
+</td>
+<td>
+  {{#if not_setup}}
+  <button class="setup btn btn-mini">Setup</button>
+  {{/if}}
+</td>

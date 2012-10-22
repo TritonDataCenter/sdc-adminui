@@ -1,6 +1,6 @@
 <div id="page-vm">
   <div class="page-header">
-    <h1>Virtual Machine <small><%- vm.get('uuid') %></small></h1>
+    <h1>Virtual Machine <small>{{vm.uuid}}</small></h1>
   </div>
 
   <div class="btn-group pull-right actions">
@@ -23,14 +23,14 @@
     <div class="row dash">
       <div class="state span2">
         <div class="value">
-          <span class=""><%- vm.get('state') || '' %> </span>
+          <span class="">{{vm.state}}</span>
         </div>
         <div class="title">status</div>
       </div>
 
       <div class="memory span2">
         <div class="value">
-          <%- vm.get('ram') || '' %> MB
+          {{vm.ram}} MB
         </div>
         <div class="title">memory</div>
       </div>
@@ -41,47 +41,55 @@
         <th>Name</th>
         <td>
           <span class="alias">
-            <span class="value"><%- vm.get('alias') || '' %></span>
+            <span class="value">{{vm.alias}}</span>
             <a class="rename" href="#">rename</a>
           </span>
-          <span class="vm-uuid"><%- vm.get('uuid') %></span>
+          <span class="vm-uuid">{{vm.uuid}}</span>
         </td>
       </tr>
       <tr>
         <th>Owner</th>
         <td>
-          <span class="owner-name"><%- owner.get('cn') || '' %></span>
-          <span class="owner-uuid"><%- vm.get('owner_uuid') || '' %></span>
+          <span class="owner-name">{{owner.cn}}</span>
+          <span class="owner-uuid">{{vm.owner_uuid}}</span>
         </td>
       </tr>
       <tr>
-        <th>IP <%- vm.ips().length > 1 ? 'Addresses' : 'Address' %></th>
+        <th>IP 
+          {{#if vm.ips.length}}
+          Addresses
+          {{else}}
+          Address
+          {{/if}}
+        </th>
         <td>
-          <%= vm.ips().join('<br/>') %>
+          {{#each vm.nics}}
+          {{this.ip}}<br>
+          {{/each}}
         </td>
       </tr>
       <tr>
         <th>Image</th>
         <td>
           <span class="image-name-version"><%- image.nameWithVersion() %></span>
-          <span class="image-uuid"><%- vm.get('image_uuid') %></span>
+          <span class="image-uuid">{{vm.image_uuid}}</span>
         </td>
       </tr>
       <tr>
         <th>Server</th>
         <td>
-          <a class="server-hostname"><%- server.get('hostname') || '' %></a>
-          <span class="server-uuid"><%- vm.get('server_uuid') %></span>
+          <a class="server-hostname">{{server.hostname}}</a>
+          <span class="server-uuid">{{vm.server_uuid}}</span>
         </td>
       </tr>
       <tr>
         <th>Swap</th>
-        <td><%- vm.get('max_swap') || '' %> MB</td>
+        <td>{{vm.max_swap}} MB</td>
       </tr>
       <tr>
         <th>Package</th>
         <td>
-          <%- vm.get('package_name') || '' %> <%- vm.get('package_version') || '' %>
+          {{vm.package_name}} {{vm.package_verison}}
         </td>
       </tr>
     </table>
@@ -101,16 +109,16 @@
       </thead>
       <tbody>
 
-      <% _.each(vm.get('nics'), function(nic) { %>
+      {{#each vm.nics}}
         <tr>
-        <td><%= nic.interface %></td>
-        <td><%= nic.ip %></td>
-        <td><%= nic.mac %></td>
-        <td><%= nic.netmask %></td>
-        <td><%= nic.gateway %></td>
-        <td><%= nic.nic_tag %></td>
+        <td>{{this.interface}}</td>
+        <td>{{this.ip}}</td>
+        <td>{{this.mac}}</td>
+        <td>{{this.netmask}}</td>
+        <td>{{this.gateway}}</td>
+        <td>{{this.nic_tag}}</td>
       </tr>
-      <% }) %>
+      {{/each}}
       </tbody>
 
     </table>
@@ -120,6 +128,7 @@
         <h3>Tags</h3>
         <div class="tags"></div>
       </div>
+      
       <div class="span6">
         <h3>Metadata</h3>
         <div class="metadata"></div>

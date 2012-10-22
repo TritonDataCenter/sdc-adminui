@@ -2,76 +2,80 @@
  * views/signin !!
  */
 
-define([
-    'views/base',
-    'text!tpl/signin.html'
-    ],
-    function(BaseView, tplSignin) {
+define(function(require) {
+    var Marionette = require('backbone.marionette');
+    var tplSignin = require('text!tpl/signin.html');
 
-    var View = BaseView.extend({
+    var View = Marionette.ItemView.extend({
+        attributes: {
+            id: "signin"
+        },
+
         template: tplSignin,
 
         events: {
           'submit form': 'authenticate'
         },
 
+        modelEvents: {
+            'change:authenticated': 'didAuthenticate',
+            'error': 'didError'
+        },
+
+        ui: {
+            'alert': '.alert',
+            'alertmsg': '.alert .msg',
+            'usernameField' : 'input[name=username]',
+            'passwordField' : 'input[name=password]'
+        },
+
+        didAuthenticate: function(user, value) {
+            if (value === true) {
+                this.close();
+            }
+        },
+
+        didError: function(message) {
+            this.showMessage(message);
+            this.ui.passwordField.val('');
+        },
+
         initialize: function(options) {
-            _.bindAll(this);
             this.model = options.model;
-
-            this.model.bind('change:authenticated', function(user, value) {
-                if (value === true) {
-                    this.remove();
-                }
-            }, this);
-
-            this.model.bind('error', function(message) {
-                this.showMessage(message);
-                this.password().val('');
-            }, this);
         },
 
         showMessage: function(msg) {
-            this.$(".alert .msg").html(msg);
-            this.$(".alert").show();
+            this.ui.alertmsg.html(msg);
+            this.ui.alert.show();
         },
 
         hideMessage: function(e) {
-            this.$(".alert").hide();
-            this.focus();
-        },
-
-        username: function() {
-            return this.$("input[name=username]");
-        },
-
-        password: function() {
-            return this.$("input[name=password]");
-        },
-
-        onShow: function() {
-            this.focus();
+            this.ui.alert.hide();
         },
 
         focus: function() {
-            if (this.username().val().length === 0) {
-                this.username().focus();
+            if (this.ui.usernameField.val().length === 0) {
+                this.ui.usernameField.focus();
             } else {
-                this.password().focus();
+                this.ui.passwordField.focus();
             }
         },
 
         authenticate: function(e) {
             e.preventDefault();
             this.hideMessage();
-            this.model.authenticate(this.username().val(), this.password().val());
+            this.model.authenticate(
+                this.ui.usernameField.val(),
+                this.ui.passwordField.val()
+            );
         },
 
-        render: function() {
-            this.$el.html(this.template());
+        onRender: function() {
             this.hideMessage();
+        },
 
-            return this;
+        onShow: function() {
+            this.focus();
         }
 
     });

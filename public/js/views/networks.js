@@ -1,53 +1,27 @@
 define(function(require) {
 
   var Networks = require('models/networks');
-  var BaseView = require('views/base');
 
-  var NetworksList = BaseView.extend({
-    initialize: function() {
-      _.bindAll(this, 'addOne', 'addAll');
+  var NetworksTemplate = require('text!tpl/networks.html');
+  var NetworksListItemTemplate = require('text!tpl/networks-list-item.html');
 
-      this.collection.bind('all', this.addAll);
-      this.collection.fetch();
-    },
-
-    addOne: function(model) {
-      var view = new NetworksListItem({ model:model });
-      this.$el.append(view.render().el);
-      console.log(this.$el);
-    },
-
-    addAll: function() {
-      this.collection.each(this.addOne);
-    },
-
-    render: function() {
-      return this;
-    }
+  var NetworksListItem = Backbone.Marionette.ItemView.extend({
+    template: NetworksListItemTemplate,
+    tagName: 'tr'
   });
 
-  var NetworksView = BaseView.extend({
+  var NetworksView = Backbone.Marionette.CompositeView.extend({
     name: "networks",
-    template: 'networks',
+    
+    template: NetworksTemplate,
+
+    itemViewContainer: 'tbody',
+
+    itemView: NetworksListItem,
+
     initialize: function(options) {
-
       this.collection = new Networks();
-
-      this.listView = new NetworksList({ collection: this.collection });
-    },
-
-    render: function() {
-      this.$el.html(this.template());
-      this.listView.setElement(this.$('tbody')).render();
-      return this;
-    }
-  });
-
-  var NetworksListItem = BaseView.extend({
-    template: 'networks-list-item',
-    render: function() {
-      this.setElement(this.template(this.model.attributes));
-      return this;
+      this.collection.fetch();
     }
   });
 

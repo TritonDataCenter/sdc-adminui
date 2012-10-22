@@ -1,6 +1,10 @@
-define(['views/base'], function(BaseView) {
-  return BaseView.extend({
-    template: 'vms-list-item',
+define(function(require) {
+  var ItemTemplate = require('text!tpl/vms-list-item.html');
+  var adminui = require('adminui');
+
+  return Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: ItemTemplate,
 
     events: {'click *': 'navigateToVmDetails'},
 
@@ -13,12 +17,7 @@ define(['views/base'], function(BaseView) {
     },
 
     navigateToVmDetails: function() {
-      this.eventBus.trigger('wants-view', 'vm', {vm:this.model});
-    },
-
-    render: function() {
-      this.setElement(this.template(this.model.attributes));
-      return this;
+      adminui.vent.trigger('showview', 'vm', {vm:this.model});
     }
   });
 });

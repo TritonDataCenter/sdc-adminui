@@ -15,15 +15,22 @@
 
 
 define(function(require) {
+    var Backbone = require('backbone');
     
     var Topbar = require('views/topbar');
-    var MainNav = require('views/mainnav');
-    var BaseView = require('views/base');
     var tplChrome = require('text!tpl/chrome.html');
+    var adminui = require('adminui');
 
-    var AppView = BaseView.extend({
+    var AppView = Backbone.Marionette.Layout.extend({
 
         template: tplChrome,
+
+        attributes: {id:"app"},
+
+        regions: {
+            'topbar': "#topbar",
+            'content': "#content"
+        },
 
         appEvents: {
             'hide': 'hideApp'
@@ -34,74 +41,33 @@ define(function(require) {
         },
 
         initialize: function(options) {
-            _.bindAll(this, 'render', 'presentView');
-
             this.options = options || {};
             this.user = options.user;
 
-            this.mainNavView = new MainNav();
-            this.mainNavView.bind('sidebar:selected', this.presentView);
-
             this.topbarView = new Topbar({ user: this.user });
+            this.bindTo(this.content, 'view:show', this.contentViewChanged, this);
         },
 
-        presentView: function(viewName, args) {
-            if (typeof(viewName) == 'undefined') {
-                return;
-            }
-
-            if (this.contentView) {
-                if (typeof(this.contentView.viewWillDisappear) === 'function') {
-                    this.contentView.viewWillDisappear.call(this.contentView);
-                }
-
-                this.contentView.$el.empty();
-
-                if (typeof(this.contentView.viewDidDisappear) === 'function') {
-                    this.contentView.viewDidDisappear.call(this.contentView);
-                }
-            }
-
-            if (typeof(viewName) == 'string') {
-                require([_.str.sprintf('views/%s', viewName)], function(v) {
-                    this.viewLoaded(v, args);
-                }.bind(this));
-            }
-        },
-
-        viewLoaded: function(View, args) {
-            var view = this.contentView = new View(args);
-
-            if (typeof(view.viewWillAppear) === 'function') {
-                this.contentView.viewWillAppear.call(this.contentView);
-            }
-
-            this.contentView.setElement(this.$('#content')).render();
-
-            if (typeof(this.contentView.viewDidAppear) === 'function') {
-                this.contentView.viewDidAppear.call(this.contentView);
-            }
-
-            if (typeof(this.contentView.uri) === 'function') {
-                Backbone.history.navigate(this.contentView.uri());
-            } else if (typeof(this.contentView.uri) === 'string') {
-                Backbone.history.navigate(this.contentView.uri);
+        contentViewChanged: function(view) {
+            if (typeof(view.uri) === 'function') {
+                Backbone.history.navigate(view.uri());
+            } else if (typeof(view.uri) === 'string') {
+                Backbone.history.navigate(view.uri);
             } else {
-                Backbone.history.navigate(this.contentView.name);
+                Backbone.history.navigate(view.name);
             }
 
-            if (typeof(this.contentView.sidebar) === 'string') {
-                this.mainNavView.highlight(this.contentView.sidebar);
+            if (typeof(view.sidebar) === 'string') {
+                adminui.vent.trigger('mainnav:highlight', view.sidebar);
             } else {
-                this.mainNavView.highlight(this.contentView.name);
+                adminui.vent.trigger('mainnav:highlight', view.name);
             }
         },
 
-        render: function() {
-            this.$el.html(this.template());
-
+        onRender: function() {
+            console.log('layout:render');
             this.topbarView.setElement(this.$("#topbar")).render();
-            this.mainNavView.setElement(this.$(".main-nav")).render();
+            this.topbar.attachView(this.topbarView);
 
             var indicator = this.$('.network-activity-indicator');
 

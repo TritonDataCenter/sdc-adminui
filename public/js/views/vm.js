@@ -22,7 +22,7 @@ define(function(require) {
      * options.uuid uuid of VM
      * options.vm vm attrs
      */
-     var VmView = BaseView.extend({
+     var VmView = Backbone.Marionette.ItemView.extend({
         template: tplVm,
 
         sidebar: 'vms',
@@ -95,13 +95,13 @@ define(function(require) {
             this.tagsListView = new TagsList({vm:this.vm});
         },
 
-        compileTemplate: function() {
-            return this.template({
-                vm: this.vm,
+        serializeData: function() {
+            return {
+                vm: this.vm.toJSON(),
                 image: this.image,
                 server: this.server,
-                owner: this.owner
-            });
+                owner: this.owner.toJSON()
+            };
         },
 
         clickedStartVm: function(e) {
@@ -201,9 +201,7 @@ define(function(require) {
             return this;
         },
 
-        render: function() {
-            this.$el.html(this.compileTemplate());
-
+        onRender: function() {
             this.renderImage();
             this.renderTags();
             this.renderMetadata();

@@ -5,7 +5,7 @@ define(['backbone'], function() {
 		idAttribute: 'uuid',
 
 		defaults: {
-			'sysinfo':{}
+			sysinfo:{}
 		},
 
 		setup: function(callback) {

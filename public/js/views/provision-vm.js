@@ -5,6 +5,14 @@
 */
 
 define(function(require) {
+  var Base = require('views/base');
+  var Images = require('models/images');
+  var Users = require('models/users');
+  var Package = require('models/package');
+  var Packages = require('models/packages');
+  var Networks = require('models/networks');
+  var Vm = require('models/vm');
+
 
   var PackageSelectOption = Backbone.Marionette.ItemView.extend({
     attributes: function() {
@@ -29,40 +37,25 @@ define(function(require) {
     }
   });
 
-  var Base = require('views/base');
-  var Images = require('models/images');
-  var Users = require('models/users');
-  var Package = require('models/package');
-  var Packages = require('models/packages');
-  var Networks = require('models/networks');
-  var Vm = require('models/vm');
-
   var tplProvisionVm = require('text!tpl/provision-vm.html');
 
-  var View = Base.extend({
+  var View = Backbone.Marionette.ItemView.extend({
     name: 'provision-vm',
 
     sidebar: 'vms',
 
-    template: tplProvisionVm,
+    template: _.template(tplProvisionVm),
 
     events: {
       'submit form': 'provision',
       'change input': 'checkFields'
     },
+    ui: {
+      'form': 'form',
+      'alert': '.alert'
+    },
 
     initialize: function(options) {
-      this.memoryValues = [
-        ['128 MB', 128],
-        ['256 MB', 256],
-        ['512 MB', 512],
-        ['1 GB', 1024],
-        ['2 GB', 2048]
-      ];
-
-      this.$form = null;
-
-
       this.packages = new Packages();
       this.packageSelect = new PackageSelect({ collection: this.packages });
       this.selectedPackage = new Package();
@@ -109,13 +102,10 @@ define(function(require) {
       this.$("input:first").focus();
     },
 
-    render: function() {
-      this.$el.html(this.template());
-
+    onRender: function() {
       this.packageSelect.setElement(this.$('select[name=package]')).render();
       this.packageBinder.bind(this.selectedPackage, this.$('.package-details'));
 
-      this.$form = this.$('form');
       this.hideError();
 
       this.$("input[name=image]").typeahead({
@@ -133,11 +123,6 @@ define(function(require) {
       this.checkFields();
 
       return this;
-    },
-
-    renderPackageDetails: function(package) {
-      this.$('.vcpus').html(package.get('vcpus'));
-      this.$('.zfs_io_priority').html(package.get('zfs_io_priority'));
     },
 
     populateNetworks: function(networks) {
@@ -167,16 +152,14 @@ define(function(require) {
 
     disableProvisionButton: function() {
       this.$('button[type=submit]').attr('disabled', 'disabled');
-      console.log('provision button disabled');
     },
 
     enableProvisionButton: function() {
       this.$('button[type=submit]').removeAttr('disabled');
-      console.debug("provision button enabled");
     },
 
     extractFormValues: function() {
-      var formData = this.$form.serializeObject();
+      var formData = this.ui.form.serializeObject();
       var values = {
         image_uuid: formData.image,
         dataset_uuid: formData.image, // XXX Backwards compat.
@@ -200,7 +183,7 @@ define(function(require) {
         values['zfs_io_priority'] = package.get('zfs_io_priority');
       }
 
-      var networksChecked = this.$form.find('.network-checkboxes input[type=checkbox]:checked');
+      var networksChecked = this.ui.form.find('.network-checkboxes input[type=checkbox]:checked');
       values.networks = _.map(networksChecked, function(obj) {
         return $(obj).val();
       });
@@ -209,12 +192,13 @@ define(function(require) {
     },
 
     hideError: function() {
-      this.$('.alert').hide();
+      console.log(this.ui.alert);
+      this.ui.alert.hide();
     },
 
     showError: function(message) {
-      this.$('.alert .message').html(message);
-      this.$('.alert').show();
+      this.ui.alert.find('.message').html(message);
+      this.ui.alert.show();
     },
 
     provision: function(e) {

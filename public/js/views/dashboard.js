@@ -5,21 +5,23 @@
 */
 
 define(function(require) {
+	var adminui = require('adminui');
+
 	var BaseView = require('views/base');
 	var AlarmsView = require('views/alarms');
-
-	var Dashboard = BaseView.extend({
+	var DashboardTemplate = require('text!tpl/dashboard.html')
+	var Dashboard = Backbone.Marionette.ItemView.extend({
 
 		name: 'dashboard',
 
-		template: require('text!tpl/dashboard.html'),
+		template: DashboardTemplate,
 
 		initialize: function() {
-			this.alarmsView = new AlarmsView({ userUuid: '930896af-bf8c-48d4-885c-6573a94b1853' });
+			console.log(adminui.user);
+			this.alarmsView = new AlarmsView({ userUuid: '00000000-0000-0000-0000-000000000000' });
 		},
 
-		render: function() {
-			this.$el.html(this.template());
+		onRender: function() {
 			this.alarmsView.setElement(this.$('#dashboard-alarms')).render();
 
 			return this;

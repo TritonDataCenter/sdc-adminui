@@ -12,12 +12,11 @@ define(function(require) {
 			return (/\n/).test(this.value());
 		}, this);
 		this.dataIsGood = ko.computed(function() {
-			console.log('test');
 			return this.key() && this.value();
 		}, this);
 	};
 
-	var MetadataList = BaseView.extend({
+	var MetadataList = Backbone.Marionette.ItemView.extend({
 
 		template: require("text!tpl/metadata.html"),
 
@@ -95,8 +94,7 @@ define(function(require) {
 			view.modal('show');
 		},
 
-		render: function() {
-			this.$el.html(this.template());
+		onRender: function() {
 			_.each(this.vm.get('customer_metadata'), function(v, k) {
 				var viewModel = new MetadataViewModel({key:k, value:v});
 				viewModel.editAction = this.edit;

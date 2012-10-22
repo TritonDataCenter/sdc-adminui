@@ -4,12 +4,12 @@ define(function(require) {
     */
 
 
-    var BaseView = require('views/base');
+    var adminui = require('adminui');
     var Servers = require('models/servers');
     var tplServers = require('text!tpl/servers.html');
 
-    var ServersListItem = BaseView.extend({
-        template: 'servers-list-item',
+    var ServersListItem = Backbone.Marionette.ItemView.extend({
+        template: require('text!tpl/servers-list-item.html'),
         tagName: 'tr',
 
         events: {
@@ -20,7 +20,24 @@ define(function(require) {
         uri: function() {
             return 'servers';
         },
-
+        templateHelpers: {
+            running: function() {
+                return this.status == 'running';
+            },
+            not_setup: function() {
+                return this.setup == 'false';
+            },
+            memory_percent: function() {
+                var free = (this.memory_total_bytes-this.memory_available_bytes);
+                return _.str.sprintf("%0.1f", free / this.memory_total_bytes * 100);
+            },
+            'memory_available_mb': function() {
+                return _.str.sprintf("%0.1f", this.memory_available_bytes/1024/1024);
+            },
+            'memory_total_mb': function() {
+                return _.str.sprintf("%0.1f", this.memory_total_bytes/1024/1024);
+            }
+        },
         setupServer: function(e) {
             e.stopPropagation();
 
@@ -33,55 +50,19 @@ define(function(require) {
         },
 
         navigateToServerDetails: function() {
-            this.eventBus.trigger('wants-view', 'server', { server:this.model });
-        },
-
-        render: function() {
-            this.setElement(this.template(this.model.attributes));
-            return this;
+            adminui.vent.trigger('showview', 'server', { server:this.model });
         }
     });
 
-    var ServersList = BaseView.extend({
-
-        initialize: function() {
-            _.bindAll(this, 'addOne', 'addAll');
-
-            this.collection.bind('all', this.addAll);
-            this.collection.fetch();
-        },
-
-        addOne: function(cn) {
-            var view = new ServersListItem({model:cn});
-            this.$el.append(view.render().el);
-        },
-
-        addAll: function() {
-            this.collection.each(this.addOne);
-        },
-
-        render: function() {
-            return this;
-        }
-    });
-
-    var ServersView = BaseView.extend({
+    var ServersView = Backbone.Marionette.CompositeView.extend({
         name: 'servers',
-
         template: tplServers,
+        itemView: ServersListItem,
+        itemViewContainer: 'tbody',
 
         initialize: function(options) {
             this.collection = new Servers();
-            this.listView = new ServersList({ collection: this.collection });
-        },
-
-        render: function() {
-            console.log(this.$el);
-            this.$el.html(this.template());
-
-            this.listView.setElement(this.$("tbody")).render();
-
-            return this;
+            this.collection.fetch();
         }
     });
 

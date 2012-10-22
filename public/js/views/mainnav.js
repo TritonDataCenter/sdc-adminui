@@ -1,14 +1,14 @@
 define(function(require) {
-    
-    var BaseView = require('views/base');
+    var Marionette = require('backbone.marionette');
 
-    var Mainnav = BaseView.extend({
+    var Mainnav = Marionette.ItemView.extend({
         events: {
             'click li':'onSelect'
         },
 
-        render: function() {
-            return this;
+        initialize: function() {
+            var app = require('adminui');
+            this.bindTo(app.vent, 'mainnav:highlight', this.highlight, this);
         },
 
         onSelect: function(e) {
@@ -18,7 +18,8 @@ define(function(require) {
             var view = li.attr("data-view");
             this.highlight(view);
 
-            this.trigger("sidebar:selected", view, this);
+            var app = require('adminui');
+            app.vent.trigger("showview", view);
         },
 
         highlight: function(view) {

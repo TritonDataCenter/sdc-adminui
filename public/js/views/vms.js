@@ -5,11 +5,14 @@ define(function(require) {
     var BaseView = require('views/base');
     var Vms = require('models/vms');
     var VmsList = require('views/vms-list');
+    var VmsTemplate = require('text!tpl/vms.html');
 
-    return BaseView.extend({
+    var app = require('adminui');
+
+    return Backbone.Marionette.ItemView.extend({
         name: 'vms',
 
-        template: 'vms',
+        template: VmsTemplate,
 
         url: function() {
             return 'vms';
@@ -22,15 +25,14 @@ define(function(require) {
         initialize: function(options) {
             this.collection = new Vms();
             this.listView = new VmsList({ collection: this.collection });
+            this.collection.fetch();
         },
 
         provision: function() {
-            this.eventBus.trigger('wants-view', 'provision-vm', {});
+            app.vent.trigger('showview', 'provision-vm', {});
         },
 
-        render: function() {
-            this.$el.html(this.template());
-
+        onRender: function() {
             this.listView.setElement(this.$('tbody')).render();
 
             return this;

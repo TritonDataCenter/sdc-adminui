@@ -2,9 +2,11 @@ define(function(require) {
 
 	var BaseView = require('views/base');
 
-	var EditingView = BaseView.extend({
+	var TemplateEditing = require('text!tpl/tags-list-editing.html');
+
+	var EditingView = Backbone.Marionette.ItemView.extend({
 		tagName: 'tr',
-		template: require('text!tpl/tags-list-editing.html'),
+		template: TemplateEditing,
 		events: {
 			'click .edit': 'edit',
 			'click .cancel': 'cancel',
@@ -77,19 +79,18 @@ define(function(require) {
 			this.$('button.save').attr('disabled', 'disabled');
 		},
 
-		render: function() {
-			this.$el.html(
-				this.template({
-					editing: this.model.get('editing'),
-					tag: this.tag
-				})
-			);
+		serializeData: function() {
+			return {
+				editing: this.model.get('editing'),
+				tag: this.tag
+			}	
+		},
 
+		onRender: function() {
 			if (this.model.get('editing')) {
 				this.checkFields();
 				this.focus();
 			}
-
 			return this;
 		},
 
@@ -99,7 +100,7 @@ define(function(require) {
 
 	});
 
-	var TagsList = BaseView.extend({
+	var TagsList = Backbone.Marionette.ItemView.extend({
 		template: require('text!tpl/tags-list.html'),
 
 		events: {
@@ -139,9 +140,7 @@ define(function(require) {
 			addView.focus();
 		},
 
-		render: function() {
-			this.$el.html(this.template());
-
+		onRender: function() {
 			_(this.vm.get('tags')).each(function(tv, tn) {
 				var view = new EditingView({ name: tn, value: tv });
 				view.on('save', function(tag) {
