@@ -7,7 +7,7 @@ define(function(require) {
   var UserView = require('views/user');
   var tplUsers = require('text!tpl/users.html');
 
-  return BaseView.extend({
+  return Backbone.Marionette.ItemView.extend({
 
     template: tplUsers,
 
@@ -53,8 +53,7 @@ define(function(require) {
       this.$('.total-accounts').html(c);
     },
 
-    render: function() {
-      this.$el.html(this.template());
+    onRender: function() {
       this.$findField = this.$('.findField');
       this.loadUserCounts();
       return this;
