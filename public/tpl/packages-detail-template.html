@@ -1,7 +1,9 @@
-<h2>{{name}} {{version}}
-	<small>{{uuid}}</small>
-	<button class="btn btn-info pull-right">Edit Package</button>
-</h2>
+<h3>{{name}} 
+	<small>version {{version}}</small>
+	<button class="btn btn pull-right">
+		<i class="icon-pencil"></i> Edit Package</button>
+</h3>
+
 
 <div class="memory">
 	<strong>RAM</strong>
@@ -34,7 +36,8 @@
 </div>
 
 
-<table class="table table-striped">
+<table class="table table-bordered">
+
 	<tr>
 		<td>Maximum number of processes</td>
 		<td>{{max_lwps}} Processes</td>
@@ -46,5 +49,12 @@
 	<tr>
 		<td>ZFS IO Priority</td>
 		<td>{{zfs_io_priority}}</td>
+	</tr>
+</table>
+
+<table class="table table-bordered">
+	<tr>
+		<td>Billing ID</td>
+		<td>{{uuid}}</td>
 	</tr>
 </table>
