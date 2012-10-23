@@ -1,23 +1,40 @@
-<h3>{{name}} {{version}}
+<h2>{{name}} {{version}}
 	<small>{{uuid}}</small>
-</h3>
+	<button class="btn btn-info pull-right">Edit Package</button>
+</h2>
+
+<div class="memory">
+	<strong>RAM</strong>
+	{{max_physical_memory}} MB
+</div>
+
+<div class="swap">
+	<strong>Swap</strong>
+	{{max_swap}} MB
+</div>
+
+<div class="quota">
+	<strong>Disk</strong>
+	{{quota}} MB
+</div>
+
+<div class="vcpus">
+	<strong>VCPUs</strong>
+	{{vcpus}}
+</div>
+
+<div class="flags">
+		<span class="label 
+		{{#if active}}label-success{{/if}}
+		">ACTIVE</span>
+
+		<span class="label 
+		{{#if default}}label-success{{/if}}
+		">DEFAULT</span>
+</div>
+
 
 <table class="table table-striped">
-	<tr>
-		<td>Max Physical Memory</td>
-		<td>{{max_physical_memory}} MB</td>
-	</tr>
-	<tr>
-		<td>Max Swap</td>
-		<td>{{max_swap}} MB</td>
-	<tr>
-		<td>Disk Quota</td>
-		<td>{{quota}} MB</td>
-	</tr>
-	<tr>
-		<td>Number of Virtual CPUs</td>
-		<td>{{vcpus}}</td>
-	</tr>
 	<tr>
 		<td>Maximum number of processes</td>
 		<td>{{max_lwps}} Processes</td>
@@ -29,13 +46,5 @@
 	<tr>
 		<td>ZFS IO Priority</td>
 		<td>{{zfs_io_priority}}</td>
-	</tr>
-	<tr>
-		<td>Active</td>
-		<td>{{active}}</td>
-	</tr>
-	<tr>
-		<td>Default</td>
-		<td>{{default}}</td>
 	</tr>
 </table>

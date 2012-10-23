@@ -284,8 +284,6 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 
 
 #page-packages {
-  .page-header button { margin-top: 14px; }
-
   ul li a { overflow: hidden; cursor: pointer;}
   ul li .name { float: left; }
   ul li .version {
@@ -295,7 +293,20 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
     font-size: 12px;
   }
   ul li.active .version { color: @white;}
+
+  #detail {
+    .flags { display: inline-block; width: 80px;}
+   .memory, .quota, .vcpus, .swap {
+      margin-bottom: 1.5em;
+      margin-top: 1.5em;
+      width: 140px;
+      display: inline-block;
+      strong { color: @grayLight; clear: both; display: block; font-size: 13px;}
+      font-size: 24px;
+    }
+  }
 }
+
 
 
 
