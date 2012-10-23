@@ -1,13 +1,21 @@
-<h3>{{name}} 
-	<small>version {{version}}</small>
-	<button class="btn btn pull-right">
-		<i class="icon-pencil"></i> Edit Package</button>
-</h3>
+<div class="content-header">
+	<div class="content-title">
+		{{name}}
+		{{version}}
+	</div>
+	<div class="content-actions">
+		<div class="flags">
+			<span class="label {{#if active}}label-success{{/if}} ">ACTIVE</span>
+			<span class="label {{#if default}}label-success{{/if}} ">DEFAULT</span>
+		</div>
+		<button class="btn"><i class="icon-pencil"></i> Edit Package</button>
+	</div>
+</div>
 
 
 <div class="memory">
 	<strong>RAM</strong>
-	{{max_physical_memory}} MB
+	{{normalize max_physical_memory}}
 </div>
 
 <div class="swap">
@@ -17,7 +25,7 @@
 
 <div class="quota">
 	<strong>Disk</strong>
-	{{quota}} MB
+	{{normalize quota}}
 </div>
 
 <div class="vcpus">
@@ -25,32 +33,20 @@
 	{{vcpus}}
 </div>
 
-<div class="flags">
-		<span class="label 
-		{{#if active}}label-success{{/if}}
-		">ACTIVE</span>
-
-		<span class="label 
-		{{#if default}}label-success{{/if}}
-		">DEFAULT</span>
+<div class="max-processes">
+	<strong>Max Processes</strong>
+	{{max_lwps}}
 </div>
 
+<div class="cpu-cap">
+	<strong>CPU Cap</strong>
+	{{cpu_cap}}
+</div>
 
-<table class="table table-bordered">
-
-	<tr>
-		<td>Maximum number of processes</td>
-		<td>{{max_lwps}} Processes</td>
-	</tr>
-	<tr>
-		<td>CPU Cap</td>
-		<td>{{cpu_cap}}</td>
-	</tr>
-	<tr>
-		<td>ZFS IO Priority</td>
-		<td>{{zfs_io_priority}}</td>
-	</tr>
-</table>
+<div class="io-priority">
+	<strong>ZFS IO Priority</strong>
+	{{zfs_io_priority}}
+</div>
 
 <table class="table table-bordered">
 	<tr>

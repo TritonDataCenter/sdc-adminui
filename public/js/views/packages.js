@@ -10,6 +10,7 @@ define(function(require) {
 		events: {
 			'click': 'select'
 		},
+		
 		initialize: function(options) {
 			this.vent = options.vent;
 		},
@@ -53,6 +54,15 @@ define(function(require) {
 
 	var PackageDetail = Backbone.Marionette.ItemView.extend({
 		template: PackagesDetailTemplate,
+		templateHelpers: {
+			normalize: function(v) {
+				if (v % 1024 == 0) {
+					return _.str.sprintf("%d GB", v/1024);
+				}
+
+				return _.str.sprintf("%d MB", v);
+			}
+		}
 	});
 
 	var PackagesView = Backbone.Marionette.Layout.extend({
@@ -62,6 +72,10 @@ define(function(require) {
 		},
 		attributes: {
 		 	id: "page-packages"
+		},
+
+		ui: {
+			'searchInput': '.search-query'
 		},
 
 		sidebar: 'packages',
@@ -83,16 +97,28 @@ define(function(require) {
 				vent: this.vent
 			});
 
+			this.bindTo(this.ui.searchInput, 'input', this.search, this);
 			this.bindTo(this.vent, 'showpackage', this.showPackage, this);
 			this.bindTo(this.packages, 'reset', this.showInitialPackage, this);
 			this.list.show(packagesList);
 		},
+
+		search: function() {
+			var val = this.ui.searchInput.val();
+			this.packages.search(val);
+		},
+
 		showPackage: function(package) {
 			this.detail.show(new PackageDetail({model: package}));
 		},
+
 		showInitialPackage: function() {
-			this.showPackage(this.packages.at(0));
-			this.vent.trigger('highlight', this.packages.at(0));
+			if (this.packages.length) {
+				this.showPackage(this.packages.at(0));
+				this.vent.trigger('highlight', this.packages.at(0));
+			} else {
+				this.detail.reset();
+			}
 		}
 	});
 

@@ -292,18 +292,31 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
     font-family: @monoFontFamily;
     font-size: 12px;
   }
+
   ul li.active .version { color: @white;}
 
   #detail {
-    h3 small {margin-left: 30px; }
-    .flags { display: inline-block; width: 80px;}
+    .content-header {
+      overflow: hidden;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      .content-title { .pull-left; font-size: 24px; padding: 6px;}
+      .content-actions { .pull-right; }
+    }
+
+    .flags { display: inline-block; margin-right: 20px; }
+    .flags span { display: inline-block;}
+
    .memory, .quota, .vcpus, .swap {
-      margin-bottom: 1.5em;
-      margin-top: 1.5em;
-      width: 140px;
+      width: 152px;
+      background: lighten(@blue, 50%);
+      padding: 20px 10px;
       display: inline-block;
-      strong { color: @grayLight; clear: both; display: block; font-size: 13px;}
-      font-size: 24px;
+      font-size: 28px;
+      strong { 
+        text-transform: uppercase;
+        .opacity(60);
+        clear: both; display: block; font-size: 13px;}
     }
   }
 }
