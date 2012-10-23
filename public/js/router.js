@@ -20,7 +20,6 @@ define(function(require) {
 		initialize: function(options) {
 			_.bindAll(this);
       		this.app = options.app;
-	    	this.appView = new AppView({ user: this.user });
       	},
 
       	go: function() {
@@ -87,16 +86,17 @@ define(function(require) {
 	    },
 
 	    presentView: function(viewName, args) {
-	    	if (this.app.chrome.currentView !== this.appView) {
-	    		this.app.chrome.show(this.appView);
+	    	if (false === this.app.chrome.currentView instanceof AppView) {
+	    		var appView = new AppView({user: this.user});
+	    		this.app.chrome.show(appView);
 	    	}
-	    	
+
 	    	require([_.str.sprintf('views/%s', viewName)], function(ViewClass) {
 	    		var view = new ViewClass(args);
 
-	    		this.appView.content.show(view, args);
 	    		this.applySidebar(view);
 	    		this.applyUrl(view);
+	    		this.app.chrome.currentView.content.show(view, args);
 	    	}.bind(this));
 	    },
 

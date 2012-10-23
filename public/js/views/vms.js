@@ -2,7 +2,6 @@ define(function(require) {
     /**
      * views/vms.js
      */
-    var BaseView = require('views/base');
     var Vms = require('models/vms');
     var VmsList = require('views/vms-list');
     var VmsTemplate = require('text!tpl/vms.html');

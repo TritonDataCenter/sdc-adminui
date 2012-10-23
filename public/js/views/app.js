@@ -32,34 +32,15 @@ define(function(require) {
             'content': "#content"
         },
 
-        appEvents: {
-            'hide': 'hideApp'
-        },
-
-        hideApp: function() {
-            this.$el.hide();
-        },
-
         initialize: function(options) {
             this.options = options || {};
             this.user = options.user;
 
             this.topbarView = new Topbar({ user: this.user });
-            this.bindTo(this.content, 'view:show', this.contentViewChanged, this);
         },
 
-        contentViewChanged: function(view) {
-            if (typeof(view.uri) === 'function') {
-                Backbone.history.navigate(view.uri());
-            } else if (typeof(view.uri) === 'string') {
-                Backbone.history.navigate(view.uri);
-            } else {
-                Backbone.history.navigate(view.name);
-            }
-        },
 
         onRender: function() {
-            console.log('layout:render');
             this.topbarView.setElement(this.$("#topbar")).render();
             this.topbar.attachView(this.topbarView);
 

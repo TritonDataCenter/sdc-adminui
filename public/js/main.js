@@ -1,5 +1,7 @@
+"use strict"
+
 requirejs.config({
-    urlArgs: "bust=" + (new Date()).getTime(),
+    //urlArgs: "bust=" + (new Date()).getTime(),
     paths: {
         "underscore": "lib/underscore",
         "underscore.string": "lib/underscore.string",
