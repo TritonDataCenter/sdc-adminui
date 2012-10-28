@@ -1,19 +1,16 @@
 <div class="page-header">
-	<form class="navbar-search pull-right" onsubmit="return false;">
-		<input type="text" class="search-query span4" placeholder="Search Packages by name or uuid">
-	</form>
-
-	<button class="btn btn-info pull-left">
-		<i class="icon-plus icon-white"></i> Create Package
-	</button>
+	<h2 >Packages
+		<button class="btn btn-info pull-right create">
+			<i class="icon-plus icon-white"></i> Create Package
+		</button>
+	</h2>
 </div>
 
-<div class="row">
-	<div class="span3">
-		<div id="list"></div>
+<div class="sidebar">
+	<div class="search">
+		<input type="text" placeholder="Filter by name or Billing ID">
 	</div>
-
-	<div class="span9">
-		<div id="detail"></div>
+	<div id="list">
 	</div>
 </div>
+<div id="detail"></div>

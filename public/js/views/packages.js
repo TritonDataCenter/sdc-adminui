@@ -1,127 +1,148 @@
 define(function(require) {
-	var Packages = require('models/packages');
-	var PackagesTemplate = require('text!tpl/packages.html');
-	var PackagesListItemTemplate = require('text!tpl/packages-list-item.html');
-	var PackagesDetailTemplate = require('text!tpl/packages-detail-template.html');
+    var Packages = require('models/packages');
+    var PackagesTemplate = require('text!tpl/packages.html');
+    var PackagesListItemTemplate = require('text!tpl/packages-list-item.html');
+    var PackagesDetailTemplate = require('text!tpl/packages-detail-template.html');
+    var PackageForm = require('views/packages-form');
 
-	var PackagesListItemView = Backbone.Marionette.ItemView.extend({
-		tagName: 'li',
-		template: PackagesListItemTemplate,
-		events: {
-			'click': 'select'
-		},
-		
-		initialize: function(options) {
-			this.vent = options.vent;
-		},
+    var PackagesListItemView = Backbone.Marionette.ItemView.extend({
+        tagName: 'li',
+        template: PackagesListItemTemplate,
+        events: {
+            'click': 'select'
+        },
 
-		onRender: function() {
-			this.bindTo(this.vent, 'highlight', this.highlightIfThis, this);
-		},
+        initialize: function(options) {
+            this.vent = options.vent;
+        },
 
-		highlightIfThis: function(model) {
-			if (model == this.model) {
-				this.highlight();
-			}
-		},
+        onRender: function() {
+            this.bindTo(this.vent, 'highlight', this.highlightIfThis, this);
+        },
 
-		highlight: function() {
-			this.$el.siblings().removeClass('active');
-			this.$el.addClass('active');
-		},
+        highlightIfThis: function(model) {
+            if (model == this.model) {
+                this.highlight();
+            }
+        },
 
-		select: function() {
-			this.highlight();
-			this.trigger('select', this.model);
-		}
-	});
+        highlight: function() {
+            this.$el.siblings().removeClass('active');
+            this.$el.addClass('active');
+        },
 
-	var PackagesList = Backbone.Marionette.CollectionView.extend({
-		tagName: 'ul',
-		attributes: { class: 'nav nav-pills nav-stacked' },
-		itemView: PackagesListItemView,
-		initialize: function(options) {
-			this.vent = options.vent;
-		},
-		onItemAdded: function(itemView) {
-			this.bindTo(itemView, 'select', this.onSelect, this);
-			itemView.vent = this.vent;
-		},
-		onSelect: function(package) {
-			this.vent.trigger('showpackage', package);
-		}
-	});
+        select: function() {
+            this.highlight();
+            this.trigger('select', this.model);
+        }
+    });
 
-	var PackageDetail = Backbone.Marionette.ItemView.extend({
-		template: PackagesDetailTemplate,
-		templateHelpers: {
-			normalize: function(v) {
-				if (v % 1024 == 0) {
-					return _.str.sprintf("%d GB", v/1024);
-				}
+    var PackagesList = Backbone.Marionette.CollectionView.extend({
+        tagName: 'ul',
+        attributes: { class: 'nav' },
+        itemView: PackagesListItemView,
+        initialize: function(options) {
+            this.vent = options.vent;
+        },
+        onItemAdded: function(itemView) {
+            this.bindTo(itemView, 'select', this.onSelect, this);
+            itemView.vent = this.vent;
+        },
+        onSelect: function(package) {
+            this.vent.trigger('showpackage', package);
+        }
+    });
 
-				return _.str.sprintf("%d MB", v);
-			}
-		}
-	});
+    var PackageDetail = Backbone.Marionette.ItemView.extend({
+        template: PackagesDetailTemplate,
+        templateHelpers: {
+            normalize: function(v) {
+                if (v % 1024 == 0) {
+                    return _.str.sprintf("%d GB", v/1024);
+                }
 
-	var PackagesView = Backbone.Marionette.Layout.extend({
-		regions: {
-			'list': '#list',
-			'detail': '#detail'
-		},
-		attributes: {
-		 	id: "page-packages"
-		},
+                return _.str.sprintf("%d MB", v);
+            }
+        }
+    });
 
-		ui: {
-			'searchInput': '.search-query'
-		},
+    var PackagesView = Backbone.Marionette.Layout.extend({
+        regions: {
+            'list': '#list',
+            'detail': '#detail'
+        },
 
-		sidebar: 'packages',
+        attributes: {
+            id: "page-packages"
+        },
 
-		uri: 'packages',
+        ui: {
+            'searchInput': '.search input',
+            'createButton': 'button.create'
+        },
 
-		template: PackagesTemplate,
+        sidebar: 'packages',
 
-		initialize: function(options) {
-			this.packages = new Packages();
-			this.packages.fetch();
+        uri: 'packages',
 
-			this.vent = new Marionette.EventAggregator();
-		},
+        template: PackagesTemplate,
 
-		onRender: function() {
-			var packagesList = new PackagesList({
-				collection: this.packages,
-				vent: this.vent
-			});
+        initialize: function(options) {
+            this.packages = new Packages();
+            this.packages.fetch();
 
-			this.bindTo(this.ui.searchInput, 'input', this.search, this);
-			this.bindTo(this.vent, 'showpackage', this.showPackage, this);
-			this.bindTo(this.packages, 'reset', this.showInitialPackage, this);
-			this.list.show(packagesList);
-		},
+            this.vent = new Marionette.EventAggregator();
+        },
 
-		search: function() {
-			var val = this.ui.searchInput.val();
-			this.packages.search(val);
-		},
+        onRender: function() {
+            this.$("#list").css({height: 
+                $(window).height() - $(".navbar").height() - this.$(".page-header").height()
+            });
+            var packagesList = new PackagesList({
+                collection: this.packages,
+                vent: this.vent
+            });
 
-		showPackage: function(package) {
-			this.detail.show(new PackageDetail({model: package}));
-		},
+            this.bindTo(this.ui.searchInput, 'input', this.search, this);
+            this.bindTo(this.ui.createButton, 'click', this.showCreateForm, this);
 
-		showInitialPackage: function() {
-			if (this.packages.length) {
-				this.showPackage(this.packages.at(0));
-				this.vent.trigger('highlight', this.packages.at(0));
-			} else {
-				this.detail.reset();
-			}
-		}
-	});
+            this.bindTo(this.vent, 'showpackage', this.showPackage, this);
+            this.bindTo(this.packages, 'reset', this.showInitialPackage, this);
+            this.list.show(packagesList);
+        },
+
+        search: function() {
+            var val = this.ui.searchInput.val();
+            this.packages.search(val);
+        },
+
+        transitionToCreate: function() {
+            this.ui.createButton.fadeOut(100);
+        },
+
+        showCreateForm: function() {
+            var form = new PackageForm();
+            this.$(".sidebar").hide();
+            this.detail.show(form);
+            this.transitionToCreate();
+        },
+
+        showPackage: function(package) {
+            if ((!this.detail.currentView) || this.detail.currentView.model != package) {
+                this.detail.show(new PackageDetail({model: package}));
+            }
+        },
+
+        showInitialPackage: function() {
+            if (this.packages.length) {
+                this.showPackage(this.packages.at(0));
+                this.vent.trigger('highlight', this.packages.at(0));
+            } else {
+                this.detail.reset();
+            }
+        }
+    });
 
 
-	return PackagesView;
+    return PackagesView;
 });

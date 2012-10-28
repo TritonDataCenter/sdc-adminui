@@ -2,7 +2,10 @@
 @import "variables.less";
 @import "signin.less";
 
-body { padding-top: 60px; }
+body { padding-top: 60px; height: 100%;}
+html{ height: 100% }
+#chrome { min-height: 100%; }
+#footer { height: 24px; background: #dfe7ec;}
 
 #logo { cursor: default; }
 
@@ -10,6 +13,7 @@ h1 {
   font-size: 32px;
   font-weight: 300;
 }
+
 .page-header { margin-bottom: 10px; .clearfix; overflow: hidden;  }
 
 h1 small { font-size: 18px; text-transform: lowercase;}
@@ -203,7 +207,6 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 }
 
 #page-vms {
-  .provision-button { margin-top: 14px;}
 }
 
 
@@ -284,40 +287,81 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 
 
 #page-packages {
-  ul li a { overflow: hidden; cursor: pointer;}
-  ul li .name { float: left; }
-  ul li .version {
-    float: right;
-    color: @grayDark;
-    font-family: @monoFontFamily;
-    font-size: 12px;
+  .page-header { margin-bottom: 0;}
+
+  .sidebar {
+    padding: 10px;
+    border-right: 1px solid lighten(@grayLight, 10%);
+    background: #DFE7EC;
+    width: 210px;
+    float: left;
+  }
+  .search {
+    overflow: hidden;
+    input { width: 100%; font-size: 12px; }
   }
 
-  ul li.active .version { color: @white;}
+  #list {
+    clear: both;
+
+    ul li a { 
+      color: @grayLight;
+      overflow: hidden; cursor: pointer;
+      padding: 5px 12px;
+      .name { display: inline-block; }
+      .version {
+        display: inline-block;
+        color: @grayDark;
+        font-family: @monoFontFamily;
+        font-size: 10px;
+        margin-left: 10px;
+      }
+    }
+    ul li.active { width: 221px; }
+    ul li.active a { 
+      border-top: 1px solid lighten(@grayLight, 10%);
+      border-bottom: 1px solid lighten(@grayLight, 10%);
+      border-left: 1px solid lighten(@grayLight, 10%);
+      background: @white;
+      color: @grayDarker;
+      background: @white; 
+    }
+    ul a:hover { background: none; }
+    ul li.active .version {}
+    ul li.active .name {}
+  }
 
   #detail {
+    width: 685px;
+    padding: 10px;
+    float: right;
     .content-header {
       overflow: hidden;
       padding-bottom: 10px;
       border-bottom: 1px solid #eee;
-      .content-title { .pull-left; font-size: 24px; padding: 6px;}
+
+      .content-title { 
+        text-transform: uppercase;
+        .pull-left; font-size: 24px; padding: 6px;
+      }
       .content-actions { .pull-right; }
     }
 
     .flags { display: inline-block; margin-right: 20px; }
     .flags span { display: inline-block;}
 
-   .memory, .quota, .vcpus, .swap {
-      width: 152px;
-      background: lighten(@blue, 50%);
+   .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority {
+      width: 132px;
       padding: 20px 10px;
       display: inline-block;
-      font-size: 28px;
+      font-size: 24px;
       strong { 
         text-transform: uppercase;
         .opacity(60);
-        clear: both; display: block; font-size: 13px;}
-    }
+        clear: both;
+        display: block;
+        font-size: 13px;}
+      }
   }
 }
 

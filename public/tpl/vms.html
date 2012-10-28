@@ -1,9 +1,12 @@
 <div id="page-vms">
 	<div class="page-header">
-		<h1 class="pull-left">Virtual Machines</h1>
-		<button class="provision-button pull-right btn btn-primary">
+		<button class="provision-button pull-left btn btn-info">
 			<i class="icon-plus icon-white"></i> Provision a New VM
 		</button>
+
+		<form class="navbar-search pull-right" onsubmit="return false;">
+			<input type="text" class="search-query span4" placeholder="Search VMs by name or uuid">
+		</form>
 	</div>
 
 	<div class="vms-list">

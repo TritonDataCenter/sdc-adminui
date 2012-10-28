@@ -1,0 +1,88 @@
+<h2>Create a new Package</h2>
+<form class="form-horizontal">
+
+  <div class="control-group">
+    <span class="help-block" style="margin-bottom: 2em;">
+      Name and version of the package is used to uniquely identify a package. Once a package with a specific version has been created, the properties making up the package cannot be modified. A new version must be created with the new properties.
+    </span>
+
+    <label class="control-label" for="package-name">Name</label>
+    <div class="controls">
+      <input type="text" id="package-name" name="name" placeholder="Name of the package">
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="package-version">Version</label>
+
+    <div class="controls">
+      <input type="text" id="package-version" name="version" placeholder="Version">
+    </div>
+  </div>
+
+  <legend>CPU &amp; Memory</legend>
+  <div class="control-group">
+    <label class="control-label" for="package-memory">Memory</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="number" class="span3" id="package-memory" 
+        min="64" 
+        step="64" 
+        placeholder="memory">
+        <span class="add-on">MB</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="package-memory">Swap</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="number" class="span3" id="package-swap" min="64" step="64" placeholder="swap">
+        <span class="add-on">MB</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="package-vcpus">Number of CPUs</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="number" class="span3" id="package-vcpus" min="1" max="16" placeholder="number of cores">
+        <span class="add-on">cores</span>
+      </div>
+      <p class="help-inline">maximum number of VCPUs is 16</p>
+    </div>
+  </div>
+
+  <legend>Disk</legend>
+
+  <div class="control-group">
+    <label class="control-label" for="package-quota">Disk Quota</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="number" class="span3" id="package-quota" min="1" placeholder="disk quota">
+        <span class="add-on">GB</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="package-io-prioirty">IO Priority</label>
+    <div class="controls">
+      <input type="number" class="span3" id="package-io-priority" min="1" placeholder="Disk IO Priority">
+      <p class="help-inline">1 for minimun, 10000 for maximum</p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <label class="checkbox">
+        <input type="checkbox" name="active"> Activate Package
+      </label>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Create Package</button>
+  </div>
+</form>

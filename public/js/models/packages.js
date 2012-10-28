@@ -1,5 +1,6 @@
 define(function(require) {
 	var Package = require('models/package');
+	
  	var Packages = Backbone.Collection.extend({
  		model: Package,
  		url: '/_/packages',
@@ -12,7 +13,7 @@ define(function(require) {
  				return m.get('uuid') == val || 
  					m.get('name').indexOf(val) !== -1;
  			});
- 			
+
  			this.reset(filtered);
  		},
  		fetchActive: function() {
