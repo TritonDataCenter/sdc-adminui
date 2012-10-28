@@ -1,7 +1,6 @@
 define(function(require) {
   var Job = require('models/job');
   var topbarTpl = require('text!tpl/topbar.html');
-  var Mainnav = require('views/mainnav');
   var Marionette = require('backbone.marionette');
 
   var JobItemView = Backbone.View.extend({
@@ -95,8 +94,6 @@ define(function(require) {
     },
 
     onRender: function() {
-      this.mainnavView = new Mainnav({ el: this.$("#mainnav") });
-      this.mainnav.attachView(this.mainnavView);
       
       this.notifier = new NotifierView({
         el: this.$("#notifier-feed"),

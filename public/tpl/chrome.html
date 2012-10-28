@@ -1,13 +1,26 @@
+<!--
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div id="topbar" class="container"></div>
 	</div>
 </div>
+-->
 
-<div class="container">
-	<div class="row">
-		<div id="content" class="span12"></div>
+<div class="container-fluid">
+	<div class="row-fluid">
+    <div id="sidebar">
+      <div class="branding">
+        <small>SmartDataCenter</small> Operations Portal <span class="version">7.0 ALPHA</span>
+      </div>
+      <ul class="nav" id="mainnav">
+        <li data-view="dashboard"><a href="/dashboard">Dashboard</a></li>
+        <li data-view="vms"><a href="/vms">Virtual Machines</a></li>
+        <li data-view="servers"><a href="/servers">Servers</a></li>
+        <li data-view="networks"><a href="/networks">Networks</a></li>
+        <li data-view="users"><a href="/users">Users</a></li>
+        <li data-view="packages"><a href="/packages">Packages</a></li>
+      </ul>
+    </div>
+    <div id="content" class="span10"></div>
 	</div>
 </div>
-
-<div class="network-activity-indicator"></div>

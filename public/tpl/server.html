@@ -4,29 +4,31 @@
   </div>
 
   <div class="server-details">
-    <table class="overview">
-      <tbody>
-        <tr>
-          <th>Datacenter</th>
-          <td>{{datacenter}}</td>
-        </tr>
-        <tr>
-          <th>UUID</th>
-          <td>{{uuid}}%></td>
-        </tr>
-        <tr>
-          <th>Hostname</th>
-          <td>{{hostname}}</td>
-        </tr>
-        <tr>
-          <th>Platform Version</th>
-          <td>{{platform_version}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="span10">
+      <table class="overview">
+        <tbody>
+          <tr>
+            <th>Datacenter</th>
+            <td>{{datacenter}}</td>
+          </tr>
+          <tr>
+            <th>UUID</th>
+            <td>{{uuid}}%></td>
+          </tr>
+          <tr>
+            <th>Hostname</th>
+            <td>{{hostname}}</td>
+          </tr>
+          <tr>
+            <th>Platform Version</th>
+            <td>{{platform_version}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <div class="row">
-      <div class="span9">
+    <div class="row-fluid">
+      <div class="span5">
         <h3>Hardware</h3>
         <table class="hardware">
           <tbody>
@@ -50,7 +52,7 @@
         </table>
       </div>
 
-      <div class="span4">
+      <div class="span5">
         <h3>Disks</h3>
 
         <table class="disks">

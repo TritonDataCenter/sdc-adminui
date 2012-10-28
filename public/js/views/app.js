@@ -18,6 +18,8 @@ define(function(require) {
     var Backbone = require('backbone');
     
     var Topbar = require('views/topbar');
+    var Mainnav = require('views/mainnav');
+
     var tplChrome = require('text!tpl/chrome.html');
     var adminui = require('adminui');
 
@@ -29,6 +31,7 @@ define(function(require) {
 
         regions: {
             'topbar': "#topbar",
+            'mainnav': "#mainnav",
             'content': "#content"
         },
 
@@ -37,25 +40,16 @@ define(function(require) {
             this.user = options.user;
 
             this.topbarView = new Topbar({ user: this.user });
+            this.mainnavView = new Mainnav();
         },
 
 
         onRender: function() {
-            this.topbarView.setElement(this.$("#topbar")).render();
-            this.topbar.attachView(this.topbarView);
+            this.mainnavView.setElement(this.$("#mainnav"));
+            this.mainnav.attachView(this.mainnavView);
 
-            var indicator = this.$('.network-activity-indicator');
-
-            indicator.hide();
-            indicator.hide().ajaxStart(function() {
-                indicator.fadeIn(100);
-            });
-
-            indicator.ajaxStop(function() {
-                if (! indicator.hasClass('error')) {
-                    indicator.fadeOut(100);
-                }
-            });
+            // this.topbar.attachView(this.topbarView);
+            // this.topbarView.setElement(this.$("#topbar")).render();
 
             return this;
         }

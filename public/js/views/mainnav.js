@@ -1,4 +1,5 @@
 define(function(require) {
+    var app = require('adminui');
     var Marionette = require('backbone.marionette');
 
     var Mainnav = Marionette.ItemView.extend({
@@ -7,7 +8,6 @@ define(function(require) {
         },
 
         initialize: function() {
-            var app = require('adminui');
             this.bindTo(app.vent, 'mainnav:highlight', this.highlight, this);
         },
 
@@ -18,7 +18,6 @@ define(function(require) {
             var view = li.attr("data-view");
             this.highlight(view);
 
-            var app = require('adminui');
             app.vent.trigger("showview", view);
         },
 
