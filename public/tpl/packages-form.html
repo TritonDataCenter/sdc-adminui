@@ -1,94 +1,141 @@
 <div class="page-header">
+  {{#if uuid}}
+  <h2>Edit Package</h2>
+  {{else}}
   <h2>Create a new Package</h2>
+  {{/if}}
 </div>
 
 <div class="row-fluid">
   <div class="span12">
-<form class="form-horizontal">
-  <div class="control-group">
-    <span class="help-block" style="margin-bottom: 2em;">
-      Name and version of the package is used to uniquely identify a package. Once a package with a specific version has been created, the properties making up the package cannot be modified. A new version must be created with the new properties.
-    </span>
+    <form class="form-horizontal">
+      <div class="control-group">
+        <span class="help-block" style="margin-bottom: 2em;">
+          Name and version of the package is used to uniquely identify a package. Once a package with a specific version has been created, the properties making up the package cannot be modified. A new version must be created with the new properties.
+        </span>
 
-    <label class="control-label" for="package-name">Name</label>
-    <div class="controls">
-      <input type="text" id="package-name" name="name" placeholder="Name of the package">
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label" for="package-version">Version</label>
-
-    <div class="controls">
-      <input type="text" id="package-version" name="version" placeholder="Version">
-    </div>
-  </div>
-
-  <legend>CPU &amp; Memory</legend>
-  <div class="control-group">
-    <label class="control-label" for="package-memory">Memory</label>
-    <div class="controls">
-      <div class="input-append">
-        <input type="number" class="span3" id="package-memory" 
-        min="64" 
-        step="64" 
-        placeholder="memory">
-        <span class="add-on">MB</span>
+        <label class="control-label" for="package-name">Name</label>
+        <div class="controls">
+          <input type="text" id="package-name" {{#if uuid}}readonly{{/if}} name="name" placeholder="Name of the package">
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="control-group">
-    <label class="control-label" for="package-memory">Swap</label>
-    <div class="controls">
-      <div class="input-append">
-        <input type="number" class="span3" id="package-swap" min="64" step="64" placeholder="swap">
-        <span class="add-on">MB</span>
+      <div class="control-group">
+        <label class="control-label" for="package-version">Version</label>
+
+        <div class="controls">
+          <input type="text" id="package-version" {{#if uuid}}readonly{{/if}} name="version" placeholder="Version">
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="control-group">
-    <label class="control-label" for="package-vcpus">Number of CPUs</label>
-    <div class="controls">
-      <div class="input-append">
-        <input type="number" class="span3" id="package-vcpus" min="1" max="16" placeholder="number of cores">
-        <span class="add-on">cores</span>
+      <legend>CPU &amp; Memory</legend>
+      <div class="control-group">
+        <label class="control-label" for="package-memory">Memory</label>
+        <div class="controls">
+          <div class="input-append">
+            <input type="number" class="input-small" id="package-memory"  {{#if uuid}}readonly{{/if}} name="max_physical_memory"
+            min="64" 
+            step="64" 
+            placeholder="memory">
+            <span class="add-on">MB</span>
+          </div>
+        </div>
       </div>
-      <p class="help-inline">maximum number of VCPUs is 16</p>
-    </div>
-  </div>
 
-  <legend>Disk</legend>
-
-  <div class="control-group">
-    <label class="control-label" for="package-quota">Disk Quota</label>
-    <div class="controls">
-      <div class="input-append">
-        <input type="number" class="span3" id="package-quota" min="1" placeholder="disk quota">
-        <span class="add-on">GB</span>
+      <div class="control-group">
+        <label class="control-label" for="package-memory">Swap</label>
+        <div class="controls">
+          <div class="input-append">
+            <input type="number" class="input-small" id="package-swap"  {{#if uuid}}readonly{{/if}} name="max_swap" min="64" step="64" placeholder="swap">
+            <span class="add-on">MB</span>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="control-group">
-    <label class="control-label" for="package-io-prioirty">IO Priority</label>
-    <div class="controls">
-      <input type="number" class="span3" id="package-io-priority" min="1" placeholder="Disk IO Priority">
-      <p class="help-inline">1 for minimun, 10000 for maximum</p>
-    </div>
-  </div>
+      <div class="control-group">
+        <label class="control-label" for="package-vcpus">Number of CPUs</label>
+        <div class="controls">
+          <div class="input-append">
+            <input type="number" class="input-small" id="package-vcpus"
+             {{#if uuid}}readonly{{/if}} 
+              name="vcpus" min="1" max="16" placeholder="cores">
+            <span class="add-on">cores</span>
+          </div>
+          <p class="help-inline">maximum number of VCPUs is 16</p>
+        </div>
+      </div>
 
-  <div class="control-group">
-    <div class="controls">
-      <label class="checkbox">
-        <input type="checkbox" name="active"> Activate Package
-      </label>
-    </div>
+
+      <div class="control-group">
+        <label class="control-label" for="package-cap-cpu">CPU Cap</label>
+        <div class="controls">
+          <input type="number" class="input-small" id="package-cpu-cap"
+           {{#if uuid}}readonly{{/if}} 
+          name="cpu_cap" min="1" max="10000" placeholder="cpu cap">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="package-vcpus">Max Lightweight Processes</label>
+        <div class="controls">
+          <input type="number" class="input-small" id="package-max-processes"
+           {{#if uuid}}readonly{{/if}} 
+          name="max_lwps" min="250" placeholder="processes">
+        </div>
+      </div>
+
+      <legend>Disk</legend>
+
+      <div class="control-group">
+        <label class="control-label" for="package-quota">Disk Quota</label>
+        <div class="controls">
+          <div class="input-append">
+            <input type="number"
+             {{#if uuid}}readonly{{/if}} 
+             class="input-medium" name="quota" id="package-quota" min="1" placeholder="disk quota">
+            <span class="add-on">MB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="package-io-prioirty">IO Priority</label>
+        <div class="controls">
+          <input type="number" 
+           {{#if uuid}}readonly{{/if}} 
+          class="span3" name="zfs_io_priority" id="package-io-priority" min="1" placeholder="Disk IO Priority">
+
+          <p class="help-inline">1 for minimun, 10000 for maximum</p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <label class="checkbox">
+            <input type="checkbox" name="active"> Activate Package
+          </label>
+          
+          <label class="checkbox">
+            <input type="checkbox" name="default"> Make this the Default Package
+          </label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          {{#if uuid}}
+          Save Package
+          {{else}}
+          Create Package
+          {{/if}}
+        </button>
+        <button type="cancel" class="btn">Cancel</button>
+      </div>
+    </form>
   </div>
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary">Create Package</button>
-  </div>
-</form>
-</div>
 </div>
