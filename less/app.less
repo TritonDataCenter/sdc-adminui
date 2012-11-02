@@ -331,6 +331,56 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 }
 
 
+#page-networks {
+  .details {
+    width: 79%; float: left; padding: 0 26px; box-sizing: border-box;
+    ul.attributes {
+      li+li { margin-top: 1em; }
+      li { 
+        strong { 
+          margin-left: 10px;
+          text-transform: uppercase;
+          .opacity(60);
+          display: inline-block;
+          width: 300px;
+        }
+
+        .value {
+          display: inline-block;
+        }
+      }
+    }
+  }
+  .list { 
+    float: left;
+    width: 20%; 
+    border-right: 1px solid #DFE7EC;
+    ul li a { 
+      color: @grayLight;
+      overflow: hidden;
+      cursor: pointer;
+      padding: 5px 12px;
+
+      .name { }
+      .subnet {
+        color: @grayDark;
+        font-family: @monoFontFamily;
+        font-size: 9px;
+      }
+    }
+
+    ul li.active { 
+      border-right: 1px solid #dfe7ec;
+    }
+
+    ul li.active a { 
+      color: #333;
+      background: #DFE7EC;
+    }
+    ul a:hover { background: none; }
+  }
+}
+
 
 #page-packages {
   .page-header { margin-bottom: 0; }
