@@ -10,9 +10,8 @@ define(function(require) {
 
     return Backbone.Marionette.ItemView.extend({
         name: 'vms',
-
         template: VmsTemplate,
-
+        
         url: function() {
             return 'vms';
         },

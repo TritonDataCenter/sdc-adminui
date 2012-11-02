@@ -12,7 +12,7 @@ define(function(require) {
 
     template: tplUsers,
 
-    name: 'users',
+    url: 'users',
 
     sidebar: 'users',
 

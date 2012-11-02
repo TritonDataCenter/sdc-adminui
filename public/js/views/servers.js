@@ -17,7 +17,7 @@ define(function(require) {
             'click button.setup':'setupServer'
         },
 
-        uri: function() {
+        url: function() {
             return 'servers';
         },
         templateHelpers: {

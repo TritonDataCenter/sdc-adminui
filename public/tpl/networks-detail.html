@@ -1,48 +1,60 @@
 <div class="page-header">
-  <h1>{{name}} / {{subnet}}</h1>
+  <h1>
+   <span name="name">{{name}}</span> / <span name="subnet">{{subnet}}</span></h1>
 </div>
 
+<h5>Network Details</h5>
 <ul class="unstyled attributes">
   <li>
     <strong>UUID</strong>
-    <div class="value">{{uuid}}</div>
+    <div class="value" name="uuid">{{uuid}}</div>
   </li>
 
   <li>
     <strong>VLAN ID</strong>
-    <div class="value">{{vlan_id}}</div>
+    <div class="value" name="vlan_id">{{vlan_id}}</div>
   </li>
 
   <li>
     <strong>Network</strong>
-    <div class="value">{{subnet}}</div>
+    <div class="value" name="subnet">{{subnet}}</div>
+  </li>
+  <li>
+    
+    <strong>Gateway</strong>
+    <div class="value" name="gateway">{{gateway}}</div>
   </li>
 
   <li>
     <strong>Netmask</strong>
-    <div class="value">{{netmask}}</div>
+    <div class="value" name="netmask">{{netmask}}</div>
   </li>
 
   <li>
     <strong>IP Range</strong>
-    <div class="value">{{provision_start_ip}} {{provision_end_ip}}</div>
+    <div class="value">
+      <span name="provision_start_ip">{{provision_start_ip}}</span>
+      -
+      <span name="provision_end_ip">{{provision_end_ip}}</span>
+      </div>
   </li>
 
   <li>
     <strong>NIC Tag</strong>
-    <div class="value">{{nic_tag}}</div>
+    <div class="value" name="nic_tag">{{nic_tag}}</div>
   </li>
 
   <li>
     <strong>Resolvers</strong>
-    <div class="value">{{resolvers}}</div>
-  </li>
-  <li>
-    <strong>Gateway</strong>
-    <div class="value">{{gateway}}</div>
+    <div class="value" name="resolvers">{{resolvers}}</div>
   </li>
 </ul>
 
-<table class="addresses">
+<table class="table addresses">
+  <thead>
+    <th>IP</th>
+    <th>Used By</th>
+    <th></th>
+  </thead>
   <tbody></tbody>
 </table>

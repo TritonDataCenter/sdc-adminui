@@ -24,9 +24,7 @@ define(function(require) {
     var adminui = require('adminui');
 
     var AppView = Backbone.Marionette.Layout.extend({
-
         template: tplChrome,
-
         attributes: {id:"app"},
 
         regions: {

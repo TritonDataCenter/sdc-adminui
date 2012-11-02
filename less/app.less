@@ -81,29 +81,25 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 #app > .container-fluid { padding-left: 0;}
 
 #sidebar {
+  #gradient > .vertical(#d5e0e6, #dee7ec);
+
   .branding {
-    small, .version { color: #ccc; }
+    small, .version { color: #aaa; }
     small { font-size: 14px; }
     .version { font-size: 12px; display: block;}
     font-weight: 100;
-    color: #999;
+    color: #666;
     font-size: 24px;
     text-align: right;
     text-transform: uppercase;
     padding: 20px;
   }
+
   position:fixed;
   /* top: 60px; */
   width: 200px;
   height: 100%;
   overflow: hidden;
-  background-color: #dfe7ec;
-  background-image: -webkit-gradient(linear, left top, right top, from(#dfe7ec), to(#e8eef2));
-  background-image: -webkit-linear-gradient(left, #dfe7ec, #e8eef2);
-  background-image: -moz-linear-gradient(left, #dfe7ec, #e8eef2);
-  background-image: -o-linear-gradient(left, #dfe7ec, #e8eef2);
-  background-image: -ms-linear-gradient(left, #dfe7ec, #e8eef2);
-  background-image: linear-gradient(left, #dfe7ec, #e8eef2);
 
   #mainnav { padding-top: 10px; padding-left: 10px;}
   #mainnav li a {
@@ -334,6 +330,14 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 #page-networks {
   .details {
     width: 79%; float: left; padding: 0 26px; box-sizing: border-box;
+
+    h5 {
+      background: lighten(#DFE7EC, 5%);
+      padding: 8px;
+    }
+
+    td.belongs-to strong { display: inline-block; width: 70px; color: #aaa; }
+
     ul.attributes {
       li+li { margin-top: 1em; }
       li { 

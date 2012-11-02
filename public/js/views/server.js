@@ -45,7 +45,7 @@ define(function(require) {
             return data;
         },
 
-        uri: function() {
+        url: function() {
             return _.str.sprintf('servers/%s', this.model.get('uuid'));
         }
     });

@@ -9,7 +9,7 @@ define(function(require) {
   var UserView = Marionette.ItemView.extend({
     template: require('text!tpl/user.html'),
     sidebar: 'users',
-    uri: function() {
+    url: function() {
       return _.str.sprintf('/users/%s', this.model.get('uuid'));
     },
 

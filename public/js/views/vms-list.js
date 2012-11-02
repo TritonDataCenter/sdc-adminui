@@ -13,10 +13,6 @@ define(function(require) {
       _.bindAll(this);
     },
 
-    uri: function() {
-      return 'vms';
-    },
-
     navigateToVmDetails: function() {
       adminui.vent.trigger('showview', 'vm', {vm:this.model});
     }

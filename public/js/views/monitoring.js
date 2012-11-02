@@ -5,7 +5,7 @@ var MonitoringView = BaseView.extend({
 
   name: 'monitoring',
 
-  uri: function() {
+  url: function() {
     return 'monitoring'
   },
 

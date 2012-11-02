@@ -37,7 +37,7 @@ define(function(require) {
             'click .rename': 'clickedRename'
         },
 
-        uri: function() {
+        url: function() {
             return _.str.sprintf('vms/%s', this.vm.get('uuid'));
         },
 

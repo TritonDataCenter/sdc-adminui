@@ -1,0 +1,15 @@
+<td>{{ip}}</td>
+<td class="belongs-to">
+  <strong>{{belongs_to_type}}</strong>
+  <small>{{belongs_to_uuid}}</small>
+</td>
+<td>
+  {{#if reserved}}
+  <span class="label label-info">Reserved</span>
+  {{/if}}
+</td>
+<td>
+  {{#if free}}
+  <span class="label label-info">Free</span>
+  {{/if}}
+</td>

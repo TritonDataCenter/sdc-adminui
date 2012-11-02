@@ -3,8 +3,10 @@ define(function(require) {
 
     var Addresses = require('models/addresses');
 
+    var AddressesTableRowTemplate = require('text!tpl/networks-detail-address-row.html');
     var AddressesTableRow = Backbone.Marionette.ItemView.extend({
-        template: "<tr><td>{{ip}}</td></tr>"
+        tagName: "tr",
+        template: AddressesTableRowTemplate
     });
 
     var AddressesTable = Backbone.Marionette.CollectionView.extend({
@@ -13,6 +15,13 @@ define(function(require) {
 
     var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         template: Template,
+        sidebar: "networks",
+        initialize: function() {
+            this.modelBinder = new Backbone.ModelBinder();
+        },
+        url: function() {
+            return _.str.sprintf('networks/%s', this.model.get('uuid'));
+        },
         onRender: function() {
             var addresses = new Addresses({uuid: this.model.get('uuid') });
             var addressesTable = new AddressesTable({
@@ -20,6 +29,7 @@ define(function(require) {
                 collection: addresses
             });
             addresses.fetch();
+            this.modelBinder.bind(this.model, this.el);
         }
     });
 

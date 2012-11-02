@@ -104,7 +104,7 @@ define(function(require) {
 
         sidebar: 'packages',
 
-        uri: 'packages',
+        url: 'packages',
 
         template: PackagesTemplate,
 

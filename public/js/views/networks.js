@@ -1,5 +1,6 @@
 define(function(require) {
     var Networks = require('models/networks');
+    var Network = require('models/network');
     var NetworksTemplate = require('text!tpl/networks.html');
     var NetworksListItemTemplate = require('text!tpl/networks-list-item.html');
 
@@ -34,9 +35,11 @@ define(function(require) {
 
 
     var NetworksDetailView = require('views/networks-detail');
+
     var NetworksView = Backbone.Marionette.Layout.extend({
         template: NetworksTemplate,
         name: "networks",
+        url: 'networks',
         attributes: {
             "id":"page-networks"
         },
@@ -44,17 +47,31 @@ define(function(require) {
             "list": ".list",
             "details": ".details"
         },
-        initialize: function() {
+        initialize: function(options) {
             this.listView = new NetworksListView();
+            options = options || {};
+            if (options.uuid) {
+                this.network = new Network({uuid: options.uuid});
+                this.network.fetch();
+            }
         },
 
-        onSelectNetwork: function(network) {
-            this.details.show(new NetworksDetailView({model: network}));
+        showNetwork: function(network) {
+            var view = new NetworksDetailView({model: network});
+            this.details.show(view);
         },
 
         onRender: function() {
-            this.bindTo(this.listView, 'select', this.onSelectNetwork, this);
+            this.bindTo(this.listView, 'select', this.showNetwork, this);
+            this.bindTo(this.details, 'show', function(view) {
+                adminui.router.applyUrl(view);
+            });
+
             this.list.show(this.listView);
+
+            if (this.network) {
+                this.showNetwork(this.network);
+            }
         }
     });
 
