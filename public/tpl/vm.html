@@ -95,35 +95,38 @@
     </table>
 
 
-    <h3>Network Interfaces</h3>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>IP</th>
-          <th>MAC Address</th>
-          <th>Netmask</th>
-          <th>Gateway</th>
-          <th>Tag</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="row-fluid">
+      <div class="span12">
+        <h3>Network Interfaces</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>IP</th>
+              <th>MAC Address</th>
+              <th>Netmask</th>
+              <th>Gateway</th>
+              <th>Tag</th>
+            </tr>
+          </thead>
+          <tbody>
 
-      {{#each vm.nics}}
-        <tr>
-        <td>{{this.interface}}</td>
-        <td>{{this.ip}}</td>
-        <td>{{this.mac}}</td>
-        <td>{{this.netmask}}</td>
-        <td>{{this.gateway}}</td>
-        <td>{{this.nic_tag}}</td>
-      </tr>
-      {{/each}}
-      </tbody>
+            {{#each vm.nics}}
+            <tr>
+              <td>{{this.interface}}</td>
+              <td>{{this.ip}}</td>
+              <td>{{this.mac}}</td>
+              <td>{{this.netmask}}</td>
+              <td>{{this.gateway}}</td>
+              <td>{{this.nic_tag}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-    </table>
-
-    <div class="row">
+    <div class="row-fluid">
       <div class="span6">
         <h3>Tags</h3>
         <div class="tags"></div>
