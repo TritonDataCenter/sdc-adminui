@@ -7,6 +7,8 @@ define(function(require) {
     var PackagesDetailTemplate = require('text!tpl/packages-detail-template.html');
     var PackageForm = require('views/packages-form');
 
+    var adminui = require('adminui');
+
     var PackagesListItemView = Backbone.Marionette.ItemView.extend({
         tagName: 'li',
         template: PackagesListItemTemplate,
@@ -68,6 +70,9 @@ define(function(require) {
 
     var PackageDetail = Backbone.Marionette.ItemView.extend({
         template: PackagesDetailTemplate,
+        url: function() {
+            return 'packages/' + this.model.get('uuid');
+        },
         events: {
             'click .edit': 'onEdit'
         },
@@ -109,9 +114,10 @@ define(function(require) {
         template: PackagesTemplate,
 
         initialize: function(options) {
+            options = options || {};
             this.packages = new Packages();
             this.packages.fetch();
-
+            this.initialPackageUUID = options.uuid;
             this.vent = new Marionette.EventAggregator();
         },
 
@@ -127,6 +133,10 @@ define(function(require) {
             this.bindTo(this.vent, 'showpackage', this.showPackage, this);
             this.bindTo(this.vent, 'showedit', this.showForm, this);
             this.bindTo(this.packages, 'reset', this.showInitialPackage, this);
+
+            this.bindTo(this.detail, 'show', function(view) {
+                adminui.router.applyUrl(view);
+            });
 
             this.list.show(packagesList);
         },
@@ -173,9 +183,15 @@ define(function(require) {
         },
 
         showInitialPackage: function() {
-            if (this.packages.length) {
-                this.showPackage(this.packages.at(0));
-                this.vent.trigger('highlight', this.packages.at(0));
+            var pkg;
+            if (this.initialPackageUUID) {
+                pkg = this.packages.get(this.initialPackageUUID);
+            } else {
+                pkg = this.packages.at(0);
+            }
+            
+            if (pkg) {
+                this.showPackage(pkg);
             } else {
                 this.detail.reset();
             }

@@ -50,7 +50,6 @@ requirejs.config({
         'backbone',
         'backbone.marionette',
         'backbone.modelbinder',
-        'backbone.collectionbinder',
 
         'knockout',
         'knockback']
