@@ -1,0 +1,88 @@
+<div class="page-header"><h2>Create Network</h2></div>
+
+<form class="form-horizontal">
+  <div class="alert alert-error">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <strong>Error!</strong> <span class="error"></span>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="network-name">Name</label>
+    <div class="controls">
+      <input type="text" id="network-name" name="name" placeholder="Name of the network">
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="network-gateway">Subnet</label>
+
+    <div class="controls">
+      <input type="text" id="netework-gateway" name="subnet" placeholder="Subnet">
+    </div>
+  </div>
+
+
+  <div class="control-group">
+    <label class="control-label" for="network-gateway">Gateway</label>
+
+    <div class="controls">
+      <input type="text" id="netework-gateway" name="gateway" placeholder="Gateway Address">
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="network-provision-start-ip">Start IP</label>
+
+    <div class="controls">
+      <input type="text" id="netework-start-ip" name="provision_start_ip" placeholder="Start IP">
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="network-provision-end-ip">End IP</label>
+
+    <div class="controls">
+      <input type="text" id="netework-start-ip" name="provision_end_ip" placeholder="End IP">
+    </div>
+  </div>
+
+
+
+  <div class="control-group">
+    <label class="control-label" for="network-nic-tag">NIC Tag</label>
+
+    <div class="controls">
+      <select name="nic_tag">
+        <option>Select a nic tag</option>
+        {{#each nic_tags}}
+          <option>{{name}} {{uuid}}</option>
+        {{/each}}
+      </select>
+      <p class="help-block">
+        Nics tagged with the same nic tag are reachable on the same Layer 2 network segment.
+      </p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="network-resolvers">DNS Resolvers</label>
+
+    <div class="controls">
+      <input type="text" id="netework-resolvers" name="resolvers" placeholder="DNS Resolvers">
+    </div>
+  </div>
+
+
+  <div class="control-group">
+    <label class="control-label" for="network-vlan-id">VLAN ID</label>
+
+    <div class="controls">
+      <input type="text" id="netework-vlan-id" name="vlan_id" placeholder="VLAN ID">
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Save</button>
+  </div>
+
+</div>

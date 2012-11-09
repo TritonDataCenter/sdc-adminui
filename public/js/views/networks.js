@@ -1,6 +1,8 @@
 define(function(require) {
     var Networks = require('models/networks');
     var Network = require('models/network');
+    var NetworkCreateView = require('views/networks-create');
+
     var NetworksTemplate = require('text!tpl/networks.html');
     var NetworksListItemTemplate = require('text!tpl/networks-list-item.html');
 
@@ -18,6 +20,7 @@ define(function(require) {
                 this.highlight();
             }
         },
+        
         unhighlight: function() {
             this.$el.siblings().removeClass('active');
         },
@@ -40,6 +43,9 @@ define(function(require) {
         template: NetworksTemplate,
         name: "networks",
         url: 'networks',
+        events: {
+            'click button[name=create]': 'showCreateNetworkForm'
+        },
         attributes: {
             "id":"page-networks"
         },
@@ -47,6 +53,7 @@ define(function(require) {
             "list": ".list",
             "details": ".details"
         },
+
         initialize: function(options) {
             this.listView = new NetworksListView();
             options = options || {};
@@ -54,6 +61,11 @@ define(function(require) {
                 this.network = new Network({uuid: options.uuid});
                 this.network.fetch();
             }
+        },
+
+        showCreateNetworkForm: function() {
+            var view = new NetworkCreateView();
+            this.details.show(view);
         },
 
         showNetwork: function(network) {
