@@ -34,7 +34,8 @@ define(function(require) {
             'click .reboot': 'clickedRebootVm',
             'click .delete': 'clickedDeleteVm',
             'click .create-probe': 'clickedCreateProbe',
-            'click .rename': 'clickedRename'
+            'click .rename': 'clickedRename',
+            'click .package': 'clickedPackage'
         },
 
         url: function() {
@@ -109,8 +110,13 @@ define(function(require) {
             var self = this;
             this.vm.start(function(job) {
                 job.name = 'Start VM';
-                self.eventBus.trigger('watch-job', job);
+                self.vent.trigger('watch-job', job);
             });
+        },
+
+        clickedPackage: function(e) {
+          e.preventDefault();
+          this.vent.trigger('showview', 'packages', {uuid: this.vm.get('billing_id') });
         },
 
         clickedCreateProbe: function() {
@@ -121,7 +127,7 @@ define(function(require) {
             var self = this;
             this.vm.stop(function(job) {
                 job.name = 'Stop VM';
-                self.eventBus.trigger('watch-job', job);
+                self.vent.trigger('watch-job', job);
             });
         },
 
@@ -129,7 +135,7 @@ define(function(require) {
             var self = this;
             this.vm.reboot(function(job) {
                 job.name = 'Reboot VM';
-                self.eventBus.trigger('watch-job', job);
+                self.event.trigger('watch-job', job);
             });
         },
 
