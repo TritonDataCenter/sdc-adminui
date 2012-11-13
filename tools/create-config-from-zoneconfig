@@ -12,7 +12,7 @@ function parseZoneConfig(zonecfg) {
   for (i = 0; i < lines.length; i++) {
     var entry = lines[i];
     if (entry.length === 0) { continue; }
-    var parts = entry.match(/^(.+)=\'(.*)\'$/)
+    var parts = entry.match(/^(.+)=\'(.*)\'$/);
 
       var k = parts[1].toLowerCase();
     var v = parts[2];
@@ -23,7 +23,7 @@ function parseZoneConfig(zonecfg) {
 }
 
 function translateZoneConfig(zc) {
-  var cfg = {}
+  var cfg = {};
 
   cfg.host = '0.0.0.0';
   cfg.port = 80;
@@ -41,13 +41,13 @@ function translateZoneConfig(zc) {
       "size": 1000,
       "expiry": 300
     }
-  }
+  };
 
   cfg.redis = {
     "host": zc.redis_admin_ips.split(',')[0],
     "port": zc.redis_port,
     "db": 3
-  }
+  };
 
   var dcs = cfg.datacenters = {};
   var dc = cfg.datacenters[zc.datacenter_name] = {};
@@ -57,6 +57,7 @@ function translateZoneConfig(zc) {
   dc.vmapi = { url: fmt("http://%s", zc.vmapi_admin_ips) };
   dc.cnapi = { url: fmt("http://%s", zc.cnapi_admin_ips) };
   dc.napi = { url: fmt("http://%s", zc.napi_admin_ips) };
+  dc.ca = { url: fmt("http://%s", zc.ca_admin_ips) };
 
   return cfg;
 }
