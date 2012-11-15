@@ -1,0 +1,401 @@
+#visCreate, #visButton {
+  display: inline;
+}
+
+.metrixChooser {
+  margin: 0 auto;
+  background: #eee;
+  width: 90%;
+  padding: 15px;
+  margin-top: 2em;
+}
+.metrixChooser h3 { font-weight: bold; color: #888;}
+.metrixChooser li { display: inline-block; margin-right: 15px;}
+.metrixChooser li span { display: block; font-size: 10px; text-transform: uppercase; line-height: 1em;}
+.metrixChooser select { font-size: 12px; margin-right: 20px; }
+.selectContainer { margin-top: 1em;}
+
+.gGraphContainer {
+  margin-top:20px;
+  line-height: 1;
+  padding-top:20px;
+  clear:both;
+}
+.gGraphContainer .gGraphHeader  {
+  line-height: 1.5em;
+  overflow: hidden;
+  background-color:#ddd;
+  position:relative;
+}
+.gGraphContainer .gGraphHeader p {
+  color:#69593F;
+  font-size:13px;
+  padding:10px;
+  width: 700px;
+  margin: 0;
+}
+
+  .gGraphHeader .ui-delete {
+    border:0px;
+    text-indent:-9999px;
+    background:url(/img/ui-delete.png) no-repeat -2px -4px ;
+    height:28px;
+    width:30px;
+    position:absolute;
+    top:9px;
+    right:5px;
+  }
+
+  .gGraphHeader .ui-delete:hover {
+    cursor:pointer;
+  }
+
+.gGraphContainer .gGraphDist {
+  float:right;
+  width:672px;
+  margin-top:2px;
+  display:none;
+}
+
+.gGraphContainer ul {
+  list-style: none;
+  list-style-type: none;
+}
+
+.gGraphContainer .distBody {
+  background-color:#EDEBE9;
+}
+
+  .gGraphContainer .distBody UL {
+    padding:3px;
+  }
+
+    .gGraphContainer .distBody LI {
+      padding-left:10px;
+      clear:both;
+      font-size:11px;
+      height:23px;
+      line-height:23px;
+    }
+    .gGraphContainer .distBody INPUT {
+      float:left;
+      width:20px;
+      margin-top:7px;
+    }
+
+    .gGraphContainer .distBody .entryName {
+      float:left;
+      width:180px;
+    }
+
+    .gGraphContainer .distBody .entryName.distTotal {
+      font-weight: bold;
+    }
+
+    .gGraphContainer .distBody .entryValue {
+      float:left;
+      width:100px;
+    }
+
+    .gGraphContainer .distBody .distAdvice {
+      font-size: smaller;
+      text-align: right;
+      padding: 0px 15px 8px;
+      color: #777777;
+    }
+
+
+  .gGraphContainer .ui-zoom-in,
+  .gGraphContainer .ui-zoom-out,
+  .gGraphContainer .ui-pause,
+  .gGraphContainer .ui-resume,
+  .gGraphContainer .ui-seek-next,
+  .gGraphContainer .ui-seek-prev {
+    position:absolute;
+    top:14px;
+  }
+
+  .gGraphContainer .ui-seek-prev  {
+    left:17px;
+    border:0px;
+    text-indent:-9999px;
+    background:url(/img/ui-seek.png) no-repeat 0px 0px ;
+    height:16px;
+    width:16px;
+  }
+
+  .gGraphContainer .ui-pause  {
+    left:34px;
+    border:0px;
+    background:url(/img/ui-pause.png) no-repeat 0px 0px ;
+    height:16px;
+    width:16px;
+  }
+
+ .gGraphContainer  .ui-resume  {
+    left:34px;
+    border:0px;
+    background:url(/img/play_icon.png) no-repeat 0px 0px ;
+    height:16px;
+    width:16px;
+  }
+
+
+  .gGraphContainer .ui-pause SPAN, .gGraphContainer .ui-resume SPAN {
+    display:none;
+  }
+
+  .gGraphContainer .ui-seek-next  {
+    left:52px;
+    border:0px;
+    text-indent:-9999px;
+    background:url(/img/ui-next.png) no-repeat 0px 0px ;
+    height:16px;
+    width:16px;
+    margin-right:10px;
+  }
+
+  .gGraphContainer .ui-zoom-out  {
+    left:77px;
+    border:0px;
+    text-indent:-9999px;
+    background:url(/img/ui-zoom-out.png) no-repeat 0px 0px ;
+    height:16px;
+    width:16px;
+  }
+
+  .gGraphContainer .ui-zoom-in  {
+    left:93px;
+    border:0px;
+    text-indent:-9999px;
+    background:url(/img/ui-zoom-in.png) no-repeat 0px 0px ;
+    height:16px;
+    width:16px;
+  }
+
+  .gGraphContainer .colorContainer {
+    float:right;
+    position:relative;
+    top:0px;
+    right:0px;
+    width:171px;
+    height:33px;
+  }
+
+
+  .gGraphContainer .ToolbarContainer {
+    height:48px;
+    background:url(/img/toolbarRamp.jpg) repeat-x;
+    border-top:1px solid #D0CECC;
+    border-right:1px solid #D0CECC;
+    border-left:1px solid #D0CECC;
+  }
+
+    .gGraphContainer .colorContainer .colorText {
+      color:#5B5953;
+      font-size:11px;
+      text-transform:uppercase;
+      display:inline-block;
+      padding-top:7px;
+    }
+
+    .gGraphContainer .colorContainer .colorButton {
+      float:right;
+      width:99px;
+      height:31px;
+    }
+
+    .gGraphContainer .colorContainer .colorButton.rank {
+      background:url(/img/color_rank.png)  0px 0px no-repeat transparent;
+    }
+
+    .gGraphContainer .colorContainer .colorButton.linear {
+      background:url(/img/color_rank.png)  0px -33px no-repeat transparent;
+    }
+
+
+    .gGraphContainer .ledgendControl {
+      position:relative;
+      width:209px;
+      border-right:1px solid #D0CECC;
+      float:left;
+      height:48px;
+    }
+    .gGraphContainer .gToolbar {
+      position:relative;
+      width:293px;
+      padding:7px 10px 0px 10px;
+      float:left;
+    }
+
+    .gGraphContainer .ToolbarContainer .sliderContainer {
+      float:right;
+      width:359px;
+      height:48px;
+      background-color:#EDEBE9;
+      position:relative;
+    }
+
+    .gGraphContainer .ToolbarContainer .sliderContainer .sliderLabel {
+      position:absolute;
+      top:15px;
+      left:22px;
+      width:60px;
+      font-size:11px;
+      color:#5B5953;
+      text-transform:uppercase;
+    }
+
+      .gGraphContainer .ToolbarContainer .sliderContainer .hsliderTrack {
+        position:absolute;
+        top:13px;
+        left:106px;
+        width:211px;
+        height:29px;
+        background:url(/img/ui-horz-track.png) no-repeat;
+      }
+
+      .ghRange {
+        top:7px;
+        left:4px;
+      }
+
+  .gGraphContainer .contentWindow {
+    height:282px;
+    background-color:#EDEBE9;
+  }
+
+  .gGraphContainer .contentWindow .GraphLegend {
+    width:210px;
+    float:left;
+    border-right:1px solid #D0CECC;
+  }
+
+  .gGraphContainer .contentWindow .Graph {
+    float:left;
+  }
+
+  .gGraphContainer .contentWindow .sliderContainer {
+    position:relative;
+    float:left;
+    width:48px;
+    height:280px;
+    border-right:1px solid #D0CECC;
+
+  }
+  .gGraphContainer .contentWindow .sliderTrack {
+      position:absolute;
+      background:url(/img/ui-vert-track.png);
+      width:22px;
+      height:281px;
+      left:12px;
+  }
+
+  .gGraphContainer .contentWindow .gRange {
+      position:absolute;
+      right:9px;
+      top:12px;
+  }
+
+  .gGraphContainer .footerToolbar {
+    height:51px;
+    background-color:#EDEBE9;
+    border-right:1px solid #D0CECC;
+    clear:both;
+  }
+
+    .gGraphContainer .footerToolbar .footerControls {
+      background-color:#CFCDCB;
+      width:210px;
+      height:47px;
+      float:left;
+      padding-top:3px;
+    }
+
+    .gGraphContainer .footerToolbar .footerControls DIV {
+      color:#000;
+      font-size:11px;
+      padding: 4px 0px 0px 10px;
+
+    }
+
+    .gGraphContainer .footerToolbar .controlDisplay {
+      float:left;
+      width:670px;
+      font-size:11px;
+      color:#000;
+      padding-top:20px;
+    }
+
+    .xaxisLabelCopy {
+      margin-left:15px;
+      float:left;
+    }
+    .gRangeText {
+      margin-right:15px;
+      float:right;
+    }
+
+  .GraphLegend {
+    border-top:1px solid #D0CECC;
+  }
+
+  .GraphLegend ul {
+    margin-left:0px;
+    height:281px;
+    overflow:auto;
+    overflow:-moz-scrollbars-vertical;
+
+  }
+    .GraphLegend ul li {
+      cursor:pointer;
+    }
+
+  .ledgendControl .lc_name, .GraphLegend ul li {
+    font-size:11px;
+    color:#493F2D;
+  }
+  .ledgendControl .lc_name {
+    padding:4px;
+    position:absolute;
+    top:12px;
+    left:10px;
+    text-transform:uppercase;
+  }
+  .GraphLegend ul li {
+      padding:4px 10px;
+    }
+
+  .Graph {
+    overflow:hidden;
+    background-color:#fff;
+  }
+
+  .Graph IMG {
+    position:relative;
+    left:0px;
+    cursor: pointer;
+/*    display:none;  */
+/*    border:1px solid #D0CECC;    */
+  }
+
+  .Graph .instOverlay {
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    background-color: rgba(100,100,100,0.5);
+    z-index: 1;
+  }
+
+  .Graph .instOverlay div {
+    position:relative;
+    top:110px;
+    text-align: center;
+    text-transform:uppercase;
+    font-size:30px;
+  }
+
+.gPredicateBar input[type=text],select {
+  font-size: 12px;
+  padding: inherit;
+}

@@ -1,0 +1,62 @@
+<link rel="stylesheet" type="text/css" media="screen" href="/ca-vis/demo/ui-lightness/jquery-ui-1.8.9.custom.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/ca-vis/demo/contextMenu.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/ca-vis/analytics.css" />
+
+<script language="javascript" type="text/javascript" src="/ca-vis/demo/jquery-contextMenu.js"></script>
+<script language="javascript" type="text/javascript" src="/ca-vis/demo/jquery-ui-1.8.8.custom.min.js"></script>
+
+<style>
+  .ui-icon-zoomout {
+    background-position: -1000px -1000px !important;
+  }
+  .ui-icon-zoomin {
+    background-position: -1000px -1000px !important;
+  }
+</style>
+
+<script>
+var visConfig = {
+  // get list of available metrics, fields, types, modules, etc.
+  getMetrics : '/ca',
+
+  // path to query to get all active instrumentations
+  getAllInstrumentations : '/ca/instrumentations',
+
+  // post a new instrumentation (usually the same as getAll)
+  postInstrumentation : '/ca/instrumentations',
+
+  // CSS selector for the element that should contain the
+  // instrumentation-creation UI.
+  leaflistContainerSelector : '#visCreate',
+
+  // CSS selector for the instrumentation creation button.
+  visCreateButton : '#visCreateButton',
+
+  // CSS selector for the element that should contain the
+  // actual visualizations
+  visualizationContainerSelector : '#visContainer',
+
+  requestHeaders : { 'x-adminui-dc': 'coal' },
+
+  proxyPath : "/ca/instrumentations/"
+}
+</script>
+
+<div id="ca" class="wrap">
+  <div id="form" class="metrixChooser">
+    <h3>Create Instrumentation</h3>
+    <div class="selectContainer">
+      <div id="visCreate"></div>
+      <div id="visButton"><input type='button' class="button primary_action" id='visCreateButton' value="Create" /></div>
+    </div>
+  </div>
+
+  <div id="visContainer" class="gGraphContainer"></div>
+</div>
+
+<script language="javascript" type="text/javascript" src="/ca-vis/extlib.js"></script>
+<script language="javascript" type="text/javascript" src="/ca-vis/metrics.js"></script>
+<script language="javascript" type="text/javascript" src="/ca-vis/updater.js"></script>
+<script language="javascript" type="text/javascript" src="/ca-vis/caRawDataStore.js"></script>
+<script language="javascript" type="text/javascript" src="/ca-vis/color.js"></script>
+<script language="javascript" type="text/javascript" src="/ca-vis/analyticsVis.js"></script>

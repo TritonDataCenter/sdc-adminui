@@ -152,6 +152,12 @@ define(function(require) {
             }
         },
 
+        showAnalytics: function() {
+            if (this.authenticated()) {
+                this.presentView('analytics');
+            }
+        },
+
         showSignin: function() {
             console.log('[route] showSignin');
             var signinView = new SigninView({model: this.user});

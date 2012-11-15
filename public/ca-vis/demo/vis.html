@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <title>Cloud Analytics Visualization Sandbox</title>
+
+  <!-- assumed to be installed -->
+  <link rel="stylesheet" type="text/css" media="screen" href="demo.css" />  
+  <link rel="stylesheet" type="text/css" media="screen" href="ui-lightness/jquery-ui-1.8.9.custom.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="contextMenu.css" />
+  <script language="javascript" type="text/javascript" src="jquery-1.6.1.min.js"></script>
+  <script language="javascript" type="text/javascript" src="jquery-ui-1.8.8.custom.min.js"></script>
+  <script language="javascript" type="text/javascript" src="jquery-contextMenu.js"></script>
+
+  <script language="javascript" type="text/javascript" src="visConfig.js"></script>
+
+  <script language="javascript" type="text/javascript" src="_src/d3/d3.js"></script>
+  <script language="javascript" type="text/javascript" src="_src/d3/d3.layout.js"></script>
+    
+  <link type="text/css" href="_src/css/vis.css" rel="stylesheet" />	
+  <script language="javascript" type="text/javascript" src="_src/extlib.js"></script>
+  <script language="javascript" type="text/javascript" src="_src/metrics.js"></script>
+  <script language="javascript" type="text/javascript" src="_src/updater.js"></script>
+  <script language="javascript" type="text/javascript" src="_src/caRawDataStore.js"></script>
+  <script language="javascript" type="text/javascript" src="_src/color.js"></script>
+  <script language="javascript" type="text/javascript" src="_src/analyticsVis.js"></script>
+  <script language="javascript" type="text/javascript" src="_src/create.js"></script>
+</head>
+<body>
+  <div id="container">
+    <h1>Analytics Visualization demo</h1>
+    <p>You will need an SVG-capable browser.</p>
+
+    <div id="visCreate">
+      <input type='button' class="button primary_action" id='visCreateButton' value="Create" />  
+    </div>
+    <div id="visContainer" class="gGraphContainer"></div>
+  </div>
+</body>
+</html>
