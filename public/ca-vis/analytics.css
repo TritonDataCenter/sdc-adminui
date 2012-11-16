@@ -1,5 +1,5 @@
 #visCreate, #visButton {
-  display: inline;
+  display: inline-block;
 }
 
 .metrixChooser {
@@ -9,10 +9,17 @@
   padding: 15px;
   margin-top: 2em;
 }
-.metrixChooser h3 { font-weight: bold; color: #888;}
+
+.metrixChooser h3 { font-weight: bold; color: #888; }
 .metrixChooser li { display: inline-block; margin-right: 15px;}
 .metrixChooser li span { display: block; font-size: 10px; text-transform: uppercase; line-height: 1em;}
-.metrixChooser select { font-size: 12px; margin-right: 20px; }
+.metrixChooser select {
+  font-size: 12px;
+  height: 2em;
+  margin: 0;
+  padding: 0;
+  line-height: 12px;
+}
 .selectContainer { margin-top: 1em;}
 
 .gGraphContainer {
@@ -395,7 +402,18 @@
     font-size:30px;
   }
 
-.gPredicateBar input[type=text],select {
-  font-size: 12px;
-  padding: inherit;
+.gPredicateBar ul { margin: 0;}
+.gPredicateBar { padding: 10px; }
+.gPredicateBar input[type=text],
+.gPredicateBar select {
+  width: 200px;
+  height: 2em;
+  font-size: 10px;
+  padding: 0;
+}
+.gPredicateBar input[type=submit] {
+  height: 2em;
+  font-size: 11px;
+  margin-top: -6px;
+  padding: 1px 6px;
 }
