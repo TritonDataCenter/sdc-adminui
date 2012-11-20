@@ -3,10 +3,7 @@
 }
 
 .metrixChooser {
-  margin: 0 auto;
-  background: #eee;
-  width: 90%;
-  padding: 15px;
+  width: 740px;
   margin-top: 2em;
 }
 
@@ -23,6 +20,7 @@
 .selectContainer { margin-top: 1em;}
 
 .gGraphContainer {
+  width: 836px;
   margin-top:20px;
   line-height: 1;
   padding-top:20px;
@@ -328,7 +326,7 @@
 
     .gGraphContainer .footerToolbar .controlDisplay {
       float:left;
-      width:670px;
+      width:625px;
       font-size:11px;
       color:#000;
       padding-top:20px;
@@ -349,6 +347,7 @@
 
   .GraphLegend ul {
     margin-left:0px;
+    margin-bottom: 0;
     height:281px;
     overflow:auto;
     overflow:-moz-scrollbars-vertical;
