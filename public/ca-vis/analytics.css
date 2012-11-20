@@ -20,7 +20,7 @@
 .selectContainer { margin-top: 1em;}
 
 .gGraphContainer {
-  width: 836px;
+  width: 884px;
   margin-top:20px;
   line-height: 1;
   padding-top:20px;
@@ -321,7 +321,6 @@
       color:#000;
       font-size:11px;
       padding: 4px 0px 0px 10px;
-
     }
 
     .gGraphContainer .footerToolbar .controlDisplay {
