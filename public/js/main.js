@@ -10,7 +10,7 @@ requirejs.config({
         "backbone": "lib/backbone",
         "backbone.marionette": "lib/backbone.marionette",
         "backbone.modelbinder": "lib/Backbone.ModelBinder",
-        "backbone.eventbinder": "lib/Backbone.eventbinder",
+        "backbone.eventbinder": "lib/backbone.eventbinder",
         "backbone.wreqr": "lib/backbone.wreqr",
         "handlebars": "lib/handlebars",
         "bootstrap": 'lib/bootstrap',
