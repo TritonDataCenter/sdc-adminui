@@ -7,7 +7,13 @@ define(function(require) {
         template: Template,
 
         events: {
-            'submit form': 'onSubmit'
+            'submit form': 'onSubmit',
+            'click .create-new-nic-tag': 'onClickCreateNewNicTag'
+        },
+        ui: {
+            'nicTagSelect': 'select[name=nic_tag]',
+            'newNicTagField': 'input[name=nic_tag]',
+            'createNewNicTagButton': '.create-new-nic-tag'
         },
 
         initialize: function() {
@@ -27,9 +33,18 @@ define(function(require) {
             });
         },
 
+        onClickCreateNewNicTag: function() {
+            this.ui.nicTagSelect.hide();
+            this.ui.createNewNicTagButton.hide();
+            this.ui.newNicTagField.show().focus();
+        },
+
         onSubmit: function(e) {
+            var self = this;
             e.preventDefault();
-            this.model.save();
+            this.model.save(null, {success: function(model) {
+                self.trigger('saved', model);
+            }});
         },
 
         onModelError: function(model, res) {
@@ -39,6 +54,7 @@ define(function(require) {
         },
 
         onRender: function() {
+            this.ui.newNicTagField.hide();
             this.bindTo(this.model, 'error', this.onModelError, this);
             this.nicTagsSelect.setElement(this.$('select[name=nic_tag]'));
             this.nicTags.fetch();

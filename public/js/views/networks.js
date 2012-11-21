@@ -65,6 +65,11 @@ define(function(require) {
 
         showCreateNetworkForm: function() {
             var view = new NetworkCreateView();
+            this.bindTo(view, 'saved', function(n) {
+                console.log(n);
+                this.listView.collection.add(n);
+                this.showNetwork(n);
+            }, this);
             this.details.show(view);
         },
 
@@ -91,7 +96,7 @@ define(function(require) {
     var NetworksListView = Backbone.Marionette.CompositeView.extend({
         tagName: 'ul',
         attributes: { 'class': 'nav' },
-        itemViewContainer: 'ul',
+        itemViewContainer: 'ul.items',
         template: NetworksListTemplate,
         itemView: NetworksListItem,
 
