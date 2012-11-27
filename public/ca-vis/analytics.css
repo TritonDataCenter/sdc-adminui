@@ -4,7 +4,7 @@
 
 .metrixChooser {
   width: 740px;
-  margin-top: 2em;
+  margin: 0;
 }
 
 .metrixChooser h3 { font-weight: bold; color: #888; }
@@ -21,7 +21,6 @@
 
 .gGraphContainer {
   width: 884px;
-  margin-top:20px;
   line-height: 1;
   padding-top:20px;
   clear:both;

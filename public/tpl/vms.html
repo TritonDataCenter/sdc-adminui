@@ -25,6 +25,7 @@
 
 		<div class="vms-filter span3">
 			<h3>Filter Results</h3>
+			<div class="alert alert-error"></div>
 			<form>
 				<label>Data Center</label>
 				<select name="dc" disabled></select>
@@ -47,6 +48,9 @@
 
 				<label>RAM</label>
 				<input type="text" name="ram" placeholder="RAM">
+
+				<label>Owner</label>
+				<input type="text" name="owner_uuid" placeholder="owner UUID">
 
 				<button class="btn btn-large btn-info">Apply Filters</button>
 			</form>

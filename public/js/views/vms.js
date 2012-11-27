@@ -10,7 +10,9 @@ define(function(require) {
 
     var FilterForm = Backbone.View.extend({
         events: {
-            'submit form': 'onSubmit'
+            'submit form': 'onSubmit',
+            'change input': 'onSubmit',
+            'change select': 'onSubmit'
         },
         onSubmit: function(e) {
             e.preventDefault();
@@ -44,13 +46,27 @@ define(function(require) {
         },
 
         query: function(params) {
+            this.$('.alert').hide();
             this.collection.fetch({data: params});
+        },
+
+        onError: function(model, res) {
+            var obj = JSON.parse(res.responseText);
+            var errors = _.map(obj.errors, function(e) {
+                return e.message;
+            });
+            this.$(".alert").html(errors.join('<br>')).show();
+        },
+
+        onShow: function() {
+            this.$('.alert').hide();
         },
 
         onRender: function() {
             this.listView.setElement(this.$('tbody')).render();
             this.filterView.setElement(this.$('.vms-filter'));
 
+            this.bindTo(this.collection, 'error', this.onError, this);
             this.bindTo(this.filterView, 'query', this.query, this);
             return this;
         }
