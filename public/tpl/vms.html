@@ -1,28 +1,55 @@
 <div id="page-vms">
 	<div class="page-header">
-		<h2>Virtual Machines
-			<button class="provision-button pull-right btn btn-info">
+		<h2>Virtual Machines <button class="provision-button pull-right btn btn-info">
 				<i class="icon-plus icon-white"></i> Provision a New VM
 			</button>
 		</h2>
-
-		<form class="navbar-search pull-right" onsubmit="return false;">
-			<input type="text" placeholder="Search VMs by name or uuid">
-		</form>
 	</div>
 
-	<div class="vms-list">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th class="status">Status</th>
-					<th class="alias">Alias</th>
-					<th class="memory">Memory</th>
-					<th class="uuid">UUID</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+	<div class="row-fluid">
+		<div class="vms-list span9">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th class="status">Status</th>
+						<th class="alias">Alias</th>
+						<th class="memory">Memory</th>
+						<th class="uuid">UUID</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+
+
+		<div class="vms-filter span3">
+			<h3>Filter Results</h3>
+			<form>
+				<label>Data Center</label>
+				<select name="dc" disabled></select>
+
+				<label>UUID</label>
+				<input type="text" name="uuid" placeholder="UUID">
+
+				<label>State</label>
+				<select name="state">
+					<option>running</option>
+					<option>stopped</option>
+					<option>destroyed</option>
+				</select>
+
+				<label>Alias</label>
+				<input type="text" name="alias" placeholder="alias">
+
+				<label>Server</label>
+				<input type="text" name="server_uuid" placeholder="Server UUID">
+
+				<label>RAM</label>
+				<input type="text" name="ram" placeholder="RAM">
+
+				<button class="btn btn-large btn-info">Apply Filters</button>
+			</form>
+		</div>
 	</div>
 </div>
