@@ -54,15 +54,40 @@ define(function(require) {
         }
     });
 
+    var FilterForm = Backbone.View.extend({
+        events: {
+            'submit form': 'onSubmit',
+            'change input': 'onSubmit',
+            'change select': 'onSubmit'
+        },
+        onSubmit: function(e) {
+            e.preventDefault();
+
+            var params = this.$('form').serializeObject();
+            this.trigger('query', params);
+        }
+    });
+
     var ServersView = Backbone.Marionette.CompositeView.extend({
         name: 'servers',
         template: tplServers,
         itemView: ServersListItem,
         itemViewContainer: 'tbody',
+        url: function() {
+            return 'servers';
+        },
 
         initialize: function(options) {
+            this.filterForm = new FilterForm();
             this.collection = new Servers();
             this.collection.fetch();
+        },
+        filter: function(params) {
+            this.collection.fetch({data: params});
+        },
+        onRender: function() {
+            this.filterForm.setElement(this.$('.servers-filter'));
+            this.bindTo(this.filterForm, 'query', this.filter, this);
         }
     });
 
