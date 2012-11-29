@@ -47,15 +47,22 @@ define(function(require) {
 
         query: function(params) {
             this.$('.alert').hide();
-            this.collection.fetch({data: params});
+            this.collection.fetch({ data: params });
         },
 
         onError: function(model, res) {
-            var obj = JSON.parse(res.responseText);
-            var errors = _.map(obj.errors, function(e) {
-                return e.message;
-            });
-            this.$(".alert").html(errors.join('<br>')).show();
+            if (res.status == 409) {
+                var obj = JSON.parse(res.responseText);
+                var errors = _.map(obj.errors, function(e) {
+                    return e.message;
+                });
+                this.$(".alert").html(errors.join('<br>')).show();
+            } else {
+                app.vent.trigger('error', {
+                    xhr: res,
+                    context: 'vms / vmapi'
+                });
+            }
         },
 
         onShow: function() {
@@ -63,11 +70,12 @@ define(function(require) {
         },
 
         onRender: function() {
+            this.bindTo(this.collection, 'error', this.onError, this);
             this.listView.setElement(this.$('tbody')).render();
             this.filterView.setElement(this.$('.vms-filter'));
 
-            this.bindTo(this.collection, 'error', this.onError, this);
             this.bindTo(this.filterView, 'query', this.query, this);
+
             return this;
         }
     });

@@ -41,10 +41,21 @@ define(function(require) {
             this.mainnavView = new Mainnav();
         },
 
+        onError: function(error) {
+            error = error || {};
+            console.log(error.xhr);
+            if (error.xhr && error.xhr.status == 500) {
+                var t = require('text!tpl/error.html');
+                var tpl = Handlebars.compile(t);
+                $(tpl(error)).modal();
+            }
+        },
 
         onRender: function() {
             this.mainnavView.setElement(this.$("#mainnav"));
             this.mainnav.attachView(this.mainnavView);
+
+            this.bindTo(adminui.vent, 'error', this.onError);
 
             // this.topbar.attachView(this.topbarView);
             // this.topbarView.setElement(this.$("#topbar")).render();

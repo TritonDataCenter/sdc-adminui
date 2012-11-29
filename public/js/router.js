@@ -47,16 +47,11 @@ define(function(require) {
             this.user.set('token', window.sessionStorage.getItem('api-token'));
 
             var self = this;
+
             $(document).ajaxError(function(e, xhr, settings, exception) {
                 if (xhr.status == 403) {
                     window.sessionStorage.removeItem('api-token');
                     self.showSignin.call(self);
-                    return;
-                }
-
-                if (xhr.status == 409) {
-                    console.log('409 Conflict');
-                    console.log(xhr.responseText);
                     return;
                 }
             });
