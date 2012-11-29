@@ -102,7 +102,14 @@ define(function(require) {
 
         initialize: function(options) {
             this.collection = new Networks();
-            this.collection.fetch();
+            this.bindTo(this.collection, 'error', this.onError, this);
+        },
+
+        onError: function(model, res) {
+            adminui.vent.trigger('error', {
+                xhr: res,
+                context: 'napi / networks'
+            });
         },
 
         onItemAdded: function(itemView) {
@@ -111,6 +118,10 @@ define(function(require) {
 
         onSelect: function(model)  {
             this.trigger('select', model);
+        },
+        
+        onRender: function() {
+            this.collection.fetch();
         }
     });
 
