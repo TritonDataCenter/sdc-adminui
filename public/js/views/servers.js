@@ -80,6 +80,7 @@ define(function(require) {
         initialize: function(options) {
             this.filterForm = new FilterForm();
             this.collection = new Servers();
+            this.collection.fetch();
         },
         filter: function(params) {
             this.collection.fetch({data: params});
@@ -94,8 +95,8 @@ define(function(require) {
             this.filterForm.setElement(this.$('.servers-filter'));
             this.bindTo(this.filterForm, 'query', this.filter, this);
             this.bindTo(this.collection, 'error', this.onError, this);
-            
-            this.collection.fetch();
+            console.log('onRender');
+
         }
     });
 
