@@ -117,9 +117,19 @@ define(function(require) {
             options = options || {};
             this.packages = new Packages();
             this.packages.fetch();
+            this.bindTo(this.packages, 'error', this.onError);
+
             this.initialPackageUUID = options.uuid;
             this.vent = new Marionette.EventAggregator();
         },
+
+        onError: function(model, xhr) {
+          adminui.vent.trigger('error', {
+            xhr: xhr,
+            context: 'packages / ufds',
+            message: 'error occured while retrieving package information'
+        });
+      },
 
         onRender: function() {
             var packagesList = new PackagesList({

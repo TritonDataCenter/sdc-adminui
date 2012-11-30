@@ -84,7 +84,6 @@ define(function(require) {
 
             require([_.str.sprintf('views/%s', viewName)], function(ViewClass) {
                 var view = new ViewClass(args);
-                console.log(view);
 
                 this.applySidebar(view);
                 this.applyUrl(view);
