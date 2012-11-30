@@ -6,7 +6,7 @@ define(function(require) {
   var Users = require('models/users');
   var UserView = require('views/user');
   var tplUsers = require('text!tpl/users.html');
-  var app = require('adminui');
+  var adminui = require('adminui');
 
   return Backbone.Marionette.ItemView.extend({
 
@@ -22,17 +22,33 @@ define(function(require) {
       'submit .form-search': 'onSearch'
     },
 
+    initialize: function() {
+      this.users = new Users();
+      this.bindTo(this.users, 'error', this.onError);
+    },
+
+    onError: function(model, xhr) {
+      adminui.vent.trigger('error', {
+        xhr: xhr,
+        context: 'users / ufds',
+        message: 'error occured while retrieving user information'
+      });
+    },
+
     newUser: function() {
       this.createView = new CreateUserView();
       this.createView.render();
     },
 
     findUser: function() {
-      var val = this.$findField.val();
-      var users = new Users();
-      users.searchByLogin(val, function(res) {
+      var val = this.$('input[name=findField]').val();
+      this.users.searchByLogin(val, function(res) {
         var user = res.at(0);
-        app.vent.trigger('showview', 'user', { user: user });
+        if (user) {
+          adminui.vent.trigger('showview', 'user', { user: user });
+        } else {
+          alert('user not found');
+        }
       });
     },
 
@@ -41,8 +57,7 @@ define(function(require) {
     },
 
     loadUserCounts: function() {
-      var users = new Users();
-      users.userCount(this.updateCount);
+      this.users.userCount(this.updateCount);
     },
 
     updateCount: function(c) {
