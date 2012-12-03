@@ -8,6 +8,22 @@ define(function(require) {
   var tplUsers = require('text!tpl/users.html');
   var adminui = require('adminui');
 
+  var UsersListItem = Backbone.Marionette.ItemView.extend({
+    template: require('text!tpl/users-list-item.html'),
+    tagName: 'tr',
+    events: {
+      'click a.login': 'onClickLoginName'
+    },
+    onClickLoginName: function(e) {
+      e.preventDefault();
+      adminui.vent.trigger('showview', 'user', { user: this.model });
+    }
+  });
+
+  var UsersList = Backbone.Marionette.CollectionView.extend({
+    itemView: UsersListItem
+  });
+
   return Backbone.Marionette.ItemView.extend({
 
     template: tplUsers,
@@ -24,6 +40,7 @@ define(function(require) {
 
     initialize: function() {
       this.users = new Users();
+      this.usersListView = new UsersList({collection: this.users});
       this.bindTo(this.users, 'error', this.onError);
     },
 
@@ -66,6 +83,8 @@ define(function(require) {
 
     onRender: function() {
       this.$findField = this.$('.findField');
+      this.usersListView.setElement(this.$('.users-list tbody'));
+      this.users.fetch();
       this.loadUserCounts();
       return this;
     }
