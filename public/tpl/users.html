@@ -18,7 +18,7 @@
   </div>
 
   <div class="row-fluid">
-    <div class="span6 users-list">
+    <div class="span9 users-list">
       <table class="table">
         <thead>
           <tr>
@@ -29,6 +29,29 @@
         </thead>
         <tbody></tbody>
       </table>
+    </div>
+
+    <div class="filter-panel users-filter span3">
+      <h3>Filter Options</h3>
+      <div class="alert alert-error"></div>
+      <form>
+        <label>UUID</label>
+        <input type="text" name="uuid" placeholder="UUID">
+
+        <label>Login Name</label>
+        <input type="text" name="login" placeholder="Login name">
+
+        <label>Email</label>
+        <input type="text" name="email" placeholder="Email Address">
+
+        <label>First Name</label>
+        <input type="text" name="cn" placeholder="First name">
+
+        <label>Last Name</label>
+        <input type="text" name="sn" placeholder="Last name">
+
+        <button class="btn btn-large btn-info">Apply Filters</button>
+      </form>
     </div>
   </div>
 </div>

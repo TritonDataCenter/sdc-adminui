@@ -24,6 +24,20 @@ define(function(require) {
     itemView: UsersListItem
   });
 
+  var FilterForm = Backbone.View.extend({
+    events: {
+      'submit form': 'onSubmit',
+      'change input': 'onSubmit',
+      'change select': 'onSubmit'
+    },
+    onSubmit: function(e) {
+      e.preventDefault();
+
+      var params = this.$('form').serializeObject();
+      this.trigger('query', params);
+    }
+  });
+
   return Backbone.Marionette.ItemView.extend({
 
     template: tplUsers,
@@ -41,7 +55,15 @@ define(function(require) {
     initialize: function() {
       this.users = new Users();
       this.usersListView = new UsersList({collection: this.users});
-      this.bindTo(this.users, 'error', this.onError);
+
+      this.filterView = new FilterForm();
+      this.bindTo(this.users, 'error', this.onError, this);
+    },
+
+
+    query: function(params) {
+      this.$('.alert').hide();
+      this.users.fetch({ data: params });
     },
 
     onError: function(model, xhr) {
@@ -50,6 +72,10 @@ define(function(require) {
         context: 'users / ufds',
         message: 'error occured while retrieving user information'
       });
+    },
+
+    onShow: function() {
+      this.$('.alert').hide();
     },
 
     newUser: function() {
@@ -83,6 +109,8 @@ define(function(require) {
 
     onRender: function() {
       this.$findField = this.$('.findField');
+      this.filterView.setElement(this.$('.users-filter'));
+      this.bindTo(this.filterView, 'query', this.query, this);
       this.usersListView.setElement(this.$('.users-list tbody'));
       this.users.fetch();
       this.loadUserCounts();
