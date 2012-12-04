@@ -47,9 +47,7 @@ define(function(require) {
     sidebar: 'users',
 
     events: {
-      'click button[data-event=new-user]': 'newUser',
-      'click button[data-event=find-user]': 'findUser',
-      'submit .form-search': 'onSearch'
+      'click button[data-event=new-user]': 'newUser'
     },
 
     initialize: function() {
@@ -81,22 +79,6 @@ define(function(require) {
     newUser: function() {
       this.createView = new CreateUserView();
       this.createView.render();
-    },
-
-    findUser: function() {
-      var val = this.$('input[name=findField]').val();
-      this.users.searchByLogin(val, function(res) {
-        var user = res.at(0);
-        if (user) {
-          adminui.vent.trigger('showview', 'user', { user: user });
-        } else {
-          alert('user not found');
-        }
-      });
-    },
-
-    onSearch: function(e) {
-      return false;
     },
 
     loadUserCounts: function() {
