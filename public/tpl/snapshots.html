@@ -1,0 +1,18 @@
+  <table class="table">
+    {{#if snapshots.length}}
+    <thead>
+      <th>Name</th>
+    </thead>
+    {{/if}}
+
+    <tbody>
+      {{#unless snapshots.length}}
+      <tr><td class="empty">This VM does not have any snapshots.</td></tr>
+      {{/unless}}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td><a class="btn-link">Take New Snapshot</a></td>
+      </tr>
+    </tfoot>
+  </table>

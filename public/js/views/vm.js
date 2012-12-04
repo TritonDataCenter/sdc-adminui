@@ -10,6 +10,7 @@ define(function(require) {
     var VMDeleteModal = require('views/vm-delete-modal');
     var TagsList = require('views/tags-list');
     var MetadataList = require('views/metadata');
+    var SnapshotsList = require('views/snapshots');
     var CreateProbeController = require('controllers/create-probe');
     var adminui = require('adminui');
 
@@ -93,8 +94,9 @@ define(function(require) {
             this.vm.on('change:alias', this.render, this);
             this.vm.fetch();
 
-            this.metadataListView = new MetadataList({vm:this.vm});
-            this.tagsListView = new TagsList({vm:this.vm});
+            this.metadataListView = new MetadataList({vm: this.vm});
+            this.tagsListView = new TagsList({vm: this.vm});
+            this.snapshotsListView = new SnapshotsList({vm: this.vm});
         },
 
         serializeData: function() {
@@ -156,12 +158,12 @@ define(function(require) {
           renameBtn.hide();
           value.hide();
 
-          var input = $('<input type="text">').val(this.vm.get('alias'))
+          var input = $('<input type="text">').val(this.vm.get('alias'));
           var save = $('<button class="btn btn-primary btn-mini">').html('Save');
           var cancel = $('<button class="btn btn-cancel btn-mini">').html('Cancel');
           this.$('.alias').append(input);
-          this.$('.alias').append(save)
-          this.$('.alias').append(cancel)
+          this.$('.alias').append(save);
+          this.$('.alias').append(cancel);
           cancel.click(cancelAction);
           save.click(saveAction);
           input.focus();
@@ -208,10 +210,15 @@ define(function(require) {
             return this;
         },
 
+        renderSnapshots: function() {
+            this.snapshotsListView.setElement(this.$('.snapshots')).render();
+        },
+
         onRender: function() {
             this.renderImage();
             this.renderTags();
             this.renderMetadata();
+            this.renderSnapshots();
             return this;
         }
 
