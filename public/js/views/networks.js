@@ -102,6 +102,8 @@ define(function(require) {
 
         initialize: function(options) {
             this.collection = new Networks();
+            this.collection.fetch();
+            
             this.bindTo(this.collection, 'error', this.onError, this);
         },
 
@@ -121,7 +123,6 @@ define(function(require) {
         },
         
         onRender: function() {
-            this.collection.fetch();
         }
     });
 
