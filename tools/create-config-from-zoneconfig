@@ -58,6 +58,7 @@ function translateZoneConfig(zc) {
   dc.cnapi = { url: fmt("http://%s", zc.cnapi_admin_ips) };
   dc.napi = { url: fmt("http://%s", zc.napi_admin_ips) };
   dc.ca = { url: fmt("http://%s:23181", zc.ca_admin_ips) };
+  dc.imgapi = { url: fmt("http://%s", zc.imgapi_admin_ips) };
 
   return cfg;
 }
