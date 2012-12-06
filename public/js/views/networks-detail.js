@@ -6,7 +6,20 @@ define(function(require) {
     var AddressesTableRowTemplate = require('text!tpl/networks-detail-address-row.html');
     var AddressesTableRow = Backbone.Marionette.ItemView.extend({
         tagName: "tr",
-        template: AddressesTableRowTemplate
+        template: AddressesTableRowTemplate,
+        templateHelpers: {
+            belongs_to_url: function() {
+                var uuid = this.belongs_to_uuid;
+                var type = this.belongs_to_type;
+                var prefix;
+                if (type === 'server') {
+                    prefix = 'servers';
+                } else if (type === 'zone') {
+                    prefix = 'vms';
+                }
+                return _.str.sprintf('/%s/%s', prefix, uuid);
+            }
+        }
     });
 
     var AddressesTable = Backbone.Marionette.CollectionView.extend({
