@@ -10,6 +10,10 @@ define(['underscore', 'backbone'], function(_, Backbone) {
       'name':null
     },
 
+    nameWithVersion: function() {
+      return _.str.sprintf('%s %s', this.get('name'), this.get('version'));
+    },
+
     toJSON: function() {
       var attrs = this.attributes;
       attrs.files = _.map(attrs.files, function(f) {

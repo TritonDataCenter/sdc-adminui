@@ -27,6 +27,7 @@ define(function(require) {
   var ImagesView = Backbone.Marionette.CompositeView.extend({
     template: require('text!tpl/images.html'),
     url: 'images',
+    sidebar: 'images',
     itemView: ImageRow,
     itemViewContainer: 'tbody',
     initialize: function(opts) {
