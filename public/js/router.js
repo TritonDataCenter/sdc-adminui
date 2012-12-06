@@ -11,6 +11,7 @@ define(function(require) {
             'vms': 'showVms',
             'vms/:uuid': 'showVm',
             'users/:uuid': 'showUser',
+            'images/:uuid': 'showImage',
             'networks/:uuid': 'showNetwork',
             'packages/:uuid': 'showPackage',
             'monitoring': 'showMonitoring',
@@ -127,6 +128,10 @@ define(function(require) {
                 this.presentView('monitoring');
         },
 
+        showImage: function(uuid) {
+            if (this.authenticated())
+                this.presentView('image', { uuid: uuid });
+        },
 
         showVm: function(uuid) {
             if (this.authenticated())

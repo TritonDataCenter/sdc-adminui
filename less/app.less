@@ -116,6 +116,9 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
     text-transform: uppercase;
     font-size: 12px;
   }
+  #mainnav li.separator {
+    height: 10px;
+  }
   #mainnav li.active a {
     color: #333;
     background: #FFF;
@@ -131,11 +134,27 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
   .page-header button { margin-top: 14px;}
 }
 
-#sdc-images-list li { display: block; margin-bottom: 1em; }
-#sdc-images-list li .item { padding: 1em;  }
-#sdc-images-list li .item .name { margin-bottom: 0.5em; }
-#sdc-images-list li .item p {  clear: both; }
-
+#page-images {
+  .images-table {
+    th.state { width: 80px; }
+    td.state .active { color: @green; text-transform: uppercase; font-weight: bold;} 
+    td.state .disabled { color: @gray; }
+    td.state .unactivated { color: @yellow; }
+    td.name { width: 400px;}
+    .uuid {
+      color: @grayLight;
+      display: inline-block;
+      float: right;
+      font-style: italic;
+      font-family: monospace;
+    }
+    td.visibility {
+      width: 200px;
+      .public { font-weight: bold;}
+      .private { font-weight: bold;}
+    }
+  }
+}
 
 #notifier-feed {
   width: 300px;

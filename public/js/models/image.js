@@ -9,12 +9,6 @@ define(['underscore', 'backbone'], function(_, Backbone) {
     defaults: {
       'name':null
     },
-    
-    nameWithVersion: function() {
-      var name = this.get('name');
-      var version = this.get('version');
-      return [name, version].join(' ');
-    },
 
     toJSON: function() {
       var attrs = this.attributes;

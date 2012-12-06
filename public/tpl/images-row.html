@@ -1,0 +1,20 @@
+<td class="state">
+  <span class="{{state}}">{{state}}</span>
+</td>
+<td>
+  <a href="/images/{{uuid}}">{{name}} {{version}}</a>
+  <span class="uuid">{{uuid}}</span>
+</td>
+<td>{{os}}</td>
+<td class="visibility">
+  {{#if public}}
+  <span class="public">public</span>
+  {{else}}
+  <span class="private">owner</span>
+    {{#if acl}}
+    <span class="acl">
+      and <a>{{acl.length}} others</a>
+    </span>
+    {{/if}}
+  {{/if}}
+</td>

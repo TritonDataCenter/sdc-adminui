@@ -1,97 +1,48 @@
 define(function(require) {
 
-  var BaseView = require('views/base');
   var Images = require('models/images');
 
-  var images = new Images();
+  var ImageRow = Backbone.Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: require('text!tpl/images-row.html'),
+    templateHelpers: {
+      active: function() {
+        return this.state == 'active';
+      },
+      unactivated: function() {
+        return this.state == 'unactivated';
+      },
+      disabled: function() {
+        return this.state == 'disabled';
+      }
+    }/*,
+    serializeData: function() {
+      var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this);
+      data.public = false;
+      data.acl = ['abcd', 'efgh'];
+      return data;
+    }*/
+  });
 
-  return BaseView.extend({
-    template: Handlebars.compile($("#template-images").html()),
-    name: 'images',
-    events: { },
-
-    initialize: function() {
-      _.bindAll(this);
-
-      var self = this;
-
-      this.setElement(this.template());
-      this.listViews = new Backbone.Collection();
-      this.listViews.on('add', this.addListView);
-
-      images.on('reset', function() {
-         images.groupBy('os').each(function(col) {
-          self.listViews.add(new ListView({ collection: col }));
-        });
-      });
-
-      images.fetch();
+  var ImagesView = Backbone.Marionette.CompositeView.extend({
+    template: require('text!tpl/images.html'),
+    url: 'images',
+    itemView: ImageRow,
+    itemViewContainer: 'tbody',
+    initialize: function(opts) {
+      this.collection = new Images();
+      this.collection.fetch();
     },
-
-    addListView: function(list) {
-      this.$("#sdc-images-list").append(list.attributes.render().el);
+    serializeData: function() {
+      return {collection: this.collection};
     },
-
-    render: function() {
-      return this;
+    onCompositeCollectionRendered: function()  {
+      this.$('.record-count').html(this.collection.length);
     }
-  }, Backbone.Model);
-
-
-
-
-
-  var ListView = Backbone.View.extend({
-    template: Handlebars.compile($("#template-images-list").html()),
-    initialize: function(options) {
-      _.bindAll(this, 'addOne', 'addAll');
-
-      this.os = this.collection.groupedBy;
-      this.collection = _(this.collection.groupBy('name').map(function(n) {
-        var vers = n.models.sort(function(a, b) {
-          return a.get('version') < b.get('version');
-        });
-        return vers[0];
-      }));
-    },
-
-    addOne: function(image) {
-      var view = new ListItemView({ model: image });
-      this.$('ul').append(view.render().el);
-    },
-
-    addAll: function() {
-      this.collection.each(this.addOne);
-    },
-
-    render: function(el) {
-      this.$el.append(this.template({ os: this.os }));
-      this.addAll();
-
-      return this;
-    }
-
   });
 
 
 
-
-  var ListItemView = Backbone.View.extend({
-    template: Handlebars.compile($("#template-images-list-item").html()),
-    events: {
-      'click button': 'presentDetailView'
-    },
-
-    presentDetailView: function() {
-      var view = new ImageDetailView({ model: this.model });
-      view.render();
-    },
-
-    render: function() {
-      this.setElement(this.template(this.model.toJSON()));
-      return this;
-    }
-  });
 
 
   var ImageDetailView = Backbone.View.extend({
@@ -102,4 +53,6 @@ define(function(require) {
       return this;
     }
   });
+
+  return ImagesView;
 });
