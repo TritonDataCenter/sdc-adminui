@@ -1,0 +1,135 @@
+
+<div class="page-header">
+
+  <h2>{{name}} {{version}}
+    <small class="uuid">{{uuid}}</small>
+  </h2>
+</div>
+
+
+<div class="basic">
+  {{#if os}}
+  <img src="/img/os-{{os}}.png">
+  {{/if}}
+
+  <p>{{description}}</p>
+
+  <p>{{state}}</p>
+
+  <p>
+    Visibility: 
+    {{#if public}}
+      public
+    {{else}}
+      {{#each acl}} {{this}} {{/each}}
+    {{/if}}
+  </p>
+</div>
+
+
+<div class="details">
+  <h5>Overview</h5>
+  <ul class="unstyled attributes">
+    <li>
+      <strong>UUID</strong>
+      <span class="value">{{uuid}}</span>
+    </li>
+    <li>
+      <strong>Owner</strong>
+      <span class="value">{{owner}}</span>
+    </li>
+    <li>
+      <strong>Name / Version</strong>
+      <span class="value">{{name}} {{version}}</span>
+    </li>
+    <li>
+      <strong>Publish Date</strong>
+      <span class="value">{{published_at}}</span>
+    </li>
+    <li>
+      <strong>Operating System</strong>
+      <span class="value">{{os}}</span>
+    </li>
+    <li>
+      <strong>Image Type</strong>
+      <span class="value">{{type}}</span>
+    </li>
+    {{#if cpu_type}}
+    <li>
+      <strong>CPU Type</strong>
+      <span class="value">{{cpu_type}}</span>
+    </li>
+    {{/if}}
+  </ul>
+
+  <h5>Files</h5>
+  <ul class="unstyled files">
+    <li>
+      {{#each files}}
+        <span class="sha1">{{this.sha1}}</span>
+        <span class="size">{{this.size}} bytes</span>
+        <span class="compression">{{this.compression}}</span>
+      {{/each}}
+    </li>
+  </ul>
+
+  <h5>Requirements</h5>
+  <ul class="unstyled attributes requirements">
+    <li>
+      <strong>Networks</strong>
+      <span class="value">
+        {{#each requirements.networks}}
+        {{this.name}} / {{this.description}}
+        {{/each}}
+      </span>
+    </li>
+
+    {{#if requirements.ssh_key}}
+    <li>
+      <strong>SSH Key</strong>
+      <span class="value">{{requirements.ssh_key}}</span>
+    </li>
+    {{/if}}
+
+    {{#if requirements.min_ram}}
+    <li>
+      <strong>Minimum RAM</strong>
+      <span class="value">{{requirements.min_ram}}</span>
+    </li>
+    {{/if}}
+
+    {{#if requirements.max_ram}}
+    <li>
+      <strong>Maximum RAM</strong>
+      <span class="value">{{requirements.max_ram}}</span>
+    </li>
+    {{/if}}
+
+    {{#if requirements.generate_passwords}}
+    <li>
+      <strong>Paaswords Generated for users:</strong>
+      <span class="value">
+        {{#each requirements.users}} {{this}} {{/each}}
+      </span>
+    </li>
+    {{/if}}
+  </ul>
+
+  {{#if nic_driver}}
+  <h5>Drivers</h5>
+  <ul class="unstyled attributes requirements">
+    <li>
+      <strong>NIC Driver</strong>
+      <span class="value">
+        {{nic_driver}}
+      </span>
+    </li>
+    <li>
+      <strong>Disk Driver</strong>
+      <span class="value">
+        {{disk_driver}}
+      </span>
+    </li>
+  </ul>
+  {{/if}}
+</div>
