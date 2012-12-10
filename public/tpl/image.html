@@ -14,7 +14,14 @@
 
   <p>{{description}}</p>
 
-  <p>{{state}}</p>
+  <p>
+    <span class="state">
+      <span class="{{state}}">{{state}}</span>
+    </span>
+    {{#if activatable}}
+    <a class="activate">Activate</a>
+    {{/if}}
+  </p>
 
   <p>
     Visibility: 
