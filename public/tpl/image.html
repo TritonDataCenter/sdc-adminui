@@ -18,23 +18,29 @@
     <span class="state">
       <span class="{{state}}">{{state}}</span>
     </span>
+
     {{#if activatable}}
-    <a class="activate">Activate Image</a>
+    <button class="btn btn-block btn-success activate">Activate Image</a>
     {{/if}}
 
     {{#if disableable}}
-    <a class="disable">Disable Image</a>
+    <button class="btn btn-block btn-danger disable">Disable Image</button>
     {{/if}}
   </p>
 
-  <p>
-    Visibility: 
+  <p class="visibility">
+    <h3>Visibility</h3>
     {{#if public}}
-      public
+      Image is available for <strong>public</strong> consumption
     {{else}}
-      {{#each acl}} {{this}} {{/each}}
+      This image is only available to the owner
+      {{#if acl.length}}
+        and
+        {{#each acl}} {{this}} {{/each}}
+      {{/if}}
     {{/if}}
   </p>
+
 </div>
 
 
