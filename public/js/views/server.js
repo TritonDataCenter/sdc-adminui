@@ -2,12 +2,16 @@ define(function(require) {
 
     var Server = require('models/server');
     var BaseView = require('views/base');
-    var ServerTemplate = require('text!tpl/server.html')
+    var ServerTemplate = require('text!tpl/server.html');
 
     var ServerView = Backbone.Marionette.ItemView.extend({
         sidebar: 'servers',
 
         template: ServerTemplate,
+
+        modelEvents: {
+            'change': 'render'
+        },
 
         initialize: function(options) {
             this.model = options.server || new Server();
@@ -16,7 +20,6 @@ define(function(require) {
                 this.model.set({uuid: options.uuid});
                 this.model.fetch();
             }
-            this.bindTo(this.model, 'change', this.render, this);
         },
 
         templateHelpers: {
