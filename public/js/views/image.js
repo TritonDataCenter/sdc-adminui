@@ -7,9 +7,12 @@ define(function(require) {
         url: function() {
             return _.str.sprintf('images/%s', this.model.get('uuid'));
         },
+
         events: {
-            'activate': 'onClickActivate'
+            'click .activate': 'onClickActivate',
+            'click .disable': 'onClickDisable'
         },
+
         modelEvents: {
             'change': 'render',
             'error': 'onError'
@@ -17,7 +20,11 @@ define(function(require) {
 
         templateHelpers: {
             'activatable': function() {
-                return this.active === false;
+                return this.state !== 'active';
+            },
+
+            'disableable': function() {
+                return this.state === 'active';
             }
         },
 
@@ -35,11 +42,19 @@ define(function(require) {
                 context: 'images / imgapi'
             });
         },
-        onClickActivate: function() {
+        onClickActivate: function(e) {
+            e.preventDefault();
             var self = this;
-            this.model.activate({success: function() {
+            this.model.activate(function() {
                 self.model.fetch();
-            }});
+            });
+        },
+        onClickDisable: function(e) {
+            e.preventDefault();
+            var self = this;
+            this.model.disable(function() {
+                this.model.fetch();
+            });
         }
     });
 

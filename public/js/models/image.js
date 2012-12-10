@@ -1,6 +1,4 @@
-define(['underscore', 'backbone'], function(_, Backbone) {
-  'use strict';
-
+define(function(require) {
   return Backbone.Model.extend({
     urlRoot:'/_/images',
 
@@ -12,6 +10,14 @@ define(['underscore', 'backbone'], function(_, Backbone) {
 
     nameWithVersion: function() {
       return _.str.sprintf('%s %s', this.get('name'), this.get('version'));
+    },
+
+    activate: function(cb) {
+      $.post(this.url()+"?action=activate", cb);
+    },
+
+    disable: function(cb) {
+      $.post(this.url()+"?action=disable", cb);
     },
 
     toJSON: function() {
