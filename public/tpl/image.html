@@ -1,34 +1,45 @@
-
 <div class="page-header">
-
-  <h2>{{name}} {{version}}
-    <small class="uuid">{{uuid}}</small>
-  </h2>
+  <h2>{{name}} {{version}}<small class="uuid">{{uuid}}</small></h2>
 </div>
 
 
 <div class="basic">
   {{#if os}}
-  <img src="/img/os-{{os}}.png">
+  <div class="os-image">
+    <img src="/img/os-{{os}}.png">
+  </div>
   {{/if}}
 
-  <p>{{description}}</p>
+  <p class="description">{{description}}</p>
 
-  <p>
-    <span class="state">
-      <span class="{{state}}">{{state}}</span>
-    </span>
+  <div class="btn-group state">
+    <a class="btn btn-block btn-small dropdown-toggle
+      {{#if active}}btn-success{{/if}}
+      {{#if disabled}}btn-danger{{/if}}
+      " data-toggle="dropdown" href="#">
+      
+      {{#if active}}
+      ACTIVATED
+      {{else}}
+      {{state}}
+      {{/if}}
+      <span class="caret"></span>
+    </a>
 
-    {{#if activatable}}
-    <button class="btn btn-block btn-small btn-success activate">Activate Image</a>
-    {{/if}}
+    <ul class="dropdown-menu">
+      {{#if activatable}}
+      <li><a class="activate">Activate Image</a></li>
+      {{/if}}
+      {{#if enableable}}
+      <li><a class="enable">Enable Image</a></li>
+      {{/if}}
+      {{#if disableable}}
+      <li><a class="disable">Disable Image</a></li>
+      {{/if}}
+    </ul>
+  </div>
 
-    {{#if disableable}}
-    <button class="btn btn-block btn-small btn-danger disable">Disable Image</button>
-    {{/if}}
-  </p>
-
-  <p class="visibility">
+  <div class="visibility">
     <h3>Visibility</h3>
     {{#if public}}
       Image is available for <strong>public</strong> consumption
@@ -39,7 +50,7 @@
         {{#each acl}} {{this}} {{/each}}
       {{/if}}
     {{/if}}
-  </p>
+  </div>
 
 </div>
 
@@ -49,11 +60,11 @@
   <ul class="unstyled attributes">
     <li>
       <strong>UUID</strong>
-      <span class="value">{{uuid}}</span>
+      <span class="value uuid">{{uuid}}</span>
     </li>
     <li>
       <strong>Owner</strong>
-      <span class="value">{{owner}}</span>
+      <span class="value uuid">{{owner}}</span>
     </li>
     <li>
       <strong>Name / Version</strong>

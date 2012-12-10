@@ -165,17 +165,20 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 
 #page-image {
   .basic { 
-    width: 205px; height: 205px; float: left; text-align: center;
-    p { padding: 10px; }
-    .state {
-      font-size: 24px;
-      .active { 
-        color: green;
-        text-transform: uppercase;
-      }
+    width: 205px;
+    float: left;
+    .os-image { text-align: center; }
+
+    p {
+     padding: 10px; 
+     text-align: center;
     }
+
+    .state {
+      width: 140px; margin: 0 auto;
+    }
+    .visibility { text-align: center;}
     button { margin-top: 1em;}
-    p.visibility { }
   }
 
   .details { margin-left: 215px; }
@@ -412,6 +415,10 @@ ul.attributes {
 
     .value {
       display: inline-block;
+    }
+    .uuid {
+      color: @grayLight;
+      #font > .monospace(12px);
     }
   }
 }

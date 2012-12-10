@@ -20,6 +20,10 @@ define(function(require) {
       $.post(this.url()+"?action=disable", cb);
     },
 
+    enable: function(cb) {
+      $.post(this.url()+"?action=enable", cb);
+    }
+
     toJSON: function() {
       var attrs = this.attributes;
       attrs.files = _.map(attrs.files, function(f) {

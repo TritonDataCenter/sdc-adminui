@@ -11,6 +11,7 @@ define(function(require) {
         events: {
             'click .activate': 'onClickActivate',
             'click .disable': 'onClickDisable'
+            'click .enable': 'onClickEnable'
         },
 
         modelEvents: {
@@ -19,12 +20,20 @@ define(function(require) {
         },
 
         templateHelpers: {
+            'active': function() {
+                return this.state === 'active';
+            },
+
             'activatable': function() {
                 return this.state !== 'active';
             },
 
+            'enableable': function() {
+                return this.disabled === true;
+            },
+
             'disableable': function() {
-                return this.state === 'active';
+                return this.disabled === false;
             }
         },
 
@@ -36,6 +45,7 @@ define(function(require) {
             }
             this.model.fetch();
         },
+
         onError: function(model, res) {
             app.vent.trigger('error', {
                 xhr: res,
@@ -49,11 +59,20 @@ define(function(require) {
                 self.model.fetch();
             });
         },
+
         onClickDisable: function(e) {
             e.preventDefault();
             var self = this;
             this.model.disable(function() {
-                this.model.fetch();
+                self.model.fetch();
+            });
+        },
+
+        onClickEnable: function(e) {
+            e.preventDefault();
+            var self = this;
+            this.model.enable(function() {
+                self.model.fetch();
             });
         }
     });
