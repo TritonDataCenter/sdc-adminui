@@ -10,9 +10,12 @@ define(function(require) {
             'click .image-name': 'onClickImageName'
         },
         onClickImageName: function(e) {
-            if (e) e.preventDefault();
+            if (e) {
+                e.preventDefault();
+            }
             app.vent.trigger('showview', 'image', {image: this.model});
         },
+
         templateHelpers: {
             active: function() {
                 return this.state == 'active';
@@ -32,15 +35,25 @@ define(function(require) {
         sidebar: 'images',
         itemView: ImageRow,
         itemViewContainer: 'tbody',
+        events: {
+            'click .create-image': 'onClickCreateImage',
+            'click .import-image': 'onClickImportImage'
+        },
         initialize: function(opts) {
             this.collection = new Images();
-            this.collection.fetch();
+            this.collection.fetch({data: {state:'all'}});
         },
         serializeData: function() {
             return {collection: this.collection};
         },
         onCompositeCollectionRendered: function()  {
             this.$('.record-count').html(this.collection.length);
+        },
+        onClickImportImage: function() {
+            app.vent.trigger('showview', 'image-import');
+        },
+        onClickCreateImage: function() {
+            
         }
   });
 

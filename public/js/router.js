@@ -11,6 +11,7 @@ define(function(require) {
             'vms': 'showVms',
             'vms/:uuid': 'showVm',
             'users/:uuid': 'showUser',
+            'image-import': 'showImageImport',
             'images/:uuid': 'showImage',
             'networks/:uuid': 'showNetwork',
             'packages/:uuid': 'showPackage',
@@ -131,6 +132,11 @@ define(function(require) {
         showImage: function(uuid) {
             if (this.authenticated())
                 this.presentView('image', { uuid: uuid });
+        },
+
+        showImageImport: function() {
+            if (this.authenticated())
+                this.presentView('image-import');
         },
 
         showVm: function(uuid) {

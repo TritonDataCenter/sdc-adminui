@@ -24,6 +24,17 @@ define(function(require) {
             $.post(this.url() + "?action=enable", cb);
         },
 
+        adminImport: function() {
+            var url = this.url() + '?action=import';
+            var ajax = $.ajax(url, {
+                data: JSON.stringify(this.attributes),
+                contentType: 'application/json',
+                type: 'POST'
+            });
+
+            return ajax;
+        },
+
         toJSON: function() {
             var attrs = this.attributes;
             attrs.files = _.map(attrs.files, function(f) {
