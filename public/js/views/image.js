@@ -24,9 +24,14 @@ define(function(require) {
                 return this.state === 'active';
             },
 
+            'unactivated': function() {
+                return this.state === 'unactivated';
+            },
+
             'activatable': function() {
                 return this.state !== 'active';
             },
+
 
             'enableable': function() {
                 return this.disabled === true;
@@ -64,6 +69,7 @@ define(function(require) {
         onClickDisable: function(e) {
             e.preventDefault();
             var self = this;
+            alert('blocked on imgapi.disableImage'); //XXX
             this.model.disable(function() {
                 self.model.fetch();
             });
@@ -72,6 +78,7 @@ define(function(require) {
         onClickEnable: function(e) {
             e.preventDefault();
             var self = this;
+            alert('blocked on imgapi.enableImage'); //XXX
             this.model.enable(function() {
                 self.model.fetch();
             });
