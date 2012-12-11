@@ -11,7 +11,8 @@ define(function(require) {
         events: {
             'click .activate': 'onClickActivate',
             'click .disable': 'onClickDisable',
-            'click .enable': 'onClickEnable'
+            'click .enable': 'onClickEnable',
+            'click .add-file': 'onClickAddFile'
         },
 
         modelEvents: {
@@ -82,6 +83,10 @@ define(function(require) {
             this.model.enable(function() {
                 self.model.fetch();
             });
+        },
+
+        onClickAddFile: function() {
+            this.$('.fileinput').click();
         }
     });
 

@@ -64,26 +64,32 @@
       <strong>UUID</strong>
       <span class="value uuid">{{uuid}}</span>
     </li>
+
     <li>
       <strong>Owner</strong>
       <span class="value uuid">{{owner}}</span>
     </li>
+
     <li>
       <strong>Name / Version</strong>
       <span class="value">{{name}} {{version}}</span>
     </li>
+
     <li>
       <strong>Publish Date</strong>
       <span class="value">{{published_at}}</span>
     </li>
+
     <li>
       <strong>Operating System</strong>
       <span class="value">{{os}}</span>
     </li>
+
     <li>
       <strong>Image Type</strong>
       <span class="value">{{type}}</span>
     </li>
+
     {{#if cpu_type}}
     <li>
       <strong>CPU Type</strong>
@@ -104,9 +110,10 @@
     </li>
     {{else}}
     <li class="empty">
+      <input type="file" class="fileinput">
       <span class="alert alert-warn">
         There are currently no files in this Image. An image must have a file before it can be activated.
-      <a class="add-file">Add a file</a>
+        <a class="add-file">Add a file</a>
       </span>
     </li>
     {{/if}}

@@ -21,7 +21,7 @@ define(function(require) {
       return {
         name: this.model.get('name'),
         value: this.model.get('uuid')
-      }
+      };
     },
     tagName: 'option',
     template: Handlebars.compile('{{name}} {{version}}')
@@ -67,8 +67,8 @@ define(function(require) {
         this.selectedPackage.set(collection.models[0].attributes);
       }, this);
 
-      this.packageSelect.on('select', function(package) {
-          this.selectedPackage.set(package.attributes);
+      this.packageSelect.on('select', function(pkg) {
+        this.selectedPackage.set(pkg.attributes);
       }, this);
 
       this.packageBinder = new Backbone.ModelBinder();
@@ -86,8 +86,7 @@ define(function(require) {
       }, this);
 
       this.imagesCollection.on('reset', function(images) {
-        this.imagesSource = [];
-        images.each(function(img) { this.imagesSource.push(img); }, this);
+        images.each(function(u) { this.imagesSource.push(u); }, this);
       }, this);
 
       this.networks.on('reset', function(networks) {

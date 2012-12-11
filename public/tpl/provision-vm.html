@@ -20,8 +20,7 @@
 			<div class="control-group">
 				<label class="control-label" for="input-alias">Alias</label>
 				<div class="controls">
-					<input id="input-alias"
-					name="alias"
+					<input id="input-alias" name="alias"
 					placeholder="name as it appears to the customer"
 					type="text" class="input-xlarge">
 					<span class="help-inline">Optional</span>
@@ -42,40 +41,40 @@
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label">Networks</label>
-				<div class="network-checkboxes controls">
-					<label class="checkbox">
-						<input type="checkbox" name="networks[]" /><span class="name">My Network<span>
-					</label>
-					<p class="help-block">Must select at least one network</p>
-  				</div>
-  			</div>
+      <div class="control-group">
+        <label class="control-label">Image</label>
+        <div class="controls">
+          <input id="input-image" type="text" placeholder="enter UUID or search image by name" class="input-xlarge" name="image">
+          <p class="help-inline">Required</p>
+          <p class="help-block">Image to provision machine with</p>
+        </div>
+      </div>
 
-  			<div class="control-group">
-  				<label class="control-label">Brand</label>
-  				<div class="controls">
-  					<select name="brand">
-  						<option value="joyent">joyent</option>
-  						<option value="joyent-minimal">joyent-minimal</option>
-  						<option value="kvm">kvm</option>
-  					</select>
-  				</div>
-  			</div>
+      <div class="control-group">
+        <label class="control-label">Networks</label>
+        <div class="network-checkboxes controls">
+          <label class="checkbox"><input type="checkbox" name="networks[]" /><span class="name">My Network<span></label>
+          <p class="help-block">Must select at least one network</p>
+        </div>
+      </div>
 
-  			<div class="control-group">
-  				<label class="control-label">Image</label>
-  				<div class="controls">
-  					<input name="image" type="text" class="input-xlarge" id="input01">
-  					<p class="help-inline">Required</p>
-  					<p class="help-block">Image to provision machine with</p>
-  				</div>
-  			</div>
+      <div class="control-group">
+        <label class="control-label">Brand</label>
+        <div class="controls">
+          <select name="brand">
+            <option value="joyent">joyent</option>
+            <option value="joyent-minimal">joyent-minimal</option>
+            <option value="kvm">kvm</option>
+          </select>
+        </div>
+      </div>
 
-  			<div class="form-actions">
-  				<button type="submit" class="btn btn-primary">Provision</button>
-  			</div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Provision</button>
+      </div>
 
-  		</fieldset>
-  	</form>
-  </div>
+    </div>
+
+  </fieldset>
+</form>
+</div>
