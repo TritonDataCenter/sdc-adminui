@@ -10,7 +10,7 @@ define(function(require) {
 
         events: {
             'click .activate': 'onClickActivate',
-            'click .disable': 'onClickDisable'
+            'click .disable': 'onClickDisable',
             'click .enable': 'onClickEnable'
         },
 
@@ -52,6 +52,7 @@ define(function(require) {
                 context: 'images / imgapi'
             });
         },
+
         onClickActivate: function(e) {
             e.preventDefault();
             var self = this;
