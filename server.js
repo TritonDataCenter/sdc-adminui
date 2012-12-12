@@ -1,6 +1,7 @@
 var path = require('path');
 var assert = require('assert');
 var fs = require('fs');
+var restify = require('restify');
 
 
 function loadConfig(file) {
@@ -12,7 +13,8 @@ function loadConfig(file) {
 
 var log = require('bunyan').createLogger({
   name: 'adminui',
-  level: 'info'
+  level: 'info',
+  serializers: restify.bunyan.serializers
 });
 
 
