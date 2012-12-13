@@ -49,7 +49,10 @@ define(function(require) {
 
         initialize: function(options) {
             this.viewModel = new Backbone.Model();
-            this.viewModel.set({uploadform: false});
+            this.viewModel.set({
+                uploadform: false,
+                uploading: false
+            });
 
             if (options.uuid) {
                 this.model = new Img({uuid: options.uuid});
