@@ -98,7 +98,11 @@
     {{/if}}
   </ul>
 
-  <h5>Files <a class="show-upload-form">Upload a new file</a></h5>
+  <h5>Files 
+    {{#if unactivated}}
+    <a class="show-upload-form">Upload a new file</a>
+    {{/if}}
+  </h5>
   <ul class="unstyled files">
     {{#if files.length}}
     <li class="file">
