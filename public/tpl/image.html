@@ -98,26 +98,50 @@
     {{/if}}
   </ul>
 
-  <h5>Files</h5>
+  <h5>Files <a class="show-upload-form">Upload a new file</a></h5>
   <ul class="unstyled files">
     {{#if files.length}}
-    <li>
+    <li class="file">
       {{#each files}}
-        <span class="sha1">{{this.sha1}}</span>
-        <span class="size">{{this.size}} bytes</span>
-        <span class="compression">{{this.compression}}</span>
+        <div class="sha1"><span>{{this.sha1}}</span></div>
+        <div class="size"><span>{{this.size}} bytes</span></div>
+        <div class="compression"><span>{{this.compression}}</span></div>
       {{/each}}
     </li>
-    {{else}}
-    <li class="empty">
-      <input type="file" class="fileinput">
-      <span class="alert alert-warn">
-        There are currently no files in this Image. An image must have a file before it can be activated.
-        <a class="add-file">Add a file</a>
-      </span>
-    </li>
     {{/if}}
+    <li class="progress">
+      <div class="progress progress-striped active">
+        <div class="bar" style="width: 0%;"></div>
+      </div>
+    </li>
+
+    {{#unless files.length}}
+    <li class="empty">
+        There are currently no files in this Image. An image must have a file before it can be activated.
+    </li>
+    {{/unless}}
+
+
+    <li class="upload">
+      <div class="select">
+        <a class="add-file">Select image file to upload</a>
+      </div>
+      <div class="compression">
+        Compression
+        <select class="input-small">
+          <option value="none">none</option>
+          <option value="bzip2">bzip2</option>
+          <option value="gzip">gzip</option>
+        </select>
+      </div>
+      <button class="btn btn-small btn-info start-upload">Start Upload</button>
+      <button class="btn btn-small cancel-upload-form">Cancel</button>
+    </li>
   </ul>
+
+  <form class="uploadform">
+    <input type="file" class="fileinput">
+  </form>
 
   <h5>Requirements</h5>
   <ul class="unstyled attributes requirements">
