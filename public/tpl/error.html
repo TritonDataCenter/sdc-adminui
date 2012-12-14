@@ -1,7 +1,7 @@
 <div class="modal hide error-modal">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>An Error Occured</h3>
+    <h3>An Error Occured: {{xhr.statusText}}</h3>
   </div>
   <div class="modal-body">
     <p>Context: {{context}}</p>
@@ -10,7 +10,7 @@
     {{/if}}
     <p>HTTP Status: <pre>{{xhr.status}} {{xhr.statusText}}</pre></p>
     <p>HTTP body: 
-      <pre>{{xhr.responseText}}</pre>
+      <pre>{{responseBody}}</pre>
     </p>
   </div>
   <div class="modal-footer">

@@ -41,13 +41,16 @@ define(function(require) {
             this.mainnavView = new Mainnav();
         },
 
-        onError: function(error) {
-            error = error || {};
-            console.log(error.xhr);
-            if (error.xhr && error.xhr.status == 500) {
+        onError: function(err) {
+            err = err || {};
+            if (err.xhr && err.xhr.status >= 500) {
+                if (err.xhr.responseText.length) {
+                    var json = JSON.parse(err.xhr.responseText);
+                    err.responseBody = JSON.stringify(json, null, 2);
+                }
                 var t = require('text!tpl/error.html');
                 var tpl = Handlebars.compile(t);
-                $(tpl(error)).modal();
+                $(tpl(err)).modal();
             }
         },
 

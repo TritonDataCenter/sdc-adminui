@@ -1,0 +1,28 @@
+<div class="page-header">
+  <h2>System Status</h2>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+    <th>Service</th>
+    <th>Last Status Report</th>
+    <th>Last Error</th>
+  </tr>
+  </thead>
+  <tbody>
+    <% _(services).each(function(val, name) { %>
+    <tr>
+      <td><%= name %></td>
+      <td class="last-ping">
+        <pre><%= JSON.stringify(val.lastPing, null, 2) %></pre>
+      </td>
+      <td class="last-error">
+        <% if(val.lastError) { %>
+        <pre><%= JSON.stringify(val.lastError, null, 2) %></pre>
+        <% } %>
+      </td>
+    </tr>
+      <% }); %>
+  </tbody>
+</table>

@@ -1,15 +1,18 @@
 define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
     var Pinger = function(options) {
         this.options = options || {};
-        this.options.interval = this.options.interval || (60 * 1000);
+        this.options.interval = this.options.interval || (10 * 1000);
     };
 
     _.extend(Pinger, Backbone.Events);
 
     Pinger.prototype.start = function() {
-        this.timer = setInterval(function() {
-            $.get('/_/ping', function() { console.log('.'); });
-        }, this.options.interval);
+        this.timer = setInterval(this.ping, this.options.interval);
+        this.ping();
+    };
+
+    Pinger.prototype.ping = function() {
+        $.get('/_/ping', function() { console.log('.'); });
     };
 
     Pinger.prototype.stop = function() {

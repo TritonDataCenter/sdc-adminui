@@ -9,6 +9,8 @@ requirejs.config({
         "knockback": "lib/knockback",
         "backbone": "lib/backbone",
         "backbone.marionette": "lib/backbone.marionette",
+        "backbone.babysitter": "lib/backbone.babysitter",
+        "backbone.stickit": "lib/backbone.stickit",
         "backbone.modelbinder": "lib/Backbone.ModelBinder",
         "backbone.eventbinder": "lib/backbone.eventbinder",
         "backbone.wreqr": "lib/backbone.wreqr",
@@ -37,6 +39,7 @@ requirejs.config({
         },
         "backbone.marionette": ['backbone', "backbone.wreqr", "backbone.eventbinder"],
         "backbone.modelbinder": ['backbone'],
+        "backbone.stickit": ['backbone'],
         "knockback": ["underscore", "backbone"]
     },
     deps: [
@@ -50,7 +53,7 @@ requirejs.config({
         'backbone',
         'backbone.marionette',
         'backbone.modelbinder',
-
+        'backbone.stickit',
         'knockout',
         'knockback']
 });
