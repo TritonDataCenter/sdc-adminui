@@ -114,7 +114,7 @@ define(function(require) {
             });
         },
 
-        onItemAdded: function(itemView) {
+        onBeforeItemAdded: function(itemView) {
             this.bindTo(itemView, 'select', this.onSelect, this);
         },
 

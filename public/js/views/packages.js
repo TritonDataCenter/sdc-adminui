@@ -58,7 +58,7 @@ define(function(require) {
             }, this);
         },
 
-        onItemAdded: function(itemView) {
+        onBeforeItemAdded: function(itemView) {
             this.bindTo(itemView, 'select', this.onSelect, this);
             itemView.vent = this.vent;
         },
@@ -124,12 +124,12 @@ define(function(require) {
         },
 
         onError: function(model, xhr) {
-          adminui.vent.trigger('error', {
-            xhr: xhr,
-            context: 'packages / ufds',
-            message: 'error occured while retrieving package information'
-        });
-      },
+            adminui.vent.trigger('error', {
+                xhr: xhr,
+                context: 'packages / ufds',
+                message: 'error occured while retrieving package information'
+            });
+        },
 
         onRender: function() {
             var packagesList = new PackagesList({
