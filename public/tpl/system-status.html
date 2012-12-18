@@ -13,13 +13,15 @@
   <tbody>
     <% _(services).each(function(val, name) { %>
     <tr>
-      <td><%= name %></td>
-      <td class="last-ping">
+      <td class="name span2"><%= name %></td>
+      <td class="last-ping span5">
+        <% if (val.lastPing) { %>
         <pre><%= JSON.stringify(val.lastPing, null, 2) %></pre>
+        <% } %>
       </td>
-      <td class="last-error">
-        <% if(val.lastError) { %>
-        <pre><%= JSON.stringify(val.lastError, null, 2) %></pre>
+      <td class="last-error span5">
+        <% if (val.lastError) { %>
+        <pre class="alert-error"><%= JSON.stringify(val.lastError, null, 2) %></pre>
         <% } %>
       </td>
     </tr>
