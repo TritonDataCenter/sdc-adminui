@@ -7,7 +7,13 @@ define(function(require) {
 
   var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
-    template: '<td>{{name}}</td><td>{{fingerprint}}</td>'
+    template: '<td>{{name}}</td><td>{{fingerprint}}</td><td><a class="remove">remove</a></td>',
+    events: {
+      'click a.remove': 'onClickRemove'
+    },
+    onClickRemove: function() {
+      this.model.destroy();
+    }
   });
 
   var SSHKeysList = Backbone.Marionette.CollectionView.extend({
