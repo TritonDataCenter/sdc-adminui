@@ -183,6 +183,7 @@ define(function(require) {
         values['quota'] = package.get('quota');
         values['vcpus'] = package.get('vcpus');
         values['zfs_io_priority'] = package.get('zfs_io_priority');
+        values['ram'] = package.get('max_physical_memory');
       }
 
       var networksChecked = this.ui.form.find('.network-checkboxes input[type=checkbox]:checked');
@@ -194,7 +195,6 @@ define(function(require) {
     },
 
     hideError: function() {
-      console.log(this.ui.alert);
       this.ui.alert.hide();
     },
 
