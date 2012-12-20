@@ -7,7 +7,7 @@ define(function(require) {
     tagName: 'tr',
     template: ItemTemplate,
 
-    events: {'click *': 'navigateToVmDetails'},
+    events: {'click .alias a': 'navigateToVmDetails'},
 
     initialize: function() {
       _.bindAll(this);
