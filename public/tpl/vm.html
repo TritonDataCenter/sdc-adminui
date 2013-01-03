@@ -23,14 +23,14 @@
     <div class="row dash">
       <div class="state span2">
         <div class="value">
-          <span class="">{{vm.state}}</span>
+          <span class="vm-state">{{vm.state}}</span>
         </div>
         <div class="title">status</div>
       </div>
 
       <div class="memory span2">
         <div class="value">
-          {{vm.ram}} MB
+          <span class="vm-memory"></span> MB
         </div>
         <div class="title">memory</div>
       </div>
@@ -41,10 +41,12 @@
         <th>Name</th>
         <td>
           <span class="alias">
-            <span class="value">{{vm.alias}}</span>
+
+            <span class="value vm-alias"></span>
+
             <a class="rename" href="#">rename</a>
           </span>
-          <span class="vm-uuid">{{vm.uuid}}</span>
+          <span class="vm-uuid"></span>
         </td>
       </tr>
       <tr>
@@ -71,15 +73,15 @@
       <tr>
         <th>Image</th>
         <td>
-          <span class="image-name-version"><%- image.nameWithVersion() %></span>
-          <span class="image-uuid">{{vm.image_uuid}}</span>
+          <span class="image-name-version"></span>
+          <span class="image-uuid"></span>
         </td>
       </tr>
       <tr>
         <th>Server</th>
         <td>
-          <a class="server-hostname">{{server.hostname}}</a>
-          <span class="server-uuid">{{vm.server_uuid}}</span>
+          <a class="server-hostname"></a>
+          <span class="server-uuid"></span>
         </td>
       </tr>
       <tr>

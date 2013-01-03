@@ -247,18 +247,15 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 }
 
 .vms-list tr {
-  cursor: pointer;
-
   th.status { width: 70px; }
-  th.alias { }
   th.memory, td.memory { width: 140px; text-align: right; padding-right: 30px; }
-
   td.uuid {
    width: 300px;
     color: @grayLight;
     font-style: italic;
     font-family: monospace;
   }
+  td.alias a { cursor: pointer; }
   span.running { background-color: @successText; }
   span.destroyed { background-color: @grayDark; }
 }

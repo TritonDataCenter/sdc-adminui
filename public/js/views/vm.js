@@ -57,11 +57,8 @@ define(function(require) {
             this.image = new Img();
             this.server = new Server();
 
-            this.image.on('change', this.renderImage, this);
-            this.server.on('change', this.renderServer, this);
-            this.owner.on('change', this.renderOwner, this);
-
             this.image.set({ uuid: this.vm.get('image_uuid') });
+            
             if (! this.image.get('updated_at'))
                 this.image.fetch();
 
@@ -189,13 +186,6 @@ define(function(require) {
             }
         },
 
-        renderImage: function() {
-            this.$('.image-name-version').html(this.image.nameWithVersion());
-            this.$('.image-uuid').html(this.image.get('uuid'));
-
-            return this;
-        },
-
         renderTags: function() {
             this.tagsListView.setElement(this.$('.tags')).render();
         },
@@ -204,27 +194,45 @@ define(function(require) {
             this.metadataListView.setElement(this.$('.metadata')).render();
         },
 
-        renderServer: function() {
-            this.$('.server-hostname').html(this.server.get('hostname'));
-            this.$('.server-uuid').html(this.server.get('uuid'));
-        },
-
-        renderOwner: function() {
-            this.$('.owner-name').html(this.owner.get('cn'));
-            this.$('.owner-uuid').html(this.owner.get('uuid'));
-
-            return this;
-        },
-
         renderSnapshots: function() {
             this.snapshotsListView.setElement(this.$('.snapshots')).render();
         },
 
         onRender: function() {
-            this.renderImage();
+
             this.renderTags();
             this.renderMetadata();
             this.renderSnapshots();
+
+            this.stickit(this.image, {
+                '.image-uuid': 'uuid',
+                '.image-name-version': {
+                    observe: ['name', 'version'],
+                    onGet: function(val, attr) {
+                        console.log('onGet');
+                        return val[0] + val[1];
+                    }
+                }
+            });
+
+            this.stickit(this.owner, {
+                '.owner-name': 'cn',
+                '.owner-uuid': 'uuid'
+            });
+
+            this.stickit(this.vm, {
+                '.vm-alias': 'alias',
+                '.vm-memory': 'ram',
+                '.vm-uuid': 'uuid',
+                '.vm-state': 'state'
+            });
+
+            this.stickit(this.server, {
+                '.server-hostname': 'hostname',
+                '.server-uuid': 'uuid'
+            });
+
+
             return this;
         }
 
