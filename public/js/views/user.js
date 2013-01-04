@@ -7,9 +7,9 @@ define(function(require) {
 
   var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
-    template: '<td>{{name}}</td><td>{{fingerprint}}</td><td><a class="remove">remove</a></td>',
+    template: '<td>{{name}}</td><td>{{fingerprint}}</td><td><button class="btn btn-small btn-danger remove"><i class="icon-remove-sign icon-white"></i> Delete</button></td>',
     events: {
-      'click a.remove': 'onClickRemove'
+      'click .remove': 'onClickRemove'
     },
     onClickRemove: function() {
       this.model.destroy();
