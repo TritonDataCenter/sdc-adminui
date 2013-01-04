@@ -1,6 +1,6 @@
 <div id="page-vm">
   <div class="page-header">
-    <h1>{{vm.alias}} <small>{{vm.uuid}}</small></h1>
+    <h1><span class="vm-alias"></span> <small class="vm-uuid"></small></h1>
   </div>
 
   <div class="btn-group pull-right actions">
@@ -57,17 +57,9 @@
         </td>
       </tr>
       <tr>
-        <th>IP 
-          {{#if vm.ips.length}}
-          Addresses
-          {{else}}
-          Address
-          {{/if}}
-        </th>
+        <th>IP Addresse</th>
         <td>
-          {{#each vm.nics}}
-          {{this.ip}}<br>
-          {{/each}}
+          <span class="vm-ips"></span>
         </td>
       </tr>
       <tr>
@@ -86,14 +78,16 @@
       </tr>
       <tr>
         <th>Swap</th>
-        <td>{{vm.max_swap}} MB</td>
+        <td><span class="vm-swap"></span> MB</td>
       </tr>
       <tr>
         <th>Package</th>
         <td>
-          <a class="package" href="/packages/{{vm.billing_id}}">
-            {{vm.package_name}} {{vm.package_verison}}
+          <a class="package">
+            <span class="package-name"></span>
+            <span class="package-version"></span>
           </a>
+          <span class="billing-id"></span>
         </td>
       </tr>
     </table>
@@ -102,29 +96,7 @@
     <div class="row-fluid">
       <div class="span12">
         <h3>Network Interfaces</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>IP</th>
-              <th>MAC Address</th>
-              <th>Netmask</th>
-              <th>Tag</th>
-            </tr>
-          </thead>
-          <tbody>
-
-            {{#each vm.nics}}
-            <tr>
-              <td>{{this.interface}}</td>
-              <td>{{this.ip}}</td>
-              <td>{{this.mac}}</td>
-              <td>{{this.netmask}}</td>
-              <td>{{this.nic_tag}}</td>
-            </tr>
-            {{/each}}
-          </tbody>
-        </table>
+        <div class="nics"></div>
       </div>
     </div>
 

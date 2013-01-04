@@ -9,6 +9,7 @@ define(function(require) {
 
     var VMDeleteModal = require('views/vm-delete-modal');
     var TagsList = require('views/tags-list');
+    var NicsList = require('views/nics');
     var MetadataList = require('views/metadata');
     var SnapshotsList = require('views/snapshots');
     var CreateProbeController = require('controllers/create-probe');
@@ -46,6 +47,7 @@ define(function(require) {
 
         initialize: function(options) {
             _.bindAll(this);
+
             this.vent = adminui.vent;
 
             if (options.uuid)
@@ -88,22 +90,28 @@ define(function(require) {
                 this.server.set({uuid: m.get('server_uuid')});
                 this.server.fetch();
             }, this);
+            
+            this.vm.on('change:customer_metadata', function(m) {
+                this.renderMetadata();
+            }, this);
 
-            this.vm.on('change:alias', this.render, this);
-            this.vm.fetch();
+            this.vm.on('change:tags', function() {
+                this.renderTags();
+            }, this);
+
+            this.vm.on('change:snapshots', function() {
+                this.renderSnapshots();
+            }, this);
+
+            this.vm.on('change:nics', function() {
+                this.renderNics();
+            }, this);
 
             this.metadataListView = new MetadataList({vm: this.vm});
             this.tagsListView = new TagsList({vm: this.vm});
             this.snapshotsListView = new SnapshotsList({vm: this.vm});
-        },
 
-        serializeData: function() {
-            return {
-                vm: this.vm.toJSON(),
-                image: this.image,
-                server: this.server,
-                owner: this.owner.toJSON()
-            };
+            this.vm.fetch();
         },
 
         clickedStartVm: function(e) {
@@ -190,6 +198,10 @@ define(function(require) {
             this.tagsListView.setElement(this.$('.tags')).render();
         },
 
+        renderNics: function() {
+            this.nicsList.render();
+        },
+
         renderMetadata: function() {
             this.metadataListView.setElement(this.$('.metadata')).render();
         },
@@ -199,17 +211,18 @@ define(function(require) {
         },
 
         onRender: function() {
+            this.nicsList = new NicsList({vm: this.vm, el: this.$('.nics')});
 
             this.renderTags();
             this.renderMetadata();
             this.renderSnapshots();
+            this.renderNics();
 
             this.stickit(this.image, {
                 '.image-uuid': 'uuid',
                 '.image-name-version': {
                     observe: ['name', 'version'],
                     onGet: function(val, attr) {
-                        console.log('onGet');
                         return val[0] + val[1];
                     }
                 }
@@ -223,8 +236,32 @@ define(function(require) {
             this.stickit(this.vm, {
                 '.vm-alias': 'alias',
                 '.vm-memory': 'ram',
+                '.vm-swap': 'max_swap',
                 '.vm-uuid': 'uuid',
-                '.vm-state': 'state'
+                '.vm-state': 'state',
+                '.vm-ips': {
+                    observe: 'nics',
+                    onGet: function(val) {
+                        if (val.length) {
+                            var ips = _.map(val, function(nic) {
+                                return nic.ip;
+                            });
+                            return ips.join(',');
+                        }
+                    }
+                },
+                '.package': {
+                    attributes: [{
+                        name: 'href',
+                        observe: 'billing_id',
+                        onGet: function(val) {
+                            return '/packages/' + val;
+                        }
+                    }]
+                },
+                '.package-name': 'package_name',
+                '.package-version': 'package_version',
+                '.billing-id': 'billing_id'
             });
 
             this.stickit(this.server, {
