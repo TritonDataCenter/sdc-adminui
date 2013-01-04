@@ -2,15 +2,18 @@
   <span class="
     label
     {{#if running}}
-    label-success
+    {{status}}
     {{else}}
     label-warn
     {{/if}}
     ">
+    {{#if running}}
+    <i class="icon-ok-sign icon-white"></i>
+    {{/if}}
     {{status}}
   </span>
 </td>
-<td class="name">{{hostname}}</td>
+<td class="name"><a>{{hostname}}</a></td>
 <td class="memory">
   {{#if memory_total_bytes}}
   <span class="percent">{{memory_percent}} %</span>

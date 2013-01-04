@@ -247,7 +247,7 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
 }
 
 .vms-list tr {
-  th.status { width: 70px; }
+  th.status { width: 80px; }
   th.memory, td.memory { width: 140px; text-align: right; padding-right: 30px; }
   td.uuid {
    width: 300px;
@@ -256,7 +256,7 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
     font-family: monospace;
   }
   td.alias a { cursor: pointer; }
-  span.running { background-color: @successText; }
+  span.running { background-color: #4cc658; }
   span.destroyed { background-color: @grayDark; }
 }
 
@@ -284,6 +284,7 @@ h2, h3, h4, h5, h6 { font-weight: 300; }
     tr td { cursor: pointer; }
 
     .status { width: 100px; }
+    .status span.running { background: #4cc658;}
     .memory {
       width: 200px;
       .percent { display: inline-block; width: 60px; }
