@@ -1,6 +1,11 @@
+<h3>Network Interfaces
+  <button class="btn pull-right"><i class="icon-plus-sign"></i> Add New NIC</button>
+</h3>
+
 <table class="table">
   <thead>
     <tr>
+      <th style="width: 20px"></th>
       <th>Name</th>
       <th>IP</th>
       <th>MAC Address</th>
@@ -9,15 +14,13 @@
     </tr>
   </thead>
   
-  <tbody>
-    {{#each this.nics}}
-    <tr>
-      <td>{{this.interface}}</td>
-      <td>{{this.ip}}</td>
-      <td>{{this.mac}}</td>
-      <td>{{this.netmask}}</td>
-      <td>{{this.nic_tag}}</td>
-    </tr>
-    {{/each}}
-  </tbody>
+  <tbody></tbody>
+  <tfoot>
+    <td colspan="6">
+      <div class="btn-group">
+        <button class="btn btn-mini btn-danger"><i class="icon-white icon-remove-sign"></i> Delete Selected NIC</button>
+      </div>
+    </td>
+  </tfoot>
 </table>
+

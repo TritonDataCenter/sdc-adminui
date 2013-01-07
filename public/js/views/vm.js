@@ -99,17 +99,12 @@ define(function(require) {
                 this.renderTags();
             }, this);
 
-            this.vm.on('change:snapshots', function() {
-                this.renderSnapshots();
-            }, this);
-
             this.vm.on('change:nics', function() {
                 this.renderNics();
             }, this);
 
             this.metadataListView = new MetadataList({vm: this.vm});
             this.tagsListView = new TagsList({vm: this.vm});
-            this.snapshotsListView = new SnapshotsList({vm: this.vm});
 
             this.vm.fetch();
         },
@@ -207,11 +202,12 @@ define(function(require) {
         },
 
         renderSnapshots: function() {
-            this.snapshotsListView.setElement(this.$('.snapshots')).render();
+            this.snapshotsListView.render();
         },
 
         onRender: function() {
             this.nicsList = new NicsList({vm: this.vm, el: this.$('.nics')});
+            this.snapshotsListView = new SnapshotsList({vm: this.vm, el: this.$('.snapshots') });
 
             this.renderTags();
             this.renderMetadata();

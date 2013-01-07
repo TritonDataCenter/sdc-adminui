@@ -7,7 +7,7 @@ define(function(require) {
 
     var SnapshotRow = Backbone.Marionette.ItemView.extend({
         tagName: 'tr',
-        template: Handlebars.compile('<td>{{name}}</td>')
+        template: Handlebars.compile('<td>{{name}}</td><td>{{created_at}}</td>')
     });
 
 
@@ -15,14 +15,33 @@ define(function(require) {
         itemView: SnapshotRow,
         itemViewContainer: 'tbody',
         template: require('text!tpl/snapshots.html'),
+        events: {
+            'click button': 'clickedCreateSnapshot'
+        },
         initialize: function(options) {
-            this.collection = new Snapshots(options.vm.get('snapshots'));
+            this.vm = options.vm;
+            this.collection = new Snapshots(this.vm.get('snapshots'));
+            this.bindTo(this.collection, "add", this.render, this);
+            this.bindTo(this.collection, "remove", this.render, this);
+            this.bindTo(this.collection, "reset", this.render, this);
+            this.bindTo(this.vm, 'change:snapshots', this.resetSnapshots, this);
         },
-        serializeData: function() {
-            return {snapshots: this.collection};
+        resetSnapshots: function(vm, n) {
+            this.collection.reset(vm.get('snapshots'));
         },
-        onShow: function() {
-            this.collection.add(new Snapshot({name:'hello'}));
+        templateHelpers: function() {
+            var self = this;
+            return {
+                snapshots: this.collection,
+                hasSnapshots: function(data) {
+                    return self.collection.length > 0;
+                }
+            };
+        },
+        clickedCreateSnapshot: function() {
+            this.vm.createSnapshot(function(snapshot) {
+                console.log(snapshot);
+            });
         }
     });
     return View;

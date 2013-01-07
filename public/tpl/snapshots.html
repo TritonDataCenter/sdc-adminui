@@ -1,18 +1,17 @@
-  <table class="table">
-    {{#if snapshots.length}}
-    <thead>
-      <th>Name</th>
-    </thead>
-    {{/if}}
+<h3>Snapshots
+  <button class="btn pull-right"><i class="icon-camera"></i> Create Snapshot</button>
+</h3>
+<table class="table">
+  {{#if hasSnapshots}}
+  <thead>
+    <th>Name</th>
+    <th>Snapshot Date</th>
+  </thead>
+  {{/if}}
 
-    <tbody>
-      {{#unless snapshots.length}}
-      <tr><td class="empty">This VM does not have any snapshots.</td></tr>
-      {{/unless}}
-    </tbody>
-    <tfoot>
-      <tr>
-        <td><a class="btn"><i class="icon-camera"></i> Take New Snapshot</a></td>
-      </tr>
-    </tfoot>
-  </table>
+  <tbody>
+    {{#unless hasSnapshots}}
+    <tr><td class="empty">This VM does not have any snapshots.</td></tr>
+    {{/unless}}
+  </tbody>
+</table>
