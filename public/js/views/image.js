@@ -118,7 +118,6 @@ define(function(require) {
         onClickDisable: function(e) {
             e.preventDefault();
             var self = this;
-            alert('blocked on imgapi.disableImage'); //XXX
             this.model.disable(function() {
                 self.model.fetch();
             });
