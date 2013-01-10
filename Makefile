@@ -31,7 +31,7 @@ JSSTYLE_FLAGS    = -o indent=2,doxygen,unparenthesized-return=0
 REPO_MODULES	 = 
 SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
 
-NODE_PREBUILT_VERSION=v0.8.9
+NODE_PREBUILT_VERSION=v0.8.14
 NODE_PREBUILT_TAG=zone
 
 include ./tools/mk/Makefile.defs
