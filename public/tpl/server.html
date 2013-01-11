@@ -11,6 +11,16 @@
             <th>Datacenter</th>
             <td>{{datacenter}}</td>
           </tr>
+          <tr class="rack">
+            <th>Rack</th>
+            <td>
+              {{#if rack_identifier}}
+              {{rack_identifier}}
+              {{else}}
+              <span class="none">Unspecified</span>
+              {{/if}}
+            </td>
+          </tr>
           <tr>
             <th>UUID</th>
             <td>{{uuid}}</td>
