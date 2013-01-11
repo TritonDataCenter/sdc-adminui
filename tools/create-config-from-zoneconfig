@@ -5,77 +5,104 @@ var util = require('util');
 var fmt = require('util').format;
 
 function parseZoneConfig(zonecfg) {
-  var cfg = {};
-  var file = fs.readFileSync(zonecfg, 'ascii');
-  var lines = file.split('\n');
-  var i;
-  for (i = 0; i < lines.length; i++) {
-    var entry = lines[i];
-    if (entry.length === 0) { continue; }
-    var parts = entry.match(/^(.+)=\'(.*)\'$/);
+    var cfg = {};
+    var file = fs.readFileSync(zonecfg, 'ascii');
+    var lines = file.split('\n');
+    var i;
+    for (i = 0; i < lines.length; i++) {
+        var entry = lines[i];
+        if (entry.length === 0) {
+            continue;
+        }
+        var parts = entry.match(/^(.+)=\'(.*)\'$/);
 
-      var k = parts[1].toLowerCase();
-    var v = parts[2];
+        var k = parts[1].toLowerCase();
+        var v = parts[2];
 
-    cfg[k] = v;
-  }
-  return cfg;
+        cfg[k] = v;
+    }
+    return cfg;
 }
 
 function translateZoneConfig(zc) {
-  var cfg = {};
+    var cfg = {};
 
-  cfg.host = '0.0.0.0';
-  cfg.port = 80;
+    cfg.host = '0.0.0.0';
+    cfg.port = 80;
 
-  cfg.sslport = 443;
-  cfg.ssl = {};
-  cfg.ssl.certificate = "/opt/smartdc/adminui/etc/ssl/default.pem";
-  cfg.ssl.key = "/opt/smartdc/adminui/etc/ssl/default.pem";
+    cfg.sslport = 443;
+    cfg.ssl = {};
+    cfg.ssl.certificate = "/opt/smartdc/adminui/etc/ssl/default.pem";
+    cfg.ssl.key = "/opt/smartdc/adminui/etc/ssl/default.pem";
 
-  cfg.ufds = {
-    "url": fmt("ldaps://%s", zc.ufds_admin_ips),
-    "bindDN": fmt('%s', zc.ufds_root_dn),
-    "bindPassword": fmt("%s", zc.ufds_root_pw),
-    "cache": {
-      "size": 1000,
-      "expiry": 300
-    }
-  };
+    cfg.ufds = {
+        "url": fmt("ldaps://%s", zc.ufds_admin_ips),
+        "bindDN": fmt('%s', zc.ufds_root_dn),
+        "bindPassword": fmt("%s", zc.ufds_root_pw),
+        "cache": {
+            "size": 1000,
+            "expiry": 300
+        }
+    };
 
-  cfg.redis = {
-    "host": zc.redis_admin_ips.split(',')[0],
-    "port": zc.redis_port,
-    "db": 3
-  };
+    cfg.moray = {
+        "host": zc.moray_admin_ips,
+        "port": 2020,
+        "connectTimeout": 200,
+        "retry": {
+          "retries": 2,
+          "minTimeout": 500
+        }
+    };
 
-  var dcs = cfg.datacenters = {};
-  var dc = cfg.datacenters[zc.datacenter_name] = {};
 
-  dc.amon = { url: fmt("http://%s", zc.amon_admin_ips) };
-  dc.dcapi = { url: fmt("%s", zc.dcapi_url) };
-  dc.vmapi = { url: fmt("http://%s", zc.vmapi_admin_ips) };
-  dc.cnapi = { url: fmt("http://%s", zc.cnapi_admin_ips) };
-  dc.napi = { url: fmt("http://%s", zc.napi_admin_ips) };
-  dc.ca = { url: fmt("http://%s:23181", zc.ca_admin_ips) };
-  dc.imgapi = { url: fmt("http://%s", zc.imgapi_admin_ips) };
+    cfg.redis = {
+        "host": zc.redis_admin_ips.split(',')[0],
+        "port": zc.redis_port,
+        "db": 3
+    };
 
-  return cfg;
+    var dcs = cfg.datacenters = {};
+    var dc = cfg.datacenters[zc.datacenter_name] = {};
+
+    dc.amon = {
+        url: fmt("http://%s", zc.amon_admin_ips)
+    };
+    dc.dcapi = {
+        url: fmt("%s", zc.dcapi_url)
+    };
+    dc.vmapi = {
+        url: fmt("http://%s", zc.vmapi_admin_ips)
+    };
+    dc.cnapi = {
+        url: fmt("http://%s", zc.cnapi_admin_ips)
+    };
+    dc.napi = {
+        url: fmt("http://%s", zc.napi_admin_ips)
+    };
+    dc.ca = {
+        url: fmt("http://%s:23181", zc.ca_admin_ips)
+    };
+    dc.imgapi = {
+        url: fmt("http://%s", zc.imgapi_admin_ips)
+    };
+
+    return cfg;
 }
 
 
 if (typeof(process.argv[2]) === 'undefined') {
-  banner();
-  process.exit(1);
+    banner();
+    process.exit(1);
 }
 
 if (typeof(process.argv[3]) === 'undefined') {
-  banner();
-  process.exit(1);
+    banner();
+    process.exit(1);
 }
 
 function banner() {
-  util.print("create-config-from-zoneconfig <path/to/zoneconfig> <path/to/config>");
+    util.puts("create-config-from-zoneconfig <path/to/zoneconfig> <path/to/config>");
 }
 
 var src = process.argv[2];
@@ -90,8 +117,9 @@ util.puts("*** config:");
 util.puts(util.inspect(config, false, null));
 
 var out = JSON.stringify(config, null, 2);
-console.log("*** Writing config to: "+dst)
-fs.writeFileSync(dst, out, 'ascii')
+console.log("*** Writing config to: " + dst);
+fs.writeFileSync(dst, out, 'ascii');
 
 util.puts("*** DONE");
-process.exit(0)
+
+process.exit(0);
