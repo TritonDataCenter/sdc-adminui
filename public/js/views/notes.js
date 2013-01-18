@@ -41,10 +41,26 @@ define(function(require) {
 
     });
 
+
+
+
+
+    var EmptyNoteView = Backbone.Marionette.ItemView.extend({
+        tagName: 'li',
+        attributes: {
+            'class': 'empty'
+        },
+        template: Handlebars.compile('Noone has written anything yet...')
+    });
+
+
+
+
     var View = Backbone.Marionette.CompositeView.extend({
         template: require('tpl!notes'),
 
         itemView: NotesItemView,
+        emptyView: EmptyNoteView,
 
         itemViewContainer: 'ul',
 
