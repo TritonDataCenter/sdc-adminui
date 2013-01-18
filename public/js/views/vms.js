@@ -2,11 +2,11 @@ define(function(require) {
     /**
      * views/vms.js
      */
+    var app = require('adminui');
+
     var Vms = require('models/vms');
     var VmsList = require('views/vms-list');
-    var VmsTemplate = require('text!tpl/vms.html');
-
-    var app = require('adminui');
+    var VmsTemplate = require('tpl!vms');
 
     var FilterForm = Backbone.View.extend({
         events: {

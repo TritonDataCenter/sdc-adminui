@@ -1,6 +1,6 @@
 define(function(require) {
 
-  var ItemTemplate = require('text!tpl/vms-list-item.html');
+  var ItemTemplate = require('tpl!vms-list-item');
   var adminui = require('adminui');
 
   var ItemView = Marionette.ItemView.extend({

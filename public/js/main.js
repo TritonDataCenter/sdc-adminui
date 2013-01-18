@@ -18,8 +18,7 @@ requirejs.config({
         "bootstrap": 'lib/bootstrap',
         "kevinykchan-bootstrap-typeahead": 'lib/kevinykchan-bootstrap-typeahead',
         "jquery": "require-jquery",
-        "jquery.serializeObject": "lib/jquery.serializeObject",
-        "tpl": "../tpl"
+        "jquery.serializeObject": "lib/jquery.serializeObject"
     },
     shim: {
         "jquery.serializeObject": ["jquery"],

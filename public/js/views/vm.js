@@ -12,10 +12,11 @@ define(function(require) {
     var NicsList = require('views/nics');
     var MetadataList = require('views/metadata');
     var SnapshotsList = require('views/snapshots');
+    var NotesView = require('views/notes');
     var CreateProbeController = require('controllers/create-probe');
     var adminui = require('adminui');
 
-    var tplVm = require('text!tpl/vm.html');
+    var tplVm = require('tpl!vm');
 
 
     /**
@@ -208,6 +209,9 @@ define(function(require) {
         onRender: function() {
             this.nicsList = new NicsList({vm: this.vm, el: this.$('.nics')});
             this.snapshotsListView = new SnapshotsList({vm: this.vm, el: this.$('.snapshots') });
+
+            this.notesView = new NotesView({itemUuid: this.vm.get('uuid'), el: this.$('.notes')});
+            this.notesView.render();
 
             this.renderTags();
             this.renderMetadata();

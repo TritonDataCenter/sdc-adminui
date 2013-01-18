@@ -1,6 +1,6 @@
 define(function(require) {
   var Job = require('models/job');
-  var topbarTpl = require('text!tpl/topbar.html');
+  var topbarTpl = require('tpl!topbar');
   var Marionette = require('backbone.marionette');
 
   var JobItemView = Backbone.View.extend({

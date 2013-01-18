@@ -20,7 +20,7 @@ define(function(require) {
     var Topbar = require('views/topbar');
     var Mainnav = require('views/mainnav');
 
-    var tplChrome = require('text!tpl/chrome.html');
+    var tplChrome = require('tpl!chrome');
     var adminui = require('adminui');
 
     var AppView = Backbone.Marionette.Layout.extend({
@@ -48,7 +48,7 @@ define(function(require) {
                     var json = JSON.parse(err.xhr.responseText);
                     err.responseBody = JSON.stringify(json, null, 2);
                 }
-                var t = require('text!tpl/error.html');
+                var t = require('tpl!error');
                 var tpl = Handlebars.compile(t);
                 $(tpl(err)).modal();
             }

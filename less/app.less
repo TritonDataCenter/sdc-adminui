@@ -2,8 +2,8 @@
 @import "variables.less";
 @import "signin.less";
 
-body { height: 100%;}
-html{ height: 100% }
+body { height: 100%; }
+html { height: 100%; }
 #chrome { min-height: 100%; }
 #footer { height: 24px; background: #dfe7ec;}
 
@@ -754,7 +754,6 @@ ul.attributes {
 
 
   td:hover {}
-
   td:hover .row-actions {
     visibility: visible;
     a { 
@@ -768,8 +767,19 @@ ul.attributes {
 
 
 
-.comments {
+.notes {
+  li {
+    border-bottom: 1px solid #eee;
+  }
+  li:last-child {
+    border-bottom: none;
+  }
   .author { font-weight: bold; display: inline-block;}
   .date { font-size: 12px; color: @gray; display: inline-block;}
-  .message { display: block; padding: 10px;}
+  .note { display: block; padding: 8px;}
+
+  ul { height: 320px; overflow-y: scroll; }
+  li { padding: 5px;}
+  textarea { width: 98%; }
+  button { float: right; width: 100px;}
 }

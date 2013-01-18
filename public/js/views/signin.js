@@ -4,7 +4,7 @@
 
 define(function(require) {
     var Marionette = require('backbone.marionette');
-    var tplSignin = require('text!tpl/signin.html');
+    var tplSignin = require('tpl!signin');
 
     var View = Marionette.ItemView.extend({
         attributes: {
