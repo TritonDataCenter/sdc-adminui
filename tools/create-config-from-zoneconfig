@@ -45,17 +45,6 @@ function translateZoneConfig(zc) {
         }
     };
 
-    cfg.moray = {
-        "host": zc.moray_admin_ips,
-        "port": 2020,
-        "connectTimeout": 200,
-        "retry": {
-          "retries": 2,
-          "minTimeout": 500
-        }
-    };
-
-
     cfg.redis = {
         "host": zc.redis_admin_ips.split(',')[0],
         "port": zc.redis_port,
@@ -64,6 +53,16 @@ function translateZoneConfig(zc) {
 
     var dcs = cfg.datacenters = {};
     var dc = cfg.datacenters[zc.datacenter_name] = {};
+
+    dc.moray = {
+        "host": zc.moray_admin_ips,
+        "port": 2020,
+        "connectTimeout": 200,
+        "retry": {
+          "retries": 2,
+          "minTimeout": 500
+        }
+    };
 
     dc.amon = {
         url: fmt("http://%s", zc.amon_admin_ips)
