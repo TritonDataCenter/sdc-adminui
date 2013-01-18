@@ -3,84 +3,90 @@
     <h1>{{hostname}} <small>{{uuid}}</small></h1>
   </div>
 
-  <div class="server-details">
-    <div class="span10">
-      <table class="overview">
-        <tbody>
-          <tr>
-            <th>Datacenter</th>
-            <td>{{datacenter}}</td>
-          </tr>
+  <div class="row-fluid">
+    <div class="span8">
+      <div class="row-fluid">
+        <table class="overview">
+          <tbody>
+            <tr>
+              <th>Datacenter</th>
+              <td>{{datacenter}}</td>
+            </tr>
 
-          <tr class="rack">
-            <th>Rack</th>
-            <td>
-              {{rack_identifier}}
-              <a class="change-rack-id">Change <i class="icon-edit"></i></a>
-            </td>
-          </tr>
+            <tr class="rack">
+              <th>Rack</th>
+              <td>
+                {{rack_identifier}}
+                <a class="change-rack-id">Change <i class="icon-edit"></i></a>
+              </td>
+            </tr>
 
-          <tr>
-            <th>UUID</th>
-            <td>{{uuid}}</td>
-          </tr>
-          <tr>
-            <th>Hostname</th>
-            <td>{{hostname}}</td>
-          </tr>
-          <tr>
-            <th>Platform Version</th>
-            <td>{{platform_version}}</td>
-          </tr>
-        </tbody>
-      </table>
+            <tr>
+              <th>UUID</th>
+              <td>{{uuid}}</td>
+            </tr>
+            <tr>
+              <th>Hostname</th>
+              <td>{{hostname}}</td>
+            </tr>
+            <tr>
+              <th>Platform Version</th>
+              <td>{{platform_version}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div><!--row fluid-->
+
+      <div class="row-fluid">
+        <div class="span12">
+          <h3>Hardware</h3>
+          <table class="hardware">
+            <tbody>
+              <tr>
+                <th>CPU Type</th>
+                <td>{{cpu_type}}</td>
+              </tr>
+              <tr>
+                <th>Cores</th>
+                <td>{{cpu_cores}}</td>
+              </tr>
+              <tr>
+                <th>Serial Number</th>
+                <td>{{serial_number}}</td>
+              </tr>
+              <tr>
+                <th>Total Memory</th>
+                <td>{{total_memory}} MiB</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div><!-- row-fluid-->
+
+      <div class="row-fluid">
+        <div class="span12">
+          <h3>Disks</h3>
+          <table class="disks">
+            <thead>
+              <tr>
+                <th>Device</th>
+                <th>Size</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each disks}}
+              <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.size}} GB</td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-
-    <div class="row-fluid">
-      <div class="span5">
-        <h3>Hardware</h3>
-        <table class="hardware">
-          <tbody>
-            <tr>
-              <th>CPU Type</th>
-              <td>{{cpu_type}}</td>
-            </tr>
-            <tr>
-              <th>Cores</th>
-              <td>{{cpu_cores}}</td>
-            </tr>
-            <tr>
-              <th>Serial Number</th>
-              <td>{{serial_number}}</td>
-            </tr>
-            <tr>
-              <th>Total Memory</th>
-              <td>{{total_memory}} MiB</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="span5">
-        <h3>Disks</h3>
-
-        <table class="disks">
-          <thead>
-            <tr>
-              <th>Device</th>
-              <th>Size</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each disks}}
-            <tr>
-              <td>{{this.name}}</td>
-              <td>{{this.size}} GB</td>
-            </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
+    <div class="span4">
+      <div class="notes"></div>
     </div>
 
   </div>

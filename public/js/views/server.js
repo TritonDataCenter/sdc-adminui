@@ -22,6 +22,7 @@ define(function(require) {
     });
 
     var Server = require('models/server');
+    var NotesView = require('views/notes');
     var BaseView = require('views/base');
     var ServerTemplate = require('text!tpl/server.html');
 
@@ -81,6 +82,11 @@ define(function(require) {
             this.$('.rack td').append(view.el);
             this.$('.rack td a').hide();
             view.render();
+        },
+        
+        onRender: function() {
+            this.notesView = new NotesView({itemUuid: this.model.get('uuid'), el: this.$('.notes')});
+            this.notesView.render();
         },
 
         url: function() {
