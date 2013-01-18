@@ -1,12 +1,24 @@
 define(function(require) {
     var Notes = require('models/notes');
     var Note = require('models/note');
+    var User = require('models/user');
 
     var NotesItemView = Backbone.Marionette.ItemView.extend({
         template: require('tpl!notes-item'),
         tagName: 'li',
-        bindings: {
-            '.author': 'owner_uuid',
+        initialize: function() {
+            this.user = new User({uuid: this.model.get('owner_uuid')});
+            this.user.fetch();
+        },
+        userBindings: {
+            '.author': {
+                observe: ['cn', 'sn'],
+                onGet: function(values) {
+                    return values.join(' ');
+                }
+            }
+        },
+        noteBindings: {
             '.note': 'note',
             '.date': {
                 observe: 'created',
@@ -23,7 +35,8 @@ define(function(require) {
             }
         },
         onRender: function() {
-            this.stickit();
+            this.stickit(this.model, this.noteBindings);
+            this.stickit(this.user, this.userBindings);
         }
 
     });
