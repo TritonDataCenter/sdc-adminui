@@ -26,6 +26,8 @@ define(function(require) {
         itemView: AddressesTableRow
     });
 
+    var NotesView = require('views/notes');
+
     var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         template: Template,
         sidebar: "networks",
@@ -43,6 +45,9 @@ define(function(require) {
             });
             addresses.fetch();
             this.modelBinder.bind(this.model, this.el);
+
+            this.notesView = new NotesView({itemUuid: this.model.get('uuid'), el: this.$('.notes')});
+            this.notesView.render();
         }
     });
 
