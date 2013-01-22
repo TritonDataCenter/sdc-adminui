@@ -64,23 +64,41 @@ define(function(require) {
 
         itemViewContainer: 'ul',
 
+        ui: {
+            'noteField': 'textarea',
+            'saveButton': 'button.add-note'
+        },
+
         events: {
+            'input textarea': 'noteChanged',
             'click button': 'saveNote'
+        },
+
+        noteChanged: function() {
+            if (this.ui.noteField.val().length) {
+                this.ui.saveButton.removeAttr('disabled');
+            } else {
+                this.ui.saveButton.attr('disabled', 'disabled');
+            }
         },
 
         saveNote: function() {
             var self = this;
-            var noteText = this.$('textarea').val();
+            var noteText = this.ui.noteField.val();
             var note = new Note({
                 item_uuid: this.collection.item_uuid,
                 note: noteText
             });
             note.save(null, {
                 success: function() {
-                    self.$('textarea').val('');
+                    self.ui.noteField.val('');
                     self.collection.fetch();
                 }
             });
+        },
+
+        onRender: function() {
+            this.ui.saveButton.attr('disabled', 'disabled');
         },
 
         initialize: function(options) {
