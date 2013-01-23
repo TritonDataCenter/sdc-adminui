@@ -44,14 +44,22 @@
   <div class="visibility">
     <h3>Visibility</h3>
     {{#if public}}
-      Image is available for <strong>public</strong> consumption
+      Image is available to the <strong>public</strong>
     {{else}}
-      This image is only available to the owner
+      This image is <strong>restricted to the owner</strong>
       {{#if acl.length}}
         and
         {{#each acl}} {{this}} {{/each}}
       {{/if}}
+    {{/if}}<br>
+
+    <button class="btn btn-small change-publicity">
+    {{#if public}}
+      <i class="icon-lock"></i> Make Image Private
+    {{else}}
+      <i class="icon-globe"></i> Make Image Public
     {{/if}}
+    </button>
   </div>
 
 </div>

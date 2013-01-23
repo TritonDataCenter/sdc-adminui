@@ -1,4 +1,5 @@
 define(function(require) {
+    var adminui = require('adminui');
     var Img = require('models/image');
     var ImageView = Backbone.Marionette.ItemView.extend({
         sidebar: 'images',
@@ -16,6 +17,7 @@ define(function(require) {
             'click .show-upload-form': 'onClickShowUploadForm',
             'click .cancel-upload-form': 'onClickCancelUploadForm',
             'click .start-upload': 'onClickStartUpload',
+            'click .change-publicity': 'onClickChangePublicity',
             'change .fileinput': 'onSelectFile'
         },
 
@@ -74,6 +76,14 @@ define(function(require) {
             this.viewModel.set({uploadform:false});
         },
 
+        onClickChangePublicity: function() {
+            var newVal = !this.model.get('public');
+            var self = this;
+            this.model.save({'public': newVal}, {success: function() {
+                self.model.fetch();
+            }});
+        },
+
         onChangeProgress: function(model, value) {
             if (value) {
                 this.$('li.progress').show();
@@ -97,7 +107,7 @@ define(function(require) {
         },
 
         onError: function(model, res) {
-            app.vent.trigger('error', {
+            adminui.vent.trigger('error', {
                 xhr: res,
                 context: 'images / imgapi'
             });
