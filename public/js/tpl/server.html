@@ -1,6 +1,17 @@
 <div id="page-server">
   <div class="page-header">
-    <h1>{{hostname}} <small>{{uuid}}</small></h1>
+    <h1>{{hostname}} <small>{{uuid}}</small>
+      <div class="server-state-container">
+        <span class="server-state">
+          {{status}}
+        </span>
+        {{#if setting_up}}
+        <span class="server-setting-up">
+          SETTING UP
+        </span>
+        {{/if}}
+      </div>
+    </h1>
   </div>
 
   <div class="row-fluid">
