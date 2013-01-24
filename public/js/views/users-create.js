@@ -1,25 +1,34 @@
 define(function(require) {
 
     var User = require('models/user');
+    var Template = require('tpl!users-create');
     
-    return Backbone.View.extend({
+    return Backbone.Marionette.ItemView.extend({
 
-        template: Handlebars.compile($("#template-users-create").html()),
+        template: Template,
+
+        id: 'users-create',
+
+        attributes: {
+            'class': 'modal fade'
+        },
 
         events: {
             'submit form': 'create'
         },
 
-        initialize: function() {
-            _.bindAll(this, 'showErrors');
-            this.model = new User();
-            this.model.on('error', this.showErrors, this);
+        modelEvents: {
+            'error': 'onError'
         },
 
-        showErrors: function(field, errors) {
+        initialize: function() {
+            this.model = new User();
+        },
+
+        onError: function(errRes) {
             var ul = $("<ul />");
-            _(errors).each(function(e) {
-                ul.append('<li>'+e+'</li>');
+            _(errRes.errors).each(function(e) {
+                ul.append('<li>'+e.message+' (' + e.field + ')</li>');
             });
 
             this.$(".alert")
@@ -44,7 +53,7 @@ define(function(require) {
                 },
                 error: function(model, resp) {
                     var response = JSON.parse(resp.responseText);
-                    model.trigger('error', 'errors', response.error);
+                    model.trigger('error', response);
                 }
             });
         },
@@ -59,11 +68,9 @@ define(function(require) {
             return obj;
         },
 
-        render: function() {
-            this.$el = $(this.template()).modal({keyboard: false});
-
+        onRender: function() {
+            this.$el.modal({keyboard: false});
             this.$el.on('shown', _.bind(function() {
-                this.delegateEvents();
                 this.$("input:first").focus();
             }, this));
 
