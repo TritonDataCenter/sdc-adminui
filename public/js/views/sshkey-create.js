@@ -26,12 +26,13 @@ define(function(require) {
         },
 
         onModelError: function(model, xhr, error) {
-            this.$(".alert").html(xhr.responseText);
+            this.$('textarea').parents('.control-group').addClass('error');
+            this.$(".alert").html(xhr.responseData.message);
             this.$(".alert").show();
-            console.log('error', xhr);
         },
 
         onClickSave: function() {
+            this.$('textarea').parents('.control-group').removeClass('error');
             var key = this.$('textarea[name=key]').val();
             this.model.save({key: key});
         },
