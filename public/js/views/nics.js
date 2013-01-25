@@ -48,11 +48,11 @@ define(function(require) {
         },
 
         enableActions: function() {
-            this.$(".btn-group").show();
+            this.$(".btn-group .remove-nics").show();
         },
 
         disableActions: function() {
-            this.$(".btn-group").hide();
+            this.$(".btn-group .remove-nics").hide();
         },
 
         onBeforeItemAdded: function(itemView) {
