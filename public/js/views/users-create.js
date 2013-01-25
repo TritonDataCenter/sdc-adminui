@@ -25,9 +25,11 @@ define(function(require) {
             this.model = new User();
         },
 
-        onError: function(errRes) {
+        onError: function(model, xhr) {
             var ul = $("<ul />");
-            _(errRes.errors).each(function(e) {
+            this.$('.control-group').removeClass('error');
+            _(xhr.responseData.errors).each(function(e) {
+                this.$('[name='+e.field+']').parents('.control-group').addClass('error');
                 ul.append('<li>'+e.message+' (' + e.field + ')</li>');
             });
 
@@ -50,10 +52,6 @@ define(function(require) {
                 success: function(model, resp) {
                     console.log('hello!');
                     self.$el.modal('hide').remove();
-                },
-                error: function(model, resp) {
-                    var response = JSON.parse(resp.responseText);
-                    model.trigger('error', response);
                 }
             });
         },
