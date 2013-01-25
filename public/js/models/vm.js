@@ -1,5 +1,6 @@
 define(function(require) {
-    var Vm = Backbone.Model.extend({
+    var Model = require('model');
+    var Vm = Model.extend({
         urlRoot: '/_/vms',
 
         idAttribute: 'uuid',
