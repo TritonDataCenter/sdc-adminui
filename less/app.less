@@ -799,3 +799,31 @@ ul.attributes {
   textarea { width: 98%; }
   button { float: right; width: 100px;}
 }
+
+
+#job-item-details {
+  li .name {
+    font-weight: bold;
+    width: 240px;
+    display: inline-block;
+  }
+  li .result {
+    display: inline-block;
+    color: green;
+  }
+  li.error {
+    .result { color: red;}
+  }
+}
+
+#page-jobs {
+  table {
+    .execution {
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: 13px;
+      &.succeeded { color: green;}
+      &.canceled { color: #762cff; }
+    }
+  }
+}
