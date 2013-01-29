@@ -73,6 +73,7 @@ define(function(require) {
         template: tplServers,
         itemView: ServersListItem,
         itemViewContainer: 'tbody',
+        
         url: function() {
             return 'servers';
         },
@@ -95,8 +96,6 @@ define(function(require) {
             this.filterForm.setElement(this.$('.servers-filter'));
             this.bindTo(this.filterForm, 'query', this.filter, this);
             this.bindTo(this.collection, 'error', this.onError, this);
-            console.log('onRender');
-
         }
     });
 
