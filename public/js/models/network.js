@@ -1,5 +1,6 @@
 define(function(require) {
-	return Backbone.Model.extend({
+    var Model = require('model');
+	return Model.extend({
 		urlRoot: "/_/networks",
 		idAttribute: 'uuid'
 	});

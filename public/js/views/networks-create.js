@@ -10,10 +10,16 @@ define(function(require) {
             'submit form': 'onSubmit',
             'click .create-new-nic-tag': 'onClickCreateNewNicTag'
         },
+
         ui: {
+            'alert': '.alert',
             'nicTagSelect': 'select[name=nic_tag]',
             'newNicTagField': 'input[name=nic_tag]',
             'createNewNicTagButton': '.create-new-nic-tag'
+        },
+
+        modelEvents: {
+            'error': 'onError'
         },
 
         initialize: function() {
@@ -47,15 +53,31 @@ define(function(require) {
             }});
         },
 
-        onModelError: function(model, res) {
-            var err = JSON.parse(res.responseText);
-            this.$('.error').html(err.message);
-            this.$('.alert').show();
+        onError: function(model, xhr, options) {
+            var fieldMap = {
+                'name': '[name=name]',
+                'subnet': '[name=subnet]',
+                'gateway': '[name=gateway]',
+                'provision_start_ip': '[name=provision_start_ip]',
+                'provision_end_ip': '[name=provision_end_ip]',
+                'resolvers': '[name=resolvers]',
+                'nic_tag': '[name=nic_tag]'
+            };
+            var err = xhr.responseData;
+            this.ui.alert.find('.message').html(err.message);
+            this.$('.control-group').removeClass('error');
+            _.each(err.errors, function(errObj) {
+                var field = $(fieldMap[errObj.field]);
+                field.parents('.control-group').addClass('error');
+            }, this);
+            this.ui.alert.find('.error').html(err.message);
+            this.ui.alert.show();
         },
+
+
 
         onRender: function() {
             this.ui.newNicTagField.hide();
-            this.bindTo(this.model, 'error', this.onModelError, this);
             this.nicTagsSelect.setElement(this.$('select[name=nic_tag]'));
             this.nicTags.fetch();
             var bindings = Backbone.ModelBinder.createDefaultBindings(this.el, 'name');
