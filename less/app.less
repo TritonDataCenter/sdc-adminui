@@ -822,8 +822,9 @@ ul.attributes {
       text-transform: uppercase;
       font-weight: bold;
       font-size: 13px;
-      &.succeeded { color: green;}
+      &.succeeded { color: @successColor;}
       &.canceled { color: #762cff; }
+      &.failed { color: @errorText; }
     }
   }
 }

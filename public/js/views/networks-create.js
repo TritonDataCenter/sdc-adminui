@@ -61,7 +61,8 @@ define(function(require) {
                 'provision_start_ip': '[name=provision_start_ip]',
                 'provision_end_ip': '[name=provision_end_ip]',
                 'resolvers': '[name=resolvers]',
-                'nic_tag': '[name=nic_tag]'
+                'nic_tag': '[name=nic_tag]',
+                'vlan_id': '[name=vlan_id]'
             };
             var err = xhr.responseData;
             this.ui.alert.find('.message').html(err.message);
