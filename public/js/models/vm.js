@@ -1,5 +1,6 @@
 define(function(require) {
     var Model = require('model');
+    var Job = require('models/job');
     var Vm = Model.extend({
         urlRoot: '/_/vms',
 
@@ -11,15 +12,24 @@ define(function(require) {
         },
 
         start: function(cb) {
-            $.post(this.url()+'?action=start', {}, cb);
+            $.post(this.url()+'?action=start', {}, function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                cb(job);
+            });
         },
 
         stop: function(cb) {
-            $.post(this.url()+'?action=stop', {}, cb);
+            $.post(this.url()+'?action=stop', {}, function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                cb(job);
+            });
         },
 
         reboot: function(cb) {
-            $.post(this.url()+'?action=reboot', {}, cb);
+            $.post(this.url()+'?action=reboot', {}, function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                cb(job);
+            });
         },
 
         delete: function(cb) {

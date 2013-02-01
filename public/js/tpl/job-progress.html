@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h2>{{name}}</h2>
+</div>
+<div class="modal-body">
+  {{uuid}}<br/>
+  {{execution}}
+
+  <div>
+    {{#each chain_results}}
+    <li class="{{#if error.length}}error{{/if}}">
+      <div class="name">{{name}}</div>
+      <div class="result">{{result}}</div>
+    </li>
+    {{/each}}
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn" data-dismiss="modal">Close</button>
+</div>

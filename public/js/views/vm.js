@@ -12,6 +12,8 @@ define(function(require) {
     var NicsList = require('views/nics');
     var MetadataList = require('views/metadata');
     var SnapshotsList = require('views/snapshots');
+
+    var JobProgressView = require('views/job-progress');
     var NotesView = require('views/notes');
     var CreateProbeController = require('controllers/create-probe');
     var adminui = require('adminui');
@@ -113,8 +115,8 @@ define(function(require) {
         clickedStartVm: function(e) {
             var self = this;
             this.vm.start(function(job) {
-                job.name = 'Start VM';
-                self.vent.trigger('watch-job', job);
+                var jobView = new JobProgressView({model: job});
+                jobView.show();
             });
         },
 
@@ -135,16 +137,16 @@ define(function(require) {
         clickedStopVm: function(e) {
             var self = this;
             this.vm.stop(function(job) {
-                job.name = 'Stop VM';
-                self.vent.trigger('watch-job', job);
+                var jobView = new JobProgressView({model: job});
+                jobView.show();
             });
         },
 
         clickedRebootVm: function(e) {
             var self = this;
             this.vm.reboot(function(job) {
-                job.name = 'Reboot VM';
-                self.event.trigger('watch-job', job);
+                var jobView = new JobProgressView({model: job});
+                jobView.show();
             });
         },
 
