@@ -1,21 +1,19 @@
-<div class="modal hide fade">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal">×</button>
-		<h3>Are you sure you want to delete this VM?</h3>
-	</div>
-	<div class="modal-body">
-		<p>
-			The Virtual Machine &nbsp; <strong><%= vm.get('alias') %></strong> <small><%= vm.get('uuid') %></small> &nbsp;
-			owned by <strong><%= owner.get('cn') %></strong> <small><%= owner.get('uuid') %></small>
-			will be deleted. All data for this Virtual 
-			Machine, including any snapshots created will be deleted <em>permanently</em>.
-		</p>
-		<p>
-			<strong>This operation cannot be undone.</strong>
-		</p>
-	</div>
-	<div class="modal-footer">
-		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
-		<a href="#" class="btn btn-danger delete">YES, Delete It</a>
-	</div>
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">×</button>
+	<h3>Are you sure you want to delete this VM?</h3>
+</div>
+<div class="modal-body">
+	<p>
+		The Virtual Machine &nbsp; <strong><%= {{vm.alias}} %></strong> <small>{{vm.uuid}}</small> &nbsp;
+		owned by <strong>{{owner.cn}}</strong> <small>{{owner.uuid}}</small>
+		will be deleted. All data for this Virtual 
+		Machine, including any snapshots created will be deleted <em>permanently</em>.
+	</p>
+	<p>
+		<strong>This operation cannot be undone.</strong>
+	</p>
+</div>
+<div class="modal-footer">
+	<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+	<a href="#" class="btn btn-danger delete">YES, Delete It</a>
 </div>

@@ -18,6 +18,7 @@ define(function(require) {
         },
         update: function() {
             this.model.fetch();
+            this.trigger('execution', this.model.get('execution'));
         },
         onClose: function() {
             clearInterval(this._timer);

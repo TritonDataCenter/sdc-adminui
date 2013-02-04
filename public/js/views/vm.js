@@ -152,7 +152,7 @@ define(function(require) {
 
         clickedDeleteVm: function(e) {
             var vmDeleteView = new VMDeleteModal({ vm: this.vm, owner: this.owner });
-            vmDeleteView.render();
+            vmDeleteView.show();
         },
 
         clickedServerHostname: function() {

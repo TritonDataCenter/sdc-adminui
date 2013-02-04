@@ -32,8 +32,11 @@ define(function(require) {
             });
         },
 
-        delete: function(cb) {
-            $.delete_(this.url(), cb);
+        del: function(cb) {
+            $.delete_(this.url(), function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                cb(job);
+            });
         },
 
         saveTags: function(cb) {

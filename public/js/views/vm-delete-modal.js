@@ -1,10 +1,14 @@
 
 define(function(require) {
+    var JobProgressView = require('views/job-progress');
     var BaseView = require('views/base');
-    var tplVmDelete = require('text!tpl/vm-delete.html');
+    var tplVmDelete = require('tpl!vm-delete');
 
-    return BaseView.extend({
+    return Backbone.Marionette.ItemView.extend({
         template: tplVmDelete,
+        attributes: {
+            'class': 'modal hide fade'
+        },
 
         events: {
             'click .delete': 'clickedDelete'
@@ -13,33 +17,27 @@ define(function(require) {
         initialize: function(options) {
             this.vm = options.vm;
             this.owner = options.owner;
-            var tpl = $(this.compileTemplate());
-            this.setElement(tpl);
         },
 
-        compileTemplate: function() {
-            return this.template({
-                vm: this.vm,
-                owner: this.owner
-            });
+        serializeData: function() {
+            return {
+                owner: this.owner.toJSON(),
+                vm: this.vm.toJSON()
+            };
         },
 
-        render: function() {
-            var self = this;
-            this.$el.on('hidden', function() {
-                self.$el.remove();
-            });
+        show: function() {
+            this.render();
             this.$el.modal();
-
-            return this;
         },
 
         clickedDelete: function(e) {
             var self = this;
             this.$el.modal('hide');
-            this.vm.delete(function(job) {
+            this.vm.del(function(job) {
                 job.name = 'Delete VM';
-                self.eventBus.trigger('watch-job', job);
+                var jobView = new JobProgressView({model: job});
+                jobView.show();
             });
         }
     });
