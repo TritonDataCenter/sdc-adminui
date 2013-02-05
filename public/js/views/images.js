@@ -1,5 +1,6 @@
 define(function(require) {
 
+    var moment = require('moment');
     var Images = require('models/images');
     var app = require('adminui');
 
@@ -17,6 +18,10 @@ define(function(require) {
         },
 
         templateHelpers: {
+            publish_date: function() {
+                var d = moment(this.published_at);
+                return d.format("MMM D, YYYY");
+            },
             active: function() {
                 return this.state == 'active';
             },

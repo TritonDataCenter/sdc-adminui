@@ -14,6 +14,7 @@ requirejs.config({
         "backbone.modelbinder": "lib/Backbone.ModelBinder",
         "backbone.eventbinder": "lib/backbone.eventbinder",
         "backbone.wreqr": "lib/backbone.wreqr",
+        "moment": "lib/moment.min",
         "handlebars": "lib/handlebars",
         "bootstrap": 'lib/bootstrap',
         "kevinykchan-bootstrap-typeahead": 'lib/kevinykchan-bootstrap-typeahead',
