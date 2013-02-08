@@ -4,7 +4,13 @@
 	</span>
 </td>
 <td class="alias">
-  <a>{{ alias }}</a>
+  <a>
+    {{#if alias}}
+    {{alias}}
+    {{else}}
+    {{uuid}}
+    {{/if}}
+  </a>
 </td>
 <td class="memory">{{ ram }} MB</td>
 <td class="uuid">{{ uuid }}</td>
