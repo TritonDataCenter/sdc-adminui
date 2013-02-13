@@ -13,6 +13,9 @@ define(function(require) {
     var Networks = require('models/networks');
     var Vm = require('models/vm');
 
+    var Job = require('models/job');
+    var JobProgressView = require('views/job-progress');
+
     var adminui = require('adminui');
 
     var PackageSelectOption = Backbone.Marionette.ItemView.extend({
@@ -233,13 +236,10 @@ define(function(require) {
 
             this.model.save(this.extractFormValues(), {
                 success: function(m, obj) {
-                    alert('Machine being provisioned. This will get fancier.. trust me!');
                     console.log(obj);
-                    adminui.vent.trigger('watch-job', {
-                        job_uuid: obj.job_uuid,
-                        name: 'Provision Machine'
-                    });
-                    this.vent.trigger('showview', 'vms', {});
+                    var job = new Job({uuid: obj.job_uuid});
+                    var jobView = new JobProgressView({model: job});
+                    jobView.show();
                 }
             });
         }
