@@ -165,6 +165,16 @@ define(function(require) {
             } else {
                 this.enableProvisionButton();
             }
+            if (values.image_uuid) {
+                var image = this.imagesCollection.get(values.image_uuid);
+                if (image && image.requirements && image.requirements['brand']) {
+                    this.$('.control-group-brand').hide();
+                } else {
+                    this.$('.control-group-brand').show();
+                }
+            } else {
+                this.$('.control-group-brand').show();
+            }
         },
 
         disableProvisionButton: function() {
@@ -187,11 +197,13 @@ define(function(require) {
                 alias: formData.alias
             };
 
-            var image = this.imagesCollection.get(formData.image);
-            var imageReqs = image.get('requirements') || {};
+            if (formData.image) {
+                var image = this.imagesCollection.get(formData.image);
+                var imageReqs = image.get('requirements') || {};
 
-            if (imageReqs['brand']) {
-                values.brand = imageReqs['brand'];
+                if (imageReqs['brand']) {
+                    values.brand = imageReqs['brand'];
+                }
             }
 
             var pkg = this.packages.get(formData['package']);
