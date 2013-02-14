@@ -187,6 +187,13 @@ define(function(require) {
                 alias: formData.alias
             };
 
+            var image = this.imagesCollection.get(formData.image);
+            var imageReqs = image.get('requirements') || {};
+
+            if (imageReqs['brand']) {
+                values.brand = imageReqs['brand'];
+            }
+
             var pkg = this.packages.get(formData['package']);
 
             if (pkg) {
