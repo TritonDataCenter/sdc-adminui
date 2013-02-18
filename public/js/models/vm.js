@@ -11,6 +11,13 @@ define(function(require) {
             snapshots: []
         },
 
+        update: function(attrs, cb) {
+            $.post(this.url()+'?action=update', attrs, function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                cb(job);
+            });
+        },
+
         start: function(cb) {
             $.post(this.url()+'?action=start', {}, function(data) {
                 var job = new Job({uuid: data.job_uuid});

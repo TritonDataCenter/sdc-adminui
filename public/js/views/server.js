@@ -71,6 +71,9 @@ define(function(require) {
             data.disks = _.map(data.sysinfo['Disks'], function(v, k) {
                 return {name: k, size: v['Size in GB']};
             });
+            data.traits = _.map(data.traits, function(v, k) {
+                return {name: k, value: v};
+            });
             return data;
         },
 

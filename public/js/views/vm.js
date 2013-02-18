@@ -13,6 +13,8 @@ define(function(require) {
     var MetadataList = require('views/metadata');
     var SnapshotsList = require('views/snapshots');
 
+    var ResizeVmView = require('views/resize-vm');
+
     var JobProgressView = require('views/job-progress');
     var NotesView = require('views/notes');
     var CreateProbeController = require('controllers/create-probe');
@@ -41,7 +43,8 @@ define(function(require) {
             'click .create-probe': 'clickedCreateProbe',
             'click .rename': 'clickedRename',
             'click .owner-name': 'clickedOwnerName',
-            'click .package': 'clickedPackage'
+            'click .package': 'clickedPackage',
+            'click .resize': 'clickedResize'
         },
 
         url: function() {
@@ -118,6 +121,11 @@ define(function(require) {
                 var jobView = new JobProgressView({model: job});
                 jobView.show();
             });
+        },
+
+        clickedResize: function() {
+            var view = new ResizeVmView({vm: this.vm});
+            view.show();
         },
 
         clickedOwnerName: function(e) {
