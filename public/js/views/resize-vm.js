@@ -17,6 +17,7 @@ define(function(require) {
             this.packages = new Packages();
             this.packages.fetch();
             this.bindTo(this.packages, 'reset', this.render, this);
+            this.bindTo(this.model, 'change:package', this.onSelectPackage, this);
         },
         onClickResize: function() {
             var self = this;
@@ -38,14 +39,27 @@ define(function(require) {
                 jobView.show();
             });
         },
+        onSelectPackage: function() {
+        },
         onRender: function() {
             var self = this;
             this.stickit(this.model, {
+                'button': {
+                    attributes: [{
+                        observe: 'package',
+                        name: 'disabled',
+                        onGet: function(pkg) {
+                            return pkg === null || pkg.length === 0;
+                        }
+                    }]
+                },
                 'select': {
                     observe: 'package',
                     selectOptions: {
                         'collection': function() {
-                            return self.packages.toJSON();
+                            var packages = self.packages.toJSON();
+                            packages.unshift(null);
+                            return packages;
                         },
                         'labelPath': 'name'
                     }

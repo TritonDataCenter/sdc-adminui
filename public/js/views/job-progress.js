@@ -3,7 +3,8 @@ define(function(require) {
 
     var JobProgressView = Backbone.Marionette.ItemView.extend({
         attributes: {
-            'class': 'modal'
+            'class': 'modal',
+            'id': 'job-progress'
         },
         template: require('tpl!job-progress'),
         initialize: function() {
