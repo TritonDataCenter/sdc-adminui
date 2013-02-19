@@ -15,6 +15,7 @@ define(function(require) {
 
     var Job = require('models/job');
     var JobProgressView = require('views/job-progress');
+    var PackagePreview = require('views/package-preview');
 
     var adminui = require('adminui');
 
@@ -72,6 +73,7 @@ define(function(require) {
                 collection: this.packages
             });
             this.selectedPackage = new Package();
+            this.packagePreview = new PackagePreview({model: this.selectedPackage});
 
             this.packages.on('reset', function(collection) {
                 this.selectedPackage.set(collection.models[0].attributes);
@@ -80,8 +82,6 @@ define(function(require) {
             this.packageSelect.on('select', function(pkg) {
                 this.selectedPackage.set(pkg.attributes);
             }, this);
-
-            this.packageBinder = new Backbone.ModelBinder();
 
             this.imagesSource = [];
             this.usersSource = [];
@@ -115,7 +115,7 @@ define(function(require) {
 
         onRender: function() {
             this.packageSelect.setElement(this.$('select[name=package]')).render();
-            this.packageBinder.bind(this.selectedPackage, this.$('.package-details'));
+            this.$('.package-preview-container').html(this.packagePreview.render().el);
 
             this.hideError();
 

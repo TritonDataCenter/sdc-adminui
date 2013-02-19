@@ -1,6 +1,9 @@
 define(function(require) {
     var Packages = require('models/packages');
+    var Package = require('models/package');
     var JobProgressView = require('views/job-progress');
+    var PackagePreviewView = require('views/package-preview');
+
     var ViewModel = Backbone.Model.extend({});
     var View = Backbone.Marionette.ItemView.extend({
         template: require('tpl!resize-vm'),
@@ -16,6 +19,8 @@ define(function(require) {
 
             this.packages = new Packages();
             this.packages.fetch();
+            this.selectedPackage = new Package();
+            this.packagePreviewView = new PackagePreviewView({model: this.selectedPackage});
             this.bindTo(this.packages, 'reset', this.render, this);
             this.bindTo(this.model, 'change:package', this.onSelectPackage, this);
         },
@@ -39,9 +44,17 @@ define(function(require) {
                 jobView.show();
             });
         },
-        onSelectPackage: function() {
+        onSelectPackage: function(p) {
+            var pkg = p.get('package');
+            if (pkg && typeof(pkg) === 'object') {
+                this.selectedPackage.set(pkg);
+            } else {
+                this.selectedPackage.clear();
+            }
+            window.s = this.selectedPackage;
         },
         onRender: function() {
+            this.$('.package-preview-container').html(this.packagePreviewView.render().el);
             var self = this;
             this.stickit(this.model, {
                 'button': {
