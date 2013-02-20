@@ -25,6 +25,7 @@ define(function(require) {
     var NotesView = require('views/notes');
     var BaseView = require('views/base');
     var ServerTemplate = require('text!tpl/server.html');
+    var TraitsModal = require('views/traits-editor');
 
     var ServerView = Backbone.Marionette.ItemView.extend({
         sidebar: 'servers',
@@ -32,7 +33,8 @@ define(function(require) {
         template: ServerTemplate,
 
         events: {
-            'click .change-rack-id': 'showChangeRackField'
+            'click .change-rack-id': 'showChangeRackField',
+            'click .modify-traits': 'showTraitsModal'
         },
 
         modelEvents: {
@@ -85,6 +87,18 @@ define(function(require) {
             this.$('.rack td').append(view.el);
             this.$('.rack td a').hide();
             view.render();
+        },
+
+        showTraitsModal: function() {
+            var modal = new TraitsModal({traits: this.model.get('traits')});
+            var server = this.model;
+            modal.show();
+            this.bindTo(modal, 'save-traits', function(traits) {
+                server.set({traits: traits});
+                server.update({traits: traits}, function() {
+                    modal.close();
+                });
+            });
         },
         
         onRender: function() {

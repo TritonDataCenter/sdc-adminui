@@ -10,7 +10,18 @@ define(['backbone'], function() {
 
 		setup: function(callback) {
 			$.post(this.url(), {action:'setup'}, callback);
-		}
+		},
+
+        update: function(attrs, cb) {
+            $.ajax({
+                url: this.url(),
+                type: "PUT",
+                data: JSON.stringify(attrs),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: cb
+            });
+        }
 
 	});
 	return Server;

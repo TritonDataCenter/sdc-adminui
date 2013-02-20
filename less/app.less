@@ -329,6 +329,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
     tbody th { width: 140px; }
   }
   table.disks { .table;}
+  table.traits { .table; }
 }
 
 #page-vm {
@@ -831,6 +832,18 @@ ul.attributes {
   }
 }
 
+#traits-editor {
+  textarea { 
+    .box-sizing(border-box);
+    background: @grayDark;
+    color: @grayLighter;
+    width: 100%; border: none; 
+    padding: 5px;
+    #font > .monospace(11px, normal, 1.2);
+    height: 300px;
+  }
+  .error { float: left; color: red; }
+}
 
 #job-progress {
   .chain-results {
