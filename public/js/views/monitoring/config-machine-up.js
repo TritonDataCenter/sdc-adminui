@@ -24,7 +24,6 @@ define(function(require) {
         },
 
         onRender: function() {
-
             return this;
         },
 
