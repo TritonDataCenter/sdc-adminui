@@ -70,6 +70,7 @@ define(function(require) {
 
     var ServersView = Backbone.Marionette.CompositeView.extend({
         name: 'servers',
+        id: 'page-servers',
         template: tplServers,
         itemView: ServersListItem,
         itemViewContainer: 'tbody',

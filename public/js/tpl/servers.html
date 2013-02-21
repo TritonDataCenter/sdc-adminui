@@ -1,42 +1,40 @@
-<div id="page-servers">
-	<div class="page-header">
-		<h1>Servers</h1>
+<div class="page-header">
+	<h1>Servers</h1>
+</div>
+
+<div class="row-fluid">
+	<div class="servers-list span9">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th class="status">Status</th>
+					<th>Hostname</th>
+					<th class="memory">RAM Usage</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
 	</div>
 
-	<div class="row-fluid">
-		<div class="servers-list span9">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th class="status">Status</th>
-						<th>Hostname</th>
-						<th class="memory">RAM Usage</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-		</div>
+	<div class="filter-panel servers-filter span3">
+		<h3>Filter Options</h3>
+		<form>
+			<label>Data Center</label>
+			<select name="dc" disabled></select>
 
-		<div class="filter-panel servers-filter span3">
-			<h3>Filter Options</h3>
-			<form>
-				<label>Data Center</label>
-				<select name="dc" disabled></select>
+			<label>UUID</label>
+			<input type="text" name="uuid" placeholder="UUID">
 
-				<label>UUID</label>
-				<input type="text" name="uuid" placeholder="UUID">
+			<label>Setup State</label>
+			<select name="setup">
+				<option value="">any</option>
+				<option value="true">setup</option>
+				<option value="false">not setup</option>
+			</select>
 
-				<label>Setup State</label>
-				<select name="setup">
-					<option value="">any</option>
-					<option value="true">setup</option>
-					<option value="false">not setup</option>
-				</select>
-
-				<button class="btn btn-large btn-info">Apply Filters</button>
-			</form>
-		</div>
+			<button class="btn btn-large btn-info">Apply Filters</button>
+		</form>
 	</div>
 </div>

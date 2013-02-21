@@ -5,16 +5,16 @@ var restify = require('restify');
 
 
 function loadConfig(file) {
-  assert.ok(file);
+    assert.ok(file);
 
-  var _f = fs.readFileSync(file, 'utf8');
-  return JSON.parse(_f);
+    var _f = fs.readFileSync(file, 'utf8');
+    return JSON.parse(_f);
 }
 
 var log = require('bunyan').createLogger({
-  name: 'adminui',
-  level: 'info',
-  serializers: restify.bunyan.serializers
+    name: 'adminui',
+    level: 'info',
+    serializers: restify.bunyan.serializers
 });
 
 
@@ -23,15 +23,14 @@ var cfg = loadConfig(cfgFile);
 
 log.info('Initializing AdminUI');
 var adminui = require('./lib/adminui').createServer({
-  config: cfg,
-  log: log
+    config: cfg,
+    log: log
 });
 
 adminui.listen(function() {
-  log.info('Ready to rock!');
+    log.info('Ready to rock!');
 });
 
 process.on('uncaughtException', function(e) {
-  log.fatal(e);
+    log.fatal(e);
 });
-

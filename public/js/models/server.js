@@ -9,7 +9,9 @@ define(['backbone'], function() {
 		},
 
 		setup: function(callback) {
-			$.post(this.url(), {action:'setup'}, callback);
+			$.post(this.url()+'?action=setup', {}, function(res) {
+                console.log(res);
+            });
 		},
 
         update: function(attrs, cb) {

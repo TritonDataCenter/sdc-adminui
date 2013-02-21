@@ -28,11 +28,13 @@ define(function(require) {
     var TraitsModal = require('views/traits-editor');
 
     var ServerView = Backbone.Marionette.ItemView.extend({
+        id: 'page-server',
         sidebar: 'servers',
 
         template: ServerTemplate,
 
         events: {
+            'click .setup': 'setup',
             'click .change-rack-id': 'showChangeRackField',
             'click .modify-traits': 'showTraitsModal'
         },
@@ -99,6 +101,10 @@ define(function(require) {
                     modal.close();
                 });
             });
+        },
+
+        setup: function() {
+            this.model.setup();
         },
         
         onRender: function() {
