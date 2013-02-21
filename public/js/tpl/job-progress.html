@@ -20,6 +20,11 @@
 <div class="modal-footer">
   <div class="pull-left">
     <span class="execution">Status: <span class="{{execution}}">{{execution}}</span></span> 
+    {{#unless finished}}
+    <span class="wait">
+      Working... <img src="/img/job-progress-loading.gif">
+    </span>
+    {{/unless}}
   </div>
   <button class="btn" data-dismiss="modal">Close</button>
 </div>

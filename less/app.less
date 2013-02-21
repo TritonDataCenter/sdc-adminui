@@ -858,19 +858,33 @@ ul.attributes {
 }
 
 #job-progress {
+  h2 small {
+    color: @grayLight;
+    font-style: italic;
+    font-family: monospace;
+  }
   .chain-results {
     li { margin-bottom: 0.5em;}
     li.error { color: red;}
     .name { font-weight: bold;}
   }
+  .wait {
+    float: left; 
+    padding: 10px;
+    margin-left: 10px;
+    font-size: 14px;
+    line-height: 14px;
+    color: #888;
+    img { margin-left: 10px;}
+  }
   .execution {
-    background: #000;
+    background: #333;
     text-transform: uppercase;
     font-size: 14px;
     line-height: 14px;
     padding: 10px;
     font-weight: bold;
-    float: right;
+    float: left;
     color: #fff;
     span { color: yellow; }
     .succeeded { color: #a8ff00; }

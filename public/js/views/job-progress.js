@@ -11,6 +11,11 @@ define(function(require) {
             this.model.fetch();
             this.bindTo(this.model, 'change', this.render, this);
         },
+        templateHelpers: {
+            'finished': function() {
+                return this.execution === 'succeeded' || this.execution === 'failed';
+            }
+        },
         show: function() {
             this.render();
             var modal  =this.$el.modal();

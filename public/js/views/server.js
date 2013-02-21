@@ -106,9 +106,16 @@ define(function(require) {
         },
 
         setup: function() {
+            var server = this.model;
+            var self = this;
             this.model.setup(function(job) {
                 var jobView = new JobProgressView({model: job});
                 jobView.show();
+                self.bindTo(server, 'execution', function(status) {
+                    if (status === 'succeeded') {
+                        server.fetch();
+                    }
+                });
             });
         },
 
