@@ -26,6 +26,7 @@ define(function(require) {
     var BaseView = require('views/base');
     var ServerTemplate = require('text!tpl/server.html');
     var TraitsModal = require('views/traits-editor');
+    var JobProgressView = require('views/job-progress');
 
     var ServerView = Backbone.Marionette.ItemView.extend({
         id: 'page-server',
@@ -36,7 +37,8 @@ define(function(require) {
         events: {
             'click .setup': 'setup',
             'click .change-rack-id': 'showChangeRackField',
-            'click .modify-traits': 'showTraitsModal'
+            'click .modify-traits': 'showTraitsModal',
+            'click .factory-reset': 'factoryReset'
         },
 
         modelEvents: {
@@ -104,7 +106,17 @@ define(function(require) {
         },
 
         setup: function() {
-            this.model.setup();
+            this.model.setup(function(job) {
+                var jobView = new JobProgressView({model: job});
+                jobView.show();
+            });
+        },
+
+        factoryReset: function() {
+            this.model.factoryReset(function(job) {
+                var jobView = new JobProgressView({model: job});
+                jobView.show();
+            });
         },
         
         onRender: function() {

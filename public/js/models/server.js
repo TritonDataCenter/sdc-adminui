@@ -1,4 +1,5 @@
-define(['backbone'], function() {
+define(function(require) {
+    var Job = require('models/job');
 	var Server = Backbone.Model.extend({
 		urlRoot: '/_/servers',
 
@@ -9,10 +10,18 @@ define(['backbone'], function() {
 		},
 
 		setup: function(callback) {
-			$.post(this.url()+'?action=setup', {}, function(res) {
-                console.log(res);
+			$.post(this.url()+'?action=setup', {}, function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                callback(job);
             });
 		},
+
+        factoryReset: function(callback) {
+            $.post(this.url()+'?action=factory-reset', {}, function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                callback(job);
+            });
+        },
 
         update: function(attrs, cb) {
             $.ajax({

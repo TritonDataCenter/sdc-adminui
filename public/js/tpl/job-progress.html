@@ -1,6 +1,5 @@
 <div class="modal-header">
-  <h2>Job {{name}} <span class="execution">Status: <span class="{{execution}}">{{execution}}</span></span>
-  </h2>
+  <h2>Job {{name}} </h2>
    <small>{{uuid}}</small>
 </div>
 <div class="modal-body">
@@ -10,11 +9,17 @@
     <li class="{{#if error.length}}error{{/if}}">
       <div class="name">{{name}}</div>
       <div class="result">{{result}}</div>
+      {{#if error}}
+      <div class="error">{{error}}</div>
+      {{/if}}
     </li>
     {{/each}}
     </ol>
   </div>
 </div>
 <div class="modal-footer">
+  <div class="pull-left">
+    <span class="execution">Status: <span class="{{execution}}">{{execution}}</span></span> 
+  </div>
   <button class="btn" data-dismiss="modal">Close</button>
 </div>
