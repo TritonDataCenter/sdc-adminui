@@ -248,7 +248,15 @@ define(function(require) {
                 '.vm-memory': 'ram',
                 '.vm-swap': 'max_swap',
                 '.vm-uuid': 'uuid',
-                '.vm-state': 'state',
+                '.vm-state': {
+                    observe: 'state',
+                    attributes: [{
+                        'name': 'class',
+                        onGet: function(state) {
+                            return state;
+                        }
+                    }]
+                },
                 '.vm-ips': {
                     observe: 'nics',
                     onGet: function(val) {
