@@ -1,10 +1,9 @@
-define(['views/base'], function(BaseView) {
+define(function(require) {
 	var HOST_REGEX = /^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?)*\.?$/;
 
+	var ICMPProbe = Backbone.Marionette.ItemView.extend({
 
-	var ICMPProbe = BaseView.extend({
-
-		template: 'monitoring-icmp-probe',
+		template: require('tpl!monitoring-icmp-probe'),
 
 		events: {
 			"click button.btn-primary": 'onComplete',
@@ -14,7 +13,6 @@ define(['views/base'], function(BaseView) {
 		},
 
 		initialize: function(options) {
-			_.bindAll(this);
 
 			this.params = {
 				type: 'icmp',
@@ -36,8 +34,7 @@ define(['views/base'], function(BaseView) {
 			this.$('input:first').focus();
 		},
 
-		render: function() {
-			this.setElement(this.template());
+		onRender: function() {
 			this.bindElements();
 
 			return this;

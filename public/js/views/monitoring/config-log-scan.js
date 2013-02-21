@@ -1,8 +1,8 @@
 define(function(require) {
     var BaseView = require('views/base');
-    var tplLogScan = require('text!tpl/probe-log-scan.html');
+    var tplLogScan = require('tpl!probe-log-scan');
 
-    return BaseView.extend({
+    return Backbone.Marionette.ItemView.extend({
 
         template: tplLogScan,
 
@@ -44,8 +44,7 @@ define(function(require) {
             return this;
         },
 
-        render: function() {
-            this.setElement(this.template());
+        onRender: function() {
             this.bindElements();
             this.initialState();
 
@@ -55,7 +54,6 @@ define(function(require) {
         initialState: function() {
             this.$completeButton.addClass('disabled');
         },
-
 
 
 

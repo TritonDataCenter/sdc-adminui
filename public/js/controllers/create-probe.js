@@ -27,10 +27,9 @@ function(
     };
 
 
-    var CreateProbeController = BaseView.extend({
+    var CreateProbeController = Backbone.View.extend({
         initialize: function(options) {
             _.bindAll(this);
-
             this.probe = options.probe || new Probe();
             this.vm = options.vm;
             this.showSelectProbeView();

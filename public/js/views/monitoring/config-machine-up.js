@@ -1,40 +1,40 @@
-define(['views/base'], function(BaseView) {
-  return BaseView.extend({
-    template: 'monitoring-machine-up-probe',
+define(function(require) {
+    var Template = require('tpl!monitoring-machine-up-probe');
 
-    events: {
-      'click button': 'done'
-    },
+    return Backbone.Marionette.ItemView.extend({
 
-    initialize: function(options) {
-      _.bindAll(this);
-      options = options || {};
+        template: Template,
 
-      this.params = {
-        type: 'machine-up',
-        agent: options.vm.get('uuid'),
-        name: _.str.sprintf('machine-up-%s', options.vm.get('alias'))
-      };
-    },
+        events: {
+            'click button': 'done'
+        },
 
-    focus: function() {
-      return this;
-    },
+        initialize: function(options) {
+            options = options || {};
 
-    render: function() {
-      this.setElement(this.template());
-      this.delegateEvents();
+            this.params = {
+                type: 'machine-up',
+                agent: options.vm.get('uuid'),
+                name: _.str.sprintf('machine-up-%s', options.vm.get('alias'))
+            };
+        },
 
-      return this;
-    },
+        focus: function() {
+            return this;
+        },
 
-    done: function() {
-      this.trigger('done', this.params);
-    },
+        onRender: function() {
 
-    hide: function() {
-      this.$el.modal('hide');
-    }
-  });
+            return this;
+        },
+
+        done: function() {
+            this.trigger('done', this.params);
+        },
+
+        hide: function() {
+            this.$el.modal('hide');
+        }
+    });
 
 });

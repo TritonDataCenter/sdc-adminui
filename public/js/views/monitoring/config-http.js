@@ -1,7 +1,7 @@
-define(['views/base'], function(BaseView) {
-    var ConfigHttpProbe = BaseView.extend({
+define(function(require) {
+    var ConfigHttpProbe = Backbone.Marionette.ItemView.extend({
 
-        template: 'monitoring-http-probe',
+        template: require('tpl!monitoring-http-probe'),
 
         events: {
             'click button.btn-primary': 'onComplete',
@@ -47,11 +47,8 @@ define(['views/base'], function(BaseView) {
             this.$maxResponseTimeGroup = this.$('.control-group.max-response-time');
         },
 
-        render: function() {
-            this.setElement(this.template());
+        onRender: function() {
             this.bindElements();
-
-            return this;
         },
 
 
