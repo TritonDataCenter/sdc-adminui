@@ -51,7 +51,17 @@ define(function(require) {
         },
 
         createSnapshot: function(cb) {
-            $.post(this.url()+'?action=create_snapshot',{}, cb);
+            $.post(this.url()+'?action=create_snapshot',{}, function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                cb(job);
+            });
+        },
+
+        rollbackSnapshot: function(snapshotName, cb) {
+            $.post(this.url()+'?action=rollback_snapshot', { name: snapshotName }, function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                cb(job);
+            });
         },
 
         addNics: function(networks, cb) {
