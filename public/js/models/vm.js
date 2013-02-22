@@ -65,11 +65,17 @@ define(function(require) {
         },
 
         addNics: function(networks, cb) {
-            $.post(this.url()+'?action=add_nics', {networks: networks}, cb);
+            $.post(this.url()+'?action=add_nics', {networks: networks}, function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                cb(job);
+            });
         },
 
         removeNics: function(macs, cb) {
-            $.post(this.url()+'?action=remove_nics', {macs: macs}, cb);
+            $.post(this.url()+'?action=remove_nics', {macs: macs}, function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                cb(job);
+            });
         },
 
 

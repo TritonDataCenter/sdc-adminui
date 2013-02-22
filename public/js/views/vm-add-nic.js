@@ -1,5 +1,6 @@
 define(function(require) {
     var Networks = require('models/networks');
+    var JobProgress = require('views/job-progress');
     var VmAddNicView = Backbone.Marionette.ItemView.extend({
         template: require('text!tpl/vm-add-nic.html'),
         attributes: {
@@ -17,9 +18,17 @@ define(function(require) {
 
         onSubmit: function() {
             var self = this;
+            var vm = this.vm;
             var netuuid = this.selectedNetwork.get('uuid');
-            this.vm.addNics([{uuid:netuuid}], function(res) {
+            vm.addNics([{uuid:netuuid}], function(job) {
                 self.$el.modal('hide').remove();
+                var view = new JobProgress({model: job});
+                view.show();
+                self.bindTo(view, 'execution', function(st) {
+                    if (st === 'succeeded') {
+                        vm.fetch();
+                    }
+                });
             });
         },
 
@@ -38,7 +47,7 @@ define(function(require) {
                 'select[name=network]': {
                     observe: 'uuid',
                     selectOptions: {
-                        collection: function() { 
+                        collection: function() {
                             var col = self.networks.toJSON();
                             col = _(col).map(function(n) {
                                 n.label = [n.name, n.subnet].join(' - ');

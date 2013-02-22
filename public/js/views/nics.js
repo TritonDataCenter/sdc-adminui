@@ -1,5 +1,6 @@
 define(function(require) {
     var NicsRowView = require('views/nics-row');
+    var JobProgress = require('views/job-progress');
 
     var NicsView = Backbone.Marionette.CompositeView.extend({
         template: require('text!tpl/nics.html'),
@@ -26,9 +27,16 @@ define(function(require) {
         onClickRemoveNics: function() {
             var self = this;
             var macs = this.selectedNics.pluck('mac');
-            this.model.removeNics(macs, function() {
-                self.selectedNics.each(function(n) {
-                    self.collection.remove(n);
+            this.model.removeNics(macs, function(job) {
+                var jobView = new JobProgress({model: job});
+                jobView.show();
+                self.bindTo(jobView, 'execution', function(st) {
+                    console.log(st);
+                    if (st === 'succeeded') {
+                        self.selectedNics.each(function(n) {
+                            self.collection.remove(n);
+                        });
+                    }
                 });
             });
         },
