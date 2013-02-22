@@ -2,6 +2,7 @@ define(function(require) {
 
     var User = require('models/user');
     var Template = require('tpl!users-create');
+    var app = require('adminui');
     
     return Backbone.Marionette.ItemView.extend({
 
@@ -47,11 +48,10 @@ define(function(require) {
             var self = this;
 
             this.$('.alert').hide();
-
             this.model.save(this.serialize(), {
                 success: function(model, resp) {
-                    console.log('hello!');
                     self.$el.modal('hide').remove();
+                    app.vent.trigger('showview', 'user', {user: self.model});
                 }
             });
         },
