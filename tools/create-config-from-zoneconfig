@@ -85,6 +85,9 @@ function translateZoneConfig(zc) {
     dc.imgapi = {
         url: fmt("http://%s", zc.imgapi_admin_ips)
     };
+    dc.sapi = {
+        url: fmt("http://%s", zc.sapi_admin_ips)
+    };
 
     return cfg;
 }
