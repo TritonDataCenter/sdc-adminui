@@ -50,7 +50,7 @@ define(function(require) {
         attributes: {
             'class': 'empty'
         },
-        template: Handlebars.compile('Noone has written anything yet...')
+        template: Handlebars.compile('There are no notes yet...')
     });
 
 
