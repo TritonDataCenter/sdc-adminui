@@ -265,13 +265,17 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
 .vms-list tr {
   th.status { width: 80px; }
   th.memory, td.memory { width: 140px; text-align: right; padding-right: 30px; }
-  td.uuid {
-   width: 300px;
+  .uuid {
+    font-size: 12px;
     color: @grayLight;
     font-style: italic;
+    display: block;
+    color: @grayLight;
     font-family: monospace;
   }
+  th.alias { width: 400px;}
   td.alias a { cursor: pointer; }
+  th.package { width: 100px;}
   span.running { background-color: #4cc658; }
   span.destroyed { background-color: @grayDark; }
 }
@@ -298,6 +302,13 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
 #page-servers {
   .servers-list {
     tr td { cursor: pointer; }
+    .uuid {
+      font-size: 12px;
+      color: @grayLight;
+      font-style: italic;
+      display: block;
+      font-family: monospace;
+    }
 
     .status { width: 100px; }
     .status span.running { background: #4cc658;}

@@ -13,7 +13,10 @@
     {{status}}
   </span>
 </td>
-<td class="name"><a>{{hostname}}</a></td>
+<td class="name">
+  <a>{{hostname}}</a>
+  <span class="uuid">{{uuid}}</span>
+</td>
 <td class="memory">
   {{#if memory_total_bytes}}
   <span class="percent">{{memory_percent}} %</span>
