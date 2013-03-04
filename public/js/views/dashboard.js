@@ -9,7 +9,7 @@ define(function(require) {
 
 	var BaseView = require('views/base');
 	var AlarmsView = require('views/alarms');
-	var DashboardTemplate = require('text!tpl/dashboard.html');
+	var DashboardTemplate = require('tpl!dashboard');
 	var Dashboard = Backbone.Marionette.ItemView.extend({
         id: 'page-dashboard',
 		name: 'dashboard',

@@ -2,11 +2,16 @@ define(function(require) {
 	var Alarms = require('models/alarms');
 	var Probes = require('models/probes');
 	var ProbeGroups = require('models/probe-groups');
+    var AlarmsTemplateText = require('text!tpl/alarms.html');
+    var AlarmsTemplate = _.template(AlarmsTemplateText);
 
-	var BaseView = require('views/base');
 
-	var AlarmsView = BaseView.extend({
-		template: require('text!tpl/alarms.html'),
+	var AlarmsView = Backbone.Marionette.ItemView.extend({
+		template: function(vars) {
+            if (Object.keys(vars).length) {
+                return AlarmsTemplate(vars);
+            }
+        },
 
 		events: {
 			'click .summary': 'showDetails'
@@ -31,45 +36,47 @@ define(function(require) {
 				this.probes.fetchProbes(options.userUuid);
 			}
 
-			this.alarms.on('reset', this.render);
-			this.probeGroups.on('reset', this.render);
-			this.probes.on('reset', this.render);
+			this.bindTo(this.alarms, 'reset', this.render);
+			this.bindTo(this.probeGroups, 'reset', this.render);
+			this.bindTo(this.probes, 'reset', this.render);
 		},
 
 		dataReady: function() {
 			return this.probes.length && this.alarms.length && this.probeGroups.length;
 		},
 
-		render: function() {
-			if (! this.dataReady()) {
-				return;
-			}
+        serializeData: function() {
+            if (! this.dataReady()) {
+                return;
+            }
 
-			this.alarms.each(function(a) {
-				if (a.get('probeGroup')) {
-					a.probeGroup = this.probeGroups.find(function(pg) {
-						return pg.get('uuid') == a.get('probeGroup');
-					});
-				}
+            this.alarms.each(function(a) {
+                if (a.get('probeGroup')) {
+                    a.probeGroup = this.probeGroups.find(function(pg) {
+                        return pg.get('uuid') == a.get('probeGroup');
+                    });
+                }
 
-				_(a.get('faults')).each(function(f) {
-					var faultProbe = f.probe;
-					if (faultProbe) {
-						f.probe = this.probes.find(function(p) {
-							return p.get('uuid') == faultProbe;
-						});
-					}
-				}, this);
-			}, this);
+                _(a.get('faults')).each(function(f) {
+                    var faultProbe = f.probe;
+                    if (faultProbe) {
+                        f.probe = this.probes.find(function(p) {
+                            return p.get('uuid') == faultProbe;
+                        });
+                    }
+                }, this);
 
-			console.log(this.alarms);
+            }, this);
 
-			this.$el.html(this.template({
-				probes: this.probes,
-				probeGroups: this.probeGroups,
-				alarms: this.alarms
-			}));
+            var vars = {
+                probes: this.probes,
+                probeGroups: this.probeGroups,
+                alarms: this.alarms
+            };
+            return vars;
+        },
 
+		onRender: function() {
 			this.$('.details').hide();
 		}
 	});
