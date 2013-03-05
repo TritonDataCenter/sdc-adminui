@@ -53,7 +53,7 @@ define(function(require) {
         },
 
         deselect: function() {
-            _(this.children).each(function(c) {
+            this.children.each(function(c) {
                 c.unhighlight();
             }, this);
         },
