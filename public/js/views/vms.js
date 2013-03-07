@@ -25,7 +25,7 @@ define(function(require) {
     return Backbone.Marionette.ItemView.extend({
         name: 'vms',
         template: VmsTemplate,
-        
+
         url: function() {
             return 'vms';
         },
@@ -69,13 +69,17 @@ define(function(require) {
             this.$('.alert').hide();
         },
 
+        updateCount: function() {
+            this.$('.record-count').html(this.collection.length);
+        },
+
         onRender: function() {
             this.bindTo(this.collection, 'error', this.onError, this);
             this.listView.setElement(this.$('tbody')).render();
             this.filterView.setElement(this.$('.vms-filter'));
 
             this.bindTo(this.filterView, 'query', this.query, this);
-
+            this.bindTo(this.collection, 'reset', this.updateCount, this);
             return this;
         }
     });
