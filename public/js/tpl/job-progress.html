@@ -10,7 +10,13 @@
       <div class="name">{{name}}</div>
       <div class="result">{{result}}</div>
       {{#if error}}
-      <div class="error">{{error}}</div>
+      <div class="error">
+        {{#if error.message}}
+        {{error.message}}
+        {{else}}
+        {{error}}
+        {{/if}}
+      </div>
       {{/if}}
     </li>
     {{/each}}
