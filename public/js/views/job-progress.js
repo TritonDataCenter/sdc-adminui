@@ -23,7 +23,14 @@ define(function(require) {
             this._timer = setInterval(this.update.bind(this), 3000);
         },
         update: function() {
-            this.model.fetch();
+            this.model.fetch({success: this.onUpdate.bind(this)});
+        },
+        onUpdate: function() {
+            var execution = this.model.get('execution');
+            console.log(execution);
+            if (execution === 'succeeded' || execution === 'failed') {
+                clearInterval(this._timer);
+            }
             this.trigger('execution', this.model.get('execution'));
         },
         onClose: function() {
