@@ -160,13 +160,31 @@ define(function(require) {
         checkFields: function() {
             this.hideError();
             var values = this.extractFormValues();
-            if (!values.owner_uuid.length || !values.networks.length || !values.image_uuid.length) {
-                this.disableProvisionButton();
+            var valid;
+            var image_uuid
+
+            if (!values.owner_uuid.length || !values.networks.length) {
+                valid = false;
             } else {
-                this.enableProvisionButton();
+                valid = true;
             }
-            if (values.image_uuid) {
-                var image = this.imagesCollection.get(values.image_uuid);
+
+            if (!values.image_uuid && (!values.disks || !values.disks[0] || !values.disks[0].image_uuid)) {
+                valid = valid && false;
+            } else {
+                image_uuid = values['image_uuid'] || values['disks'][0]['image_uuid'];
+                valid = valid && true;
+            }
+
+            if (valid) {
+                this.enableProvisionButton();
+            } else {
+                this.disableProvisionButton();
+            }
+
+
+            if (image_uuid) {
+                var image = this.imagesCollection.get(image_uuid);
                 if (image && image.requirements && image.requirements['brand']) {
                     this.$('.control-group-brand').hide();
                 } else {
@@ -235,6 +253,7 @@ define(function(require) {
                     {'image_uuid': values['image_uuid'] },
                     {'size': values['quota'] }
                 ];
+                delete values['image_uuid'];
             }
 
 
