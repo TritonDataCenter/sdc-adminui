@@ -18,7 +18,7 @@ define(function(require) {
         },
         show: function() {
             this.render();
-            var modal  =this.$el.modal();
+            var modal = this.$el.modal();
             modal.on('hide', this.onClose);
             this._timer = setInterval(this.update.bind(this), 3000);
         },
