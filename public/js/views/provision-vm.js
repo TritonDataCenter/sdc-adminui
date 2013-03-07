@@ -172,6 +172,13 @@ define(function(require) {
                 } else {
                     this.$('.control-group-brand').show();
                 }
+
+                if (image.get('type') === 'zvol') {
+                    this.$('.control-group-brand').find('[name=brand]').val('kvm');
+                    this.$('.control-group-brand').hide();
+                } else {
+                    this.$('.control-group-brand').show();
+                }
             } else {
                 this.$('.control-group-brand').show();
             }
@@ -189,8 +196,6 @@ define(function(require) {
             var formData = this.ui.form.serializeObject();
             var values = {
                 image_uuid: formData.image,
-                dataset_uuid: formData.image,
-                // XXX Backwards compat.
                 ram: formData.memory,
                 owner_uuid: formData.owner,
                 brand: formData.brand,
@@ -201,10 +206,14 @@ define(function(require) {
                 var image = this.imagesCollection.get(formData.image);
                 var imageReqs = image.get('requirements') || {};
 
-                if (imageReqs['brand']) {
-                    values.brand = imageReqs['brand'];
+                if (imageReqs['brand'] === 'kvm') {
+                    values['brand'] = 'kvm';
+                }
+                if (image.get('type') === 'zvol') {
+                    values['brand'] = 'kvm';
                 }
             }
+
 
             var pkg = this.packages.get(formData['package']);
 
@@ -220,6 +229,14 @@ define(function(require) {
                 values['zfs_io_priority'] = pkg.get('zfs_io_priority');
                 values['ram'] = pkg.get('max_physical_memory');
             }
+
+            if (values['brand'] === 'kvm') {
+                values['disks'] = [
+                    {'image_uuid': values['image_uuid'] },
+                    {'size': values['quota'] }
+                ];
+            }
+
 
             var networksChecked = this.ui.form.find('.network-checkboxes input[type=checkbox]:checked');
             values.networks = _.map(networksChecked, function(obj) {
