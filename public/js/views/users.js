@@ -44,6 +44,8 @@ define(function(require) {
         template: tplUsers,
 
         url: 'users',
+        
+        id: "page-users",
 
         sidebar: 'users',
 

@@ -20,7 +20,7 @@
 .selectContainer { margin-top: 1em;}
 
 .gGraphContainer {
-  width: 884px;
+  width: 100%;
   line-height: 1;
   padding-top:20px;
   clear:both;
@@ -80,6 +80,7 @@
       font-size:11px;
       height:23px;
       line-height:23px;
+      font-family: "Menlo", monospace;
     }
     .gGraphContainer .distBody INPUT {
       float:left;
@@ -89,7 +90,7 @@
 
     .gGraphContainer .distBody .entryName {
       float:left;
-      width:180px;
+      width:380px;
     }
 
     .gGraphContainer .distBody .entryName.distTotal {
@@ -99,6 +100,7 @@
     .gGraphContainer .distBody .entryValue {
       float:left;
       width:100px;
+      text-align: right;
     }
 
     .gGraphContainer .distBody .distAdvice {
@@ -220,7 +222,7 @@
 
     .gGraphContainer .ledgendControl {
       position:relative;
-      width:209px;
+      width:279px;
       border-right:1px solid #D0CECC;
       float:left;
       height:48px;
@@ -270,9 +272,10 @@
   }
 
   .gGraphContainer .contentWindow .GraphLegend {
-    width:210px;
-    float:left;
-    border-right:1px solid #D0CECC;
+    font-size: 10px;
+    width: 280px;
+    float: left;
+    border-right: 1px solid #D0CECC;
   }
 
   .gGraphContainer .contentWindow .Graph {
@@ -310,7 +313,7 @@
 
     .gGraphContainer .footerToolbar .footerControls {
       background-color:#CFCDCB;
-      width:210px;
+      width:280px;
       height:47px;
       float:left;
       padding-top:3px;

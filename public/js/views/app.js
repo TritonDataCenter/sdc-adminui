@@ -16,7 +16,6 @@
 
 define(function(require) {
     var Backbone = require('backbone');
-    
     var Topbar = require('views/topbar');
     var Mainnav = require('views/mainnav');
 
@@ -39,6 +38,8 @@ define(function(require) {
 
             this.topbarView = new Topbar({ user: this.user });
             this.mainnavView = new Mainnav();
+
+            this.bindTo(adminui.vent, 'error', this.onError, this);
         },
 
         onError: function(err) {
@@ -55,13 +56,13 @@ define(function(require) {
         },
 
         onRender: function() {
-            this.mainnavView.setElement(this.$("#mainnav"));
             this.mainnav.attachView(this.mainnavView);
+            this.mainnavView.setElement(this.$("#mainnav"));
 
-            this.bindTo(adminui.vent, 'error', this.onError);
+            this.topbar.attachView(this.topbarView);
+            this.topbarView.setElement(this.$("#topnav"));
 
-            // this.topbar.attachView(this.topbarView);
-            // this.topbarView.setElement(this.$("#topbar")).render();
+            this.$('#topbar .acc-controls .login-name').html(this.user.get('login'));
 
             return this;
         }

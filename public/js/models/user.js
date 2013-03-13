@@ -3,17 +3,14 @@
  */
 
 define(function(require) {
-    
-    var Model = require('model');
+   var Model = require('model');
 
     return Model.extend({
 
         defaults: {
             token: null
         },
-
         idAttribute: 'uuid',
-
         urlRoot: "/_/users",
 
         authenticated: function() {
@@ -28,12 +25,13 @@ define(function(require) {
                 return false;
             }
 
-            var data = {
+            var authData = {
                 username: user,
                 password: pass
             };
 
-            $.post("/_/auth", data, function(data) {
+            $.post("/_/auth", authData, function(data) {
+                console.log(data);
                 data.user.token = data.token;
                 self.set(data.user);
             }).error(function(xhr) {

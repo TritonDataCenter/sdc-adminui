@@ -31,18 +31,35 @@ define(function(require) {
         },
 
         events: {
-            'click .provision-button':'provision'
+            'click .provision-button':'provision',
+            'click .toggle-filter':'toggleFiltersPanel'
         },
 
         initialize: function(options) {
             this.collection = new Vms();
             this.listView = new VmsList({ collection: this.collection });
             this.filterView = new FilterForm();
+            this.filterViewVisible = false;
             this.collection.fetch();
         },
 
         provision: function() {
             app.vent.trigger('showview', 'provision-vm', {});
+        },
+
+
+        toggleFiltersPanel: function() {
+            var filterPanel = this.$('.vms-filter');
+            var vmsList = this.$('.vms-list');
+            if (this.filterViewVisible) {
+                filterPanel.hide();
+                vmsList.removeClass('span9').addClass('span12');
+                this.filterViewVisible = false;
+            } else {
+                filterPanel.show();
+                vmsList.addClass('span9').removeClass('span12');
+                this.filterViewVisible = true;
+            }
         },
 
         query: function(params) {
@@ -67,6 +84,7 @@ define(function(require) {
 
         onShow: function() {
             this.$('.alert').hide();
+            this.$('.vms-filter').hide();
         },
 
         updateCount: function() {

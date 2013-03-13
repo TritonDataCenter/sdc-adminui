@@ -11,9 +11,7 @@ define(function(require) {
             'click .image-name': 'onClickImageName'
         },
         onClickImageName: function(e) {
-            if (e) {
-                e.preventDefault();
-            }
+            if (e) {e.preventDefault(); }
             app.vent.trigger('showview', 'image', {image: this.model});
         },
 

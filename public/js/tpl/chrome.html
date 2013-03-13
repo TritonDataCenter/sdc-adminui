@@ -1,25 +1,54 @@
-<div class="container-fluid">
-	<div class="row-fluid">
-    <div id="sidebar">
-      <div class="branding">
-        <small>SmartDataCenter</small> Operations Portal <span class="version">7.0 ALPHA</span>
+<div id="topbar">
+  <div class="container">
+    <div class="row">
+      <div class="span6 branding">
+        <span class="joyent">Joyent</span>
+        <span class="sdc">SmartDataCenter</span> 
+        <span class="product">Operations Portal</span>
+        <span class="version">7.0</span>
       </div>
-      <ul class="nav" id="mainnav">
-        <li data-view="dashboard"><a href="/dashboard">Dashboard</a></li>
-        <li data-view="analytics"><a href="/analytics">Cloud Analytics</a></li>
-
-        <li data-view="vms" class="new-section"><a href="/vms">Virtual Machines</a></li>
-        <li data-view="servers"><a href="/servers">Servers</a></li>
-        <li data-view="users"><a href="/users">Users</a></li>
-
-        <li data-view="images" class="new-section"><a href="/images">Images</a></li>
-        <li data-view="networks"><a href="/networks">Networks</a></li>
-        <li data-view="packages"><a href="/packages">Packages</a></li>
-        
-        <li data-view="jobs" class="new-section"><a href="/jobs">Jobs</a></li>
-        <li data-view="services"><a href="/services">Services</a></li>
-      </ul>
+      <div class="span6 acc-controls">
+        Signed in as: <span class="login-name"></span>
+        &nbsp;
+        &nbsp;
+        &nbsp;
+         <a data-trigger="signout">Sign out</a>
+      </div>
     </div>
-    <div id="content" class="span10"></div>
+  </div>
+</div>
+
+<div id="rootnav">
+  <div class="container">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <ul class="nav" id="mainnav">
+          <li data-view="dashboard"><a href="/dashboard">Dashboard</a></li>
+          <li data-view="analytics"><a href="/analytics">Cloud Analytics</a></li>
+
+          <li data-view="vms"><a href="/vms">Virtual Machines</a></li>
+          <li data-view="servers"><a href="/servers">Servers</a></li>
+          <li data-view="users"><a href="/users">Users</a></li>
+
+          <li data-view="images"><a href="/images">Images</a></li>
+          <li data-view="networks"><a href="/networks">Networks</a></li>
+          <li data-view="packages"><a href="/packages">Packages</a></li>
+
+          <li data-view="jobs"><a href="/jobs">Jobs</a></li>
+          <li data-view="services"><a href="/services">Services</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="content" class="span12"></div>
   </div>
 </div>

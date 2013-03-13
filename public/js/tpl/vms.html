@@ -1,14 +1,15 @@
 <div id="page-vms">
 	<div class="page-header">
-		<h2>Virtual Machines
-			<button class="provision-button pull-right btn btn-info">
-				<i class="icon-plus icon-white"></i> Provision a New VM
-			</button>
-		</h2>
+		<h1>Virtual Machines
+			<div class="actions">
+				<button class="provision-button btn btn-primary"> <i class="icon-plus icon-white"></i> Provision a New VM </button>
+				<button class="toggle-filter btn" data-toggle="button"><i class="icon-filter"></i> Filter Options</button>
+			</div>
+		</h1>
 	</div>
 
-	<div class="row-fluid">
-		<div class="vms-list span9">
+	<div class="row">
+		<div class="vms-list span12">
 			<table class="table table-striped">
 				<thead>
 					<tr>
@@ -18,8 +19,7 @@
 						<th class="package">Package</th>
 					</tr>
 				</thead>
-				<tbody>
-				</tbody>
+				<tbody></tbody>
 				<caption align="bottom">
 					<span class="record-count"></span> Virtual Machines
 				</caption>
@@ -28,7 +28,7 @@
 
 
 		<div class="filter-panel vms-filter span3">
-			<h3>Filter Options</h3>
+			<h4>Filter Options</h4>
 			<div class="alert alert-error"></div>
 			<form>
 				<label>Data Center</label>

@@ -19,7 +19,7 @@ define(function(require) {
         show: function() {
             this.render();
             var modal = this.$el.modal();
-            modal.on('hide', this.onClose);
+            this.bindTo(modal, 'hide', this.onClose);
             this._timer = setInterval(this.update.bind(this), 3000);
         },
         update: function() {
@@ -27,10 +27,11 @@ define(function(require) {
         },
         onUpdate: function() {
             var execution = this.model.get('execution');
-            console.log(execution);
+
             if (execution === 'succeeded' || execution === 'failed') {
                 clearInterval(this._timer);
             }
+
             this.trigger('execution', this.model.get('execution'));
         },
         onClose: function() {

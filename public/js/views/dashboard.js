@@ -26,6 +26,9 @@ define(function(require) {
             $.getJSON("/_/stats/vm_count", function(res) {
                 self.$('.vm-count').html(res.total);
             });
+            $.getJSON("/_/stats/server_count", function(res) {
+                self.$('.server-count').html(res.total);
+            });
 
 			return this;
 		}

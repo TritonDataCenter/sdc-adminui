@@ -31,11 +31,20 @@ define(function(require) {
 
             // holds the state of the currently logged in user
             this.app.user = this.user = new User();
+
+            this.user.on('change:uuid', function(user) {
+                window.sessionStorage.setItem('user-uuid', user.get('uuid'));
+            });
+
+            this.user.on('change:login', function(user) {
+                window.sessionStorage.setItem('user-login', user.get('login'));
+            });
+
             this.user.on('change:token', function(user) {
                 var token = user.get('token');
 
                 if (token === null) {
-                    window.sessionStorage.removeItem('api-token');
+                    window.sessionStorage.clear();
                     $.ajaxSetup({ headers:{} });
                 } else {
                     window.sessionStorage.setItem('api-token', token);
@@ -46,7 +55,10 @@ define(function(require) {
                     }
                 }
             }, this);
+
             this.user.set('token', window.sessionStorage.getItem('api-token'));
+            this.user.set('uuid', window.sessionStorage.getItem('user-uuid'));
+            this.user.set('login', window.sessionStorage.getItem('user-login'));
 
             var self = this;
 

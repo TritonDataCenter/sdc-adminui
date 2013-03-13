@@ -31,9 +31,8 @@ define(function(require) {
      */
      var VmView = Backbone.Marionette.ItemView.extend({
         template: tplVm,
-
+        id: 'page-vm',
         sidebar: 'vms',
-
         events: {
             'click .server-hostname': 'clickedServerHostname',
             'click .start': 'clickedStartVm',

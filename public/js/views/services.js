@@ -5,6 +5,7 @@ define(function(require) {
     var View = Backbone.Marionette.ItemView.extend({
         id: 'page-services',
         template: Template,
+        name: 'services',
 
         events: {
             'click .create-application': 'showCreateApp'
