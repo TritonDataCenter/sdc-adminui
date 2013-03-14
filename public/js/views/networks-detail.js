@@ -16,6 +16,8 @@ define(function(require) {
                     prefix = 'servers';
                 } else if (type === 'zone') {
                     prefix = 'vms';
+                } else {
+                    return null;
                 }
                 return _.str.sprintf('/%s/%s', prefix, uuid);
             }
