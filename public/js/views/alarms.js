@@ -13,7 +13,7 @@ define(function(require) {
             } else {
                 return 'There are no un-suppressed alarms at this time.';
             }
- l       },
+        },
 
 		events: {
 			'click .summary': 'showDetails'
