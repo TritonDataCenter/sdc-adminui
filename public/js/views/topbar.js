@@ -3,7 +3,7 @@ define(function(require) {
 
     var Topbar = Backbone.Marionette.ItemView.extend({
         events: {
-            'click a[data-trigger=signout]': 'signout'
+            'click a.signout': 'signout'
         },
 
         initialize: function(options) {
