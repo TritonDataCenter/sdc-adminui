@@ -1,7 +1,11 @@
 <td>{{ip}}</td>
 <td class="belongs-to">
   <strong>{{belongs_to_type}}</strong>
+  {{#if belongs_to_url}}
   <a href="{{belongs_to_url}}"><small>{{belongs_to_uuid}}</small></a>
+  {{else}}
+  <small>{{belongs_to_uuid}}</small>
+  {{/if}}
 </td>
 <td>
   {{#if reserved}}
