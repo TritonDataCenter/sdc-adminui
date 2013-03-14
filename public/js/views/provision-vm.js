@@ -161,7 +161,7 @@ define(function(require) {
             this.hideError();
             var values = this.extractFormValues();
             var valid;
-            var image_uuid
+            var image_uuid;
 
             if (!values.owner_uuid.length || !values.networks.length) {
                 valid = false;
