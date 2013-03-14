@@ -19,13 +19,19 @@ define(function(require) {
 
 
     var JobsTemplate = require('tpl!jobs');
+
+    var JobsItemEmptyView = Backbone.Marionette.ItemView.extend({
+        template: '<div class="well">There are no jobs to show.</div>'
+    });
+
     var JobsView = Backbone.Marionette.CompositeView.extend({
         name: 'jobs',
+        id: 'page-jobs',
         template: JobsTemplate,
         url: function() { return '/jobs'; },
         itemView: JobsItemView,
+        emptyView: JobsItemEmptyView,
         itemViewContainer: 'tbody',
-
         initialize: function() {
             this.collection = new Jobs();
             this.collection.fetch();

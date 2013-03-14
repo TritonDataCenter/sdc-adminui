@@ -10,15 +10,19 @@ html { height: 100%; }
 
 
 .page-header { 
-  margin-bottom: 10px; .clearfix; overflow: hidden; border: none; 
+  margin-bottom: 10px;
+  .clearfix;
+  overflow: hidden;
+  border: none; 
   h1 {
     font-size: 28px;
     font-weight: 300;
   }
   .actions { .pull-right; }
 }
+.page-header+.actions { .pull-right; margin-top: -62px;}
 
-h1 small { font-size: 18px; text-transform: lowercase;}
+h1 small { font-size: 14px; text-transform: lowercase;}
 
 h2, h3, h4, h5, h6 { font-weight: 300; }
 
@@ -67,6 +71,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
   color: #666;
   .acc-controls {
     text-align: right;
+    a.signout { cursor: pointer;}
   }
 
   .branding {
@@ -79,7 +84,6 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
   }
 }
 #ca #form {
-  background: #e8eef2;
   padding: 30px;
   width: 100%;
   box-sizing: border-box;
@@ -314,7 +318,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
   }
   th.alias { width: 400px;}
   td.alias a { cursor: pointer; }
-  th.package { width: 100px;}
+  th.package { width: 120px;}
   span.running { background-color: #4cc658; }
   span.destroyed { background-color: @grayDark; }
 }
@@ -559,6 +563,10 @@ ul.attributes {
     width: 79%; float: left; padding: 0 26px; box-sizing: border-box;
 
     td.belongs-to strong { display: inline-block; width: 70px; color: #aaa; }
+    td.belongs-to small { 
+      font-style: italic;
+      #font > .monospace(12px);
+    }
 
   }
   .list { 
