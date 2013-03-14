@@ -1,5 +1,6 @@
 <div class="page-header">
-  <h2>{{hostname}} <small>{{uuid}}</small>
+  <h1>{{hostname}}
+    <small class="uuid">{{uuid}}</small>
     <div class="server-state-container">
       Status &nbsp;
       {{#if setting_up}}
@@ -13,12 +14,12 @@
       {{/if}}
     </div>
 
-  </h2>
+  </h1>
 </div>
 
 {{#unless setup}}
 <div class="btn-group pull-right actions">
-  <button class="btn btn-info setup">Setup Compute Node</button>
+  <button class="btn btn-info setup">Setup</button>
 </div>
 {{/unless}}
 
