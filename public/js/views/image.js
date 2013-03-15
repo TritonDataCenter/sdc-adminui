@@ -158,24 +158,25 @@ define(function(require) {
         onSelectFile: function(e) {
             var file = e.target.files[0] || e.dataTransfer.files[0];
             this.viewModel.set({file:file});
-            console.log(e.target);
-            console.log(file);
         },
 
         onClickStartUpload: function() {
             var xhr = new XMLHttpRequest();
             var file = this.viewModel.get('file');
-            file.compression = $('.upload .compression select').val();
+            var compression = $('.upload .compression select').val();
+
             xhr.upload.addEventListener("progress", this.onUploadProgress.bind(this), false);
             xhr.addEventListener("load", this.onUploadComplete.bind(this), false);
             xhr.addEventListener("error", this.onUploadFailed.bind(this), false);
             xhr.addEventListener("abort", this.onUploadCancelled.bind(this), false);
 
-            xhr.open("POST", this.model.url() + "?action=upload", true);
+            xhr.open("PUT", this.model.url() + "/file");
             xhr.setRequestHeader("Content-type", file.type);
-            xhr.setRequestHeader("x-file-compression", file.compression);
+            xhr.setRequestHeader("content-length", file.size);
+            xhr.setRequestHeader("x-file-compression", compression);
             xhr.setRequestHeader('x-adminui-token', $.ajaxSettings.headers['x-adminui-token']);
             xhr.send(file);
+
             this.viewModel.set({uploadform: false});
             this.viewModel.set({uploading: true});
             this.viewModel.set({progress: true});

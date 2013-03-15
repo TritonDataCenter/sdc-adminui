@@ -1,5 +1,30 @@
 <div class="page-header">
-  <h2>{{name}} {{version}} <small class="uuid">{{uuid}}</small></h2>
+  <h1>{{name}} {{version}} <small class="uuid">{{uuid}}</small>
+    <div class="resource-status">
+      Status: 
+      {{#if active}}
+      <span class="active">active</span>
+      {{/if}}
+      {{#if unactivated}}
+      <span class="unactivated">unactivated</span>
+      {{/if}}
+    </div>
+  </h1>
+</div>
+
+  <div class="actions">
+    {{#if enableable}}
+    <a class="btn enable">Enable</a>
+    {{/if}}
+
+    {{#if activatable}}
+    <a class="btn activate btn-info">Activate</a>
+    {{/if}}
+
+    {{#if disableable}}
+    <a class="btn disable btn-danger">Disable</a>
+    {{/if}}
+  </div>
 </div>
 
 
@@ -12,37 +37,7 @@
 
   <p class="description">{{description}}</p>
 
-  <div class="btn-group state">
-    <a class="btn btn-block btn-small dropdown-toggle
-      {{#if active}}btn-success{{/if}}
-      {{#if unactivated}}btn-warning{{/if}}
-      {{#if disabled}}btn-danger{{/if}}
-      " data-toggle="dropdown" href="#">
-      
-      {{#if active}}
-      ACTIVATED
-      {{/if}}
-      {{#if unactivated}}
-      UNACTIVATED
-      {{/if}}
-      <span class="caret"></span>
-    </a>
-
-    <ul class="dropdown-menu">
-      {{#if activatable}}
-      <li><a class="activate">Activate Image</a></li>
-      {{/if}}
-      {{#if enableable}}
-      <li><a class="enable">Enable Image</a></li>
-      {{/if}}
-      {{#if disableable}}
-      <li><a class="disable">Disable Image</a></li>
-      {{/if}}
-    </ul>
-  </div>
-
   <div class="visibility">
-    <h3>Visibility</h3>
     {{#if public}}
       Image is available to the <strong>public</strong>
     {{else}}

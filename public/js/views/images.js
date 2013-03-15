@@ -39,7 +39,6 @@ define(function(require) {
         itemView: ImageRow,
         itemViewContainer: 'tbody',
         events: {
-            'click .create-image': 'onClickCreateImage',
             'click .import-image': 'onClickImportImage'
         },
         initialize: function(opts) {
@@ -54,9 +53,6 @@ define(function(require) {
         },
         onClickImportImage: function() {
             app.vent.trigger('showview', 'image-import');
-        },
-        onClickCreateImage: function() {
-            
         }
   });
 
