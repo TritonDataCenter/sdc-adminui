@@ -1,5 +1,6 @@
 define(function(require) {
     var Marionette = require('backbone.marionette');
+    var app = require('adminui');
 
     var Topbar = Backbone.Marionette.ItemView.extend({
         events: {
@@ -11,8 +12,11 @@ define(function(require) {
         },
 
         signout: function() {
-            var app = require('adminui');
             app.vent.trigger('signout');
+        },
+
+        renderLoginName: function() {
+            this.$('.acc-controls .login-name').html(this.user.get('login'));
         },
 
         serializeData: function() {
@@ -20,7 +24,6 @@ define(function(require) {
                 user: this.user
             };
         }
-
     });
     return Topbar;
 });

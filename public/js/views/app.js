@@ -60,9 +60,8 @@ define(function(require) {
             this.mainnavView.setElement(this.$("#mainnav"));
 
             this.topbar.attachView(this.topbarView);
-            this.topbarView.setElement(this.$("#topnav"));
-
-            this.$('#topbar .acc-controls .login-name').html(this.user.get('login'));
+            this.topbarView.setElement(this.$("#topbar"));
+            this.topbarView.renderLoginName();
 
             return this;
         }
