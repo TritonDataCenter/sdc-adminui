@@ -5,28 +5,29 @@
  */
 
 .caGraph {
-	padding: 5px;
 	width: 100%;
+	border: 1px solid rgb(227, 227, 227);
+	box-shadow: rgba(0, 0, 0, 0.0470588) 0px 1px 1px 0px inset;
+	box-sizing: border-box;
+	background: #f8f8f8;
 }
 
 .caHidden {
 	display: none;
 }
+.caHidden:first-child td { background: red;}
 
 /*
  * Graph title bar.
  */
 .caGraphHeader {
 	width: 100%;
-	color: #997966;
-	margin-bottom: 3px;
-	border-bottom: 1px solid;
 }
 
 .caGraphHeaderTitle {
-	color: #441900;
-	font-weight: bold;
-	font-size: medium;
+	padding: 20px;
+	color: #888;
+	font-size: 16px;
 	margin-right: 50px;
 }
 
@@ -34,7 +35,8 @@
 	float: right;
 	width: 17px;
 	height: 17px;
-	top: -22px; /* XXX Why would this be necessary? */
+	left: -17px;
+	top: -42px; /* XXX Why would this be necessary? */
 }
 
 .caGraphButtonClose > * {
@@ -45,24 +47,31 @@
 	float: right;
 	width: 17px;
 	height: 17px;
-	margin-right: 5px;
+	left: -37px;
+	top: -38px; /* XXX Why would this be necessary? */
+	width: 17px;
+	height: 17px;
 	position: relative;
-	top: -20px;
 }
 
 /*
  * Toolbar.
  */
 .caGraphToolbar {
-        height: 20px;
-        width: 100%;
-	margin-bottom: 10px;
+	box-sizing: border-box;
+	padding: 0 10px;
+	padding-top: 4px;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+		
+	background: #ddd;
+	width: 100%;
 }
 
 .caGraphToolbar .caGraphButton {
-        font-size: 0px;
-        width: 18px;
-        height: 17px;
+	font-size: 0px;
+	width: 18px;
+	height: 17px;
 }
 
 .caGraphToolbar .caGraphToolbarButtons {
@@ -143,10 +152,11 @@ div.caGraphData div.caSlider {
  * we don't know which components are interesting, so we add a scrollbar.
  */
 .caGraphLegend {
+	background: #eee;
 	height: 100%;
-	width: 200px;
+	width: 220px;
+	padding: 0 10px;
 	float: left;
-	margin-right: 30px;
 }
 
 .caGraphHeatMap .caGraphLegend {
@@ -155,8 +165,10 @@ div.caGraphData div.caSlider {
 }
 
 .caGraphLegendTable {
-	width: 200px;
+	width: 100%;
+	border-collapse: collapse;
 }
+.caGraphLegendTable td { padding: 4px; font-family: "Menlo", "Bitstream Vera Sans Mono", "Consolas", monospace; font-size: 10px;}
 
 .caGraphLegendComponent div {
 	overflow: hidden;
@@ -196,8 +208,8 @@ table.caConfigTable td {
 
 table.caConfigTable td.caConfigLabel {
 	padding-right: 20px;
-	font-weight: bold;
-	font-size: small;
+	font-weight: normal;
+	font-size: 14px;
 	white-space: nowrap;
 }
 
@@ -213,6 +225,7 @@ table.caConfigTable td.caConfigHelp {
 	white-space: nowrap;
 	vertical-align: middle;
 }
+table.caConfigTable tr:last-child td { padding-top: 20px; }
 
 /*
  * Dialogs and dialog buttons.
