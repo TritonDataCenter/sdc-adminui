@@ -1,16 +1,8 @@
 /**
- * views/chrome
+ * views/app
  *
  * This module manages the Layout & Pane for
  * the application
- *
- * -------------------------------------+
- *        TOP  BAR                      |
- * -------------------------------------+
- *          |                           |
- * sidebar  |          content          |
- *          |                           |
- *          |                           |
  */
 
 

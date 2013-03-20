@@ -48,7 +48,7 @@ define(function(require) {
         },
 
 
-        toggleFiltersPanel: function() {
+        toggleFiltersPanel: function(e) {
             var filterPanel = this.$('.vms-filter');
             var vmsList = this.$('.vms-list');
             if (this.filterViewVisible) {

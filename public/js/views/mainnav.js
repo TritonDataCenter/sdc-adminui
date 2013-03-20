@@ -4,7 +4,7 @@ define(function(require) {
 
     var Mainnav = Marionette.ItemView.extend({
         events: {
-            'click li':'onSelect'
+            'click li[data-view]':'onSelect'
         },
 
         initialize: function() {

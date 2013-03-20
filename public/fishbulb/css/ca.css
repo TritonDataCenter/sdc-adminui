@@ -1,0 +1,254 @@
+/*
+ * ca.css: generic CA widget styles
+ *
+ * Application-specific styles (like color schemes) should not be here.
+ */
+
+.caGraph {
+	padding: 5px;
+	width: 100%;
+}
+
+.caHidden {
+	display: none;
+}
+
+/*
+ * Graph title bar.
+ */
+.caGraphHeader {
+	width: 100%;
+	color: #997966;
+	margin-bottom: 3px;
+	border-bottom: 1px solid;
+}
+
+.caGraphHeaderTitle {
+	color: #441900;
+	font-weight: bold;
+	font-size: medium;
+	margin-right: 50px;
+}
+
+.caGraphButtonClose {
+	float: right;
+	width: 17px;
+	height: 17px;
+	top: -22px; /* XXX Why would this be necessary? */
+}
+
+.caGraphButtonClose > * {
+	font-size: 0px;
+}
+
+.caGraphWarning {
+	float: right;
+	width: 17px;
+	height: 17px;
+	margin-right: 5px;
+	position: relative;
+	top: -20px;
+}
+
+/*
+ * Toolbar.
+ */
+.caGraphToolbar {
+        height: 20px;
+        width: 100%;
+	margin-bottom: 10px;
+}
+
+.caGraphToolbar .caGraphButton {
+        font-size: 0px;
+        width: 18px;
+        height: 17px;
+}
+
+.caGraphToolbar .caGraphToolbarButtons {
+	display: inline-block;
+	margin-left: 10px;
+}
+
+.caGraphToolbar .caGraphToolbarButtons span {
+	position: relative;
+	top: +20px;
+}
+
+.caGraphToolbar .caGraphToolbarButtons label {
+	font-size: x-small;
+	height: 19px;
+	position: relative;
+	top: -4px;
+}
+
+.caGraphToolbar .caGraphToolbarButtons label * {
+	position: relative;
+	top: -1px;
+}
+
+.caGraphToolbar select {
+	position: relative;
+	top: -6px;
+	margin-left: 10px;
+}
+
+/*
+ * Graph body.
+ */
+.caGraphBody {
+	height: 200px;
+	width: 100%;
+	white-space: nowrap;
+}
+
+.caGraphBody > div {
+	display: inline-block;
+}
+
+.caGraphData {
+	height: 100%;
+}
+
+
+/*
+ * Anything directly inside a caOverlaid element is overlaid on top of its
+ * siblings.  We use this when drawing heat maps to have Rickshaw draw tick
+ * marks and other sugar over the heat map itself.
+ */
+.caOverlaid {
+	position: relative;
+}
+
+.caOverlaid * {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.caGraphHeatMap .caOverlaid > div {
+	z-index: 1
+}
+
+div.caGraphData div.caSlider {
+	position: absolute;
+	right: 40px;
+	height: 200px;
+}
+
+/*
+ * Legend.
+ *
+ * Line graph legends are automatically trimmed.  Heat map ones cannot be, since
+ * we don't know which components are interesting, so we add a scrollbar.
+ */
+.caGraphLegend {
+	height: 100%;
+	width: 200px;
+	float: left;
+	margin-right: 30px;
+}
+
+.caGraphHeatMap .caGraphLegend {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.caGraphLegendTable {
+	width: 200px;
+}
+
+.caGraphLegendComponent div {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 150px;
+}
+
+.caGraphLegendValue {
+	width: 15px;
+	text-align: right;
+}
+
+/*
+ * Context menus.
+ */
+ul.caGraphCloneMenu li {
+	/*
+	 * The following works around the context menu's faulty width
+	 * calculation that doesn't seem to take into account its own left-side
+	 * padding.
+	 */
+	padding-right: +20px;
+}
+
+/*
+ * Configuration table.
+ */
+table.caConfigTable {
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+table.caConfigTable td {
+	vertical-align: middle;
+}
+
+table.caConfigTable td.caConfigLabel {
+	padding-right: 20px;
+	font-weight: bold;
+	font-size: small;
+	white-space: nowrap;
+}
+
+table.caConfigTable td.caConfigValue {
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+table.caConfigTable td.caConfigHelp {
+	padding-left: 10px;
+	font-size: small;
+	font-style: italic;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+/*
+ * Dialogs and dialog buttons.
+ *
+ * The added selector with additional specificity below exists to ensure
+ * precedence over jquery-ui's CSS styles.
+ */
+div.ui-dialog button.ui-button-text-only span.ui-button-text,
+div.ui-button-text-only span.ui-button-text {
+	font-size: small;
+	height: 1em;
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+	padding-left: 0.6em;
+	padding-right: 0.6em;
+	line-height: 1em;
+}
+
+.caDialogIcon {
+	float: left;
+	margin: 0 7px 50px 0;
+}
+
+/*
+ * Metric selector widget
+ */
+div.caWidgetCreateInstn .caConfigTable td.caConfigLabel {
+	width: 135px;
+	padding-right: 0px;
+}
+
+div.caWidgetExpandButton {
+	width: auto;
+	padding-right: +0.5em;
+}
+
+div.caWidgetExpandButton span.ui-button-text {
+	font-size: x-small;
+}
