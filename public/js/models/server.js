@@ -23,6 +23,13 @@ define(function(require) {
             });
         },
 
+        reboot: function(callback) {
+            $.post(this.url()+'?action=reboot', {}, function(data) {
+                var job = new Job({uuid: data.job_uuid});
+                callback(job);
+            });
+        },
+
         update: function(attrs, cb) {
             $.ajax({
                 url: this.url(),

@@ -38,7 +38,8 @@ define(function(require) {
             'click .setup': 'setup',
             'click .change-rack-id': 'showChangeRackField',
             'click .modify-traits': 'showTraitsModal',
-            'click .factory-reset': 'factoryReset'
+            'click .factory-reset': 'factoryReset',
+            'click .reboot': 'reboot'
         },
 
         modelEvents: {
@@ -125,7 +126,14 @@ define(function(require) {
                 jobView.show();
             });
         },
-        
+
+        reboot: function() {
+            this.model.reboot(function(job) {
+                var jobView = new JobProgressView({model: job});
+                jobView.show();
+            });
+        },
+
         onRender: function() {
             this.notesView = new NotesView({itemUuid: this.model.get('uuid'), el: this.$('.notes')});
             this.notesView.render();
