@@ -54,7 +54,6 @@ define(function(require) {
         this.$el.html(view.el);
         this.$el.fadeIn(150);
     };
-    
 
     var AdminUI = new Backbone.Marionette.Application();
 
@@ -66,7 +65,7 @@ define(function(require) {
         this.router = options.router;
         this.router.go();
         Backbone.history.start({pushState: true});
-        
+
         this.pinger = new Pinger();
         this.pinger.start();
     });

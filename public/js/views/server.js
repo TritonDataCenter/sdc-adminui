@@ -21,6 +21,8 @@ define(function(require) {
         }
     });
 
+    var app = require('adminui');
+
     var Server = require('models/server');
     var NotesView = require('views/notes');
     var BaseView = require('views/base');
@@ -39,7 +41,8 @@ define(function(require) {
             'click .change-rack-id': 'showChangeRackField',
             'click .modify-traits': 'showTraitsModal',
             'click .factory-reset': 'factoryReset',
-            'click .reboot': 'reboot'
+            'click .reboot': 'reboot',
+            'click .forget': 'forget'
         },
 
         modelEvents: {
@@ -112,7 +115,7 @@ define(function(require) {
             this.model.setup(function(job) {
                 var jobView = new JobProgressView({model: job});
                 jobView.show();
-                self.bindTo(server, 'execution', function(status) {
+                self.bindTo(job, 'execution', function(status) {
                     if (status === 'succeeded') {
                         server.fetch();
                     }
@@ -122,15 +125,20 @@ define(function(require) {
 
         factoryReset: function() {
             this.model.factoryReset(function(job) {
-                var jobView = new JobProgressView({model: job});
-                jobView.show();
+                app.vent.trigger('showjob', job);
             });
         },
 
         reboot: function() {
             this.model.reboot(function(job) {
-                var jobView = new JobProgressView({model: job});
-                jobView.show();
+                app.vent.trigger('showjob', job);
+            });
+        },
+
+        forget: function() {
+            this.model.forget(function(err) {
+                alert('Server Removed from Datacenter');
+                app.vent.trigger('showview', 'servers');
             });
         },
 

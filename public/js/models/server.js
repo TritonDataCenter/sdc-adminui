@@ -30,6 +30,13 @@ define(function(require) {
             });
         },
 
+        forget: function(cb) {
+            $.delete_(this.url(), {}, function(data) {
+                console.log(data);
+                cb();
+            });
+        },
+
         update: function(attrs, cb) {
             $.ajax({
                 url: this.url(),

@@ -32,6 +32,7 @@ define(function(require) {
             this.mainnavView = new Mainnav();
 
             this.bindTo(adminui.vent, 'error', this.onError, this);
+            this.bindTo(adminui.vent, 'showjob', this.onShowjob, this);
         },
 
         onError: function(err) {
@@ -45,6 +46,11 @@ define(function(require) {
                 var tpl = Handlebars.compile(t);
                 $(tpl(err)).modal();
             }
+        },
+
+        onShowjob: function(job) {
+            var jobView = new JobProgressView({model: job});
+            jobView.show();
         },
 
         onRender: function() {
