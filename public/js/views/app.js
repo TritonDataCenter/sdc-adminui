@@ -11,6 +11,7 @@ define(function(require) {
     var Topbar = require('views/topbar');
     var Mainnav = require('views/mainnav');
 
+    var JobProgressView = require('views/job-progress');
     var tplChrome = require('tpl!chrome');
     var adminui = require('adminui');
 

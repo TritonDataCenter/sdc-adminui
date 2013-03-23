@@ -88,7 +88,7 @@ define(function(require) {
         saveCustomerMetadata: function(cb) {
             $.put(this.url() + '/customer_metadata', this.get('customer_metadata'), cb);
         },
-        
+
         ips: function() {
             return this.get('nics').map(function(n) {
                 return n.ip;

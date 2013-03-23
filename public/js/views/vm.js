@@ -1,6 +1,4 @@
 define(function(require) {
-    
-    var BaseView = require('views/base');
     var Vm = require('models/vm');
     var Img = require('models/image');
     var Server = require('models/server');
@@ -16,6 +14,7 @@ define(function(require) {
     var ResizeVmView = require('views/resize-vm');
 
     var JobProgressView = require('views/job-progress');
+    var VmChangeOwner = require('views/vm-change-owner');
     var NotesView = require('views/notes');
     var CreateProbeController = require('controllers/create-probe');
     var adminui = require('adminui');
@@ -43,7 +42,8 @@ define(function(require) {
             'click .rename': 'clickedRename',
             'click .owner-name': 'clickedOwnerName',
             'click .package': 'clickedPackage',
-            'click .resize': 'clickedResize'
+            'click .resize': 'clickedResize',
+            'click .change-owner': 'clickChangeOwner'
         },
 
         url: function() {
@@ -65,7 +65,7 @@ define(function(require) {
             this.server = new Server();
 
             this.image.set({ uuid: this.vm.get('image_uuid') });
-            
+
             if (! this.image.get('updated_at'))
                 this.image.fetch();
 
@@ -95,7 +95,7 @@ define(function(require) {
                 this.server.set({uuid: m.get('server_uuid')});
                 this.server.fetch();
             }, this);
-            
+
             this.vm.on('change:customer_metadata', function(m) {
                 this.renderMetadata();
             }, this);
@@ -162,6 +162,11 @@ define(function(require) {
             vmDeleteView.show();
         },
 
+        clickChangeOwner: function() {
+            var vmChangeOwner = new VmChangeOwner({vm: this.vm});
+            vmChangeOwner.show();
+        },
+
         clickedServerHostname: function() {
             this.vent.trigger('showview', 'server', { server:this.server });
         },
@@ -170,7 +175,7 @@ define(function(require) {
             var self = this;
             var renameBtn = this.$('.alias .rename');
             var value = this.$('.alias .value');
-            
+
             renameBtn.hide();
             value.hide();
 
