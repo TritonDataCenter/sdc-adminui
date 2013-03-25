@@ -1,3 +1,5 @@
+<% if (alarms.length) { %>
+<div class="alarms-container has-alarms">
 <ul class="unstyled alarms-list">
 	<% alarms.each(function(alarm) { %>
 	<li>
@@ -37,4 +39,7 @@
 		<% }); %>
 	</li>
 </ul>
-There are no alarms at this time.
+</div>
+<% } else { %>
+<div class="alarms-container no-alarms">There are no alarms at this time.</div>
+<% } %>

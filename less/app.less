@@ -159,13 +159,16 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
 
   .alarms-container {
     font-size: 24px;
-    padding: 24px 48px;
     text-align: center;
     line-height: 1.5em;
     font-weight: bold;
-    background: #855eb0;
     color: #FFF;
+    .no-alarms {
+      background: #855eb0;
+      padding: 24px 48px;
+    }
   }
+
 
   .widget-label {
     display: block;
@@ -706,26 +709,26 @@ ul.attributes {
 
 
 .alarms {
-  .alarms-list { float: left; width: 500px;}
+  .alarms-list { margin: 0;}
   .alarms-list>li { 
     display: block;
     overflow: hidden;
     .border-radius(2px);
 
-    .probe-name { font-weight: bold;}
+    text-align: left;
+    .probe-name { font-weight: bold; font-size: 14px;}
     .time-last-event { font-size: 10px; text-transform: uppercase;}
 
     .summary {
       cursor: pointer;
-      background: lighten(@red, 54%);
+      background: lighten(@red, 20%);
       padding: 18px;
     }
 
     .details {
-      background: lighten(@red, 62%);
-      padding: 18px;
+      background: lighten(@red, 40%);
+      padding: 14px;
       overflow: hidden;
-      padding-left: 30px;
     }
 
 
@@ -752,13 +755,14 @@ ul.attributes {
     .faults>li+li { margin-top: .5em;}
 
     .faults>li {
-      .fault-time { font-size: 11px; color: @grayLight; float: right;}
+      .fault-time { font-size: 11px; color: #FFF; float: right;}
       .fault-name { font-weight: bold; font-size: 12px; float: left; }
       .fault-message { 
         clear: both;
+        font-weight: normal;
         font-size: 11px;
-        background: lighten(@red, 62%);
-        padding: 4px; 
+        background: #444; 
+        padding: 4px 8px; 
         .border-radius(2px);
       }
     }

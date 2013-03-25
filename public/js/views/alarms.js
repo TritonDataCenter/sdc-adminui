@@ -20,7 +20,7 @@ define(function(require) {
 		},
 
 		showDetails: function(e) {
-			$(e.currentTarget).siblings('.details').toggle('slide');
+			$(e.currentTarget).siblings('.details').toggle();
 		},
 
 		initialize: function(options) {
