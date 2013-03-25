@@ -1,7 +1,7 @@
 define(function(require) {
-    var Backbone = require('backbone');
+    var Marionette= require('backbone.marionette');
 
-    var JobProgressView = Backbone.Marionette.ItemView.extend({
+    var JobProgressView = Marionette.ItemView.extend({
         attributes: {
             'class': 'modal',
             'id': 'job-progress'
