@@ -10,6 +10,7 @@ define(function(require) {
     var Users = require('models/users');
     var Package = require('models/package');
     var Packages = require('models/packages');
+    var Servers = require('models/servers');
     var Networks = require('models/networks');
     var Vm = require('models/vm');
 
@@ -85,9 +86,11 @@ define(function(require) {
 
             this.imagesSource = [];
             this.usersSource = [];
+            this.serversSource = [];
 
             this.usersCollection = new Users();
             this.imagesCollection = new Images();
+            this.serversCollection = new Servers();
             this.networks = new Networks();
 
             this.usersCollection.on('reset', function(users) {
@@ -103,6 +106,13 @@ define(function(require) {
                 }, this);
             }, this);
 
+            this.serversCollection.on('reset', function(servers) {
+                console.log(servers);
+                servers.each(function(u) {
+                    this.serversSource.push(u);
+                }, this);
+            }, this);
+
             this.networks.on('reset', function(networks) {
                 this.populateNetworks(networks);
             }, this);
@@ -110,6 +120,7 @@ define(function(require) {
             this.imagesCollection.fetch();
             this.usersCollection.searchByLogin('');
             this.networks.fetch();
+            this.serversCollection.fetch();
             this.packages.fetchActive();
         },
 
@@ -128,6 +139,17 @@ define(function(require) {
                     return obj.get('uuid');
                 }
             });
+
+            this.$("input[name=server]").typeahead({
+                source: this.serversSource,
+                labeler: function(obj) {
+                    return obj.get('hostname');
+                },
+                valuer: function(obj) {
+                    return obj.get('uuid');
+                }
+            });
+
 
             this.$("input[name=owner]").typeahead({
                 source: this.usersSource,
@@ -220,6 +242,10 @@ define(function(require) {
                 alias: formData.alias
             };
 
+            if (formData.server) {
+                values['server_uuid'] = formData.server;
+            }
+
             if (formData.image) {
                 var image = this.imagesCollection.get(formData.image);
                 var imageReqs = image.get('requirements') || {};
@@ -273,7 +299,8 @@ define(function(require) {
             var fieldMap = {
                 'image_uuid': '[name=image]',
                 'alias': '[name=alias]',
-                'owner_uuid': '[name=owner]'
+                'owner_uuid': '[name=owner]',
+                'server_uuid': '[name=server]'
             };
             var err = xhr.responseData;
             this.ui.alert.find('.message').html(err.message);
