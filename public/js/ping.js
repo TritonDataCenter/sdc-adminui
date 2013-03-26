@@ -1,7 +1,7 @@
 define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
     var Pinger = function(options) {
         this.options = options || {};
-        this.options.interval = this.options.interval || (10 * 1000);
+        this.options.interval = this.options.interval || (60 * 1000);
     };
 
     _.extend(Pinger, Backbone.Events);

@@ -8,11 +8,8 @@ define(function(require) {
 
 	var AlarmsView = Backbone.Marionette.ItemView.extend({
 		template: function(vars) {
-            if (Object.keys(vars).length) {
-                return AlarmsTemplate(vars);
-            } else {
-                return 'There are no un-suppressed alarms at this time.';
-            }
+            vars.alarms = vars.alarms || [];
+            return AlarmsTemplate(vars);
         },
 
 		events: {
