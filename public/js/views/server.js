@@ -8,7 +8,7 @@ define(function(require) {
     var ServerTemplate = require('text!tpl/server.html');
     var TraitsModal = require('views/traits-editor');
     var JobProgressView = require('views/job-progress');
-    var ChangeRackForm =- require('views/server-change-rack');
+    var ChangeRackForm = require('views/server-change-rack');
 
     var ServerView = Backbone.Marionette.ItemView.extend({
         id: 'page-server',
@@ -69,6 +69,7 @@ define(function(require) {
 
         showChangeRackField: function() {
             var view = new ChangeRackForm({model: this.model});
+
             this.bindTo(view, 'cancel', function() {
                 this.$('.rack td a').show();
             }, this);

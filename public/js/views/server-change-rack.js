@@ -1,6 +1,10 @@
-define(function() {
-    var ChangeRackFormTemplate = Handlebars.compile('<input class="input" type="text"><button class="btn btn-primary save">Save</button><button class="btn cancel">Cancel</button>');
+define(function(require) {
+    var template = '<input class="input input" type="text"><button class="btn btn-primary save">Save</button><button class="btn cancel">Cancel</button>';
+    var ChangeRackFormTemplate = Handlebars.compile(template);
     var ChangeRackForm = Backbone.Marionette.ItemView.extend({
+        attributes: {
+            'class': 'change-rack-form'
+        },
         template: ChangeRackFormTemplate,
         events: {
             'click button.save': 'save',
@@ -19,6 +23,6 @@ define(function() {
             this.remove();
         }
     });
-    
+
     return ChangeRackForm;
 });
