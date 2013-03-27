@@ -35,14 +35,36 @@
         <tr class="rack">
           <th>Rack</th>
           <td>
+            {{#if rack_identifier}}
             {{rack_identifier}}
             <a class="change-rack-id">Change <i class="icon-edit"></i></a>
+            {{else}}
+            <a class="change-rack-id">Assign to Rack <i class="icon-edit"></i></a>
+            {{/if}}
+          </td>
+        </tr>
+
+        <tr class="platform">
+          <th>Platform</th>
+          <td>
+            <strong>Current</strong> {{current_platform}}<br/>
+            <strong>Next Boot</strong> {{boot_platform}} <a class="change-platform">Change <i class="icon-edit"></i></a>
           </td>
         </tr>
 
         <tr>
           <th>UUID</th>
           <td>{{uuid}}</td>
+        </tr>
+        <tr>
+          <th>Reserved</th>
+          <td>
+            {{#if reserved}}
+            Reserved
+            {{else}}
+            Not Reserved
+            {{/if}}
+          </td>
         </tr>
         <tr>
           <th>Hostname</th>

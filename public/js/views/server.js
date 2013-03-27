@@ -9,6 +9,7 @@ define(function(require) {
     var TraitsModal = require('views/traits-editor');
     var JobProgressView = require('views/job-progress');
     var ChangeRackForm = require('views/server-change-rack');
+    var ChangePlatformForm = require('views/server-change-platform');
 
     var ServerView = Backbone.Marionette.ItemView.extend({
         id: 'page-server',
@@ -19,6 +20,7 @@ define(function(require) {
         events: {
             'click .setup': 'setup',
             'click .change-rack-id': 'showChangeRackField',
+            'click .change-platform': 'showChangePlatformField',
             'click .modify-traits': 'showTraitsModal',
             'click .factory-reset': 'factoryReset',
             'click .reboot': 'reboot',
@@ -67,14 +69,41 @@ define(function(require) {
             return data;
         },
 
-        showChangeRackField: function() {
-            var view = new ChangeRackForm({model: this.model});
+        showChangePlatformField: function() {
+            var self = this;
+            var $link = this.$('.platform td a');
+            var view = new ChangePlatformForm({model: this.model});
 
             this.bindTo(view, 'cancel', function() {
-                this.$('.rack td a').show();
+                $link.show();
             }, this);
+
+            this.bindTo(view, 'save', function(platform) {
+                self.model.set({boot_platform: platform});
+                view.remove();
+                $link.show();
+            });
+            this.$('.platform td').append(view.el);
+            $link.hide();
+            view.render();
+        },
+
+        showChangeRackField: function() {
+            var self = this;
+            var view = new ChangeRackForm({model: this.model});
+            var $link = this.$('.rack td a');
+
+            this.bindTo(view, 'cancel', function() {
+               $link.show();
+            }, this);
+
+            this.bindTo(view, 'save', function(rack) {
+                self.model.set({rack_identifier: rack});
+                view.remove();
+                $link.show();
+            });
             this.$('.rack td').append(view.el);
-            this.$('.rack td a').hide();
+            $link.hide();
             view.render();
         },
 

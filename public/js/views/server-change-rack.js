@@ -13,10 +13,9 @@ define(function(require) {
         save: function() {
             var self = this;
             var rid = this.$('input').val();
-            this.model.set({rack_identifier: rid });
-            this.model.save(null, {success: function() {
+            this.model.update({rack_identifier: rid }, function() {
                 self.trigger('save', rid);
-            }});
+            });
         },
         cancel: function() {
             this.trigger('cancel');
