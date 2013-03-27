@@ -52,7 +52,7 @@ var capWidgets = [];            /* all widgets in the panel */
  var capConfig = {           /* CA backend configuration */
     'type': 'direct',
     'host': capDefaultIp,
-    'port': capDefaultPort,
+    'port': capDefaultPort || 443,
     'protocol': capDefaultProtocol,
 };
 
