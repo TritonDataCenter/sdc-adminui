@@ -47,8 +47,11 @@ define(function(require) {
             cpu_type: function() {
                 return this.sysinfo['CPU Type'];
             },
-            cpu_cores: function() {
+            cpu_physical_cores: function() {
                 return this.sysinfo['CPU Physical Cores'];
+            },
+            cpu_total_cores: function() {
+                return this.sysinfo['CPU Total Cores'];
             },
             serial_number: function() {
                 return this.sysinfo['Serial Number'];
@@ -71,7 +74,7 @@ define(function(require) {
 
         showChangePlatformField: function() {
             var self = this;
-            var $link = this.$('.platform td a');
+            var $link = this.$('.platform a');
             var view = new ChangePlatformForm({model: this.model});
 
             this.bindTo(view, 'cancel', function() {
@@ -83,7 +86,7 @@ define(function(require) {
                 view.remove();
                 $link.show();
             });
-            this.$('.platform td').append(view.el);
+            this.$('.platform').append(view.el);
             $link.hide();
             view.render();
         },
