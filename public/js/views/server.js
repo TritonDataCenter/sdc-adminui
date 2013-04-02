@@ -3,14 +3,17 @@ define(function(require) {
     var app = require('adminui');
 
     var Server = require('models/server');
+    var Nics = require('models/nics');
+
     var NotesView = require('views/notes');
     var BaseView = require('views/base');
-    var ServerTemplate = require('text!tpl/server.html');
     var TraitsModal = require('views/traits-editor');
     var JobProgressView = require('views/job-progress');
     var ChangeRackForm = require('views/server-change-rack');
     var ChangePlatformForm = require('views/server-change-platform');
+    var ServerNicsView = require('views/server-nics');
 
+    var ServerTemplate = require('tpl!server');
     var ServerView = Backbone.Marionette.ItemView.extend({
         id: 'page-server',
         sidebar: 'servers',
@@ -27,6 +30,10 @@ define(function(require) {
             'click .forget': 'forget'
         },
 
+        url: function() {
+            return _.str.sprintf('servers/%s', this.model.get('uuid'));
+        },
+
         modelEvents: {
             'change': 'render'
         },
@@ -38,6 +45,9 @@ define(function(require) {
                 this.model.set({uuid: options.uuid});
                 this.model.fetch();
             }
+
+            this.nics = new Nics({ belongs_to_type: 'server', belongs_to_uuid: this.model.get('uuid') });
+            this.nics.fetchNics();
         },
 
         templateHelpers: {
@@ -158,10 +168,8 @@ define(function(require) {
         onRender: function() {
             this.notesView = new NotesView({itemUuid: this.model.get('uuid'), el: this.$('.notes')});
             this.notesView.render();
-        },
-
-        url: function() {
-            return _.str.sprintf('servers/%s', this.model.get('uuid'));
+            this.nicsView = new ServerNicsView({nics: this.nics, el: this.$('.nics')});
+            this.nicsView.render();
         }
     });
 

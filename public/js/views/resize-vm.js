@@ -59,8 +59,8 @@ define(function(require) {
             this.stickit(this.model, {
                 'button': {
                     attributes: [{
-                        observe: 'package',
                         name: 'disabled',
+                        observe: 'package',
                         onGet: function(pkg) {
                             return pkg === null || pkg.length === 0;
                         }
@@ -69,11 +69,7 @@ define(function(require) {
                 'select': {
                     observe: 'package',
                     selectOptions: {
-                        'collection': function() {
-                            var packages = self.packages.toJSON();
-                            packages.unshift(null);
-                            return packages;
-                        },
+                        'collection': 'this.packages',
                         'labelPath': 'name'
                     }
                 }
