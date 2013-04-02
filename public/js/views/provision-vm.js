@@ -107,7 +107,6 @@ define(function(require) {
             }, this);
 
             this.serversCollection.on('reset', function(servers) {
-                console.log(servers);
                 servers.each(function(u) {
                     this.serversSource.push(u);
                 }, this);
@@ -318,9 +317,13 @@ define(function(require) {
 
             this.model.save(this.extractFormValues(), {
                 success: function(m, obj) {
-                    console.log(obj);
                     var job = new Job({uuid: obj.job_uuid});
                     var jobView = new JobProgressView({model: job});
+                    self.bindTo(jobView, 'execution', function(status) {
+                        if (status == 'succeeded') {
+                            adminui.vent.trigger('showview', {uuid: obj.vm_uuid});
+                        }
+                    });
                     jobView.show();
                 }
             });

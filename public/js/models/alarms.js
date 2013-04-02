@@ -1,6 +1,7 @@
 define(function(require) {
-
+    var Alarm = require('models/alarm');
     return Backbone.Collection.extend({
+        model: Alarm,
         url: '/_/amon/alarms',
 
         parse: function(resp) {

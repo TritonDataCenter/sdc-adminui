@@ -1,5 +1,7 @@
 define(function(require) {
 	var Alarms = require('models/alarms');
+    var Alarm = require('models/alarm');
+
 	var Probes = require('models/probes');
 	var ProbeGroups = require('models/probe-groups');
     var AlarmsTemplateText = require('text!tpl/alarms.html');
@@ -13,32 +15,49 @@ define(function(require) {
         },
 
 		events: {
-			'click .summary': 'showDetails'
+			'click .summary': 'showDetails',
+            'click .suppress': 'suppressAlarm'
 		},
 
 		showDetails: function(e) {
 			$(e.currentTarget).siblings('.details').toggle();
 		},
 
+        suppressAlarm: function(e) {
+            var self = this;
+            e.preventDefault();
+            e.stopPropagation();
+            var uuid = $(e.target).closest('li').attr('data-uuid');
+            uuid = _.str.trim(uuid);
+            var alarm = new Alarm({id: uuid, user: this.probeGroups.user });
+            alarm.suppress(function() {
+                self.fetch();
+            });
+        },
+
 		initialize: function(options) {
 			_.bindAll(this);
 
 			if (options.userUuid) {
 				this.alarms = new Alarms();
-				this.alarms.fetchAlarms(options.userUuid);
-
 				this.probeGroups = new ProbeGroups();
 				this.probeGroups.user = options.userUuid;
-				this.probeGroups.fetch();
-
 				this.probes = new Probes();
-				this.probes.fetchProbes(options.userUuid);
 			}
 
 			this.bindTo(this.alarms, 'reset', this.render);
 			this.bindTo(this.probeGroups, 'reset', this.render);
 			this.bindTo(this.probes, 'reset', this.render);
+            this.fetch();
 		},
+
+        fetch: function() {
+            if (this.options.userUuid) {
+                this.probes.fetchProbes(this.options.userUuid);
+                this.alarms.fetchAlarms(this.options.userUuid);
+                this.probeGroups.fetch();
+            }
+        },
 
 		dataReady: function() {
 			return this.probes.length && this.alarms.length && this.probeGroups.length;
@@ -72,6 +91,10 @@ define(function(require) {
                 probeGroups: this.probeGroups,
                 alarms: this.alarms
             };
+            var open = vars.alarms.filter(function(a) {
+                return a.get('suppressed') === false && a.get('closed') === false;
+            });
+            vars.alarms = new Backbone.Collection(open);
             return vars;
         },
 
