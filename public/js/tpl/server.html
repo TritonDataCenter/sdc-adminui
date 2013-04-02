@@ -48,6 +48,7 @@
             {{rack_identifier}}
             <a class="change-rack-id">Change <i class="icon-edit"></i></a>
             {{else}}
+            <span style="color: #aaa;">No Rack Assigned</span>
             <a class="change-rack-id">Assign to Rack <i class="icon-edit"></i></a>
             {{/if}}
           </td>
@@ -57,8 +58,10 @@
           <td>
             {{#if reserved}}
             Reserved
+            <a class="change-reserve">Unreserve <i class="icon-edit"></i></a>
             {{else}}
             Not Reserved
+            <a class="change-reserve">Reserve <i class="icon-edit"></i></a>
             {{/if}}
           </td>
         </tr>

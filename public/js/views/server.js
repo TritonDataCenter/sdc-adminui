@@ -27,7 +27,8 @@ define(function(require) {
             'click .modify-traits': 'showTraitsModal',
             'click .factory-reset': 'factoryReset',
             'click .reboot': 'reboot',
-            'click .forget': 'forget'
+            'click .forget': 'forget',
+            'click .change-reserve': 'toggleReserve'
         },
 
         url: function() {
@@ -80,6 +81,11 @@ define(function(require) {
                 return {name: k, value: v};
             });
             return data;
+        },
+
+        toggleReserve: function() {
+            var newValue = !this.model.get('reserved');
+            this.model.update({'reserved': newValue });
         },
 
         showChangePlatformField: function() {

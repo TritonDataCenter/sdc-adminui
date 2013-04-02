@@ -38,6 +38,7 @@ define(function(require) {
         },
 
         update: function(attrs, cb) {
+            this.set(attrs);
             $.ajax({
                 url: this.url(),
                 type: "PUT",
