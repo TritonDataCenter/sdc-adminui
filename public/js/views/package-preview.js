@@ -12,19 +12,22 @@ define(function(require) {
             '[name=version]': 'version',
             '[name=vcpus]': 'vcpus',
             '[name=quota]': 'quota',
-            '[name=zfs_io_priority]': 'zfs_io_priority',
-            ':el': {
-                observe: 'uuid',
-                visible: function(val) {
-                    return !! val;
-                }
-            }
+            '[name=zfs_io_priority]': 'zfs_io_priority'
         },
         initialize: function(options) {
             this.model = options.model;
+            this.bindTo(this.model, 'change:uuid', this.toggleDisplay);
+        },
+        toggleDisplay: function() {
+            if (this.model.get('uuid') && this.model.get('uuid').length) {
+                this.$el.show();
+            } else {
+                this.$el.hide();
+            }
         },
         onRender: function() {
-            this.stickit(this.model, this.bindings);
+            this.stickit();
+            this.toggleDisplay();
         }
     });
 

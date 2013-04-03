@@ -125,7 +125,7 @@ define(function(require) {
 
         onRender: function() {
             this.packageSelect.setElement(this.$('select[name=package]')).render();
-            this.$('.package-preview-container').html(this.packagePreview.render().el);
+            this.$('.package-preview-container').append(this.packagePreview.render().el);
 
             this.hideError();
 
@@ -321,7 +321,7 @@ define(function(require) {
                     var jobView = new JobProgressView({model: job});
                     self.bindTo(jobView, 'execution', function(status) {
                         if (status == 'succeeded') {
-                            adminui.vent.trigger('showview', {uuid: obj.vm_uuid});
+                            adminui.vent.trigger('showview', 'vm', {uuid: obj.vm_uuid});
                         }
                     });
                     jobView.show();

@@ -51,7 +51,6 @@ define(function(require) {
             } else {
                 this.selectedPackage.clear();
             }
-            window.s = this.selectedPackage;
         },
         onRender: function() {
             this.$('.package-preview-container').html(this.packagePreviewView.render().el);
@@ -70,6 +69,7 @@ define(function(require) {
                     observe: 'package',
                     selectOptions: {
                         'collection': 'this.packages',
+                        defaultOption: { label: 'Select a Package' },
                         'labelPath': 'name'
                     }
                 }
