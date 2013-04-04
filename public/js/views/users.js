@@ -1,6 +1,6 @@
 define(function(require) {
     // UsersView
-    var CreateUserView = require('views/users-create');
+    var UserForm = require('views/user-form');
     var BaseView = require('views/base');
     var Users = require('models/users');
     var UserView = require('views/user');
@@ -44,7 +44,7 @@ define(function(require) {
         template: tplUsers,
 
         url: 'users',
-        
+
         id: "page-users",
 
         sidebar: 'users',
@@ -84,7 +84,7 @@ define(function(require) {
         },
 
         newUser: function() {
-            this.createView = new CreateUserView();
+            this.createView = new UserForm();
             this.createView.render();
         },
 

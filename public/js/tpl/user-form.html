@@ -1,7 +1,7 @@
 <form>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
-    <h3>Create User</h3>
+    <h3><span class="action"></span> User</h3>
   </div>
 
   <div class="modal-body">
@@ -41,21 +41,22 @@
         <div class="control-group">
           <label class="control-label">Company</label>
           <div class="controls">
-            <input type="text" name="company_name" placeholder="Joyent">
+            <input type="text" name="company" placeholder="Joyent">
           </div>
         </div>
 
         <div class="control-group">
           <label class="control-label">Phone Number</label>
           <div class="controls">
-            <input type="text" name="phone" placeholder="Joyent">
+            <input type="text" name="phone" placeholder="510-123-4567">
           </div>
         </div>
+        <input type="hidden" name="cn">
       </fieldset>
     </div>
   </div> <!-- .modal-body -->
   <div class="modal-footer">
-    <button type='submit' class="create btn btn-primary">Create User</button>
+    <button type='submit' class="save btn btn-primary">Save User</button>
     <button data-dismiss="modal" class="btn">Close</button>
   </div>
 </form>

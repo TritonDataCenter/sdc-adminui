@@ -4,10 +4,11 @@ define(function(require) {
     var VmsList = require('views/vms-list');
     var Vms = require('models/vms');
     var SSHKeys = require('models/sshkeys');
+    var UserForm = require('views/user-form');
 
     var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
         tagName: 'tr',
-        template: '<td>{{name}}</td><td>{{fingerprint}}</td><td><button class="btn btn-small btn-danger remove"><i class="icon-remove-sign icon-white"></i> Delete</button></td>',
+        template: '<td>{{name}}</td><td>{{fingerprint}}</td><td><a class="remove"><i class="icon-remove-sign"></i> Delete</a></td>',
         events: {
             'click .remove': 'onClickRemove'
         },
@@ -21,10 +22,11 @@ define(function(require) {
     });
 
     var User = require('models/user');
-
     var UserView = Marionette.ItemView.extend({
         template: require('text!tpl/user.html'),
+        id: 'page-user',
         events: {
+            'click .edit-user': 'onClickEditUser',
             'click .add-key': 'onClickAddKey'
         },
 
@@ -32,6 +34,11 @@ define(function(require) {
 
         url: function() {
             return _.str.sprintf('/users/%s', this.model.get('uuid'));
+        },
+
+        onClickEditUser: function(e) {
+            var form = new UserForm({user: this.model});
+            form.render();
         },
 
         onClickAddKey: function(e) {
@@ -84,7 +91,7 @@ define(function(require) {
 
             var viewModel = kb.viewModel(
             this.model, {
-                keys: ['uuid', 'cn', 'sn', 'email', 'login', 'memberof', 'member']
+                keys: ['company','uuid', 'cn', 'sn', 'email', 'login', 'memberof', 'member']
             });
 
             viewModel.member = ko.computed(function() {
