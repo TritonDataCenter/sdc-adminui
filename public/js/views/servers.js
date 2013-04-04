@@ -74,7 +74,14 @@ define(function(require) {
         template: tplServers,
         itemView: ServersListItem,
         itemViewContainer: 'tbody',
-        
+        events: {
+            'click .toggle-filter':'toggleFiltersPanel'
+        },
+        ui: {
+            'filterPanel': '.filter-panel',
+            'serversList': '.servers-list'
+        },
+
         url: function() {
             return 'servers';
         },
@@ -87,6 +94,18 @@ define(function(require) {
         filter: function(params) {
             this.collection.fetch({data: params});
         },
+        toggleFiltersPanel: function(e) {
+            var serversList = this.$('.servers-list');
+            if (this.filterViewVisible) {
+                this.ui.filterPanel.hide();
+                this.ui.serversList.removeClass('span9').addClass('span12');
+                this.filterViewVisible = false;
+            } else {
+                this.ui.filterPanel.show();
+                this.ui.serversList.addClass('span9').removeClass('span12');
+                this.filterViewVisible = true;
+            }
+        },
         onError: function(model, xhr) {
             adminui.vent.trigger('error', {
                 context: 'servers / cnapi',
@@ -97,6 +116,7 @@ define(function(require) {
             this.filterForm.setElement(this.$('.servers-filter'));
             this.bindTo(this.filterForm, 'query', this.filter, this);
             this.bindTo(this.collection, 'error', this.onError, this);
+            this.ui.filterPanel.hide();
         }
     });
 
