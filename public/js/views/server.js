@@ -12,6 +12,7 @@ define(function(require) {
     var ChangeRackForm = require('views/server-change-rack');
     var ChangePlatformForm = require('views/server-change-platform');
     var ServerNicsView = require('views/server-nics');
+    var ServerSetup = require('views/server-setup');
 
     var ServerTemplate = require('tpl!server');
     var ServerView = Backbone.Marionette.ItemView.extend({
@@ -21,7 +22,7 @@ define(function(require) {
         template: ServerTemplate,
 
         events: {
-            'click .setup': 'setup',
+            'click .setup': 'showSetupModal',
             'click .change-rack-id': 'showChangeRackField',
             'click .change-platform': 'showChangePlatformField',
             'click .modify-traits': 'showTraitsModal',
@@ -138,18 +139,9 @@ define(function(require) {
             });
         },
 
-        setup: function() {
-            var server = this.model;
-            var self = this;
-            this.model.setup(function(job) {
-                var jobView = new JobProgressView({model: job});
-                jobView.show();
-                self.bindTo(job, 'execution', function(status) {
-                    if (status === 'succeeded') {
-                        server.fetch();
-                    }
-                });
-            });
+        showSetupModal: function() {
+            var view = new ServerSetup({model: this.model});
+            view.render();
         },
 
         factoryReset: function() {
@@ -166,7 +158,7 @@ define(function(require) {
 
         forget: function() {
             this.model.forget(function(err) {
-                alert('Server Removed from Datacenter');
+                alert('Server Removed from Datacenter') ;
                 app.vent.trigger('showview', 'servers');
             });
         },

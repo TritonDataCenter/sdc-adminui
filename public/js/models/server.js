@@ -9,8 +9,9 @@ define(function(require) {
 			sysinfo:{}
 		},
 
-		setup: function(callback) {
-			$.post(this.url()+'?action=setup', {}, function(data) {
+		setup: function(opts, callback) {
+            opts = opts || {};
+			$.post(this.url()+'?action=setup', opts, function(data) {
                 var job = new Job({uuid: data.job_uuid});
                 callback(job);
             });

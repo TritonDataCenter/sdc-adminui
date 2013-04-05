@@ -95,7 +95,6 @@ define(function(require) {
             this.collection.fetch({data: params});
         },
         toggleFiltersPanel: function(e) {
-            var serversList = this.$('.servers-list');
             if (this.filterViewVisible) {
                 this.ui.filterPanel.hide();
                 this.ui.serversList.removeClass('span9').addClass('span12');
