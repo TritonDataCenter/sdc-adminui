@@ -31,9 +31,9 @@ define(function(require) {
             };
 
             $.post("/_/auth", authData, function(data) {
-                console.log(data);
                 data.user.token = data.token;
                 self.set(data.user);
+                self.set('adminUuid', data.adminUuid);
             }).error(function(xhr) {
                 var err = JSON.parse(xhr.responseText);
                 self.trigger('error', err.message);

@@ -11,6 +11,7 @@
       "bindDN": "cn=root",
     "bindPassword": "secret",
     "cache": {
+    "adminUuid": "00000000-0000-0000-0000-000000000000",
       "size": 1000,
       "expiry": 300
     }

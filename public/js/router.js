@@ -36,6 +36,10 @@ define(function(require) {
                 window.sessionStorage.setItem('user-uuid', user.get('uuid'));
             });
 
+            this.user.on('change:adminUuid', function(user) {
+                window.sessionStorage.setItem('admin-uuid', user.get('adminUuid'));
+            });
+
             this.user.on('change:login', function(user) {
                 window.sessionStorage.setItem('user-login', user.get('login'));
             });
@@ -59,6 +63,7 @@ define(function(require) {
             this.user.set('token', window.sessionStorage.getItem('api-token'));
             this.user.set('uuid', window.sessionStorage.getItem('user-uuid'));
             this.user.set('login', window.sessionStorage.getItem('user-login'));
+            this.user.set('adminUuid', window.sessionStorage.getItem('admin-uuid'));
 
             var self = this;
 
