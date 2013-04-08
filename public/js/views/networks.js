@@ -20,7 +20,7 @@ define(function(require) {
                 this.highlight();
             }
         },
-        
+
         unhighlight: function() {
             this.$el.siblings().removeClass('active');
         },
@@ -38,7 +38,6 @@ define(function(require) {
 
 
     var NetworksDetailView = require('views/networks-detail');
-
     var NetworksView = Backbone.Marionette.Layout.extend({
         template: NetworksTemplate,
         name: "networks",
@@ -66,7 +65,6 @@ define(function(require) {
         showCreateNetworkForm: function() {
             var view = new NetworkCreateView();
             this.bindTo(view, 'saved', function(n) {
-                console.log(n);
                 this.listView.collection.add(n);
                 this.showNetwork(n);
             }, this);
@@ -94,8 +92,6 @@ define(function(require) {
 
     var NetworksListTemplate = require('text!tpl/networks-list.html');
     var NetworksListView = Backbone.Marionette.CompositeView.extend({
-        tagName: 'ul',
-        attributes: { 'class': 'nav' },
         itemViewContainer: 'ul.items',
         template: NetworksListTemplate,
         itemView: NetworksListItem,
@@ -103,7 +99,6 @@ define(function(require) {
         initialize: function(options) {
             this.collection = new Networks();
             this.collection.fetch();
-            
             this.bindTo(this.collection, 'error', this.onError, this);
         },
 
@@ -120,9 +115,6 @@ define(function(require) {
 
         onSelect: function(model)  {
             this.trigger('select', model);
-        },
-        
-        onRender: function() {
         }
     });
 

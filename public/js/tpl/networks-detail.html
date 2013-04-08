@@ -1,66 +1,62 @@
 <div class="page-header">
   <h1>
    <span name="name">{{name}}</span> / <span name="subnet">{{subnet}}</span></h1>
-</div>
+ </div>
+ <h5>Network Details</h5>
+ <ul class="unstyled attributes">
+  <li>
+    <strong>UUID</strong>
+    <div class="value" name="uuid">{{uuid}}</div>
+  </li>
 
-<div class="row">
-  <div class="span9">
-  <h5>Network Details</h5>
-  <ul class="unstyled attributes">
-    <li>
-      <strong>UUID</strong>
-      <div class="value" name="uuid">{{uuid}}</div>
-    </li>
+  <li>
+    <strong>VLAN ID</strong>
+    <div class="value" name="vlan_id">{{vlan_id}}</div>
+  </li>
 
-    <li>
-      <strong>VLAN ID</strong>
-      <div class="value" name="vlan_id">{{vlan_id}}</div>
-    </li>
+  <li>
+    <strong>Network</strong>
+    <div class="value" name="subnet">{{subnet}}</div>
+  </li>
+  <li>
 
-    <li>
-      <strong>Network</strong>
-      <div class="value" name="subnet">{{subnet}}</div>
-    </li>
-    <li>
-      
-      <strong>Gateway</strong>
-      <div class="value" name="gateway">{{gateway}}</div>
-    </li>
+    <strong>Gateway</strong>
+    <div class="value" name="gateway">{{gateway}}</div>
+  </li>
 
-    <li>
-      <strong>Netmask</strong>
-      <div class="value" name="netmask">{{netmask}}</div>
-    </li>
+  <li>
+    <strong>Netmask</strong>
+    <div class="value" name="netmask">{{netmask}}</div>
+  </li>
 
-    <li>
-      <strong>IP Range</strong>
-      <div class="value">
-        <span name="provision_start_ip">{{provision_start_ip}}</span>
-        -
-        <span name="provision_end_ip">{{provision_end_ip}}</span>
-        </div>
-    </li>
+  <li>
+    <strong>IP Range</strong>
+    <div class="value">
+      <span name="provision_start_ip">{{provision_start_ip}}</span>
+      -
+      <span name="provision_end_ip">{{provision_end_ip}}</span>
+    </div>
+  </li>
 
-    <li>
-      <strong>NIC Tag</strong>
-      <div class="value" name="nic_tag">{{nic_tag}}</div>
-    </li>
+  <li>
+    <strong>NIC Tag</strong>
+    <div class="value" name="nic_tag">{{nic_tag}}</div>
+  </li>
 
-    <li>
-      <strong>Resolvers</strong>
-      <div class="value" name="resolvers">{{resolvers}}</div>
-    </li>
-  </ul>
+  <li>
+    <strong>Resolvers</strong>
+    <div class="value" name="resolvers">{{resolvers}}</div>
+  </li>
+</ul>
 
-  <table class="table addresses">
-    <thead>
-      <th>IP</th>
-      <th>Used By</th>
-      <th></th>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
+<table class="table addresses">
+  <thead>
+    <th>IP</th>
+    <th>Used By</th>
+    <th></th>
+  </thead>
+  <tbody></tbody>
+</table>
 
 <div class="span4 notes"></div>
 </div>
