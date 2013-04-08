@@ -1,57 +1,60 @@
 <div class="page-header">
-	<h1>
-		{{name}}
-		{{version}}
-		<button class="btn btn-small pull-right edit"><i class="icon-pencil"></i> Edit Package</button>
-	</h1>
-	<div class="flags">
-		<span class="label {{#if active}}label-info{{/if}} ">ACTIVE</span>
-	</div>
+  <h1>
+    {{name}}
+    {{version}}
+    <div class="actions">
+      <button class="btn btn-small edit"><i class="icon-pencil"></i> Edit Package</button>
+      <button class="btn btn-small traits"><i class="icon-pencil"></i> Edit Traits</button>
+    </div>
+  </h1>
+  <div class="flags">
+    <span class="label {{#if active}}label-info{{/if}} ">ACTIVE</span>
+  </div>
 </div>
 
 
 <h5>Memory &amp; CPU</h5>
 
 <div class="memory">
-	<strong>RAM</strong>
-	<div class="value">{{normalize max_physical_memory}}</div>
+  <strong>RAM</strong>
+  <div class="value">{{normalize max_physical_memory}}</div>
 </div>
 
 <div class="vcpus">
-	<strong>VCPUs</strong>
-	<div class="value">{{vcpus}}</div>
+  <strong>VCPUs</strong>
+  <div class="value">{{vcpus}}</div>
 </div>
 
 <div class="swap">
-	<strong>Swap</strong>
-	<div class="value">{{max_swap}} MB</div>
+  <strong>Swap</strong>
+  <div class="value">{{max_swap}} MB</div>
 </div>
 
 <div class="cpu-cap">
-	<strong>CPU Cap</strong>
-	<div class="value">{{cpu_cap}}</div>
+  <strong>CPU Cap</strong>
+  <div class="value">{{cpu_cap}}</div>
 </div>
 
 <div class="max-processes">
-	<strong>Max Processes</strong>
-	<div class="value">{{max_lwps}}</div>
+  <strong>Max Processes</strong>
+  <div class="value">{{max_lwps}}</div>
 </div>
 
 
 <h5>Storage</h5>
 <div class="quota">
-	<strong>Disk Quota</strong>
-	<div class="value">{{normalize quota}}</div>
+  <strong>Disk Quota</strong>
+  <div class="value">{{normalize quota}}</div>
 </div>
 
 <div class="io-priority">
-	<strong>ZFS IO Priority</strong>
-	<div class="value">{{zfs_io_priority}}</div>
+  <strong>ZFS IO Priority</strong>
+  <div class="value">{{zfs_io_priority}}</div>
 </div>
 
 <h5>Billing</h5>
 
 <div class="billing-id">
-	<strong>Billing ID</strong>
-	<div class="value">{{uuid}}</div>
+  <strong>Billing ID</strong>
+  <div class="value">{{uuid}}</div>
 </div>

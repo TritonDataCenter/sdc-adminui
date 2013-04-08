@@ -11,7 +11,8 @@ define(function(require) {
             'click .btn-primary': 'onClickSave'
         },
         initialize: function(options) {
-            this.traits = options.traits;
+            options = options || {};
+            this.traits = options.traits || {};
         },
         onRender: function() {
             this.$('textarea').text(JSON.stringify(this.traits, null, 2));

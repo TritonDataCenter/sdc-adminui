@@ -1,9 +1,11 @@
 define(function(require) {
-	return Backbone.Model.extend({
+    var Model = require('model');
+	return Model.extend({
         urlRoot: '/_/packages',
         idAttribute: 'uuid',
         defaults: {
-            'default': false
+            'default': false,
+            'traits': {}
         }
     });
 });

@@ -68,17 +68,40 @@ define(function(require) {
         }
     });
 
+    var TraitsEditor = require('views/traits-editor');
     var PackageDetail = Backbone.Marionette.ItemView.extend({
         template: PackagesDetailTemplate,
         url: function() {
             return 'packages/' + this.model.get('uuid');
         },
         events: {
-            'click .edit': 'onEdit'
+            'click .edit': 'onEdit',
+            'click .traits': 'onTraits'
+        },
+
+        initialize: function(options) {
         },
 
         onEdit: function() {
             this.vent.trigger('showedit', this.model);
+        },
+
+        onSaveTraits: function(traits) {
+            var that = this;
+            this.model.set();
+            this.model.save(
+                {traits: traits},
+                {success: function() {
+                that.traitsEditor.close();
+                that.model.fetch();
+            }});
+        },
+
+        onTraits: function() {
+            this.traitsEditor = new TraitsEditor();
+            this.traitsEditor.traits = this.model.get('traits');
+            this.bindTo(this.traitsEditor, 'save-traits', this.onSaveTraits);
+            this.traitsEditor.show();
         },
 
         templateHelpers: {
@@ -175,7 +198,7 @@ define(function(require) {
                 this.showInitialPackage();
                 return;
             }
-            
+
             this.$(".sidebar").animate({opacity: 1});
 
             if ((!this.detail.currentView) ||
@@ -199,7 +222,7 @@ define(function(require) {
             } else {
                 pkg = this.packages.at(0);
             }
-            
+
             if (pkg) {
                 this.showPackage(pkg);
             } else {
