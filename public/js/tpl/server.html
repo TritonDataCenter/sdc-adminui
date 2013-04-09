@@ -32,11 +32,6 @@
           <td>{{datacenter}}</td>
         </tr>
 
-
-        <tr>
-          <th>UUID</th>
-          <td>{{uuid}}</td>
-        </tr>
         <tr>
           <th>Hostname</th>
           <td>{{hostname}}</td>
@@ -136,6 +131,7 @@
     </table>
 
     <h3>Traits</h3>
+    {{#if traits.length}}
     <table class="traits">
       <thead>
         <tr>
@@ -151,8 +147,16 @@
         </tr>
         {{/each}}
       </tbody>
+      <tfoot>
+      <td colspan="2"><button class="btn btn-small modify-traits"><i class="icon-edit"></i> Edit Traits</button></td>
+    </tfoot>
     </table>
-    <button class="btn modify-traits">View/Modify Traits</button>
+    {{else}}
+    <div class="zero-state">
+      <p>There are no traits configured for this server.</p>
+      <button class="btn btn-small modify-traits"><i class="icon-edit"></i> Assign Traits</button>
+    </div>
+    {{/if}}
   </div>
 
   <div class="span4">
