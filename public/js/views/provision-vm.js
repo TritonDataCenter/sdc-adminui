@@ -124,6 +124,7 @@ define(function(require) {
         },
 
         onRender: function() {
+
             this.packageSelect.setElement(this.$('select[name=package]')).render();
             this.$('.package-preview-container').append(this.packagePreview.render().el);
 
@@ -218,8 +219,14 @@ define(function(require) {
                 } else {
                     this.$('.control-group-brand').show();
                 }
+
+                if (image.get('os') === 'smartos') {
+                    this.$('.control-group-brand option[value=kvm]').attr('disabled', true);
+                } else {
+                    this.$('.control-group-brand option[value=kvm]').removeAttr('disabled');
+                }
             } else {
-                this.$('.control-group-brand').show();
+                this.$('.control-group-brand').hide();
             }
         },
 
