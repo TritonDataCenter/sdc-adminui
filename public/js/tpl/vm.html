@@ -31,85 +31,82 @@
 <div class="vms-details">
   <div class="row">
     <div class="span12">
-      <div class="row-fluid">
-        <div class="span12">
-          <h3>Overview</h3>
-          <table class="overview">
-            <tr>
-              <th>Name</th>
-              <td>
-                <span class="alias">
-                  <span class="value vm-alias"></span>
-                  <a class="btn-link rename"><i class="icon-edit"></i> rename</a>
-                </span>
-                <span class="vm-uuid"></span>
-              </td>
-            </tr>
-            <tr>
-              <th>Owner</th>
-              <td>
-                <a class="owner-name" href="/users/{{vm.owner_uuid}}">{{owner.cn}}</a>
-                <span class="owner-uuid">{{vm.owner_uuid}}</span>
-                <a class="btn-link change-owner"><i class="icon-edit"></i> change</a>
-              </td>
-            </tr>
+      <h3>Overview</h3>
+      <table class="overview">
+        <tr>
+          <th>Name</th>
+          <td>
+            <span class="alias">
+              <span class="value vm-alias"></span>
+              <a class="btn-link rename"><i class="icon-edit"></i> rename</a>
+            </span>
+            <span class="vm-uuid"></span>
+          </td>
+        </tr>
+        <tr>
+          <th>Owner</th>
+          <td>
+            <a class="owner-name" href="/users/{{vm.owner_uuid}}">{{owner.cn}}</a>
+            <span class="owner-uuid">{{vm.owner_uuid}}</span>
+            <a class="btn-link change-owner"><i class="icon-edit"></i> change</a>
+          </td>
+        </tr>
 
-            <tr>
-              <th>Memory</th>
-              <td>
-                <span class="vm-memory"></span> MB
-              </td>
-            </tr>
+        <tr>
+          <th>Memory</th>
+          <td>
+            <span class="vm-memory"></span> MB
+          </td>
+        </tr>
 
-            <tr>
-              <th>Swap</th>
-              <td><span class="vm-swap"></span> MB</td>
-            </tr>
+        <tr>
+          <th>Swap</th>
+          <td><span class="vm-swap"></span> MB</td>
+        </tr>
 
-            <tr>
-              <th>IP Addresse</th>
-              <td>
-                <span class="vm-ips"></span>
-              </td>
-            </tr>
-            <tr>
-              <th>Image</th>
-              <td>
-                <a class="image-name-version"></a>
-                <span class="image-uuid"></span>
-              </td>
-            </tr>
-            <tr>
-              <th>Server</th>
-              <td>
-                <a class="server-hostname"></a>
-                <span class="server-uuid"></span>
-              </td>
-            </tr>
-            <tr>
-              <th>Package</th>
-              <td>
-                <a class="package">
-                  <span class="package-name"></span>
-                  <span class="package-version"></span>
-                </a>
-                <span class="billing-id"></span>
-              </td>
-            </tr>
-          </table>
-        </div><!-- span12 view overview -->
+        <tr>
+          <th>IP Addresse</th>
+          <td>
+            <span class="vm-ips"></span>
+          </td>
+        </tr>
+        <tr>
+          <th>Image</th>
+          <td>
+            <a class="image-name-version"></a>
+            <span class="image-uuid"></span>
+          </td>
+        </tr>
+        <tr>
+          <th>Server</th>
+          <td>
+            <a class="server-hostname"></a>
+            <span class="server-uuid"></span>
+          </td>
+        </tr>
+        <tr>
+          <th>Package</th>
+          <td>
+            <a class="package">
+              <span class="package-name"></span>
+              <span class="package-version"></span>
+            </a>
+            <span class="billing-id"></span>
+          </td>
+        </tr>
+      </table>
+    </div><!-- span12 view overview -->
+  </div><!-- row -->
+</div><!-- details -->
 
-      </div>
-      <div class="row-fluid">
-        <div class="span12">
-          <div class="nics"></div>
-        </div>
-      </div> <!-- end row-fluid container for nics-->
-    </div> <!-- end left column -->
+<div class="row-fluid">
+  <div class="span12">
+    <div class="nics"></div>
   </div>
+</div> <!-- end row-fluid container for nics-->
 
 
-  <div class="row-fluid">
+<div class="row-fluid">
     <div class="span12">
       <div class="snapshots">
       </div>
