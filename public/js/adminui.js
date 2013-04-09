@@ -49,12 +49,6 @@ define(function(require) {
         return template;
     };
 
-    Backbone.Marionette.Region.prototype.open = function(view) {
-        this.$el.hide();
-        this.$el.html(view.el);
-        this.$el.fadeIn(150);
-    };
-
     var AdminUI = new Backbone.Marionette.Application();
 
     AdminUI.addInitializer(function(options) {
