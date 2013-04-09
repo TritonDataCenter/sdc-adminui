@@ -42,6 +42,7 @@ define(function(require) {
             'click .rename': 'clickedRename',
             'click .owner-name': 'clickedOwnerName',
             'click .package': 'clickedPackage',
+            'click .image-name-version': 'clickedImage',
             'click .resize': 'clickedResize',
             'click .change-owner': 'clickChangeOwner'
         },
@@ -135,6 +136,11 @@ define(function(require) {
         clickedPackage: function(e) {
             e.preventDefault();
             this.vent.trigger('showview', 'packages', {uuid: this.vm.get('billing_id') });
+        },
+
+        clickedImage: function(e) {
+            e.preventDefault();
+            this.vent.trigger('showview', 'image', {uuid: this.vm.get('image_uuid') });
         },
 
         clickedCreateProbe: function() {
