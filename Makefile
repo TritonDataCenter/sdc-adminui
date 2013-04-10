@@ -87,3 +87,9 @@ include ./tools/mk/Makefile.node_prebuilt.targ
 include ./tools/mk/Makefile.node_deps.targ
 include ./tools/mk/Makefile.smf.targ
 include ./tools/mk/Makefile.targ
+
+SRC = $(wildcard lib/*/*.js)
+
+js: $(SRC)
+	node public/js/build.js
+	@echo "Done"

@@ -1,5 +1,6 @@
-define(function(require) {
-	return Backbone.Collection.extend({
+var Backbone = require('backbone');
+
+
+	module.exports = Backbone.Collection.extend({
 		url: "/_/networks"
 	});
-});

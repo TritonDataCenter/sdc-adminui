@@ -1,17 +1,18 @@
-var BaseView = require('views/base');
+var Backbone = require('backbone');
+var BaseView = require('./base');
 
 var MonitoringView = BaseView.extend({
-  template: 'monitoring',
+    template: 'monitoring',
 
-  name: 'monitoring',
+    name: 'monitoring',
 
-  url: function() {
-    return 'monitoring'
-  },
+    url: function() {
+        return 'monitoring';
+    },
 
-  render: function() {
-    this.$el.html(this.template());
-  }
+    render: function() {
+        this.$el.html(this.template());
+    }
 });
 
 module.exports = MonitoringView;

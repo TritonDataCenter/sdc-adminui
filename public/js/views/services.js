@@ -1,25 +1,26 @@
-define(function(require) {
+var Backbone = require('backbone');
 
-    var ApplicationCreateView = require('views/applications-create');
-    var Template = require('tpl!services');
-    var View = Backbone.Marionette.ItemView.extend({
-        id: 'page-services',
-        template: Template,
-        name: 'services',
 
-        events: {
-            'click .create-application': 'showCreateApp'
-        },
 
-        url: function() {
-            return '/services';
-        },
+var ApplicationCreateView = require('./applications-create');
+var Template = require('../tpl/services.hbs');
+var View = Backbone.Marionette.ItemView.extend({
+    id: 'page-services',
+    template: Template,
+    name: 'services',
 
-        showCreateApp: function() {
-            var view = new ApplicationCreateView();
-            view.show();
-        }
-    });
+    events: {
+        'click .create-application': 'showCreateApp'
+    },
 
-    return View;
+    url: function() {
+        return '/services';
+    },
+
+    showCreateApp: function() {
+        var view = new ApplicationCreateView();
+        view.show();
+    }
 });
+
+module.exports = View;

@@ -1,7 +1,7 @@
-define(function(require) {
-    var Model = require('model');
-	return Model.extend({
-		urlRoot: "/_/networks",
-		idAttribute: 'uuid'
-	});
+var Backbone = require('backbone');
+var Model = require('./model');
+
+module.exports = Model.extend({
+    urlRoot: "/_/networks",
+    idAttribute: 'uuid'
 });

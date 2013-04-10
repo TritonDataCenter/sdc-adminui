@@ -1,23 +1,25 @@
-define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
-    var Pinger = function(options) {
-        this.options = options || {};
-        this.options.interval = this.options.interval || (60 * 1000);
-    };
+var $ = require('jquery');
+var _ = require('underscore');
+var Backbone = require('backbone');
 
-    _.extend(Pinger, Backbone.Events);
+var Pinger = function(options) {
+    this.options = options || {};
+    this.options.interval = this.options.interval || (60 * 1000);
+};
 
-    Pinger.prototype.start = function() {
-        this.timer = setInterval(this.ping, this.options.interval);
-        this.ping();
-    };
+_.extend(Pinger, Backbone.Events);
 
-    Pinger.prototype.ping = function() {
-        $.get('/_/ping', function() { console.log('.'); });
-    };
+Pinger.prototype.start = function() {
+    this.timer = setInterval(this.ping, this.options.interval);
+    this.ping();
+};
 
-    Pinger.prototype.stop = function() {
-        clearInterval(this.timer);
-    };
+Pinger.prototype.ping = function() {
+    $.get('/_/ping', function() { console.log('.'); });
+};
 
-    return Pinger;
-});
+Pinger.prototype.stop = function() {
+    clearInterval(this.timer);
+};
+
+module.exports = Pinger;

@@ -1,9 +1,10 @@
-define(function(require) {
-    var Template = require('tpl!services-create');
+var Backbone = require('backbone');
 
-    var View = Backbone.Marionette.ItemView.extend({
-        template: Template
-    });
 
-    return View;
+var Template = require('../tpl/services-create');
+
+var View = Backbone.Marionette.ItemView.extend({
+    template: Template
 });
+
+module.exports = View;

@@ -1,21 +1,23 @@
-define(['backbone', 'models/vm'], function(Backbone, Vm) {
-  return Backbone.Collection.extend({
-    model: Vm,
+var Backbone = require('backbone');
+var Vm = require('./vm');
 
-    url: "/_/vms",
+  module.exports = Backbone.Collection.extend({
+model: Vm,
 
-    initialize: function(options) {
-      this.options = options || {};
-    },
+url: "/_/vms",
 
-    fetch: function(opts) {
-      opts = opts || {};
-      if (this.options.params) {
-        opts.data = $.param(this.options.params);
-      }
+initialize: function(options) {
+  this.options = options || {};
+},
 
-      Backbone.Collection.prototype.fetch.call(this, opts);
-    }
+fetch: function(opts) {
+  opts = opts || {};
+  if (this.options.params) {
+    opts.data = $.param(this.options.params);
+  }
+
+  Backbone.Collection.prototype.fetch.call(this, opts);
+}
 
   });
-});
+

@@ -117,9 +117,9 @@
 
   if (!this._ && (typeof require !== 'undefined')) {
     try {
-      _ = require('lodash');
-    } catch (e) {
       _ = require('underscore');
+    } catch (e) {
+        // ...
     }
   } else {
     _ = this._;

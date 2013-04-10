@@ -1,8 +1,7 @@
-define(function(require) {
-    var Image = require('models/image');
+var Backbone = require('backbone');
+var Image = require('./image');
 
-    return Backbone.Collection.extend({
-        model: Image,
-        url: '/_/images'
-    });
+module.exports = Backbone.Collection.extend({
+    model: Image,
+    url: '/_/images'
 });

@@ -1,10 +1,7 @@
-define([
-	'backbone',
-	'models/probe'
-	],
+var Backbone = require('backbone');
+var Probe = require('./probe');
 
-function(Backbone, Probe) {
-	return Backbone.Collection.extend({
+	module.exports = Backbone.Collection.extend({
 
 		url: '/_/amon/probes',
 
@@ -15,4 +12,3 @@ function(Backbone, Probe) {
 			this.fetch({ data: params });
 		}
 	});
-});

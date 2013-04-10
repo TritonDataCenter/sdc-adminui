@@ -1,104 +1,105 @@
-define(function(require) {
-    /**
-     * views/vms.js
-     */
-    var app = require('adminui');
 
-    var Vms = require('models/vms');
-    var VmsList = require('views/vms-list');
-    var VmsTemplate = require('tpl!vms');
 
-    var FilterForm = Backbone.View.extend({
-        events: {
-            'submit form': 'onSubmit',
-            'change input': 'onSubmit',
-            'change select': 'onSubmit'
-        },
-        onSubmit: function(e) {
-            e.preventDefault();
+/**
+ * ./vms.js
+ */
+var app = require('../adminui');
+var Backbone = require('backbone');
 
-            var params = this.$('form').serializeObject();
-            this.trigger('query', params);
-        }
-    });
+var Vms = require('../models/vms');
+var VmsList = require('./vms-list');
+var VmsTemplate = require('../tpl/vms.hbs');
 
-    return Backbone.Marionette.ItemView.extend({
-        name: 'vms',
-        template: VmsTemplate,
+var FilterForm = Backbone.View.extend({
+    events: {
+        'submit form': 'onSubmit',
+        'change input': 'onSubmit',
+        'change select': 'onSubmit'
+    },
+    onSubmit: function(e) {
+        e.preventDefault();
 
-        url: function() {
-            return 'vms';
-        },
+        var params = this.$('form').serializeObject();
+        this.trigger('query', params);
+    }
+});
 
-        events: {
-            'click .provision-button':'provision',
-            'click .toggle-filter':'toggleFiltersPanel'
-        },
+module.exports = Backbone.Marionette.ItemView.extend({
+    name: 'vms',
+    template: VmsTemplate,
 
-        initialize: function(options) {
-            this.collection = new Vms();
-            this.listView = new VmsList({ collection: this.collection });
-            this.filterView = new FilterForm();
+    url: function() {
+        return 'vms';
+    },
+
+    events: {
+        'click .provision-button':'provision',
+        'click .toggle-filter':'toggleFiltersPanel'
+    },
+
+    initialize: function(options) {
+        this.collection = new Vms();
+        this.listView = new VmsList({ collection: this.collection });
+        this.filterView = new FilterForm();
+        this.filterViewVisible = false;
+        this.collection.fetch();
+    },
+
+    provision: function() {
+        app.vent.trigger('showview', 'provision-vm', {});
+    },
+
+
+    toggleFiltersPanel: function(e) {
+        var filterPanel = this.$('.vms-filter');
+        var vmsList = this.$('.vms-list');
+        if (this.filterViewVisible) {
+            filterPanel.hide();
+            vmsList.removeClass('span9').addClass('span12');
             this.filterViewVisible = false;
-            this.collection.fetch();
-        },
-
-        provision: function() {
-            app.vent.trigger('showview', 'provision-vm', {});
-        },
-
-
-        toggleFiltersPanel: function(e) {
-            var filterPanel = this.$('.vms-filter');
-            var vmsList = this.$('.vms-list');
-            if (this.filterViewVisible) {
-                filterPanel.hide();
-                vmsList.removeClass('span9').addClass('span12');
-                this.filterViewVisible = false;
-            } else {
-                filterPanel.show();
-                vmsList.addClass('span9').removeClass('span12');
-                this.filterViewVisible = true;
-            }
-        },
-
-        query: function(params) {
-            this.$('.alert').hide();
-            this.collection.fetch({ data: params });
-        },
-
-        onError: function(model, res) {
-            if (res.status == 409) {
-                var obj = JSON.parse(res.responseText);
-                var errors = _.map(obj.errors, function(e) {
-                    return e.message;
-                });
-                this.$(".alert").html(errors.join('<br>')).show();
-            } else {
-                app.vent.trigger('error', {
-                    xhr: res,
-                    context: 'vms / vmapi'
-                });
-            }
-        },
-
-        onShow: function() {
-            this.$('.alert').hide();
-            this.$('.vms-filter').hide();
-        },
-
-        updateCount: function() {
-            this.$('.record-count').html(this.collection.length);
-        },
-
-        onRender: function() {
-            this.bindTo(this.collection, 'error', this.onError, this);
-            this.listView.setElement(this.$('tbody')).render();
-            this.filterView.setElement(this.$('.vms-filter'));
-
-            this.bindTo(this.filterView, 'query', this.query, this);
-            this.bindTo(this.collection, 'reset', this.updateCount, this);
-            return this;
+        } else {
+            filterPanel.show();
+            vmsList.addClass('span9').removeClass('span12');
+            this.filterViewVisible = true;
         }
-    });
+    },
+
+    query: function(params) {
+        this.$('.alert').hide();
+        this.collection.fetch({ data: params });
+    },
+
+    onError: function(model, res) {
+        if (res.status == 409) {
+            var obj = JSON.parse(res.responseText);
+            var errors = _.map(obj.errors, function(e) {
+                return e.message;
+            });
+            this.$(".alert").html(errors.join('<br>')).show();
+        } else {
+            app.vent.trigger('error', {
+                xhr: res,
+                context: 'vms / vmapi'
+            });
+        }
+    },
+
+    onShow: function() {
+        this.$('.alert').hide();
+        this.$('.vms-filter').hide();
+    },
+
+    updateCount: function() {
+        this.$('.record-count').html(this.collection.length);
+    },
+
+    onRender: function() {
+        this.bindTo(this.collection, 'error', this.onError, this);
+        this.listView.setElement(this.$('tbody')).render();
+        this.filterView.setElement(this.$('.vms-filter'));
+
+        this.bindTo(this.filterView, 'query', this.query, this);
+        this.bindTo(this.collection, 'reset', this.updateCount, this);
+        return this;
+    }
 });

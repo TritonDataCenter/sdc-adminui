@@ -1,19 +1,18 @@
-define(function(require) {
-    var Model = require('model');
-    
-    return Model.extend({
-        urlRoot: function() {
-            return _.str.sprintf('/_/users/%s/keys', this.user);
-        },
+var Backbone = require('backbone');
+var Model = require('./model');
 
-        idAttribute: 'fingerprint',
+module.exports = Model.extend({
+    urlRoot: function() {
+        return _.str.sprintf('/_/users/%s/keys', this.user);
+    },
 
-        initialize: function(options) {
-            if (! options.user) {
-                throw new TypeError('options.user required');
-            }
+    idAttribute: 'fingerprint',
 
-            this.user = options.user;
+    initialize: function(options) {
+        if (!options.user) {
+            throw new TypeError('options.user required');
         }
-    });
+
+        this.user = options.user;
+    }
 });

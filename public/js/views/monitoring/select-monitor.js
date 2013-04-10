@@ -1,13 +1,14 @@
-define(['views/base'], function(BaseView) {
-	var SelectMonitorView = BaseView.extend({
-		template: 'select-monitor',
+var Backbone = require('backbone');
+var BaseView = require('../base');
 
-		render: function() {
-			this.$el.html(this.template());
-			return this;
-		}
+var SelectMonitorView = BaseView.extend({
+    template: 'select-monitor',
 
-	});
+    render: function() {
+        this.$el.html(this.template());
+        return this;
+    }
 
-	return SelectMonitorView;
 });
+
+module.exports = SelectMonitorView;

@@ -1,54 +1,55 @@
-define(function(require) {
-    return Backbone.Model.extend({
-        urlRoot: '/_/images',
+var Backbone = require('backbone');
 
-        idAttribute: 'uuid',
 
-        defaults: {
-            'name': null
-        },
+module.exports = Backbone.Model.extend({
+    urlRoot: '/_/images',
 
-        nameWithVersion: function() {
-            return _.str.sprintf('%s %s', this.get('name'), this.get('version'));
-        },
+    idAttribute: 'uuid',
 
-        activate: function(cb) {
-            $.post(this.url() + "?action=activate", cb);
-        },
+    defaults: {
+        'name': null
+    },
 
-        disable: function(cb) {
-            $.post(this.url() + "?action=disable", cb);
-        },
+    nameWithVersion: function() {
+        return _.str.sprintf('%s %s', this.get('name'), this.get('version'));
+    },
 
-        enable: function(cb) {
-            $.post(this.url() + "?action=enable", cb);
-        },
+    activate: function(cb) {
+        $.post(this.url() + "?action=activate", cb);
+    },
 
-        adminImport: function() {
-            var url = this.url() + '?action=import';
-            var ajax = $.ajax(url, {
-                data: JSON.stringify(this.attributes),
-                contentType: 'application/json',
-                type: 'POST'
-            });
+    disable: function(cb) {
+        $.post(this.url() + "?action=disable", cb);
+    },
 
-            return ajax;
-        },
+    enable: function(cb) {
+        $.post(this.url() + "?action=enable", cb);
+    },
 
-        toJSON: function() {
-            var attrs = this.attributes;
-            attrs.files = _.map(attrs.files, function(f) {
-                if(f.size) {
-                    f.size_in_mb = _sizeToMB(f.size);
-                }
-                return f;
-            });
-            return attrs;
-        }
-    });
+    adminImport: function() {
+        var url = this.url() + '?action=import';
+        var ajax = $.ajax(url, {
+            data: JSON.stringify(this.attributes),
+            contentType: 'application/json',
+            type: 'POST'
+        });
 
-    function _sizeToMB(size) {
-        return _.str.sprintf('%0.1f', size / 1024 / 1024);
+        return ajax;
+    },
+
+    toJSON: function() {
+        var attrs = this.attributes;
+        attrs.files = _.map(attrs.files, function(f) {
+            if(f.size) {
+                f.size_in_mb = _sizeToMB(f.size);
+            }
+            return f;
+        });
+        return attrs;
     }
-
 });
+
+function _sizeToMB(size) {
+    return _.str.sprintf('%0.1f', size / 1024 / 1024);
+}
+

@@ -1,39 +1,37 @@
-define(function(require) {
-    var Template = require('tpl!monitoring-machine-up-probe');
+var Backbone = require('backbone');
+var Template = require('../../tpl/monitoring-machine-up-probe.hbs');
 
-    return Backbone.Marionette.ItemView.extend({
+module.exports = Backbone.Marionette.ItemView.extend({
 
-        template: Template,
+    template: Template,
 
-        events: {
-            'click button': 'done'
-        },
+    events: {
+        'click button': 'done'
+    },
 
-        initialize: function(options) {
-            options = options || {};
+    initialize: function(options) {
+        options = options || {};
 
-            this.params = {
-                type: 'machine-up',
-                agent: options.vm.get('uuid'),
-                name: _.str.sprintf('machine-up-%s', options.vm.get('alias'))
-            };
-        },
+        this.params = {
+            type: 'machine-up',
+            agent: options.vm.get('uuid'),
+            name: _.str.sprintf('machine-up-%s', options.vm.get('alias'))
+        };
+    },
 
-        focus: function() {
-            return this;
-        },
+    focus: function() {
+        return this;
+    },
 
-        onRender: function() {
-            return this;
-        },
+    onRender: function() {
+        return this;
+    },
 
-        done: function() {
-            this.trigger('done', this.params);
-        },
+    done: function() {
+        this.trigger('done', this.params);
+    },
 
-        hide: function() {
-            this.$el.modal('hide');
-        }
-    });
-
+    hide: function() {
+        this.$el.modal('hide');
+    }
 });
