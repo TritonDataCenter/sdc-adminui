@@ -43,17 +43,31 @@ ROOT            := $(shell pwd)
 RELEASE_TARBALL := adminui-pkg-$(STAMP).tar.bz2
 TMPDIR          := /tmp/$(STAMP)
 
+
+
 #
 # Repo-specific targets
 #
 .PHONY: all
-all: $(SMF_MANIFESTS) | $(TAP) $(REPO_DEPS)
+all: $(SMF_MANIFESTS) | $(TAP) $(REPO_DEPS) js
 	$(NPM) rebuild
 
 $(TAP): | $(NPM_EXEC)
 	$(NPM) install
 
-CLEAN_FILES += $(TAP) ./node_modules/tap
+JS_BUNDLE = ./public/a.js
+JS_BUNDLE_FILES	:= $(shell find public/js -name '*.js')
+
+CLEAN_FILES += $(TAP) ./node_modules/tap $(JS_BUNDLE)
+
+.PHONY: js
+js: $(JS_BUNDLE)
+
+
+$(JS_BUNDLE): $(JS_BUNDLE_FILES)
+	@echo "Building js bundle"
+	$(NODE) ./tools/build-js
+
 
 .PHONY: test
 test: $(TAP)
@@ -61,7 +75,7 @@ test: $(TAP)
 
 
 .PHONY: release
-release: all deps docs $(SMF_MANIFESTS)
+release: all deps docs $(SMF_MANIFESTS) js
 	@echo "Building $(RELEASE_TARBALL)"
 	@mkdir -p $(TMPDIR)/root/opt/smartdc/adminui
 	@mkdir -p $(TMPDIR)/site
@@ -87,9 +101,3 @@ include ./tools/mk/Makefile.node_prebuilt.targ
 include ./tools/mk/Makefile.node_deps.targ
 include ./tools/mk/Makefile.smf.targ
 include ./tools/mk/Makefile.targ
-
-SRC = $(wildcard lib/*/*.js)
-
-js: $(SRC)
-	node public/js/build.js
-	@echo "Done"

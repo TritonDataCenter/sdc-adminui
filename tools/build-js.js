@@ -1,7 +1,13 @@
+#!/usr/bin/env node
+
 var fs = require('fs');
 var path = require('path');
 var browserify = require('browserify');
 var shim = require('browserify-shim');
+var join = path.join;
+
+var root = path.resolve(__dirname, '..', 'public', 'js');
+var outputPath = path.join(root, '..', '✚.js');
 
 var shimConfig = {
     'jquery': { path: './lib/jquery', exports: '$' },
@@ -44,22 +50,29 @@ var shimConfig = {
         }
     }
 };
-var bundlePath = path.join(__dirname, 'bundle.js');
+
+Object.keys(shimConfig).forEach(function(k) {
+    if (shimConfig[k].path) {
+        shimConfig[k].path = path.join(root, shimConfig[k].path);
+    }
+});
 
 shim(browserify(), shimConfig)
-    .transform(require.resolve('./transforms/tpl'))
+    .transform(require.resolve(join(root, './transforms/tpl')))
     .require('underscore', { expose: 'underscore' })
     .require('underscore.string', { expose: 'underscore.string' })
 
-    .require(require.resolve('./lib/jquery'), { expose: 'jquery' })
-    .require(require.resolve('./lib/backbone'), { expose: 'backbone' })
-    .require(require.resolve('./lib/moment.min'), { expose: 'moment' })
+    .require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery' })
+    .require(require.resolve(join(root, './lib/backbone')), { expose: 'backbone' })
+    .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment' })
 
-    .require(require.resolve('./main'), {entry: true})
+    .require(require.resolve(join(root, './main')), {entry: true})
     .bundle({debug:true})
     .on('error', function(err) {
         console.error(err);
-    }).pipe(fs.createWriteStream(bundlePath))
+        process.exit(1);
+    }).pipe(fs.createWriteStream(outputPath))
     .on('end', function() {
+        process.exit(0);
         console.log('Build succeeded');
     });

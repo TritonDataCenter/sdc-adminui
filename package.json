@@ -30,7 +30,8 @@
     "underscore.string": "~2.3.1",
     "hbsfy": "~0.1.2",
     "through": "~2.2.7",
-    "handlebars": "~1.0.10"
+    "handlebars": "~1.0.10",
+    "mime": "~1.2.9"
   },
   "devDependencies": {
     "nodeunit": "0.7.x"
