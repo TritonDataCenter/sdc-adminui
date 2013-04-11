@@ -1,11 +1,12 @@
-var Backbone = require('backbone');
 /**
  * models/user
  */
 
+var Backbone = require('backbone');
 var Model = require('./model');
 
-module.exports = Model.extend({
+
+var User = module.exports = Model.extend({
 
     defaults: {
         token: null
@@ -14,7 +15,15 @@ module.exports = Model.extend({
     urlRoot: "/_/users",
 
     authenticated: function() {
-        return this.get('token') !== null;
+        return window.sessionStorage.getItem('api-token') !== null;
+    },
+
+    getToken: function() {
+        return window.sessionStorage.getItem('api-token');
+    },
+
+    getAdminUuid: function() {
+        return window.sessionStorage.getItem('admin-uuid');
     },
 
     authenticate: function(user, pass) {
@@ -31,9 +40,12 @@ module.exports = Model.extend({
         };
 
         $.post("/_/auth", authData, function(data) {
-            data.user.token = data.token;
             self.set(data.user);
-            self.set('adminUuid', data.adminUuid);
+            window.sessionStorage.setItem('api-token', data.token);
+            window.sessionStorage.setItem('admin-uuid', data.adminUuid);
+            window.sessionStorage.setItem('user-uuid', data.user.uuid);
+            window.sessionStorage.setItem('user-login', data.user.login);
+            self.trigger('authenticated', self);
         }).error(function(xhr) {
             var err = JSON.parse(xhr.responseText);
             self.trigger('error', err.message);
@@ -41,17 +53,16 @@ module.exports = Model.extend({
     },
 
     signout: function() {
-        $.ajax({
-            url: "/_/auth",
-
-            success: function() {
-                this.set({
-                    authenticated: false
-                });
-            },
-
-            type: "DELETE",
-            context: this
-        });
+        window.sessionStorage.clear();
+        this.trigger('unauthenticated');
     }
 });
+
+User.currentUser = function() {
+    return new User({
+        'token': window.sessionStorage.getItem('api-token') || null,
+        'uuid': window.sessionStorage.getItem('user-uuid') || null,
+        'login': window.sessionStorage.getItem('user-login') || null,
+        'adminUuid': window.sessionStorage.getItem('admin-uuid') || null
+    });
+};

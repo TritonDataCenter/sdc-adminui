@@ -6,6 +6,7 @@ var Probes = require('../models/probes');
 var ProbeGroups = require('../models/probe-groups');
 var AlarmsTemplate = require('../tpl/alarms.html');
 
+var adminui = require('../adminui');
 
 var AlarmsView = Backbone.Marionette.ItemView.extend({
     template: function(vars) {
@@ -40,12 +41,10 @@ var AlarmsView = Backbone.Marionette.ItemView.extend({
     initialize: function(options) {
         _.bindAll(this);
 
-        if (options.userUuid) {
-            this.alarms = new Alarms();
-            this.probeGroups = new ProbeGroups();
-            this.probeGroups.user = options.userUuid;
-            this.probes = new Probes();
-        }
+        this.alarms = new Alarms();
+        this.probeGroups = new ProbeGroups();
+        this.probeGroups.user = options.userUuid;
+        this.probes = new Probes();
 
         this.bindTo(this.alarms, 'reset', this.render);
         this.bindTo(this.probeGroups, 'reset', this.render);

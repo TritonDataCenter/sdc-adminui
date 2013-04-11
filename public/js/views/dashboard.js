@@ -19,7 +19,7 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
 
     initialize: function() {
         this.alarmsView = new AlarmsView({
-            userUuid: adminui.user.get('adminUuid')
+            userUuid: adminui.user.getAdminUuid()
         });
     },
 

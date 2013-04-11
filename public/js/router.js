@@ -41,53 +41,34 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         this.app = options.app;
     },
 
+    didAuthenticate: function() {
+        this.setupRequestToken();
+        if (typeof(Backbone.history.fragment) !== 'undefined') {
+            Backbone.history.loadUrl(Backbone.history.fragment);
+        }
+    },
+
+    setupRequestToken: function() {
+        $.ajaxSetup({
+            headers: {'x-adminui-token': this.app.user.getToken()}
+        });
+    },
+
     go: function() {
         this.app.vent.on('showview', this.presentView, this);
         this.app.vent.on('signout', this.signout, this);
 
         // holds the state of the currently logged in user
-        this.app.user = this.user = new User();
+        this.app.user = this.user = User.currentUser();
+        this.app.user.on('authenticated', this.didAuthenticate);
 
-        this.user.on('change:uuid', function(user) {
-            window.sessionStorage.setItem('user-uuid', user.get('uuid'));
-        });
-
-        this.user.on('change:adminUuid', function(user) {
-            window.sessionStorage.setItem('admin-uuid', user.get('adminUuid'));
-        });
-
-        this.user.on('change:login', function(user) {
-            window.sessionStorage.setItem('user-login', user.get('login'));
-        });
-
-        this.user.on('change:token', function(user) {
-            var token = user.get('token');
-
-            if (token === null) {
-                window.sessionStorage.clear();
-                $.ajaxSetup({ headers:{} });
-            } else {
-                window.sessionStorage.setItem('api-token', token);
-                $.ajaxSetup({ headers:{'x-adminui-token': token} });
-
-                if (typeof(Backbone.history.fragment) !== 'undefined') {
-                    Backbone.history.loadUrl(Backbone.history.fragment);
-                }
-            }
-        }, this);
-
-        this.user.set('token', window.sessionStorage.getItem('api-token'));
-        this.user.set('uuid', window.sessionStorage.getItem('user-uuid'));
-        this.user.set('login', window.sessionStorage.getItem('user-login'));
-        this.user.set('adminUuid', window.sessionStorage.getItem('admin-uuid'));
-
-        var self = this;
+        if (this.app.user.authenticated()) {
+            this.setupRequestToken();
+        }
 
         $(document).ajaxError(function(e, xhr, settings, exception) {
             if (xhr.status == 403) {
-                window.sessionStorage.removeItem('api-token');
-                self.showSignin.call(self);
-                return;
+                this.signout();
             }
         });
      },
@@ -208,7 +189,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     signout: function() {
-        this.user.set('token', null);
+        this.user.signout();
         this.showSignin();
     }
 });
