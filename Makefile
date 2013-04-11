@@ -66,8 +66,12 @@ js: $(JS_BUNDLE)
 
 $(JS_BUNDLE): $(JS_BUNDLE_FILES)
 	@echo "Building js bundle"
-	$(NODE) ./tools/build-js
+	./tools/build-js
 
+
+.PHONY: dev 
+devrun:
+	@./tools/devrun.sh
 
 .PHONY: test
 test: $(TAP)

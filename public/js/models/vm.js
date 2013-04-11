@@ -77,6 +77,7 @@ var Vm = Model.extend({
             var job = new Job({
                 uuid: data.job_uuid
             });
+
             cb(job);
         });
     },
