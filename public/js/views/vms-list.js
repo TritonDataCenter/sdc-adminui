@@ -10,9 +10,7 @@ var ItemView = Marionette.ItemView.extend({
         'click .alias a': 'navigateToVmDetails'
     },
 
-    initialize: function() {
-        _.bindAll(this);
-    },
+    initialize: function() {},
 
     navigateToVmDetails: function() {
         adminui.vent.trigger('showview', 'vm', {

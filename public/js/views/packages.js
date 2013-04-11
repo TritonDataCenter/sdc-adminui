@@ -147,7 +147,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
         this.bindTo(this.packages, 'error', this.onError);
 
         this.initialPackageUUID = options.uuid;
-        this.vent = new Marionette.EventAggregator();
+        this.vent = new Backbone.Wreqr.EventAggregator();
     },
 
     onError: function(model, xhr) {

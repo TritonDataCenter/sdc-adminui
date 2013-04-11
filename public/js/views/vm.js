@@ -58,10 +58,14 @@ var VmView = Backbone.Marionette.ItemView.extend({
 
         this.vent = adminui.vent;
 
-        if (options.uuid) this.vm = new Vm({
-            uuid: options.uuid
-        });
-        if (options.vm) this.vm = options.vm;
+        if (options.uuid) {
+            this.vm = new Vm({uuid: options.uuid });
+            console.log(this.vm);
+        }
+
+        if (options.vm) {
+            this.vm = options.vm;
+        }
 
         this.owner = new User();
         this.image = new Img();
@@ -76,6 +80,7 @@ var VmView = Backbone.Marionette.ItemView.extend({
         this.server.set({
             uuid: this.vm.get('server_uuid')
         });
+
         if (!this.server.get('last_modified')) {
             this.server.fetch();
         }
@@ -83,48 +88,45 @@ var VmView = Backbone.Marionette.ItemView.extend({
         this.owner.set({
             uuid: this.vm.get('owner_uuid')
         });
+
         if (!this.owner.get('cn')) {
             this.owner.fetch();
         }
 
 
-        this.vm.on('change:image_uuid', function(m) {
-            this.image.set({
-                uuid: m.get('image_uuid')
-            });
+        this.listenTo(this.vm, 'change:image_uuid', function(m) {
+            this.image.set({uuid: m.get('image_uuid')});
             this.image.fetch();
         }, this);
 
 
-        this.vm.on('change:owner_uuid', function(m) {
-            this.owner.set({
-                uuid: m.get('owner_uuid')
-            });
+        this.listenTo(this.vm, 'change:owner_uuid', function(m) {
+            this.owner.set({uuid: m.get('owner_uuid')});
             this.owner.fetch();
         }, this);
 
-        this.vm.on('change:server_uuid', function(m) {
-            this.server.set({
-                uuid: m.get('server_uuid')
-            });
+        this.listenTo(this.vm, 'change:server_uuid', function(m) {
+            this.server.set({uuid: m.get('server_uuid')});
             this.server.fetch();
         }, this);
 
-        this.vm.on('change:customer_metadata', function(m) {
+        this.listenTo(this.vm, 'change:customer_metadata', function(m) {
             this.renderMetadata();
         }, this);
 
-        this.vm.on('change:tags', function() {
+        this.listenTo(this.vm, 'change:tags', function() {
+            console.log('change:tags');
             this.renderTags();
         }, this);
 
-        this.vm.on('change:nics', function() {
+        this.listenTo(this.vm, 'change:nics', function() {
             this.renderNics();
         }, this);
 
         this.metadataListView = new MetadataList({
             vm: this.vm
         });
+
         this.tagsListView = new TagsList({
             vm: this.vm
         });
@@ -270,10 +272,12 @@ var VmView = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
+        console.log(this.vm);
         this.nicsList = new NicsList({
             vm: this.vm,
             el: this.$('.nics')
         });
+
         this.snapshotsListView = new SnapshotsList({
             vm: this.vm,
             el: this.$('.snapshots')
@@ -283,6 +287,7 @@ var VmView = Backbone.Marionette.ItemView.extend({
             itemUuid: this.vm.get('uuid'),
             el: this.$('.notes')
         });
+
         this.notesView.render();
 
         this.renderTags();

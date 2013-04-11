@@ -60,32 +60,21 @@ var UserView = Marionette.ItemView.extend({
         if (options.user) {
             this.model = options.user;
         } else {
-            this.model = new User({
-                uuid: options.uuid
-            });
+            this.model = new User({uuid: options.uuid });
         }
+
         this.model.fetch();
 
-        this.bindTo(this.model, 'reset', this.render, this);
+        this.bindTo(this.model, 'sync', this.render, this);
 
-        this.vms = new Vms({
-            params: {
-                owner_uuid: this.model.get('uuid')
-            }
-        });
+        this.vms = new Vms({params: { owner_uuid: this.model.get('uuid') }});
         this.vms.fetch();
 
-        this.sshkeys = new SSHKeys({
-            user: this.model.get('uuid')
-        });
+        this.sshkeys = new SSHKeys({user: this.model.get('uuid') });
         this.sshkeys.fetch();
 
-        this.vmsList = new VmsList({
-            collection: this.vms
-        });
-        this.sshkeysList = new SSHKeysList({
-            collection: this.sshkeys
-        });
+        this.vmsList = new VmsList({collection: this.vms });
+        this.sshkeysList = new SSHKeysList({collection: this.sshkeys });
     },
 
     onRender: function() {

@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var Model = require('./model');
 var Job = require('./job');
+
 var Vm = Model.extend({
     urlRoot: '/_/vms',
 

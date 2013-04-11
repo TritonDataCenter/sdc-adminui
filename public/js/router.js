@@ -62,13 +62,15 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         this.app.user = this.user = User.currentUser();
         this.app.user.on('authenticated', this.didAuthenticate);
 
+
         if (this.app.user.authenticated()) {
             this.setupRequestToken();
         }
 
+        var self = this;
         $(document).ajaxError(function(e, xhr, settings, exception) {
             if (xhr.status == 403) {
-                this.signout();
+                self.signout();
             }
         });
      },
