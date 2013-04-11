@@ -55,7 +55,7 @@ all: $(SMF_MANIFESTS) | $(TAP) $(REPO_DEPS) js
 $(TAP): | $(NPM_EXEC)
 	$(NPM) install
 
-JS_BUNDLE = ./public/a.js
+JS_BUNDLE = ./public/✚.js
 JS_BUNDLE_FILES	:= $(shell find public/js -name '*.js')
 
 CLEAN_FILES += $(TAP) ./node_modules/tap $(JS_BUNDLE)
@@ -66,7 +66,7 @@ js: $(JS_BUNDLE)
 
 $(JS_BUNDLE): $(JS_BUNDLE_FILES)
 	@echo "Building js bundle"
-	./tools/build-js
+	$(NODE) tools/build-js
 
 
 .PHONY: dev 
