@@ -18,7 +18,6 @@ var SSHKeys = Backbone.Collection.extend({
     parse: function(response) {
         return _.map(response, function(item) {
             item.user = this.uuid;
-            console.log(item);
             return item;
         }, this);
     },

@@ -40,15 +40,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         '[name=phone]': 'phone',
         '[name=password]': 'password',
         '[name=last_name]': 'sn',
-        '[name=first_name]': {
-            'observe': 'cn',
-            updateModel: false,
-            onGet: function(val) {
-                var parts = val.split(/\s/);
-                parts.slice(0, parts.length-2);
-                return parts.join(' ');
-            }
-        }
+        '[name=first_name]': 'givenName'
     },
 
     updateCommonName: function(e) {
@@ -76,10 +68,10 @@ module.exports = Backbone.Marionette.ItemView.extend({
         });
 
         this.$(".alert")
-            .empty()
-            .append('<h4 class="alert-heading">Please fix the following errors</h4>')
-            .append(ul)
-            .show();
+        .empty()
+        .append('<h4 class="alert-heading">Please fix the following errors</h4>')
+        .append(ul)
+        .show();
     },
 
     save: function(e) {

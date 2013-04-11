@@ -11,8 +11,6 @@ Backbone.ajax = function() {
             console.log('parsing JSON response');
             xhr.responseData = jQuery.parseJSON(xhr.responseText);
         }
-        if (error) error(model, xhr, options);
-        model.trigger('error', model, xhr, options);
     };
 
     return Backbone.$.ajax.apply(Backbone.$, args);
