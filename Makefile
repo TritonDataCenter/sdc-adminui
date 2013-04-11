@@ -44,19 +44,21 @@ RELEASE_TARBALL := adminui-pkg-$(STAMP).tar.bz2
 TMPDIR          := /tmp/$(STAMP)
 
 
-
 #
 # Repo-specific targets
 #
-.PHONY: all
-all: $(SMF_MANIFESTS) | $(TAP) $(REPO_DEPS) js
-	$(NPM) rebuild
-
-$(TAP): | $(NPM_EXEC)
-	$(NPM) install
 
 JS_BUNDLE = ./public/✚.js
 JS_BUNDLE_FILES	:= $(shell find public/js -name '*.js')
+
+
+.PHONY: all
+all: $(SMF_MANIFESTS) | $(TAP) $(REPO_DEPS) $(JS_BUNDLE)
+	$(NPM) rebuild
+
+
+$(TAP): | $(NPM_EXEC)
+	$(NPM) install
 
 CLEAN_FILES += $(TAP) ./node_modules/tap $(JS_BUNDLE)
 
@@ -64,7 +66,7 @@ CLEAN_FILES += $(TAP) ./node_modules/tap $(JS_BUNDLE)
 js: $(JS_BUNDLE)
 
 
-$(JS_BUNDLE): $(JS_BUNDLE_FILES)
+$(JS_BUNDLE): $(JS_BUNDLE_FILES) $(NODE_EXEC)
 	@echo "Building js bundle"
 	$(NODE) tools/build-js
 
@@ -79,7 +81,7 @@ test: $(TAP)
 
 
 .PHONY: release
-release: all deps docs $(SMF_MANIFESTS) js
+release: all deps docs $(SMF_MANIFESTS)
 	@echo "Building $(RELEASE_TARBALL)"
 	@mkdir -p $(TMPDIR)/root/opt/smartdc/adminui
 	@mkdir -p $(TMPDIR)/site
