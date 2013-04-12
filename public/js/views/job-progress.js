@@ -1,9 +1,6 @@
 var Backbone = require('backbone');
 
-
-var Marionette= require('backbone.marionette');
-
-var JobProgressView = Marionette.ItemView.extend({
+var JobProgressView = Backbone.Marionette.ItemView.extend({
     attributes: {
         'class': 'modal',
         'id': 'job-progress'
@@ -11,7 +8,7 @@ var JobProgressView = Marionette.ItemView.extend({
     template: require('../tpl/job-progress.hbs'),
     initialize: function() {
         this.model.fetch();
-        this.bindTo(this.model, 'change', this.render, this);
+        this.listenTo(this.model, 'change', this.render, this);
     },
     templateHelpers: {
         'finished': function() {
@@ -20,9 +17,12 @@ var JobProgressView = Marionette.ItemView.extend({
     },
     show: function() {
         this.render();
-        var modal = this.$el.modal();
-        this.bindTo(modal, 'hide', this.onClose);
         this._timer = setInterval(this.update.bind(this), 3000);
+        var modal = this.$el.modal();
+        var timer = this._timer;
+        modal.on('hidden', function() {
+            clearInterval(timer);
+        });
     },
     update: function() {
         this.model.fetch({success: this.onUpdate.bind(this)});
@@ -35,9 +35,6 @@ var JobProgressView = Marionette.ItemView.extend({
         }
 
         this.trigger('execution', this.model.get('execution'));
-    },
-    onClose: function() {
-        clearInterval(this._timer);
     }
 });
 

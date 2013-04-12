@@ -28,7 +28,7 @@ var VmAddNicView = Backbone.Marionette.ItemView.extend({
                 model: job
             });
             view.show();
-            self.bindTo(view, 'execution', function(st) {
+            self.listenTo(view, 'execution', function(st) {
                 if (st === 'succeeded') {
                     vm.fetch();
                 }

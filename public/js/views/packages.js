@@ -19,7 +19,7 @@ var PackagesListItemView = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        this.bindTo(this.vent, 'highlight', this.highlightIfThis, this);
+        this.listenTo(this.vent, 'highlight', this.highlightIfThis, this);
     },
 
     highlightIfThis: function(model) {
@@ -59,7 +59,7 @@ var PackagesList = Backbone.Marionette.CollectionView.extend({
     },
 
     onBeforeItemAdded: function(itemView) {
-        this.bindTo(itemView, 'select', this.onSelect, this);
+        this.listenTo(itemView, 'select', this.onSelect, this);
         itemView.vent = this.vent;
     },
 
@@ -113,7 +113,7 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
     onTraits: function() {
         this.traitsEditor = new TraitsEditor();
         this.traitsEditor.traits = this.model.get('traits');
-        this.bindTo(this.traitsEditor, 'save-traits', this.onSaveTraits);
+        this.listenTo(this.traitsEditor, 'save-traits', this.onSaveTraits);
         this.traitsEditor.show();
     }
 
@@ -144,7 +144,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
         options = options || {};
         this.packages = new Packages();
         this.packages.fetch();
-        this.bindTo(this.packages, 'error', this.onError);
+        this.listenTo(this.packages, 'error', this.onError);
 
         this.initialPackageUUID = options.uuid;
         this.vent = new Backbone.Wreqr.EventAggregator();
@@ -164,14 +164,14 @@ var PackagesView = Backbone.Marionette.Layout.extend({
             vent: this.vent
         });
 
-        this.bindTo(this.ui.searchInput, 'input', this.search, this);
-        this.bindTo(this.ui.createButton, 'click', this.onClickCreateButton, this);
+        this.listenTo(this.ui.searchInput, 'input', this.search, this);
+        this.listenTo(this.ui.createButton, 'click', this.onClickCreateButton, this);
 
-        this.bindTo(this.vent, 'showpackage', this.showPackage, this);
-        this.bindTo(this.vent, 'showedit', this.showForm, this);
-        this.bindTo(this.packages, 'reset', this.showInitialPackage, this);
+        this.listenTo(this.vent, 'showpackage', this.showPackage, this);
+        this.listenTo(this.vent, 'showedit', this.showForm, this);
+        this.listenTo(this.packages, 'reset', this.showInitialPackage, this);
 
-        this.bindTo(this.detail, 'show', function(view) {
+        this.listenTo(this.detail, 'show', function(view) {
             adminui.router.applyUrl(view);
         });
 

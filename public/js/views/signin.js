@@ -1,14 +1,12 @@
-var Backbone = require('backbone');
-
 
 /**
  * ./signin !!
  */
 
-var Marionette = require('backbone.marionette');
+var Backbone = require('backbone');
 var tplSignin = require('../tpl/signin.hbs');
 
-var View = Marionette.ItemView.extend({
+var View = Backbone.Marionette.ItemView.extend({
     attributes: {
         id: "signin"
     },
@@ -16,7 +14,7 @@ var View = Marionette.ItemView.extend({
     template: tplSignin,
 
     events: {
-      'submit form': 'authenticate'
+        'submit form': 'authenticate'
     },
 
     modelEvents: {

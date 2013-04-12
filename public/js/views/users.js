@@ -62,7 +62,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         });
 
         this.filterView = new FilterForm();
-        this.bindTo(this.users, 'error', this.onError, this);
+        this.listenTo(this.users, 'error', this.onError, this);
     },
 
 
@@ -101,7 +101,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         this.$findField = this.$('.findField');
         this.filterView.setElement(this.$('.users-filter'));
-        this.bindTo(this.filterView, 'query', this.query, this);
+        this.listenTo(this.filterView, 'query', this.query, this);
         this.usersListView.setElement(this.$('.users-list tbody'));
         this.users.fetch();
         this.loadUserCounts();

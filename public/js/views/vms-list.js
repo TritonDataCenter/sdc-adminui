@@ -2,7 +2,7 @@ var Backbone = require('backbone');
 var ItemTemplate = require('../tpl/vms-list-item.hbs');
 var adminui = require('../adminui');
 
-var ItemView = Marionette.ItemView.extend({
+var ItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
     template: ItemTemplate,
 

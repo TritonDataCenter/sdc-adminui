@@ -18,8 +18,8 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
         this.selectedNics = new Backbone.Collection();
         this.collection = new Backbone.Collection(this.model.get('nics'));
 
-        this.bindTo(this.selectedNics, 'add remove', this.onChangeSelectedNics, this);
-        this.bindTo(this.model, 'change:nics', this.resetNics, this);
+        this.listenTo(this.selectedNics, 'add remove', this.onChangeSelectedNics, this);
+        this.listenTo(this.model, 'change:nics', this.resetNics, this);
     },
 
     resetNics: function(vm) {
@@ -32,7 +32,7 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
         this.model.removeNics(macs, function(job) {
             var jobView = new JobProgress({model: job});
             jobView.show();
-            self.bindTo(jobView, 'execution', function(st) {
+            self.listenTo(jobView, 'execution', function(st) {
                 console.log(st);
                 if (st === 'succeeded') {
                     self.selectedNics.each(function(n) {
@@ -66,8 +66,8 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
     },
 
     onBeforeItemAdded: function(itemView) {
-        this.bindTo(itemView, 'select', this.onSelectNic, this);
-        this.bindTo(itemView, 'deselect', this.onDeselectNic, this);
+        this.listenTo(itemView, 'select', this.onSelectNic, this);
+        this.listenTo(itemView, 'deselect', this.onDeselectNic, this);
     },
 
     onSelectNic: function(nic) {

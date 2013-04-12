@@ -19,7 +19,7 @@ var ChangePlatformForm = Backbone.Marionette.ItemView.extend({
     initialize: function(options) {
         this.platforms = new Platforms();
         this.platforms.fetch();
-        this.bindTo(this.platforms, 'sync', this.applyBindings);
+        this.listenTo(this.platforms, 'sync', this.applyBindings);
         this.viewModel = new ViewModel();
         this.viewModel.set({
             platform: options.model.get('boot_platform')

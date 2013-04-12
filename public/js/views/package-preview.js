@@ -18,7 +18,7 @@ var PackagePreviewView = Backbone.Marionette.ItemView.extend({
     },
     initialize: function(options) {
         this.model = options.model;
-        this.bindTo(this.model, 'change:uuid', this.toggleDisplay);
+        this.listenTo(this.model, 'change:uuid', this.toggleDisplay);
     },
     toggleDisplay: function() {
         if (this.model.get('uuid') && this.model.get('uuid').length) {

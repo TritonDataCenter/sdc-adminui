@@ -1,6 +1,8 @@
 @import "bootstrap.less";
 @import "variables.less";
+@import "typeahead.js-bootstrap.less";
 @import "signin.less";
+@import "typeahead.less";
 
 body { height: 100%; }
 html { height: 100%; }
@@ -10,17 +12,17 @@ html { height: 100%; }
 #footer { height: 24px; background: #dfe7ec;}
 
 
-.page-header { 
+.page-header {
   margin-bottom: 10px;
   .clearfix;
   overflow: hidden;
-  border: none; 
+  border: none;
 
   h1 {
     font-size: 26px;
     font-weight: 300;
     small.uuid {
-      text-transform: lowercase; 
+      text-transform: lowercase;
       #font > .monospace(12px);
     }
 
@@ -43,8 +45,20 @@ html { height: 100%; }
 }
 .page-header+.actions { .pull-right; margin-top: -62px;}
 
+// Headings
+// -------------------------
 
-h2, h3, h4, h5, h6 { font-weight: 300; }
+h1 { font-size: 32px; line-height: 40px; }
+h2 { font-size: 28px; line-height: 40px; }
+h3 { font-size: 21px; line-height: 40px; }
+h4 { font-size: 18px; line-height: 20px; }
+h5 { font-size: 14px; line-height: 20px; }
+h6 { font-size: 12px; line-height: 20px; }
+
+h1 small { font-size: 24px; }
+h2 small { font-size: 18px; }
+h3 small { font-size: 14px; }
+h4 small { font-size: 14px; }
 
 h4.alert-heading { font-weight: bold; font-size: 14px; }
 .alert ul li { font-size: 13px;}
@@ -127,9 +141,12 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
   padding-top: 8px;
   padding-bottom: 8px;
 
-  .navbar { padding: ;}
-  .navbar .navbar-inner {
+  .navbar { margin-bottom: 0;}
+  .navbar-inner {
+    background: none;
+    border: none;
     box-shadow: none;
+    min-height: 0;
 
     ul.nav { margin-bottom: 0; }
 
@@ -140,7 +157,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
       font-size: 12px;
       display: block;
       text-transform: uppercase;
-      color: #4d779f; 
+      color: #4d779f;
       .box-shadow(none);
     }
     li.active a {
@@ -180,7 +197,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
 
   .widget-label {
     display: block;
-    text-transform: uppercase; 
+    text-transform: uppercase;
     color: #333;
     background: #e8e8e8;
     padding: 6px 0;
@@ -190,14 +207,14 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
   .counters { text-align: center; }
 
   .counter>div { display: inline-block;}
-  .counter { 
-    color: #FFF; 
+  .counter {
+    color: #FFF;
     text-align: center;
     font-size: 14px;
 
     .name {
       display: block;
-      text-transform: uppercase; 
+      text-transform: uppercase;
       color: #333;
       background: #e8e8e8;
       padding: 6px 0;
@@ -245,7 +262,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
 #page-images {
   .images-table {
     th.state { width: 80px; }
-    td.state .active { color: @green; text-transform: uppercase; font-weight: bold;} 
+    td.state .active { color: @green; text-transform: uppercase; font-weight: bold;}
     td.state .disabled { color: @gray; }
     td.state .unactivated { color: @yellow; }
     td.name { width: 400px;}
@@ -277,13 +294,13 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
       .unactivated { color: @yellow;}
     }
   }
-  .basic { 
+  .basic {
     width: 205px;
     float: left;
     .os-image { text-align: center; }
 
     p {
-     padding: 10px; 
+     padding: 10px;
      text-align: center;
     }
 
@@ -326,7 +343,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
       }
       .sha1 {
         padding-left: 8px;
-        width: 300px; 
+        width: 300px;
         #font > .monospace(11px, normal, 1.2);
       }
       .compression { color: @grayLight;}
@@ -411,7 +428,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
   a { cursor: pointer; }
   .change-rack-id { float: right; }
   .change-rack-form,
-  .change-platform-form { 
+  .change-platform-form {
     padding: 10px;
     background: #f3f3f3;
     input, select { margin: 0; padding: 3px; }
@@ -433,7 +450,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
     strong { width: 140px; display: inline-block ;}
   }
   .platform>div { margin-bottom: 8px;}
-  .server-state-container { 
+  .server-state-container {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 16px;
@@ -468,7 +485,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
 #page-vm {
   .dropdown-menu .delete { color: red; }
 
-  .resource-status { 
+  .resource-status {
     .running {
       color: #00a733;
     }
@@ -594,8 +611,8 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
 /** Attributes styling **/
 ul.attributes {
   li+li { margin-top: 1em; }
-  li { 
-    strong { 
+  li {
+    strong {
       margin-left: 10px;
       text-transform: uppercase;
       .opacity(60);
@@ -617,23 +634,23 @@ ul.attributes {
 #page-networks {
   .details {
     .page-header { margin-bottom: 0; padding-bottom: 0;}
-    width: 79%; 
-    float: left; 
+    width: 79%;
+    float: left;
     padding: 0 26px;
     box-sizing: border-box;
 
     td.belongs-to strong { display: inline-block; width: 70px; color: #aaa; }
-    td.belongs-to small { 
+    td.belongs-to small {
       font-style: italic;
       #font > .monospace(12px);
     }
   }
 
-  .list { 
+  .list {
     float: left;
-    width: 20%; 
+    width: 20%;
     border-right: 1px solid #DFE7EC;
-    ul li a { 
+    ul li a {
       color: @grayLight;
       overflow: hidden;
       cursor: pointer;
@@ -647,11 +664,11 @@ ul.attributes {
       }
     }
 
-    ul li.active { 
+    ul li.active {
       border-right: 1px solid #dfe7ec;
     }
 
-    ul li.active a { 
+    ul li.active a {
       color: #333;
       background: #DFE7EC;
     }
@@ -675,7 +692,7 @@ ul.attributes {
 
   #list {
 
-    ul li a { 
+    ul li a {
       color: @grayLight;
       overflow: hidden; cursor: pointer;
       padding: 5px 12px;
@@ -689,10 +706,10 @@ ul.attributes {
         margin-left: 10px;
       }
     }
-    ul li.active { 
+    ul li.active {
       border-right: 1px solid #dfe7ec;
     }
-    ul li.active a { 
+    ul li.active a {
       color: #333;
       background: #DFE7EC;
     }
@@ -713,7 +730,7 @@ ul.attributes {
    .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority {
       margin-bottom: 1em;
 
-      strong { 
+      strong {
         margin-left: 10px;
         text-transform: uppercase;
         .opacity(60);
@@ -748,7 +765,7 @@ ul.attributes {
 
 .alarms {
   .alarms-list { margin: 0;}
-  .alarms-list>li { 
+  .alarms-list>li {
     display: block;
     overflow: hidden;
     .border-radius(2px);
@@ -776,7 +793,7 @@ ul.attributes {
       margin-top: -50px;
     }
 
-    .fault-count { 
+    .fault-count {
       position: relative;
       background: #fff;
       .border-radius(10px);
@@ -794,12 +811,12 @@ ul.attributes {
     .faults>li {
       .fault-time { font-size: 11px; color: #FFF; float: right;}
       .fault-name { font-weight: bold; font-size: 12px; float: left; }
-      .fault-message { 
+      .fault-message {
         clear: both;
         font-weight: normal;
         font-size: 11px;
-        background: #444; 
-        padding: 4px 8px; 
+        background: #444;
+        padding: 4px 8px;
         .border-radius(2px);
       }
     }
@@ -809,7 +826,7 @@ ul.attributes {
 .probes {
   ul { .clearfix; }
   li {
-    padding: 0.5em 0; 
+    padding: 0.5em 0;
     .status {
       display: inline-block;
       width: 20px;
@@ -834,7 +851,7 @@ ul.attributes {
 
 .metadata {
   td.key { width: 140px;}
-  td.value { 
+  td.value {
     a.view { cursor: pointer; }
     span.value {
       font-family: monospace;
@@ -851,7 +868,7 @@ ul.attributes {
   }
 }
 .metadata-edit {
-  input { 
+  input {
     border: none;
     .box-sizing(border-box);
     width: 100%;
@@ -867,11 +884,11 @@ ul.attributes {
   .modal-body {
     overflow-x: hidden;
     background: @grayDarker;
-    textarea { 
+    textarea {
       .box-sizing(border-box);
       background: @grayDark;
       color: @grayLighter;
-      width: 100%; border: none; 
+      width: 100%; border: none;
       padding: 5px;
       #font > .monospace(11px, normal, 1.2);
       height: 360px;
@@ -879,7 +896,7 @@ ul.attributes {
   }
 }
 
-.table.editable { 
+.table.editable {
   tr.editing {
     input {
       border: none;
@@ -892,7 +909,7 @@ ul.attributes {
     }
 
     .editing-actions {
-      float: right; 
+      float: right;
       button {
         line-height: 14px;
         font-size: 12px;
@@ -906,7 +923,7 @@ ul.attributes {
 
   .row-actions {
     opacity: 0.7;
-    visibility: hidden; 
+    visibility: hidden;
     float: right;
   }
 
@@ -914,7 +931,7 @@ ul.attributes {
   td:hover {}
   td:hover .row-actions {
     visibility: visible;
-    a { 
+    a {
       cursor: pointer;
       margin-left: 5px;
       color: #111;
@@ -954,11 +971,11 @@ ul.attributes {
 }
 
 #traits-editor {
-  textarea { 
+  textarea {
     .box-sizing(border-box);
     background: @grayDark;
     color: @grayLighter;
-    width: 100%; border: none; 
+    width: 100%; border: none;
     padding: 5px;
     #font > .monospace(11px, normal, 1.2);
     height: 300px;
@@ -978,7 +995,7 @@ ul.attributes {
     .name { font-weight: bold;}
   }
   .wait {
-    float: left; 
+    float: left;
     padding: 10px;
     margin-left: 10px;
     font-size: 14px;

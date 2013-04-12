@@ -2,21 +2,24 @@ var _ = require('underscore');
 _.str = require('underscore.string');
 
 var Backbone = require('backbone');
+Backbone.$ = require('jquery');
+
 require('backbone.stickit');
 require('backbone.marionette');
 
-var $ = require('jquery');
+// require('jquery-migrate');
 require('jquery.serializeObject');
 require('bootstrap');
-require('kevinykchan-bootstrap-typeahead');
+require('typeahead');
+// require('kevinykchan-bootstrap-typeahead');
 
 var Pinger = require('./ping');
 
 /* Extend jQuery with functions for PUT and DELETE requests. */
 function _ajax_request(url, data, callback, type, method) {
     if (jQuery.isFunction(data)) {
-      callback = data;
-      data = {};
+        callback = data;
+        data = {};
     }
     return jQuery.ajax({
         type: method,

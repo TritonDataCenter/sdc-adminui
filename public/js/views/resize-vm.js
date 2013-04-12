@@ -23,8 +23,8 @@ var View = Backbone.Marionette.ItemView.extend({
         this.packagePreviewView = new PackagePreviewView({
             model: this.selectedPackage
         });
-        this.bindTo(this.packages, 'reset', this.render, this);
-        this.bindTo(this.model, 'change:package', this.onSelectPackage, this);
+        this.listenTo(this.packages, 'reset', this.render, this);
+        this.listenTo(this.model, 'change:package', this.onSelectPackage, this);
     },
     onClickResize: function() {
         var self = this;

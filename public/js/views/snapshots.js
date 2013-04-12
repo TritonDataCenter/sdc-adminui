@@ -21,7 +21,7 @@ var SnapshotRow = Backbone.Marionette.ItemView.extend({
         var vm = this.vm;
         vm.rollbackSnapshot(name, function(job) {
             var jobView = new JobProgressView({model: job});
-            self.bindTo(jobView, 'execution', function(exec) {
+            self.listenTo(jobView, 'execution', function(exec) {
                 if (exec === 'succeeded') {
                     vm.fetch();
                 }
@@ -42,10 +42,10 @@ var View = Backbone.Marionette.CompositeView.extend({
     initialize: function(options) {
         this.vm = options.vm;
         this.collection = new Snapshots(this.vm.get('snapshots'));
-        this.bindTo(this.collection, "add", this.render, this);
-        this.bindTo(this.collection, "remove", this.render, this);
-        this.bindTo(this.collection, "reset", this.render, this);
-        this.bindTo(this.vm, 'change:snapshots', this.resetSnapshots, this);
+        this.listenTo(this.collection, "add", this.render, this);
+        this.listenTo(this.collection, "remove", this.render, this);
+        this.listenTo(this.collection, "reset", this.render, this);
+        this.listenTo(this.vm, 'change:snapshots', this.resetSnapshots, this);
     },
     resetSnapshots: function(vm, n) {
         console.log('reset');
@@ -68,7 +68,7 @@ var View = Backbone.Marionette.CompositeView.extend({
         var self = this;
         this.vm.createSnapshot(function(job) {
             var jobView = new JobProgressView({model: job});
-            self.bindTo(jobView, 'execution', function(exec) {
+            self.listenTo(jobView, 'execution', function(exec) {
                 console.log(exec);
                 if (exec === 'succeeded') {
                     vm.fetch();

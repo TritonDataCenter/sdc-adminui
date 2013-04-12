@@ -115,8 +115,8 @@ var ServersView = Backbone.Marionette.CompositeView.extend({
     },
     onRender: function() {
         this.filterForm.setElement(this.$('.servers-filter'));
-        this.bindTo(this.filterForm, 'query', this.filter, this);
-        this.bindTo(this.collection, 'error', this.onError, this);
+        this.listenTo(this.filterForm, 'query', this.filter, this);
+        this.listenTo(this.collection, 'error', this.onError, this);
         this.ui.filterPanel.hide();
     }
 });

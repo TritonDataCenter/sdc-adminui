@@ -31,7 +31,8 @@
     "hbsfy": "~0.1.2",
     "through": "~2.2.7",
     "handlebars": "~1.0.10",
-    "mime": "~1.2.9"
+    "mime": "~1.2.9",
+    "clone": "~0.1.6"
   },
   "devDependencies": {
     "nodeunit": "0.7.x",

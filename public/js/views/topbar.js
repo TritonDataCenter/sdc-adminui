@@ -1,8 +1,7 @@
 var Backbone = require('backbone');
-var Marionette = require('backbone.marionette');
 var app = require('../adminui');
 
-var Topbar = Marionette.ItemView.extend({
+var Topbar = Backbone.Marionette.ItemView.extend({
     events: {
         'click a.signout': 'signout'
     },

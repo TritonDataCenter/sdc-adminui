@@ -7,16 +7,20 @@ var shim = require('browserify-shim');
 var join = path.join;
 
 var root = path.resolve(__dirname, '..', 'public', 'js');
+/* jsl:ignire */
 var outputPath = path.join(root, '..', '✚.js');
 
 var shimConfig = {
     'jquery': { path: './lib/jquery', exports: '$' },
-    'jquery.serializeObject': { path: './lib/jquery.serializeObject', exports: null },
-    'bootstrap': { path: './lib/bootstrap', exports: null },
-    'kevinykchan-bootstrap-typeahead': {
-        path: './lib/kevinykchan-bootstrap-typeahead',
+    'jquery.serializeObject': {
+        path: './lib/jquery.serializeObject',
+        depends: {
+            'jquery': '$'
+        },
         exports: null
     },
+    'bootstrap': { path: './lib/bootstrap', exports: null },
+    'typeahead': { path: './lib/typeahead', exports: null },
     'knockback': {
         path: './lib/knockback',
         exports: null,
@@ -30,15 +34,19 @@ var shimConfig = {
     'backbone': {
         path: './lib/backbone',
         exports: null,
-        depends: { 'jquery': '$'}
+        depends: {
+            'jquery': '$',
+            'underscore': '_'
+        }
     },
-    'backbone.babysitter': { path: './lib/backbone.babysitter', exports: null },
-    'backbone.eventbinder': { path: './lib/backbone.eventbinder', exports: null },
-    'backbone.wreqr': { path: './lib/backbone.wreqr', exports: null },
     'backbone.marionette': {
         path: './lib/backbone.marionette',
         exports: null,
-        depends: { 'underscore': '_'}
+        depends: {
+            'jquery': '$',
+            'underscore': '_',
+            'backbone': 'Backbone'
+        }
     },
     'backbone.modelbinder': { path: './lib/Backbone.ModelBinder', exports: null },
     'backbone.stickit': {
@@ -63,7 +71,6 @@ shim(browserify(), shimConfig)
     .require('underscore.string', { expose: 'underscore.string' })
 
     .require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery' })
-    .require(require.resolve(join(root, './lib/backbone')), { expose: 'backbone' })
     .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment' })
 
     .require(require.resolve(join(root, './main')), {entry: true})

@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 var Vm = require('../models/vm');
 var Img = require('../models/image');
@@ -60,7 +61,6 @@ var VmView = Backbone.Marionette.ItemView.extend({
 
         if (options.uuid) {
             this.vm = new Vm({uuid: options.uuid });
-            console.log(this.vm);
         }
 
         if (options.vm) {
@@ -75,7 +75,9 @@ var VmView = Backbone.Marionette.ItemView.extend({
             uuid: this.vm.get('image_uuid')
         });
 
-        if (!this.image.get('updated_at')) this.image.fetch();
+        if (!this.image.get('updated_at')) {
+            this.image.fetch();
+        }
 
         this.server.set({
             uuid: this.vm.get('server_uuid')
@@ -110,26 +112,12 @@ var VmView = Backbone.Marionette.ItemView.extend({
             this.server.fetch();
         }, this);
 
-        this.listenTo(this.vm, 'change:customer_metadata', function(m) {
-            this.renderMetadata();
-        }, this);
+        this.listenTo(this.vm, 'change:customer_metadata', this.renderMetadata, this);
+        this.listenTo(this.vm, 'change:tags', this.renderTags, this);
+        this.listenTo(this.vm, 'change:nics', this.renderNics, this);
 
-        this.listenTo(this.vm, 'change:tags', function() {
-            console.log('change:tags');
-            this.renderTags();
-        }, this);
-
-        this.listenTo(this.vm, 'change:nics', function() {
-            this.renderNics();
-        }, this);
-
-        this.metadataListView = new MetadataList({
-            vm: this.vm
-        });
-
-        this.tagsListView = new TagsList({
-            vm: this.vm
-        });
+        this.metadataListView = new MetadataList({vm: this.vm});
+        this.tagsListView = new TagsList({vm: this.vm});
 
         this.vm.fetch();
     },
@@ -220,7 +208,6 @@ var VmView = Backbone.Marionette.ItemView.extend({
     },
 
     clickedRename: function() {
-        var self = this;
         var renameBtn = this.$('.alias .rename');
         var value = this.$('.alias .value');
 
@@ -239,12 +226,13 @@ var VmView = Backbone.Marionette.ItemView.extend({
 
         function saveAction() {
             value.html(input.val());
-            self.vm.set({
+            this.vm.set({
                 alias: input.val()
             });
-            self.vm.saveAlias();
+            this.vm.saveAlias();
             cancelAction();
         }
+        saveAction.bind(this);
 
         function cancelAction() {
             renameBtn.show();
@@ -253,6 +241,7 @@ var VmView = Backbone.Marionette.ItemView.extend({
             cancel.remove();
             value.show();
         }
+        cancelAction.bind(this);
     },
 
     renderTags: function() {
@@ -272,7 +261,6 @@ var VmView = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        console.log(this.vm);
         this.nicsList = new NicsList({
             vm: this.vm,
             el: this.$('.nics')

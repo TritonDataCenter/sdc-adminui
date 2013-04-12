@@ -68,10 +68,10 @@ module.exports = Backbone.Marionette.ItemView.extend({
         });
 
         this.$(".alert")
-        .empty()
-        .append('<h4 class="alert-heading">Please fix the following errors</h4>')
-        .append(ul)
-        .show();
+            .empty()
+            .append('<h4 class="alert-heading">Please fix the following errors</h4>')
+            .append(ul)
+            .show();
     },
 
     save: function(e) {

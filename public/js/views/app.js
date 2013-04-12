@@ -34,8 +34,8 @@ var AppView = Backbone.Marionette.Layout.extend({
         this.topbarView = new Topbar({ user: this.user });
         this.mainnavView = new Mainnav();
 
-        this.bindTo(adminui.vent, 'error', this.onError, this);
-        this.bindTo(adminui.vent, 'showjob', this.onShowjob, this);
+        this.listenTo(adminui.vent, 'error', this.onError, this);
+        this.listenTo(adminui.vent, 'showjob', this.onShowjob, this);
     },
 
     onError: function(err) {

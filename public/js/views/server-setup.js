@@ -23,7 +23,7 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
         this.model.setup({hostname: hostname}, function(job) {
             self.remove();
             app.vent.trigger('showjob', job);
-            self.bindTo(job, 'execution', function(status) {
+            self.listenTo(job, 'execution', function(status) {
                 if (status === 'succeeded') {
                     server.fetch();
                 }

@@ -94,12 +94,12 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        this.bindTo(this.collection, 'error', this.onError, this);
+        this.listenTo(this.collection, 'error', this.onError, this);
         this.listView.setElement(this.$('tbody')).render();
         this.filterView.setElement(this.$('.vms-filter'));
 
-        this.bindTo(this.filterView, 'query', this.query, this);
-        this.bindTo(this.collection, 'reset', this.updateCount, this);
+        this.listenTo(this.filterView, 'query', this.query, this);
+        this.listenTo(this.collection, 'reset', this.updateCount, this);
         return this;
     }
 });

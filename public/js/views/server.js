@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 var app = require('../adminui');
 
@@ -79,7 +80,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
     },
 
     serializeData: function() {
-        var data = Marionette.ItemView.prototype.serializeData.call(this);
+        var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this);
         data.disks = _.map(data.sysinfo['Disks'], function(v, k) {
             return {
                 name: k,
@@ -109,11 +110,11 @@ var ServerView = Backbone.Marionette.ItemView.extend({
             model: this.model
         });
 
-        this.bindTo(view, 'cancel', function() {
+        this.listenTo(view, 'cancel', function() {
             $link.show();
         }, this);
 
-        this.bindTo(view, 'save', function(platform) {
+        this.listenTo(view, 'save', function(platform) {
             self.model.set({
                 boot_platform: platform
             });
@@ -132,11 +133,11 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         });
         var $link = this.$('.rack td a');
 
-        this.bindTo(view, 'cancel', function() {
+        this.listenTo(view, 'cancel', function() {
             $link.show();
         }, this);
 
-        this.bindTo(view, 'save', function(rack) {
+        this.listenTo(view, 'save', function(rack) {
             self.model.set({
                 rack_identifier: rack
             });
@@ -154,7 +155,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         });
         var server = this.model;
         modal.show();
-        this.bindTo(modal, 'save-traits', function(traits) {
+        this.listenTo(modal, 'save-traits', function(traits) {
             server.set({
                 traits: traits
             });

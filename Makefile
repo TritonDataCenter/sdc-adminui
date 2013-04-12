@@ -28,7 +28,7 @@ JSL_CONF_NODE	 = tools/jsl.node.conf
 JSL_FILES_NODE   = $(JS_FILES)
 JSSTYLE_FILES	 = $(JS_FILES)
 JSSTYLE_FLAGS    = -o indent=2,doxygen,unparenthesized-return=0
-REPO_MODULES	 = 
+REPO_MODULES	 =
 SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
 
 NODE_PREBUILT_VERSION=v0.8.20
@@ -49,7 +49,8 @@ TMPDIR          := /tmp/$(STAMP)
 #
 
 JS_BUNDLE = ./public/✚.js
-JS_BUNDLE_FILES	:= $(shell find public/js -name '*.js')
+JS_BUNDLE_FILES	:= $(shell find public/js -name '*.js' -o -name '*.hbs')
+JS_BUNDLE_FILES	+= ./tools/build-js
 
 
 .PHONY: all
@@ -71,7 +72,7 @@ $(JS_BUNDLE): $(JS_BUNDLE_FILES) $(NODE_EXEC)
 	$(NODE) tools/build-js
 
 
-.PHONY: dev 
+.PHONY: dev
 devrun:
 	@./tools/devrun.sh
 

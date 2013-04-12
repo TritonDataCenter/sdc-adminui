@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 
 /**
@@ -21,6 +22,7 @@ var JobProgressView = require('./job-progress');
 var PackagePreview = require('./package-preview');
 
 var adminui = require('../adminui');
+
 
 var PackageSelectOption = Backbone.Marionette.ItemView.extend({
     attributes: function() {
@@ -49,6 +51,10 @@ var PackageSelect = Backbone.Marionette.CollectionView.extend({
 
 var ProvisionVmTemplate = require('../tpl/provision-vm.hbs');
 
+var UserTypeaheadView = require('../tpl/typeahead-user.hbs');
+var TypeaheadUser = require('./typeahead-user');
+var ImageTypeaheadView = require('../tpl/typeahead-image.hbs');
+var ServerTypeaheadView = require('../tpl/typeahead-server.hbs');
 var View = Backbone.Marionette.ItemView.extend({
     name: 'provision-vm',
 
@@ -88,83 +94,63 @@ var View = Backbone.Marionette.ItemView.extend({
             this.selectedPackage.set(pkg.attributes);
         }, this);
 
-        this.imagesSource = [];
-        this.usersSource = [];
-        this.serversSource = [];
-
-        this.usersCollection = new Users();
         this.imagesCollection = new Images();
         this.serversCollection = new Servers();
         this.networks = new Networks();
 
-        this.usersCollection.on('reset', function(users) {
-            this.userSource = [];
-            users.each(function(u) {
-                this.usersSource.push(u);
-            }, this);
-        }, this);
-
-        this.imagesCollection.on('reset', function(images) {
-            images.each(function(u) {
-                this.imagesSource.push(u);
-            }, this);
-        }, this);
-
-        this.serversCollection.on('reset', function(servers) {
-            servers.each(function(u) {
-                this.serversSource.push(u);
-            }, this);
-        }, this);
+        this.listenTo(this.imagesCollection, 'sync', this.prepareImageInput);
+        this.listenTo(this.serversCollection, 'sync', this.prepareServerInput);
 
         this.networks.on('reset', function(networks) {
             this.populateNetworks(networks);
         }, this);
 
         this.imagesCollection.fetch();
-        this.usersCollection.searchByLogin('');
         this.networks.fetch();
         this.serversCollection.fetch();
         this.packages.fetchActive();
     },
 
+    prepareImageInput: function(images) {
+        var source = images.map(function(i) {
+            return {
+                'uuid': i.get('uuid'),
+                'tokens': [i.get('uuid'), i.get('name')],
+                'name': i.get('name'),
+                'version': i.get('version')
+            };
+        });
+
+        this.$("input[name=image]").typeahead({
+            name: 'images',
+            local: source,
+            valueKey: 'uuid',
+            template: ImageTypeaheadView
+        });
+    },
+    prepareServerInput: function(servers) {
+        var source = servers.map(function(s) {
+            return {
+                'uuid': s.get('uuid'),
+                'tokens': [s.get('hostname'), s.get('uuid')],
+                'hostname': s.get('hostname')
+            };
+        });
+
+        this.$("input[name=server]").typeahead({
+            name: 'servers',
+            local: source,
+            valueKey: 'uuid',
+            template: ServerTypeaheadView
+        });
+    },
     onRender: function() {
+        this.userInput = new TypeaheadUser({el: this.$('[name=owner]') });
 
         this.packageSelect.setElement(this.$('select[name=package]')).render();
         this.$('.package-preview-container').append(this.packagePreview.render().el);
 
         this.hideError();
-
-        this.$("input[name=image]").typeahead({
-            source: this.imagesSource,
-            labeler: function(obj) {
-                return [obj.get('name'), obj.get('version')].join(" ");
-            },
-            valuer: function(obj) {
-                return obj.get('uuid');
-            }
-        });
-
-        this.$("input[name=server]").typeahead({
-            source: this.serversSource,
-            labeler: function(obj) {
-                return obj.get('hostname');
-            },
-            valuer: function(obj) {
-                return obj.get('uuid');
-            }
-        });
-
-
-        this.$("input[name=owner]").typeahead({
-            source: this.usersSource,
-            labeler: function(obj) {
-                return [obj.get('login'), obj.get('cn')].join(" - ");
-            },
-            valuer: function(obj) {
-                return obj.get('uuid');
-            }
-        });
-
         this.checkFields();
 
         return this;
@@ -330,8 +316,8 @@ var View = Backbone.Marionette.ItemView.extend({
             success: function(m, obj) {
                 var job = new Job({uuid: obj.job_uuid});
                 var jobView = new JobProgressView({model: job});
-                self.bindTo(jobView, 'execution', function(status) {
-                    if (status == 'succeeded') {
+                self.listenTo(jobView, 'execution', function(status) {
+                    if (status === 'succeeded') {
                         adminui.vent.trigger('showview', 'vm', {uuid: obj.vm_uuid});
                     }
                 });

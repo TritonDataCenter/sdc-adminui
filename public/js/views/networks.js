@@ -66,7 +66,7 @@ var NetworksView = Backbone.Marionette.Layout.extend({
 
     showCreateNetworkForm: function() {
         var view = new NetworkCreateView();
-        this.bindTo(view, 'saved', function(n) {
+        this.listenTo(view, 'saved', function(n) {
             this.listView.collection.add(n);
             this.showNetwork(n);
         }, this);
@@ -79,8 +79,8 @@ var NetworksView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
-        this.bindTo(this.listView, 'select', this.showNetwork, this);
-        this.bindTo(this.details, 'show', function(view) {
+        this.listenTo(this.listView, 'select', this.showNetwork, this);
+        this.listenTo(this.details, 'show', function(view) {
             adminui.router.applyUrl(view);
         });
 
@@ -101,7 +101,7 @@ var NetworksListView = Backbone.Marionette.CompositeView.extend({
     initialize: function(options) {
         this.collection = new Networks();
         this.collection.fetch();
-        this.bindTo(this.collection, 'error', this.onError, this);
+        this.listenTo(this.collection, 'error', this.onError, this);
     },
 
     onError: function(model, res) {
@@ -112,7 +112,7 @@ var NetworksListView = Backbone.Marionette.CompositeView.extend({
     },
 
     onBeforeItemAdded: function(itemView) {
-        this.bindTo(itemView, 'select', this.onSelect, this);
+        this.listenTo(itemView, 'select', this.onSelect, this);
     },
 
     onSelect: function(model)  {

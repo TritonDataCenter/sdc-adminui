@@ -1,14 +1,13 @@
 var Backbone = require('backbone');
 var app = require('../adminui');
-var Marionette = require('backbone.marionette');
 
-var Mainnav = Marionette.ItemView.extend({
+var Mainnav = Backbone.Marionette.ItemView.extend({
     events: {
         'click li[data-view]':'onSelect'
     },
 
     initialize: function() {
-        this.bindTo(app.vent, 'mainnav:highlight', this.highlight, this);
+        this.listenTo(app.vent, 'mainnav:highlight', this.highlight, this);
     },
 
     onSelect: function(e) {

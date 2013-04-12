@@ -46,9 +46,9 @@ var AlarmsView = Backbone.Marionette.ItemView.extend({
         this.probeGroups.user = options.userUuid;
         this.probes = new Probes();
 
-        this.bindTo(this.alarms, 'reset', this.render);
-        this.bindTo(this.probeGroups, 'reset', this.render);
-        this.bindTo(this.probes, 'reset', this.render);
+        this.listenTo(this.alarms, 'reset', this.render);
+        this.listenTo(this.probeGroups, 'reset', this.render);
+        this.listenTo(this.probes, 'reset', this.render);
         this.fetch();
     },
 

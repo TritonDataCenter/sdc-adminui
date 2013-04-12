@@ -17,7 +17,7 @@ var SystemStatus = Backbone.Model.extend({
     },
     initialize: function() {
         this.model = new SystemStatus();
-        this.bindTo(this.model, 'change', this.render);
+        this.listenTo(this.model, 'change', this.render);
     },
     onShow: function() {
         this.model.fetch();

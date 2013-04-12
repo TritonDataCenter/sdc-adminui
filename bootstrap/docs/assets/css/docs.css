@@ -114,7 +114,7 @@ hr.soften {
 .jumbotron p {
   font-size: 24px;
   font-weight: 300;
-  line-height: 30px;
+  line-height: 1.25;
   margin-bottom: 30px;
 }
 
@@ -132,18 +132,8 @@ hr.soften {
 }
 
 /* Download button */
-@-webkit-keyframes downloadButton {
-  from { box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25), 0 2px 10px rgba(0,68,204,.5); }
-  50% {  box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25), 0 2px 25px rgba(0,68,204,.9); }
-  to {   box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25), 0 2px 10px rgba(0,68,204,.5); }
-}
-@-moz-keyframes downloadButton {
-  from { box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25), 0 2px 10px rgba(0,68,204,.5); }
-  50% {  box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25), 0 2px 25px rgba(0,68,204,.9); }
-  to {   box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25), 0 2px 10px rgba(0,68,204,.5); }
-}
 .masthead .btn {
-  padding: 14px 24px;
+  padding: 19px 24px;
   font-size: 24px;
   font-weight: 200;
   color: #fff; /* redeclare to override the `.jumbotron a` */
@@ -151,19 +141,17 @@ hr.soften {
   -webkit-border-radius: 6px;
      -moz-border-radius: 6px;
           border-radius: 6px;
-  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25), 0 2px 10px rgba(0,68,204,.01);
-     -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25), 0 2px 10px rgba(0,68,204,.01);
-          box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25), 0 2px 10px rgba(0,68,204,.01);
-  -webkit-animation-name: downloadButton;
-     -moz-animation-name: downloadButton;
-  -webkit-animation-duration: 1.5s;
-     -moz-animation-duration: 1.5s;
-  -webkit-animation-iteration-count: infinite;
-     -moz-animation-iteration-count: infinite;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+     -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
   -webkit-transition: none;
      -moz-transition: none;
           transition: none;
-
+}
+.masthead .btn:hover {
+  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+     -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
 }
 .masthead .btn:active {
   -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.1);
@@ -188,6 +176,16 @@ hr.soften {
   left: 0;
   background: url(../img/bs-docs-masthead-pattern.png) repeat center center;
   opacity: .4;
+}
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1) {
+
+  .jumbotron:after {
+    background-size: 150px 150px;
+  }
+
 }
 
 /* Masthead (docs home)
@@ -287,12 +285,13 @@ hr.soften {
   margin-bottom: 40px;
   font-size: 20px;
   font-weight: 300;
-  line-height: 25px;
+  line-height: 1.25;
   color: #999;
 }
-.marketing img {
+.marketing-img {
   display: block;
   margin: 0 auto 30px;
+  max-height: 145px;
 }
 
 
@@ -301,7 +300,8 @@ hr.soften {
 -------------------------------------------------- */
 
 .footer {
-  padding: 70px 0;
+  text-align: center;
+  padding: 30px 0;
   margin-top: 70px;
   border-top: 1px solid #e5e5e5;
   background-color: #f5f5f5;
@@ -315,7 +315,10 @@ hr.soften {
 }
 .footer-links li {
   display: inline;
-  margin-right: 10px;
+  padding: 0 2px;
+}
+.footer-links li:first-child {
+  padding-left: 0;
 }
 
 
@@ -336,15 +339,21 @@ hr.soften {
   min-height: 40px;
   line-height: 40px;
 }
-.show-grid:hover [class*="span"] {
-  background: #ddd;
+.show-grid [class*="span"]:hover {
+  background-color: #ddd;
 }
 .show-grid .show-grid {
   margin-top: 0;
   margin-bottom: 0;
 }
 .show-grid .show-grid [class*="span"] {
+  margin-top: 5px;
+}
+.show-grid [class*="span"] [class*="span"] {
   background-color: #ccc;
+}
+.show-grid [class*="span"] [class*="span"] [class*="span"] {
+  background-color: #999;
 }
 
 
@@ -541,8 +550,11 @@ h2 + .row {
   background-color: rgba(255,0,0,.25);
 }
 
-/* Eaxmples page
+/* Example page
 ------------------------- */
+.bootstrap-examples h4 {
+  margin: 10px 0 5px;
+}
 .bootstrap-examples p {
   font-size: 13px;
   line-height: 18px;
@@ -647,10 +659,6 @@ h2 + .row {
 form.bs-docs-example {
   padding-bottom: 19px;
 }
-.bs-docs-example .lead {
-  font-size: 18px;
-  line-height: 24px;
-}
 
 /* Images */
 .bs-docs-example-images img {
@@ -680,6 +688,21 @@ form.bs-docs-example {
   float: left;
   width: 260px;
   margin: 20px;
+}
+
+/* Dropdowns */
+.bs-docs-example-submenus {
+  min-height: 180px;
+}
+.bs-docs-example-submenus > .pull-left + .pull-left {
+  margin-left: 20px;
+}
+.bs-docs-example-submenus .dropup > .dropdown-menu,
+.bs-docs-example-submenus .dropdown > .dropdown-menu {
+  display: block;
+  position: static;
+  margin-bottom: 5px;
+  *width: 180px;
 }
 
 
@@ -756,11 +779,6 @@ form.bs-docs-example {
 /* Sidenav for Docs
 -------------------------------------------------- */
 
-/* prevent column from collapsing when affixing */
-.span3 {
-  min-height: 1px;
-}
-
 .bs-docs-sidenav {
   width: 228px;
   margin: 30px 0 0;
@@ -775,7 +793,7 @@ form.bs-docs-example {
 }
 .bs-docs-sidenav > li > a {
   display: block;
-  *width: 190px;
+  width: 190px \9;
   margin: 0 0 -1px;
   padding: 8px 14px;
   border: 1px solid #e5e5e5;
@@ -842,6 +860,9 @@ form.bs-docs-example {
   .bs-docs-sidenav {
     width: 258px;
   }
+  .bs-docs-sidenav > li > a {
+    width: 230px \9; /* Override the previous IE8-9 hack */
+  }
 }
 
 /* Desktop
@@ -864,6 +885,7 @@ form.bs-docs-example {
   /* When affixed, space properly */
   .bs-docs-sidenav {
     top: 0;
+    width: 218px;
     margin-top: 30px;
     margin-right: 0;
   }
@@ -871,7 +893,7 @@ form.bs-docs-example {
 
 /* Tablet to desktop
 ------------------------- */
-@media (min-width: 768px) and (max-width: 980px) {
+@media (min-width: 768px) and (max-width: 979px) {
   /* Remove any padding from the body */
   body {
     padding-top: 0;
@@ -892,7 +914,7 @@ form.bs-docs-example {
 
 /* Tablet
 ------------------------- */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   /* Remove any padding from the body */
   body {
     padding-top: 0;
@@ -962,11 +984,11 @@ form.bs-docs-example {
 
   /* Downsize the jumbotrons */
   .jumbotron h1 {
-    font-size: 60px;
+    font-size: 45px;
   }
   .jumbotron p,
   .jumbotron .btn {
-    font-size: 20px;
+    font-size: 18px;
   }
   .jumbotron .btn {
     display: block;
@@ -981,7 +1003,10 @@ form.bs-docs-example {
 
   /* Marketing on home */
   .marketing h1 {
-    font-size: 40px;
+    font-size: 30px;
+  }
+  .marketing-byline {
+    font-size: 18px;
   }
 
   /* center example sites */
@@ -1006,7 +1031,26 @@ form.bs-docs-example {
     word-break: break-all;
   }
 
-  /* Modal example */
+  /* Examples: dropdowns */
+  .bs-docs-example-submenus > .pull-left {
+    float: none;
+    clear: both;
+  }
+  .bs-docs-example-submenus > .pull-left,
+  .bs-docs-example-submenus > .pull-left + .pull-left {
+    margin-left: 0;
+  }
+  .bs-docs-example-submenus p {
+    margin-bottom: 0;
+  }
+  .bs-docs-example-submenus .dropup > .dropdown-menu,
+  .bs-docs-example-submenus .dropdown > .dropdown-menu {
+    margin-bottom: 10px;
+    float: none;
+    max-width: 180px;
+  }
+
+  /* Examples: modal */
   .modal-example .modal {
     position: relative;
     top: auto;
@@ -1015,8 +1059,9 @@ form.bs-docs-example {
     left: auto;
   }
 
-  /* Unfloat the back to top in footer to prevent odd text wrapping */
-  .footer .pull-right {
-    float: none;
+  /* Tighten up footer */
+  .footer {
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 }

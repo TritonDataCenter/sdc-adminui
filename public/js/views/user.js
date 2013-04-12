@@ -1,6 +1,8 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 
+var ko = require('knockout');
 var kb = require('knockback');
 var BaseView = require('./base');
 var VmsList = require('./vms-list');
@@ -25,7 +27,7 @@ var SSHKeysList = Backbone.Marionette.CollectionView.extend({
 });
 
 var User = require('../models/user');
-var UserView = Marionette.ItemView.extend({
+var UserView = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/user.hbs'),
     id: 'page-user',
     events: {
@@ -51,7 +53,7 @@ var UserView = Marionette.ItemView.extend({
         });
         view.render();
 
-        this.bindTo(view, 'saved', function(key) {
+        this.listenTo(view, 'saved', function(key) {
             this.sshkeys.add(key);
         }, this);
     },
@@ -65,7 +67,7 @@ var UserView = Marionette.ItemView.extend({
 
         this.model.fetch();
 
-        this.bindTo(this.model, 'sync', this.render, this);
+        this.listenTo(this.model, 'sync', this.render, this);
 
         this.vms = new Vms({params: { owner_uuid: this.model.get('uuid') }});
         this.vms.fetch();

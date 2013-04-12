@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Javascript · Twitter Bootstrap</title>
+    <title>Javascript · Bootstrap</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -15,15 +15,15 @@
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="assets/js/html5shiv.js"></script>
     <![endif]-->
 
     <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="assets/ico/favicon.ico">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="assets/ico/favicon.png">
 
   </head>
 
@@ -58,7 +58,7 @@
                 <a href="./components.html">Components</a>
               </li>
               <li class="active">
-                <a href="./javascript.html">Javascript</a>
+                <a href="./javascript.html">JavaScript</a>
               </li>
               <li class="">
                 <a href="./customize.html">Customize</a>
@@ -73,7 +73,7 @@
 ================================================== -->
 <header class="jumbotron subhead">
   <div class="container">
-    <h1>JavaScript for Bootstrap</h1>
+    <h1>JavaScript</h1>
     <p class="lead">Bring Bootstrap's components to life&mdash;now with 13 custom jQuery plugins.
   </div>
 </header>
@@ -112,7 +112,7 @@
           </div>
 
           <h3>Individual or compiled</h3>
-          <p>If you have downloaded the latest version of Bootstrap, both <strong>bootstrap.js</strong> and <strong>bootstrap.min.js</strong> contain all of the plugins listed on this page.</p>
+          <p>Plugins can be included individually (though some have required dependencies), or all at once. Both <strong>bootstrap.js</strong> and <strong>bootstrap.min.js</strong> contain all plugins in a single file.</p>
 
           <h3>Data attributes</h3>
           <p>You can use all Bootstrap plugins purely through the markup API without writing a single line of JavaScript. This is Bootstrap's first class API and should be your first consideration when using a plugin.</p>
@@ -120,7 +120,7 @@
           <p>That said, in some situations it may be desirable to turn this functionality off. Therefore, we also provide the ability to disable the data attribute API by unbinding all events on the body namespaced with `'data-api'`. This looks like this:
           <pre class="prettyprint linenums">$('body').off('.data-api')</pre>
 
-          <p>Alternatively, to target a specific plugin, just include the plugins name as a namespace along with the data-api namespace like this:</p>
+          <p>Alternatively, to target a specific plugin, just include the plugin's name as a namespace along with the data-api namespace like this:</p>
           <pre class="prettyprint linenums">$('body').off('.alert.data-api')</pre>
 
           <h3>Programmatic API</h3>
@@ -132,11 +132,19 @@ $("#myModal").modal()                       // initialized with defaults
 $("#myModal").modal({ keyboard: false })   // initialized with no keyboard
 $("#myModal").modal('show')                // initializes and invokes show immediately</p>
 </pre>
-          <p>Each plugin also exposes it's raw constructor on a `Constructor` property: <code>$.fn.popover.Constructor</code>. If you'd like to get a particular plugin instance, retrieve it directly from an element: <code>$('[rel=popover]').data('popover')</code>.</p>
+          <p>Each plugin also exposes its raw constructor on a `Constructor` property: <code>$.fn.popover.Constructor</code>. If you'd like to get a particular plugin instance, retrieve it directly from an element: <code>$('[rel=popover]').data('popover')</code>.</p>
+
+          <h3>No Conflict</h3>
+          <p>Sometimes it is necessary to use Bootstrap plugins with other UI frameworks. In these circumstances,  namespace collisions can occasionally occur. If this happens, you may call <code>.noConflict</code> on the plugin you wish to revert the value of.</p>
+
+<pre class="prettyprint linenums">
+var bootstrapButton = $.fn.button.noConflict() // return $.fn.button to previously assigned value
+$.fn.bootstrapBtn = bootstrapButton            // give $().bootstrapBtn the bootstrap functionality
+</pre>
 
           <h3>Events</h3>
-          <p>Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. <code>show</code>) is triggered at the start of an event, and it's past participle form (ex. <code>shown</code>) is trigger on the completion of an action.</p>
-          <p>All infinitive events provide preventDefault functionality. This provides the abililty to stop the execution of an action before it starts.</p>
+          <p>Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. <code>show</code>) is triggered at the start of an event, and its past participle form (ex. <code>shown</code>) is trigger on the completion of an action.</p>
+          <p>All infinitive events provide preventDefault functionality. This provides the ability to stop the execution of an action before it starts.</p>
 <pre class="prettyprint linenums">
 $('#myModal').on('show', function (e) {
     if (!data) return e.preventDefault() // stops modal from being shown
@@ -153,7 +161,7 @@ $('#myModal').on('show', function (e) {
             <h1>Transitions <small>bootstrap-transition.js</small></h1>
           </div>
           <h3>About transitions</h3>
-          <p>For simple transition effects, include bootstrap-transition.js once alongside the other JS files. If you're using the compiled (or minified) bootstrap.js, there is no need to include this&mdash;it's already there.</p>
+          <p>For simple transition effects, include <strong>bootstrap-transition.js</strong> once alongside the other JS files. If you're using the compiled (or minified) <strong>bootstrap.js</strong>, there is no need to include this&mdash;it's already there.</p>
           <h3>Use cases</h3>
           <p>A few examples of the transition plugin:</p>
           <ul>
@@ -181,13 +189,13 @@ $('#myModal').on('show', function (e) {
           <h3>Static example</h3>
           <p>A rendered modal with header, body, and set of actions in the footer.</p>
           <div class="bs-docs-example" style="background-color: #f5f5f5;">
-            <div class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto 20px; z-index: 1; max-width: 100%;">
+            <div class="modal" style="position: relative; top: auto; left: auto; right: auto; margin: 0 auto 20px; z-index: 1; max-width: 100%;">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3>Modal header</h3>
               </div>
               <div class="modal-body">
-                <p>One fine body…</p>
+                <p>One fine body&hellip;</p>
               </div>
               <div class="modal-footer">
                 <a href="#" class="btn">Close</a>
@@ -202,7 +210,7 @@ $('#myModal').on('show', function (e) {
     &lt;h3&gt;Modal header&lt;/h3&gt;
   &lt;/div&gt;
   &lt;div class="modal-body"&gt;
-    &lt;p&gt;One fine body…&lt;/p&gt;
+    &lt;p&gt;One fine body&hellip;&lt;/p&gt;
   &lt;/div&gt;
   &lt;div class="modal-footer"&gt;
     &lt;a href="#" class="btn"&gt;Close&lt;/a&gt;
@@ -224,7 +232,7 @@ $('#myModal').on('show', function (e) {
               <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem.</p>
 
               <h4>Popover in a modal</h4>
-              <p>This <a href="#" role="button" class="btn popover-test" title="A Title" data-content="And here's some amazing content. It's very engaging. right?">button</a> should trigger a popover on hover.</p>
+              <p>This <a href="#" role="button" class="btn popover-test" title="A Title" data-content="And here's some amazing content. It's very engaging. right?">button</a> should trigger a popover on click.</p>
 
               <h4>Tooltips in a modal</h4>
               <p><a href="#" class="tooltip-test" title="Tooltip">This link</a> and <a href="#" class="tooltip-test" title="Tooltip">that link</a> should have tooltips on hover.</p>
@@ -249,17 +257,17 @@ $('#myModal').on('show', function (e) {
             <a data-toggle="modal" href="#myModal" class="btn btn-primary btn-large">Launch demo modal</a>
           </div>
 <pre class="prettyprint linenums">
-&lt;-- Button to trigger modal --&gt;
+&lt!-- Button to trigger modal --&gt;
 &lt;a href="#myModal" role="button" class="btn" data-toggle="modal"&gt;Launch demo modal&lt;/a&gt;
 
-&lt;-- Modal --&gt;
-&lt;div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"&gt;
+&lt!-- Modal --&gt;
+&lt;div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"&gt;
   &lt;div class="modal-header"&gt;
     &lt;button type="button" class="close" data-dismiss="modal" aria-hidden="true"&gt;&times;&lt;/button&gt;
     &lt;h3 id="myModalLabel"&gt;Modal header&lt;/h3&gt;
   &lt;/div&gt;
   &lt;div class="modal-body"&gt;
-    &lt;p&gt;One fine body…&lt;/p&gt;
+    &lt;p&gt;One fine body&hellip;&lt;/p&gt;
   &lt;/div&gt;
   &lt;div class="modal-footer"&gt;
     &lt;button class="btn" data-dismiss="modal" aria-hidden="true"&gt;Close&lt;/button&gt;
@@ -376,7 +384,7 @@ $('#myModal').on('hidden', function () {
 
 
 
-        <!-- Dropdown
+        <!-- Dropdowns
         ================================================== -->
         <section id="dropdowns">
           <div class="page-header">
@@ -397,21 +405,21 @@ $('#myModal').on('hidden', function () {
                     <li class="dropdown">
                       <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
                       <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                        <li><a tabindex="-1" href="http://google.com">Action</a></li>
-                        <li><a tabindex="-1" href="#anotherAction">Another action</a></li>
-                        <li><a tabindex="-1" href="#">Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a tabindex="-1" href="#">Separated link</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="http://google.com">Action</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#anotherAction">Another action</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
                       </ul>
                     </li>
                     <li class="dropdown">
                       <a href="#" id="drop2" role="button" class="dropdown-toggle" data-toggle="dropdown">Dropdown 2 <b class="caret"></b></a>
                       <ul class="dropdown-menu" role="menu" aria-labelledby="drop2">
-                        <li><a tabindex="-1" href="#">Action</a></li>
-                        <li><a tabindex="-1" href="#">Another action</a></li>
-                        <li><a tabindex="-1" href="#">Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a tabindex="-1" href="#">Separated link</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
                       </ul>
                     </li>
                   </ul>
@@ -419,11 +427,11 @@ $('#myModal').on('hidden', function () {
                     <li id="fat-menu" class="dropdown">
                       <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Dropdown 3 <b class="caret"></b></a>
                       <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
-                        <li><a tabindex="-1" href="#">Action</a></li>
-                        <li><a tabindex="-1" href="#">Another action</a></li>
-                        <li><a tabindex="-1" href="#">Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a tabindex="-1" href="#">Separated link</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
                       </ul>
                     </li>
                   </ul>
@@ -439,31 +447,31 @@ $('#myModal').on('hidden', function () {
               <li class="dropdown">
                 <a class="dropdown-toggle" id="drop4" role="button" data-toggle="dropdown" href="#">Dropdown <b class="caret"></b></a>
                 <ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
-                  <li><a tabindex="-1" href="#">Action</a></li>
-                  <li><a tabindex="-1" href="#">Another action</a></li>
-                  <li><a tabindex="-1" href="#">Something else here</a></li>
-                  <li class="divider"></li>
-                  <li><a tabindex="-1" href="#">Separated link</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+                  <li role="presentation" class="divider"></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
                 </ul>
               </li>
               <li class="dropdown">
                 <a class="dropdown-toggle" id="drop5" role="button" data-toggle="dropdown" href="#">Dropdown 2 <b class="caret"></b></a>
                 <ul id="menu2" class="dropdown-menu" role="menu" aria-labelledby="drop5">
-                  <li><a tabindex="-1" href="#">Action</a></li>
-                  <li><a tabindex="-1" href="#">Another action</a></li>
-                  <li><a tabindex="-1" href="#">Something else here</a></li>
-                  <li class="divider"></li>
-                  <li><a tabindex="-1" href="#">Separated link</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+                  <li role="presentation" class="divider"></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
                 </ul>
               </li>
               <li class="dropdown">
                 <a class="dropdown-toggle" id="drop5" role="button" data-toggle="dropdown" href="#">Dropdown 3 <b class="caret"></b></a>
                 <ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop5">
-                  <li><a tabindex="-1" href="#">Action</a></li>
-                  <li><a tabindex="-1" href="#">Another action</a></li>
-                  <li><a tabindex="-1" href="#">Something else here</a></li>
-                  <li class="divider"></li>
-                  <li><a tabindex="-1" href="#">Separated link</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+                  <li role="presentation" class="divider"></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
                 </ul>
               </li>
             </ul> <!-- /tabs -->
@@ -479,7 +487,7 @@ $('#myModal').on('hidden', function () {
           <p>Add <code>data-toggle="dropdown"</code> to a link or button to toggle a dropdown.</p>
 <pre class="prettyprint linenums">
 &lt;div class="dropdown"&gt;
-  &lt;a class="dropdown-toggle" href="#"&gt;Dropdown trigger&lt;/a&gt;
+  &lt;a class="dropdown-toggle" data-toggle="dropdown" href="#"&gt;Dropdown trigger&lt;/a&gt;
   &lt;ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"&gt;
     ...
   &lt;/ul&gt;
@@ -506,8 +514,8 @@ $('#myModal').on('hidden', function () {
           <p><em>None</em></p>
 
           <h3>Methods</h3>
-          <h4>$().dropdown()</h4>
-          <p>A programatic api for activating menus for a given navbar or tabbed navigation.</p>
+          <h4>$().dropdown('toggle')</h4>
+          <p>A programmatic api for toggling menus for a given navbar or tabbed navigation.</p>
         </section>
 
 
@@ -636,7 +644,7 @@ $('[data-spy="scroll"]').each(function () {
 
 
           <h2>Example tabs</h2>
-          <p>Add quick, dynamic tab functionality to transiton through panes of local content, even via dropdown menus.</p>
+          <p>Add quick, dynamic tab functionality to transition through panes of local content, even via dropdown menus.</p>
           <div class="bs-docs-example">
             <ul id="myTab" class="nav nav-tabs">
               <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
@@ -759,22 +767,26 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
 
           <h2>Examples</h2>
           <p>Inspired by the excellent jQuery.tipsy plugin written by Jason Frame; Tooltips are an updated version, which don't rely on images, use CSS3 for animations, and data-attributes for local title storage.</p>
+          <p>For performance reasons, the tooltip and popover data-apis are opt in, meaning <strong>you must initialize them yourself</strong>.</p>
           <p>Hover over the links below to see tooltips:</p>
           <div class="bs-docs-example tooltip-demo">
-            <p class="muted" style="margin-bottom: 0;">Tight pants next level keffiyeh <a href="#" rel="tooltip" title="Default tooltip">you probably</a> haven't heard of them. Photo booth beard raw denim letterpress vegan messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie sustainable quinoa 8-bit american apparel <a href="#" rel="tooltip" title="Another tooltip">have a</a> terry richardson vinyl chambray. Beard stumptown, cardigans banh mi lomo thundercats. Tofu biodiesel williamsburg marfa, four loko mcsweeney's cleanse vegan chambray. A really ironic artisan <a href="#" rel="tooltip" title="Another one here too">whatever keytar</a>, scenester farm-to-table banksy Austin <a href="#" rel="tooltip" title="The last tip!">twitter handle</a> freegan cred raw denim single-origin coffee viral.
+            <p class="muted" style="margin-bottom: 0;">Tight pants next level keffiyeh <a href="#" data-toggle="tooltip" title="Default tooltip">you probably</a> haven't heard of them. Photo booth beard raw denim letterpress vegan messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie sustainable quinoa 8-bit american apparel <a href="#" data-toggle="tooltip" title="Another tooltip">have a</a> terry richardson vinyl chambray. Beard stumptown, cardigans banh mi lomo thundercats. Tofu biodiesel williamsburg marfa, four loko mcsweeney's cleanse vegan chambray. A really ironic artisan <a href="#" data-toggle="tooltip" title="A much longer tooltip belongs right here to demonstrate the max-width we apply.">whatever keytar</a>, scenester farm-to-table banksy Austin <a href="#" data-toggle="tooltip" title="The last tip!">twitter handle</a> freegan cred raw denim single-origin coffee viral.
             </p>
           </div>
 
           <h3>Four directions</h3>
           <div class="bs-docs-example tooltip-demo">
             <ul class="bs-docs-tooltip-examples">
-              <li><a href="#" rel="tooltip" data-placement="top" title="Tooltip on top">Tooltip on top</a></li>
-              <li><a href="#" rel="tooltip" data-placement="right" title="Tooltip on right">Tooltip on right</a></li>
-              <li><a href="#" rel="tooltip" data-placement="bottom" title="Tooltip on bottom">Tooltip on bottom</a></li>
-              <li><a href="#" rel="tooltip" data-placement="left" title="Tooltip on left">Tooltip on left</a></li>
+              <li><a href="#" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Tooltip on top</a></li>
+              <li><a href="#" data-toggle="tooltip" data-placement="right" title="Tooltip on right">Tooltip on right</a></li>
+              <li><a href="#" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">Tooltip on bottom</a></li>
+              <li><a href="#" data-toggle="tooltip" data-placement="left" title="Tooltip on left">Tooltip on left</a></li>
             </ul>
           </div>
 
+
+          <h3>Tooltips in input groups</h3>
+          <p>When using tooltips and popovers with the Bootstrap input groups, you'll have to set the <code>container</code> (documented below) option to avoid unwanted side effects.</p>
 
           <hr class="bs-docs-separator">
 
@@ -804,12 +816,12 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
              <tr>
                <td>html</td>
                <td>boolean</td>
-               <td>true</td>
+               <td>false</td>
                <td>Insert html into the tooltip. If false, jquery's <code>text</code> method will be used to insert content into the dom. Use text if you're worried about XSS attacks.</td>
              </tr>
              <tr>
                <td>placement</td>
-               <td>string|function</td>
+               <td>string | function</td>
                <td>'top'</td>
                <td>how to position the tooltip - top | bottom | left | right</td>
              </tr>
@@ -828,8 +840,8 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
              <tr>
                <td>trigger</td>
                <td>string</td>
-               <td>'hover'</td>
-               <td>how tooltip is triggered - click | hover | focus | manual</td>
+               <td>'hover focus'</td>
+               <td>how tooltip is triggered - click | hover | focus | manual. Note you case pass trigger mutliple, space seperated, trigger types.</td>
              </tr>
              <tr>
                <td>delay</td>
@@ -841,6 +853,14 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
                 <p>Object structure is: <code>delay: { show: 500, hide: 100 }</code></p>
                </td>
              </tr>
+             <tr>
+               <td>container</td>
+               <td>string | false</td>
+               <td>false</td>
+               <td>
+                <p>Appends the tooltip to a specific element <code>container: 'body'</code></p>
+               </td>
+             </tr>
             </tbody>
           </table>
           <div class="alert alert-info">
@@ -849,8 +869,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
           </div>
 
           <h3>Markup</h3>
-          <p>For performance reasons, the Tooltip and Popover data-apis are opt in. If you would like to use them just specify a selector option.</p>
-          <pre class="prettyprint linenums">&lt;a href="#" rel="tooltip" title="first tooltip"&gt;hover over me&lt;/a&gt;</pre>
+          <pre class="prettyprint linenums">&lt;a href="#" data-toggle="tooltip" title="first tooltip"&gt;hover over me&lt;/a&gt;</pre>
 
           <h3>Methods</h3>
           <h4>$().tooltip(options)</h4>
@@ -922,7 +941,17 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
 
         <h3>Live demo</h3>
         <div class="bs-docs-example" style="padding-bottom: 24px;">
-          <a href="#" class="btn btn-large btn-danger" rel="popover" title="A Title" data-content="And here's some amazing content. It's very engaging. right?">Click to toggle popover</a>
+          <a href="#" class="btn btn-large btn-danger" data-toggle="popover" title="A Title" data-content="And here's some amazing content. It's very engaging. right?">Click to toggle popover</a>
+        </div>
+
+        <h4>Four directions</h4>
+        <div class="bs-docs-example tooltip-demo">
+          <ul class="bs-docs-tooltip-examples">
+            <li><a href="#" class="btn" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." title="Popover on top">Popover on top</a></li>
+            <li><a href="#" class="btn" data-toggle="popover" data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." title="Popover on right">Popover on right</a></li>
+            <li><a href="#" class="btn" data-toggle="popover" data-placement="bottom" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." title="Popover on bottom">Popover on bottom</a></li>
+            <li><a href="#" class="btn" data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." title="Popover on left">Popover on left</a></li>
+          </ul>
         </div>
 
 
@@ -954,12 +983,12 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
            <tr>
              <td>html</td>
              <td>boolean</td>
-             <td>true</td>
+             <td>false</td>
              <td>Insert html into the popover. If false, jquery's <code>text</code> method will be used to insert content into the dom. Use text if you're worried about XSS attacks.</td>
            </tr>
            <tr>
              <td>placement</td>
-             <td>string|function</td>
+             <td>string | function</td>
              <td>'right'</td>
              <td>how to position the popover - top | bottom | left | right</td>
            </tr>
@@ -995,6 +1024,14 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
               <p>delay showing and hiding the popover (ms) - does not apply to manual trigger type</p>
               <p>If a number is supplied, delay is applied to both hide/show</p>
               <p>Object structure is: <code>delay: { show: 500, hide: 100 }</code></p>
+             </td>
+           </tr>
+           <tr>
+             <td>container</td>
+             <td>string | false</td>
+             <td>false</td>
+             <td>
+              <p>Appends the popover to a specific element <code>container: 'body'</code></p>
              </td>
            </tr>
           </tbody>
@@ -1035,7 +1072,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
 
 
         <h2>Example alerts</h2>
-        <p>Add dismiss functionality to all alerge messages with this plugin.</p>
+        <p>Add dismiss functionality to all alert messages with this plugin.</p>
         <div class="bs-docs-example">
           <div class="alert fade in">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -1114,7 +1151,7 @@ $('#my-alert').bind('closed', function () {
             <p>Do more with buttons. Control button states or create groups of buttons for more components like toolbars.</p>
 
             <h4>Stateful</h4>
-            <p>Add data-loading-text="Loading..." to use a loading state on a button.</p>
+            <p>Add <code>data-loading-text="Loading..."</code> to use a loading state on a button.</p>
             <div class="bs-docs-example" style="padding-bottom: 24px;">
               <button type="button" id="fat-btn" data-loading-text="loading..." class="btn btn-primary">
                 Loading state
@@ -1123,14 +1160,14 @@ $('#my-alert').bind('closed', function () {
             <pre class="prettyprint linenums">&lt;button type="button" class="btn btn-primary" data-loading-text="Loading..."&gt;Loading state&lt;/button&gt;</pre>
 
             <h4>Single toggle</h4>
-            <p>Add data-toggle="button" to activate toggling on a single button.</p>
+            <p>Add <code>data-toggle="button"</code> to activate toggling on a single button.</p>
             <div class="bs-docs-example" style="padding-bottom: 24px;">
               <button type="button" class="btn btn-primary" data-toggle="button">Single Toggle</button>
             </div>
-            <pre class="prettyprint linenums">&lt;button type="button" class="btn" data-toggle="button"&gt;Single Toggle&lt;/button&gt;</pre>
+            <pre class="prettyprint linenums">&lt;button type="button" class="btn btn-primary" data-toggle="button"&gt;Single Toggle&lt;/button&gt;</pre>
 
             <h4>Checkbox</h4>
-            <p>Add data-toggle="buttons-checkbox" for checkbox style toggling on btn-group.</p>
+            <p>Add <code>data-toggle="buttons-checkbox"</code> for checkbox style toggling on btn-group.</p>
             <div class="bs-docs-example" style="padding-bottom: 24px;">
               <div class="btn-group" data-toggle="buttons-checkbox">
                 <button type="button" class="btn btn-primary">Left</button>
@@ -1140,14 +1177,14 @@ $('#my-alert').bind('closed', function () {
             </div>
 <pre class="prettyprint linenums">
 &lt;div class="btn-group" data-toggle="buttons-checkbox"&gt;
-  &lt;button type="button" class="btn"&gt;Left&lt;/button&gt;
-  &lt;button type="button" class="btn"&gt;Middle&lt;/button&gt;
-  &lt;button type="button" class="btn"&gt;Right&lt;/button&gt;
+  &lt;button type="button" class="btn btn-primary"&gt;Left&lt;/button&gt;
+  &lt;button type="button" class="btn btn-primary"&gt;Middle&lt;/button&gt;
+  &lt;button type="button" class="btn btn-primary"&gt;Right&lt;/button&gt;
 &lt;/div&gt;
 </pre>
 
             <h4>Radio</h4>
-            <p>Add data-toggle="buttons-radio" for radio style toggling on btn-group.</p>
+            <p>Add <code>data-toggle="buttons-radio"</code> for radio style toggling on btn-group.</p>
             <div class="bs-docs-example" style="padding-bottom: 24px;">
               <div class="btn-group" data-toggle="buttons-radio">
                 <button type="button" class="btn btn-primary">Left</button>
@@ -1157,9 +1194,9 @@ $('#my-alert').bind('closed', function () {
             </div>
 <pre class="prettyprint linenums">
 &lt;div class="btn-group" data-toggle="buttons-radio"&gt;
-  &lt;button type="button" class="btn"&gt;Left&lt;/button&gt;
-  &lt;button type="button" class="btn"&gt;Middle&lt;/button&gt;
-  &lt;button type="button" class="btn"&gt;Right&lt;/button&gt;
+  &lt;button type="button" class="btn btn-primary"&gt;Left&lt;/button&gt;
+  &lt;button type="button" class="btn btn-primary"&gt;Middle&lt;/button&gt;
+  &lt;button type="button" class="btn btn-primary"&gt;Right&lt;/button&gt;
 &lt;/div&gt;
 </pre>
 
@@ -1260,6 +1297,36 @@ $('#my-alert').bind('closed', function () {
                 </div>
               </div>
             </div>
+<pre class="prettyprint linenums">
+&lt;div class="accordion" id="accordion2"&gt;
+  &lt;div class="accordion-group"&gt;
+    &lt;div class="accordion-heading"&gt;
+      &lt;a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne"&gt;
+        Collapsible Group Item #1
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div id="collapseOne" class="accordion-body collapse in"&gt;
+      &lt;div class="accordion-inner"&gt;
+        Anim pariatur cliche...
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="accordion-group"&gt;
+    &lt;div class="accordion-heading"&gt;
+      &lt;a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo"&gt;
+        Collapsible Group Item #2
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div id="collapseTwo" class="accordion-body collapse"&gt;
+      &lt;div class="accordion-inner"&gt;
+        Anim pariatur cliche...
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+...
+</pre>
+            <p>You can also use the plugin without the accordion markup. Make a button toggle the expanding and collapsing of another element.</p>
 <pre class="prettyprint linenums">
 &lt;button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#demo"&gt;
   simple collapsible
@@ -1374,6 +1441,11 @@ $('#myCollapsible').on('hidden', function () {
             <p>The slideshow below shows a generic plugin and component for cycling through elements like a carousel.</p>
             <div class="bs-docs-example">
               <div id="myCarousel" class="carousel slide">
+                <ol class="carousel-indicators">
+                  <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                  <li data-target="#myCarousel" data-slide-to="1"></li>
+                  <li data-target="#myCarousel" data-slide-to="2"></li>
+                </ol>
                 <div class="carousel-inner">
                   <div class="item active">
                     <img src="assets/img/bootstrap-mdo-sfmoma-01.jpg" alt="">
@@ -1403,6 +1475,11 @@ $('#myCollapsible').on('hidden', function () {
             </div>
 <pre class="prettyprint linenums">
 &lt;div id="myCarousel" class="carousel slide"&gt;
+  &lt;ol class="carousel-indicators"&gt
+    &lt;li data-target="#myCarousel" data-slide-to="0" class="active"&gt&lt;/li&gt
+    &lt;li data-target="#myCarousel" data-slide-to="1"&gt&lt;/li&gt
+    &lt;li data-target="#myCarousel" data-slide-to="2"&gt&lt;/li&gt
+  &lt;/ol&gt
   &lt;!-- Carousel items --&gt;
   &lt;div class="carousel-inner"&gt;
     &lt;div class="active item"&gt;…&lt;/div&gt;
@@ -1427,14 +1504,14 @@ $('#myCollapsible').on('hidden', function () {
             <h2>Usage</h2>
 
             <h3>Via data attributes</h3>
-            <p>...</p>
+            <p>Use data attributes to easily control the position of the carousel. <code>data-slide</code> accepts the keywords <code>prev</code> or <code>next</code>, which alters the slide position relative to it's current position. Alternatively, use <code>data-slide-to</code> to pass a raw slide index to the carousel <code>data-slide-to="2"</code>, which jump's the slide position to a particular index beginning with <code>0</code>.</p>
 
             <h3>Via JavaScript</h3>
             <p>Call carousel manually with:</p>
             <pre class="prettyprint linenums">$('.carousel').carousel()</pre>
 
             <h3>Options</h3>
-            <p>Options can be passed via data attributes or JavaScript. For data attributes, append the option name to <code>data-</code>, as in <code>data-interval=""</code>.</p>
+            <p>Options can be passed via data attributes or JavaScriptz. For data attributes, append the option name to <code>data-</code>, as in <code>data-interval=""</code>.</p>
             <table class="table table-bordered table-striped">
               <thead>
                <tr>
@@ -1517,7 +1594,7 @@ $('.carousel').carousel({
               <input type="text" class="span3" style="margin: 0 auto;" data-provide="typeahead" data-items="4" data-source='["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]'>
             </div>
             <pre class="prettyprint linenums">&lt;input type="text" data-provide="typeahead"&gt;</pre>
-
+            <p>You'll want to set <code>autocomplete="off"</code> to prevent default browser menus from appearing over the Bootstrap typeahead dropdown.</p>
 
             <hr class="bs-docs-separator">
 
@@ -1574,6 +1651,12 @@ $('.carousel').carousel({
                  <td>Method used to sort autocomplete results. Accepts a single argument <code>items</code> and has the scope of the typeahead instance. Reference the current query with <code>this.query</code>.</td>
                </tr>
                <tr>
+                 <td>updater</td>
+                 <td>function</td>
+                 <td>returns selected item</td>
+                 <td>The method used to return selected item. Accepts a single argument, the <code>item</code> and has the scope of the typeahead instance.</td>
+               </tr>
+               <tr>
                  <td>highlighter</td>
                  <td>function</td>
                  <td>highlights all default matches</td>
@@ -1606,25 +1689,17 @@ $('.carousel').carousel({
             <h3>Via data attributes</h3>
             <p>To easily add affix behavior to any element, just add <code>data-spy="affix"</code> to the element you want to spy on. Then use offsets to define when to toggle the pinning of an element on and off.</p>
 
-            <pre class="prettyprint linenums">&lt;div data-spy="affix" data-offset-top="200"&gt;...&lt;/body&gt;</pre>
+            <pre class="prettyprint linenums">&lt;div data-spy="affix" data-offset-top="200"&gt;...&lt;/div&gt;</pre>
 
             <div class="alert alert-info">
               <strong>Heads up!</strong>
-              It's up to you to manage the position of a pinned element. This is done by styling <code>affix</code>, <code>affix-top</code>, and <code>affix-bottom</code>.
+              You must manage the position of a pinned element and the behavior of its immediate parent. Position is controlled by <code>affix</code>, <code>affix-top</code>, and <code>affix-bottom</code>. Remember to check for a potentially collapsed parent when the affix kicks in as it's removing content from the normal flow of the page.
             </div>
 
             <h3>Via JavaScript</h3>
             <p>Call the affix plugin via JavaScript:</p>
             <pre class="prettyprint linenums">$('#navbar').affix()</pre>
 
-            <h3>Methods</h3>
-            <h4>.affix('refresh')</h4>
-            <p>When using affix in conjunction with adding or removing of elements from the DOM, you'll want to call the refresh method:</p>
-<pre class="prettyprint linenums">
-$('[data-spy="affix"]').each(function () {
-  $(this).affix('refresh')
-});
-</pre>
           <h3>Options</h3>
           <p>Options can be passed via data attributes or JavaScript. For data attributes, append the option name to <code>data-</code>, as in <code>data-offset-top="200"</code>.</p>
           <table class="table table-bordered table-striped">
@@ -1641,7 +1716,7 @@ $('[data-spy="affix"]').each(function () {
                <td>offset</td>
                <td>number | function | object</td>
                <td>10</td>
-               <td>Pixels to offset from screen when calculating position of scroll. If a single number is provide, the offset will be applied in both top and left directions. To listen for a single direction, or multiple unique offsets, just provided an object <code>offset: { x: 10 }</code>. Use a function when you need to dynamically provide an offset (useful for some responsive designs).</td>
+               <td>Pixels to offset from screen when calculating position of scroll. If a single number is provided, the offset will be applied in both top and left directions. To listen for a single direction, or multiple unique offsets, just provide an object <code>offset: { x: 10 }</code>. Use a function when you need to dynamically provide an offset (useful for some responsive designs).</td>
              </tr>
             </tbody>
           </table>
@@ -1660,14 +1735,15 @@ $('[data-spy="affix"]').each(function () {
     ================================================== -->
     <footer class="footer">
       <div class="container">
-        <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>Designed and built with all the love in the world <a href="http://twitter.com/twitter" target="_blank">@twitter</a> by <a href="http://twitter.com/mdo" target="_blank">@mdo</a> and <a href="http://twitter.com/fat" target="_blank">@fat</a>.</p>
-        <p>Code licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
-        <p>Icons from <a href="http://glyphicons.com">Glyphicons Free</a>, licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+        <p>Designed and built with all the love in the world by <a href="http://twitter.com/mdo" target="_blank">@mdo</a> and <a href="http://twitter.com/fat" target="_blank">@fat</a>.</p>
+        <p>Code licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, documentation under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+        <p><a href="http://glyphicons.com">Glyphicons Free</a> licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
         <ul class="footer-links">
-          <li><a href="http://blog.getbootstrap.com">Read the blog</a></li>
-          <li><a href="https://github.com/twitter/bootstrap/issues?state=open">Submit issues</a></li>
-          <li><a href="https://github.com/twitter/bootstrap/wiki">Roadmap and changelog</a></li>
+          <li><a href="http://blog.getbootstrap.com">Blog</a></li>
+          <li class="muted">&middot;</li>
+          <li><a href="https://github.com/twitter/bootstrap/issues?state=open">Issues</a></li>
+          <li class="muted">&middot;</li>
+          <li><a href="https://github.com/twitter/bootstrap/blob/master/CHANGELOG.md">Changelog</a></li>
         </ul>
       </div>
     </footer>
@@ -1679,7 +1755,6 @@ $('[data-spy="affix"]').each(function () {
     <!-- Placed at the end of the document so the pages load faster -->
     <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
     <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/google-code-prettify/prettify.js"></script>
     <script src="assets/js/bootstrap-transition.js"></script>
     <script src="assets/js/bootstrap-alert.js"></script>
     <script src="assets/js/bootstrap-modal.js"></script>
@@ -1693,6 +1768,10 @@ $('[data-spy="affix"]').each(function () {
     <script src="assets/js/bootstrap-carousel.js"></script>
     <script src="assets/js/bootstrap-typeahead.js"></script>
     <script src="assets/js/bootstrap-affix.js"></script>
+
+    <script src="assets/js/holder/holder.js"></script>
+    <script src="assets/js/google-code-prettify/prettify.js"></script>
+
     <script src="assets/js/application.js"></script>
 
 
