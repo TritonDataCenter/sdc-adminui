@@ -42,19 +42,13 @@ var ServerView = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function(options) {
-        this.model = options.server || new Server();
-
-        if (options.uuid) {
-            this.model.set({
-                uuid: options.uuid
-            });
-            this.model.fetch();
-        }
+        this.model = options.server || new Server({uuid: options.uuid});
 
         this.nics = new Nics({
             belongs_to_type: 'server',
             belongs_to_uuid: this.model.get('uuid')
         });
+        this.model.fetch();
         this.nics.fetchNics();
     },
 

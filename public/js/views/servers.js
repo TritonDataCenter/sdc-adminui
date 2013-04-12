@@ -1,4 +1,6 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
+var moment = require('moment');
 
 
 /**
@@ -24,10 +26,13 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
     },
     templateHelpers: {
         running: function() {
-            return this.status == 'running';
+            return this.status === 'running';
         },
         not_setup: function() {
-            return this.setup == 'false';
+            return this.setup === 'false';
+        },
+        when_boot: function() {
+            return moment(this.last_boot).fromNow();
         },
         memory_percent: function() {
             var free = (this.memory_total_bytes-this.memory_available_bytes);

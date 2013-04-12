@@ -18,12 +18,10 @@
   <span class="uuid">{{uuid}}</span>
 </td>
 <td class="memory">
-  {{#if memory_total_bytes}}
-  <span class="percent">{{memory_percent}} %</span>
-
-  <span class="breakdown">{{memory_available_mb}} / {{memory_total_mb}} MB</span>
-
-  {{/if}}
+  <span class="percent">{{ram}} MB</span>
+</td>
+<td class="when-boot">
+  {{when_boot}}
 </td>
 <td>
   {{#if not_setup}}
