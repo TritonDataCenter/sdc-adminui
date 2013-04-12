@@ -7,11 +7,9 @@ Backbone.$ = require('jquery');
 require('backbone.stickit');
 require('backbone.marionette');
 
-// require('jquery-migrate');
 require('jquery.serializeObject');
 require('bootstrap');
 require('typeahead');
-// require('kevinykchan-bootstrap-typeahead');
 
 var Pinger = require('./ping');
 
