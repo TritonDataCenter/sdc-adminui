@@ -65,10 +65,6 @@ var UserView = Backbone.Marionette.ItemView.extend({
             this.model = new User({uuid: options.uuid });
         }
 
-        this.model.fetch();
-
-        this.listenTo(this.model, 'sync', this.render, this);
-
         this.vms = new Vms({params: { owner_uuid: this.model.get('uuid') }});
         this.vms.fetch();
 
@@ -77,23 +73,30 @@ var UserView = Backbone.Marionette.ItemView.extend({
 
         this.vmsList = new VmsList({collection: this.vms });
         this.sshkeysList = new SSHKeysList({collection: this.sshkeys });
+
+        this.model.fetch();
     },
 
     onRender: function() {
         this.vmsList.setElement(this.$('.vms-list tbody')).render();
         this.sshkeysList.setElement(this.$('.ssh-keys tbody')).render();
 
-        var viewModel = kb.viewModel(
-        this.model, {
-            keys: ['company','uuid', 'cn', 'sn', 'email', 'login', 'memberof', 'member']
+        this.stickit(this.model, {
+            '.cn': 'cn',
+            '.uuid': 'uuid',
+            '.login': 'login',
+            '.email': 'email',
+            '.company': 'company',
+            '.groups': {
+                observe: 'memberof',
+                onGet: function(value) {
+                    return _.map(value, function(dn) {
+                        var p = dn.match(/^cn=(\w+)/);
+                        return p[1];
+                    }).join(' ');
+                }
+            }
         });
-
-        viewModel.member = ko.computed(function() {
-            var mb = viewModel.memberof() || [];
-            return mb.join(',');
-        }, this);
-
-        kb.applyBindings(viewModel, this.el);
     }
 });
 

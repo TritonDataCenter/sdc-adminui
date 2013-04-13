@@ -1,26 +1,30 @@
 <div class="page-header">
   <h1>
-    <span data-bind="text: cn"></span>
-    <small class="uuid" data-bind="text: uuid"></small>
+    <span class="cn"></span>
+    <small class="uuid"></small>
 
-      <div class="actions">
-        <button class="edit-user btn"> <i class="icon-pencil"></i> Modify User Details</button>
-      </div>
+    <div class="actions">
+      <button class="edit-user btn"> <i class="icon-pencil"></i> Modify User Details</button>
+    </div>
   </h1>
 </div>
 
 <table class="table">
   <tr>
     <th>Login</th>
-    <td><span data-bind="text: login"></span></td>
+    <td><span class="login"></span></td>
   </tr>
   <tr>
     <th>Email</th>
-    <td><span data-bind="text: email"></span></td>
+    <td><span class="email"></span></td>
   </tr>
   <tr>
     <th>Company</th>
-    <td><span data-bind="text: company"></span></td>
+    <td><span class="company"></span></td>
+  </tr>
+  <tr>
+    <th>Groups</th>
+    <td><span class="groups"></span></td>
   </tr>
 </table>
 
@@ -37,8 +41,8 @@
     <tbody></tbody>
     <tfoot>
       <td colspan="3"><button class="btn add-key">
-        <i class="icon-plus-sign"></i>
-        Add Key</button></td>
+        <i class="icon-plus-sign"></i> Add Key</button>
+      </td>
     </tfoot>
   </table>
 </div>
