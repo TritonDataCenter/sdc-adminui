@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 
 
@@ -40,7 +41,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         '[name=phone]': 'phone',
         '[name=password]': 'password',
         '[name=last_name]': 'sn',
-        '[name=first_name]': 'givenName'
+        '[name=first_name]': 'givenname'
     },
 
     updateCommonName: function(e) {
