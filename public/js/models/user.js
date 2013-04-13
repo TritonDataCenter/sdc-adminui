@@ -3,6 +3,7 @@
  */
 
 var Backbone = require('backbone');
+var _ = require('underscore');
 var Model = require('./model');
 
 
@@ -12,7 +13,22 @@ var User = module.exports = Model.extend({
         token: null
     },
     idAttribute: 'uuid',
+
     urlRoot: "/_/users",
+
+    parse: function(resp) {
+        var data = Model.prototype.parse.apply(this, arguments);
+        data.groups = this.parseGroups(data.memberof);
+        console.log(data);
+        return data;
+    },
+
+    parseGroups: function(memberof) {
+        return _.map(memberof, function(dn) {
+            var p = dn.match(/^cn=(\w+)/);
+            return p[1];
+        });
+    },
 
     authenticated: function() {
         return window.sessionStorage.getItem('api-token') !== null;

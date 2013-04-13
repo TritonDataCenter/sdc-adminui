@@ -87,15 +87,7 @@ var UserView = Backbone.Marionette.ItemView.extend({
             '.login': 'login',
             '.email': 'email',
             '.company': 'company',
-            '.groups': {
-                observe: 'memberof',
-                onGet: function(value) {
-                    return _.map(value, function(dn) {
-                        var p = dn.match(/^cn=(\w+)/);
-                        return p[1];
-                    }).join(' ');
-                }
-            }
+            '.groups': 'groups'
         });
     }
 });
