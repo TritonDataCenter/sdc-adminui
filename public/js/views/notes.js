@@ -12,14 +12,7 @@ var NotesItemView = Backbone.Marionette.ItemView.extend({
         this.user = new User({uuid: this.model.get('owner_uuid')});
         this.user.fetch();
     },
-    userBindings: {
-        '.author': {
-            observe: ['cn', 'sn'],
-            onGet: function(values) {
-                return values.join(' ');
-            }
-        }
-    },
+    userBindings: {'.author': 'cn'},
     noteBindings: {
         '.note': 'note',
         '.date': {

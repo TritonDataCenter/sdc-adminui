@@ -1,15 +1,27 @@
 .typeahead-user {
-    .login { font-weight: bold; }
-    .uuid { font-size: 10px; color: @gray;}
-    &.tt-is-under-cursor {
-        .uuid { color: #FFF; }
-    }
-    .email { font-size: 12px; }
+  width: 240px;
+  .login { font-weight: bold; }
+  .uuid { font-size: 10px; color: @gray;}
+  &.tt-is-under-cursor {
+    .uuid { color: #FFF; }
+  }
+  .email { font-size: 12px; }
 }
 .typeahead-server {
-    .hostname { font-weight: bold;}
-    .uuid { font-size: 10px; color: @gray;}
-    &.tt-is-under-cursor {
-        .uuid { color: #FFF; }
-    }
+  width: 240px;
+  .hostname { font-weight: bold;}
+  .uuid { font-size: 10px; color: @gray;}
+  &.tt-is-under-cursor {
+    .uuid { color: #FFF; }
+  }
+}
+.typeahead-image {
+  width: 240px;
+  .name { font-weight: bold;}
+  .version { color: @gray; font-size: 11px; }
+  .uuid { font-size: 10px; color: @gray;}
+  &.tt-is-under-cursor {
+    .uuid { color: #FFF; }
+    .version { color: #fff; }
+  }
 }

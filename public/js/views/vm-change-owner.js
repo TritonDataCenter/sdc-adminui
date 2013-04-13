@@ -5,6 +5,7 @@ var app = require('../adminui');
 var UserInput = require('./typeahead-user');
 
 var View = Backbone.Marionette.ItemView.extend({
+    id: 'vm-change-owner',
     attributes: {
         'class': 'modal'
     },
