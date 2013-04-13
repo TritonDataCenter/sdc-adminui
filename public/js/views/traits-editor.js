@@ -9,7 +9,7 @@ var View = Backbone.Marionette.ItemView.extend({
         'id': 'traits-editor'
     },
     events: {
-        'blur textarea': 'checkSyntax',
+        'input textarea': 'checkSyntax',
         'click .btn-primary': 'onClickSave'
     },
     initialize: function(options) {
@@ -31,7 +31,7 @@ var View = Backbone.Marionette.ItemView.extend({
         }
     },
     onClickSave: function() {
-        var trait = null;
+        var traits;
         try {
             traits = JSON.parse(this.$('textarea').val());
         } catch (e) {
