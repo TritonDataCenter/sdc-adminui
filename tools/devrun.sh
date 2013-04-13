@@ -7,5 +7,5 @@ echo "***** Starting adminui server on port $port"
 node-dev server.js NODE=$(which node) | bunyan &
 
 while true; do
-	: # Do nothing
+  sleep 10
 done

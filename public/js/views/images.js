@@ -1,7 +1,6 @@
 var Backbone = require('backbone');
 
 
-
 var moment = require('moment');
 var Images = require('../models/images');
 var app = require('../adminui');
@@ -23,13 +22,13 @@ var ImageRow = Backbone.Marionette.ItemView.extend({
             return d.format("MMM D, YYYY");
         },
         active: function() {
-            return this.state == 'active';
+            return this.state === 'active';
         },
         unactivated: function() {
-            return this.state == 'unactivated';
+            return this.state === 'unactivated';
         },
         disabled: function() {
-            return this.state == 'disabled';
+            return this.state === 'disabled';
         }
     }
 });
@@ -56,7 +55,7 @@ var ImagesView = Backbone.Marionette.CompositeView.extend({
     onClickImportImage: function() {
         app.vent.trigger('showview', 'image-import');
     }
-  });
+});
 
 module.exports = ImagesView;
 

@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 
 var adminui = require('../adminui');
@@ -35,10 +36,6 @@ var ImageView = Backbone.Marionette.ItemView.extend({
 
         'unactivated': function() {
             return this.state === 'unactivated';
-        },
-
-        'activatable': function() {
-            return this.state !== 'active';
         },
 
 
@@ -138,7 +135,6 @@ var ImageView = Backbone.Marionette.ItemView.extend({
     onClickEnable: function(e) {
         e.preventDefault();
         var self = this;
-        alert('blocked on imgapi.enableImage'); //XXX
         this.model.enable(function() {
             self.model.fetch();
         });

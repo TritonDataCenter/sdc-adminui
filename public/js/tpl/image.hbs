@@ -2,7 +2,7 @@
   <h1>
     <span class="name">{{name}}</span> <span class="version">{{version}}</span>
     <div class="resource-status">
-      Status: 
+      Status:
       {{#if active}}
       <span class="active">active</span>
       {{/if}}
@@ -15,15 +15,15 @@
 
   <div class="actions">
     {{#if enableable}}
-    <a class="btn enable">Enable</a>
+    <a class="btn btn-info enable"><i class="icon-ok-sign icon-white"></i> Enable Image</a>
     {{/if}}
 
-    {{#if activatable}}
-    <a class="btn activate btn-info">Activate</a>
+    {{#if unactivated}}
+    <a class="btn activate btn-primary"><i class="icon-ok-sign icon-white"></i> Activate Image</a>
     {{/if}}
 
     {{#if disableable}}
-    <a class="btn disable btn-danger">Disable</a>
+    <a class="btn disable btn-danger"><i class="icon-remove-sign icon-white"></i> Disable Image</a>
     {{/if}}
   </div>
 </div>
@@ -102,7 +102,7 @@
     {{/if}}
   </ul>
 
-  <h3>Files 
+  <h3>Files
     {{#if unactivated}}
     <a class="show-upload-form">Upload a new file</a>
     {{/if}}
