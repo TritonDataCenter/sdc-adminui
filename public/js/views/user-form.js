@@ -22,7 +22,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     events: {
         'input input[name=first_name]': 'updateCommonName',
         'input input[name=last_name]': 'updateCommonName',
-        'submit form': 'save'
+        'submit': 'save'
     },
     bindings: {
         '.action': {
