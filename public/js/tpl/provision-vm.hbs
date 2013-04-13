@@ -1,47 +1,46 @@
 <div class="page" id="page-provision">
-	<div class="page-header">
-		<h1>Provision a Virtual Machine</h1>
-	</div>
+  <div class="page-header">
+    <h1>Provision a Virtual Machine</h1>
+  </div>
 
-	<form class="form-horizontal span12">
-		<div class="alert alert-block alert-error">
-			<strong>OH SNAP!</strong> <span class="message"></span>
-		</div>
+  <form class="form-horizontal span12">
+    <div class="alert alert-block alert-error">
+      <strong>OH SNAP!</strong> <span class="message"></span>
+    </div>
 
-		<fieldset>
-			<div class="control-group">
-				<label class="control-label" for="input-owner">Owner</label>
-				<div class="controls">
-					<input id="input-owner" type="text" placeholder="enter a username" class="input-xlarge" name="owner">
-					<p class="help-inline">Required</p>
-				</div>
-			</div>
+      <div class="control-group">
+        <label class="control-label" for="input-owner">Owner</label>
+        <div class="controls">
+          <input id="input-owner" type="text" placeholder="enter a username" class="input-xlarge" name="owner">
+          <span class="help-inline">Required</span>
+        </div>
+      </div>
 
-			<div class="control-group">
-				<label class="control-label" for="input-alias">Alias</label>
-				<div class="controls">
-					<input id="input-alias" name="alias"
-					placeholder="name as it appears to the customer"
-					type="text" class="input-xlarge">
-					<span class="help-inline">Optional</span>
-				</div>
-			</div>
+      <div class="control-group">
+        <label class="control-label" for="input-alias">Alias</label>
+        <div class="controls">
+          <input id="input-alias" name="alias"
+          placeholder="name as it appears to the customer"
+          type="text" class="input-xlarge">
+          <span class="help-inline">Optional</span>
+        </div>
+      </div>
 
-			<div class="control-group">
-				<label class="control-label">Package</label>
-				<div class="controls">
-					<select name="package"></select>
-				</div>
+      <div class="control-group">
+        <label class="control-label">Package</label>
+        <div class="controls">
+          <select name="package"></select>
+        </div>
 
-				<div class="package-preview-container"></div>
-			</div>
+        <div class="package-preview-container"></div>
+      </div>
 
       <div class="control-group">
         <label class="control-label">Image</label>
         <div class="controls">
           <input id="input-image" type="text" placeholder="enter UUID or search image by name" class="input-xlarge" name="image">
-          <p class="help-inline">Required</p>
-          <p class="help-block">Image to provision machine with</p>
+          <span class="help-inline">Required</span>
+          <span class="help-block">Image to provision machine with</span>
         </div>
       </div>
 
@@ -49,8 +48,8 @@
         <label class="control-label">Server</label>
         <div class="controls">
           <input id="input-server" type="text" placeholder="enter UUID or search by hostname" class="input-xlarge" name="server">
-          <p class="help-inline">Optional</p>
-          <p class="help-block">Server to provision machine to</p>
+          <span class="help-inline">Optional</span>
+          <span class="help-block">Server to provision machine to</span>
         </div>
       </div>
 
@@ -58,7 +57,7 @@
         <label class="control-label">Networks</label>
         <div class="network-checkboxes controls">
           <label class="checkbox"><input type="checkbox" name="networks[]" /><span class="name">My Network<span></label>
-          <p class="help-block">Must select at least one network</p>
+          <span class="help-block">Must select at least one network</span>
         </div>
       </div>
 
@@ -79,6 +78,5 @@
 
     </div>
 
-  </fieldset>
 </form>
 </div>

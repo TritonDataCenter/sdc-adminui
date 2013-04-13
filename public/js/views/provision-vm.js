@@ -100,10 +100,7 @@ var View = Backbone.Marionette.ItemView.extend({
 
         this.listenTo(this.imagesCollection, 'sync', this.prepareImageInput);
         this.listenTo(this.serversCollection, 'sync', this.prepareServerInput);
-
-        this.networks.on('reset', function(networks) {
-            this.populateNetworks(networks);
-        }, this);
+        this.listenTo(this.networks, 'sync', this.populateNetworks);
 
         this.imagesCollection.fetch();
         this.networks.fetch();
