@@ -23,6 +23,10 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
 var JobsTemplate = require('../tpl/jobs.hbs');
 
 var JobsItemEmptyView = Backbone.Marionette.ItemView.extend({
+    tagName: 'td',
+    attributes: {
+        'colspan':'4'
+    },
     template: '<div class="well">There are no jobs to show.</div>'
 });
 

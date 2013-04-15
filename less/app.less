@@ -963,13 +963,15 @@ ul.attributes {
 
 #page-jobs {
   table {
+    .name { width: 300px;}
     .execution {
+      width: 100px;
       text-transform: uppercase;
       font-weight: bold;
       font-size: 13px;
-      &.succeeded { color: @successText; }
-      &.canceled { color: #762cff; }
-      &.failed { color: @errorText; }
+      &.succeeded { color: @green; }
+      &.canceled { color: @gray; }
+      &.failed { color: @red; }
     }
   }
 }
