@@ -10,7 +10,6 @@
 
 var Backbone = require('backbone');
 
-var adminui = require('../adminui');
 var Topbar = require('./topbar');
 var Mainnav = require('./mainnav');
 var JobProgressView = require('./job-progress');
@@ -30,12 +29,13 @@ var AppView = Backbone.Marionette.Layout.extend({
     initialize: function(options) {
         this.options = options || {};
         this.user = options.user;
+        this.vent = options.vent;
 
         this.topbarView = new Topbar({ user: this.user });
         this.mainnavView = new Mainnav();
 
-        this.listenTo(adminui.vent, 'error', this.onError, this);
-        this.listenTo(adminui.vent, 'showjob', this.onShowjob, this);
+        this.listenTo(this.vent, 'error', this.onError, this);
+        this.listenTo(this.vent, 'showjob', this.onShowjob, this);
     },
 
     onError: function(err) {
