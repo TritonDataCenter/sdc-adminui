@@ -17,11 +17,12 @@
   <a>{{hostname}}</a>
   <span class="uuid">{{uuid}}</span>
 </td>
-<td class="memory">
-  <span class="percent">{{ram}} MB</span>
+<td class="last-status">
+  <div class="last-boot"><i class="icon-off"></i> {{last_boot}}</div>
+  <div class="last-heartbeat"><i class="icon-heart"></i> {{last_heartbeat}}</div>
 </td>
-<td class="when-boot">
-  {{when_boot}}
+<td class="memory">
+  <span class="ram">{{ram}} MB</span>
 </td>
 <td>
   {{#if not_setup}}

@@ -17,13 +17,14 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
 
     events: {
-        'click td':'navigateToServerDetails',
+        'click td.name a':'navigateToServerDetails',
         'click button.setup':'setupServer'
     },
 
     url: function() {
         return 'servers';
     },
+
     templateHelpers: {
         running: function() {
             return this.status === 'running';
@@ -31,12 +32,11 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
         not_setup: function() {
             return this.setup === 'false';
         },
-        when_boot: function() {
+        last_boot: function() {
             return moment(this.last_boot).fromNow();
         },
-        memory_percent: function() {
-            var free = (this.memory_total_bytes-this.memory_available_bytes);
-            return _.str.sprintf("%0.1f", free / this.memory_total_bytes * 100);
+        last_heartbeat: function() {
+            return moment(this.last_heartbeat).fromNow();
         },
         'memory_available_mb': function() {
             return _.str.sprintf("%0.1f", this.memory_available_bytes/1024/1024);
@@ -58,6 +58,18 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
 
     navigateToServerDetails: function() {
         adminui.vent.trigger('showview', 'server', { server:this.model });
+    },
+    onRender: function() {
+        this.$(".last-boot").tooltip({
+            title: 'Last booted on',
+            placement: 'top',
+            container: 'body'
+        });
+        this.$(".last-heartbeat").tooltip({
+            title: 'Last seen heartbeat',
+            placement: 'bottom',
+            container: 'body'
+        });
     }
 });
 
