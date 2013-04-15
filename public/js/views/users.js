@@ -68,9 +68,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     query: function(params) {
         this.$('.alert').hide();
-        this.users.fetch({
-            data: params
-        });
+        this.users.fetch({ data: params });
     },
 
     onError: function(model, xhr) {
