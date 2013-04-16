@@ -5,10 +5,18 @@ var Users = require('../models/users');
 var UserTypeaheadTemplate = require('../tpl/typeahead-user.hbs');
 
 var UserTypeaheadView = Backbone.Marionette.ItemView.extend({
+    events: {
+        'typeahead:selected': 'onSelect'
+    },
     initialize: function(options) {
-        this.model = new Users();
-        this.listenTo(this.model, 'sync', this.onUpdate, this);
-        this.model.fetch();
+        options = options || {};
+        this.collection = options.collection || new Users();
+        this.listenTo(this.collection, 'sync', this.onUpdate, this);
+        this.collection.fetch();
+    },
+    onSelect: function(e, datum) {
+        var user = this.collection.get(datum.uuid);
+        this.trigger('selected', user);
     },
     onUpdate: function(users) {
         var source = users.map(function(u) {

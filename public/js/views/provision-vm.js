@@ -64,7 +64,8 @@ var View = Backbone.Marionette.ItemView.extend({
 
     events: {
         'submit form': 'provision',
-        'change input': 'checkFields'
+        'blur input[type=text]': 'checkFields',
+        'change input[type=checkbox]': 'checkFields'
     },
 
     modelEvents: {
@@ -103,7 +104,6 @@ var View = Backbone.Marionette.ItemView.extend({
         this.listenTo(this.networks, 'sync', this.populateNetworks);
 
         this.imagesCollection.fetch();
-        this.networks.fetch();
         this.serversCollection.fetch();
         this.packages.fetchActive();
     },
@@ -141,10 +141,21 @@ var View = Backbone.Marionette.ItemView.extend({
             template: ServerTypeaheadView
         });
     },
+
+    onSelectUser: function(u) {
+        if (this.networks.length) {
+            this.networks.reset();
+        }
+        this.networks.fetch({data: {owner_uuid: 'null' }}, {remove: false});
+        this.networks.fetch({data: {owner_uuid: u.get('uuid')}}, {remove: false});
+    },
+
     onRender: function() {
         this.userInput = new TypeaheadUser({el: this.$('[name=owner]') });
+        this.listenTo(this.userInput, 'selected', this.onSelectUser);
 
         this.packageSelect.setElement(this.$('select[name=package]')).render();
+        this.$('.control-group-networks').hide();
         this.$('.package-preview-container').append(this.packagePreview.render().el);
 
         this.hideError();
@@ -163,6 +174,8 @@ var View = Backbone.Marionette.ItemView.extend({
             elm.find('input').val(n.get('uuid'));
             elm.clone().prependTo(container);
         }, this);
+
+        this.$('.control-group-networks').show();
     },
 
 
@@ -211,6 +224,7 @@ var View = Backbone.Marionette.ItemView.extend({
                 this.$('.control-group-brand option[value=kvm]').attr('disabled', true);
             } else {
                 this.$('.control-group-brand option[value=kvm]').removeAttr('disabled');
+                this.$('.control-group-brand').show();
             }
         } else {
             this.$('.control-group-brand').hide();

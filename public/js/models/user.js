@@ -19,7 +19,6 @@ var User = module.exports = Model.extend({
     parse: function(resp) {
         var data = Model.prototype.parse.apply(this, arguments);
         data.groups = this.parseGroups(data.memberof);
-        console.log(data);
         return data;
     },
 
