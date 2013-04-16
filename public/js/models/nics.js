@@ -9,11 +9,11 @@ var Nics = Backbone.Collection.extend({
         this.belongs_to_uuid = options.belongs_to_uuid;
     },
     mergeSysinfo: function(sysinfo) {
-        _mergeSysinfo(sysinfo['Network Interfaces'], this);
-        _mergeSysinfo(sysinfo['Virtual Network Interfaces'], this);
+        _mergeSysinfo(sysinfo['Network Interfaces'], this, 'nic');
+        _mergeSysinfo(sysinfo['Virtual Network Interfaces'], this, 'vnic');
         return this;
 
-        function _mergeSysinfo(snics, nics) {
+        function _mergeSysinfo(snics, nics, kind) {
             _.each(snics, function(n, nicName) {
                 var mac = n['MAC Address'];
                 var nic = nics.findWhere({'mac': mac});
@@ -25,6 +25,7 @@ var Nics = Backbone.Collection.extend({
                 if (nic['Host Interface']) {
                     params.host_interface = nic['Host Interface'];
                 }
+                params.kind = kind;
 
                 nic.set(params);
             });

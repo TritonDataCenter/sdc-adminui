@@ -3,6 +3,7 @@ _.str = require('underscore.string');
 
 var Backbone = require('backbone');
 Backbone.$ = require('jquery');
+require('jquery.chosen');
 
 require('backbone.stickit');
 require('backbone.marionette');

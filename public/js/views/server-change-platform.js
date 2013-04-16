@@ -5,7 +5,7 @@ var Platforms = require('../models/platforms');
 var Platform = Backbone.Model.extend({});
 var ViewModel = Backbone.Model.extend({});
 var ChangePlatformTemplate = function() {
-    return '<select class="input"></select><button class="btn btn-primary save">Save</button><button class="btn cancel">Cancel</button>';
+    return '<select class="input chosen chosen-mini" data-placeholder-text="Choose Platform"></select><button class="btn btn-primary save">Save</button><button class="btn cancel">Cancel</button>';
 };
 var ChangePlatformForm = Backbone.Marionette.ItemView.extend({
     attributes: {
@@ -42,6 +42,9 @@ var ChangePlatformForm = Backbone.Marionette.ItemView.extend({
         this.stickit(this.viewModel, {
             'select': {
                 observe: 'platform',
+                initialize: function($el, model, options) {
+                    $el.chosen();
+                },
                 selectOptions: {
                     collection: 'this.platforms',
                     labelPath: 'version',

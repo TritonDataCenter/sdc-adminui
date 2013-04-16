@@ -29,12 +29,18 @@ var Server = Backbone.Model.extend({
     },
 
     updateNics: function(data, callback) {
-        $.post(this.url() + '?action=update-nics', data, function(res) {
-            console.log(res);
-            var job = new Job({
-                uuid: res.job_uuid
-            });
-            callback(job);
+        $.ajax({
+            url: this.url() + '?action=update-nics',
+            type: "POST",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(res) {
+                var job = new Job({
+                    uuid: res.job_uuid
+                });
+                callback(job);
+            }
         });
     },
 

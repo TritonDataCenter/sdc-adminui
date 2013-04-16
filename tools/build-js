@@ -19,6 +19,7 @@ var shimConfig = {
         },
         exports: null
     },
+    'jquery.chosen': { path: '/lib/chosen.jquery', exports: null },
     'bootstrap': { path: './lib/bootstrap', exports: null },
     'typeahead': { path: './lib/typeahead', exports: null },
     'knockback': {
