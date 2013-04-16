@@ -119,16 +119,13 @@ var ServerView = Backbone.Marionette.ItemView.extend({
 
         this.listenTo(view, 'cancel', function() {
             $link.show();
-        }, this);
-
+        });
         this.listenTo(view, 'save', function(platform) {
-            self.model.set({
-                boot_platform: platform
-            });
+            self.model.set({boot_platform: platform });
             view.remove();
             $link.show();
         });
-        this.$('.platform').append(view.el);
+        this.$('.platform .change td').append(view.el);
         $link.hide();
         view.render();
     },

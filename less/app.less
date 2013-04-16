@@ -83,6 +83,9 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
     }
   }
 }
+table.vertical {
+  tbody th { color: @gray;}
+}
 
 .error-modal {
   border: 1px solid red;
@@ -434,9 +437,9 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
     input, select { margin: 0; padding: 3px; }
     button { margin: 0; padding: 3px 8px; }
     line-height: 1em; font-size: 10px;
+    select { width: 220px;}
   }
   .change-reserve { float: right;}
-  .change-platform-form select { width: 180px;}
 
   .server-nics {
     li+li {
@@ -492,8 +495,9 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
   .platform {
     line-height: 20px;
     strong { width: 140px; display: inline-block ;}
+    td { text-align: right; }
+    tr.change td { text-align: left; }
   }
-  .platform>div { margin-bottom: 8px;}
   .server-state-container {
     text-transform: uppercase;
     font-weight: bold;

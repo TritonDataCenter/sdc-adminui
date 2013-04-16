@@ -24,7 +24,7 @@
 
 <div class="row">
   <div class="span7">
-    <table class="overview">
+    <table class="overview vertical">
       <tbody>
         <tr>
           <th>Datacenter</th>
@@ -64,12 +64,24 @@
   </div>{{! /span}}
 
   <div class="span5">
-    <div class="platform well">
-      <h4>Platform Version</h4>
-      <div class="current"><strong>Current</strong> {{current_platform}}</div>
-      <div class="boot"><strong>Next Boot</strong> {{boot_platform}}</div>
-
-      <a class="change-platform">Change Boot Platform <i class="icon-edit"></i></a>
+    <div class="platform">
+      <table class="table vertical">
+        <tbody>
+          <tr class="current">
+            <th><strong>Current Platform</strong></th>
+            <td>{{current_platform}}</td>
+          </tr>
+          <tr class="boot">
+            <th><strong>Next Boot Platform</strong></th>
+            <td>{{boot_platform}}</div></td>
+          </tr>
+          <tr class="change">
+            <td colspan="2">
+              <a class="change-platform pull-right">Change Boot Platform <i class="icon-edit"></i></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>{{! /row}}
