@@ -86,6 +86,9 @@ var ServerNicsEditView = Backbone.Marionette.ItemView.extend({
     attributes: {
         'class': 'modal'
     },
+    ui: {
+        'form': 'form'
+    },
     events: {
         'click .save': 'save'
     },
@@ -104,32 +107,26 @@ var ServerNicsEditView = Backbone.Marionette.ItemView.extend({
     },
 
     renderSelects: function() {
-        this.nics.each(function(nic) {
-            if (nic.get('kind') === 'nic') {
-                var select = new NicTagSelect({model: nic, nic_tags: this.nic_tags});
-                this.$('form').append(select.render().el);
-            }
+        this.nics.where({kind: 'nic'}).forEach(function(nic) {
+            var select = new NicTagSelect({model: nic, nic_tags: this.nic_tags});
+            this.ui.form.append(select.render().el);
         }, this);
 
         var nic_tags = this.nic_tags;
-        this.nics.each(function(nic) {
-            if (nic.get('kind') === 'nic') {
-                _.each(nic.get('nic_tags_provided'), function(tag) {
-                    nic_tags.findWhere({'name': tag}).set({selected: true});
-                });
-            }
+        this.nics.where({kind: 'nic'}).forEach(function(nic) {
+            _.each(nic.get('nic_tags_provided'), function(tag) {
+                nic_tags.findWhere({'name': tag}).set({selected: true});
+            });
         });
     },
 
     save: function() {
         var self = this;
-        var data = _.compact(this.nics.map(function(n) {
-            if (n.get('kind') === 'nic') {
-                return {
-                    mac: n.get('mac'),
-                    nic_tags_provided: n.get('nic_tags_provided')
-                };
-            }
+        var data = _.compact(this.nics.where({kind:'vnic'}).map(function(n) {
+            return {
+                mac: n.get('mac'),
+                nic_tags_provided: n.get('nic_tags_provided')
+            };
         }));
         console.log('server.updateNics', data);
         this.server.updateNics({nics: data, action: 'replace'}, this.onUpdateNicsJob.bind(this));
