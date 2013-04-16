@@ -17,8 +17,7 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
 
     events: {
-        'click td.name a':'navigateToServerDetails',
-        'click button.setup':'setupServer'
+        'click td.name a':'navigateToServerDetails'
     },
 
     url: function() {
@@ -45,20 +44,11 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
             return _.str.sprintf("%0.1f", this.memory_total_bytes/1024/1024);
         }
     },
-    setupServer: function(e) {
-        e.stopPropagation();
-
-        console.log('Setup server');
-
-        this.model.setup(function(res) {
-            console.log('Setup Server returned');
-            console.log(res);
-        });
-    },
 
     navigateToServerDetails: function() {
         adminui.vent.trigger('showview', 'server', { server:this.model });
     },
+
     onRender: function() {
         this.$(".last-boot").tooltip({
             title: 'Last booted on',

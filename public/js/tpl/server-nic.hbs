@@ -1,7 +1,31 @@
-<td class="mac"></td>
-<td class="ip"></td>
-<td class="netmask"></td>
-<td class="vlan_id"></td>
-<td class="resolvers"></td>
-<td class="nic_tag"></td>
-<td class="nic_tags_provided"></td>
+<div class="link-status"></div>
+<div class="name-container">
+    <span class="name"></span>
+    <span class="mac"></span>
+</div>
+<div class="ip-container">
+    <span class="lbl">IP</span>
+    <span class="ip value"></span>
+</div>
+<div class="netmask-container">
+    <span class="lbl">NETMASK</span>
+    <span class="netmask value"></span>
+</div>
+<div class="vlan-id-container">
+    <span class="lbl">VLAN</span>
+    <span class="vlan-id value"></span>
+</div>
+<div class="resolvers-container">
+    <span class="lbl">RESOLVERS</span>
+    <span class="resolvers value"></span>
+</div>
+<div class="nic-tag-container">
+    <span class="lbl">NICTAG</span>
+    <span class="nic-tag value"></span>
+</div>
+{{#if nic_tags_provided}}
+<div class="nic-tags-provided-container">
+    <span class="lbl">NICTAGS-PROV</span>
+    <span class="nic-tags-provided value"></span>
+</div>
+{{/if}}

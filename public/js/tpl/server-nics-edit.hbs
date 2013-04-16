@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <h1>Manage Server Nics</h1>
+</div>
+<div class="modal-body">
+    <p>Please specify the Nic Tags each of the nics provide below. Each nic tag should be separated by a space</p>
+    <form class="form form-horizontal">
+    {{#each nics}}
+    {{#if this.nic_tags_provided}}
+    <div class="control-group">
+        <label class="control-label">{{this.name}}</label>
+        <div class="controls">
+            <input type="text" class="input" name="{{this.mac}}" value="{{this.nic_tags_provided}}">
+            <span class="help-text">{{this.mac}}</span>
+        </div>
+    </div>
+    {{/if}}
+    {{/each}}
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn" data-dismiss="modal">Close</button>
+    <button class="btn btn-primary save">Save Changes</button>
+</div>

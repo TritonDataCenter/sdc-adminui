@@ -11,7 +11,7 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
         'class': 'modal'
     },
     events: {
-        'click setup': 'setup'
+        'click .setup': 'setup'
     },
     initialize: function(options) {
         this.viewModel = new ViewModel({customHostname: false});
@@ -21,13 +21,13 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
         var self = this;
         var hostname = this.$('.custom-hostname').val();
         this.model.setup({hostname: hostname}, function(job) {
-            self.remove();
             app.vent.trigger('showjob', job);
             self.listenTo(job, 'execution', function(status) {
                 if (status === 'succeeded') {
                     server.fetch();
                 }
             });
+            self.$el.modal('hide').remove();
         });
     },
     onRender: function() {

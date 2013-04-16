@@ -28,6 +28,16 @@ var Server = Backbone.Model.extend({
         });
     },
 
+    updateNics: function(data, callback) {
+        $.post(this.url() + '?action=update-nics', data, function(res) {
+            console.log(res);
+            var job = new Job({
+                uuid: res.job_uuid
+            });
+            callback(job);
+        });
+    },
+
     reboot: function(callback) {
         $.post(this.url() + '?action=reboot', {}, function(data) {
             var job = new Job({

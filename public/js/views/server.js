@@ -14,6 +14,7 @@ var ChangeRackForm = require('./server-change-rack');
 var ChangePlatformForm = require('./server-change-platform');
 var ServerNicsView = require('./server-nics');
 var ServerSetup = require('./server-setup');
+var ServerNicsEdit = require('./server-nics-edit');
 
 var ServerTemplate = require('../tpl/server.hbs');
 var ServerView = Backbone.Marionette.ItemView.extend({
@@ -30,7 +31,8 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         'click .factory-reset': 'factoryReset',
         'click .reboot': 'reboot',
         'click .forget': 'forget',
-        'click .change-reserve': 'toggleReserve'
+        'click .change-reserve': 'toggleReserve',
+        'click .manage-nics': 'showManageNics'
     },
 
     url: function() {
@@ -48,8 +50,16 @@ var ServerView = Backbone.Marionette.ItemView.extend({
             belongs_to_type: 'server',
             belongs_to_uuid: this.model.get('uuid')
         });
+
         this.model.fetch();
         this.nics.fetchNics();
+        this.listenTo(this.nics, 'sync', this.mergeSysinfo);
+    },
+
+    mergeSysinfo: function(nics) {
+        var sysinfo = this.model.get('sysinfo');
+        this.nics.mergeSysinfo(sysinfo);
+        console.log(this.nics);
     },
 
     templateHelpers: {
@@ -82,19 +92,22 @@ var ServerView = Backbone.Marionette.ItemView.extend({
             };
         });
         data.traits = _.map(data.traits, function(v, k) {
-            return {
-                name: k,
-                value: v
-            };
+            return {name: k, value: v};
         });
         return data;
     },
 
     toggleReserve: function() {
         var newValue = !this.model.get('reserved');
-        this.model.update({
-            'reserved': newValue
+        this.model.update({'reserved': newValue});
+    },
+
+    showManageNics: function() {
+        var view = new ServerNicsEdit({
+            server: this.model,
+            nics: this.nics
         });
+        view.show();
     },
 
     showChangePlatformField: function() {

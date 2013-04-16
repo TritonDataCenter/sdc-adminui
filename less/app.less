@@ -1,6 +1,7 @@
 @import "bootstrap.less";
 @import "variables.less";
 @import "typeahead.js-bootstrap.less";
+@import "bootstrap-tags.less";
 @import "signin.less";
 @import "typeahead.less";
 
@@ -437,10 +438,54 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
   .change-reserve { float: right;}
   .change-platform-form select { width: 180px;}
 
-  .nics {
-    .mac {
-      width: 130px;
-      #font > .monospace(12px);
+  .server-nics {
+    li+li {
+      border-top: none;
+    }
+    li {
+      padding: 4px;
+      border: 1px solid #ddd;
+      background: #f8f8f8;
+      .name {
+        display: block;
+        #font > .monospace(12px);
+        font-weight: bold;
+      }
+      .mac {
+        display: block;
+        #font > .monospace(10px);
+        color: @grayLight;
+      }
+
+      .link-status {
+        .border-radius(2px);
+        margin: 0 8px; width: 20px; height: 5px; background: @grayDark; }
+      .link-status.up { background: @green; }
+
+      & > div {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .lbl {
+        #font > .monospace(10px);
+        color: @grayLight;
+        display: block;
+      }
+      .value {
+        #font > .monospace(10px);
+        display: block;
+        color: @grayDarker;
+      }
+
+      .ip-container {
+        width: 100px;
+      }
+      .name-container { width: 150px; }
+      .netmask-container { width: 100px; }
+      .vlan-id-container { width: 50px;}
+      .resolvers-container { width: 150px; }
+      .nic-tag-container { width: 80px;}
+      .nic-tags-provided-container { width: 100px;}
     }
   }
 
@@ -479,6 +524,11 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
   }
   table.disks { .table;}
   table.traits { .table; }
+}
+
+#server-nics-edit {
+  width: 700px;
+  margin-left: -350px;
 }
 
 #vm-change-owner {
