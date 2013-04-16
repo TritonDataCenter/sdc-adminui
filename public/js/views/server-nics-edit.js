@@ -122,12 +122,12 @@ var ServerNicsEditView = Backbone.Marionette.ItemView.extend({
 
     save: function() {
         var self = this;
-        var data = _.compact(this.nics.where({kind:'vnic'}).map(function(n) {
+        var data = this.nics.where({kind:'nic'}).map(function(n) {
             return {
                 mac: n.get('mac'),
                 nic_tags_provided: n.get('nic_tags_provided')
             };
-        }));
+        });
         console.log('server.updateNics', data);
         this.server.updateNics({nics: data, action: 'replace'}, this.onUpdateNicsJob.bind(this));
     },
