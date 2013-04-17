@@ -1,6 +1,7 @@
 var adminui = require('../adminui');
 var Backbone = require('backbone');
 var Jobs = require('../models/jobs');
+var moment = require('moment');
 
 var JobProgressView = require('./job-progress');
 
@@ -10,6 +11,11 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
     events: {
         "click button.details": "showJobDetails"
+    },
+    serializeData: function() {
+        var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this, arguments);
+        data.when = moment(data.exec_after).format('lll');
+        return data;
     },
     showJobDetails: function() {
         var detailsView = new JobProgressView({
