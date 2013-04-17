@@ -439,7 +439,11 @@ table.vertical {
     line-height: 1em; font-size: 10px;
     select { width: 220px;}
   }
-  .change-reserve { float: right;}
+  .change-reserve { .pull-right; }
+  .change-reservation-ratio { .pull-right; }
+
+  .enabled { color: @green; }
+  .disabled { color: @red; }
 
   .server-nics {
     li+li {
@@ -462,7 +466,8 @@ table.vertical {
 
       .link-status {
         .border-radius(2px);
-        margin: 0 8px; width: 20px; height: 5px; background: @grayDark; }
+        margin: 0 12px; width: 20px; height: 6px; background: @grayDark; }
+
       .link-status.up { background: @green; }
 
       & > div {
@@ -1053,6 +1058,8 @@ ul.attributes {
 }
 
 #job-progress {
+  width: 640px;
+  margin-left: -320px;
   .modal-header small {
     color: @grayLight;
     font-style: italic;
@@ -1062,6 +1069,21 @@ ul.attributes {
     li { margin-bottom: 0.5em;}
     li.error { color: red;}
     .name { font-weight: bold;}
+  }
+  .modal-body.raw-enabled {
+    padding: 0;
+  }
+  .raw {
+    max-height: inherit;
+    overflow-x: scroll;
+    .box-sizing(border-box);
+    padding: 10px;
+    display: none;
+    background: #222;
+    color: #fff;
+    #font > .monospace(10px);
+    line-height: 1.2;
+    white-space: pre;
   }
   .wait {
     float: left;

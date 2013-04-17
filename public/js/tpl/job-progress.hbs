@@ -1,31 +1,36 @@
 <div class="modal-header">
-  <h2>Job {{name}} </h2>
-   <small>{{uuid}}</small>
+  <h2>Job {{name}}</h2>
+  <small>{{uuid}}</small>
+  <a class="toggle-raw pull-right">Show Raw Output</a>
 </div>
+
 <div class="modal-body">
-  <div class="chain-results">
-    <ol>
-    {{#each chain_results}}
-    <li class="{{#if error.length}}error{{/if}}">
-      <div class="name">{{name}}</div>
-      <div class="result">{{result}}</div>
-      {{#if error}}
-      <div class="error">
-        {{#if error.message}}
-        {{error.message}}
-        {{else}}
-        {{error}}
-        {{/if}}
-      </div>
-      {{/if}}
-    </li>
-    {{/each}}
-    </ol>
+  <div class="raw"></div>
+  <div class="summary">
+    <div class="chain-results">
+      <ol>
+        {{#each chain_results}}
+        <li class="{{#if error.length}}error{{/if}}">
+          <div class="name">{{name}}</div>
+          <div class="result">{{result}}</div>
+          {{#if error}}
+          <div class="error">
+            {{#if error.message}}
+            {{error.message}}
+            {{else}}
+            {{error}}
+            {{/if}}
+          </div>
+          {{/if}}
+        </li>
+        {{/each}}
+      </ol>
+    </div>
   </div>
 </div>
 <div class="modal-footer">
   <div class="pull-left">
-    <span class="execution">Status: <span class="{{execution}}">{{execution}}</span></span> 
+    <span class="execution">Status: <span class="{{execution}}">{{execution}}</span></span>
     {{#unless finished}}
     <span class="wait">
       Working... <img src="/img/job-progress-loading.gif">

@@ -38,25 +38,25 @@
         <tr class="rack">
           <th>Rack</th>
           <td>
-            {{#if rack_identifier}}
+          {{#if rack_identifier}}
             {{rack_identifier}}
             <a class="change-rack-id">Change <i class="icon-edit"></i></a>
-            {{else}}
+          {{else}}
             <span style="color: #aaa;">No Rack Assigned</span>
             <a class="change-rack-id">Assign to Rack <i class="icon-edit"></i></a>
-            {{/if}}
+          {{/if}}
           </td>
         </tr>
         <tr>
           <th>Provisioning</th>
           <td>
-            {{#if reserved}}
-            <i class="icon-ban-circle"></i> Disabled
+          {{#if reserved}}
+            <span class="disabled"><i class="icon-ban-circle"></i> Disabled</span>
             <a class="change-reserve">Enable Provisioning <i class="icon-off"></i></a>
-            {{else}}
-            <i class="icon-ok-circle"></i> Enabled
+          {{else}}
+            <span class="enabled"><i class="icon-ok-circle"></i> Enabled</span>
             <a class="change-reserve">Disable Provisioning <i class="icon-off"></i></a>
-            {{/if}}
+          {{/if}}
           </td>
         </tr>
 
@@ -66,9 +66,11 @@
             <a class="help-text"
             title="Ratio of server memory reserved to not be used by Virtual Machines"
             data-toggle="tooltip"
-            data-trigger="hover"><i class="icon-question-sign"></i></a></th>
+            data-trigger="hover"><i class="icon-question-sign"></i></a>
+          </th>
           <td>
-            {{reservation_ratio}}
+            <span class="reservation-ratio">{{reservation_ratio}}</span>
+            <a class="change-reservation-ratio">Change Ratio <i class="icon-edit"></i></a>
           </td>
         </tr>
       </tbody>

@@ -6,10 +6,27 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
         'id': 'job-progress'
     },
     template: require('../tpl/job-progress.hbs'),
+    events: {
+        'click .toggle-raw': 'toggleRaw'
+    },
     initialize: function() {
         this.model.fetch();
         this.listenTo(this.model, 'change', this.render, this);
     },
+
+    toggleRaw: function() {
+        this.$('.raw').html(JSON.stringify(this.model.attributes, null, 2));
+        this.$('.raw').toggle();
+        this.$('.summary').toggle();
+        if (this.$('.raw').is(':visible')) {
+            this.$('.modal-body').addClass('raw-enabled');
+            this.$('.toggle-raw').html('Show Summary');
+        } else {
+            this.$('.modal-body').removeClass('raw-enabled');
+            this.$('.toggle-raw').html('Show Raw');
+        }
+    },
+
     templateHelpers: {
         'finished': function() {
             return this.execution === 'succeeded' || this.execution === 'failed';
