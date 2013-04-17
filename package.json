@@ -36,10 +36,11 @@
     "glob": "~3.1.21"
   },
   "devDependencies": {
-    "phantomjs": "~1.9.0-2",
     "qunitjs": "~1.11.0",
     "nodeunit": "0.7.x",
     "node-dev": "~2.0.1"
   },
-  "optionalDependencies": {}
+  "optionalDependencies": {
+    "phantomjs": "~1.9.0-2"
+  }
 }
