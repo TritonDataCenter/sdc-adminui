@@ -48,15 +48,27 @@
           </td>
         </tr>
         <tr>
-          <th>Reserved</th>
+          <th>Provisioning</th>
           <td>
             {{#if reserved}}
-            Reserved
-            <a class="change-reserve">Unreserve <i class="icon-edit"></i></a>
+            <i class="icon-ban-circle"></i> Disabled
+            <a class="change-reserve">Enable Provisioning <i class="icon-off"></i></a>
             {{else}}
-            Not Reserved
-            <a class="change-reserve">Reserve <i class="icon-edit"></i></a>
+            <i class="icon-ok-circle"></i> Enabled
+            <a class="change-reserve">Disable Provisioning <i class="icon-off"></i></a>
             {{/if}}
+          </td>
+        </tr>
+
+        <tr>
+          <th>
+            Reservation Ratio
+            <a class="help-text"
+            title="Ratio of server memory reserved to not be used by Virtual Machines"
+            data-toggle="tooltip"
+            data-trigger="hover"><i class="icon-question-sign"></i></a></th>
+          <td>
+            {{reservation_ratio}}
           </td>
         </tr>
       </tbody>

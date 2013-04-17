@@ -1,7 +1,7 @@
 @import "bootstrap.less";
 @import "variables.less";
-@import "typeahead.js-bootstrap.less";
-@import "chosen.js-bootstrap.less";
+@import "lib/typeahead.js-bootstrap.less";
+@import "lib/chosen.js-bootstrap.less";
 @import "signin.less";
 @import "typeahead.less";
 
@@ -558,9 +558,7 @@ table.vertical {
   .vms-details {
     .alias {
       input { margin: 0; padding: 0; }
-      .rename { margin-left: 10px; }
     }
-    .change-owner { margin-left: 10px; }
     .server-hostname { cursor: pointer; }
     .uuid {
       font-size: 10px;
@@ -570,7 +568,12 @@ table.vertical {
     }
     .overview {
       .table;
-      tbody th { width: 100px; }
+      tbody {
+        td .mutate { visibility: hidden; }
+        td:hover .mutate { visibility: visible; }
+        th { width: 100px; }
+        td>*:first-child { display: inline-block; width: 500px; };
+      }
     }
     .vm-uuid,
     .server-uuid,
@@ -1021,7 +1024,8 @@ ul.attributes {
 
 #page-jobs {
   table {
-    .name { width: 300px;}
+    .actions { width: 200px;}
+    .uuid { #font > .monospace(12px); color: @grayLight; }
     .execution {
       width: 100px;
       text-transform: uppercase;

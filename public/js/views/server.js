@@ -208,6 +208,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
             el: this.$('.nics')
         });
         this.nicsView.render();
+        this.$("[data-toggle=tooltip]").tooltip();
     }
 });
 
