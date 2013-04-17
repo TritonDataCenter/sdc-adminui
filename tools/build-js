@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var browserify = require('browserify');
 var shim = require('browserify-shim');
+var glob = require('glob');
 var join = path.join;
 
 var root = path.resolve(__dirname, '..', 'public', 'js');
@@ -65,17 +66,25 @@ Object.keys(shimConfig).forEach(function(k) {
         shimConfig[k].path = path.join(root, shimConfig[k].path);
     }
 });
+console.log(root);
 
-shim(browserify(), shimConfig)
+var b = shim(browserify(), shimConfig)
     .transform(require.resolve(join(root, './transforms/tpl')))
     .require('underscore', { expose: 'underscore' })
     .require('underscore.string', { expose: 'underscore.string' })
-
     .require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery' })
     .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment' })
+    .require(require.resolve(join(root, './adminui')), {expose: 'adminui'})
+    .require(require.resolve(join(root, './main')), {expose: 'main'});
 
-    .require(require.resolve(join(root, './main')), {entry: true})
-    .bundle({debug:true})
+glob(join('**/*.js'), {cwd: root}, function(err, files) {
+    files.forEach(function(f) {
+        var exposeAs = f.substr(0, f.lastIndexOf('.'));
+        b.require(require.resolve(join(root, f)), {expose: exposeAs});
+    });
+});
+
+b.bundle({debug:true})
     .on('error', function(err) {
         console.error(err);
         process.exit(1);

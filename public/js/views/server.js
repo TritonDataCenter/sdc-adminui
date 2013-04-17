@@ -51,15 +51,15 @@ var ServerView = Backbone.Marionette.ItemView.extend({
             belongs_to_uuid: this.model.get('uuid')
         });
 
+        this.listenTo(this.nics, 'sync', this.mergeSysinfo);
+
         this.model.fetch();
         this.nics.fetchNics();
-        this.listenTo(this.nics, 'sync', this.mergeSysinfo);
     },
 
     mergeSysinfo: function(nics) {
         var sysinfo = this.model.get('sysinfo');
         this.nics.mergeSysinfo(sysinfo);
-        console.log(this.nics);
     },
 
     templateHelpers: {

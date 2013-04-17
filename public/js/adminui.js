@@ -39,19 +39,18 @@ $.extend({
 });
 
 
-var AdminUI = new Backbone.Marionette.Application();
+var adminui = module.exports = new Backbone.Marionette.Application();
 
-AdminUI.addInitializer(function(options) {
-    AdminUI.addRegions({chrome:"#chrome"});
-});
-
-AdminUI.on("initialize:after", function(options) {
-    this.router = options.router;
-    this.router.go();
-    Backbone.history.start({pushState: true});
-
+adminui.addInitializer(function(options) {
+    var Router = require('./router');
+    this.addRegions({chrome:"#chrome"});
     this.pinger = new Pinger();
-    this.pinger.start();
+    this.router = new Router({app: adminui});
 });
 
-module.exports = AdminUI;
+adminui.on('start', function() {
+    this.pinger.start();
+    this.router.start();
+    Backbone.history.start({pushState: true});
+});
+

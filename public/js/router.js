@@ -36,11 +36,9 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'servers/:uuid': 'showServer',
         '*default': 'defaultAction'
     },
-
     initialize: function(options) {
-        _.bindAll(this);
         this.app = options.app;
-        this.app.user = this.user = User.currentUser();
+        this.app.user = this.app.user || (this.user = User.currentUser());
     },
 
     didAuthenticate: function() {
@@ -52,11 +50,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     setupRequestToken: function() {
         $.ajaxSetup({
+            timeout: 10000,
             headers: {'x-adminui-token': this.app.user.getToken()}
         });
     },
 
-    go: function() {
+    start: function(app) {
         this.listenTo(this.app.vent, 'showview', this.presentView, this);
         this.listenTo(this.app.vent, 'signout', this.signout, this);
         this.listenTo(this.app.user, 'authenticated', this.didAuthenticate, this);

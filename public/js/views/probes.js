@@ -8,7 +8,7 @@ var probesTpl = require('../tpl/probes.hbs');
 
 var ProbeItemView = BaseView.extend({
 
-    template: require('../tpl/probe-item.hbs'),
+    template: require('../tpl/probe-item.html'),
 
     events: {
         'click .delete-probe': 'deleteProbe'
