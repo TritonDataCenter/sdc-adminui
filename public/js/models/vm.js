@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 var Model = require('./model');
 var Job = require('./job');
 
@@ -106,16 +107,19 @@ var Vm = Model.extend({
 
 
     saveAlias: function(cb) {
-        $.put(this.url(), {
-            alias: this.get('alias')
-        }, cb);
+        $.put(this.url(), { alias: this.get ('alias')}).done(function(data) {
+            var job = new Job({ uuid: data.job_uuid });
+            cb(null, job);
+        }).fail(function(xhr, status) {
+            var obj = JSON.parse(xhr.responseText);
+            var err = _.findWhere(obj.errors, {'field': 'alias'});
+            cb(err);
+        });
     },
 
     saveCustomerMetadata: function(cb) {
         $.put(this.url() + '/customer_metadata', this.get('customer_metadata'), function(data) {
-            var job = new Job({
-                uuid: data.job_uuid
-            });
+            var job = new Job({ uuid: data.job_uuid });
             cb(job);
         });
     },

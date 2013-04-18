@@ -208,6 +208,7 @@ var VmView = Backbone.Marionette.ItemView.extend({
     },
 
     clickedRename: function() {
+        var vm = this.vm;
         var renameBtn = this.$('.alias .rename');
         var value = this.$('.alias .value');
 
@@ -220,28 +221,39 @@ var VmView = Backbone.Marionette.ItemView.extend({
         this.$('.alias').append(input);
         this.$('.alias').append(save);
         this.$('.alias').append(cancel);
+        input.keyup(function(e) {
+            if (e.which === 13) {
+                save.click();
+            }
+        });
+
         cancel.click(cancelAction);
         save.click(saveAction);
+
         input.focus();
 
         function saveAction() {
             value.html(input.val());
-            this.vm.set({
-                alias: input.val()
+            vm.set({ alias: input.val() });
+            vm.saveAlias(function(err, job) {
+                if (err) {
+                    input.tooltip({placement: 'bottom', title: err.message}).tooltip('show');
+                } else {
+                    adminui.vent.trigger('showjob', job);
+                    cancelAction();
+                }
             });
-            this.vm.saveAlias();
-            cancelAction();
         }
-        saveAction.bind(this);
 
         function cancelAction() {
+            input.tooltip('hide');
+            input.tooltip('destroy');
             renameBtn.show();
             input.remove();
             save.remove();
             cancel.remove();
             value.show();
         }
-        cancelAction.bind(this);
     },
 
     renderTags: function() {

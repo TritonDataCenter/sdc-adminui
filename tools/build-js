@@ -8,6 +8,7 @@ var glob = require('glob');
 var format = require('util').format;
 var join = path.join;
 
+
 var root = path.resolve(__dirname, '..', 'public', 'js');
 
 
