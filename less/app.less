@@ -71,7 +71,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
   tr.selected {
     background: #fff2da;
   }
-  td, th { border: none;}
+  td, th { border:none; }
   thead {
     background: #e8eef2;
     // background: lighten(#c1c4ce, 5%);
@@ -428,7 +428,52 @@ table.vertical {
 }
 
 #page-server {
+  table.overview {
+    .table;
+    margin-bottom: 0;
+    tbody th { width: 150px; }
+  }
+  tr.rack .none { color: @grayLight;}
+  table.hardware {
+    .table;
+    tbody th { width: 140px; }
+  }
+  table.disks { .table;}
+  table.traits { .table; }
   a { cursor: pointer; }
+
+  div.overview {
+    .item { clear: both; }
+    .item > * { padding: 8px; display: inline-block; vertical-align: top; }
+    .item-label { font-weight: bold; width: 150px; color: #555555;}
+    .item-content {
+      text-align: justify;
+      overflow: visible;
+      height: 20px;
+      vertical-align: middle;
+      width: 350px;
+    }
+  }
+
+  .change-reservation-ratio { float: right; }
+  .btn-reservation-ratio { display: none; }
+  input.reservation-ratio {
+    margin-top: -4px;
+    padding: 4px 8px;
+    text-align: left;
+    width: 100px;
+    display: inline-block;
+    background: lighten(@yellow, 42%);
+    border: none;
+  }
+  span.reservation-ratio {
+    margin-top: -20px;
+    margin-left: -5px;
+    padding: 5px;
+    display: inline-block;
+    width: 140px;
+  }
+
   .change-rack-id { float: right; }
   .change-rack-form,
   .change-platform-form {
@@ -440,7 +485,6 @@ table.vertical {
     select { width: 220px;}
   }
   .change-reserve { .pull-right; }
-  .change-reservation-ratio { .pull-right; }
 
   .enabled { color: @green; }
   .disabled { color: @red; }
@@ -521,18 +565,6 @@ table.vertical {
     }
 
   }
-
-  table.overview {
-    .table;
-    tbody th { width: 140px; }
-  }
-  tr.rack .none { color: @grayLight;}
-  table.hardware {
-    .table;
-    tbody th { width: 140px; }
-  }
-  table.disks { .table;}
-  table.traits { .table; }
 }
 
 #server-nics-edit {

@@ -24,6 +24,7 @@
 
 <div class="row">
   <div class="span7">
+
     <table class="overview vertical">
       <tbody>
         <tr>
@@ -47,9 +48,12 @@
           {{/if}}
           </td>
         </tr>
-        <tr>
-          <th>Provisioning</th>
-          <td>
+      </tbody>
+    </table>
+    <div class="overview">
+      <div class="item">
+        <div class="item-label">Provisioning</div>
+        <div class="item-content">
           {{#if reserved}}
             <span class="disabled"><i class="icon-ban-circle"></i> Disabled</span>
             <a class="change-reserve">Enable Provisioning <i class="icon-off"></i></a>
@@ -57,24 +61,20 @@
             <span class="enabled"><i class="icon-ok-circle"></i> Enabled</span>
             <a class="change-reserve">Disable Provisioning <i class="icon-off"></i></a>
           {{/if}}
-          </td>
-        </tr>
-
-        <tr>
-          <th>
-            Reservation Ratio
-            <a class="help-text"
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-label">Reservation Ratio <a class="help-text"
             title="Ratio of server memory reserved to not be used by Virtual Machines"
             data-toggle="tooltip"
             data-trigger="hover"><i class="icon-question-sign"></i></a>
-          </th>
-          <td>
+        </div>
+        <div class="item-content">
             <span class="reservation-ratio">{{reservation_ratio}}</span>
             <a class="change-reservation-ratio">Change Ratio <i class="icon-edit"></i></a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        </div>
+      </div>
+    </div>
   </div>{{! /span}}
 
   <div class="span5">

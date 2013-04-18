@@ -27,6 +27,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         'click .setup': 'showSetupModal',
         'click .change-rack-id': 'showChangeRackField',
         'click .change-platform': 'showChangePlatformField',
+        'click .change-reservation-ratio': 'showChangeReservationRatio',
         'click .modify-traits': 'showTraitsModal',
         'click .factory-reset': 'factoryReset',
         'click .reboot': 'reboot',
@@ -110,6 +111,63 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         view.show();
     },
 
+    showChangeReservationRatio: function() {
+        var $reservationRatio = this.$('span.reservation-ratio');
+        var $changeReservationRatio = this.$('.change-reservation-ratio');
+        var $input = $("<input type='text'/>").addClass('reservation-ratio');
+        $input.val(this.model.get('reservation_ratio'));
+
+        enterEditMode();
+
+        var self = this;
+
+        $input.on('blur', function(e) {
+            saveVal();
+        });
+
+        $input.on('keyup', function(e) {
+            if (e.which === 27) {
+                exitEditMode();
+            }
+            if (e.which === 13) {
+                saveVal();
+            }
+        });
+
+
+        function enterEditMode() {
+            $reservationRatio.after($input);
+            $input.focus();
+            $changeReservationRatio.hide();
+            $reservationRatio.hide();
+            showTooltip('Press ENTER to <i class="icon-ok"></i> Save<br/>Press ESC to <i class="icon-undo"></i> Cancel');
+        }
+
+        function showTooltip(t) {
+            $input.tooltip('hide');
+            $input.tooltip('destroy');
+            $input.tooltip({title: t, html: true}).tooltip('show');
+        }
+
+        function saveVal() {
+            var val = $input.val();
+            var n = Number(val);
+            if (/^[0-9.]+$/.test(val) && (n >= 0 && n <= 1.0)) {
+                self.model.update({reservation_ratio: n}, exitEditMode);
+            } else {
+                showTooltip('Ratio should be a number between 0 and 1');
+            }
+        }
+
+        function exitEditMode() {
+            $changeReservationRatio.show();
+            $reservationRatio.show();
+            $input.tooltip('hide');
+            $input.tooltip('destroy');
+            $input.remove();
+        }
+    },
+
     showChangePlatformField: function() {
         var self = this;
         var $link = this.$('.platform a');
@@ -120,11 +178,13 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         this.listenTo(view, 'cancel', function() {
             $link.show();
         });
+
         this.listenTo(view, 'save', function(platform) {
             self.model.set({boot_platform: platform });
             view.remove();
             $link.show();
         });
+
         this.$('.platform .change td').append(view.el);
         $link.hide();
         view.render();
