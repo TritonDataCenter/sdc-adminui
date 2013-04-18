@@ -31,12 +31,12 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
 
     serializeData: function() {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this, arguments);
-        _.each(data.chain_results, function(task) {
-            var t = {};
+        data.chain_results = _.map(data.chain_results, function(task) {
+            var t = _.clone(task);
             t.started_at = moment(task.started_at).format('YYYY-MM-DD HH:mm:ss');
             t.finished_at = moment(task.finished_at).format('YYYY-MM-DD HH:mm:ss');
             t.duration = moment(task.finished_at).diff(moment(task.started_at), 'seconds', true) + 's';
-            _.extend(task, t);
+            return t;
         });
         return data;
     },
