@@ -1,4 +1,6 @@
 var Backbone = require('backbone');
+var moment = require('moment');
+var _ = require('underscore');
 
 var JobProgressView = Backbone.Marionette.ItemView.extend({
     attributes: {
@@ -25,6 +27,18 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
             this.$('.modal-body').removeClass('raw-enabled');
             this.$('.toggle-raw').html('Show Raw');
         }
+    },
+
+    serializeData: function() {
+        var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this, arguments);
+        _.each(data.chain_results, function(task) {
+            var t = {};
+            t.started_at = moment(task.started_at).format('YYYY-MM-DD HH:mm:ss');
+            t.finished_at = moment(task.finished_at).format('YYYY-MM-DD HH:mm:ss');
+            t.duration = moment(task.finished_at).diff(moment(task.started_at), 'seconds', true) + 's';
+            _.extend(task, t);
+        });
+        return data;
     },
 
     templateHelpers: {

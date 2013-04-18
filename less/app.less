@@ -1096,15 +1096,40 @@ ul.attributes {
 #job-progress {
   width: 640px;
   margin-left: -320px;
+  .toggle-raw {
+    font-size: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
   .modal-header small {
     color: @grayLight;
     font-style: italic;
     font-family: monospace;
   }
   .chain-results {
-    li { margin-bottom: 0.5em;}
-    li.error { color: red;}
-    .name { font-weight: bold;}
+    li {
+      padding: 5px 10px;
+      background: #f3f3f3;
+      margin-bottom: 0.5em; font-size: 12px; }
+    li.error {
+      background: rgb(255, 202, 202);
+    }
+    li > * {
+      display: inline-block;
+      vertical-align: top;
+    }
+    .name { font-weight: bold; }
+    .task { width: 360px;}
+    .time { padding-right: 5px; color: @grayLight; font-size: 10px; text-align: right; }
+    .duration {
+      .value {
+        display: inline-block;
+        width: 40px;
+        text-align: right;
+        color: @gray;
+        font-size: 10px;
+      }
+    }
   }
   .modal-body.raw-enabled {
     padding: 0;

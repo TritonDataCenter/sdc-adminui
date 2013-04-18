@@ -11,8 +11,21 @@
       <ol>
         {{#each chain_results}}
         <li class="{{#if error.length}}error{{/if}}">
-          <div class="name">{{name}}</div>
-          <div class="result">{{result}}</div>
+          <div class="task">
+            <div class="name">{{name}}</div>
+            <div class="result">{{result}}</div>
+          </div>
+          <div class="time">
+            <div class="started-at">
+              <i class="icon-play"></i> {{started_at}}
+            </div>
+            <div class="finished-at">
+              <i class="icon-stop"></i> {{finished_at}}
+            </div>
+          </div>
+          <div class="duration">
+            <i class="icon-time"></i><div class="value">{{duration}}</div>
+          </div>
           {{#if error}}
           <div class="error">
             {{#if error.message}}
