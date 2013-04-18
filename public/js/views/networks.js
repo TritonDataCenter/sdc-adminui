@@ -18,7 +18,7 @@ var NetworksListItem = Backbone.Marionette.ItemView.extend({
     },
 
     highlightIfThis: function(model) {
-        if (model == this.model) {
+        if (model === this.model) {
             this.highlight();
         }
     },

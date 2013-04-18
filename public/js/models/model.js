@@ -1,19 +1,19 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 
-// We are overriding the error handler so the error response from admin UI
-// gets parsed and set to responseData
-Backbone.ajax = function() {
-    var args = Array.prototype.slice.call(arguments, 0);
-    var error = args[0].error;
-    args[0].error = function(xhr) {
-        var contentType = xhr.getResponseHeader('content-type');
-        if (contentType === 'application/json') {
-            console.log('parsing JSON response');
-            xhr.responseData = jQuery.parseJSON(xhr.responseText);
-        }
-    };
+var Sync = Backbone.sync;
 
-    return Backbone.$.ajax.apply(Backbone.$, args);
-};
+var Model = Backbone.Model.extend({
+    sync: function(method, model, options) {
+        options.error = function(xhr, err, statusText) {
+            var contentType = xhr.getResponseHeader('content-type');
+            if (contentType === 'application/json') {
+                xhr.responseData = jQuery.parseJSON(xhr.responseText);
+            }
+            model.trigger('error', model, xhr, options);
+        };
+        Backbone.sync.apply(this, arguments);
+    }
+});
 
-module.exports = Backbone.Model;
+module.exports = Model;

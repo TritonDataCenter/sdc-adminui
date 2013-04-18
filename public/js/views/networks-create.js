@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 var Template = require('../tpl/networks-create.hbs');
 var Network = require('../models/network');
 var NicTags = require('../models/nictags');
@@ -17,8 +18,8 @@ var View = Backbone.Marionette.ItemView.extend({
         'newNicTagField': 'input[name=nic_tag]',
         'createNewNicTagButton': '.create-new-nic-tag'
     },
-
     modelEvents: {
+        'sync': 'onSave',
         'error': 'onError'
     },
 
@@ -45,12 +46,14 @@ var View = Backbone.Marionette.ItemView.extend({
         this.ui.newNicTagField.show().focus();
     },
 
+    onSave: function() {
+        this.trigger('saved', this.model);
+    },
+
     onSubmit: function(e) {
-        var self = this;
         e.preventDefault();
-        this.model.save(null, {success: function(model) {
-            self.trigger('saved', model);
-        }});
+        var self = this;
+        this.model.save();
     },
 
     onError: function(model, xhr, options) {
@@ -61,15 +64,21 @@ var View = Backbone.Marionette.ItemView.extend({
             'provision_start_ip': '[name=provision_start_ip]',
             'provision_end_ip': '[name=provision_end_ip]',
             'resolvers': '[name=resolvers]',
-            'nic_tag': '[name=nic_tag]',
+            'nic_tag': 'input[name=nic_tag]',
             'vlan_id': '[name=vlan_id]'
         };
         var err = xhr.responseData;
-        this.ui.alert.find('.message').html(err.message);
+        console.log('network creation validation failed', err);
         this.$('.control-group').removeClass('error');
+        this.$('.help-inline', 'control-group').remove();
         _.each(err.errors, function(errObj) {
-            var field = $(fieldMap[errObj.field]);
-            field.parents('.control-group').addClass('error');
+            var $field = $(fieldMap[errObj.field]);
+            var $controlGroup = $field.parents('.control-group');
+            $controlGroup.addClass('error');
+            if (errObj.message) {
+                var errmsg = $("<div class='help-inline'>").html(errObj.message);
+                $field.after(errmsg);
+            }
         }, this);
         this.ui.alert.find('.error').html(err.message);
         this.ui.alert.show();
@@ -83,7 +92,7 @@ var View = Backbone.Marionette.ItemView.extend({
         this.nicTags.fetch();
         var bindings = Backbone.ModelBinder.createDefaultBindings(this.el, 'name');
         bindings['resolvers'].converter = function(direction, value, attrName, model) {
-            if (direction == 'ModelToView') {
+            if (direction === 'ModelToView') {
                 return (value || []).join(',');
             } else {
                 return value.split(',');
