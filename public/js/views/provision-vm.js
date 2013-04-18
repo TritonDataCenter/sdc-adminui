@@ -146,8 +146,7 @@ var View = Backbone.Marionette.ItemView.extend({
         if (this.networks.length) {
             this.networks.reset();
         }
-        this.networks.fetch({data: {owner_uuid: 'null' }}, {remove: false});
-        this.networks.fetch({data: {owner_uuid: u.get('uuid')}}, {remove: false});
+        this.networks.fetch({data: {provisionable_by: u.get('uuid') }});
     },
 
     onRender: function() {
