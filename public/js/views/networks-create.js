@@ -4,6 +4,8 @@ var Template = require('../tpl/networks-create.hbs');
 var Network = require('../models/network');
 var NicTags = require('../models/nictags');
 
+var TypeaheadUserInput = require('./typeahead-user');
+
 var View = Backbone.Marionette.ItemView.extend({
     template: Template,
 
@@ -64,6 +66,7 @@ var View = Backbone.Marionette.ItemView.extend({
             'provision_start_ip': '[name=provision_start_ip]',
             'provision_end_ip': '[name=provision_end_ip]',
             'resolvers': '[name=resolvers]',
+            'owner_uuid': '[name=owner_uuid]',
             'nic_tag': 'input[name=nic_tag]',
             'vlan_id': '[name=vlan_id]'
         };
@@ -89,6 +92,7 @@ var View = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         this.ui.newNicTagField.hide();
         this.nicTagsSelect.setElement(this.$('select[name=nic_tag]'));
+        this.userInput = new TypeaheadUserInput({el: this.$('[name=owner_uuid]') });
         this.nicTags.fetch();
         var bindings = Backbone.ModelBinder.createDefaultBindings(this.el, 'name');
         bindings['resolvers'].converter = function(direction, value, attrName, model) {
