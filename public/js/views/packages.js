@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 var Packages = require('../models/packages');
 var PackagesTemplate = require('../tpl/packages.hbs');
@@ -23,7 +24,7 @@ var PackagesListItemView = Backbone.Marionette.ItemView.extend({
     },
 
     highlightIfThis: function(model) {
-        if (model == this.model) {
+        if (model === this.model) {
             this.highlight();
         }
     },
@@ -129,6 +130,10 @@ var PackagesView = Backbone.Marionette.Layout.extend({
         id: "page-packages"
     },
 
+    events: {
+        'click button.create': 'showCreateForm'
+    },
+
     ui: {
         'searchInput': '.search input',
         'createButton': 'button.create'
@@ -164,8 +169,9 @@ var PackagesView = Backbone.Marionette.Layout.extend({
             vent: this.vent
         });
 
-        this.listenTo(this.ui.searchInput, 'input', this.search, this);
-        this.listenTo(this.ui.createButton, 'click', this.onClickCreateButton, this);
+        this.ui.searchInput.on('input', this.search, this);
+        console.log(this.ui.createButton);
+        var self = this;
 
         this.listenTo(this.vent, 'showpackage', this.showPackage, this);
         this.listenTo(this.vent, 'showedit', this.showForm, this);
@@ -178,7 +184,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
         this.list.show(packagesList);
     },
 
-    onClickCreateButton: function() {
+    showCreateForm: function() {
         this.showForm();
     },
 
@@ -188,15 +194,12 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     },
 
     showForm: function(model) {
+        console.log(model);
         if (!model) {
-            this.$(".sidebar").animate({
-                opacity: 0.4
-            });
+            this.$(".sidebar").animate({ opacity: 0.4 });
             this.list.currentView.deselect();
         }
-        var form = new PackageForm({
-            model: model
-        });
+        var form = new PackageForm({ model: model });
         this.detail.show(form);
         this.detail.currentView.vent = this.vent;
     },
