@@ -4,6 +4,7 @@ var Backbone = require('backbone');
 var SSHKey = require('../models/sshkey');
 
 module.exports = Backbone.Marionette.ItemView.extend({
+    id: 'sshkey-create',
     className: 'modal',
     template: require('../tpl/sshkey-create.hbs'),
     events: {
@@ -30,8 +31,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onModelError: function(model, xhr, error) {
-        this.$('textarea').parents('.control-group').addClass('error');
-        this.$(".alert").html(xhr.responseData.message);
+        this.$(".alert .alert-body").html(xhr.responseData.message);
         this.$(".alert").show();
     },
 
