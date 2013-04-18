@@ -55,7 +55,6 @@ var Server = Backbone.Model.extend({
 
     forget: function(cb) {
         $.delete_(this.url(), {}, function(data) {
-            console.log(data);
             cb();
         });
     },

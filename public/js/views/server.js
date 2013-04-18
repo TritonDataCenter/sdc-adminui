@@ -246,7 +246,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
 
     reboot: function() {
         this.model.reboot(function(job) {
-            app.vent.trigger('showjob', job);
+            alert('Server is now being rebooted Progress cannot be tracked yet [CNAPI-236]');
         });
     },
 
