@@ -4,6 +4,7 @@
  * ./vms.js
  */
 var app = require('../adminui');
+var _ = require('underscore');
 var Backbone = require('backbone');
 
 var Vms = require('../models/vms');
@@ -38,11 +39,15 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function(options) {
-        this.collection = new Vms();
-        this.listView = new VmsList({ collection: this.collection });
         this.filterView = new FilterForm();
         this.filterViewVisible = false;
-        this.collection.fetch();
+        this.collection = new Vms();
+        this.listView = new VmsList({ collection: this.collection });
+
+        this.listenTo(this.collection, 'error', this.onError, this);
+        this.listenTo(this.filterView, 'query', this.query, this);
+        this.listenTo(this.collection, 'sync', this.updateCount, this);
+        this.listenTo(this.collection, 'sync', this.listView.render, this);
     },
 
     provision: function() {
@@ -70,7 +75,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onError: function(model, res) {
-        if (res.status == 409) {
+        if (res.status === 409) {
             var obj = JSON.parse(res.responseText);
             var errors = _.map(obj.errors, function(e) {
                 return e.message;
@@ -94,12 +99,10 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        this.listenTo(this.collection, 'error', this.onError, this);
         this.listView.setElement(this.$('tbody')).render();
         this.filterView.setElement(this.$('.vms-filter'));
 
-        this.listenTo(this.filterView, 'query', this.query, this);
-        this.listenTo(this.collection, 'reset', this.updateCount, this);
+        this.query({state: 'running'});
         return this;
     }
 });

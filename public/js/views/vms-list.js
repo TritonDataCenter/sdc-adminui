@@ -13,9 +13,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     initialize: function() {},
 
     navigateToVmDetails: function() {
-        adminui.vent.trigger('showview', 'vm', {
-            vm: this.model
-        });
+        adminui.vent.trigger('showview', 'vm', { vm: this.model });
     }
 });
 

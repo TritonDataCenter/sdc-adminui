@@ -5,11 +5,11 @@ var path = require('path');
 var browserify = require('browserify');
 var shim = require('browserify-shim');
 var glob = require('glob');
+var format = require('util').format;
 var join = path.join;
 
 var root = path.resolve(__dirname, '..', 'public', 'js');
-/* jsl:ignire */
-var outputPath = path.join(root, '..', '✚.js');
+
 
 var shimConfig = {
     'jquery': { path: './lib/jquery', exports: '$' },
@@ -66,7 +66,6 @@ Object.keys(shimConfig).forEach(function(k) {
         shimConfig[k].path = path.join(root, shimConfig[k].path);
     }
 });
-console.log(root);
 
 var b = shim(browserify(), shimConfig)
     .transform(require.resolve(join(root, './transforms/tpl')))
@@ -83,13 +82,19 @@ glob(join('**/*.js'), {cwd: root}, function(err, files) {
         b.require(require.resolve(join(root, f)), {expose: exposeAs});
     });
 });
+var t = new Date().getTime();
+var outputPath = path.join(root, '..', '✚.js');
+var tmpPath = format('%s.%s', outputPath, t);
 
-b.bundle({debug:true})
-    .on('error', function(err) {
+
+b.bundle({debug:true}, function(err, src) {
+    if (err) {
+        fs.unlinkSync(outputPath);
         console.error(err);
         process.exit(1);
-    }).pipe(fs.createWriteStream(outputPath))
-    .on('end', function() {
-        process.exit(0);
-        console.log('Build succeeded');
-    });
+    }
+    fs.writeFileSync(tmpPath, src);
+    fs.renameSync(tmpPath, outputPath);
+    console.log('Build succeeded: ', outputPath);
+    process.exit(0);
+});
