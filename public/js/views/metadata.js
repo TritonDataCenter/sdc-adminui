@@ -1,8 +1,13 @@
 var Backbone = require('backbone');
 var ko = require('knockout');
+var _ = require('underscore');
+
+var adminui = require('adminui');
+
 var BaseView = require('./base');
 var metadataViewModalTemplate = require('../tpl/metadata-view-modal.hbs');
 var metadataEditModalTemplate = require('../tpl/metadata-edit-modal.hbs');
+var JobProgressView = require('./job-progress');
 
 var MetadataViewModel = function(m) {
     m = m || {};
@@ -45,11 +50,12 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
 
         var viewModel = new MetadataViewModel();
         viewModel.editAction = this.edit;
-        showAction = this.showContent;
-        removeAction = this.removeItem;
+        viewModel.showAction = this.showContent;
+        viewModel.removeAction = this.removeItem;
         viewModel.saveAction = function(m) {
             self.metadata.push(m);
-            self.save(function() {
+            self.save(function(job) {
+                adminui.vent.trigger('showjob', job);
                 view.modal('hide').remove();
             });
         };
@@ -64,7 +70,9 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
 
     removeItem: function(m) {
         this.metadata.remove(m);
-        this.save();
+        this.save(function(job) {
+            adminui.vent.trigger('showjob', job);
+        });
     },
 
     save: function(cb) {
@@ -72,9 +80,7 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
         _(this.metadata()).each(function(m) {
             data[m.key()] = m.value();
         });
-        this.vm.set({
-            customer_metadata: data
-        });
+        this.vm.set({ customer_metadata: data });
         this.vm.saveCustomerMetadata(cb);
         return data;
     },
