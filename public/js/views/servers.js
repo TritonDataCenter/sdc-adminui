@@ -24,29 +24,21 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
         return 'servers';
     },
 
-    templateHelpers: {
-        running: function() {
-            return this.status === 'running';
-        },
-        not_setup: function() {
-            return this.setup === 'false';
-        },
-        last_boot: function() {
-            return moment(this.last_boot).fromNow();
-        },
-        last_heartbeat: function() {
-            return moment(this.last_heartbeat).fromNow();
-        },
-        'memory_available_mb': function() {
-            return _.str.sprintf("%0.1f", this.memory_available_bytes/1024/1024);
-        },
-        'memory_total_mb': function() {
-            return _.str.sprintf("%0.1f", this.memory_total_bytes/1024/1024);
-        }
-    },
-
     navigateToServerDetails: function() {
         adminui.vent.trigger('showview', 'server', { server:this.model });
+    },
+
+    serializeData: function() {
+        var data = Backbone.Marionette.ItemView.prototype.serializeData.apply(this, arguments);
+        _.extend(data, {
+            running: data.status === 'running',
+            not_setup: data.setup === 'false',
+            last_boot: moment(data.last_boot).fromNow(),
+            last_heartbeat: moment(data.last_heartbeat).fromNow(),
+            memory_available_mb: _.str.sprintf("%0.1f", this.memory_available_bytes/1024/1024),
+            memory_total_mb: _.str.sprintf("%0.1f", this.memory_total_bytes/1024/1024)
+        });
+        return data;
     },
 
     onRender: function() {
