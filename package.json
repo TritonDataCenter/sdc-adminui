@@ -15,7 +15,7 @@
     "ldapjs": "0.5.7",
     "sockjs": "0.3.x",
     "node-uuid": "1.4.0",
-    "bunyan": "~0.16",
+    "bunyan": "0.21.1",
     "assert-plus": "0.1.0",
     "restify": "2.4.0",
     "filed": "0.0.7",
@@ -39,6 +39,7 @@
     "mocha": "~1.9.0"
   },
   "optionalDependencies": {
-    "phantomjs": "~1.9.0-2"
+    "phantomjs": "~1.9.0-2",
+    "mocha-phantomjs": "~2.0.1"
   }
 }

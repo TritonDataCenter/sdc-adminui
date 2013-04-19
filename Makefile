@@ -17,7 +17,7 @@
 #
 # Tools
 #
-TAP		:= ./node_modules/.bin/tap
+MOCHA_PHANTOMJS	:= ./node_modules/.bin/mocha-phantomjs
 
 #
 # Files
@@ -31,19 +31,17 @@ JSSTYLE_FLAGS    = -o indent=2,doxygen,unparenthesized-return=0
 REPO_MODULES	 =
 SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
 
-NODE_PREBUILT_VERSION=v0.8.20
+NODE_PREBUILT_VERSION=v0.8.23
 NODE_PREBUILT_TAG=zone
 
 
 
 include ./tools/mk/Makefile.defs
-ifeq ($(shell uname -s), 'SunOS')
+ifeq ($(shell uname -s),SunOS)
 	include ./tools/mk/Makefile.node_prebuilt.defs
 else
 	include ./tools/mk/Makefile.node.defs
 endif
-
-include ./tools/mk/Makefile.node_deps.defs
 include ./tools/mk/Makefile.smf.defs
 
 ROOT            := $(shell pwd)
@@ -61,31 +59,29 @@ JS_BUNDLE_FILES	+= ./tools/build-js
 
 
 .PHONY: all
-all: $(SMF_MANIFESTS) | $(TAP) $(REPO_DEPS) $(JS_BUNDLE)
-	$(NPM) rebuild
+all: $(SMF_MANIFESTS) node_modules js
 
-
-$(TAP): | $(NPM_EXEC)
+.PHONY: node_modules
+node_modules: | $(NPM_EXEC)
 	$(NPM) install
 
-CLEAN_FILES += $(TAP) ./node_modules/tap $(JS_BUNDLE)
+CLEAN_FILES += ./node_modules $(JS_BUNDLE)
 
 .PHONY: js
 js: $(JS_BUNDLE)
-
 
 $(JS_BUNDLE): $(JS_BUNDLE_FILES) $(NODE_EXEC)
 	@echo "Building js bundle"
 	$(NODE) tools/build-js
 
 
-.PHONY: dev
+.PHONY: devrun
 devrun:
 	@./tools/devrun.sh
 
 .PHONY: test
-test: $(JS_BUNDLE)
-	./node_modules/.bin/mocha-phantomjs ./public/test/index.html
+test: $(JS_BUNDLE) | $(MOCHA_PHANTOMJS)
+	$(MOCHA_PHANTOMJS) ./public/test/index.html
 
 
 .PHONY: release
@@ -111,13 +107,11 @@ publish: release
 
 
 include ./tools/mk/Makefile.deps
-
 include ./tools/mk/Makefile.targ
-ifeq ($(shell uname -s), 'SunOS')
+ifeq ($(shell uname -s),SunOS)
 	include ./tools/mk/Makefile.node_prebuilt.targ
 else
 	include ./tools/mk/Makefile.node.targ
 endif
-
-include ./tools/mk/Makefile.node_deps.targ
 include ./tools/mk/Makefile.smf.targ
+
