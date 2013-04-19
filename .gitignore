@@ -8,4 +8,4 @@ cscope.po.out
 cscope.out
 smf/manifests/*.xml
 .DS_Store
-public/✚.js
+public/app.js

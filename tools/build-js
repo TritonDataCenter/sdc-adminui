@@ -74,7 +74,7 @@ var b = shim(browserify(), shimConfig)
     .require('underscore.string', { expose: 'underscore.string' })
     .require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery' })
     .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment' })
-    .require(require.resolve(join(root, './adminui')), {expose: 'adminui'})
+    .require(require.resolve(join(root, './adminui')), {expose: 'adminui'});
 
 glob(join('**/*.js'), {cwd: root}, function(err, files) {
     files.forEach(function(f) {
@@ -84,7 +84,7 @@ glob(join('**/*.js'), {cwd: root}, function(err, files) {
 });
 
 var t = new Date().getTime();
-var outputPath = path.join(root, '..', '✚.js');
+var outputPath = path.join(root, '..', 'app.js');
 var tmpPath = format('%s.%s', outputPath, t);
 
 

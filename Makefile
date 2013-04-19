@@ -53,7 +53,7 @@ TMPDIR          := /tmp/$(STAMP)
 # Repo-specific targets
 #
 
-JS_BUNDLE = ./public/✚.js
+JS_BUNDLE = ./public/app.js
 JS_BUNDLE_FILES	:= $(shell find public/js -name '*.js' -o -name '*.hbs')
 JS_BUNDLE_FILES	+= ./tools/build-js
 
