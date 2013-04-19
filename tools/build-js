@@ -75,14 +75,14 @@ var b = shim(browserify(), shimConfig)
     .require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery' })
     .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment' })
     .require(require.resolve(join(root, './adminui')), {expose: 'adminui'})
-    .require(require.resolve(join(root, './main')), {expose: 'main'});
 
 glob(join('**/*.js'), {cwd: root}, function(err, files) {
     files.forEach(function(f) {
-        var exposeAs = f.substr(0, f.lastIndexOf('.'));
+        var exposeAs = './' + f.substr(0, f.lastIndexOf('.'));
         b.require(require.resolve(join(root, f)), {expose: exposeAs});
     });
 });
+
 var t = new Date().getTime();
 var outputPath = path.join(root, '..', '✚.js');
 var tmpPath = format('%s.%s', outputPath, t);

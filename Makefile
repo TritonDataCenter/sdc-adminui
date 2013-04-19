@@ -34,8 +34,15 @@ SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
 NODE_PREBUILT_VERSION=v0.8.20
 NODE_PREBUILT_TAG=zone
 
+
+
 include ./tools/mk/Makefile.defs
-include ./tools/mk/Makefile.node_prebuilt.defs
+ifeq ($(shell uname -s), 'SmartOS')
+	include ./tools/mk/Makefile.node_prebuilt.defs
+else
+	include ./tools/mk/Makefile.node.defs
+endif
+
 include ./tools/mk/Makefile.node_deps.defs
 include ./tools/mk/Makefile.smf.defs
 
@@ -77,8 +84,8 @@ devrun:
 	@./tools/devrun.sh
 
 .PHONY: test
-test: $(TAP)
-	# TAP=1 $(TAP) test/*.test.js
+test: $(JS_BUNDLE)
+	./node_modules/.bin/mocha-phantomjs ./public/test/index.html
 
 
 .PHONY: release
@@ -104,7 +111,13 @@ publish: release
 
 
 include ./tools/mk/Makefile.deps
-include ./tools/mk/Makefile.node_prebuilt.targ
+
+include ./tools/mk/Makefile.targ
+ifeq ($(shell uname), 'SunOS')
+	include ./tools/mk/Makefile.node_prebuilt.targ
+else
+	include ./tools/mk/Makefile.node.targ
+endif
+
 include ./tools/mk/Makefile.node_deps.targ
 include ./tools/mk/Makefile.smf.targ
-include ./tools/mk/Makefile.targ
