@@ -108,11 +108,14 @@ table.vertical {
 
 .network-activity-indicator.error { background: #ff1e00; }
 
-.branding {
+h1.branding {
   .version { color: #aaa; }
   .joyent { color: #ff6600; font-weight: 300;}
   .sdc { margin-right: 10px;}
   .product { color: #aaa;}
+  margin: 0;
+  line-height: 20px;
+  font-size: 14px;
   font-weight: 200;
   text-transform: uppercase;
 }
@@ -122,7 +125,9 @@ table.vertical {
   color: #666;
   .acc-controls {
     text-align: right;
-    a.signout { cursor: pointer;}
+    font-size: 12px;
+    a.signout { cursor: pointer; text-transform: uppercase; }
+    .login-name { margin: 0 8px; }
   }
 
 }
@@ -174,7 +179,7 @@ table.vertical {
       .box-shadow(none);
     }
   }
-  li.fishbulb { margin-left: 15px; }
+  li.fishbulb { margin-left: 70px; }
 
 
   overflow: hidden;

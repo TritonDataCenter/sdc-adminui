@@ -37,7 +37,7 @@ NODE_PREBUILT_TAG=zone
 
 
 include ./tools/mk/Makefile.defs
-ifeq ($(shell uname -s), 'SmartOS')
+ifeq ($(shell uname -s), 'SunOS')
 	include ./tools/mk/Makefile.node_prebuilt.defs
 else
 	include ./tools/mk/Makefile.node.defs
@@ -102,9 +102,9 @@ release: all deps docs $(SMF_MANIFESTS)
 .PHONY: publish
 publish: release
 	@if [[ -z "$(BITS_DIR)" ]]; then \
-    echo "error: 'BITS_DIR' must be set for 'publish' target"; \
-    exit 1; \
-  fi
+		echo "error: 'BITS_DIR' must be set for 'publish' target"; \
+		exit 1; \
+	fi
 	mkdir -p $(BITS_DIR)/adminui
 	cp $(ROOT)/$(RELEASE_TARBALL) $(BITS_DIR)/adminui/$(RELEASE_TARBALL)
 
@@ -113,7 +113,7 @@ publish: release
 include ./tools/mk/Makefile.deps
 
 include ./tools/mk/Makefile.targ
-ifeq ($(shell uname), 'SunOS')
+ifeq ($(shell uname -s), 'SunOS')
 	include ./tools/mk/Makefile.node_prebuilt.targ
 else
 	include ./tools/mk/Makefile.node.targ
