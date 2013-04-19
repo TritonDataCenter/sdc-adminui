@@ -51,7 +51,6 @@ var PackageSelect = Backbone.Marionette.CollectionView.extend({
 
 var ProvisionVmTemplate = require('../tpl/provision-vm.hbs');
 
-var UserTypeaheadView = require('../tpl/typeahead-user.hbs');
 var TypeaheadUser = require('./typeahead-user');
 var ImageTypeaheadView = require('../tpl/typeahead-image.hbs');
 var ServerTypeaheadView = require('../tpl/typeahead-server.hbs');
@@ -64,6 +63,8 @@ var View = Backbone.Marionette.ItemView.extend({
 
     events: {
         'submit form': 'provision',
+        'typeahead:selected input#input-image': 'onSelectImage',
+        'input input#input-image': 'onSelectImage',
         'blur input[type=text]': 'checkFields',
         'change input[type=checkbox]': 'checkFields'
     },
@@ -78,6 +79,7 @@ var View = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function(options) {
+        _.bind(this, this.onSelectImage);
         this.vent = adminui.vent;
         this.model = new Vm();
         this.packages = new Packages();
@@ -158,6 +160,7 @@ var View = Backbone.Marionette.ItemView.extend({
         this.$('.package-preview-container').append(this.packagePreview.render().el);
 
         this.hideError();
+        this.$('.control-group-brand').hide();
         this.checkFields();
 
         return this;
@@ -177,6 +180,36 @@ var View = Backbone.Marionette.ItemView.extend({
         this.$('.control-group-networks').show();
     },
 
+    onSelectImage: function(e, datum) {
+        var image = null;
+        if (datum && datum.uuid) {
+            image = this.imagesCollection.get(datum.uuid);
+        }
+
+        if (! image) {
+            this.$('.control-group-brand').hide();
+            return;
+        }
+        if (image && image.requirements && image.requirements['brand']) {
+            this.$('.control-group-brand').hide();
+        } else {
+            this.$('.control-group-brand').show();
+        }
+
+        if (image.get('type') === 'zvol') {
+            this.$('.control-group-brand').find('[name=brand]').val('kvm');
+            this.$('.control-group-brand').hide();
+        } else {
+            this.$('.control-group-brand').show();
+        }
+
+        if (image.get('os') === 'smartos') {
+            this.$('.control-group-brand option[value=kvm]').attr('disabled', true);
+        } else {
+            this.$('.control-group-brand option[value=kvm]').removeAttr('disabled');
+            this.$('.control-group-brand').show();
+        }
+    },
 
     checkFields: function() {
         this.hideError();
@@ -202,32 +235,6 @@ var View = Backbone.Marionette.ItemView.extend({
         } else {
             this.disableProvisionButton();
         }
-
-
-        if (image_uuid) {
-            var image = this.imagesCollection.get(image_uuid);
-            if (image && image.requirements && image.requirements['brand']) {
-                this.$('.control-group-brand').hide();
-            } else {
-                this.$('.control-group-brand').show();
-            }
-
-            if (image.get('type') === 'zvol') {
-                this.$('.control-group-brand').find('[name=brand]').val('kvm');
-                this.$('.control-group-brand').hide();
-            } else {
-                this.$('.control-group-brand').show();
-            }
-
-            if (image.get('os') === 'smartos') {
-                this.$('.control-group-brand option[value=kvm]').attr('disabled', true);
-            } else {
-                this.$('.control-group-brand option[value=kvm]').removeAttr('disabled');
-                this.$('.control-group-brand').show();
-            }
-        } else {
-            this.$('.control-group-brand').hide();
-        }
     },
 
     disableProvisionButton: function() {
@@ -252,15 +259,18 @@ var View = Backbone.Marionette.ItemView.extend({
             values['server_uuid'] = formData.server;
         }
 
-        if (formData.image) {
-            var image = this.imagesCollection.get(formData.image);
-            var imageReqs = image.get('requirements') || {};
 
-            if (imageReqs['brand'] === 'kvm') {
-                values['brand'] = 'kvm';
-            }
-            if (image.get('type') === 'zvol') {
-                values['brand'] = 'kvm';
+        if (formData.image.length) {
+            var image = this.imagesCollection.get(formData.image);
+            if (image) {
+                var imageReqs = image.get('requirements') || {};
+
+                if (imageReqs['brand'] === 'kvm') {
+                    values['brand'] = 'kvm';
+                }
+                if (image.get('type') === 'zvol') {
+                    values['brand'] = 'kvm';
+                }
             }
         }
 
