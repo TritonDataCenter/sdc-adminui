@@ -12,6 +12,8 @@ var Backbone = require('backbone');
 
 var Topbar = require('./topbar');
 var Mainnav = require('./mainnav');
+var Notifier = require('./notifier');
+
 var JobProgressView = require('./job-progress');
 
 var tplChrome = require('../tpl/chrome.hbs');
@@ -33,6 +35,7 @@ var AppView = Backbone.Marionette.Layout.extend({
 
         this.topbarView = new Topbar({ user: this.user });
         this.mainnavView = new Mainnav({ vent: this.vent});
+        this.notifier = new Notifier({ vent: this.vent });
 
         this.listenTo(this.vent, 'error', this.onError, this);
         this.listenTo(this.vent, 'showjob', this.onShowjob, this);
@@ -58,6 +61,7 @@ var AppView = Backbone.Marionette.Layout.extend({
     onRender: function() {
         this.mainnav.attachView(this.mainnavView);
         this.mainnavView.setElement(this.$("#mainnav"));
+        this.notifier.setElement(this.$("#notifications"));
 
         this.topbar.attachView(this.topbarView);
         this.topbarView.setElement(this.$("#topbar"));

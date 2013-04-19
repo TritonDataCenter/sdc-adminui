@@ -86,6 +86,10 @@ module.exports = Backbone.Marionette.ItemView.extend({
             success: function(model, resp) {
                 self.$el.modal('hide').remove();
                 app.vent.trigger('showview', 'user', {user: self.model});
+                app.vent.trigger('notification', {
+                    level: 'success',
+                    message: _.str.sprintf('Created user with login %s', self.model.get('login'))
+                });
             }
         });
     },

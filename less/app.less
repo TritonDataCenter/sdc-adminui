@@ -12,6 +12,39 @@ html { height: 100%; }
 #content a { cursor: pointer;}
 #footer { height: 24px; background: #dfe7ec;}
 
+#notifications {
+  position: relative;
+  text-align: center;
+  z-index: 50;
+  .notifications {
+    overflow: visible;
+    z-index: 51;
+    position: absolute;
+  }
+  .notification {
+    width: auto;
+    min-width: 300px;
+    padding: 10px;
+    &.success {
+      color: @successText;
+      border: 1px solid @successBorder;
+      background: @successBackground; }
+    &.error {
+      color: @errorText;
+      border: 1px solid @errorBorder;
+      background: @errorBackground; }
+    &.info {
+      color: @infoText;
+      border: 1px solid @infoBorder;
+      background: @infoBackground;
+    }
+    &.warn {
+      color: @warningText;
+      border: 1px solid @warningBorder;
+      background: @warningBackground; }
+  }
+}
+
 
 .page-header {
   margin-bottom: 10px;
