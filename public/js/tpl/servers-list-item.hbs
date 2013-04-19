@@ -2,13 +2,13 @@
   <span class="
     label
     {{#if running}}
-    {{status}}
+      {{status}}
     {{else}}
-    label-warn
+      label-warn
     {{/if}}
     ">
     {{#if running}}
-    <i class="icon-ok-sign icon-white"></i>
+      <i class="icon-ok-sign icon-white"></i>
     {{/if}}
     {{status}}
   </span>
@@ -26,6 +26,10 @@
 </td>
 <td>
   {{#if not_setup}}
-  <button class="setup btn btn-mini">Setup</button>
+    {{#if setting_up}}
+    Setting up
+    {{else}}
+    <button class="setup btn btn-info setup"><i class="icon-magic"></i> Setup Server</button>
+    {{/unless}}
   {{/if}}
 </td>

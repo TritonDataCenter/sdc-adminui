@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
-
-
+var _ = require('underscore');
 var app = require('../adminui');
+
 var Template = require('../tpl/server-setup.hbs');
 var ViewModel = Backbone.Model.extend({});
 var ServerSetupView = Backbone.Marionette.ItemView.extend({
@@ -26,6 +26,10 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
                 if (status === 'succeeded') {
                     server.fetch();
                 }
+                app.vent.trigger('notification', {
+                    level: 'success',
+                    message: _.str.sprintf('Server %s setup complete.', server.get('hostname'))
+                });
             });
             self.$el.modal('hide').remove();
         });

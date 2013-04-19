@@ -232,9 +232,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
     },
 
     showSetupModal: function() {
-        var view = new ServerSetup({
-            model: this.model
-        });
+        var view = new ServerSetup({ model: this.model });
         view.render();
     },
 

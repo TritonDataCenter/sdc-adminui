@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var moment = require('moment');
+var ServerSetup = require('./server-setup');
 
 
 /**
@@ -17,7 +18,8 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
 
     events: {
-        'click td.name a':'navigateToServerDetails'
+        'click td.name a':'navigateToServerDetails',
+        'click .setup':'setup'
     },
 
     url: function() {
@@ -28,11 +30,16 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
         adminui.vent.trigger('showview', 'server', { server:this.model });
     },
 
+    setup: function() {
+        var view = new ServerSetup({ model: this.model });
+        view.render();
+    },
+
     serializeData: function() {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.apply(this, arguments);
         _.extend(data, {
             running: data.status === 'running',
-            not_setup: data.setup === 'false',
+            not_setup: data.setup === false,
             last_boot: moment(data.last_boot).fromNow(),
             last_heartbeat: moment(data.last_heartbeat).fromNow(),
             memory_available_mb: _.str.sprintf("%0.1f", this.memory_available_bytes/1024/1024),
