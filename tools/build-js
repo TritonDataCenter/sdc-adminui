@@ -90,7 +90,6 @@ var tmpPath = format('%s.%s', outputPath, t);
 
 b.bundle({debug:true}, function(err, src) {
     if (err) {
-        fs.unlinkSync(outputPath);
         console.error(err);
         process.exit(1);
     }
