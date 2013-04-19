@@ -4,7 +4,7 @@ supervisor -w public/js/,tools/build-js -e 'js|hbs' -n exit tools/build-js &
 
 port=$(cat `pwd`/etc/config.json | json sslport)
 echo "***** Starting adminui server on port $port"
-node-dev server.js NODE=$(which node) | bunyan &
+node-dev server.js NODE=$(which node) | bunyan -p &
 
 while true; do
   sleep 10

@@ -36,9 +36,7 @@
     "handlebars-runtime": "~1.0.0"
   },
   "devDependencies": {
-    "mocha": "~1.9.0"
-  },
-  "optionalDependencies": {
+    "mocha": "~1.9.0",
     "phantomjs": "~1.9.0-2",
     "mocha-phantomjs": "~2.0.1"
   }

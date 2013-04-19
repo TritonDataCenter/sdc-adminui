@@ -63,16 +63,22 @@ all: $(SMF_MANIFESTS) node_modules js
 
 .PHONY: node_modules
 node_modules: | $(NPM_EXEC)
-	$(NPM) install
+	$(NPM) install --production
 
 CLEAN_FILES += ./node_modules $(JS_BUNDLE)
 
 .PHONY: js
 js: $(JS_BUNDLE)
 
-$(JS_BUNDLE): $(JS_BUNDLE_FILES) $(NODE_EXEC)
+$(JS_BUNDLE): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
 	@echo "Building js bundle"
 	$(NODE) tools/build-js
+
+$(MOCHA_PHANTOMJS): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
+	$(NPM) install
+
+.PHONY: dev
+dev: $(JS_BUNDLE) $(MOCHA_PHANTOMJS)
 
 
 .PHONY: devrun
