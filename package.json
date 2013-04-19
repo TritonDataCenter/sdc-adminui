@@ -28,7 +28,6 @@
     "install": "~0.1.7",
     "underscore": "~1.4.4",
     "underscore.string": "~2.3.1",
-    "hbsfy": "~0.1.2",
     "through": "~2.2.7",
     "handlebars": "~1.0.10",
     "mime": "~1.2.9",
@@ -36,9 +35,7 @@
     "glob": "~3.1.21"
   },
   "devDependencies": {
-    "qunitjs": "~1.11.0",
-    "nodeunit": "0.7.x",
-    "node-dev": "~2.0.1"
+    "mocha": "~1.9.0"
   },
   "optionalDependencies": {
     "phantomjs": "~1.9.0-2"
