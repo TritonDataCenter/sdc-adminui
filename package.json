@@ -20,7 +20,7 @@
     "restify": "2.4.0",
     "filed": "0.0.7",
     "less": "1.3.x",
-    "redis": "0.7.2",
+    "redis": "0.8.3",
     "moray": "git+ssh://git@git.joyent.com:node-moray.git#e5db01d",
     "npm": "~1.2.18",
     "browserify": "~2.12.0",
