@@ -1,4 +1,7 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
+
+var adminui = require('adminui');
 
 
 var Template = require('../tpl/networks-detail.hbs');
@@ -9,6 +12,23 @@ var AddressesTableRowTemplate = require('../tpl/networks-detail-address-row.hbs'
 var AddressesTableRow = Backbone.Marionette.ItemView.extend({
     tagName: "tr",
     template: AddressesTableRowTemplate,
+    events: {
+        'click .belongs-to a': 'navigateToItem'
+    },
+    navigateToItem: function(e) {
+        if (e) {
+            e.preventDefault();
+        }
+
+        var uuid = this.model.get('belongs_to_uuid');
+        var type = this.model.get('belongs_to_type');
+        if (type === 'server') {
+            adminui.vent.trigger('showview', 'server', {uuid: uuid });
+        }
+        if (type === 'zone') {
+            adminui.vent.trigger('showview', 'vm', {uuid: uuid });
+        }
+    },
     templateHelpers: {
         belongs_to_url: function() {
             var uuid = this.belongs_to_uuid;
