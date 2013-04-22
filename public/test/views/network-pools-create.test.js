@@ -24,4 +24,12 @@ suite('views - NetworkPoolsCreate', function() {
         assert.notEqual($el.find('.chzn-container').length, 0, 'contains a .chzn-container');
         assert.notEqual($el.find('.chzn-container-multi').length, 0, 'contains a .chzn-container');
     });
+
+    test('attaches user typeahead input', function() {
+        var view = new View();
+        var $el = view.render().$el;
+        assert.equal(view.ui.ownerInputField.get(0), view.userInput.el);
+        assert.ok(view.ui.ownerInputField);
+        assert.ok(view.userInput.el);
+    })
 });

@@ -5,11 +5,16 @@ var Networks = require('../models/networks');
 var NetworkPool = require('../models/network-pool');
 var Template = require('../tpl/network-pools-create.hbs');
 
+var TypeaheadUser = require('../views/typeahead-user');
+
 module.exports = Backbone.Marionette.ItemView.extend({
     template: Template,
     id: 'network-pools-create',
     attributes: {
         'class': 'modal'
+    },
+    ui: {
+        'ownerInputField': 'input[name=owner_uuid]'
     },
     events: {
         'submit form': 'onSubmit'
@@ -19,6 +24,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.networks = options.networks || new Networks();
         this.networkPool = options.networkPool || new NetworkPool();
 
+        this.userInput = new TypeaheadUser();
+        this.listenTo(this.userInput, 'selected', this.onSelectUser);
         this.listenTo(this.networks, 'sync', this.render);
         this.listenTo(this.networkPool, 'sync', this.onSaved);
     },
@@ -42,6 +49,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
+        this.userInput.setElement(this.$('input[name=owner_uuid]'));
         this.$('select').chosen();
     },
 
