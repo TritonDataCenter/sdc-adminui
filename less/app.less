@@ -738,11 +738,16 @@ ul.attributes {
       font-size: 12px;
       background-color: darken(#e8eef2, 2%);
       padding: 10px;
+
       .name { margin-right: 20px; }
       .uuid {
         float: right;
+        color: @grayLight;
         #font > .monospace(10px);
       }
+      .delete { margin-left: 10px; font-weight: bold; color: @red; float: right; visibility: hidden;}
+      &:hover .delete { text-decoration: none; visibility: visible; }
+
       .network-count { font-style: italic; font-size: 10px; text-transform: uppercase; color: @grayLight;}
     }
   }
@@ -791,12 +796,13 @@ ul.attributes {
   .attributes strong { width: 200px;}
 }
 
-#network-create-modal   {
+#network-create-modal {
   width: 720px;
   margin-left: -360px ;
 }
+
 #network-pools-create {
-  .modal-body { min-height: 300px;}
+  .modal-body { overflow: visible;}
 }
 
 

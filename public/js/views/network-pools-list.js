@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 
+var adminui = require('../adminui');
 var Networks = require('../models/networks');
 var NetworksList = require('./views/networks-list');
 
@@ -9,7 +10,24 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/network-pools-list-item.hbs'),
 
     events: {
-        'click .network-pool-header': 'toggleDetails'
+        'click .network-pool-header': 'toggleDetails',
+        'click .delete': 'onClickDelete'
+    },
+
+    onClickDelete: function() {
+        var model = this.model;
+        var confirmMsg = _.str.sprintf('Confirm delete network pool: %s ?', this.model.get('name'));
+        var res = window.confirm(confirmMsg);
+        if (res === true) {
+            model.destroy().done(function() {
+                var notifyMsg = _.str.sprintf('Network %s deleted successfully.',
+                    model.get('name'));
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: notifyMsg
+                });
+            });
+        }
     },
 
     toggleDetails: function() {
@@ -22,8 +40,16 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     }
 });
 
+var EmptyView = Backbone.Marionette.ItemView.extend({
+    tagName: 'p',
+    template: function() {
+        return 'There are no network pools.';
+    }
+});
+
 module.exports = Backbone.Marionette.CollectionView.extend({
     tagName: 'ul',
+    emptyView: EmptyView,
     itemView: ItemView,
     attributes: {
         'class': 'unstyled network-pools-list'

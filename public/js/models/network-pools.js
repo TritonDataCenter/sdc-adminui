@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var NetworkPool = require('./network-pool');
 /*
     GET /network_pools/3b5913ec-42e6-4803-9c0b-c9b1c5603520
     {
@@ -12,6 +13,7 @@ var Backbone = require('backbone');
 */
 
 module.exports = Backbone.Collection.extend({
+    model: NetworkPool,
     url: "/_/network_pools"
 });
 
