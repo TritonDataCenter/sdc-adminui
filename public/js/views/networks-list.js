@@ -10,8 +10,17 @@ var NetworksListView = Backbone.Marionette.CollectionView.extend({
         'class': 'unstyled networks-list'
     },
     itemView: NetworksListItem,
+    itemViewOptions: function() {
+        return {
+            'showDelete': this.showDelete
+        };
+    },
     collectionEvents: {
         'error': 'onError'
+    },
+    initialize: function(options) {
+        options = options || {};
+        this.showDelete = options.showDelete || false;
     },
 
     onError: function(model, res) {

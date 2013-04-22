@@ -778,6 +778,10 @@ ul.attributes {
         width: 100px;
       }
       strong { font-size: 12px; color: @grayLight;}
+      .actions {
+        a.delete-network { color: @red; text-decoration: none;}
+       float: right; vertical-align: middle; color: @red; visibility: hidden;}
+      &:hover .actions { visibility: visible; }
       .value {
         color: @grayDark;
         font-family: @monoFontFamily;

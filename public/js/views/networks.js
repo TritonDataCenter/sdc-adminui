@@ -44,7 +44,10 @@ var NetworksView = Backbone.Marionette.ItemView.extend({
         this.networks = options.networks || new Networks();
         var networkPools = this.networkPools = options.networkPools || new NetworkPools();
 
-        this.networksList = new NetworksListView({ collection: this.networks });
+        this.networksList = new NetworksListView({
+            showDelete: true,
+            collection: this.networks
+        });
         this.networkPoolsList = new NetworkPoolsListView({
             networks: this.networks,
             collection: this.networkPools

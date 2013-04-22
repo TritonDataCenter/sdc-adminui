@@ -15,19 +15,22 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     },
 
     onClickDelete: function() {
-        var model = this.model;
         var confirmMsg = _.str.sprintf('Confirm delete network pool: %s ?', this.model.get('name'));
         var res = window.confirm(confirmMsg);
         if (res === true) {
-            model.destroy().done(function() {
-                var notifyMsg = _.str.sprintf('Network %s deleted successfully.',
-                    model.get('name'));
-                adminui.vent.trigger('notification', {
-                    level: 'success',
-                    message: notifyMsg
-                });
-            });
+            this.deleteNetworkPool();
         }
+    },
+
+    deleteNetworkPool: function() {
+        var model = this.model;
+        this.model.destroy().done(function() {
+            var notifyMsg = _.str.sprintf('Network %s deleted successfully.', model.get('name'));
+            adminui.vent.trigger('notification', {
+                level: 'success',
+                message: notifyMsg
+            });
+        });
     },
 
     toggleDetails: function() {

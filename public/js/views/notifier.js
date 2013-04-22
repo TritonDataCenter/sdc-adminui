@@ -25,7 +25,9 @@ var View = Backbone.View.extend({
 
         node.slideDown();
         setTimeout(function() {
-            node.slideUp();
+            node.slideUp(function() {
+                node.remove();
+            });
         }, this.timeout);
     },
     _createNode: function(t) {
