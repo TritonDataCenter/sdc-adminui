@@ -14,8 +14,8 @@
     <div class="control-group">
       <label class="control-label">Networks</label>
       <div class="controls">
-        <div class="chosen">
-          <select class="chzn-select" style="width: 300px" name="networks" class="input-large" multiple>
+        <div class="chosen chosen-xlarge">
+          <select class="chzn-select" name="networks" multiple>
             {{#each networks}}
             <option value="{{this.uuid}}">{{this.name}} / {{this.subnet}}</option>
             {{/each}}

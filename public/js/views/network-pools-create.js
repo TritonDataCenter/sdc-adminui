@@ -42,11 +42,9 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        var self = this;
-        process.nextTick(function() {
-            self.$('select').chosen();
-        });
+        this.$('select').chosen();
     },
+
     show: function() {
         this.render();
         this.$el.modal();
