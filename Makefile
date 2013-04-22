@@ -74,7 +74,7 @@ $(JS_BUNDLE): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
 	@echo "Building js bundle"
 	$(NODE) tools/build-js
 
-$(MOCHA_PHANTOMJS): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
+$(MOCHA_PHANTOMJS): | $(JS_BUNDLE_FILES) | $(NODE_EXEC)
 	$(NPM) install
 
 .PHONY: dev
@@ -86,7 +86,7 @@ devrun:
 	@./tools/devrun.sh
 
 .PHONY: test
-test: $(JS_BUNDLE) | $(MOCHA_PHANTOMJS)
+test: | $(JS_BUNDLE) $(MOCHA_PHANTOMJS)
 	$(MOCHA_PHANTOMJS) ./public/test/index.html
 
 

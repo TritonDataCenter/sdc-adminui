@@ -12,7 +12,7 @@
   "private": true,
   "dependencies": {
     "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#c90f01d",
-    "ldapjs": "0.5.7",
+    "ldapjs": "0.6.2",
     "sockjs": "0.3.x",
     "node-uuid": "1.4.0",
     "bunyan": "0.21.1",
@@ -25,7 +25,6 @@
     "npm": "~1.2.18",
     "browserify": "~2.12.0",
     "browserify-shim": "~2.0.3",
-    "install": "~0.1.7",
     "underscore": "~1.4.4",
     "underscore.string": "~2.3.1",
     "through": "~2.2.7",
@@ -38,6 +37,7 @@
   "devDependencies": {
     "mocha": "~1.9.0",
     "phantomjs": "~1.9.0-2",
-    "mocha-phantomjs": "~2.0.1"
+    "mocha-phantomjs": "~2.0.1",
+    "chai": "~1.5.0"
   }
 }

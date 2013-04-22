@@ -8,7 +8,6 @@ var View = Backbone.View.extend({
             this.applyBindings();
         }
         this.timeout = options.timeout || 5000;
-        console.log('hello');
     },
 
     applyBindings: function() {

@@ -82,8 +82,8 @@ html { height: 100%; }
 // Headings
 // -------------------------
 
-h1 { font-size: 32px; line-height: 40px; }
-h2 { font-size: 28px; line-height: 40px; }
+h1 { font-size: 28px; line-height: 40px; }
+h2 { font-size: 24px; line-height: 40px; font-weight: 300; }
 h3 { font-size: 21px; line-height: 40px; }
 h4 { font-size: 18px; line-height: 20px; }
 h5 { font-size: 14px; line-height: 20px; }
@@ -775,50 +775,80 @@ ul.attributes {
   }
 }
 
-
-#page-networks {
-  .details {
-    .page-header { margin-bottom: 0; padding-bottom: 0;}
-    width: 79%;
-    float: left;
-    padding: 0 26px;
-    box-sizing: border-box;
-
+#page-network {
     td.belongs-to strong { display: inline-block; width: 70px; color: #aaa; }
     td.belongs-to small {
       font-style: italic;
       #font > .monospace(12px);
     }
+}
+
+#page-networks {
+  section { margin-bottom: 20px;}
+  .network-pools-list>ul>li {
+    margin-bottom: 1em;
+
+    .network-pool-header {
+      cursor: pointer;
+      font-size: 12px;
+      background-color: darken(#e8eef2, 2%);
+      padding: 10px;
+      .name { margin-right: 20px; }
+      .uuid {
+        float: right;
+        #font > .monospace(10px);
+      }
+      .network-count { font-style: italic; font-size: 10px; text-transform: uppercase; color: @grayLight;}
+    }
   }
 
-  .list {
-    float: left;
-    width: 20%;
-    border-right: 1px solid #DFE7EC;
-    ul li a {
-      color: @grayLight;
-      overflow: hidden;
-      cursor: pointer;
-      padding: 5px 12px;
+  .networks-list {
+    li {
+      border: 1px solid #e8e8e8;
+      background: #fafafa;
+      display: block;
+      padding: 10px;
 
-      .name { }
+      &>div { vertical-align:top; display: inline-block; }
+      strong { display: block; }
+      .provision-ip-range {
+        width: 240px;
+      }
+      .gateway { width: 140px;}
+      .name {
+        width: 180px;
+        a { display: block; clear: both; font-weight: bold; }
+      }
       .subnet {
         color: @grayDark;
         font-family: @monoFontFamily;
-        font-size: 9px;
+        font-size: 10px;
+      }
+      .vlan {
+        width: 100px;
+      }
+      strong { font-size: 12px; color: @grayLight;}
+      .value {
+        color: @grayDark;
+        font-family: @monoFontFamily;
+        font-size: 10px;
       }
     }
-
-    ul li.active {
-      border-right: 1px solid #dfe7ec;
-    }
-
-    ul li.active a {
-      color: #333;
-      background: #DFE7EC;
-    }
-    ul a:hover { background: none; }
   }
+}
+
+#network-details {
+  width: 640px;
+  margin-left: -320px;
+  .attributes strong { width: 200px;}
+}
+
+#network-create-modal   {
+  width: 720px;
+  margin-left: -360px ;
+}
+#network-pools-create {
+  .modal-body { min-height: 200px;}
 }
 
 

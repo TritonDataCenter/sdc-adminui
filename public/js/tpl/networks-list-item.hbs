@@ -1,4 +1,29 @@
-<A>
-  <div class="name">{{ name }}</div>
-  <div class="subnet">{{ subnet }}</div>
-</a>
+<div class="name"><a>{{ name }}</a> <span class="subnet">{{subnet}}</span></div>
+<div class="vlan">
+  <strong>VLAN</strong>
+  <span class="value">{{vlan_id}}</span>
+</div>
+<div class="gateway">
+  <strong>Gateway</strong>
+  <span class="value">
+    {{#if gateway}}
+    {{ gateway }}
+    {{else}}
+    -
+    {{/if}}
+  </span>
+</div>
+<div class="provision-ip-range">
+  <strong>Range</strong>
+  <span class="value">{{ provision_start_ip }} - {{ provision_end_ip }}</span>
+</div>
+<div class="resolvers">
+  <strong>Resolvers</strong>
+  <span class="value">
+    {{#if resolvers}}
+    {{#each resolvers}} {{this}} &nbsp; {{/each}}
+    {{else}}
+    -
+    {{/if}}
+  </span>
+</div>

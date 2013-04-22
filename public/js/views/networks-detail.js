@@ -54,7 +54,10 @@ var NotesView = require('./notes');
 
 var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     template: Template,
-    sidebar: "networks",
+    id: 'network-details',
+    attributes: {
+        'class': 'modal'
+    },
     initialize: function() {
         this.modelBinder = new Backbone.ModelBinder();
     },

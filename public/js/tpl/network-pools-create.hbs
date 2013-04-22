@@ -1,0 +1,33 @@
+<form class="form-horizontal">
+  <div class="modal-header">
+    <h1>Create Network Pool</h1>
+  </div>
+
+  <div class="modal-body">
+    <div class="control-group">
+      <label class="control-label">Network Pool Name</label>
+      <div class="controls">
+        <input type="text" class="input" name="name" placeholder="name of network pool">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Networks</label>
+      <div class="controls">
+        <div class="chosen">
+          <select class="chzn-select" style="width: 300px" name="networks" class="input-large" multiple>
+            {{#each networks}}
+            <option value="{{this.uuid}}">{{this.name}} / {{this.subnet}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <a class="btn" data-dismiss="modal">Close</a>
+    <button type="submit" class="btn btn-primary">Save Network Group</button>
+  </div>
+</form>

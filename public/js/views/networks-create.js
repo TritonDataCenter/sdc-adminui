@@ -1,16 +1,32 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
+
 var Template = require('../tpl/networks-create.hbs');
 var Network = require('../models/network');
 var NicTags = require('../models/nictags');
 
 var TypeaheadUserInput = require('./typeahead-user');
 
+var NicTagSelectItem = Backbone.View.extend({
+    tagName: 'option',
+    render: function() {
+        var name = this.model.get('name');
+        this.$el.text(name);
+        this.$el.attr("value", name);
+    }
+});
+
 var View = Backbone.Marionette.ItemView.extend({
     template: Template,
+    attributes: {
+        'class': 'modal'
+    },
+
+    id: 'network-create-modal',
 
     events: {
         'submit form': 'onSubmit',
+        'click .save': 'onSubmit',
         'click .create-new-nic-tag': 'onClickCreateNewNicTag'
     },
 
@@ -20,8 +36,9 @@ var View = Backbone.Marionette.ItemView.extend({
         'newNicTagField': 'input[name=nic_tag]',
         'createNewNicTagButton': '.create-new-nic-tag'
     },
+
     modelEvents: {
-        'sync': 'onSave',
+        'sync': 'onSaved',
         'error': 'onError'
     },
 
@@ -30,14 +47,7 @@ var View = Backbone.Marionette.ItemView.extend({
         this.model = new Network();
         this.nicTags = new NicTags();
         this.nicTagsSelect = new Backbone.Marionette.CollectionView({
-            itemView: Backbone.View.extend({
-                tagName: 'option',
-                render: function() {
-                    var name = this.model.get('name');
-                    this.$el.text(name);
-                    this.$el.attr("value", name);
-                }
-            }),
+            itemView: NicTagSelectItem,
             collection: this.nicTags
         });
     },
@@ -48,13 +58,12 @@ var View = Backbone.Marionette.ItemView.extend({
         this.ui.newNicTagField.show().focus();
     },
 
-    onSave: function() {
+    onSaved: function() {
         this.trigger('saved', this.model);
     },
 
     onSubmit: function(e) {
         e.preventDefault();
-        var self = this;
         this.model.save();
     },
 
@@ -105,8 +114,10 @@ var View = Backbone.Marionette.ItemView.extend({
         this.modelBinder.bind(this.model, this.el, bindings);
     },
 
-    onShow: function() {
+    show: function() {
+        this.render();
         this.$('.alert').hide();
+        this.$el.modal('show');
     },
 
     onClose: function() {

@@ -40,12 +40,12 @@ var JobsView = Backbone.Marionette.CompositeView.extend({
     name: 'jobs',
     id: 'page-jobs',
     template: JobsTemplate,
+    itemView: JobsItemView,
+    itemViewContainer: 'tbody',
     url: function() {
         return '/jobs';
     },
-    itemView: JobsItemView,
     emptyView: JobsItemEmptyView,
-    itemViewContainer: 'tbody',
     initialize: function() {
         this.collection = new Jobs();
         this.collection.fetch();
@@ -54,7 +54,7 @@ var JobsView = Backbone.Marionette.CompositeView.extend({
 
     onError: function(model, xhr) {
         adminui.vent.trigger('error', {
-            context: 'workflow via vmapi',
+            context: 'workflow vmapi',
             xhr: xhr
         });
     }
