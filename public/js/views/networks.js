@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 
+var adminui = require('../adminui');
 
 var Networks = require('../models/networks');
 var NetworkPools = require('../models/network-pools');
@@ -13,7 +14,15 @@ var NetworkPoolCreateView = require('./network-pools-create');
 var NetworksCreateView = require('./networks-create');
 var NetworksDetailView = require('./networks-detail');
 
-var adminui = require('../adminui');
+var ___NETWORK_POOL_CREATED = function(networkPool) {
+    return _.str.sprintf('Network Pool <strong>%s</strong> created successfully.',
+        networkPool.get('name'));
+};
+
+var ___NETWORK_CREATED = function(network) {
+    return _.str.sprintf('Network <strong>%s</strong> created successfully.', network.get('name'));
+};
+
 
 var NetworksTemplate = require('../tpl/networks.hbs');
 
@@ -25,13 +34,12 @@ var NetworksView = Backbone.Marionette.ItemView.extend({
         'click button[name=create-network]': 'showCreateNetworkForm',
         'click button[name=create-network-pool]': 'showCreateNetworkPoolForm'
     },
-
-    attributes: {
-        "id":"page-networks"
-    },
     ui: {
         'networksList': '.networks-list',
         'networkPoolsList': '.network-pools-list'
+    },
+    attributes: {
+        "id":"page-networks"
     },
 
     /**
@@ -69,8 +77,7 @@ var NetworksView = Backbone.Marionette.ItemView.extend({
             view.$el.modal('hide').remove();
             adminui.vent.trigger('notification', {
                 level: 'success',
-                message: _.str.sprintf('Network Pool <strong>%s</strong> created successfully.',
-                    networkPool.get('name'))
+                message: ___NETWORK_POOL_CREATED(networkPool)
             });
         }, this);
         view.show();
@@ -83,7 +90,7 @@ var NetworksView = Backbone.Marionette.ItemView.extend({
             view.$el.modal('hide').remove();
             adminui.vent.trigger('notification', {
                 level: 'success',
-                message: _.str.sprintf('Network <strong>%s</strong> created successfully.', network.get('name'))
+                message: ___NETWORK_CREATED(network)
             });
         }, this);
         view.show();

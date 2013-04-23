@@ -17,13 +17,15 @@ module.exports = Backbone.Marionette.ItemView.extend({
         'ownerInputField': 'input[name=owner_uuid]'
     },
     events: {
+        'blur input[name=owner_uuid]': 'onBlurOwnerField',
+        'focus input[name=owner_uuid]': 'onFocusOwnerField',
         'submit form': 'onSubmit'
     },
     initialize: function(options) {
         options = options || {};
         this.networks = options.networks || new Networks();
         this.networkPool = options.networkPool || new NetworkPool();
-
+        this.selectedUser = null;
         this.userInput = new TypeaheadUser();
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
         this.listenTo(this.networks, 'sync', this.render);
@@ -35,6 +37,32 @@ module.exports = Backbone.Marionette.ItemView.extend({
             networkPool: this.networkPool.toJSON(),
             networks: this.networks.toJSON()
         };
+    },
+
+
+    onFocusOwnerField: function(e) {
+        this.selectedUser = null;
+        this.userInput.val('');
+    },
+    onBlurOwnerField: function(e) {
+        /*
+         * prevent the user from de-focusing on the field if the user never selected
+         * a user from the dropdown
+         */
+        var $field = $(e.target);
+        if ($field.val().length === 0) {
+            this.selectedUser = null;
+        } else {
+            if (! this.selectedUser) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                $field.focus();
+            }
+        }
+    },
+
+    onSelectUser: function(user) {
+        this.selectedUser = user;
     },
 
     onSubmit: function(e) {
@@ -56,5 +84,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
     show: function() {
         this.render();
         this.$el.modal();
+        this.$('input:first').focus();
     }
 });

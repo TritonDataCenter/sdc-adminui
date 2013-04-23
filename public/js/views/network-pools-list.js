@@ -25,7 +25,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     deleteNetworkPool: function() {
         var model = this.model;
         this.model.destroy().done(function() {
-            var notifyMsg = _.str.sprintf('Network %s deleted successfully.', model.get('name'));
+            var notifyMsg = _.str.sprintf('Network <strong>%s</strong> deleted successfully.', model.get('name'));
             adminui.vent.trigger('notification', {
                 level: 'success',
                 message: notifyMsg
@@ -43,17 +43,20 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     }
 });
 
-var EmptyView = Backbone.Marionette.ItemView.extend({
+var EmptyView = require('./empty');
+var NetworkPoolListEmptyView = EmptyView.extend({
     tagName: 'p',
-    template: function() {
-        return 'There are no network pools.';
-    }
+    loadingMessage: 'Loading Network Pools...',
+    emptyMessage: 'There are no network pools.'
 });
 
 module.exports = Backbone.Marionette.CollectionView.extend({
     tagName: 'ul',
-    emptyView: EmptyView,
+    emptyView: NetworkPoolListEmptyView,
     itemView: ItemView,
+    itemViewOptions: function() {
+        return { emptyViewModel: this.networks };
+    },
     attributes: {
         'class': 'unstyled network-pools-list'
     },

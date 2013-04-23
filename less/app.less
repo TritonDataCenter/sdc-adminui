@@ -91,7 +91,6 @@ table.table {
   }
 }
 table.vertical {
-  tbody th { color: @gray;}
 }
 
 .error-modal {
@@ -242,7 +241,9 @@ h1.branding {
 }
 
 
-
+.table {
+  th, td { border: none;}
+}
 .table caption {
   border-top: 2px solid #eee;
   text-align: left;
@@ -417,7 +418,7 @@ h1.branding {
 }
 
 #page-server {
-  table.overview {
+  table {
     .table;
     margin-bottom: 0;
     tbody th { width: 150px; }
