@@ -4,11 +4,21 @@ var adminui = require('../adminui');
 
 var Networks = require('../models/networks');
 var NetworksListItem = require('./networks-list-item');
+var NetworksListEmptyView = Backbone.Marionette.ItemView.extend({
+    attributes: {
+        'class': 'empty'
+    },
+    template: function() {
+        return 'There are no networks';
+    }
+});
+
 var NetworksListView = Backbone.Marionette.CollectionView.extend({
     tagName: 'ul',
     attributes: {
         'class': 'unstyled networks-list'
     },
+    emptyView: NetworksListEmptyView,
     itemView: NetworksListItem,
     itemViewOptions: function() {
         return {
