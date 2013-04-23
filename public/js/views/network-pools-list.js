@@ -5,12 +5,15 @@ var adminui = require('../adminui');
 var Networks = require('../models/networks');
 var NetworksList = require('./views/networks-list');
 
+var NetworkPoolsForm = require('./views/network-pools-form');
+
 var ItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'li',
     template: require('../tpl/network-pools-list-item.hbs'),
 
     events: {
         'click .network-pool-header': 'toggleDetails',
+        'click .edit': 'editNetworkPool',
         'click .delete': 'onClickDelete'
     },
 
@@ -20,6 +23,10 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         if (res === true) {
             this.deleteNetworkPool();
         }
+    },
+
+    editNetworkPool: function() {
+        this.trigger('edit', this.model);
     },
 
     deleteNetworkPool: function() {
@@ -64,6 +71,21 @@ module.exports = Backbone.Marionette.CollectionView.extend({
         this.networks = options.networks;
     },
 
+    onEditNetworkPool: function(model) {
+        var view = new NetworkPoolsForm({
+            networkPool: model,
+            networks: this.networks
+        });
+        view.show();
+        view.once('saved', function() {
+            view.close();
+            adminui.vent.trigger('notification', {
+                level: 'success',
+                message: _.str.sprintf('Network Pool %s updated successfully.', model.get('name'))
+            });
+        });
+    },
+
     onSelect: function(network) {
         this.trigger('select', network);
     },
@@ -74,5 +96,6 @@ module.exports = Backbone.Marionette.CollectionView.extend({
         }, this);
         itemView.networksList = new NetworksList({collection: new Networks(networks)});
         this.listenTo(itemView.networksList, 'select', this.onSelect);
+        this.listenTo(itemView, 'edit', this.onEditNetworkPool);
     }
 });

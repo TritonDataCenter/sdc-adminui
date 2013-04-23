@@ -14,8 +14,9 @@
   <script>
     window.assert = chai.assert;
     mocha.ui('tdd');
+    mocha.reporter('html');
   </script>
-  <script src="views/network-pools-create.test.js"></script>
+  <script src="views/network-pools-form.test.js"></script>
   <script>
   if (window.mochaPhantomJS) {
     mochaPhantomJS.run();

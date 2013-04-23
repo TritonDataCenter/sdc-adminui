@@ -10,7 +10,7 @@ var NetworkPools = require('../models/network-pools');
 var NetworksListView = require('./networks-list');
 var NetworkPoolsListView = require('./network-pools-list');
 
-var NetworkPoolCreateView = require('./network-pools-create');
+var NetworkPoolFormView = require('./network-pools-form');
 var NetworksCreateView = require('./networks-create');
 var NetworksDetailView = require('./networks-detail');
 
@@ -71,7 +71,7 @@ var NetworksView = Backbone.Marionette.ItemView.extend({
     },
 
     showCreateNetworkPoolForm: function() {
-        var view = new NetworkPoolCreateView({networks: this.networks});
+        var view = new NetworkPoolsFormView({networks: this.networks});
         this.listenTo(view, 'saved', function(networkPool) {
             this.networkPools.add(networkPool);
             view.$el.modal('hide').remove();

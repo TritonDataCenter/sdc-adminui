@@ -746,8 +746,10 @@ ul.attributes {
         color: @grayLight;
         #font > .monospace(10px);
       }
+      .edit { margin-left: 10px; float: right; font-weight: bold; visibility: hidden;};
       .delete { margin-left: 10px; font-weight: bold; color: @red; float: right; visibility: hidden;}
       &:hover .delete { text-decoration: none; visibility: visible; }
+      &:hover .edit { text-decoration: none; visibility: visible; }
 
       .network-count { font-style: italic; font-size: 10px; text-transform: uppercase; color: @grayLight;}
     }

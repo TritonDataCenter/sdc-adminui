@@ -1,6 +1,10 @@
 <form class="form-horizontal">
   <div class="modal-header">
+    {{#if networkPool.uuid}}
+    <h1>Edit Network Pool {{networkPool.name}}</h1>
+    {{else}}
     <h1>Create Network Pool</h1>
+    {{/if}}
   </div>
 
   <div class="modal-body">
@@ -17,7 +21,9 @@
         <div class="chosen chosen-xlarge">
           <select class="chzn-select" name="networks" multiple>
             {{#each networks}}
-            <option value="{{this.uuid}}">{{this.name}} / {{this.subnet}}</option>
+            <option {{#if this.selected}}selected{{/if}}
+                value="{{this.uuid}}">{{this.name}} / {{this.subnet}}
+            </option>
             {{/each}}
           </select>
         </div>
@@ -36,6 +42,6 @@
 
   <div class="modal-footer">
     <a class="btn" data-dismiss="modal">Close</a>
-    <button type="submit" class="btn btn-primary">Save Network Group</button>
+    <button type="submit" class="btn btn-primary save">Save Network Group</button>
   </div>
 </form>
