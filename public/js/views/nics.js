@@ -27,6 +27,11 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
     },
 
     onClickRemoveNics: function() {
+        var confirm = window.confirm('Are you sure you want to remove selected nics?');
+        if (! confirm) {
+            return;
+        }
+
         var self = this;
         var macs = this.selectedNics.pluck('mac');
         this.model.removeNics(macs, function(job) {
