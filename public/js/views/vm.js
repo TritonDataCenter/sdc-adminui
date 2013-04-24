@@ -167,23 +167,25 @@ var VmView = Backbone.Marionette.ItemView.extend({
     },
 
     clickedStopVm: function(e) {
-        var self = this;
-        this.vm.stop(function(job) {
-            var jobView = new JobProgressView({
-                model: job
+        var confirm = window.confirm('Are you sure you want to stop this VM?');
+        if (confirm) {
+            this.vm.stop(function(job) {
+                var jobView = new JobProgressView({
+                    model: job
+                });
+                jobView.show();
             });
-            jobView.show();
-        });
+        }
     },
 
     clickedRebootVm: function(e) {
-        var self = this;
-        this.vm.reboot(function(job) {
-            var jobView = new JobProgressView({
-                model: job
+        var confirm = window.confirm('Are you sure you want to reboot this VM?');
+        if (confirm) {
+            this.vm.reboot(function(job) {
+                var jobView = new JobProgressView({ model: job });
+                jobView.show();
             });
-            jobView.show();
-        });
+        }
     },
 
     clickedDeleteVm: function(e) {

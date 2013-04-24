@@ -237,22 +237,37 @@ var ServerView = Backbone.Marionette.ItemView.extend({
     },
 
     factoryReset: function() {
-        this.model.factoryReset(function(job) {
-            app.vent.trigger('showjob', job);
-        });
+        var confirm = window.confirm('Are you sure you want to run Factory Reset on this Server?');
+        if (confirm) {
+            this.model.factoryReset(function(job) {
+                app.vent.trigger('showjob', job);
+            });
+        }
     },
 
     reboot: function() {
-        this.model.reboot(function(job) {
-            alert('Server is now being rebooted Progress cannot be tracked yet [CNAPI-236]');
-        });
+        var confirm = window.confirm('Are you sure you want to reboot this server? All customer zones will be rebooted');
+        if (confirm) {
+            this.model.reboot(function(job) {
+                app.vent.trigger('notification', {
+                    level: 'success',
+                    message: 'Server is now being rebooted Progress cannot be tracked yet [CNAPI-236]'
+                });
+            });
+        }
     },
 
     forget: function() {
-        this.model.forget(function(err) {
-            alert('Server Removed from Datacenter');
-            app.vent.trigger('showview', 'servers');
-        });
+        var confirm = window.confirm('Are you sure you want to remove this server?');
+        if (confirm) {
+            this.model.forget(function(err) {
+                app.vent.trigger('notification', {
+                    level: 'success',
+                    message: 'Server removed from SmartDataCenter.'
+                });
+                app.vent.trigger('showview', 'servers');
+            });
+        }
     },
 
     onRender: function() {
