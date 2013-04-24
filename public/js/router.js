@@ -19,7 +19,8 @@ var Views = {
     'image': require('./views/image'),
     'image-import': require('./views/image-import'),
     'jobs': require('./views/jobs'),
-    'networks': require('./views/networks')
+    'networks': require('./views/networks'),
+    'services': require('./views/services')
 };
 
 module.exports = Backbone.Marionette.AppRouter.extend({
