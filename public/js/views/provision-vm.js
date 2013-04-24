@@ -13,6 +13,7 @@ var Images = require('../models/images');
 var Users = require('../models/users');
 var Package = require('../models/package');
 var Packages = require('../models/packages');
+var SSHKeys = require('../models/sshkeys');
 var Servers = require('../models/servers');
 var Networks = require('../models/networks');
 var Vm = require('../models/vm');
@@ -148,7 +149,18 @@ var View = Backbone.Marionette.ItemView.extend({
         if (this.networks.length) {
             this.networks.reset();
         }
+
         this.networks.fetch({data: {provisionable_by: u.get('uuid') }});
+
+        this.sshKeys = new SSHKeys({user: u});
+        this.listenTo(this.sshKeys, 'sync', this.onFetchKeys);
+        this.sshKeys.fetch();
+    },
+
+    onFetchKeys: function(collection) {
+        this.userKeys = this.sshKeys.map(function(k) {
+            return k.get('openssh');
+        });
     },
 
     onRender: function() {
@@ -296,6 +308,12 @@ var View = Backbone.Marionette.ItemView.extend({
                 {'size': values['quota'] }
             ];
             delete values['image_uuid'];
+        }
+
+        if (values['brand'] === 'kvm' && this.userKeys) {
+            values.customer_metadata = {
+                authorized_keys: this.userKeys.join("\n")
+            };
         }
 
 

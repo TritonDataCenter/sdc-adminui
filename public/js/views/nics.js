@@ -38,7 +38,6 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
             var jobView = new JobProgress({model: job});
             jobView.show();
             self.listenTo(jobView, 'execution', function(st) {
-                console.log(st);
                 if (st === 'succeeded') {
                     self.selectedNics.each(function(n) {
                         self.collection.remove(n);

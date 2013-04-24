@@ -23,7 +23,7 @@
     "redis": "0.8.3",
     "moray": "git+ssh://git@git.joyent.com:node-moray.git#e5db01d",
     "npm": "~1.2.18",
-    "browserify": "~2.12.0",
+    "browserify": "~2.13.2",
     "browserify-shim": "~2.0.3",
     "underscore": "~1.4.4",
     "underscore.string": "~2.3.1",

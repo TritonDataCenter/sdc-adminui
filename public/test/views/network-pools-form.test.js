@@ -4,7 +4,7 @@ var View = require('./views/network-pools-form');
 var Networks = require('./models/networks');
 var NetworkPool = require('./models/network-pool');
 
-suite('views - NetworkPoolsForm', function() {
+suite('NetworkPoolsForm', function() {
     setup(function() {
         this.view = new View();
     });
@@ -42,7 +42,7 @@ suite('views - NetworkPoolsForm', function() {
     });
 });
 
-suite('Edit Network Pool', function() {
+suite('NetworkPoolForm - Edit Network Pool', function() {
     setup(function() {
         var networksFixture = [{
             "uuid": "567bd4ac-0a95-40e2-92a2-38030f462ba6",
@@ -75,7 +75,7 @@ suite('Edit Network Pool', function() {
         this.networkPool = new NetworkPool({
             "uuid": "a1cf93b8-1a82-4f29-bb05-ce06bc94d744",
             "name": "a-entwork-pool-3",
-            "owner_uuid": "c478d1c8-1a14-47e2-b0be-dcf98603333e"
+            "owner_uuid": "c478d1c8-1a14-47e2-b0be-dcf98603333e",
             "networks": [
                 "567bd4ac-0a95-40e2-92a2-38030f462ba6",
                 "a7bf8140-383b-45bb-94b6-a276eabb4511"
