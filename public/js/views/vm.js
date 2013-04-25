@@ -147,6 +147,10 @@ var VmView = Backbone.Marionette.ItemView.extend({
     },
 
     clickedPackage: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+
         e.preventDefault();
         this.vent.trigger('showview', 'packages', {
             uuid: this.vm.get('billing_id')
@@ -154,6 +158,10 @@ var VmView = Backbone.Marionette.ItemView.extend({
     },
 
     clickedImage: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+
         e.preventDefault();
         this.vent.trigger('showview', 'image', {
             uuid: this.vm.get('image_uuid')
@@ -203,7 +211,11 @@ var VmView = Backbone.Marionette.ItemView.extend({
         vmChangeOwner.show();
     },
 
-    clickedServerHostname: function() {
+    clickedServerHostname: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+        e.preventDefault();
         this.vent.trigger('showview', 'server', {
             server: this.server
         });
@@ -303,7 +315,14 @@ var VmView = Backbone.Marionette.ItemView.extend({
                 observe: ['name', 'version'],
                 onGet: function(val, attr) {
                     return val[0] + val[1];
-                }
+                },
+                attributes: [{
+                    observe: 'uuid',
+                    name: 'href',
+                    onGet: function(val) {
+                        return '/images/'+val;
+                    }
+                }]
             }
         });
 
@@ -352,7 +371,16 @@ var VmView = Backbone.Marionette.ItemView.extend({
         });
 
         this.stickit(this.server, {
-            '.server-hostname': 'hostname',
+            '.server-hostname': {
+                observe: 'hostname',
+                attributes: [{
+                    observe: 'uuid',
+                    name: 'href',
+                    onGet: function(uuid) {
+                        return '/servers/'+uuid;
+                    }
+                }]
+            },
             '.server-uuid': 'uuid'
         });
 

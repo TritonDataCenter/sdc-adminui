@@ -26,15 +26,15 @@ var User = module.exports = Model.extend({
     },
 
     authenticated: function() {
-        return window.sessionStorage.getItem('api-token') !== null;
+        return window.localStorage.getItem('api-token') !== null;
     },
 
     getToken: function() {
-        return window.sessionStorage.getItem('api-token');
+        return window.localStorage.getItem('api-token');
     },
 
     getAdminUuid: function() {
-        return window.sessionStorage.getItem('admin-uuid');
+        return window.localStorage.getItem('admin-uuid');
     },
 
     authenticate: function(user, pass) {
@@ -52,10 +52,10 @@ var User = module.exports = Model.extend({
 
         $.post("/_/auth", authData, function(data) {
             self.set(data.user);
-            window.sessionStorage.setItem('api-token', data.token);
-            window.sessionStorage.setItem('admin-uuid', data.adminUuid);
-            window.sessionStorage.setItem('user-uuid', data.user.uuid);
-            window.sessionStorage.setItem('user-login', data.user.login);
+            window.localStorage.setItem('api-token', data.token);
+            window.localStorage.setItem('admin-uuid', data.adminUuid);
+            window.localStorage.setItem('user-uuid', data.user.uuid);
+            window.localStorage.setItem('user-login', data.user.login);
             self.trigger('authenticated', self);
         }).error(function(xhr) {
             var err = JSON.parse(xhr.responseText);
@@ -64,16 +64,16 @@ var User = module.exports = Model.extend({
     },
 
     signout: function() {
-        window.sessionStorage.clear();
+        window.localStorage.clear();
         this.trigger('unauthenticated');
     }
 });
 
 User.currentUser = function() {
     return new User({
-        'token': window.sessionStorage.getItem('api-token') || null,
-        'uuid': window.sessionStorage.getItem('user-uuid') || null,
-        'login': window.sessionStorage.getItem('user-login') || null,
-        'adminUuid': window.sessionStorage.getItem('admin-uuid') || null
+        'token': window.localStorage.getItem('api-token') || null,
+        'uuid': window.localStorage.getItem('user-uuid') || null,
+        'login': window.localStorage.getItem('user-login') || null,
+        'adminUuid': window.localStorage.getItem('admin-uuid') || null
     });
 };

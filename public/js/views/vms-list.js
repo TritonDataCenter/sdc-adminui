@@ -10,9 +10,11 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         'click .alias a': 'navigateToVmDetails'
     },
 
-    initialize: function() {},
-
-    navigateToVmDetails: function() {
+    navigateToVmDetails: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+        e.preventDefault();
         adminui.vent.trigger('showview', 'vm', { vm: this.model });
     }
 });

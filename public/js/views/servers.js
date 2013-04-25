@@ -26,7 +26,11 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
         return 'servers';
     },
 
-    navigateToServerDetails: function() {
+    navigateToServerDetails: function(e) {
+        if (e.metaKey) {
+            return true;
+        }
+        e.preventDefault();
         adminui.vent.trigger('showview', 'server', { server:this.model });
     },
 

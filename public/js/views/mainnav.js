@@ -11,12 +11,14 @@ var Mainnav = Backbone.Marionette.ItemView.extend({
     },
 
     onSelect: function(e) {
-        e.preventDefault();
+        if (e.metaKey || e.ctrlKey) {
+            return true;
+        }
 
-        var li = $(e.currentTarget);
+        e.preventDefault();
+        var li = $(e.target).parent();
         var view = li.attr("data-view");
         this.highlight(view);
-
         this.vent.trigger("showview", view);
     },
 

@@ -16,6 +16,9 @@ var UsersListItem = Backbone.Marionette.ItemView.extend({
         'click a.login': 'onClickLoginName'
     },
     onClickLoginName: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
         e.preventDefault();
         adminui.vent.trigger('showview', 'user', {
             user: this.model

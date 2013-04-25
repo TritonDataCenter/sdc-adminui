@@ -12,7 +12,9 @@ var ImageRow = Backbone.Marionette.ItemView.extend({
         'click .image-name': 'onClickImageName'
     },
     onClickImageName: function(e) {
-        if (e) {e.preventDefault(); }
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
         app.vent.trigger('showview', 'image', {image: this.model});
     },
 

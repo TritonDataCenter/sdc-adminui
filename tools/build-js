@@ -24,6 +24,11 @@ var shimConfig = {
     'jquery.chosen': { path: '/lib/chosen.jquery', exports: null },
     'bootstrap': { path: './lib/bootstrap', exports: null },
     'typeahead': { path: './lib/typeahead', exports: null },
+    'caliper': {
+        path: './lib/caliper.backbone-0.0.4.min',
+        exports: null,
+        depends: {'backbone': 'Backbone'}
+    },
     'knockback': {
         path: './lib/knockback',
         exports: null,

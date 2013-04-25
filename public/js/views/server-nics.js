@@ -54,7 +54,7 @@ var ServerNic = Backbone.Marionette.ItemView.extend({
             updateMethod: 'html',
             onGet: function(resolvers) {
                 if (resolvers.length) {
-                    return resolvers.join(', ');
+                    return resolvers.join('<br/>');
                 } else {
                     return '&#8212';
                 }
