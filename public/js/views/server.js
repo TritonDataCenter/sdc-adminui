@@ -28,6 +28,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         'click .change-rack-id': 'showChangeRackField',
         'click .change-platform': 'showChangePlatformField',
         'click .change-reservation-ratio': 'showChangeReservationRatio',
+        'click .change-serial-console': 'showChangeSerialConsole',
         'click .modify-traits': 'showTraitsModal',
         'click .factory-reset': 'factoryReset',
         'click .reboot': 'reboot',
@@ -100,7 +101,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
 
     toggleReserve: function() {
         var newValue = !this.model.get('reserved');
-        this.model.update({'reserved': newValue});
+        this.model.save({'reserved': newValue}, {patch: true});
     },
 
     showManageNics: function() {
@@ -109,6 +110,37 @@ var ServerView = Backbone.Marionette.ItemView.extend({
             nics: this.nics
         });
         view.show();
+    },
+
+    showChangeSerialConsole: function() {
+        function input(fieldName, value) {
+            return $("<input type='text'>").attr('value', value).attr('name', fieldName);
+        }
+        this.$('.change-serial-console').hide();
+
+        var $defaultConsole = input('default_console', this.model.get('default_console'));
+        this.$('.serial-console .default-console').html($defaultConsole);
+
+        var $serial = input('serial', this.model.get('serial'));
+        this.$('.serial-console .serial').html($serial);
+
+        var $serialSpeed = input('serial_speed', this.model.get('serial_speed'));
+        this.$('.serial-console .serial-speed').html($serialSpeed);
+
+        var btn = $("<button>").addClass('btn btn-primary pull-right').html('Save');
+        this.$('.serial-console .change').append(btn);
+
+        var self = this;
+        var model = this.model;
+        btn.click(function() {
+            model.save({
+                default_console: $defaultConsole.val(),
+                serial: $serial.val(),
+                serial_speed: Number($serialSpeed.val())
+            }, {patch: true}).done(function() {
+                self.render();
+            });
+        });
     },
 
     showChangeReservationRatio: function() {
@@ -153,7 +185,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
             var val = $input.val();
             var n = Number(val);
             if (/^[0-9.]+$/.test(val) && (n >= 0 && n <= 1.0)) {
-                self.model.update({reservation_ratio: n}, exitEditMode);
+                self.model.save({reservation_ratio: n}, {patch: true}).done(exitEditMode);
             } else {
                 showTooltip('Ratio should be a number between 0 and 1');
             }
@@ -185,7 +217,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
             $link.show();
         });
 
-        this.$('.platform .change td').append(view.el);
+        this.$('.platform .change').append(view.el);
         $link.hide();
         view.render();
     },
@@ -220,12 +252,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         var server = this.model;
         modal.show();
         this.listenTo(modal, 'save-traits', function(traits) {
-            server.set({
-                traits: traits
-            });
-            server.update({
-                traits: traits
-            }, function() {
+            server.save({ traits: traits } ,{patch: true}, function() {
                 modal.close();
             });
         });

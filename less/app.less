@@ -417,6 +417,21 @@ h1.branding {
   }
 }
 
+.key-value-list {
+  width: 100%;
+  .item { clear: both; }
+  .item-label, .item-content { padding: 8px; display: inline-block; vertical-align: top; }
+  .item-label { font-weight: bold; width: 150px; color: #555555;}
+  .item-content {
+    text-align: justify;
+    overflow: visible;
+    height: 20px;
+    vertical-align: middle;
+    width: 350px;
+  }
+}
+
+
 #page-server {
   table {
     .table;
@@ -432,18 +447,6 @@ h1.branding {
   table.traits { .table; }
   a { cursor: pointer; }
 
-  div.overview {
-    .item { clear: both; }
-    .item > * { padding: 8px; display: inline-block; vertical-align: top; }
-    .item-label { font-weight: bold; width: 150px; color: #555555;}
-    .item-content {
-      text-align: justify;
-      overflow: visible;
-      height: 20px;
-      vertical-align: middle;
-      width: 350px;
-    }
-  }
 
   .change-reservation-ratio { float: right; }
   .btn-reservation-ratio { display: none; }
@@ -533,11 +536,18 @@ h1.branding {
   }
 
   .platform {
-    line-height: 20px;
-    strong { width: 140px; display: inline-block ;}
-    td { text-align: right; }
-    tr.change td { text-align: left; }
+    overflow: hidden;
+    .item-content { width: 194px; text-align: right;}
+    .change { padding: 8px;}
   }
+  .serial-console {
+    overflow: hidden;
+    margin-top: 10px;
+
+    .item-content { width: 194px; text-align: right;}
+    .change { padding: 8px; }
+  }
+
   .server-state-container {
     margin-left: 80px;
     width: 200px;
@@ -1220,7 +1230,6 @@ ul.attributes {
   .services {
     border-left: 3px solid #bbb;
     padding-left: 10px;
-
     .service-name {
       font-size: 12px;
       background-color: darken(#e8eef2, 2%);

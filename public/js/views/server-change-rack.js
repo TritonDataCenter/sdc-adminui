@@ -17,7 +17,7 @@ var ChangeRackForm = Backbone.Marionette.ItemView.extend({
     save: function() {
         var self = this;
         var rid = this.$('input').val();
-        this.model.update({rack_identifier: rid }, function() {
+        this.model.save({rack_identifier: rid }, {patch: true}).done(function() {
             self.trigger('save', rid);
         });
     },

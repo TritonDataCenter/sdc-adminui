@@ -51,7 +51,7 @@
       </tbody>
     </table>
     {{#unless headnode}}
-    <div class="overview">
+    <div class="overview key-value-list">
       <div class="item">
         <div class="item-label">Provisioning</div>
         <div class="item-content">
@@ -81,24 +81,48 @@
 
   <div class="span5">
     <div class="platform">
-      <table class="table vertical">
-        <tbody>
-          <tr class="current">
-            <th><strong>Current Platform</strong></th>
-            <td>{{current_platform}}</td>
-          </tr>
-          <tr class="boot">
-            <th><strong>Next Boot Platform</strong></th>
-            <td>{{boot_platform}}</div></td>
-          </tr>
-          <tr class="change">
-            <td colspan="2">
-              <a class="change-platform pull-right">Change Boot Platform <i class="icon-edit"></i></a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="key-value-list">
+        <div class="item current">
+          <div class="item-label">Current Platform</div>
+          <div class="item-content">{{current_platform}}</div>
+        </div>
+        <div class="item boot">
+            <div class="item-label">Next Boot Platform</div>
+            <div class="item-content">{{boot_platform}}</div>
+        </div>
+        <div class="item change">
+          <a class="pull-right change-platform pull-right">Change Boot Platform <i class="icon-edit"></i></a>
+        </div>
+      </div>
+    </div> {{! platform }}
+
+    <div class="serial-console">
+      <div class="key-value-list">
+        <div class="item">
+          <div class="item-label">Default Console</div>
+          <div class="item-content">
+            <span class="default-console">{{default_console}}</span>
+          </div>
+        </div>
+        <div class="item">
+          <div class="item-label">Serial</div>
+          <div class="item-content">
+            <span class="serial">{{serial}}</span>
+          </div>
+        </div>
+        <div class="item">
+          <div class="item-label">Serial Speed</div>
+          <div class="item-content">
+            <span class="serial-speed">{{serial_speed}}</span>
+          </div>
+        </div>
+        <div class="item change">
+          <a class="pull-right change-serial-console">Change Console Settings <i class="icon-edit"></i></a>
+        </div>
+      </div>
+
     </div>
+
   </div>
 </div>{{! /row}}
 

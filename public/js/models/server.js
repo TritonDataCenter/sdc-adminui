@@ -57,19 +57,7 @@ var Server = Backbone.Model.extend({
         $.delete_(this.url(), {}, function(data) {
             cb();
         });
-    },
-
-    update: function(attrs, cb) {
-        this.set(attrs);
-        $.ajax({
-            url: this.url(),
-            type: "PUT",
-            data: JSON.stringify(attrs),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: cb
-        });
     }
-
 });
+
 module.exports = Server;

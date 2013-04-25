@@ -28,9 +28,7 @@ var ChangePlatformForm = Backbone.Marionette.ItemView.extend({
     save: function() {
         var self = this;
         var platform = this.$('select').val();
-        this.model.update({
-            'boot_platform': platform
-        }, function() {
+        this.model.save({'boot_platform': platform}, {patch: true}).done(function() {
             self.trigger('save', platform);
         });
     },
