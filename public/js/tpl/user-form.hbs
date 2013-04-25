@@ -51,10 +51,21 @@
             <input type="text" name="phone" placeholder="510-123-4567">
           </div>
         </div>
+
+        <div class="control-group">
+          <label class="control-label">Groups</label>
+          <div class="controls">
+            <label class="checkbox">
+            <input type="checkbox" name="groups" value="operators"> Operators
+          </label>
+          </div>
+        </div>
+
         <input type="hidden" name="cn">
+
       </fieldset>
     </div>
-  </div> <!-- .modal-body -->
+  </div> {{! .modal-body }}
   <div class="modal-footer">
     <a data-dismiss="modal" class="btn">Close</a>
     <button type="submit" class="save btn btn-primary">Save User</button>

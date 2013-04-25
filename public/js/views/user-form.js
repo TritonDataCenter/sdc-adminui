@@ -41,7 +41,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
         '[name=phone]': 'phone',
         '[name=password]': 'password',
         '[name=last_name]': 'sn',
-        '[name=first_name]': 'givenname'
+        '[name=first_name]': 'givenname',
+        '[name=groups]': 'groups'
     },
 
     updateCommonName: function(e) {
@@ -58,6 +59,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
             this.model = new User();
             this.mode = 'create';
         }
+        console.log(this.model);
     },
 
     onError: function(model, xhr) {
@@ -83,6 +85,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
         this.$('.alert').hide();
         this.model.save(null, {
+            patch: true,
             success: function(model, resp) {
                 self.$el.modal('hide').remove();
                 app.vent.trigger('showview', 'user', {user: self.model});

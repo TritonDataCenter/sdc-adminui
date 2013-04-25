@@ -8,10 +8,6 @@ var Model = require('./model');
 
 
 var User = module.exports = Model.extend({
-
-    defaults: {
-        token: null
-    },
     idAttribute: 'uuid',
 
     urlRoot: "/_/users",
