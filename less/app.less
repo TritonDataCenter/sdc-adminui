@@ -70,7 +70,7 @@ html { height: 100%; }
 
 h1 { font-size: 28px; line-height: 40px; }
 h2 { font-size: 24px; line-height: 40px; font-weight: 300; }
-h3 { font-size: 21px; line-height: 40px; }
+h3 { font-size: 21px; line-height: 40px; font-weight: 200; }
 h4 { font-size: 18px; line-height: 20px; }
 h5 { font-size: 14px; line-height: 20px; }
 h6 { font-size: 12px; line-height: 20px; }
@@ -100,8 +100,6 @@ table.table {
       text-transform: uppercase;
     }
   }
-}
-table.vertical {
 }
 
 .error-modal {
@@ -443,7 +441,7 @@ h1.branding {
   width: 100%;
   .item { clear: both; }
   .item-label, .item-content { padding: 8px; display: inline-block; vertical-align: top; }
-  .item-label { font-weight: bold; width: 150px; color: #555555;}
+  .item-label { font-weight: 400; width: 150px; color: #555555;}
   .item-content {
     text-align: justify;
     overflow: visible;
@@ -516,9 +514,22 @@ h1.branding {
     }
     li {
       .widget;
+
+      & > div {
+        display: inline-block;
+        vertical-align: top;
+      }
+
       padding: 8px;
-      // border: 1px solid #ddd;
-      // background: #f8f8f8;
+
+      .name-container { width: 160px; }
+      .ip-container { width: 140px; }
+      .netmask-container { width: 140px; }
+      .vlan-id-container { width: 80px;}
+      .resolvers-container { width: 150px; }
+      .nic-tag-container { width: 100px;}
+      .nic-tags-provided-container { width: 100px;}
+
       .name {
         display: block;
         #font > .monospace(12px);
@@ -540,10 +551,6 @@ h1.branding {
 
       .link-status.up { background: @green; }
 
-      & > div {
-        display: inline-block;
-        vertical-align: top;
-      }
       .lbl {
         #font > .monospace(10px);
         color: @grayLight;
@@ -555,15 +562,6 @@ h1.branding {
         color: @grayDarker;
       }
 
-      .ip-container {
-        width: 100px;
-      }
-      .name-container { width: 150px; }
-      .netmask-container { width: 100px; }
-      .vlan-id-container { width: 50px;}
-      .resolvers-container { width: 150px; }
-      .nic-tag-container { width: 80px;}
-      .nic-tags-provided-container { width: 100px;}
     }
   }
 
@@ -637,7 +635,7 @@ h1.branding {
       tbody {
         td .mutate { visibility: hidden; }
         td:hover .mutate { visibility: visible; }
-        th { width: 100px; }
+        th { width: 100px; font-weight: 400; color: #888;}
         td>*:first-child { display: inline-block; width: 500px; };
       }
     }
