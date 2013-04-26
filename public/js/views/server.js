@@ -219,7 +219,11 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         });
 
         this.listenTo(view, 'save', function(platform) {
-            self.model.set({boot_platform: platform });
+            var message = _.str.sprintf('Server has been configured to use platform: <strong>%s</strong> on next boot.', platform);
+            app.vent.trigger('notification', {
+                level: 'success',
+                message: message
+            });
             view.remove();
             $link.show();
         });
