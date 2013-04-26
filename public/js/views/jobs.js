@@ -10,14 +10,15 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
     template: JobsItemViewTemplate,
     tagName: 'tr',
     events: {
-        "click button.details": "showJobDetails"
+        "click a.name": "showJobDetails"
     },
     serializeData: function() {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this, arguments);
         data.when = moment(data.exec_after).format('lll');
         return data;
     },
-    showJobDetails: function() {
+    showJobDetails: function(e) {
+        e.preventDefault();
         var detailsView = new JobProgressView({
             model: this.model
         });

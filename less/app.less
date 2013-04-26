@@ -17,11 +17,14 @@ html { height: 100%; }
 #content a { cursor: pointer;}
 #footer { height: 24px; background: #dfe7ec;}
 
+.widget-container {
+  .box-shadow(0 1px 3px rgba(0,0,0,.25));
+}
 .widget-header {
   #gradient > .vertical(#e8eef2, darken(#e8eef2, 5%));
   border: 1px solid darken(#e8eef2, 5%);
 }
-.widget {
+.widget-content {
   .box-shadow(0 1px 3px rgba(0,0,0,.25));
   border: 1px solid #eee;
   #gradient > .vertical(#f8f8f8, #fafafa);
@@ -86,18 +89,37 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
     color: @grayLight;
 }
 
+table.vertical { tr, td { border: none;}}
+
 table.table {
+  caption {
+    border-top: 2px solid #eee;
+    text-align: left;
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
   tr.selected {
     background: #fff2da;
   }
-  td, th { border:none; }
+  td, th {
+    border: none;
+  }
+
   thead {
-    background: #e1e9ee;
+    tr {
+      .widget-header;
+    }
     th {
       color: darken(#dfe7ec, 50%);
       font-size: 13px;
       font-weight: normal;
       text-transform: uppercase;
+    }
+  }
+  tbody {
+    tr {
+      .widget-content;
     }
   }
 }
@@ -233,8 +255,11 @@ h1.branding {
 
 #page-users {
   .page-header button { margin-top: 14px;}
-  .login { width: 200px; }
-  .name { width: 200px; }
+  .login, .cn, .email { display: inline-block;}
+  .login { width: 140px; }
+  .cn { display: block; }
+  .email { width: 200px;}
+  .uuid { #font > .monospace(12px); color: @grayLight;}
 }
 
 #page-user {
@@ -243,7 +268,7 @@ h1.branding {
     .details, .actions { display: inline-block; vertical-align: middle;}
     .details { width: 500px;}
     .item {
-      .widget;
+      .widget-content;
       .fingerprint { #font > .monospace(10px);line-height: 15px; color: @grayLight; }
       .remove { font-size: 12px; text-decoration: none; color: @red; padding: 8px; visibility: hidden;}
       &:hover .remove { visibility: visible; };
@@ -260,16 +285,6 @@ h1.branding {
   }
 }
 
-
-.table {
-  th, td { border: none;}
-}
-.table caption {
-  border-top: 2px solid #eee;
-  text-align: left;
-  font-size: 13px;
-  padding: 8px 12px;
-}
 
 #page-images {
   .images-table {
@@ -379,6 +394,8 @@ h1.branding {
   li .task.success { color: @successText; }
 }
 
+.vms-list {
+}
 .vms-list tr {
   th.status { width: 80px; }
   th.memory, td.memory { width: 80px; text-align: right; padding-right: 30px; }
@@ -468,7 +485,7 @@ h1.branding {
 
   .disks {
     .disk {
-      .widget;
+      .widget-content;
       .name { display: inline-block; width: 200px; }
       .size { display: inline-block; width: 200px; }
     }
@@ -512,7 +529,7 @@ h1.branding {
       border-top: none;
     }
     li {
-      .widget;
+      .widget-content;
 
       & > div {
         display: inline-block;
@@ -797,7 +814,7 @@ ul.attributes {
 
   .networks-list {
     li {
-      .widget;
+      .widget-content;
       display: block;
       padding: 10px;
 
@@ -1263,7 +1280,7 @@ ul.attributes {
   }
   .service+.service { margin-top: 1em;}
   .instance {
-    .widget;
+    .widget-content;
     font-size: 12px;
     padding: 8px;
     .state {

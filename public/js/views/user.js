@@ -10,6 +10,8 @@ var Vms = require('../models/vms');
 var SSHKeys = require('../models/sshkeys');
 var UserForm = require('./user-form');
 
+var __CONFIRM_REMOVE_KEY = "Are you sure you want to remove this key from the user's account?";
+
 var SSHKeyListItemTemplate = require('../tpl/sshkey-list-item.hbs');
 var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
     tagName: 'div',
@@ -19,7 +21,7 @@ var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
         'click .remove': 'onClickRemove'
     },
     onClickRemove: function() {
-        var confirm = window.confirm("Are you sure you want to remove this key from the user's account?");
+        var confirm = window.confirm(__CONFIRM_REMOVE_KEY);
         if (confirm) {
             this.model.destroy();
         }
@@ -88,6 +90,7 @@ var UserView = Backbone.Marionette.ItemView.extend({
             '.uuid': 'uuid',
             '.login': 'login',
             '.email': 'email',
+            '.phone': 'phone',
             '.company': 'company',
             '.groups': 'groups'
         });
