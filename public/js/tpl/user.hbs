@@ -4,61 +4,57 @@
     <small class="uuid"></small>
 
     <div class="actions">
-      <button class="edit-user btn"> <i class="icon-pencil"></i> Modify User Details</button>
     </div>
   </h1>
 </div>
 
-<table class="table">
-  <tr>
-    <th>Login</th>
-    <td><span class="login"></span></td>
-  </tr>
-  <tr>
-    <th>Email</th>
-    <td><span class="email"></span></td>
-  </tr>
-  <tr>
-    <th>Company</th>
-    <td><span class="company"></span></td>
-  </tr>
-  <tr>
-    <th>Groups</th>
-    <td><span class="groups"></span></td>
-  </tr>
-</table>
-
-<h3>SSH Keys</h3>
-<div class="ssh-keys">
-  <table class="table table-striped">
-    <thead>
+<div class="row">
+  <div class="span4">
+    <h3>User Details</h3>
+    <table class="table">
       <tr>
-        <th>Name</th>
-        <th>Fingerprint</th>
-        <th></th>
+        <th>Login</th>
+        <td><span class="login"></span></td>
       </tr>
-    </thead>
-    <tbody></tbody>
-    <tfoot>
-      <td colspan="3"><button class="btn add-key">
-        <i class="icon-plus-sign"></i> Add Key</button>
-      </td>
-    </tfoot>
-  </table>
-</div>
-
-<h3>Virtual Machines</h3>
-<div class="vms-list">
-  <table class="table table-striped">
-    <thead>
       <tr>
-        <th class="status">Status</th>
-        <th class="alias">Alias</th>
-        <th class="memory">Memory</th>
-        <th class="package">Package</th>
+        <th>Email</th>
+        <td><span class="email"></span></td>
       </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
+      <tr>
+        <th>Company</th>
+        <td><span class="company"></span></td>
+      </tr>
+      <tr>
+        <th>Groups</th>
+        <td><span class="groups"></span></td>
+      </tr>
+    </table>
+
+    <button class="edit-user btn"> <i class="icon-pencil"></i> Edit User Details</button>
+  </div>
+
+  <div class="span8">
+    <h3>SSH Keys</h3>
+
+    <div class="ssh-keys">
+      <div class="items"></div>
+      <button class="btn add-key"><i class="icon-plus-sign"></i> Add Key</button>
+    </div>
+
+    <h3>Virtual Machines</h3>
+    <div class="vms-list">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th class="status">Status</th>
+            <th class="alias">Alias</th>
+            <th class="memory">Memory</th>
+            <th class="package">Package</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

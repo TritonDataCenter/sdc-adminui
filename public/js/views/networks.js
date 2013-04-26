@@ -10,7 +10,7 @@ var NetworkPools = require('../models/network-pools');
 var NetworksListView = require('./networks-list');
 var NetworkPoolsListView = require('./network-pools-list');
 
-var NetworkPoolFormView = require('./network-pools-form');
+var NetworkPoolsFormView = require('./network-pools-form');
 var NetworksCreateView = require('./networks-create');
 var NetworksDetailView = require('./networks-detail');
 

@@ -12,13 +12,17 @@ var UserForm = require('./user-form');
 
 var SSHKeyListItemTemplate = require('../tpl/sshkey-list-item.hbs');
 var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
-    tagName: 'tr',
+    tagName: 'div',
+    attributes: {'class':'item'},
     template: SSHKeyListItemTemplate,
     events: {
         'click .remove': 'onClickRemove'
     },
     onClickRemove: function() {
-        this.model.destroy();
+        var confirm = window.confirm("Are you sure you want to remove this key from the user's account?");
+        if (confirm) {
+            this.model.destroy();
+        }
     }
 });
 
@@ -53,9 +57,7 @@ var UserView = Backbone.Marionette.ItemView.extend({
         });
         view.render();
 
-        this.listenTo(view, 'saved', function(key) {
-            this.sshkeys.add(key);
-        }, this);
+        this.listenTo(view, 'saved', this.sshkeys.add);
     },
 
     initialize: function(options) {
@@ -79,7 +81,7 @@ var UserView = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.vmsList.setElement(this.$('.vms-list tbody')).render();
-        this.sshkeysList.setElement(this.$('.ssh-keys tbody')).render();
+        this.sshkeysList.setElement(this.$('.ssh-keys .items')).render();
 
         this.stickit(this.model, {
             '.cn': 'cn',

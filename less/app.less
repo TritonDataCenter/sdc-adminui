@@ -17,6 +17,16 @@ html { height: 100%; }
 #content a { cursor: pointer;}
 #footer { height: 24px; background: #dfe7ec;}
 
+.widget-header {
+  #gradient > .vertical(#e8eef2, darken(#e8eef2, 5%));
+  border: 1px solid darken(#e8eef2, 5%);
+}
+.widget {
+  .box-shadow(0 1px 3px rgba(0,0,0,.25));
+  border: 1px solid #eee;
+  #gradient > .vertical(#f8f8f8, #fafafa);
+  padding: 10px 14px;
+}
 
 .page-header {
   margin-bottom: 10px;
@@ -230,7 +240,18 @@ h1.branding {
 }
 
 #page-user {
-  .remove { color: @red;}
+  .ssh-keys {
+    .items { margin-bottom: 10px; }
+    .details, .actions { display: inline-block; vertical-align: middle;}
+    .details { width: 500px;}
+    .item {
+      .widget;
+      .fingerprint { #font > .monospace(10px);line-height: 15px; color: @grayLight; }
+      .remove { font-size: 12px; text-decoration: none; color: @red; padding: 8px; visibility: hidden;}
+      &:hover .remove { visibility: visible; };
+    }
+
+  }
 }
 
 #sshkey-create {
@@ -362,7 +383,7 @@ h1.branding {
 
 .vms-list tr {
   th.status { width: 80px; }
-  th.memory, td.memory { width: 140px; text-align: right; padding-right: 30px; }
+  th.memory, td.memory { width: 80px; text-align: right; padding-right: 30px; }
   .uuid {
     font-size: 12px;
     font-style: italic;
@@ -370,9 +391,9 @@ h1.branding {
     color: @grayLight;
     font-family: monospace;
   }
-  th.alias { width: 400px;}
+  th.alias { }
   td.alias a { cursor: pointer; }
-  th.package { width: 120px;}
+  th.package { width: 140px;}
   span.running { background-color: #4cc658; }
   span.destroyed { background-color: @grayDark; }
 }
@@ -444,10 +465,16 @@ h1.branding {
     .table;
     tbody th { width: 140px; }
   }
-  table.disks { .table;}
   table.traits { .table; }
   a { cursor: pointer; }
 
+  .disks {
+    .disk {
+      .widget;
+      .name { display: inline-block; width: 200px; }
+      .size { display: inline-block; width: 200px; }
+    }
+  }
 
   .change-reservation-ratio { float: right; }
   .btn-reservation-ratio { display: none; }
@@ -471,7 +498,6 @@ h1.branding {
   .change-rack-id { float: right; }
   .change-rack-form,
   .change-platform-form {
-    padding: 10px;
     background: #f3f3f3;
     input, select { margin: 0; padding: 3px; }
     button { margin: 0; padding: 3px 8px; }
@@ -489,9 +515,10 @@ h1.branding {
       border-top: none;
     }
     li {
+      .widget;
       padding: 8px;
-      border: 1px solid #ddd;
-      background: #f8f8f8;
+      // border: 1px solid #ddd;
+      // background: #f8f8f8;
       .name {
         display: block;
         #font > .monospace(12px);
@@ -738,11 +765,11 @@ ul.attributes {
 }
 
 #page-network {
-    td.belongs-to strong { display: inline-block; width: 70px; color: #aaa; }
-    td.belongs-to small {
-      font-style: italic;
-      #font > .monospace(12px);
-    }
+  td.belongs-to strong { display: inline-block; width: 70px; color: #aaa; }
+  td.belongs-to small {
+    font-style: italic;
+    #font > .monospace(12px);
+  }
 }
 
 #page-networks {
@@ -751,9 +778,9 @@ ul.attributes {
     margin-bottom: 1em;
 
     .network-pool-header {
+      .widget-header;
       cursor: pointer;
       font-size: 12px;
-      background-color: darken(#e8eef2, 2%);
       padding: 10px;
 
       .name { margin-right: 20px; }
@@ -773,8 +800,7 @@ ul.attributes {
 
   .networks-list {
     li {
-      border: 1px solid #e8e8e8;
-      background: #fafafa;
+      .widget;
       display: block;
       padding: 10px;
 

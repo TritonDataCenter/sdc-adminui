@@ -172,16 +172,14 @@
 <div class="row">
   <div class="span8">
     <h3>Disks</h3>
-    <table class="disks table table-striped">
-      <tbody>
-        {{#each disks}}
-        <tr>
-          <td>{{this.name}}</td>
-          <td>{{this.size}} GB</td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
+    <div class="disks">
+      {{#each disks}}
+      <div class="disk">
+        <div class="name">{{this.name}}</div>
+        <div class="size">{{this.size}} GB</div>
+      </div>
+      {{/each}}
+    </div>
 
     <h3>Traits</h3>
     {{#if traits.length}}

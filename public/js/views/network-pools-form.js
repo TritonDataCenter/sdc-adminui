@@ -48,11 +48,13 @@ module.exports = Backbone.Marionette.ItemView.extend({
         var networkPool = this.networkPool.toJSON();
         var networks = this.networks.toJSON();
 
-        _.each(networks, function(d) {
-            if (networkPool.networks.indexOf(d.uuid) !== -1) {
-                d.selected = true;
-            }
-        });
+        if (networkPool.networks) {
+            _.each(networks, function(d) {
+                if (networkPool.networks.indexOf(d.uuid) !== -1) {
+                    d.selected = true;
+                }
+            });
+        }
         return {
             networkPool: networkPool,
             networks: networks

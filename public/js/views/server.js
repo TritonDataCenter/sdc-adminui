@@ -234,9 +234,11 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         var view = new ChangeRackForm({
             model: this.model
         });
+        var $span = this.$('.rack span');
         var $link = this.$('.rack td a');
 
         this.listenTo(view, 'cancel', function() {
+            $span.show();
             $link.show();
         }, this);
 
@@ -245,9 +247,11 @@ var ServerView = Backbone.Marionette.ItemView.extend({
                 rack_identifier: rack
             });
             view.remove();
+            $span.show();
             $link.show();
         });
         this.$('.rack td').append(view.el);
+        $span.hide();
         $link.hide();
         view.render();
     },
