@@ -79,6 +79,9 @@ var ServicesListView = Backbone.Marionette.CompositeView.extend({
 var ApplicationsListView = Backbone.Marionette.CollectionView.extend({
     itemView: Backbone.Marionette.ItemView.extend({
         template: require('../tpl/services-application.hbs'),
+        attributes: {
+            'class': 'application'
+        },
         onRender: function() {
             this.services = new Services();
             this.servicesView = new ServicesListView({

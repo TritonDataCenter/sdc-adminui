@@ -1246,31 +1246,27 @@ ul.attributes {
 #page-services {
   .application {
     .info {
-      float: left;
-      width: 20%;
       h4 {
         color: #555;
         text-transform: uppercase;
       }
     }
-    padding: 10px;
     margin-bottom: 1em;
     clear: both;
     overflow: hidden;
   }
   .services {
-    border-left: 3px solid #bbb;
-    padding-left: 10px;
     .service-name {
+      .widget-header;
       font-size: 12px;
-      background-color: darken(#e8eef2, 2%);
       padding: 5px 10px;
     }
   }
-  .service+.service { margin-top: .5em;}
+  .service+.service { margin-top: 1em;}
   .instance {
+    .widget;
     font-size: 12px;
-    padding: 12px;
+    padding: 8px;
     .state {
       color: @red;
     }
@@ -1278,7 +1274,7 @@ ul.attributes {
       color: @green;
     }
     .alias, .uuid, .state, .ram { display: inline-block;}
-    .alias { width: 100px;}
+    .alias { color: @grayLight; width: 100px;}
     .uuid {
       width: 280px;
       font-style: italic;
