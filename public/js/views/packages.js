@@ -173,7 +173,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
 
         this.listenTo(this.vent, 'showpackage', this.showPackage, this);
         this.listenTo(this.vent, 'showedit', this.showForm, this);
-        this.listenTo(this.packages, 'reset', this.showInitialPackage, this);
+        this.listenTo(this.packages, 'sync', this.showInitialPackage, this);
 
         this.listenTo(this.detail, 'show', function(view) {
             adminui.router.applyUrl(view);

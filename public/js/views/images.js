@@ -15,6 +15,7 @@ var ImageRow = Backbone.Marionette.ItemView.extend({
         if (e.metaKey || e.ctrlKey) {
             return;
         }
+        e.preventDefault();
         app.vent.trigger('showview', 'image', {image: this.model});
     },
 

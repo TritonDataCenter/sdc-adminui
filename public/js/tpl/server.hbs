@@ -24,6 +24,7 @@
 
 <div class="row">
   <div class="span7">
+    <h3>Overview</h3>
 
     <table class="overview vertical">
       <tbody>
@@ -80,14 +81,15 @@
   </div>{{! /span}}
 
   <div class="span5">
+    <h3>Platform</h3>
     <div class="platform">
       <div class="key-value-list">
         <div class="item current">
-          <div class="item-label">Current Platform</div>
+          <div class="item-label">Current</div>
           <div class="item-content">{{current_platform}}</div>
         </div>
         <div class="item boot">
-            <div class="item-label">Next Boot Platform</div>
+            <div class="item-label">Next Boot</div>
             <div class="item-content">{{boot_platform}}</div>
         </div>
         <div class="item change">
@@ -96,32 +98,6 @@
       </div>
     </div> {{! platform }}
 
-    <div class="serial-console">
-      <div class="key-value-list">
-        <div class="item">
-          <div class="item-label">Default Console</div>
-          <div class="item-content">
-            <span class="default-console">{{default_console}}</span>
-          </div>
-        </div>
-        <div class="item">
-          <div class="item-label">Serial</div>
-          <div class="item-content">
-            <span class="serial">{{serial}}</span>
-          </div>
-        </div>
-        <div class="item">
-          <div class="item-label">Serial Speed</div>
-          <div class="item-content">
-            <span class="serial-speed">{{serial_speed}}</span>
-          </div>
-        </div>
-        <div class="item change">
-          <a class="pull-right change-serial-console">Change Console Settings <i class="icon-edit"></i></a>
-        </div>
-      </div>
-
-    </div>
 
   </div>
 </div>{{! /row}}
@@ -136,7 +112,7 @@
     <div class="nics"></div>
   </div>
 
-  <div class="span12">
+  <div class="span8">
     <h3>Hardware</h3>
     <table class="hardware">
       <tbody>
@@ -163,18 +139,40 @@
       </tbody>
     </table>
   </div>
+  <div class="span4">
+    <h3>Serial Console</h3>
+    <div class="serial-console">
+      <div class="key-value-list">
+        <div class="item">
+          <div class="item-label">Default Console</div>
+          <div class="item-content">
+            <span class="default-console">{{default_console}}</span>
+          </div>
+        </div>
+        <div class="item">
+          <div class="item-label">Serial</div>
+          <div class="item-content">
+            <span class="serial">{{serial}}</span>
+          </div>
+        </div>
+        <div class="item">
+          <div class="item-label">Serial Speed</div>
+          <div class="item-content">
+            <span class="serial-speed">{{serial_speed}}</span>
+          </div>
+        </div>
+        <div class="item change">
+          <a class="pull-right change-serial-console">Change Console Settings <i class="icon-edit"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div><!-- row-->
 
 <div class="row">
   <div class="span8">
     <h3>Disks</h3>
     <table class="disks table table-striped">
-      <thead>
-        <tr>
-          <th>Device</th>
-          <th>Size</th>
-        </tr>
-      </thead>
       <tbody>
         {{#each disks}}
         <tr>

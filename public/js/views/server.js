@@ -129,10 +129,17 @@ var ServerView = Backbone.Marionette.ItemView.extend({
 
         var btn = $("<button>").addClass('btn btn-primary pull-right').html('Save');
         this.$('.serial-console .change').append(btn);
+        var cancel = $("<button>").addClass('btn pull-right').html('Cancel');
+        this.$('.serial-console .change').append(cancel);
 
         var self = this;
         var model = this.model;
-        btn.click(function() {
+
+        cancel.on('click', function() {
+            self.render();
+        });
+
+        btn.on('click', function() {
             model.save({
                 default_console: $defaultConsole.val(),
                 serial: $serial.val(),
