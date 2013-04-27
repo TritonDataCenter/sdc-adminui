@@ -51,6 +51,7 @@ var View = Backbone.Marionette.ItemView.extend({
         this.$el.modal('hide');
         this.remove();
     },
+
     show: function() {
         this.render();
         this.$el.modal();

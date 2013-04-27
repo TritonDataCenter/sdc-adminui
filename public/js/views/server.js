@@ -267,7 +267,9 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         var server = this.model;
         modal.show();
         this.listenTo(modal, 'save-traits', function(traits) {
-            server.save({ traits: traits } ,{patch: true}, function() {
+            server.save(
+                {traits: traits},
+                {patch: true}).done(function() {
                 modal.close();
             });
         });

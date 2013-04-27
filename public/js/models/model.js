@@ -12,7 +12,7 @@ var Model = Backbone.Model.extend({
             }
             model.trigger('error', model, xhr, options);
         };
-        Backbone.sync.apply(this, arguments);
+        return Backbone.sync.apply(this, arguments);
     }
 });
 

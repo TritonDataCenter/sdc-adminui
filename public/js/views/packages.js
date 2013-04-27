@@ -100,14 +100,11 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
 
     onSaveTraits: function(traits) {
         var that = this;
-        this.model.set();
-        this.model.save({
-            traits: traits
-        }, {
-            success: function() {
-                that.traitsEditor.close();
-                that.model.fetch();
-            }
+        this.model.save(
+            { traits: traits },
+            { patch: true }
+        ).done(function() {
+            that.traitsEditor.close();
         });
     },
 

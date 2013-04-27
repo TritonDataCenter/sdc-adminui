@@ -9,7 +9,7 @@ var Packages = Backbone.Collection.extend({
             return;
         }
         var filtered = this.filter(function(m) {
-            return m.get('uuid') == val || m.get('name').indexOf(val) !== -1;
+            return m.get('uuid') === val || m.get('name').indexOf(val) !== -1;
         });
 
         this.reset(filtered);
