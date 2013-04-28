@@ -41,7 +41,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     },
 
     toggleDetails: function() {
-        this.$('.networks-list-container').toggle('slide', null, 100);
+        this.$('.networks-list-container').toggle('slide', null, 50);
     },
 
     onRender: function() {

@@ -32,7 +32,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     ui: {
-        'alert', '.alert'
+        'alert': '.alert'
     },
 
     events: {
