@@ -11,8 +11,14 @@ var ChangeRackForm = Backbone.Marionette.ItemView.extend({
     },
     template: ChangeRackFormTemplate,
     events: {
+        'keyup': 'keyup',
         'click button.save': 'save',
         'click button.cancel': 'cancel'
+    },
+    keyup: function(e) {
+        if (e.which === 13) {
+            this.save();
+        }
     },
     save: function() {
         var self = this;

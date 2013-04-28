@@ -252,6 +252,10 @@ var ServerView = Backbone.Marionette.ItemView.extend({
             self.model.set({
                 rack_identifier: rack
             });
+            app.vent.trigger('notification', {
+                level: 'success',
+                message: 'Rack assigned to ' + rack
+            });
             view.remove();
             $span.show();
             $link.show();
