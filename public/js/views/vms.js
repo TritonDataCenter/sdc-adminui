@@ -1,5 +1,3 @@
-
-
 /**
  * ./vms.js
  */
@@ -31,6 +29,10 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     url: function() {
         return 'vms';
+    },
+
+    ui: {
+        'alert', '.alert'
     },
 
     events: {
@@ -70,17 +72,17 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     query: function(params) {
-        this.$('.alert').hide();
+        this.ui.alert.hide();
         this.collection.fetch({ data: params });
     },
 
     onError: function(model, res) {
-        if (res.status === 409) {
+        if (res.status === 409 || res.status === 422) {
             var obj = JSON.parse(res.responseText);
             var errors = _.map(obj.errors, function(e) {
                 return e.message;
             });
-            this.$(".alert").html(errors.join('<br>')).show();
+            this.ui.alert.html(errors.join('<br>')).show();
         } else {
             app.vent.trigger('error', {
                 xhr: res,
