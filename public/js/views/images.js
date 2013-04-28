@@ -48,11 +48,12 @@ var ImagesView = Backbone.Marionette.CompositeView.extend({
     initialize: function(opts) {
         this.collection = new Images();
         this.collection.fetch({data: {state:'all'}});
+        this.listenTo(this.collection, 'sync', this.updateRecordCount, this);
     },
     serializeData: function() {
         return {collection: this.collection};
     },
-    onCompositeCollectionRendered: function()  {
+    updateRecordCount: function() {
         this.$('.record-count').html(this.collection.length);
     },
     onClickImportImage: function() {

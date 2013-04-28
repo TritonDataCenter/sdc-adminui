@@ -62,11 +62,11 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
     },
 
     enableActions: function() {
-        this.$(".btn-group .remove-nics").show();
+        this.$(".remove-nics").show();
     },
 
     disableActions: function() {
-        this.$(".btn-group .remove-nics").hide();
+        this.$(".remove-nics").hide();
     },
 
     onBeforeItemAdded: function(itemView) {

@@ -210,11 +210,11 @@ var ServerView = Backbone.Marionette.ItemView.extend({
     showChangePlatformField: function() {
         var self = this;
         var $link = this.$('.platform a');
-        var view = new ChangePlatformForm({
-            model: this.model
-        });
+        var $value = this.$('.platform .value');
+        var view = new ChangePlatformForm({ model: this.model });
 
         this.listenTo(view, 'cancel', function() {
+            $value.show();
             $link.show();
         });
 
@@ -225,10 +225,12 @@ var ServerView = Backbone.Marionette.ItemView.extend({
                 message: message
             });
             view.remove();
+            $value.show();
             $link.show();
         });
 
-        this.$('.platform .change').append(view.el);
+        this.$('.platform .boot .item-content').append(view.el);
+        $value.hide();
         $link.hide();
         view.render();
     },
@@ -238,8 +240,8 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         var view = new ChangeRackForm({
             model: this.model
         });
-        var $span = this.$('.rack span');
-        var $link = this.$('.rack td a');
+        var $span = this.$('.rack .item-content span');
+        var $link = this.$('.rack .item-content a');
 
         this.listenTo(view, 'cancel', function() {
             $span.show();
@@ -254,7 +256,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
             $span.show();
             $link.show();
         });
-        this.$('.rack td').append(view.el);
+        this.$('.rack .item-content').append(view.el);
         $span.hide();
         $link.hide();
         view.render();

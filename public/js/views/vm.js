@@ -367,6 +367,15 @@ var VmView = Backbone.Marionette.ItemView.extend({
             },
             '.package-name': 'package_name',
             '.package-version': 'package_version',
+            '.owner-link': {
+                attributes: [{
+                    'observe':'owner_uuid',
+                    'name': 'class',
+                    'onGet': function(v) {
+                        return '/users/'+v;
+                    }
+                }]
+            },
             '.billing-id': 'billing_id'
         });
 

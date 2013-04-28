@@ -26,79 +26,70 @@
   <div class="span7">
     <h3>Overview</h3>
 
-    <table class="overview vertical">
-      <tbody>
-        <tr>
-          <th>Datacenter</th>
-          <td>{{datacenter}}</td>
-        </tr>
-
-        <tr>
-          <th>Hostname</th>
-          <td>{{hostname}}</td>
-        </tr>
-        <tr class="rack">
-          <th>Rack</th>
-          <td>
+    <div class="overview">
+      <div class="item">
+        <div class="item-label">Datacenter</div>
+        <div class="item-content">{{datacenter}}</div>
+      </div>
+      <div class="item">
+          <div class="item-label">Hostname</div>
+          <div class="item-content">{{hostname}}</div>
+      </div>
+      <div class="item rack">
+        <div class="item-label">Rack</div>
+        <div class="item-content">
           {{#if rack_identifier}}
             {{rack_identifier}}
             <a class="change-rack-id">Change <i class="icon-edit"></i></a>
           {{else}}
-            <span style="color: #aaa;">No Rack Assigned</span>
+            <span class="none">No Rack Assigned</span>
             <a class="change-rack-id">Assign to Rack <i class="icon-edit"></i></a>
           {{/if}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    {{#unless headnode}}
-    <div class="overview key-value-list">
+        </div>
+      </div>
+      {{#unless headnode}}
       <div class="item">
         <div class="item-label">Provisioning</div>
         <div class="item-content">
           {{#if reserved}}
-            <span class="disabled"><i class="icon-ban-circle"></i> Disabled</span>
-            <a class="change-reserve">Enable Provisioning <i class="icon-off"></i></a>
+          <span class="disabled"><i class="icon-ban-circle"></i> Disabled</span>
+          <a class="change-reserve">Enable Provisioning <i class="icon-off"></i></a>
           {{else}}
-            <span class="enabled"><i class="icon-ok-circle"></i> Enabled</span>
-            <a class="change-reserve">Disable Provisioning <i class="icon-off"></i></a>
+          <span class="enabled"><i class="icon-ok-circle"></i> Enabled</span>
+          <a class="change-reserve">Disable Provisioning <i class="icon-off"></i></a>
           {{/if}}
         </div>
       </div>
       <div class="item">
         <div class="item-label">Reservation Ratio <a class="help-text"
-            title="Ratio of server memory reserved to not be used by Virtual Machines"
-            data-toggle="tooltip"
-            data-trigger="hover"><i class="icon-question-sign"></i></a>
+          title="Ratio of server memory reserved to not be used by Virtual Machines"
+          data-toggle="tooltip"
+          data-trigger="hover"><i class="icon-question-sign"></i></a>
         </div>
         <div class="item-content">
-            <span class="reservation-ratio">{{reservation_ratio}}</span>
-            <a class="change-reservation-ratio">Change Ratio <i class="icon-edit"></i></a>
+          <span class="reservation-ratio">{{reservation_ratio}}</span>
+          <a class="change-reservation-ratio">Change Ratio <i class="icon-edit"></i></a>
         </div>
       </div>
+      {{/unless}}
     </div>
-    {{/unless}}
   </div>{{! /span}}
 
   <div class="span5">
     <h3>Platform</h3>
     <div class="platform">
-      <div class="key-value-list">
-        <div class="item current">
-          <div class="item-label">Current</div>
-          <div class="item-content">{{current_platform}}</div>
-        </div>
-        <div class="item boot">
-            <div class="item-label">Next Boot</div>
-            <div class="item-content">{{boot_platform}}</div>
-        </div>
-        <div class="item change">
-          <a class="pull-right change-platform pull-right">Change Boot Platform <i class="icon-edit"></i></a>
+      <div class="item current">
+        <div class="item-label">Current</div>
+        <div class="item-content">{{current_platform}}</div>
+      </div>
+      <div class="item boot">
+        <div class="item-label">Next Boot</div>
+        <div class="item-content">
+          <span class="value">{{boot_platform}}</span>
+          <a class="change-platform"><i class="icon-edit"></i></a>
         </div>
       </div>
     </div> {{! platform }}
-
-
   </div>
 </div>{{! /row}}
 
@@ -111,7 +102,9 @@
     </h3>
     <div class="nics"></div>
   </div>
+</div>
 
+<div class="row">
   <div class="span8">
     <h3>Hardware</h3>
     <table class="hardware">

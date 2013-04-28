@@ -97,4 +97,6 @@ var UserView = Backbone.Marionette.ItemView.extend({
     }
 });
 
+UserView.__name__ = 'UserView';
+
 module.exports = UserView;

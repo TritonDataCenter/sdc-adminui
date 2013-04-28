@@ -17,15 +17,13 @@ html { height: 100%; }
 #content a { cursor: pointer;}
 #footer { height: 24px; background: #dfe7ec;}
 
-.widget-container {
-  .box-shadow(0 1px 3px rgba(0,0,0,.25));
-}
+.widget-container {}
+
 .widget-header {
-  #gradient > .vertical(#e8eef2, darken(#e8eef2, 5%));
+  #gradient > .vertical(#e8eef2, darken(#e8eef2, 2%));
   border: 1px solid darken(#e8eef2, 5%);
 }
 .widget-content {
-  .box-shadow(0 1px 3px rgba(0,0,0,.25));
   border: 1px solid #eee;
   #gradient > .vertical(#f8f8f8, #fafafa);
   padding: 10px 14px;
@@ -86,14 +84,15 @@ h4 small { font-size: 14px; }
 h4.alert-heading { font-weight: bold; font-size: 14px; }
 .alert ul li { font-size: 13px;}
 .zero-state {
-    color: @grayLight;
+  .widget-content;
+  color: @grayLight;
 }
 
 table.vertical { tr, td { border: none;}}
 
 table.table {
   caption {
-    border-top: 2px solid #eee;
+    border-top: 1px solid #eee;
     text-align: left;
     font-size: 13px;
     padding: 8px 12px;
@@ -254,12 +253,18 @@ h1.branding {
 }
 
 #page-users {
+  .users-container { .widget-container; }
   .page-header button { margin-top: 14px;}
-  .login, .cn, .email { display: inline-block;}
-  .login { width: 140px; }
+
+  td {
+    .login, .cn, .email { display: inline-block;}
+  }
+  th.login { width: 140px; }
+  th.email { width: 200px;}
+
   .cn { display: block; }
   .email { width: 200px;}
-  .uuid { #font > .monospace(12px); color: @grayLight;}
+  .uuid { #font > .monospace(12px); color: @grayLight; display:block; }
 }
 
 #page-user {
@@ -434,9 +439,7 @@ h1.branding {
 
 #page-servers {
   .servers-list {
-    td a {
-      cursor: pointer;
-    }
+    td a { cursor: pointer; }
     .uuid {
       font-size: 12px;
       color: @grayLight;
@@ -444,6 +447,7 @@ h1.branding {
       display: block;
       font-family: monospace;
     }
+
     td.last-status>div { font-size: 12px; opacity: 0.5;}
 
     .status { width: 100px; }
@@ -470,16 +474,19 @@ h1.branding {
 
 
 #page-server {
-  table {
-    .table;
-    margin-bottom: 0;
-    tbody th { width: 150px; }
+  .rack .none { color: @grayLight;}
+  .overview {
+    .item { .widget-content; }
+    .item-label, .item-content { display: inline-block; }
+    .item-label { width: 120px; }
+    .item-content { width: 380px; }
   }
-  tr.rack .none { color: @grayLight;}
+
   table.hardware {
     .table;
     tbody th { width: 140px; }
   }
+
   table.traits { .table; }
   a { cursor: pointer; }
 
@@ -490,6 +497,15 @@ h1.branding {
       .size { display: inline-block; width: 200px; }
     }
   }
+
+  .change-platform { margin-left: 5px;}
+  .change-platform-form {
+    line-height: 1em;
+    select { margin: 0; padding: 1px; }
+    button { margin: 0; padding: 3px 8px; }
+    select { width: 150px;}
+  }
+
 
   .change-reservation-ratio { float: right; }
   .btn-reservation-ratio { display: none; }
@@ -510,16 +526,16 @@ h1.branding {
     width: 140px;
   }
 
-  .change-rack-id { float: right; }
-  .change-rack-form,
-  .change-platform-form {
-    input, select { margin: 0; padding: 3px; }
-    button { margin: 0; padding: 3px 8px; }
-    line-height: 1em; font-size: 10px;
-    select { width: 250px;}
+  .rack {
+    .change-rack-id { visibility: hidden; .pull-right; }
+    .item-content:hover .change-rack-id { visibility: visible; };
   }
 
-  .change-reserve { .pull-right; }
+  .change-rack-form, .change-reserve {
+    input, button {  margin:0; font-size: 12px;}
+    input { padding: 2px;}
+    button { padding: 2px 6px;}
+  }
 
   .enabled { color: @green; }
   .disabled { color: @red; }
@@ -582,9 +598,13 @@ h1.branding {
   }
 
   .platform {
+    .item { .widget-content; }
     .item-content { width: 194px; text-align: right;}
-    .change { padding: 8px;}
+    .item-label, .item-content { display: inline-block;}
+    .item-label { width: 100px; }
+    .item-content { width: 240px;}
   }
+  .rack > * { vertical-align: top; font-size: 10p x;}
 
   .serial-console {
     overflow: hidden;
@@ -1110,10 +1130,6 @@ ul.attributes {
     }
   }
 
-  tfoot td {
-    padding: 1px;
-  }
-
   .row-actions {
     opacity: 0.7;
     visibility: hidden;
@@ -1136,15 +1152,15 @@ ul.attributes {
 
 
 .notes {
-  li { border-bottom: 1px solid #eee; }
+  li { padding: 5px; border-bottom: 1px solid #eee; .widget-content; }
   li:last-child { border-bottom: none; }
   li.empty { color: @grayLight; }
+
   .author { font-weight: bold; display: inline-block;}
   .date { font-size: 12px; color: @gray; display: inline-block;}
   .note { display: block; padding: 8px;}
 
   ul { height: 320px; overflow-y: scroll; }
-  li { padding: 5px;}
   textarea { width: 98%; }
   button { float: right; width: 100px;}
 }

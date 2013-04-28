@@ -3,10 +3,12 @@ var Backbone = require('backbone');
 
 var Platforms = require('../models/platforms');
 var Platform = Backbone.Model.extend({});
+
 var ViewModel = Backbone.Model.extend({});
 var ChangePlatformTemplate = function() {
-    return '<select class="input" data-placeholder-text="Choose Platform"></select><button class="btn btn-primary save">Save</button><button class="btn cancel">Cancel</button>';
+    return '<select class="input" data-placeholder-text="Choose Platform"></select><button class="btn btn-primary save">Save</button><button class="btn cancel"><i class="icon-reply"></i></button>';
 };
+
 var ChangePlatformForm = Backbone.Marionette.ItemView.extend({
     attributes: {
         'class': 'change-platform-form'

@@ -1,16 +1,17 @@
 var _ = require('underscore');
 _.str = require('underscore.string');
 
-var Backbone = require('backbone');
-Backbone.$ = require('jquery');
+var $ = require('jquery');
 require('jquery.chosen');
-
-require('backbone.stickit');
-require('backbone.marionette');
-
 require('jquery.serializeObject');
 require('bootstrap');
 require('typeahead');
+
+var Backbone = require('backbone');
+Backbone.$ = require('jquery');
+require('backbone.stickit');
+require('backbone.marionette');
+require('caliper');
 
 var Pinger = require('./ping');
 
