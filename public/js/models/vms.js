@@ -1,23 +1,64 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
+
 var Vm = require('./vm');
 
-  module.exports = Backbone.Collection.extend({
-model: Vm,
+module.exports = Backbone.Collection.extend({
+    model: Vm,
 
-url: "/_/vms",
+    url: "/_/vms",
 
-initialize: function(options) {
-  this.options = options || {};
-},
+    initialize: function(options) {
+        this.options = options || {};
+        this.pagingParams = {
+            page: this.options.page || 1,
+            per_page: this.options.per_page || 15
+        };
+        this.params = this.options.params || {};
+    },
 
-fetch: function(opts) {
-  opts = opts || {};
-  if (this.options.params) {
-    opts.data = $.param(this.options.params);
-  }
+    parse: function(resp, options) {
+        this.objectCount = options.xhr.getResponseHeader('x-object-count');
+        if (this.objectCount) {
+            this.objectCount = Number(this.objectCount);
+        }
+        return Backbone.Collection.prototype.parse.apply(this, arguments);
+    },
 
-  Backbone.Collection.prototype.fetch.call(this, opts);
-}
+    firstPage: function() {
+        this.pagingParams.page = 1;
+    },
 
-  });
+    next: function() {
+        if (this.hasNext()) {
+            this.pagingParams.page = this.pagingParams.page + 1;
+        }
+    },
 
+    pages: function() {
+        return Math.ceil(this.objectCount / this.pagingParams.per_page);
+    },
+
+    hasNext: function() {
+        return (this.pagingParams.page * this.pagingParams.per_page) < this.objectCount;
+    },
+
+    hasPrev: function() {
+        return this.pagingParams.page > 0;
+    },
+
+    prev: function() {
+        if (this.hasPrev()) {
+            this.pagingParams.page = this.pagingParams.page - 1;
+        }
+    },
+
+    fetch: function(opts) {
+        var params = _.extend(this.pagingParams, this.params);
+
+        opts = opts || {};
+        opts.data = $.param(params);
+
+        return Backbone.Collection.prototype.fetch.call(this, opts);
+    }
+});

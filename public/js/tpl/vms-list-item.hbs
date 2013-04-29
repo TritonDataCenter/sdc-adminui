@@ -11,6 +11,9 @@
     {{uuid}}
     {{/if}}
   </a>
+  {{#if tags.smartdc_type}}
+  <span class="type label">{{tags.smartdc_type}}</span>
+  {{/if}}
   <span class="uuid">{{uuid}}</span>
 </td>
 <td class="memory">{{ ram }} MB</td>

@@ -73,7 +73,23 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     query: function(params) {
         this.ui.alert.hide();
-        this.collection.fetch({ data: params });
+        this.collection.params = params;
+        this.collection.firstPage();
+        this.collection.fetch();
+    },
+
+
+    onScroll: function(e) {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
+            this.next();
+        }
+    },
+
+    next: function() {
+        if (this.collection.hasNext()) {
+            this.collection.next();
+            this.collection.fetch({remove: false});
+        }
     },
 
     onError: function(model, res) {
@@ -97,12 +113,15 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     updateCount: function() {
-        this.$('.record-count').html(this.collection.length);
+        this.$('.record-count').html(this.collection.objectCount);
+        this.$('.current-count').html(this.collection.length);
     },
 
     onRender: function() {
         this.listView.setElement(this.$('tbody')).render();
         this.filterView.setElement(this.$('.vms-filter'));
+
+        $(window).scroll(this.onScroll.bind(this));
 
         this.query({state: 'running'});
         return this;
