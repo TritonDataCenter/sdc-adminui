@@ -77,7 +77,7 @@ var capWidgets = [];            /* all widgets in the panel */
 
     jQuery.ajaxSetup({
         beforeSend: function(xhr) {
-            xhr.setRequestHeader('x-adminui-token', window.sessionStorage.getItem('api-token'))
+            xhr.setRequestHeader('x-adminui-token', window.localStorage.getItem('api-token'))
         }
     });
 
