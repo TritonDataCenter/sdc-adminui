@@ -75,6 +75,7 @@ var PackagesDetailTemplate = require('../tpl/packages-detail-template.hbs');
 
 var Handlebars = require('handlebars-runtime');
 Handlebars.registerHelper('normalize', function(v) {
+    v = Number(v);
     if (v % 1024 === 0) {
         return _.str.sprintf("%d GB", v / 1024);
     }
@@ -111,7 +112,7 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
     onTraits: function() {
         this.traitsEditor = new TraitsEditor();
         this.traitsEditor.traits = this.model.get('traits');
-        this.listenTo(this.traitsEditor, 'save-traits', this.onSaveTraits);
+        this.listenTo(this.traitsEditor, 'save-traits', this.onSaveTraits, this);
         this.traitsEditor.show();
     }
 
@@ -145,7 +146,6 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     initialize: function(options) {
         options = options || {};
         this.packages = new Packages();
-        this.packages.fetch();
         this.listenTo(this.packages, 'error', this.onError);
 
         this.initialPackageUUID = options.uuid;
@@ -170,12 +170,14 @@ var PackagesView = Backbone.Marionette.Layout.extend({
 
         this.listenTo(this.vent, 'showpackage', this.showPackage, this);
         this.listenTo(this.vent, 'showedit', this.showForm, this);
-        this.listenTo(this.packages, 'sync', this.showInitialPackage, this);
 
         this.listenTo(this.detail, 'show', function(view) {
             adminui.router.applyUrl(view);
         });
-
+        var that = this;
+        this.packages.fetch().done(function() {
+            that.showInitialPackage();
+        });
         this.list.show(packagesList);
     },
 
@@ -189,7 +191,6 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     },
 
     showForm: function(model) {
-        console.log(model);
         if (!model) {
             this.$(".sidebar").animate({ opacity: 0.4 });
             this.list.currentView.deselect();
