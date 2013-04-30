@@ -4,34 +4,40 @@ var Users = require('../models/users');
 
 var UserTypeaheadTemplate = require('../tpl/typeahead-user.hbs');
 
-var UserTypeaheadView = Backbone.Marionette.ItemView.extend({
+var UserTypeaheadView = Backbone.Marionette.View.extend({
     events: {
         'typeahead:selected': 'onSelect'
     },
     initialize: function(options) {
         options = options || {};
-        this.collection = options.collection || new Users();
-        this.listenTo(this.collection, 'sync', this.onUpdate, this);
-        this.collection.fetch();
     },
+
     onSelect: function(e, datum) {
         var user = this.collection.get(datum.uuid);
         this.trigger('selected', user);
     },
-    onUpdate: function(users) {
+
+    typeAheadSource: function(users) {
         var source = users.map(function(u) {
             return {
-                'uuid': u.get('uuid'),
-                'tokens': [u.get('login'), u.get('uuid'), u.get('email')],
-                'name': u.get('cn'),
-                'login': u.get('login'),
-                'email': u.get('email')
+                'uuid': u.uuid,
+                'tokens': [u.login, u.uuid, u.email],
+                'name': u.cn,
+                'login': u.login,
+                'email': u.email
             };
         });
 
+        return source;
+    },
+    render: function() {
         this.$el.typeahead({
             name: 'users',
-            local: source,
+            remote: {
+                url: '/_/users?q=%QUERY',
+                cache: true,
+                filter: this.typeAheadSource
+            },
             valueKey: 'uuid',
             template: UserTypeaheadTemplate
         });

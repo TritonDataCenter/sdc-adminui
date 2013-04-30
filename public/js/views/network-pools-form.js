@@ -100,6 +100,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.userInput.setElement(this.ui.ownerInput);
+        this.userInput.render();
         this.ui.saveButton.prop('disabled', true);
         this.stickit(this.networkPool, {
             'input[name=name]': 'name',

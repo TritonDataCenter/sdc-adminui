@@ -102,6 +102,7 @@ var View = Backbone.Marionette.ItemView.extend({
         this.ui.newNicTagField.hide();
         this.nicTagsSelect.setElement(this.$('select[name=nic_tag]'));
         this.userInput = new TypeaheadUserInput({el: this.$('[name=owner_uuid]') });
+        this.userInput.render();
         this.nicTags.fetch();
         var bindings = Backbone.ModelBinder.createDefaultBindings(this.el, 'name');
         bindings['resolvers'].converter = function(direction, value, attrName, model) {

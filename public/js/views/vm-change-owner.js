@@ -32,6 +32,7 @@ var View = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.userInput = new UserInput({el: this.$('input[name=owner_uuid]')});
+        this.userInput.render();
     },
 
     onSubmit: function(e) {

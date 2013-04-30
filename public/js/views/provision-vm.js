@@ -166,6 +166,7 @@ var View = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         this.userInput = new TypeaheadUser({el: this.$('[name=owner]') });
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
+        this.userInput.render();
 
         this.packageSelect.setElement(this.$('select[name=package]')).render();
         this.$('.control-group-networks').hide();
