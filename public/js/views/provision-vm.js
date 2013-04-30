@@ -313,7 +313,7 @@ var View = Backbone.Marionette.ItemView.extend({
 
         if (values['brand'] === 'kvm' && this.userKeys) {
             values.customer_metadata = {
-                authorized_keys: this.userKeys.join("\n")
+                root_authorized_keys: this.userKeys.join("\n")
             };
         }
 
