@@ -121,9 +121,13 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.listView.setElement(this.$('tbody')).render();
         this.filterView.setElement(this.$('.vms-filter'));
 
-        $(window).scroll(this.onScroll.bind(this));
+        $(window).on('scroll', this.onScroll.bind(this));
 
         this.query({state: 'running'});
         return this;
+    },
+
+    onClose: function() {
+        $(window).off('scroll', this.onSroll);
     }
 });

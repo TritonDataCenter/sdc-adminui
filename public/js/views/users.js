@@ -59,19 +59,25 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function() {
-        this.users = new Users();
+        this.collection = new Users();
         this.usersListView = new UsersList({
-            collection: this.users
+            collection: this.collection
         });
 
+        $(window).on('scroll', this.onScroll.bind(this));
+
         this.filterView = new FilterForm();
-        this.listenTo(this.users, 'error', this.onError, this);
+        this.listenTo(this.collection, 'error', this.onError, this);
+        this.listenTo(this.collection, 'sync', this.updateUserCount, this);
+
     },
 
 
     query: function(params) {
         this.$('.alert').hide();
-        this.users.fetch({ data: params });
+        this.collection.firstPage();
+        this.collection.params = params;
+        this.collection.fetch();
     },
 
     onError: function(model, xhr) {
@@ -86,26 +92,41 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.$('.alert').hide();
     },
 
+    onScroll: function(e) {
+        if (this.collection.length) {
+            if ($(window).scrollTop() + $(window).height() > $(document).height() - 20) {
+                this.next();
+            }
+        }
+    },
+    next: function() {
+        if (this.collection.hasNext()) {
+            this.collection.next();
+            this.collection.fetch({remove: false});
+        }
+    },
+
     newUser: function() {
         this.createView = new UserForm();
         this.createView.render();
     },
 
-    loadUserCounts: function() {
-        this.users.userCount(this.updateCount);
-    },
-
-    updateCount: function(c) {
-        this.$('.total-accounts').html(c);
+    updateUserCount: function(c) {
+        this.$('.record-count').html(this.collection.objectCount);
+        this.$('.current-count').html(this.collection.length);
     },
 
     onRender: function() {
-        this.$findField = this.$('.findField');
         this.filterView.setElement(this.$('.users-filter'));
-        this.listenTo(this.filterView, 'query', this.query, this);
         this.usersListView.setElement(this.$('.users-list tbody'));
-        this.users.fetch();
-        this.loadUserCounts();
+
+        this.listenTo(this.filterView, 'query', this.query, this);
+        this.collection.fetch();
+
         return this;
+    },
+
+    onClose: function() {
+        $(window).off('scroll', this.onSroll);
     }
 });
