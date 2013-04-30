@@ -64,6 +64,7 @@ var View = Backbone.Marionette.ItemView.extend({
 
     events: {
         'submit form': 'provision',
+        'click .back': 'backToVirtualMachines',
         'typeahead:selected input#input-image': 'onSelectImage',
         'input input#input-image': 'onSelectImage',
         'blur input[type=text]': 'checkFields',
@@ -109,6 +110,10 @@ var View = Backbone.Marionette.ItemView.extend({
         this.imagesCollection.fetch();
         this.serversCollection.fetch();
         this.packages.fetchActive();
+    },
+
+    backToVirtualMachines: function() {
+        adminui.vent.trigger('showview', 'vms');
     },
 
     prepareImageInput: function(images) {

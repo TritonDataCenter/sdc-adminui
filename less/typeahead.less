@@ -13,10 +13,8 @@
 .tt-dataset-users {
   width: 280px;
   .login { font-weight: bold; }
+  .cn { font-size: 12px; }
   .uuid { font-size: 10px; color: @gray;}
-  .tt-is-under-cursor {
-    .uuid { color: #FFF; }
-  }
   .email { font-size: 12px; }
 }
 .tt-dataset-servers {
@@ -29,11 +27,10 @@
 }
 .tt-dataset-images {
   width: 280px;
-  .name { font-weight: bold;}
+  .name { display: block; font-weight: bold; }
   .version { color: @gray; font-size: 11px; }
-  .uuid { font-size: 10px; color: @gray;}
+  .version strong { font-weight: 300;}
   .tt-is-under-cursor {
-    .uuid { color: #FFF; }
     .version { color: #fff; }
   }
 }

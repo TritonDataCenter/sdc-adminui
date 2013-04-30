@@ -69,12 +69,12 @@ html { height: 100%; }
 // Headings
 // -------------------------
 
-h1 { font-size: 28px; line-height: 40px; }
-h2 { font-size: 24px; line-height: 40px; font-weight: 300; }
-h3 { font-size: 21px; line-height: 40px; font-weight: 200; }
-h4 { font-size: 18px; line-height: 20px; }
-h5 { font-size: 14px; line-height: 20px; }
-h6 { font-size: 12px; line-height: 20px; }
+h1 { font-size: 28px; line-height: (2*@baseLineHeight); }
+h2 { font-size: 24px; line-height: (2*@baseLineHeight); font-weight: 300; }
+h3 { font-size: 21px; line-height: (2*@baseLineHeight); font-weight: 200; }
+h4 { font-size: 18px; line-height: @baseLineHeight; }
+h5 { font-size: 14px; line-height: @baseLineHeight; }
+h6 { font-size: 12px; line-height: @baseLineHeight; }
 
 h1 small { font-size: 24px; }
 h2 small { font-size: 18px; }
@@ -182,7 +182,7 @@ h1.branding {
       .box-shadow(none);
     }
     li.active a {
-      color: #000;
+      color: @textColor;
       .box-shadow(none);
     }
 
