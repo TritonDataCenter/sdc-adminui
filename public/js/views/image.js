@@ -3,6 +3,8 @@ var _ = require('underscore');
 
 
 var adminui = require('../adminui');
+
+var TraitsEditor = require('./traits-editor');
 var Img = require('../models/image');
 var ImageView = Backbone.Marionette.ItemView.extend({
     sidebar: 'images',
@@ -21,6 +23,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         'click .cancel-upload-form': 'onClickCancelUploadForm',
         'click .start-upload': 'onClickStartUpload',
         'click .change-publicity': 'onClickChangePublicity',
+        'click .traits': 'onClickManageTraits',
         'change .fileinput': 'onSelectFile'
     },
 
@@ -73,6 +76,24 @@ var ImageView = Backbone.Marionette.ItemView.extend({
 
     onClickCancelUploadForm: function() {
         this.viewModel.set({uploadform:false});
+    },
+
+    onClickManageTraits: function() {
+        var modal = new TraitsEditor({ traits: this.model.get('traits') });
+        modal.show();
+        var image = this.model;
+        this.listenTo(modal, 'save-traits', function(traits) {
+            image.save(
+                { traits: traits},
+                { patch: true }
+                ).done(function() {
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: 'Traits updated'
+                });
+                modal.close();
+            });
+        });
     },
 
     onClickChangePublicity: function() {
