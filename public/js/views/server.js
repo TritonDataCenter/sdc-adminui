@@ -8,7 +8,7 @@ var Nics = require('../models/nics');
 
 var NotesView = require('./notes');
 var BaseView = require('./base');
-var TraitsModal = require('./traits-editor');
+var JSONEditor = require('./traits-editor');
 var JobProgressView = require('./job-progress');
 var ChangeRackForm = require('./server-change-rack');
 var ChangePlatformForm = require('./server-change-platform');
@@ -267,18 +267,24 @@ var ServerView = Backbone.Marionette.ItemView.extend({
     },
 
     showTraitsModal: function() {
-        var modal = new TraitsModal({ traits: this.model.get('traits') });
+        var modal = new JSONEditor({
+            data: this.model.get('traits'),
+            title: _.str.sprintf('Traits for server: %s', this.model.get('hostname'))
+        });
         modal.show();
         var server = this.model;
-        this.listenTo(modal, 'save-traits', function(traits) {
-            server.save({ traits: traits}, {patch: true}).done(function() {
+        modal.on('save', function(data) {
+            this.model.save(
+                {traits: data},
+                {patch: true})
+            .done(function() {
                 modal.close();
                 app.vent.trigger('notification', {
                     level: 'success',
                     message: 'Traits updated'
                 });
             });
-        });
+        }, this);
     },
 
     showSetupModal: function() {

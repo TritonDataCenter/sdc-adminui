@@ -4,7 +4,7 @@ var _ = require('underscore');
 
 var adminui = require('../adminui');
 
-var TraitsEditor = require('./traits-editor');
+var JSONEditor = require('./traits-editor');
 var Img = require('../models/image');
 var ImageView = Backbone.Marionette.ItemView.extend({
     sidebar: 'images',
@@ -24,6 +24,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         'click .start-upload': 'onClickStartUpload',
         'click .change-publicity': 'onClickChangePublicity',
         'click .traits': 'onClickManageTraits',
+        'click .tags': 'onClickManageTags',
         'change .fileinput': 'onSelectFile'
     },
 
@@ -78,11 +79,37 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         this.viewModel.set({uploadform:false});
     },
 
+    onClickManageTags: function() {
+        var server = this.model;
+        var modal = new JSONEditor({
+            title: _.str.sprintf('Tags for image: %s', this.model.get('name')),
+            data: this.model.get('tags')
+        });
+
+        modal.show();
+        modal.on('save', function(data) {
+            server.save(
+                {tags: data},
+                {patch: true}
+                ).done(function() {
+                modal.close();
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: 'Traits updated'
+                });
+            });
+        });
+    },
+
+
     onClickManageTraits: function() {
-        var modal = new TraitsEditor({ traits: this.model.get('traits') });
+        var modal = new JSONEditor({
+            title: _.str.sprintf('Traits for image: %s', this.model.get('name')),
+            data: this.model.get('traits')
+        });
         modal.show();
         var image = this.model;
-        this.listenTo(modal, 'save-traits', function(traits) {
+        this.listenTo(modal, 'save', function(traits) {
             image.save(
                 { traits: traits},
                 { patch: true }

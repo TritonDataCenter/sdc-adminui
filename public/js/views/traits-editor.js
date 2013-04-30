@@ -14,31 +14,33 @@ var View = Backbone.Marionette.ItemView.extend({
     },
     initialize: function(options) {
         options = options || {};
-        this.traits = options.traits || {};
+        this.data = options.traits || options.data || {};
+        this.title = options.title || "JSON Editor";
     },
     onRender: function() {
-        this.$('textarea').text(JSON.stringify(this.traits, null, 2));
+        this.$('textarea').text(JSON.stringify(this.data, null, 2));
+        this.$('h2').html(this.title);
     },
     checkSyntax: function() {
         try {
-            var traits = JSON.parse(this.$('textarea').val());
+            var data = JSON.parse(this.$('textarea').val());
             this.$('.btn-primary').removeAttr('disabled');
             this.$('.error').empty();
-            return traits;
+            return data;
         } catch (e) {
             this.$('.btn-primary').attr('disabled', 'disabled');
             this.showError('JSON Error: ' + e.message);
         }
     },
     onClickSave: function() {
-        var traits;
+        var data;
         try {
-            traits = JSON.parse(this.$('textarea').val());
+            data = JSON.parse(this.$('textarea').val());
         } catch (e) {
             this.showError('JSON Error: ' + e.message);
         } finally {
-            if (traits !== null) {
-                this.trigger('save-traits', traits);
+            if (data !== null) {
+                this.trigger('save', data);
             }
         }
     },

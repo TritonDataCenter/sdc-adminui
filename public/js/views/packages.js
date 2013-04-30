@@ -93,8 +93,6 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
         'click .traits': 'onTraits'
     },
 
-    initialize: function(options) {},
-
     onEdit: function() {
         this.vent.trigger('showedit', this.model);
     },
@@ -105,14 +103,20 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
             { traits: traits },
             { patch: true }
         ).done(function() {
+            adminui.vent.trigger('notification', {
+                level: 'success',
+                message: 'Package traits saved successfully.'
+            });
             that.traitsEditor.close();
         });
     },
 
     onTraits: function() {
-        this.traitsEditor = new TraitsEditor();
-        this.traitsEditor.traits = this.model.get('traits');
-        this.listenTo(this.traitsEditor, 'save-traits', this.onSaveTraits, this);
+        this.traitsEditor = new TraitsEditor({
+            data: this.model.get('traits'),
+            title: _.str.sprintf('Trats for package: %s', this.model.get('name'))
+        });
+        this.listenTo(this.traitsEditor, 'save', this.onSaveTraits, this);
         this.traitsEditor.show();
     }
 
