@@ -5,7 +5,7 @@ var DEFAULT_EMPTY_MESSAGE = 'No Records Found.';
 
 var EmptyView = Backbone.Marionette.ItemView.extend({
     attributes: {
-        'class': 'empty'
+        'class': 'zero-state'
     },
 
     initialize: function(options) {

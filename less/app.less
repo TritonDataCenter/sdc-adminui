@@ -38,7 +38,7 @@ html { height: 100%; }
   h1 {
     font-size: 26px;
     font-weight: 300;
-    small.uuid {
+    .uuid {
       text-transform: lowercase;
       #font > .monospace(12px);
     }
@@ -87,6 +87,7 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
   .widget-content;
   color: @grayLight;
 }
+.zero-state + button { margin-top: @baseLineHeight/2;}
 
 table.vertical { tr, td { border: none;}}
 
@@ -270,6 +271,7 @@ h1.branding {
     .items { margin-bottom: 10px; }
     .details, .actions { display: inline-block; vertical-align: middle;}
     .details { width: 500px;}
+
     .item {
       .widget-content;
       .fingerprint { #font > .monospace(10px);line-height: 15px; color: @grayLight; }
@@ -343,7 +345,11 @@ h1.branding {
     button { margin-top: 1em;}
   }
 
-  .details { margin-left: 215px; }
+  .details {
+    .text-warning { font-size: 12px;  float: right;}
+    margin-left: 215px;
+  }
+
   .fileinput { display: none; }
   a.show-upload-form {
     cursor: pointer;

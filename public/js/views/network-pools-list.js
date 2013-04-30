@@ -52,7 +52,6 @@ var ItemView = Backbone.Marionette.ItemView.extend({
 
 var EmptyView = require('./empty');
 var NetworkPoolListEmptyView = EmptyView.extend({
-    tagName: 'p',
     loadingMessage: 'Loading Network Pools...',
     emptyMessage: 'There are no network pools.'
 });
