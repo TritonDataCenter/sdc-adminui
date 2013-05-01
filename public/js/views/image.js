@@ -261,7 +261,6 @@ var ImageView = Backbone.Marionette.ItemView.extend({
     },
 
     onUploadComplete: function(e) {
-        var self = this;
         this.viewModel.set({progress: false});
         this.viewModel.set({uploading: false});
         adminui.vent.trigger('notificication', {

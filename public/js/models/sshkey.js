@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var Model = require('./model');
+var _ = require('underscore');
 
 module.exports = Model.extend({
     urlRoot: function() {

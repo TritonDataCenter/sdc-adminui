@@ -1,9 +1,11 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 
+var Collection = require('./collection');
 
 var SSHKey = require('./sshkey');
-var SSHKeys = Backbone.Collection.extend({
+
+var SSHKeys = Collection.extend({
     model: SSHKey,
     url: function() {
         return '/_/users/' + this.uuid + '/keys';

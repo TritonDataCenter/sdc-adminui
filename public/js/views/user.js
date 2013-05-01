@@ -9,6 +9,7 @@ var VmsList = require('./vms-list');
 var Vms = require('../models/vms');
 var SSHKeys = require('../models/sshkeys');
 var UserForm = require('./user-form');
+var AddKeyView = require('./sshkey-create');
 
 var __CONFIRM_REMOVE_KEY = "Are you sure you want to remove this key from the user's account?";
 
@@ -20,7 +21,8 @@ var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
     events: {
         'click .remove': 'onClickRemove'
     },
-    onClickRemove: function() {
+    onClickRemove: function(e) {
+        e.preventDefault();
         var confirm = window.confirm(__CONFIRM_REMOVE_KEY);
         if (confirm) {
             this.model.destroy();
@@ -28,8 +30,18 @@ var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
     }
 });
 
+var SSHKeyEmptyView = require('./empty').extend({
+    emptyMessage: 'User has no SSH Keys.'
+});
+
 var SSHKeysList = Backbone.Marionette.CollectionView.extend({
-    itemView: SSHKeyListItem
+    emptyView: SSHKeyEmptyView,
+    itemView: SSHKeyListItem,
+    itemViewOptions: function() {
+        return {
+            emptyViewModel: this.collection
+        };
+    }
 });
 
 var User = require('../models/user');
@@ -53,13 +65,12 @@ var UserView = Backbone.Marionette.ItemView.extend({
     },
 
     onClickAddKey: function(e) {
-        var AddKeyView = require('./sshkey-create');
-        var view = new AddKeyView({
-            user: this.model.get('uuid')
-        });
+        var view = new AddKeyView({ user: this.model.get('uuid') });
         view.render();
 
-        this.listenTo(view, 'saved', this.sshkeys.add);
+        view.on('saved', function(key) {
+            this.sshkeys.add(key);
+        }, this);
     },
 
     initialize: function(options) {

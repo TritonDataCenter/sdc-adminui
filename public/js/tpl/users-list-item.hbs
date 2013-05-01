@@ -3,5 +3,12 @@
   <span class="uuid">{{uuid}}</span>
 </td>
 <td>
-  <span class="cn">{{cn}}</span>
+  <span class="cn">
+    {{#if cn}}
+      {{cn}}
+    {{else}}
+      <span class="unnamed">unnamed</span>
+    {{/if}}
+
+  </span>
 <td class="email">{{email}}</td>

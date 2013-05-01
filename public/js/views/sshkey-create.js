@@ -38,9 +38,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     onClickSave: function() {
         this.$('textarea').parents('.control-group').removeClass('error');
         var key = this.$('textarea[name=key]').val();
-        this.model.save({
-            key: key
-        });
+        this.model.save({ key: key });
     },
 
     onRender: function() {
