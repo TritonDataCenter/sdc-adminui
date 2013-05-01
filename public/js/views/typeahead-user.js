@@ -1,6 +1,6 @@
 var Backbone = require('backbone');
 
-var Users = require('../models/users');
+var User = require('../models/user');
 
 var UserTypeaheadTemplate = require('../tpl/typeahead-user.hbs');
 
@@ -13,13 +13,13 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
     },
 
     onSelect: function(e, datum) {
-        var user = this.collection.get(datum.uuid);
-        this.trigger('selected', user);
+        this.trigger('selected', datum.model);
     },
 
     typeAheadSource: function(users) {
         var source = users.map(function(u) {
             return {
+                model: new User(u),
                 'uuid': u.uuid,
                 'tokens': [u.login, u.uuid, u.email],
                 'name': u.cn,

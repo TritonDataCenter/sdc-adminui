@@ -15,6 +15,7 @@ html { height: 100%; }
 
 #chrome { min-height: 100%; padding-bottom: 20px;}
 #content a { cursor: pointer;}
+#content section { margin-bottom: 20px;}
 #footer { height: 24px; background: #dfe7ec;}
 
 .widget-container {}
@@ -271,12 +272,12 @@ h1.branding {
   .ssh-keys {
     .items { margin-bottom: 10px; }
     .details, .actions { display: inline-block; vertical-align: middle;}
-    .details { width: 500px;}
+    .details { width: 400px;}
 
     .item {
       .widget-content;
-      .fingerprint { #font > .monospace(10px);line-height: 15px; color: @grayLight; }
-      .remove { font-size: 12px; text-decoration: none; color: @red; padding: 8px; visibility: hidden;}
+      .fingerprint { #font > .monospace(10px); line-height: 20px; color: @grayLight; }
+      .remove { display: inline-block; font-size: 12px; text-decoration: none; color: @red; padding: 8px; visibility: hidden;}
       &:hover .remove { visibility: visible; };
     }
 
@@ -802,7 +803,6 @@ ul.attributes {
 }
 
 #page-networks {
-  section { margin-bottom: 20px;}
   .network-pools-list>ul>li {
     margin-bottom: 1em;
 

@@ -181,7 +181,11 @@ var View = Backbone.Marionette.ItemView.extend({
         this.$('.control-group-brand').hide();
         this.checkFields();
 
+
         return this;
+    },
+    onShow: function() {
+        this.$("input:not([disabled]):first").focus();
     },
 
     populateNetworks: function(networks) {
