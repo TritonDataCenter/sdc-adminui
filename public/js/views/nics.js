@@ -18,7 +18,7 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
         this.selectedNics = new Backbone.Collection();
         this.collection = new Backbone.Collection(this.model.get('nics'));
 
-        this.listenTo(this.selectedNics, 'add remove', this.onChangeSelectedNics, this);
+        this.listenTo(this.selectedNics, 'add remove reset', this.onChangeSelectedNics, this);
         this.listenTo(this.model, 'change:nics', this.resetNics, this);
     },
 
@@ -42,6 +42,7 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
                     self.selectedNics.each(function(n) {
                         self.collection.remove(n);
                     });
+                    self.selectedNics.reset();
                 }
             });
         });
