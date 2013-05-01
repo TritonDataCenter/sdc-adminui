@@ -1,4 +1,6 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
+
 var Alarms = require('../models/alarms');
 var Alarm = require('../models/alarm');
 
@@ -49,7 +51,6 @@ var AlarmsView = Backbone.Marionette.ItemView.extend({
         this.listenTo(this.alarms, 'sync', this.render);
         this.listenTo(this.probeGroups, 'sync', this.render);
         this.listenTo(this.probes, 'sync', this.render);
-        this.fetch();
     },
 
     fetch: function() {
@@ -72,7 +73,7 @@ var AlarmsView = Backbone.Marionette.ItemView.extend({
         this.alarms.each(function(a) {
             if (a.get('probeGroup')) {
                 a.probeGroup = this.probeGroups.find(function(pg) {
-                    return pg.get('uuid') == a.get('probeGroup');
+                    return pg.get('uuid') === a.get('probeGroup');
                 });
             }
 
@@ -80,7 +81,7 @@ var AlarmsView = Backbone.Marionette.ItemView.extend({
                 var faultProbe = f.probe;
                 if (faultProbe) {
                     f.probe = this.probes.find(function(p) {
-                        return p.get('uuid') == faultProbe;
+                        return p.get('uuid') === faultProbe;
                     });
                 }
             }, this);
@@ -92,6 +93,7 @@ var AlarmsView = Backbone.Marionette.ItemView.extend({
             probeGroups: this.probeGroups,
             alarms: this.alarms
         };
+
         var open = vars.alarms.filter(function(a) {
             return a.get('suppressed') === false && a.get('closed') === false;
         });

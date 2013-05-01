@@ -200,7 +200,10 @@ h1.branding {
 
 #page-dashboard {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  padding-top: 1em;
+
+  .row {
+    margin-bottom: 20px;
+  }
 
   .alarms-container {
     font-size: 24px;
@@ -212,45 +215,47 @@ h1.branding {
       overflow: hidden;
     }
     .no-alarms {
-      background: #855eb0;
-      padding: 24px 48px;
+      .widget-content;
+      box-sizing: border-box;
+      strong {
+        font-weight: 300;
+        display: block;
+        color: #62C2B4;
+        font-size: 38px;
+        padding: 10px 0;
+      }
+      font-size: 14px;
+      font-weight: 200;
+      color: #aaa;
+      padding: 20px 48px;
     }
   }
 
+  .servers .counter .value { color: #6595B5;}
 
-  .widget-label {
-    display: block;
-    text-transform: uppercase;
-    color: #333;
-    background: #e8e8e8;
-    padding: 6px 0;
-    text-align: center;
-  }
-
-  .counters { text-align: center; }
-
-  .counter>div { display: inline-block;}
   .counter {
-    color: #FFF;
+    box-sizing: border-box;
+    .widget-content;
     text-align: center;
     font-size: 14px;
+    padding: 15px 0;
 
     .name {
       display: block;
       text-transform: uppercase;
-      color: #333;
-      background: #e8e8e8;
+      color: #888;
       padding: 6px 0;
     }
 
     .value {
-      font-weight: bold;
-      font-size: 32px;
-      padding: 32px 0;
+      font-weight: 300;
+      font-size: 38px;
+      padding: 10px 0;
       display: block;
-      background: #586275;
-      color: #bee6ff;
+      color: #62C2B4;
     }
+
+
   }
 }
 
@@ -984,12 +989,15 @@ ul.attributes {
 
     .summary {
       cursor: pointer;
-      background: lighten(@red, 20%);
+      background: lighten(@red, 48%);
+      border: 1px solid lighten(@red, 20%);
       padding: 18px;
     }
 
     .details {
-      background: lighten(@red, 40%);
+      .widget-content;
+      background: #f8f8f8;
+      color: #333;
       padding: 14px;
       overflow: hidden;
     }
@@ -1023,7 +1031,8 @@ ul.attributes {
         clear: both;
         font-weight: normal;
         font-size: 11px;
-        background: #444;
+        background: #fff;
+
         padding: 4px 8px;
         .border-radius(2px);
       }

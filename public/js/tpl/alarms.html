@@ -1,45 +1,45 @@
 <% if (alarms.length) { %>
 <div class="alarms-container has-alarms">
-<ul class="unstyled alarms-list">
-	<% alarms.each(function(alarm) { %>
-		<li data-uuid="<%= alarm.get('id') %>">
-			<div class="summary">
-				<div class="fault-count">
-					<%= alarm.get('numEvents') %>
-				</div>
+  <ul class="unstyled alarms-list">
+   <% alarms.each(function(alarm) { %>
+   <li data-uuid="<%= alarm.get('id') %>">
+     <div class="summary">
+      <div class="fault-count">
+       <%= alarm.get('numEvents') %>
+      </div>
 
-				<div class="probe-name">
-					<% if (alarm.probeGroup) { %>
-					<%= alarm.probeGroup.get('name') %>
-					<% } else { %>
-					<%= alarm.probe.get('name') %>
-					<% } %>
-				</div>
+      <div class="probe-name">
+       <% if (alarm.probeGroup) { %>
+       <%= alarm.probeGroup.get('name') %>
+       <% } else { %>
+       <%= alarm.probe.get('name') %>
+       <% } %>
+     </div>
 
-				<div class="time-last-event">
-					<%= new Date(alarm.get('timeLastEvent')) %>
-				</div>
+     <div class="time-last-event">
+       <%= new Date(alarm.get('timeLastEvent')) %>
+     </div>
 
-				<div class="actions">
-					<a class="suppress"><i class="icon-remove icon-white"></i></a>
-				</div>
-			</div>
+     <div class="actions">
+       <a class="suppress"><i class="icon-remove icon-white"></i></a>
+     </div>
+   </div>
 
-			<div class="details">
-				<ul class="unstyled faults">
-					<% _.each(alarm.get('faults'), function(fault) { %>
-					<li>
-						<div class="fault-name"><%= fault.probe.get('name') %></div>
-						<div class="fault-time"><%= new Date(fault.event.time) %></div>
-						<div class="fault-message"><%= fault.event.data.message %></div>
-					</li>
-					<% }); %>
-				</ul>
-			</div>
-		</li>
-	<% }); %>
+  <div class="details">
+    <ul class="unstyled faults">
+    <% _.each(alarm.get('faults'), function(fault) { %>
+    <li>
+      <div class="fault-name"><%= fault.probe.get('name') %></div>
+      <div class="fault-time"><%= new Date(fault.event.time) %></div>
+      <div class="fault-message"><%= fault.event.data.message %></div>
+    </li>
+    <% }); %>
+  </ul>
+</div>
+</li>
+<% }); %>
 </ul>
 </div>
 <% } else { %>
-<div class="alarms-container no-alarms">There are no alarms at this time.</div>
+<div class="alarms-container no-alarms"><strong>No alarms ☺ </strong> everything looking good :)</div>
 <% } %>
