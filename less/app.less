@@ -5,7 +5,6 @@
 
 @import "signin.less";
 @import "notifications.less";
-
 @import "typeahead.less";
 
 
@@ -17,6 +16,13 @@ html { height: 100%; }
 #content a { cursor: pointer;}
 #content section { margin-bottom: 20px;}
 #footer { height: 24px; background: #dfe7ec;}
+
+.btn-primary {
+  &.disabled,
+  &[disabled] {
+    background: desaturate(@btnPrimaryBackground, 30%);
+  }
+}
 
 .widget-container {}
 
