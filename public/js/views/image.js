@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
+var moment = require('moment');
 
 
 var adminui = require('../adminui');
@@ -41,7 +42,6 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         'unactivated': function() {
             return this.state === 'unactivated';
         },
-
 
         'enableable': function() {
             return this.disabled === true;
@@ -108,9 +108,8 @@ var ImageView = Backbone.Marionette.ItemView.extend({
             data: this.model.get('traits')
         });
         modal.show();
-        var image = this.model;
-        this.listenTo(modal, 'save', function(traits) {
-            image.save(
+        modal.on('save', function(traits) {
+            this.model.save(
                 { traits: traits},
                 { patch: true }
                 ).done(function() {
@@ -120,15 +119,28 @@ var ImageView = Backbone.Marionette.ItemView.extend({
                 });
                 modal.close();
             });
-        });
+        }, this);
     },
 
     onClickChangePublicity: function() {
         var newVal = !this.model.get('public');
+        var message = 'Image has been made ';
+
+        if (newVal) {
+            message += '<strong>public</strong>';
+        } else {
+            message += '<strong>private</strong>';
+        }
         var self = this;
-        this.model.save({'public': newVal}, {success: function() {
-            self.model.fetch();
-        }});
+        this.model.save(
+            {'public': newVal},
+            {patch: true}
+        ).done(function() {
+            adminui.vent.trigger('notification', {
+                level: 'success',
+                message: message
+            });
+        });
     },
 
     onChangeProgress: function(model, value) {
@@ -144,13 +156,15 @@ var ImageView = Backbone.Marionette.ItemView.extend({
             this.$('.add-file').html('Select image file to upload');
             this.$(".file").addClass("to-be-removed");
             this.$('.upload').show();
+            this.$('.show-upload-form').hide();
         } else {
+            this.$('.show-upload-form').show();
+            this.$('.upload').hide();
             if (model.get('uploading') === false) {
                 this.$(".file").removeClass("to-be-removed");
             }
-            this.$('.upload').hide();
         }
-        this.$('.upload button.start-upload').attr("disabled", 'disabled');
+        this.$('.upload button.start-upload').prop("disabled", true);
     },
 
     onError: function(model, res) {
@@ -168,6 +182,10 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         var self = this;
         this.model.activate(function() {
+            adminui.vent.trigger({
+                level: 'success',
+                message: 'Image has been activated.'
+            });
             self.model.fetch();
         });
     },
@@ -176,6 +194,10 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         var self = this;
         this.model.disable(function() {
+            adminui.vent.trigger({
+                level: 'success',
+                message: 'Image has been disabled.'
+            });
             self.model.fetch();
         });
     },
@@ -184,6 +206,10 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         var self = this;
         this.model.enable(function() {
+            adminui.vent.trigger({
+                level: 'success',
+                message: 'Image has been enabled.'
+            });
             self.model.fetch();
         });
     },
@@ -217,8 +243,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         xhr.addEventListener("abort", this.onUploadCancelled.bind(this), false);
 
         xhr.open("PUT", this.model.url() + "/file");
-        xhr.setRequestHeader("Content-type", file.type);
-        xhr.setRequestHeader("content-length", file.size);
+        xhr.setRequestHeader("content-type", file.type);
         xhr.setRequestHeader("x-file-compression", compression);
         xhr.setRequestHeader('x-adminui-token', $.ajaxSettings.headers['x-adminui-token']);
         xhr.send(file);
@@ -239,17 +264,19 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         var self = this;
         this.viewModel.set({progress: false});
         this.viewModel.set({uploading: false});
+        adminui.vent.trigger('notificication', {
+            level: 'success',
+            message: 'Image file has been saved.'
+        });
         this.model.fetch();
     },
 
     onUploadFailed: function(e) {
         this.viewModel.set({uploading: false});
-        console.log(e);
     },
 
     onUploadCancelled: function(e) {
         this.viewModel.set({uploading: false});
-        console.log(e);
     }
 
 });

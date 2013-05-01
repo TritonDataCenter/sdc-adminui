@@ -329,8 +329,6 @@ h1.branding {
     }
   }
   .basic {
-    width: 205px;
-    float: left;
     .os-image { text-align: center; }
 
     p {
@@ -346,19 +344,25 @@ h1.branding {
   }
 
   .details {
-    .text-warning { font-size: 12px;  float: right;}
-    margin-left: 215px;
+    .show-upload-form { font-size: 14px; .pull-right; }
+    .text-warning { font-size: 14px; float: right;}
   }
 
   .fileinput { display: none; }
   a.show-upload-form {
     cursor: pointer;
   }
+
   .files {
+    li {
+      .widget-content;
+    }
     li.upload {
       display: none;
-      padding: 8px;
-      .select { display: inline-block; width: 300px; font-size: 12px;}
+      padding: 20px;
+      overflow: hidden;
+      .upload-actions { margin-top: 10px; .pull-right;}
+      .select { display: inline-block; width: 300px; }
       .compression { width: 200px;display: inline-block;  font-size: 12px;}
       .compression select { padding: 3px; height: 24px; margin: 0;}
       .add-file {
@@ -369,6 +373,7 @@ h1.branding {
     li.progress {
       padding: 8px;
     }
+
     li.empty { padding: 0 8px; }
 
     li.file.to-be-removed {
@@ -380,27 +385,13 @@ h1.branding {
         display: inline-block;
       }
       .sha1 {
-        padding-left: 8px;
-        width: 300px;
+        width: 320px;
         #font > .monospace(11px, normal, 1.2);
       }
       .compression { color: @grayLight;}
       .size { width: 200px; }
     }
   }
-}
-
-#notifier-feed {
-  width: 300px;
-  z-index: 1000;
-
-  li { padding: 0 10px;}
-  li .uuid { font-size: 0.9em; }
-  li .job.success .name { color: @successText; }
-  li .job-name { color: @grayDarker; font-weight: bold; }
-  li .task { padding: .3em 0;}
-  li .task .name { font-weight: bold; }
-  li .task.success { color: @successText; }
 }
 
 .vms-list tr {
@@ -782,21 +773,20 @@ h1.branding {
 
 /** Attributes styling **/
 ul.attributes {
-  li+li { margin-top: 1em; }
+  margin-bottom: 20px;
+  li+li { }
   li {
+    .widget-content;
     strong {
-      margin-left: 10px;
-      text-transform: uppercase;
       .opacity(60);
       display: inline-block;
-      width: 240px;
+      width: 180px;
     }
 
     .value {
       display: inline-block;
     }
     .uuid {
-      color: @grayLight;
       #font > .monospace(12px);
     }
   }

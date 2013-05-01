@@ -13,205 +13,210 @@
   </h1>
 </div>
 
-  <div class="actions">
-    {{#if enableable}}
-    <a class="btn btn-info enable"><i class="icon-ok-sign icon-white"></i> Enable Image</a>
+<div class="actions">
+  <button class="btn change-publicity">
+    {{#if public}}
+    <i class="icon-lock"></i> Make Image Private
+    {{else}}
+    <i class="icon-unlock"></i> Make Image Public
     {{/if}}
+  </button>
 
-    {{#if unactivated}}
-    <a class="btn activate btn-primary"><i class="icon-ok-sign icon-white"></i> Activate Image</a>
-    {{/if}}
-
-    {{#if disableable}}
-    <a class="btn disable btn-danger"><i class="icon-remove-sign icon-white"></i> Disable Image</a>
-    {{/if}}
-  </div>
-</div>
-
-
-<div class="basic">
-  {{#if os}}
-  <div class="os-image">
-    <img src="/img/os-{{os}}.png">
-  </div>
+  {{#if enableable}}
+  <a class="btn btn-info enable"><i class="icon-ok-sign icon-white"></i> Enable Image</a>
   {{/if}}
 
-  <p class="description">{{description}}</p>
+  {{#if unactivated}}
+  <a class="btn activate btn-primary"><i class="icon-ok-sign icon-white"></i> Activate Image</a>
+  {{/if}}
 
-  <div class="visibility">
-    {{#if public}}
-      Image is available to the <strong>public</strong>
-    {{else}}
-      This image is <strong>restricted to the owner</strong>
-      {{#if acl.length}}
-        and
-        {{#each acl}} {{this}} {{/each}}
-      {{/if}}
-    {{/if}}<br>
-
-    <button class="btn btn-small change-publicity">
-    {{#if public}}
-      <i class="icon-lock"></i> Make Image Private
-    {{else}}
-      <i class="icon-globe"></i> Make Image Public
-    {{/if}}
-    </button>
-
-    <button type="button" class="btn btn-small traits">Manage Traits</button>
-    <button type="button" class="btn btn-small tags">Manage Tags</button>
-  </div>
+  {{#if disableable}}
+  <a class="btn disable btn-danger"><i class="icon-remove-sign icon-white"></i> Disable Image</a>
+  {{/if}}
 </div>
 
 
-<div class="details">
-  <h3>Overview</h3>
-  <ul class="unstyled attributes">
-    <li>
-      <strong>UUID</strong>
-      <span class="value uuid">{{uuid}}</span>
-    </li>
-
-    <li>
-      <strong>Owner</strong>
-      <span class="value uuid">{{owner}}</span>
-    </li>
-
-    <li>
-      <strong>Name / Version</strong>
-      <span class="value">{{name}} {{version}}</span>
-    </li>
-
-    <li>
-      <strong>Publish Date</strong>
-      <span class="value">{{published_at}}</span>
-    </li>
-
-    <li>
-      <strong>Operating System</strong>
-      <span class="value">{{os}}</span>
-    </li>
-
-    <li>
-      <strong>Image Type</strong>
-      <span class="value">{{type}}</span>
-    </li>
-
-    {{#if cpu_type}}
-    <li>
-      <strong>CPU Type</strong>
-      <span class="value">{{cpu_type}}</span>
-    </li>
+<div class="row">
+  <div class="basic span4">
+    {{#if os}}
+    <div class="os-image">
+      <img src="/img/os-{{os}}.png">
+    </div>
     {{/if}}
-  </ul>
 
-  <h3>Files
-    {{#if unactivated}}
-    <a class="show-upload-form">Upload a new file</a>
-    {{else}}
-    <span class="text-warning">To upload a new file, please deactivate the image first.</span>
-    {{/if}}
-  </h3>
-  <ul class="unstyled files">
-    {{#if files.length}}
-    <li class="file">
-      {{#each files}}
+    <p class="description">{{description}}</p>
+
+    <div class="visibility">
+      {{#if public}}
+      Image is available to the <strong>public</strong>
+      {{else}}
+      This image is <strong>restricted to the owner</strong>
+      {{#if acl.length}}
+      and
+      {{#each acl}} {{this}} {{/each}}
+      {{/if}}
+      {{/if}}<br>
+    </div>
+
+  </div>
+
+
+  <div class="details span8">
+    <h3>Overview</h3>
+    <ul class="unstyled attributes">
+      <li>
+        <strong>UUID</strong>
+        <span class="value uuid">{{uuid}}</span>
+      </li>
+
+      <li>
+        <strong>Owner</strong>
+        <span class="value uuid">{{owner}}</span>
+      </li>
+
+      <li>
+        <strong>Name / Version</strong>
+        <span class="value">{{name}} {{version}}</span>
+      </li>
+
+      <li>
+        <strong>Publish Date</strong>
+        <span class="value">{{published_at}}</span>
+      </li>
+
+      <li>
+        <strong>Operating System</strong>
+        <span class="value">{{os}}</span>
+      </li>
+
+      <li>
+        <strong>Image Type</strong>
+        <span class="value">{{type}}</span>
+      </li>
+
+      {{#if cpu_type}}
+      <li>
+        <strong>CPU Type</strong>
+        <span class="value">{{cpu_type}}</span>
+      </li>
+      {{/if}}
+    </ul>
+
+    <h3>Files
+      {{#if unactivated}}
+      <a class="show-upload-form btn">Upload a new file</a>
+      {{/if}}
+    </h3>
+
+    <ul class="unstyled files">
+      {{#if files.length}}
+      <li class="file">
+        {{#each files}}
         <div class="sha1"><span>{{this.sha1}}</span></div>
         <div class="size"><span>{{this.size}} bytes</span></div>
         <div class="compression"><span>{{this.compression}}</span></div>
-      {{/each}}
-    </li>
-    {{/if}}
-    <li class="progress">
-      <div class="progress progress-striped active">
-        <div class="bar" style="width: 0%;"></div>
-      </div>
-    </li>
-
-    {{#unless files.length}}
-    <li class="zero-state">
-        There are currently no files in this Image. An image must have a file before it can be activated.
-    </li>
-    {{/unless}}
-
-
-    <li class="upload">
-      <div class="select">
-        <a class="add-file">Select image file to upload</a>
-      </div>
-      <div class="compression">
-        Compression
-        <select class="input-small">
-          <option value="none">none</option>
-          <option value="bzip2">bzip2</option>
-          <option value="gzip">gzip</option>
-        </select>
-      </div>
-      <button class="btn btn-small btn-info start-upload">Start Upload</button>
-      <button class="btn btn-small cancel-upload-form">Cancel</button>
-    </li>
-  </ul>
-
-  <form class="uploadform">
-    <input type="file" class="fileinput">
-  </form>
-
-  <h3>Requirements</h3>
-  <ul class="unstyled attributes requirements">
-    <li>
-      <strong>Networks</strong>
-      <span class="value">
-        {{#each requirements.networks}}
-        {{this.name}} / {{this.description}}
         {{/each}}
-      </span>
-    </li>
+      </li>
+      {{/if}}
+      <li class="progress">
+        <div class="progress progress-striped active">
+          <div class="bar" style="width: 0%;"></div>
+        </div>
+      </li>
 
-    {{#if requirements.ssh_key}}
-    <li>
-      <strong>SSH Key</strong>
-      <span class="value">{{requirements.ssh_key}}</span>
-    </li>
+      {{#unless files.length}}
+      <li class="zero-state">
+        There are currently no files in this Image. An image must have a file before it can be activated.
+      </li>
+      {{/unless}}
+
+
+      <li class="upload">
+        <div class="select">
+          <a class="add-file btn">Select image file to upload</a>
+        </div>
+        <div class="compression">
+          Compression <select class="input-small">
+            <option value="none">none</option>
+            <option value="bzip2">bzip2</option>
+            <option value="gzip">gzip</option>
+          </select>
+        </div>
+
+        <div class="upload-actions">
+          <button class="btn btn-small cancel-upload-form">Cancel</button>
+          <button class="btn btn-small btn-primary start-upload">Start Image Upload</button>
+        </div>
+      </li>
+    </ul>
+
+    <form class="uploadform">
+      <input type="file" class="fileinput">
+    </form>
+
+    <h3>Requirements</h3>
+    <ul class="unstyled attributes requirements">
+      <li>
+        <strong>Networks</strong>
+        <span class="value">
+          {{#each requirements.networks}}
+          {{this.name}} / {{this.description}}
+          {{/each}}
+        </span>
+      </li>
+
+      {{#if requirements.ssh_key}}
+      <li>
+        <strong>SSH Key</strong>
+        <span class="value">{{requirements.ssh_key}}</span>
+      </li>
+      {{/if}}
+
+      {{#if requirements.min_ram}}
+      <li>
+        <strong>Minimum RAM</strong>
+        <span class="value">{{requirements.min_ram}}</span>
+      </li>
+      {{/if}}
+
+      {{#if requirements.max_ram}}
+      <li>
+        <strong>Maximum RAM</strong>
+        <span class="value">{{requirements.max_ram}}</span>
+      </li>
+      {{/if}}
+
+      {{#if requirements.generate_passwords}}
+      <li>
+        <strong>Paaswords Generated for users:</strong>
+        <span class="value">
+          {{#each requirements.users}} {{this}} {{/each}}
+        </span>
+      </li>
+      {{/if}}
+    </ul>
+
+    {{#if nic_driver}}
+    <h3>Drivers</h3>
+    <ul class="unstyled attributes requirements">
+      <li>
+        <strong>NIC Driver</strong>
+        <span class="value">
+          {{nic_driver}}
+        </span>
+      </li>
+      <li>
+        <strong>Disk Driver</strong>
+        <span class="value">
+          {{disk_driver}}
+        </span>
+      </li>
+    </ul>
     {{/if}}
 
-    {{#if requirements.min_ram}}
-    <li>
-      <strong>Minimum RAM</strong>
-      <span class="value">{{requirements.min_ram}}</span>
-    </li>
-    {{/if}}
+    <h3>Billing Tags</h3>
+  <button type="button" class="btn traits">Manage Traits</button>
+  <button type="button" class="btn tags">Manage Tags</button>
+  </div>
 
-    {{#if requirements.max_ram}}
-    <li>
-      <strong>Maximum RAM</strong>
-      <span class="value">{{requirements.max_ram}}</span>
-    </li>
-    {{/if}}
-
-    {{#if requirements.generate_passwords}}
-    <li>
-      <strong>Paaswords Generated for users:</strong>
-      <span class="value">
-        {{#each requirements.users}} {{this}} {{/each}}
-      </span>
-    </li>
-    {{/if}}
-  </ul>
-
-  {{#if nic_driver}}
-  <h3>Drivers</h3>
-  <ul class="unstyled attributes requirements">
-    <li>
-      <strong>NIC Driver</strong>
-      <span class="value">
-        {{nic_driver}}
-      </span>
-    </li>
-    <li>
-      <strong>Disk Driver</strong>
-      <span class="value">
-        {{disk_driver}}
-      </span>
-    </li>
-  </ul>
-  {{/if}}
-</div>
+</div> {{! row}}
