@@ -16,6 +16,7 @@ var Packages = require('../models/packages');
 var SSHKeys = require('../models/sshkeys');
 var Servers = require('../models/servers');
 var Networks = require('../models/networks');
+var User = require('../models/user');
 var Vm = require('../models/vm');
 
 var Job = require('../models/job');
@@ -68,6 +69,7 @@ var View = Backbone.Marionette.ItemView.extend({
         'typeahead:selected input#input-image': 'onSelectImage',
         'input input#input-image': 'onSelectImage',
         'blur input[type=text]': 'checkFields',
+        'blur input#input-owner': 'onBlurOwnerField',
         'change input[type=checkbox]': 'checkFields'
     },
 
@@ -77,7 +79,8 @@ var View = Backbone.Marionette.ItemView.extend({
 
     ui: {
         'form': 'form',
-        'alert': '.alert'
+        'alert': '.alert',
+        'ownerInput': '#input-owner'
     },
 
     initialize: function(options) {
@@ -88,6 +91,7 @@ var View = Backbone.Marionette.ItemView.extend({
         this.packageSelect = new PackageSelect({
             collection: this.packages
         });
+
         this.selectedPackage = new Package();
         this.packagePreview = new PackagePreview({model: this.selectedPackage});
 
@@ -148,6 +152,22 @@ var View = Backbone.Marionette.ItemView.extend({
             valueKey: 'uuid',
             template: ServerTypeaheadView
         });
+    },
+
+
+    onBlurOwnerField: function(e) {
+        var $field = this.ui.ownerInput;
+        if ($field.val().length === 36) {
+            var u = new User({uuid: $field.val()});
+            u.fetch()
+            .done(function() {
+                this.onSelectUser(u);
+            }.bind(this));
+        } else {
+            process.nextTick(function() {
+                $field.val('');
+            });
+        }
     },
 
     onSelectUser: function(u) {
