@@ -305,10 +305,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         var confirm = window.confirm('Are you sure you want to reboot this server? All customer zones will be rebooted');
         if (confirm) {
             this.model.reboot(function(job) {
-                app.vent.trigger('notification', {
-                    level: 'success',
-                    message: 'Server is now being rebooted Progress cannot be tracked yet [CNAPI-236]'
-                });
+                app.vent.trigger('showjob', job);
             });
         }
     },
