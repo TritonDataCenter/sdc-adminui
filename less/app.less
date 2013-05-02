@@ -941,17 +941,12 @@ ul.attributes {
     .flags { }
     .flags span { display: inline-block; margin-right: 10px;}
 
-    h5 {
-      background: lighten(#DFE7EC, 5%);
-      padding: 8px;
-    }
 
-   .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority {
-      margin-bottom: 1em;
+    .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority {
+      .widget-content;
 
       strong {
         margin-left: 10px;
-        text-transform: uppercase;
         .opacity(60);
         display: inline-block;
         width: 300px;
@@ -961,7 +956,6 @@ ul.attributes {
         display: inline-block;
       }
     }
-
   }
 
   .billing-id .value { font-family: @monoFontFamily; font-size: 10px;}
