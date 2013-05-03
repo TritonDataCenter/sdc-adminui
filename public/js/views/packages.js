@@ -83,6 +83,10 @@ Handlebars.registerHelper('normalize', function(v) {
     return _.str.sprintf("%d MB", v);
 });
 
+var Networks = require('../models/networks');
+var Network = require('../models/network');
+var NetworksList = require('../views/networks-list');
+var NetworksDetailView = require('./networks-detail');
 var PackageDetail = Backbone.Marionette.ItemView.extend({
     template: PackagesDetailTemplate,
     url: function() {
@@ -93,8 +97,24 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
         'click .traits': 'onTraits'
     },
 
+    initialize: function(options) {
+        var nets = _.map(this.model.get('networks') || [], function(uuid) {
+            return {uuid: uuid};
+        });
+        this.networks = new Networks();
+        this.networks.reset(nets);
+        this.networksView = new NetworksList({ collection: this.networks });
+        this.listenTo(this.networksView, 'select', this.onSelectNetwork);
+    },
+
     onEdit: function() {
         this.vent.trigger('showedit', this.model);
+    },
+
+    onSelectNetwork: function(model) {
+        var view = new NetworksDetailView({model: model});
+        view.render();
+        view.$el.modal('show');
     },
 
     onSaveTraits: function(traits) {
@@ -118,6 +138,21 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
         });
         this.listenTo(this.traitsEditor, 'save', this.onSaveTraits, this);
         this.traitsEditor.show();
+    },
+
+    onRender: function() {
+        if (0 === this.networks.length) {
+            this.$('.networks').hide();
+        }
+        this.$('.networks-list').html(this.networksView.el);
+        this.networksView.render();
+        var networksView = this.networksView;
+        var networks = this.networks;
+        networks.each(function(n) {
+            n.fetch().done(function() {
+                networksView.children.findByModel(n).render();
+            });
+        });
     }
 
 });
