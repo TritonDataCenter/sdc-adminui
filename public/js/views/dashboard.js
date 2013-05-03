@@ -7,6 +7,7 @@
  **/
 
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 var adminui = require('../adminui');
 var AlarmsView = require('./alarms');
@@ -23,6 +24,10 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
         });
     },
 
+    _bytesToGb: function(val) {
+        return val / 1024 / 1024 / 1024;
+    },
+
     onRender: function() {
         this.alarmsView.setElement(this.$('#dashboard-alarms'));
         this.alarmsView.fetch();
@@ -30,6 +35,19 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
         var self = this;
         $.getJSON("/_/stats/vm_count", function(res) {
             self.$('.vm-count').html(res.total);
+        });
+
+        $.getJSON("/_/stats/server_memory", function(res) {
+            var total = self._bytesToGb(res.total);
+            self.$('.server-total-memory').html(_.str.sprintf('%.2f GB', total));
+
+            var available = self._bytesToGb(res.available);
+            self.$('.server-available-memory').html(_.str.sprintf('%.2f', available));
+
+            var percent = ((res.total - res.available) / res.total) * 100;
+            self.$('.server-utilization-percent').html(
+                _.str.sprintf('%.2f%%', percent)
+            );
         });
 
         $.getJSON("/_/stats/server_count", function(res) {
