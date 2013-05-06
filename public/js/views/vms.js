@@ -25,6 +25,7 @@ var FilterForm = Backbone.View.extend({
 
 module.exports = Backbone.Marionette.ItemView.extend({
     name: 'vms',
+    id: 'page-vms',
     template: VmsTemplate,
 
     url: function() {

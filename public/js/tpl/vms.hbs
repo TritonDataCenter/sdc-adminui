@@ -1,33 +1,33 @@
-<div id="page-vms">
-  <div class="page-header">
-    <h1>Virtual Machines
-      <div class="actions">
-        <button class="provision-button btn btn-primary"> <i class="icon-plus icon-white"></i> Provision a New VM </button>
-        <button class="toggle-filter btn" data-toggle="button"><i class="icon-filter"></i> Filter Options</button>
-      </div>
-    </h1>
+<div class="page-header">
+  <h1>Virtual Machines
+    <div class="actions">
+      <button class="provision-button btn btn-primary"> <i class="icon-plus icon-white"></i> Provision a New VM </button>
+      <button class="toggle-filter btn" data-toggle="button"><i class="icon-filter"></i> Filter Options</button>
+    </div>
+  </h1>
+</div>
+
+<div class="row">
+  <div class="vms-list span12">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="status">Status</th>
+          <th class="alias">Alias</th>
+          <th class="memory">Memory</th>
+          <th class="package">Package</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <caption align="bottom">
+        Showing <span class="current-count"></span> of <span class="record-count"></span> Virtual Machines
+      </caption>
+    </table>
   </div>
 
-  <div class="row">
-    <div class="vms-list span12">
-      <table class="table">
-        <thead>
-          <tr>
-            <th class="status">Status</th>
-            <th class="alias">Alias</th>
-            <th class="memory">Memory</th>
-            <th class="package">Package</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-        <caption align="bottom">
-          Showing <span class="current-count"></span> of <span class="record-count"></span> Virtual Machines
-        </caption>
-      </table>
-    </div>
 
-
-    <div class="filter-panel vms-filter span3">
+  <div class="vms-filter span3">
+    <div class="filter-panel">
       <h4>Filter Options</h4>
       <div class="alert alert-error"></div>
       <form>
