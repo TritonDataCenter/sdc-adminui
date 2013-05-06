@@ -1,11 +1,6 @@
 <td class="status">
   <span class="
-    label
-    {{#if running}}
-      {{status}}
-    {{else}}
-      label-warn
-    {{/if}}
+    label {{#if running}}{{status}}{{else}}label-warning{{/if}}
     ">
     {{#if running}}
       <i class="icon-ok-sign icon-white"></i>

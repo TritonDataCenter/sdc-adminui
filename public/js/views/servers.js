@@ -80,10 +80,13 @@ var FilterForm = Backbone.View.extend({
     }
 });
 
-var ServersView = Backbone.Marionette.CompositeView.extend({
+var ServersView = require('./composite').extend({
     name: 'servers',
     id: 'page-servers',
     template: tplServers,
+    emptyView: require('./empty').extend({
+        columns: 5
+    }),
     itemView: ServersListItem,
     itemViewContainer: 'tbody',
     events: {
@@ -101,11 +104,15 @@ var ServersView = Backbone.Marionette.CompositeView.extend({
     initialize: function(options) {
         this.filterForm = new FilterForm();
         this.collection = new Servers();
-        this.collection.fetch();
+
+        this.listenTo(this.filterForm, 'query', this.filter, this);
+        this.listenTo(this.collection, 'error', this.onError, this);
     },
+
     filter: function(params) {
         this.collection.fetch({data: params});
     },
+
     toggleFiltersPanel: function(e) {
         if (this.filterViewVisible) {
             this.ui.filterPanel.hide();
@@ -125,9 +132,8 @@ var ServersView = Backbone.Marionette.CompositeView.extend({
     },
     onRender: function() {
         this.filterForm.setElement(this.$('.servers-filter'));
-        this.listenTo(this.filterForm, 'query', this.filter, this);
-        this.listenTo(this.collection, 'error', this.onError, this);
         this.ui.filterPanel.hide();
+        this.collection.fetch();
     }
 });
 

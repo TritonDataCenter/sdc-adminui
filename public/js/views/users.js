@@ -26,8 +26,15 @@ var UsersListItem = Backbone.Marionette.ItemView.extend({
     }
 });
 
-var UsersList = Backbone.Marionette.CollectionView.extend({
-    itemView: UsersListItem
+var EmptyView = require('./empty').extend({columns:3});
+var UsersList = Backbone.Marionette.CompositeView.extend({
+    emptyView: EmptyView,
+    template: require('../tpl/users-list.hbs'),
+    itemView: UsersListItem,
+    itemViewOptions: function() {
+        return { emptyViewModel: this.collection };
+    },
+    itemViewContainer: 'tbody'
 });
 
 var FilterForm = Backbone.View.extend({
@@ -45,15 +52,10 @@ var FilterForm = Backbone.View.extend({
 });
 
 module.exports = Backbone.Marionette.ItemView.extend({
-
     template: tplUsers,
-
     url: 'users',
-
     id: "page-users",
-
     sidebar: 'users',
-
     events: {
         'click button[data-event=new-user]': 'newUser'
     },
@@ -67,9 +69,9 @@ module.exports = Backbone.Marionette.ItemView.extend({
         $(window).on('scroll', this.onScroll.bind(this));
 
         this.filterView = new FilterForm();
+
         this.listenTo(this.collection, 'error', this.onError, this);
         this.listenTo(this.collection, 'sync', this.updateUserCount, this);
-
     },
 
 
@@ -118,7 +120,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.filterView.setElement(this.$('.users-filter'));
-        this.usersListView.setElement(this.$('.users-list tbody'));
+        this.usersListView.setElement(this.$('.users-list'));
+        this.usersListView.render();
 
         this.listenTo(this.filterView, 'query', this.query, this);
         this.collection.fetch();

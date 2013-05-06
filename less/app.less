@@ -307,9 +307,9 @@ h1.branding {
 #page-images {
   .images-table {
     th.state { width: 80px; }
-    td.state .active { color: @green; text-transform: uppercase; font-weight: bold;}
-    td.state .disabled { color: @gray; }
-    td.state .unactivated { color: @yellow; }
+    td.state .active { background: @green; text-transform: uppercase; font-weight: bold;}
+    td.state .disabled { background: @gray; }
+    td.state .unactivated { background: @yellow; }
     th.os { width: 120px; }
     th.published { width: 120px;}
     th.visibility { width: 100px;}
@@ -454,6 +454,9 @@ h1.branding {
       display: block;
       font-family: monospace;
     }
+
+    th.last-status { width: 200px;}
+    th.memory { width: 140px;}
 
     td.last-status>div { font-size: 12px; opacity: 0.5;}
 
@@ -1187,9 +1190,9 @@ ul.attributes {
       text-transform: uppercase;
       font-weight: bold;
       font-size: 13px;
-      &.succeeded { color: @green; }
-      &.canceled { color: @gray; }
-      &.failed { color: @red; }
+      &.succeeded span { background: #4cc658; }
+      &.canceled span { background: @gray; }
+      &.failed span { background: @red; }
     }
   }
 }
@@ -1313,9 +1316,7 @@ ul.attributes {
     .state {
       color: @red;
     }
-    .state.running {
-      color: @green;
-    }
+    .state.running { color: @green; }
     .alias, .uuid, .state, .ram { display: inline-block;}
     .alias { color: @grayLight; width: 100px;}
     .uuid {

@@ -29,13 +29,8 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
 
 var JobsTemplate = require('../tpl/jobs.hbs');
 
-var JobsItemEmptyView = Backbone.Marionette.ItemView.extend({
-    tagName: 'td',
-    attributes: {
-        'colspan':'4'
-    },
-    template: '<div class="well">There are no jobs to show.</div>'
-});
+var EmptyView = require('./empty');
+var JobsItemEmptyView = EmptyView.extend({columns: 3});
 
 var JobsView = Backbone.Marionette.CompositeView.extend({
     name: 'jobs',
@@ -43,6 +38,9 @@ var JobsView = Backbone.Marionette.CompositeView.extend({
     template: JobsTemplate,
     itemView: JobsItemView,
     itemViewContainer: 'tbody',
+    itemViewOptions: function() {
+        return { emptyViewModel: this.collection };
+    },
     url: function() {
         return '/jobs';
     },

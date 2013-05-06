@@ -36,12 +36,17 @@ var ImageRow = Backbone.Marionette.ItemView.extend({
     }
 });
 
+var EmptyView = require('./empty');
 var ImagesView = Backbone.Marionette.CompositeView.extend({
     template: require('../tpl/images.hbs'),
     url: 'images',
     sidebar: 'images',
     itemView: ImageRow,
+    emptyView: EmptyView.extend({columns: 5}),
     itemViewContainer: 'tbody',
+    itemViewOptions: function() {
+        return { emptyViewModel: this.collection }
+    },
     events: {
         'click .import-image': 'onClickImportImage'
     },
