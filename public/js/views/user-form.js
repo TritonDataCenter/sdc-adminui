@@ -42,7 +42,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
         '[name=password]': 'password',
         '[name=last_name]': 'sn',
         '[name=first_name]': 'givenname',
-        '[name=groups]': 'groups'
+        '[name=groups]': 'groups',
+        '[name=approved_for_provisioning]': 'approved_for_provisioning'
     },
 
     updateCommonName: function(e) {
@@ -91,7 +92,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
                 app.vent.trigger('showview', 'user', {user: self.model});
                 app.vent.trigger('notification', {
                     level: 'success',
-                    message: _.str.sprintf('Created user with login %s', self.model.get('login'))
+                    message: _.str.sprintf('User <strong>%s</strong> saved successfully.', self.model.get('login'))
                 });
             }
         });

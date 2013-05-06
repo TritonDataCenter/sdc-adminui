@@ -103,7 +103,28 @@ var UserView = Backbone.Marionette.ItemView.extend({
             '.email': 'email',
             '.phone': 'phone',
             '.company': 'company',
-            '.groups': 'groups'
+            '.groups': 'groups',
+            '.provisioning': {
+                observe: 'approved_for_provisioning',
+                onGet: function(val) {
+                    if (val === "true") {
+                        return 'approved';
+                    } else {
+                        return 'disabled';
+                    }
+                },
+                attributes: [{
+                    'name': 'class',
+                    observe: 'approved_for_provisioning',
+                    onGet: function(val) {
+                        if (val && val === 'true') {
+                            return 'approved';
+                        } else {
+                            return 'disabled';
+                        }
+                    }
+                }]
+            }
         });
     }
 });
