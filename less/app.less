@@ -14,7 +14,7 @@ html { height: 100%; }
 
 #chrome { min-height: 100%; padding-bottom: 20px;}
 #content a { cursor: pointer;}
-#content section { margin-bottom: 20px;}
+#content section { margin-bottom: 10px;}
 #footer { height: 24px; background: #dfe7ec;}
 
 .btn-primary {
@@ -55,11 +55,8 @@ html { height: 100%; }
       width: 180px;
       text-transform: uppercase;
       font-size: 14px;
-      color: #ccc;
-      span {
-
-      font-weight: bold;
-      }
+      color: #aaa;
+      span { font-weight: bold; }
 
       margin-left: 20px;
       display: inline-block;
@@ -98,7 +95,8 @@ h4.alert-heading { font-weight: bold; font-size: 14px; }
 
 table.vertical { tr, td { border: none;}}
 
-table.table {
+.table {
+  margin-bottom: 0;
   caption {
     border-top: 1px solid #eee;
     text-align: left;
@@ -280,6 +278,7 @@ h1.branding {
 }
 
 #page-user {
+  .user-details th { width: 100px;}
   .ssh-keys {
     .items { margin-bottom: 10px; }
     .details, .actions { display: inline-block; vertical-align: middle;}
@@ -632,6 +631,9 @@ h1.branding {
 
     .server-state.running {
       color: #00a733;
+    }
+    .server-state.unknown {
+      color: lighten(@red, 20%);
     }
     .server-setting-up {
       color: @yellow;
