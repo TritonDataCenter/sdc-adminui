@@ -1190,7 +1190,7 @@ function caWidgetCreateInstn(args)
 
 caWidgetCreateInstn.prototype.baseMetric = function ()
 {
-	var metric_encoded = this.wci_metric.selectedOptions[0].value;
+	var metric_encoded = $(this.wci_metric).val();
 	var dot = metric_encoded.indexOf('.');
 	var module = metric_encoded.substr(0, dot);
 	var stat = metric_encoded.substr(dot + 1);
