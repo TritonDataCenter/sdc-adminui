@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 var TemplateEditing = require('../tpl/tags-list-editing.hbs');
 
@@ -14,10 +15,7 @@ var EditingView = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function(options) {
-        _.bindAll(this);
-
         this.model = new Backbone.Model();
-
         this.model.on('change:editing', function() {
             if (this.model.get('editing') === true) {
                 this.$el.addClass('editing');
@@ -27,9 +25,7 @@ var EditingView = Backbone.Marionette.ItemView.extend({
         }, this);
 
         if (options.editing) {
-            this.model.set({
-                editing: options.editing
-            });
+            this.model.set({ editing: options.editing });
         }
 
         this.model.on('change', this.render);
@@ -51,9 +47,7 @@ var EditingView = Backbone.Marionette.ItemView.extend({
     },
 
     edit: function() {
-        this.model.set({
-            editing: true
-        });
+        this.model.set({ editing: true });
     },
 
     save: function() {
@@ -63,9 +57,7 @@ var EditingView = Backbone.Marionette.ItemView.extend({
             return false;
         }
         this.trigger('save', this.tag);
-        this.model.set({
-            editing: false
-        });
+        this.model.set({editing: false});
     },
 
     checkFields: function(e) {
@@ -105,76 +97,73 @@ var EditingView = Backbone.Marionette.ItemView.extend({
 
 });
 
+
+
+
+
+
+
 var TagsList = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/tags-list.hbs'),
-
-    events: {
-        'click .add-tag': 'addTag'
-    },
+    events: { 'click .add-tag': 'addTag'},
+    modelEvents: {'sync': 'render'},
 
     initialize: function(options) {
-        _.bindAll(this);
-
-        if (!options.vm) {
-            throw new TypeError('options.vm required');
+        if (! this.model) {
+            throw new TypeError('options.model required');
         }
-        this.vm = options.vm;
+        this.tagsProperty = options.tagsProperty || 'tags';
     },
 
     addTag: function() {
         var addTagButton = this.$('.add-tag');
         addTagButton.hide();
 
-        var addView = new EditingView({
-            editing: true
-        });
+        var addView = new EditingView({ editing: true });
         addView.on('cancel', function() {
             addTagButton.show();
             addView.remove();
         });
 
         addView.on('save', function(tag) {
-            var tags = this.vm.get('tags');
+            var tags = this.model.get(this.tagsProperty);
             tags[tag.name] = tag.value;
-            this.vm.set({
-                tags: tags
-            });
-            this.vm.saveTags();
-            this.render();
+            var params = {};
+            params[this.tagsProperty] = tags;
+            this.model.save(params, {patch: true});
         }, this);
 
         addView.render();
-
         this.$('tfoot').append(addView.$el);
         addView.focus();
     },
 
     onRender: function() {
-        _(this.vm.get('tags')).each(function(tv, tn) {
-            var view = new EditingView({
-                name: tn,
-                value: tv
-            });
+        var self = this;
+        _(this.model.get(this.tagsProperty)).each(function(tv, tn) {
+            var view = new EditingView({ name: tn, value: tv });
             view.on('save', function(tag) {
-                var tags = this.vm.get('tags');
+                var tags = this.model.get(this.tagsProperty);
                 delete tags[tn];
                 tags[tag.name] = tag.value;
-                this.vm.set({
-                    tags: tags
-                });
-                this.vm.saveTags();
+
+                var params = {};
+                params[this.tagsProperty] = tags;
+                this.model.save(params, { patch: true });
             }, this);
 
             view.on('remove', function(tag) {
-                var tags = this.vm.get('tags');
+                var tags = this.model.get(self.tagsProperty);
                 delete tags[tag.name];
-                this.vm.set({
-                    tags: tags
+
+                var params = {};
+                params[self.tagsProperty] = tags;
+                this.model.save(params, { patch: true }).done(function() {
+                    view.$el.fadeOut(200, function() {
+                        view.remove();
+                    });
                 });
-                this.vm.saveTags();
-                view.$el.fadeOut(200, function() {
-                    view.remove();
-                });
+
             }, this);
 
             this.$('tbody').append(view.$el);

@@ -95,7 +95,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
                 modal.close();
                 adminui.vent.trigger('notification', {
                     level: 'success',
-                    message: 'Traits updated'
+                    message: 'Tags updated'
                 });
             });
         });

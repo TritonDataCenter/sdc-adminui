@@ -117,7 +117,7 @@ var VmView = Backbone.Marionette.ItemView.extend({
         this.listenTo(this.vm, 'change:nics', this.renderNics, this);
 
         this.metadataListView = new MetadataList({vm: this.vm});
-        this.tagsListView = new TagsList({vm: this.vm});
+        this.tagsListView = new TagsList({model: this.vm});
 
         this.vm.fetch();
     },
