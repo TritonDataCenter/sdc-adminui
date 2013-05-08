@@ -62,6 +62,7 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
         var execution = this.model.get('execution');
 
         if (execution === 'succeeded' || execution === 'failed') {
+            this.trigger(execution);
             clearInterval(this._timer);
         }
 

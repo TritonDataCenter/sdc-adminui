@@ -175,11 +175,14 @@ var VmView = Backbone.Marionette.ItemView.extend({
     },
 
     clickedStopVm: function(e) {
+        var vm = this.vm;
         var confirm = window.confirm('Are you sure you want to stop this VM?');
+
         if (confirm) {
             this.vm.stop(function(job) {
-                var jobView = new JobProgressView({
-                    model: job
+                var jobView = new JobProgressView({model: job});
+                jobView.on('succeeded', function() {
+                    vm.fetch();
                 });
                 jobView.show();
             });
