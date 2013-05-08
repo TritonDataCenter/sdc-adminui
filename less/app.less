@@ -457,10 +457,17 @@ h1.branding {
     }
 
     th.last-status { width: 140px;}
+<<<<<<< HEAD
     th.memory { width: 100px;}
 
     td.last-status>div { font-size: 12px; opacity: 0.5;}
 
+=======
+    td.last-status>div { font-size: 12px; opacity: 0.5;}
+
+    th.memory { width: 100px;}
+
+>>>>>>> master
     .status { width: 80px; }
     .status span.running { background: #4cc658;}
   }
@@ -486,8 +493,8 @@ h1.branding {
   .overview {
     .item { .widget-content; }
     .item-label, .item-content { display: inline-block; }
-    .item-label { width: 120px; }
-    .item-content { width: 380px; }
+    .item-label { width: 140px; }
+    .item-content { width: 360px; }
   }
 
   table.hardware {
@@ -520,6 +527,7 @@ h1.branding {
   input.reservation-ratio {
     margin-top: -4px;
     padding: 4px 8px;
+    margin-bottom: 0;
     text-align: left;
     width: 100px;
     display: inline-block;
@@ -527,9 +535,8 @@ h1.branding {
     border: none;
   }
   span.reservation-ratio {
-    margin-top: -20px;
-    margin-left: -5px;
-    padding: 5px;
+    margin-top: -4px;
+    padding: 0;
     display: inline-block;
     width: 140px;
   }
@@ -538,6 +545,8 @@ h1.branding {
     .change-rack-id { visibility: hidden; .pull-right; }
     .item-content:hover .change-rack-id { visibility: visible; };
   }
+
+  .change-reserve { float: right;}
 
   .change-rack-form, .change-reserve {
     input, button {  margin:0; font-size: 12px;}
