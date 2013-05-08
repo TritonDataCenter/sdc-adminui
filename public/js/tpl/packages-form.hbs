@@ -34,8 +34,8 @@
         <div class="controls">
           <div class="input-append">
             <input type="number" class="input-small" id="package-memory"  {{#if uuid}}readonly{{/if}} name="max_physical_memory"
-            min="64" 
-            step="64" 
+            min="64"
+            step="64"
             placeholder="memory">
             <span class="add-on">MB</span>
           </div>
@@ -57,7 +57,7 @@
         <div class="controls">
           <div class="input-append">
             <input type="number" class="input-small" id="package-vcpus"
-             {{#if uuid}}readonly{{/if}} 
+             {{#if uuid}}readonly{{/if}}
               name="vcpus" min="1" max="16" placeholder="cores">
             <span class="add-on">cores</span>
           </div>
@@ -70,7 +70,7 @@
         <label class="control-label" for="package-cap-cpu">CPU Cap</label>
         <div class="controls">
           <input type="number" class="input-small" id="package-cpu-cap"
-           {{#if uuid}}readonly{{/if}} 
+           {{#if uuid}}readonly{{/if}}
           name="cpu_cap" min="1" max="10000" placeholder="cpu cap">
         </div>
       </div>
@@ -79,8 +79,8 @@
         <label class="control-label" for="package-vcpus">Max Lightweight Processes</label>
         <div class="controls">
           <input type="number" class="input-small" id="package-max-processes"
-           {{#if uuid}}readonly{{/if}} 
-          name="max_lwps" min="250" placeholder="processes">
+           {{#if uuid}}readonly{{/if}}
+          name="max_lwps" min="250" placeholder="threads">
         </div>
       </div>
 
@@ -91,7 +91,7 @@
         <div class="controls">
           <div class="input-append">
             <input type="number"
-             {{#if uuid}}readonly{{/if}} 
+             {{#if uuid}}readonly{{/if}}
              class="input-medium" name="quota" id="package-quota" min="1" placeholder="disk quota">
             <span class="add-on">MB</span>
           </div>
@@ -101,8 +101,8 @@
       <div class="control-group">
         <label class="control-label" for="package-io-prioirty">IO Priority</label>
         <div class="controls">
-          <input type="number" 
-           {{#if uuid}}readonly{{/if}} 
+          <input type="number"
+           {{#if uuid}}readonly{{/if}}
           class="span3" name="zfs_io_priority" id="package-io-priority" min="1" placeholder="Disk IO Priority">
 
           <p class="help-inline">1 for minimun, 10000 for maximum</p>
@@ -114,7 +114,7 @@
           <label class="checkbox">
             <input type="checkbox" name="active"> Activate Package
           </label>
-          
+
           <label class="checkbox">
             <input type="checkbox" name="default"> Make this the Default Package
           </label>
