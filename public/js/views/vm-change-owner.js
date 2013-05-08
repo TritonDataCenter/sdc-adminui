@@ -30,9 +30,15 @@ var View = Backbone.Marionette.ItemView.extend({
         this.$('input:first').focus();
     },
 
+    onSelectUser: function() {
+        this.$('.btn-primary').prop('disabled', false);
+    },
+
     onRender: function() {
         this.userInput = new UserInput({el: this.$('input[name=owner_uuid]')});
+        this.listenTo(this.userInput, 'selected', this.onSelectUser);
         this.userInput.render();
+        this.$('.btn-primary').prop('disabled', true);
     },
 
     onSubmit: function(e) {
