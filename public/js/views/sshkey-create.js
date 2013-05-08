@@ -20,14 +20,13 @@ module.exports = Backbone.Marionette.ItemView.extend({
             throw new TypeError('options.user {string} required');
         }
 
-        this.model = new SSHKey({
-            user: options.user
-        });
+        this.model = new SSHKey({ user: options.user });
     },
 
     onModelSync: function(model) {
         this.trigger('saved', model);
-        this.$el.modal('hide').remove();
+        this.$el.modal('hide');
+        this.remove();
     },
 
     onModelError: function(model, xhr, error) {

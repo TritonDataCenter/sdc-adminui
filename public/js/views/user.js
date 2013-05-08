@@ -66,11 +66,10 @@ var UserView = Backbone.Marionette.ItemView.extend({
 
     onClickAddKey: function(e) {
         var view = new AddKeyView({ user: this.model.get('uuid') });
-        view.render();
-
         view.on('saved', function(key) {
             this.sshkeys.add(key);
         }, this);
+        view.render();
     },
 
     initialize: function(options) {
@@ -81,20 +80,18 @@ var UserView = Backbone.Marionette.ItemView.extend({
         }
 
         this.vms = new Vms({params: { owner_uuid: this.model.get('uuid') }});
-        this.vms.fetch();
-
         this.sshkeys = new SSHKeys({user: this.model.get('uuid') });
-        this.sshkeys.fetch();
-
         this.vmsList = new VmsList({collection: this.vms });
         this.sshkeysList = new SSHKeysList({collection: this.sshkeys });
-
-        this.model.fetch();
     },
 
     onRender: function() {
         this.vmsList.setElement(this.$('.vms-list tbody')).render();
         this.sshkeysList.setElement(this.$('.ssh-keys .items')).render();
+
+        this.sshkeys.fetch();
+        this.model.fetch();
+        this.vms.fetch();
 
         this.stickit(this.model, {
             '.cn': 'cn',
