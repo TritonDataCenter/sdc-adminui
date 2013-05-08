@@ -125,8 +125,9 @@ var VmView = Backbone.Marionette.ItemView.extend({
     clickedStartVm: function(e) {
         var self = this;
         this.vm.start(function(job) {
-            var jobView = new JobProgressView({
-                model: job
+            var jobView = new JobProgressView({ model: job });
+            jobView.on('succeeded', function() {
+                self.vm.fetch();
             });
             jobView.show();
         });
