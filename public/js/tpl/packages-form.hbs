@@ -37,7 +37,6 @@
           <div class="input-append">
             <input type="number" class="input-small" id="package-memory"  {{#if uuid}}readonly{{/if}} name="max_physical_memory"
             min="64"
-            step="64"
             placeholder="memory">
             <span class="add-on">MB</span>
           </div>
@@ -48,7 +47,7 @@
         <label class="control-label" for="package-memory">Swap</label>
         <div class="controls">
           <div class="input-append">
-            <input type="number" class="input-small" id="package-swap"  {{#if uuid}}readonly{{/if}} name="max_swap" min="64" step="64" placeholder="swap">
+            <input type="number" class="input-small" id="package-swap"  {{#if uuid}}readonly{{/if}} name="max_swap" min="64" placeholder="swap">
             <span class="add-on">MB</span>
           </div>
         </div>
