@@ -102,9 +102,13 @@
         <div class="controls">
           <input type="number"
            {{#if uuid}}readonly{{/if}}
-          class="span3" name="zfs_io_priority" id="package-io-priority" min="1" placeholder="Disk IO Priority">
+           class="span3"
+           min="1"
+           max="1000"
+           name="zfs_io_priority"
+           id="package-io-priority" min="1" placeholder="Disk IO Priority">
 
-          <p class="help-inline">1 for minimun, 10000 for maximum</p>
+          <p class="help-inline">1 for minimun, 1000 for maximum</p>
         </div>
       </div>
 
