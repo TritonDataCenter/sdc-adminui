@@ -157,10 +157,12 @@ var View = Backbone.Marionette.ItemView.extend({
 
     onBlurOwnerField: function(e) {
         var $field = this.ui.ownerInput;
+        if (this.selectedUser && $field.val() === this.selectedUser.get('uuid')) {
+            return;
+        }
         if ($field.val().length === 36) {
             var u = new User({uuid: $field.val()});
-            u.fetch()
-            .done(function() {
+            u.fetch().done(function() {
                 this.onSelectUser(u);
             }.bind(this));
         } else {
@@ -171,6 +173,7 @@ var View = Backbone.Marionette.ItemView.extend({
     },
 
     onSelectUser: function(u) {
+        this.selectedUser = u;
         if (this.networks.length) {
             this.networks.reset();
         }
@@ -212,9 +215,9 @@ var View = Backbone.Marionette.ItemView.extend({
         var container = this.$('.network-checkboxes');
         var elm = container.find('label:first').clone();
         container.find('label').remove();
+
         networks.each(function(n) {
-            elm.find('.name').html(
-            [n.get('name'), n.get('subnet')].join(' - '));
+            elm.find('.name').html([n.get('name'), n.get('subnet')].join(' - '));
             elm.find('input').val(n.get('uuid'));
             elm.clone().prependTo(container);
         }, this);
