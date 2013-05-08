@@ -54,12 +54,14 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.$(".last-boot").tooltip({
-            title: 'Last booted on',
+            title: _.str.sprintf('Last boot at %s',
+                moment(this.model.get('last_boot')).format('LLL')),
             placement: 'top',
             container: 'body'
         });
         this.$(".last-heartbeat").tooltip({
-            title: 'Last seen heartbeat',
+            title: _.str.sprintf('Last heartbeat at %s',
+                moment(this.model.get('last_heartbeat')).format('LLL')),
             placement: 'bottom',
             container: 'body'
         });
