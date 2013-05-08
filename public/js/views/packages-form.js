@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 require('backbone.modelbinder');
 var FormTemplate = require('../tpl/packages-form.hbs');
@@ -6,6 +7,9 @@ var Package = require('../models/package');
 
 var PackageForm = Backbone.Marionette.ItemView.extend({
     template: FormTemplate,
+    modelEvents: {
+        'error': 'onError'
+    },
     events: {
         'submit': 'onSubmit',
         'click button[type=cancel]': 'onCancel'
@@ -19,6 +23,24 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
                 version: "1.0.0"
             });
         }
+    },
+
+    onError: function(model, xhr) {
+        var ul = $("<ul />");
+        this.$('.control-group').removeClass('error');
+        _(xhr.responseData.message.split("\n")).each(function(e) {
+            ul.append('<li>'+e+'</li>');
+        });
+
+        this.$(".alert")
+            .empty()
+            .append('<h4 class="alert-heading">Please fix the following errors</h4>')
+            .append(ul)
+            .show();
+
+        $('body').animate({
+            scrollTop: this.$('.alert').offset().top
+        }, 200);
     },
 
     onCancel: function(e) {
