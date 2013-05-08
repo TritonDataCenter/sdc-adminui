@@ -38,6 +38,9 @@ module.exports = Backbone.Marionette.ItemView.extend({
             var jobView = new JobProgressView({
                 model: job
             });
+            jobView.on('succeeded', function() {
+                self.vm.fetch();
+            });
             jobView.show();
         });
     }
