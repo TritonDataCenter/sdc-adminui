@@ -36,7 +36,12 @@ var View = Backbone.Marionette.ItemView.extend({
         values.cpu_cap = pkg.get('cpu_cap');
         values.max_lwps = pkg.get('max_lwps');
         values.max_swap = pkg.get('max_swap');
+        // quota value needs to be in GiB
         values.quota = pkg.get('quota');
+        if (values.quota) {
+            values.quota = Math.ceil(Number(values.quota) / 1024);
+        }
+
         values.vcpus = pkg.get('vcpus');
         values.zfs_io_priority = pkg.get('zfs_io_priority');
         values.ram = pkg.get('max_physical_memory');

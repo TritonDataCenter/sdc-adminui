@@ -112,9 +112,7 @@ table.vertical { tr, td { border: none;}}
   }
 
   thead {
-    tr {
-      .widget-header;
-    }
+    tr { .widget-header; }
     th {
       color: darken(#dfe7ec, 50%);
       font-size: 13px;
@@ -123,9 +121,8 @@ table.vertical { tr, td { border: none;}}
     }
   }
   tbody {
-    tr {
-      .widget-content;
-    }
+    tr { .widget-content; }
+    th { font-weight: 400; color: #888;}
   }
 }
 
@@ -468,7 +465,7 @@ h1.branding {
   width: 100%;
   .item { clear: both; }
   .item-label, .item-content { padding: 8px; display: inline-block; vertical-align: top; }
-  .item-label { font-weight: 400; width: 150px; color: #555555;}
+  .item-label { font-weight: 400; width: 150px; color: #888;}
   .item-content {
     text-align: justify;
     overflow: visible;
@@ -681,9 +678,9 @@ h1.branding {
       .table;
       tr { .widget-content; }
       tbody {
+        th { width: 100px;}
         td .mutate { visibility: hidden; }
         td:hover .mutate { visibility: visible; }
-        th { width: 100px; font-weight: 400; color: #888;}
         td>*:first-child { display: inline-block; width: 500px; };
       }
     }
