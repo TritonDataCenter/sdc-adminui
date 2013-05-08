@@ -124,9 +124,6 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         var $serial = input('serial', this.model.get('serial'));
         this.$('.serial-console .serial').html($serial);
 
-        var $serialSpeed = input('serial_speed', this.model.get('serial_speed'));
-        this.$('.serial-console .serial-speed').html($serialSpeed);
-
         var btn = $("<button>").addClass('btn btn-primary pull-right').html('Save');
         this.$('.serial-console .change').append(btn);
         var cancel = $("<button>").addClass('btn pull-right').html('Cancel');
@@ -142,9 +139,12 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         btn.on('click', function() {
             model.save({
                 default_console: $defaultConsole.val(),
-                serial: $serial.val(),
-                serial_speed: Number($serialSpeed.val())
+                serial: $serial.val()
             }, {patch: true}).done(function() {
+                app.vent.trigger('notification', {
+                    level: 'success',
+                    message: 'Serial console settings updated.'
+                });
                 self.render();
             });
         });
