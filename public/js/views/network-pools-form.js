@@ -36,6 +36,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
         this.listenTo(this.networks, 'sync', this.render);
         this.listenTo(this.networkPool, 'sync', this.onSaved);
+        this.listenTo(this.networkPool, 'error', this.onSyncError);
 
         this.selectedUser = null;
     },
@@ -66,6 +67,22 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.selectedUser = null;
     },
 
+    onSyncError: function(model, xhr) {
+        var ul = $("<ul />");
+        this.$('.control-group').removeClass('error');
+
+        _(xhr.responseData.errors).each(function(e) {
+            this.$('[name='+e.field+']').parents('.control-group').addClass('error');
+            ul.append('<li>'+e.message+' (' + e.field + ')</li>');
+        });
+
+        this.$(".alert")
+            .empty()
+            .append('<h4 class="alert-heading">Please fix the following errors</h4>')
+            .append(ul)
+            .show();
+    },
+
     onBlurOwnerField: function(e) {
         /*
          * prevent the user from de-focusing on the field if the user never selected
@@ -89,6 +106,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     onSubmit: function(e) {
         e.preventDefault();
+        this.$('.alert').hide();
         var data = this.$('form').serializeObject();
         this.networkPool.set(data);
         this.networkPool.save();

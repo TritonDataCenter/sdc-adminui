@@ -1,5 +1,6 @@
-var Backbone = require('backbone');
-var NetworkPool = Backbone.Model.extend({
+var Model = require('./model');
+
+var NetworkPool = Model.extend({
     defaults: {
         "name": ""
     },
