@@ -186,9 +186,18 @@ var View = Backbone.Marionette.ItemView.extend({
     },
 
     onFetchKeys: function(collection) {
+        if (this.sshKeys.length === 0) {
+            this.$('.no-sshkeys-warning').show();
+        } else {
+            this.$('.no-sshkeys-warning').hide();
+        }
         this.userKeys = this.sshKeys.map(function(k) {
             return k.get('openssh');
         });
+    },
+
+    showNoSshkeysWarning: function() {
+        this.$('.no-sshkeys-warning').show();
     },
 
     onRender: function() {
@@ -202,6 +211,7 @@ var View = Backbone.Marionette.ItemView.extend({
 
         this.hideError();
         this.$('.control-group-brand').hide();
+        this.$('.no-sshkeys-warning').hide();
         this.checkFields();
 
 
