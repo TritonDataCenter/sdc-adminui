@@ -1,0 +1,71 @@
+{
+  "host": "0.0.0.0",
+  "port": 4000,
+  "sslport": 4443,
+  "ssl":{
+    "certificate":"/Users/kevin/joyent/sdc7/adminui/etc/ssl/default.pem",
+    "key":"/Users/kevin/joyent/sdc7/adminui/etc/ssl/default.pem"
+  },
+  "simulateLatency": true,
+  "ufdsMaster": {
+    "url": "ldaps://10.99.99.18",
+    "bindDN": "cn=root",
+    "bindPassword": "secret",
+    "cache": {
+      "size": 1000,
+      "expiry": 300
+    }
+  },
+  "ufds": {
+    "adminUuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+    "url": "ldaps://10.99.99.18",
+    "bindDN": "cn=root",
+    "bindPassword": "secret",
+    "cache": {
+      "size": 1000,
+      "expiry": 300
+    }
+  },
+  "redis": {
+    "host": "10.99.99.23",
+    "port": "6379",
+    "db": 3
+  },
+  "datacenters": {
+    "coal": {
+      "moray": {
+        "host":"10.99.99.17",
+        "port":2020,
+        "connectTimeout": 200,
+        "retry": {
+          "retries": 2,
+          "minTimeout": 500
+        }
+      },
+      "amon": {
+        "url": "http://10.99.99.24"
+      },
+      "ca": {
+        "url": "http://10.99.99.29:23181"
+      },
+      "vmapi": {
+        "url": "http://10.99.99.27"
+      },
+      "imgapi": {
+        "url": "http://10.99.99.21"
+      },
+      "cnapi": {
+        "url": "http://10.99.99.22"
+      },
+      "napi": {
+        "url": "http://10.99.99.10"
+      },
+      "sapi": {
+        "url": "http://10.99.99.32"
+      },
+      "workflow": {
+        "url": "http://10.99.99.19"
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+    "host": "0.0.0.0",
+    "port": 4000,
+    "sslport": 4443,
+    "ssl": {
+        "certificate": "/Users/kevin/joyent/sdc7/adminui/etc/ssl/default.pem",
+        "key": "/Users/kevin/joyent/sdc7/adminui/etc/ssl/default.pem"
+    },
+    "ufdsMaster": {
+        "url": "ldaps://ufds.bh1-stage2.joyent.us",
+        "bindDN": "cn=root",
+        "bindPassword": "secret",
+        "adminUuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+        "cache": {
+            "size": 1000,
+            "expiry": 300
+        }
+    },
+    "ufds": {
+        "url": "ldaps://ufds.bh1-stage2.joyent.us",
+        "bindDN": "cn=root",
+        "bindPassword": "secret",
+        "adminUuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+        "cache": {
+            "size": 1000,
+            "expiry": 300
+        }
+    },
+    "redis": {
+        "host": "redis.bh1-stage2.joyent.us",
+        "port": "6379",
+        "db": 3
+    },
+    "datacenters": {
+        "bh1-stage2": {
+            "moray": {
+                "host": "moray.bh1-stage2.joyent.us",
+                "port": 2020,
+                "connectTimeout": 200,
+                "retry": {
+                    "retries": 2,
+                    "minTimeout": 500
+                }
+            },
+            "amon": {
+                "url": "http://amon.bh1-stage2.joyent.us"
+            },
+            "vmapi": {
+                "url": "http://vmapi.bh1-stage2.joyent.us"
+            },
+            "cnapi": {
+                "url": "http://cnapi.bh1-stage2.joyent.us"
+            },
+            "napi": {
+                "url": "http://napi.bh1-stage2.joyent.us"
+            },
+            "ca": {
+                "url": "http://ca.bh1-stage2.joyent.us:23181"
+            },
+            "imgapi": {
+                "url": "http://imgapi.bh1-stage2.joyent.us"
+            },
+            "sapi": {
+                "url": "http://sapi.bh1-stage2.joyent.us"
+            },
+            "workflow": {
+                "url": "http://workflow.bh1-stage2.joyent.us"
+            }
+        }
+    }
+}
