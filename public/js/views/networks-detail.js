@@ -28,6 +28,7 @@ var AddressesTableRow = Backbone.Marionette.ItemView.extend({
         if (type === 'zone') {
             adminui.vent.trigger('showview', 'vm', {uuid: uuid });
         }
+        (this.$el.parents('.modal').modal('hide'));
     },
     templateHelpers: {
         belongs_to_url: function() {
