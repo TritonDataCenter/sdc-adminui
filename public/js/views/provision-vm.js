@@ -110,8 +110,12 @@ var View = Backbone.Marionette.ItemView.extend({
 
         this.listenTo(this.imagesCollection, 'sync', this.prepareImageInput);
         this.listenTo(this.serversCollection, 'sync', this.prepareServerInput);
-        this.listenTo(this.networks, 'sync', this.populateNetworks);
-        this.listenTo(this.networkPools, 'sync', this.populateNetworks);
+        this.listenTo(this.networks, 'sync', function(n) {
+            this.populateNetworks(n, 'Networks');
+        }, this);
+        this.listenTo(this.networkPools, 'sync', function(n) {
+            this.populateNetworks(n, 'Network Pools');
+        }, this);
 
         this.imagesCollection.fetch();
         this.serversCollection.fetch();
@@ -179,7 +183,7 @@ var View = Backbone.Marionette.ItemView.extend({
         if (this.networks.length) {
             this.networks.reset();
         }
-        this.$('.network-checkboxes').find('label').remove();
+        this.$('.networks-select').find('select optgroup').remove();
 
         this.networks.fetch({data: {provisionable_by: u.get('uuid') }});
         this.networkPools.fetch({data: {provisionable_by: u.get('uuid') }});
@@ -209,6 +213,8 @@ var View = Backbone.Marionette.ItemView.extend({
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
         this.userInput.render();
 
+
+        this.$('.networks-select select').chosen();
         this.packageSelect.setElement(this.$('select[name=package]')).render();
         this.$('.control-group-networks').hide();
         this.$('.package-preview-container').append(this.packagePreview.render().el);
@@ -225,20 +231,20 @@ var View = Backbone.Marionette.ItemView.extend({
         this.$("input:not([disabled]):first").focus();
     },
 
-    populateNetworks: function(networks) {
-        var tpl = this.$('.network-checkbox-template').html();
-        var elm = $('<div/>').append(tpl);
-
-        var $container = this.$('.network-checkboxes');
+    populateNetworks: function(networks, kind) {
+        var $select = this.$('.networks-select select');
+        var $optgroup = $('<optgroup />').attr('label', kind);
         networks.each(function(n) {
+            var $elm = $("<option />").attr('value', n.get('uuid'));
             if (n.get('subnet')) {
-                elm.find('.name').html([n.get('name'), n.get('subnet')].join(' - '));
+                $elm.html([n.get('name'), n.get('subnet')].join(' - '));
             } else {
-                elm.find('.name').html(n.get('name'));
+                $elm.html(n.get('name'));
             }
-            elm.find('input').val(n.get('uuid'));
-            $container.prepend(elm.html());
+            $optgroup.append($elm);
         }, this);
+        $select.append($optgroup);
+        $select.trigger('liszt:updated');
 
         this.$('.control-group-networks').show();
     },
@@ -280,7 +286,10 @@ var View = Backbone.Marionette.ItemView.extend({
         var valid;
         var image_uuid;
 
-        if (!values.owner_uuid.length || !values.networks.length) {
+        if (!values.owner_uuid ||
+            !values.owner_uuid.length ||
+            !values.networks ||
+            !values.networks.length) {
             valid = false;
         } else {
             valid = true;
@@ -373,10 +382,8 @@ var View = Backbone.Marionette.ItemView.extend({
         }
 
 
-        var networksChecked = this.ui.form.find('.network-checkboxes input[type=checkbox]:checked');
-        values.networks = _.map(networksChecked, function(obj) {
-            return $(obj).val();
-        });
+        var networksChecked = this.ui.form.find('.networks-select select').val();
+        values.networks = networksChecked;
 
         return values;
     },

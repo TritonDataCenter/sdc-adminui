@@ -60,8 +60,10 @@
 
       <div class="control-group control-group-networks">
         <label class="control-label">Networks</label>
-        <div class="network-checkboxes controls">
-          <label class="checkbox"><input type="checkbox" name="networks[]" /><span class="name">My Network<span></label>
+        <div class="networks-select controls">
+          <div class="chosen chosen-xlarge">
+            <select name="networks[]" multiple></select>
+          </div>
           <span class="help-block">Must select at least one network</span>
         </div>
       </div>
@@ -86,9 +88,3 @@
 
 </form>
 </div>
-<script type="text/x-template" class="network-checkbox-template">
-  <label class="checkbox">
-    <input type="checkbox" name="networks[]" value="">
-    <span class="name"></span>
-  </label>
-</script>
