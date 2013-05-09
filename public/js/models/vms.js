@@ -2,8 +2,9 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 var Vm = require('./vm');
+var Collection = require('./collection');
 
-module.exports = Backbone.Collection.extend({
+module.exports = Collection.extend({
     model: Vm,
 
     url: "/_/vms",
