@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var moment = require('moment');
 
 
 var Notes = require('../models/notes');
@@ -8,6 +9,9 @@ var User = require('../models/user');
 var NotesItemView = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/notes-item.hbs'),
     tagName: 'li',
+    events: {
+        'click .actions a': 'toggleArchive'
+    },
     initialize: function() {
         this.user = new User({uuid: this.model.get('owner_uuid')});
         this.user.fetch();
@@ -18,16 +22,49 @@ var NotesItemView = Backbone.Marionette.ItemView.extend({
         '.date': {
             observe: 'created',
             onGet: function(created) {
-                var year = created.getFullYear();
-                var month = created.getMonth();
-                var day = created.getDate();
-                var h = created.getHours();
-                var m = created.getMinutes();
-                var date = [year, month, day].join('/');
-                var time = [h,m].join(':');
-                return [date, time].join(' ');
+                var c = moment(created);
+                return c.format('LLL');
             }
+        },
+        ':el': {
+            attributes: [{
+                name: 'class',
+                observe: 'archived',
+                onGet: function(val) {
+                    if (val.length) {
+                        return 'archived';
+                    } else {
+                        return '';
+                    }
+                }
+            }]
+        },
+        '.actions a i': {
+            attributes: [{
+                name: 'class',
+                observe: 'archived',
+                onGet: function(val) {
+                    if (val.length) {
+                        return 'icon-undo';
+                    } else {
+                        return 'icon-trash';
+                    }
+                }
+            }]
         }
+    },
+    toggleArchive: function() {
+        if (this.model.get('archived') && this.model.get('archived').length) {
+            this.unarchiveNote();
+        } else {
+            this.archiveNote();
+        }
+    },
+    unarchiveNote: function() {
+        this.model.save({archived: false });
+    },
+    archiveNote: function() {
+        this.model.save({archived: true });
     },
     onRender: function() {
         this.stickit(this.model, this.noteBindings);
@@ -55,9 +92,10 @@ var View = Backbone.Marionette.CompositeView.extend({
     template: require('../tpl/notes.hbs'),
 
     itemView: NotesItemView,
-    emptyView: EmptyNoteView,
 
     itemViewContainer: 'ul',
+
+    emptyView: EmptyNoteView,
 
     ui: {
         'noteField': 'textarea',
@@ -94,6 +132,11 @@ var View = Backbone.Marionette.CompositeView.extend({
 
     onRender: function() {
         this.ui.saveButton.attr('disabled', 'disabled');
+    },
+
+    appendHtml: function(cv, iv, index) {
+        var $container = this.getItemViewContainer(cv);
+        $container.prepend(iv.$el);
     },
 
     initialize: function(options) {

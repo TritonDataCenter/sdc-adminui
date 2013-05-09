@@ -1183,13 +1183,25 @@ ul.attributes {
 
 
 .notes {
-  li { padding: 5px; border-bottom: 1px solid #eee; .widget-content; }
+  li { border-bottom: 1px solid #eee; }
   li:last-child { border-bottom: none; }
   li.empty { color: @grayLight; }
+  li.archived {
+    .meta { background: #efefef;}
+    .author { color: #aaa;}
+    .note { color: #aaa;}
+    text-decoration: line-through; opacity: 0.8;
+  }
 
-  .author { font-weight: bold; display: inline-block;}
-  .date { font-size: 12px; color: @gray; display: inline-block;}
-  .note { display: block; padding: 8px;}
+  .meta { overflow: hidden; .widget-header; padding: 5px 8px;}
+  .author { float: left;}
+  .actions { float: right;}
+  .actions a { margin-left: 15px;}
+  .actions a .icon-trash { color: @red; }
+  .actions a .icon-undo { color: @grayLight; }
+
+  .date { font-size: 12px; color: @gray; float: right;}
+  .note { .widget-content; display: block; padding: 8px; font-size: 12px; white-space: pre;}
 
   ul { height: 320px; overflow-y: scroll; }
   textarea { width: 98%; }

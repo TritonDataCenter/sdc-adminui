@@ -1,6 +1,8 @@
+var _ = require('underscore');
+var Backbone = require('backbone');
+
 var Note = require('./note');
 
-var Backbone = require('backbone');
 
 var Notes = module.exports = Backbone.Collection.extend({
     model: Note,
