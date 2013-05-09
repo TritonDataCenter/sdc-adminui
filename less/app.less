@@ -279,9 +279,13 @@ h1.branding {
   .user-details .provisioning.approved { color: @green; }
   .user-details .provisioning.disabled { color: @red; }
   .ssh-keys {
-    .items { margin-bottom: 10px; }
+    .items {
+      overflow-y: scroll;
+      height: (4px*62);
+      margin-bottom: 10px;
+    }
     .details, .actions { display: inline-block; vertical-align: middle;}
-    .details { width: 400px;}
+    .details { width: 380px;}
 
     .item {
       .widget-content;
