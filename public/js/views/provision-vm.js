@@ -8,7 +8,6 @@ var _ = require('underscore');
  * Provision a VM
  */
 
-var Base = require('./base');
 var Images = require('../models/images');
 var Users = require('../models/users');
 var Package = require('../models/package');
@@ -16,6 +15,7 @@ var Packages = require('../models/packages');
 var SSHKeys = require('../models/sshkeys');
 var Servers = require('../models/servers');
 var Networks = require('../models/networks');
+var NetworkPools = require('../models/network-pools');
 var User = require('../models/user');
 var Vm = require('../models/vm');
 
@@ -106,10 +106,12 @@ var View = Backbone.Marionette.ItemView.extend({
         this.imagesCollection = new Images();
         this.serversCollection = new Servers();
         this.networks = new Networks();
+        this.networkPools = new NetworkPools();
 
         this.listenTo(this.imagesCollection, 'sync', this.prepareImageInput);
         this.listenTo(this.serversCollection, 'sync', this.prepareServerInput);
         this.listenTo(this.networks, 'sync', this.populateNetworks);
+        this.listenTo(this.networkPools, 'sync', this.populateNetworks);
 
         this.imagesCollection.fetch();
         this.serversCollection.fetch();
@@ -177,8 +179,10 @@ var View = Backbone.Marionette.ItemView.extend({
         if (this.networks.length) {
             this.networks.reset();
         }
+        this.$('.network-checkboxes').find('label').remove();
 
         this.networks.fetch({data: {provisionable_by: u.get('uuid') }});
+        this.networkPools.fetch({data: {provisionable_by: u.get('uuid') }});
 
         this.sshKeys = new SSHKeys({user: u});
         this.listenTo(this.sshKeys, 'sync', this.onFetchKeys);
@@ -222,14 +226,18 @@ var View = Backbone.Marionette.ItemView.extend({
     },
 
     populateNetworks: function(networks) {
-        var container = this.$('.network-checkboxes');
-        var elm = container.find('label:first').clone();
-        container.find('label').remove();
+        var tpl = this.$('.network-checkbox-template').html();
+        var elm = $('<div/>').append(tpl);
 
+        var $container = this.$('.network-checkboxes');
         networks.each(function(n) {
-            elm.find('.name').html([n.get('name'), n.get('subnet')].join(' - '));
+            if (n.get('subnet')) {
+                elm.find('.name').html([n.get('name'), n.get('subnet')].join(' - '));
+            } else {
+                elm.find('.name').html(n.get('name'));
+            }
             elm.find('input').val(n.get('uuid'));
-            elm.clone().prependTo(container);
+            $container.prepend(elm.html());
         }, this);
 
         this.$('.control-group-networks').show();
@@ -402,10 +410,8 @@ var View = Backbone.Marionette.ItemView.extend({
             success: function(m, obj) {
                 var job = new Job({uuid: obj.job_uuid});
                 var jobView = new JobProgressView({model: job});
-                self.listenTo(jobView, 'execution', function(status) {
-                    if (status === 'succeeded') {
-                        adminui.vent.trigger('showview', 'vm', {uuid: obj.vm_uuid});
-                    }
+                self.listenTo(jobView, 'succeeded', function() {
+                    adminui.vent.trigger('showview', 'vm', {uuid: obj.vm_uuid});
                 });
                 jobView.show();
             }
