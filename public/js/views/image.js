@@ -6,6 +6,7 @@ var moment = require('moment');
 var adminui = require('../adminui');
 
 var JSONEditor = require('./traits-editor');
+var TagsListView = require('./tags-list');
 var Img = require('../models/image');
 var ImageView = Backbone.Marionette.ItemView.extend({
     sidebar: 'images',
@@ -80,6 +81,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
     },
 
     onClickManageTags: function() {
+
         var server = this.model;
         var modal = new JSONEditor({
             title: _.str.sprintf('Tags for image: %s', this.model.get('name')),
@@ -176,6 +178,9 @@ var ImageView = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.$("li.progress").hide();
+        this.tagsList = new TagsListView({model: this.model});
+        this.tagsList.setElement(this.$('.tags-container'));
+        this.tagsList.render();
     },
 
     onClickActivate: function(e) {

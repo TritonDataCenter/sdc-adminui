@@ -60,13 +60,13 @@
 
     <div class="actions">
       <button type="button" class="btn traits">Manage Traits</button>
-      <button type="button" class="btn tags">Manage Tags</button>
     </div>
 
   </div>
 
 
   <div class="details span8">
+    <section>
     <h3>Overview</h3>
     <ul class="unstyled attributes">
       <li>
@@ -106,7 +106,9 @@
       </li>
       {{/if}}
     </ul>
+    </section>
 
+    <section>
     <h3>Files
       {{#if unactivated}}
       <a class="show-upload-form btn">Upload a new file</a>
@@ -158,7 +160,9 @@
     <form class="uploadform">
       <input type="file" class="fileinput">
     </form>
+    </section>
 
+    <section>
     <h3>Requirements</h3>
     <ul class="unstyled attributes requirements">
       <li>
@@ -200,8 +204,19 @@
       </li>
       {{/if}}
     </ul>
+    </section>
+
+
+    <section>
+      <h3>Tags</h3>
+      <div class="tags-container">
+      </div>
+    </section>
+
+
 
     {{#if nic_driver}}
+    <section>
     <h3>Drivers</h3>
     <ul class="unstyled attributes requirements">
       <li>
@@ -217,9 +232,8 @@
         </span>
       </li>
     </ul>
+    </section>
     {{/if}}
-
-    <h3>Billing Tags</h3>
   </div>
 
 </div> {{! row}}

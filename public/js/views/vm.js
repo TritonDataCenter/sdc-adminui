@@ -275,7 +275,7 @@ var VmView = Backbone.Marionette.ItemView.extend({
     },
 
     renderTags: function() {
-        this.tagsListView.setElement(this.$('.tags')).render();
+        this.tagsListView.setElement(this.$('.tags-container')).render();
     },
 
     renderNics: function() {

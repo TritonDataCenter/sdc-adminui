@@ -16,7 +16,8 @@ var EditingView = Backbone.Marionette.ItemView.extend({
 
     initialize: function(options) {
         this.model = new Backbone.Model();
-        this.model.on('change:editing', function() {
+        this.model.on('change:editing', function(model) {
+            this.trigger('change:editing', this.model.get('editing'));
             if (this.model.get('editing') === true) {
                 this.$el.addClass('editing');
             } else {
@@ -112,53 +113,94 @@ var TagsList = Backbone.Marionette.ItemView.extend({
         if (! this.model) {
             throw new TypeError('options.model required');
         }
+
         this.tagsProperty = options.tagsProperty || 'tags';
+
+        this.getTags = function() {
+            return this.model.get(this.tagsProperty) || {};
+        }.bind(this);
+
+        this.saveTags = function(tags) {
+            var params = {};
+            params[this.tagsProperty] = tags;
+            return this.model.save(params, {patch: true});
+        }.bind(this);
     },
 
     addTag: function() {
-        var addTagButton = this.$('.add-tag');
-        addTagButton.hide();
-
+        var self = this;
         var addView = new EditingView({ editing: true });
+
         addView.on('cancel', function() {
-            addTagButton.show();
+            self.$('.add-tag').show();
             addView.remove();
+            if (_(self.getTags).size() === 0) {
+                this.$('.table').hide();
+                this.$('.zeor-state').show();
+            }
         });
 
         addView.on('save', function(tag) {
-            var tags = this.model.get(this.tagsProperty);
+            var tags = this.getTags();
             tags[tag.name] = tag.value;
-            var params = {};
-            params[this.tagsProperty] = tags;
-            this.model.save(params, {patch: true});
+            this.saveTags(tags);
         }, this);
 
         addView.render();
+
         this.$('tfoot').append(addView.$el);
+        this.$('.add-tag').hide();
+        this.$('.table').show();
+        this.$('.zero-state').hide();
+
         addView.focus();
     },
 
+    onEditMode: function(editing) {
+        if (editing) {
+            this.$('.add-tag').css('visiblity', 'hidden');
+        } else {
+            this.$('.add-tag').css('visiblity', 'visible');
+        }
+    },
+
     onRender: function() {
-        var self = this;
-        _(this.model.get(this.tagsProperty)).each(function(tv, tn) {
+        var tags = this.getTags();
+        if (_(tags).size() === 0) {
+            this.$('.table').hide();
+            this.$('.zero-state').show();
+        } else {
+            this.$('.table').show();
+            this.$('.zero-state').hide();
+        }
+
+        var arrTags = _.pairs(tags);
+        var sortedTags = _.sortBy(arrTags, function(val, i) {
+            return val[0];
+        });
+        _.each(sortedTags, function(val, i) {
+            var tn = val[0];
+            var tv = val[1];
             var view = new EditingView({ name: tn, value: tv });
             view.on('save', function(tag) {
-                var tags = this.model.get(this.tagsProperty);
+                var tags = this.getTags();
                 delete tags[tn];
                 tags[tag.name] = tag.value;
-
-                var params = {};
-                params[this.tagsProperty] = tags;
-                this.model.save(params, { patch: true });
+                this.saveTags(tags);
             }, this);
 
+            view.on('change:editing', this.onEditMode, this);
+
             view.on('remove', function(tag) {
-                var tags = this.model.get(self.tagsProperty);
+                var confirm = window.confirm("Are you sure you want to remove " + tag.name + "?");
+                if (false === confirm) {
+                    return;
+                }
+
+                var tags = this.getTags();
                 delete tags[tag.name];
 
-                var params = {};
-                params[self.tagsProperty] = tags;
-                this.model.save(params, { patch: true }).done(function() {
+                this.saveTags(tags).done(function() {
                     view.$el.fadeOut(200, function() {
                         view.remove();
                     });
@@ -169,7 +211,6 @@ var TagsList = Backbone.Marionette.ItemView.extend({
             this.$('tbody').append(view.$el);
             view.render();
         }, this);
-        return this;
     }
 
 });
