@@ -55,7 +55,6 @@ var VmView = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function(options) {
-        _.bindAll(this);
 
         this.vent = adminui.vent;
 
@@ -70,14 +69,6 @@ var VmView = Backbone.Marionette.ItemView.extend({
         this.owner = new User();
         this.image = new Img();
         this.server = new Server();
-
-        this.image.set({
-            uuid: this.vm.get('image_uuid')
-        });
-
-        if (!this.image.get('updated_at')) {
-            this.image.fetch();
-        }
 
         this.server.set({
             uuid: this.vm.get('server_uuid')
@@ -94,13 +85,6 @@ var VmView = Backbone.Marionette.ItemView.extend({
         if (!this.owner.get('cn')) {
             this.owner.fetch();
         }
-
-
-        this.listenTo(this.vm, 'change:image_uuid', function(m) {
-            this.image.set({uuid: m.get('image_uuid')});
-            this.image.fetch();
-        }, this);
-
 
         this.listenTo(this.vm, 'change:owner_uuid', function(m) {
             this.owner.set({uuid: m.get('owner_uuid')});
@@ -119,7 +103,24 @@ var VmView = Backbone.Marionette.ItemView.extend({
         this.metadataListView = new MetadataList({vm: this.vm});
         this.tagsListView = new TagsList({model: this.vm});
 
+        this.listenTo(this.vm, 'sync', this.loadImage);
+
         this.vm.fetch();
+    },
+
+    loadImage: function(model, resp, options) {
+        if (this.vm.get('brand') === 'kvm') {
+            var disks = this.vm.get('disks');
+            if (disks.length && disks[0].image_uuid) {
+                this.image.set({uuid: disks[0].image_uuid});
+            } else {
+                console.error('Unexpected error: kvm branded has no image_uuid in first disk');
+                return;
+            }
+        } else {
+            this.image.set({uuid: this.vm.get('image_uuid')});
+        }
+        this.image.fetch();
     },
 
     clickedStartVm: function(e) {
@@ -165,7 +166,7 @@ var VmView = Backbone.Marionette.ItemView.extend({
 
         e.preventDefault();
         this.vent.trigger('showview', 'image', {
-            uuid: this.vm.get('image_uuid')
+            uuid: this.image.get('uuid')
         });
     },
 
@@ -318,7 +319,13 @@ var VmView = Backbone.Marionette.ItemView.extend({
             '.image-name-version': {
                 observe: ['name', 'version'],
                 onGet: function(val, attr) {
-                    return val[0] + val[1];
+                    var name = val[0];
+                    var version = val[1];
+                    if (!name || !version) {
+                        return '';
+                    } else {
+                        return val.join(" ");
+                    }
                 },
                 attributes: [{
                     observe: 'uuid',
