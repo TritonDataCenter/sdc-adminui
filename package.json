@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#84c31bceba4a6f9d11a887af94e45a5dcdf297ba",
+    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#abac321",
     "ldapjs": "0.6.3",
     "sockjs": "0.3.x",
     "node-uuid": "1.4.0",
@@ -23,7 +23,7 @@
     "redis": "0.8.3",
     "moray": "git+ssh://git@git.joyent.com:node-moray.git#e5db01d",
     "npm": "~1.2.18",
-    "browserify": "~2.13.2",
+    "browserify": "2.13.x",
     "browserify-shim": "~2.0.3",
     "underscore": "~1.4.4",
     "underscore.string": "~2.3.1",
