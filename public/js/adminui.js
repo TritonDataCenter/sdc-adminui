@@ -5,6 +5,10 @@ var $ = require('jquery');
 require('jquery.chosen');
 require('jquery.serializeObject');
 require('bootstrap');
+
+$.fn.bootstrapTypeahead = $.fn.typeahead.noConflict();
+
+require('bootstrap.tags');
 require('typeahead');
 
 var Backbone = require('backbone');

@@ -16,13 +16,16 @@ var shimConfig = {
     'jquery': { path: './lib/jquery', exports: '$' },
     'jquery.serializeObject': {
         path: './lib/jquery.serializeObject',
-        depends: {
-            'jquery': '$'
-        },
+        depends: {'jquery': '$'},
         exports: null
     },
-    'jquery.chosen': { path: '/lib/chosen.jquery', exports: null },
+    'jquery.chosen': { path: './lib/chosen.jquery', exports: null },
     'bootstrap': { path: './lib/bootstrap', exports: null },
+    'bootstrap.tags': {
+        path: './lib/bootstrap-tags',
+        depends: {'jquery': '$'},
+        exports: null
+    },
     'typeahead': { path: './lib/typeahead', exports: null },
     'caliper': {
         path: './lib/caliper.backbone-0.0.4.min',

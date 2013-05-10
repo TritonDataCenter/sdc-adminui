@@ -25,8 +25,8 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         'click .cancel-upload-form': 'onClickCancelUploadForm',
         'click .start-upload': 'onClickStartUpload',
         'click .change-publicity': 'onClickChangePublicity',
-        'click .traits': 'onClickManageTraits',
-        'click .tags': 'onClickManageTags',
+        'click .manage-traits': 'onClickManageTraits',
+        'click .manage-tags': 'onClickManageTags',
         'change .fileinput': 'onSelectFile'
     },
 
@@ -181,7 +181,24 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         this.tagsList = new TagsListView({model: this.model});
         this.tagsList.setElement(this.$('.tags-container'));
         this.tagsList.render();
+
+        this.renderBillingTags();
     },
+    renderBillingTags: function() {
+        var model = this.model;
+        var billingTags = this.model.get('billing_tags') || [];
+        var val = billingTags.join(', ');
+
+        this.$('input[name=billing_tags]').val(billingTags);
+        this.$('input[name=billing_tags]').tag({
+            placeholder: 'Enter new tag',
+            caseInsensitive: false,
+            change: function(tags) {
+                model.save({billing_tags: tags}, {patch: true, silent: true});
+            }
+        });
+    },
+
 
     onClickActivate: function(e) {
         e.preventDefault();
