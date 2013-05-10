@@ -25,8 +25,9 @@ var EmptyView = Backbone.Marionette.ItemView.extend({
         this.emptyMessage = this.emptyMessage || options.emptyMessage || DEFAULT_EMPTY_MESSAGE;
         this.loadingMessage = this.loadingMessage || options.loadingMessage || DEFAULT_LOADING_MESSAGE;
         this.errorMessage = this.errorMessage || options.errorMessage || DEFAULT_ERROR_MESSAGE;
-        this.listenTo(this.model, 'sync', this.render);
-        this.listenTo(this.model, 'reset', this.render);
+
+        this.listenTo(this.model, 'sync', this.renderLoaded);
+        this.listenTo(this.model, 'request', this.renderLoading);
         this.listenTo(this.model, 'error', function(m, err) {
             this.error = err;
             this.render();
@@ -49,7 +50,16 @@ var EmptyView = Backbone.Marionette.ItemView.extend({
         } else {
             return content;
         }
+    },
 
+    renderLoading: function() {
+        this.loaded = false;
+        this.render();
+    },
+
+    renderLoaded: function() {
+        this.loaded = true;
+        this.render();
     },
 
     serializeData: function() {
@@ -60,7 +70,7 @@ var EmptyView = Backbone.Marionette.ItemView.extend({
         return {
             'error': this.error,
             'columns': this.columns,
-            'loaded': this.model.loaded,
+            'loaded': this.loaded,
             'loadingMessage': this.loadingMessage,
             'emptyMessage': this.emptyMessage,
             'errorMessage': this.errorMessage
