@@ -49,6 +49,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
         this.listenTo(this.collection, 'error', this.onError, this);
         this.listenTo(this.filterView, 'query', this.query, this);
+        this.listenTo(this.collection, 'request', this.hideSummary, this);
         this.listenTo(this.collection, 'sync', this.updateCount, this);
         this.listenTo(this.collection, 'sync', this.listView.render, this);
     },
@@ -115,9 +116,14 @@ module.exports = Backbone.Marionette.ItemView.extend({
         $(window).on('scroll', this.onScroll.bind(this));
     },
 
+    hideSummary: function() {
+        this.$('.vms-list caption').hide();
+    },
+
     updateCount: function() {
         this.$('.record-count').html(this.collection.objectCount);
         this.$('.current-count').html(this.collection.length);
+        this.$('.vms-list caption').show();
     },
 
     onRender: function() {

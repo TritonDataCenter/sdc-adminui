@@ -109,6 +109,17 @@ var ServersView = require('./composite').extend({
 
         this.listenTo(this.filterForm, 'query', this.filter, this);
         this.listenTo(this.collection, 'error', this.onError, this);
+        this.listenTo(this.collection, 'sync', this.onSync, this);
+        this.listenTo(this.collection, 'request', this.onRequest, this);
+    },
+
+    onRequest: function() {
+        this.ui.serversList.find('caption').hide();
+    },
+
+    onSync: function() {
+        this.ui.serversList.find('.record-count').html(this.collection.length);
+        this.ui.serversList.find('caption').show();
     },
 
     filter: function(params) {

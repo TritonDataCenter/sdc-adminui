@@ -69,7 +69,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.filterView = new FilterForm();
 
         this.listenTo(this.collection, 'error', this.onError, this);
-        this.listenTo(this.collection, 'sync', this.updateUserCount, this);
+        this.listenTo(this.collection, 'request', this.onRequest, this);
+        this.listenTo(this.collection, 'sync', this.onSync, this);
     },
 
 
@@ -112,9 +113,14 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.createView.render();
     },
 
-    updateUserCount: function(c) {
+    onSync: function(c) {
         this.$('.record-count').html(this.collection.objectCount);
         this.$('.current-count').html(this.collection.length);
+        this.$('caption').show();
+    },
+
+    onRequest: function() {
+        this.$('caption').hide();
     },
 
     onRender: function() {
