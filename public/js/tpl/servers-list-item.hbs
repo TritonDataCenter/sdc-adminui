@@ -9,6 +9,9 @@
   </span>
 </td>
 <td class="name">
+  {{#if reserved}}
+  <span class="reserved"><i class="icon-lock"></i></span>
+  {{/if}}
   <a href="/servers/{{uuid}}">{{hostname}}</a>
   <span class="uuid">{{uuid}}</span>
 </td>
