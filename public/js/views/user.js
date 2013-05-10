@@ -79,7 +79,14 @@ var UserView = Backbone.Marionette.ItemView.extend({
             this.model = new User({uuid: options.uuid });
         }
 
-        this.vms = new Vms({params: { owner_uuid: this.model.get('uuid') }});
+        this.vms = new Vms({
+            params: {
+                owner_uuid: this.model.get('uuid'),
+                state: 'active'
+            },
+            per_page: 1000
+        });
+
         this.sshkeys = new SSHKeys({user: this.model.get('uuid') });
         this.vmsList = new VmsList({collection: this.vms });
         this.sshkeysList = new SSHKeysList({collection: this.sshkeys });
