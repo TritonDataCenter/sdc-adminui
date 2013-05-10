@@ -111,6 +111,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
     onShow: function() {
         this.$('.alert').hide();
         this.$('.vms-filter').hide();
+
+        $(window).on('scroll', this.onScroll.bind(this));
     },
 
     updateCount: function() {
@@ -122,13 +124,11 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.listView.setElement(this.$('tbody')).render();
         this.filterView.setElement(this.$('.vms-filter'));
 
-        $(window).on('scroll', this.onScroll.bind(this));
-
         this.query({state: 'running'});
         return this;
     },
 
-    onClose: function() {
+    onBeforeClose: function() {
         $(window).off('scroll', this.onSroll);
     }
 });

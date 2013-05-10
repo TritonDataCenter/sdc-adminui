@@ -20,9 +20,15 @@ var ItemView = Backbone.Marionette.ItemView.extend({
 });
 
 module.exports = require('./collection').extend({
-    emptyView: require('./empty').extend({columns: 4}),
+    emptyView: require('./empty').extend({
+        loadingMessage: 'Loading Virtual Machines...',
+        emptyMessage: 'No Virtual Machines found',
+        columns: 4
+    }),
     itemViewOptions: function() {
-        return {emptyViewModel: this.collection};
+        return {
+            emptyViewModel: this.collection
+        };
     },
     itemView: ItemView
 });

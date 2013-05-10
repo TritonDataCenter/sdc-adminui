@@ -66,8 +66,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
             collection: this.collection
         });
 
-        $(window).on('scroll', this.onScroll.bind(this));
-
         this.filterView = new FilterForm();
 
         this.listenTo(this.collection, 'error', this.onError, this);
@@ -92,6 +90,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     onShow: function() {
         this.$('.alert').hide();
+        $(window).on('scroll', this.onScroll.bind(this));
     },
 
     onScroll: function(e) {
@@ -129,7 +128,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         return this;
     },
 
-    onClose: function() {
+    onBeforeClose: function() {
         $(window).off('scroll', this.onSroll);
     }
 });
