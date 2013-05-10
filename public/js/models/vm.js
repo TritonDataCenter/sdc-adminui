@@ -58,10 +58,6 @@ var Vm = Model.extend({
         });
     },
 
-    saveTags: function(cb) {
-        $.put(this.url() + '/tags', this.get('tags'), cb);
-    },
-
     createSnapshot: function(cb) {
         $.post(this.url() + '?action=create_snapshot', {}, function(data) {
             var job = new Job({
