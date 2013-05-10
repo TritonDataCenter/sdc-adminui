@@ -136,7 +136,7 @@ var TagsList = Backbone.Marionette.ItemView.extend({
             addView.remove();
             if (_(self.getTags).size() === 0) {
                 this.$('.table').hide();
-                this.$('.zeor-state').show();
+                this.$('.zero-state').show();
             }
         });
 

@@ -55,6 +55,9 @@ var ImageView = Backbone.Marionette.ItemView.extend({
 
     initialize: function(options) {
         this.viewModel = new Backbone.Model();
+        this.listenTo(this.viewModel, 'change:uploadform', this.onChangeUploadForm, this);
+        this.listenTo(this.viewModel, 'change:progress', this.onChangeProgress, this);
+        this.listenTo(this.viewModel, 'change:file', this.onChangeFile, this);
         this.viewModel.set({
             uploadform: false,
             uploading: false
@@ -67,9 +70,6 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         }
         this.model.fetch();
 
-        this.listenTo(this.viewModel, 'change:uploadform', this.onChangeUploadForm, this);
-        this.listenTo(this.viewModel, 'change:progress', this.onChangeProgress, this);
-        this.listenTo(this.viewModel, 'change:file', this.onChangeFile, this);
     },
 
     onClickShowUploadForm: function() {
