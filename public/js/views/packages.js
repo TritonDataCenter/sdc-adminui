@@ -205,7 +205,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
             vent: this.vent
         });
 
-        this.ui.searchInput.on('input', this.search, this);
+        this.ui.searchInput.on('input', this.search.bind(this));
 
         this.listenTo(this.vent, 'showpackage', this.showPackage, this);
         this.listenTo(this.vent, 'showedit', this.showForm, this);
