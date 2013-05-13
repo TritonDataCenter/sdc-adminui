@@ -44,11 +44,34 @@ var JobsView = Backbone.Marionette.CompositeView.extend({
     url: function() {
         return '/jobs';
     },
+
     emptyView: JobsItemEmptyView,
+
     initialize: function() {
         this.collection = new Jobs();
         this.collection.fetch();
         this.listenTo(this.collection, 'error', this.onError);
+    },
+
+    next: function() {
+        if (this.collection.hasNext()) {
+            this.collection.next();
+            this.collection.fetch({remove: false});
+        }
+    },
+
+    onShow: function() {
+        $(window).on('scroll', this.onScroll.bind(this));
+    },
+
+    onScroll: function(e) {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
+            this.next();
+        }
+    },
+
+    onBeforeClose: function () {
+        $(window).off('scroll', this.onScroll.bind(this));
     },
 
     onError: function(model, xhr) {

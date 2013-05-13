@@ -13,7 +13,7 @@ module.exports = Collection.extend({
         this.options = options || {};
         this.pagingParams = {
             page: this.options.page || 1,
-            per_page: this.options.per_page || 15
+            perPage: this.options.perPage || 15
         };
         this.params = this.options.params || {};
     },
@@ -37,11 +37,11 @@ module.exports = Collection.extend({
     },
 
     pages: function() {
-        return Math.ceil(this.objectCount / this.pagingParams.per_page);
+        return Math.ceil(this.objectCount / this.pagingParams.perPage);
     },
 
     hasNext: function() {
-        return (this.pagingParams.page * this.pagingParams.per_page) < this.objectCount;
+        return (this.pagingParams.page * this.pagingParams.perPage) < this.objectCount;
     },
 
     hasPrev: function() {
