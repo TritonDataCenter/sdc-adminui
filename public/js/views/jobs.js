@@ -49,8 +49,8 @@ var JobsView = Backbone.Marionette.CompositeView.extend({
 
     initialize: function() {
         this.collection = new Jobs();
-        this.collection.fetch();
         this.listenTo(this.collection, 'error', this.onError);
+        this.collection.fetch();
     },
 
     next: function() {
@@ -76,7 +76,7 @@ var JobsView = Backbone.Marionette.CompositeView.extend({
 
     onError: function(model, xhr) {
         adminui.vent.trigger('error', {
-            context: 'workflow vmapi',
+            context: 'workflow',
             xhr: xhr
         });
     }

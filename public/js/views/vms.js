@@ -8,12 +8,18 @@ var Backbone = require('backbone');
 var Vms = require('../models/vms');
 var VmsList = require('./vms-list');
 var VmsTemplate = require('../tpl/vms.hbs');
+var UserInput = require('./typeahead-user');
 
 var FilterForm = Backbone.View.extend({
     events: {
         'submit form': 'onSubmit',
         'change input': 'onSubmit',
         'change select': 'onSubmit'
+    },
+    render: function() {
+        console.log('render');
+        this.userInput = new UserInput({el: this.$('input[name=owner_uuid]')});
+        this.userInput.render();
     },
     onSubmit: function(e) {
         e.preventDefault();
@@ -42,13 +48,13 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function(options) {
-        this.filterView = new FilterForm();
         this.filterViewVisible = false;
+        this.filterView = new FilterForm();
         this.collection = new Vms();
         this.listView = new VmsList({ collection: this.collection });
 
-        this.listenTo(this.collection, 'error', this.onError, this);
         this.listenTo(this.filterView, 'query', this.query, this);
+        this.listenTo(this.collection, 'error', this.onError, this);
         this.listenTo(this.collection, 'request', this.hideSummary, this);
         this.listenTo(this.collection, 'sync', this.updateCount, this);
         this.listenTo(this.collection, 'sync', this.listView.render, this);
@@ -129,6 +135,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         this.listView.setElement(this.$('tbody')).render();
         this.filterView.setElement(this.$('.vms-filter'));
+        this.filterView.render();
 
         this.query({state: 'running'});
         return this;
