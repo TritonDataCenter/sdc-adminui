@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
+var moment = require('moment');
 
 var Vm = require('../models/vm');
 var Img = require('../models/image');
@@ -347,6 +348,16 @@ var VmView = Backbone.Marionette.ItemView.extend({
             '.vm-memory': 'ram',
             '.vm-swap': 'max_swap',
             '.vm-uuid': 'uuid',
+            '.created': {
+                observe: 'create_timestamp',
+                onGet: function(date) {
+                    if (date) {
+                        return moment(date).format('LLL');
+                    } else {
+                        return '';
+                    }
+                }
+            },
             '.vm-state': {
                 observe: 'state',
                 attributes: [{
