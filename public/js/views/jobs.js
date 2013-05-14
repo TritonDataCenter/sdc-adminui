@@ -47,10 +47,14 @@ var JobsView = Backbone.Marionette.CompositeView.extend({
 
     emptyView: JobsItemEmptyView,
 
-    initialize: function() {
-        this.collection = new Jobs();
-        this.listenTo(this.collection, 'error', this.onError);
+    initialize: function(options) {
+        options = options || {};
+        this.collection = options.collection || new Jobs();
+        if (options.params) {
+            this.collection.params = options.params;
+        }
         this.collection.fetch();
+        this.listenTo(this.collection, 'error', this.onError);
     },
 
     next: function() {

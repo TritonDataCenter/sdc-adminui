@@ -2,6 +2,8 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var moment = require('moment');
 
+var adminui = require('../adminui');
+
 var Vm = require('../models/vm');
 var Img = require('../models/image');
 var Server = require('../models/server');
@@ -15,15 +17,12 @@ var MetadataList = require('./metadata');
 var SnapshotsList = require('./snapshots');
 
 var ResizeVmView = require('./resize-vm');
+var JobsView = require('./jobs');
 
 var JobProgressView = require('./job-progress');
 var VmChangeOwner = require('./vm-change-owner');
 var NotesView = require('./notes');
 var CreateProbeController = require('../controllers/create-probe');
-
-var adminui = require('../adminui');
-
-var tplVm = require('../tpl/vm.hbs');
 
 
 /**
@@ -33,7 +32,7 @@ var tplVm = require('../tpl/vm.hbs');
  * options.vm vm attrs
  */
 var VmView = Backbone.Marionette.ItemView.extend({
-    template: tplVm,
+    template: require('../tpl/vm.hbs'),
     id: 'page-vm',
     sidebar: 'vms',
     events: {
@@ -70,6 +69,7 @@ var VmView = Backbone.Marionette.ItemView.extend({
         this.owner = new User();
         this.image = new Img();
         this.server = new Server();
+        this.jobsView = new JobsView({params: {vm_uuid: this.vm.get('uuid')}});
 
         this.server.set({
             uuid: this.vm.get('server_uuid')
@@ -414,6 +414,8 @@ var VmView = Backbone.Marionette.ItemView.extend({
             },
             '.server-uuid': 'uuid'
         });
+
+        this.jobsView.setElement(this.$('.jobs-container')).render();
 
 
         return this;
