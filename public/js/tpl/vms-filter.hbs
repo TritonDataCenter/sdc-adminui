@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="span12">
+    <form class="unstyled quick">
+      <h3>Find Virtual Machines</h3>
+
+      <div class="input-prepend">
+        <select name="property" class="span2">
+          <option value="uuid">UUID</option>
+          <option value="ip">IP Address</option>
+        </select>
+        <input class="span6" name="value" type="text">
+      </div>
+
+      <div class="input-append">
+        <button type="submit" class="btn btn-info"><i class="icon-search icon-white"></i> Search</button>
+      </div>
+      <button type="button" class="toggle-filter btn-link" style="margin-left: 30px" data-toggle="button"><i class="icon-filter"></i> More Options</button>
+    </form>
+  </div>
+</div>
+
+<div class="row more">
+  <hr>
+  <form class="unstyled more">
+    <div class="span3">
+      <label>Owner UUID</label>
+      <input type="text" name="owner_uuid" placeholder="Search by login or uuid">
+    </div>
+
+    <div class="span2">
+      <label>State</label>
+      <select name="state" class="span2">
+        <option>running</option>
+        <option>stopped</option>
+        <option>destroyed</option>
+      </select>
+    </div>
+
+    <div class="span3">
+      <label>Alias</label>
+      <input type="text" name="alias" placeholder="alias">
+    </div>
+
+    <div class="span3">
+      <label>Server</label>
+      <input type="text" name="server_uuid" placeholder="Server UUID">
+    </div>
+    <div class="span2">
+      <button class="btn btn-info"><i class="icon-filter icon-white"></i> Apply Filters</button>
+    </div>
+  </form>
+</div>

@@ -10,23 +10,51 @@ var VmsList = require('./vms-list');
 var VmsTemplate = require('../tpl/vms.hbs');
 var UserInput = require('./typeahead-user');
 
-var FilterForm = Backbone.View.extend({
+var FilterForm = Backbone.Marionette.ItemView.extend({
     events: {
-        'submit form': 'onSubmit',
-        'change input': 'onSubmit',
-        'change select': 'onSubmit'
+        'submit form.quick': 'onQuick',
+        'submit form.more': 'detailedSearch',
+        'change form.more select[name=state]': 'detailedSearch',
+        'change form.more select[name=alias]': 'detailedSearch',
+        'change form.more select[name=server_uuid]': 'detailedSearch',
+        'click .toggle-filter': 'toggleFiltersPanel'
     },
-    render: function() {
-        console.log('render');
+    initialize: function() {
+        this.params = {};
+    },
+    template: require('../tpl/vms-filter.hbs'),
+    onRender: function() {
         this.userInput = new UserInput({el: this.$('input[name=owner_uuid]')});
         this.userInput.render();
+        this.$('.more').hide();
     },
-    onSubmit: function(e) {
+    onQuick: function(e) {
         e.preventDefault();
 
-        var params = this.$('form').serializeObject();
+        var obj = this.$('form.quick').serializeObject();
+        var params = {};
+        params[obj.property] = obj.value;
         this.trigger('query', params);
+    },
+    detailedSearch: function(e) {
+        e.preventDefault();
+
+        var params = this.$('form.more').serializeObject();
+        this.trigger('query', params);
+    },
+    toggleFiltersPanel: function(e) {
+        var filterPanel = this.$('.more');
+        var filterPanelVisible = (filterPanel.is(':visible'));
+        this.$('form.quick .btn-info').prop('disabled', !filterPanelVisible);
+        this.$('form.quick select').prop('disabled', !filterPanelVisible);
+        this.$('form.quick input').prop('disabled', !filterPanelVisible);
+        if (filterPanelVisible) {
+            filterPanel.hide();
+        } else {
+            filterPanel.show();
+        }
     }
+
 });
 
 module.exports = Backbone.Marionette.ItemView.extend({
@@ -48,7 +76,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function(options) {
-        this.filterViewVisible = false;
         this.filterView = new FilterForm();
         this.collection = new Vms();
         this.listView = new VmsList({ collection: this.collection });
@@ -64,20 +91,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
         app.vent.trigger('showview', 'provision-vm', {});
     },
 
-
-    toggleFiltersPanel: function(e) {
-        var filterPanel = this.$('.vms-filter');
-        var vmsList = this.$('.vms-list');
-        if (this.filterViewVisible) {
-            filterPanel.hide();
-            vmsList.removeClass('span9').addClass('span12');
-            this.filterViewVisible = false;
-        } else {
-            filterPanel.show();
-            vmsList.addClass('span9').removeClass('span12');
-            this.filterViewVisible = true;
-        }
-    },
 
     query: function(params) {
         this.ui.alert.hide();
@@ -106,7 +119,10 @@ module.exports = Backbone.Marionette.ItemView.extend({
             var errors = _.map(obj.errors, function(e) {
                 return e.message;
             });
-            this.ui.alert.html(errors.join('<br>')).show();
+            app.vent.trigger('notification', {
+                level: 'error',
+                message: errors.join(' ')
+            });
         } else {
             app.vent.trigger('error', {
                 xhr: res,
@@ -117,7 +133,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     onShow: function() {
         this.$('.alert').hide();
-        this.$('.vms-filter').hide();
 
         $(window).on('scroll', this.onScroll.bind(this));
     },

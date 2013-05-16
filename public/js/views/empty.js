@@ -4,7 +4,7 @@ var DEFAULT_LOADING_MESSAGE = 'Loading...';
 var DEFAULT_EMPTY_MESSAGE = 'No Records Found.';
 var DEFAULT_ERROR_MESSAGE = 'Load Error.';
 
-var EmptyView = Backbone.Marionette.ItemView.extend({
+var EmptyView = Backbone.Marionette.View.extend({
     tagName: function() {
         if (this.columns) {
             return 'tr';
@@ -26,8 +26,8 @@ var EmptyView = Backbone.Marionette.ItemView.extend({
         this.loadingMessage = this.loadingMessage || options.loadingMessage || DEFAULT_LOADING_MESSAGE;
         this.errorMessage = this.errorMessage || options.errorMessage || DEFAULT_ERROR_MESSAGE;
 
-        this.listenTo(this.model, 'sync', this.renderLoaded);
         this.listenTo(this.model, 'request', this.renderLoading);
+        this.listenTo(this.model, 'sync', this.renderLoaded);
         this.listenTo(this.model, 'error', function(m, err) {
             this.error = err;
             this.render();
@@ -38,18 +38,22 @@ var EmptyView = Backbone.Marionette.ItemView.extend({
         var content = null;
         if (data.error) {
             content = data.errorMessage;
-        } else if (data.loaded) {
-            content = data.emptyMessage;
-        } else {
+        } else if (data.loaded === false) {
             content = data.loadingMessage;
+        } else {
+            content = data.emptyMessage;
         }
-
+        var html = null;
         if (data.columns) {
             var td = $('<td>').attr('colspan', data.columns).html(content);
-            return td[0].outerHTML;
+            html = td[0].outerHTML;
         } else {
-            return content;
+            html = content;
         }
+        return html;
+    },
+    render: function() {
+        this.$el.html(this.template(this.serializeData()));
     },
 
     renderLoading: function() {

@@ -2,10 +2,12 @@
   <h1>Virtual Machines
     <div class="actions">
       <button class="provision-button btn btn-primary"> <i class="icon-plus icon-white"></i> Provision a New VM </button>
-      <button class="toggle-filter btn" data-toggle="button"><i class="icon-filter"></i> Filter Options</button>
     </div>
   </h1>
 </div>
+
+<section class="widget-content vms-filter">
+</section>
 
 <div class="row">
   <div class="vms-list span12">
@@ -23,42 +25,5 @@
         Showing <span class="current-count"></span> of <span class="record-count"></span> Virtual Machines
       </caption>
     </table>
-  </div>
-
-
-  <div class="vms-filter span3">
-    <div class="filter-panel">
-      <h4>Filter Options</h4>
-      <div class="alert alert-error"></div>
-      <form>
-        <label>Data Center</label>
-        <select name="dc" disabled></select>
-
-        <label>UUID</label>
-        <input type="text" name="uuid" placeholder="UUID">
-
-        <label>Owner UUID</label>
-        <input type="text" name="owner_uuid" placeholder="Search by login or uuid">
-
-        <label>State</label>
-        <select name="state">
-          <option>running</option>
-          <option>stopped</option>
-          <option>destroyed</option>
-        </select>
-
-        <label>Alias</label>
-        <input type="text" name="alias" placeholder="alias">
-
-        <label>Server</label>
-        <input type="text" name="server_uuid" placeholder="Server UUID">
-
-        <label>RAM</label>
-        <input type="text" name="ram" placeholder="RAM">
-
-
-        <button class="btn btn-large btn-info"><i class="icon-filter icon-white"></i> Apply Filters</button>
-      </form>
-    </div>
   </div>
 </div>

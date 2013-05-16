@@ -71,9 +71,7 @@ var VmView = Backbone.Marionette.ItemView.extend({
         this.server = new Server();
         this.jobsView = new JobsView({params: {vm_uuid: this.vm.get('uuid')}});
 
-        this.server.set({
-            uuid: this.vm.get('server_uuid')
-        });
+        this.server.set({ uuid: this.vm.get('server_uuid') });
 
         if (!this.server.get('last_modified')) {
             this.server.fetch();
@@ -100,11 +98,10 @@ var VmView = Backbone.Marionette.ItemView.extend({
         this.listenTo(this.vm, 'change:customer_metadata', this.renderMetadata, this);
         this.listenTo(this.vm, 'change:tags', this.renderTags, this);
         this.listenTo(this.vm, 'change:nics', this.renderNics, this);
+        this.listenTo(this.vm, 'sync', this.loadImage);
 
         this.metadataListView = new MetadataList({vm: this.vm});
         this.tagsListView = new TagsList({model: this.vm});
-
-        this.listenTo(this.vm, 'sync', this.loadImage);
 
         this.vm.fetch();
     },
