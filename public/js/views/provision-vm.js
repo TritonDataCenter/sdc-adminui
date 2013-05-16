@@ -130,7 +130,7 @@ var View = Backbone.Marionette.ItemView.extend({
         var source = images.map(function(i) {
             return {
                 'uuid': i.get('uuid'),
-                'tokens': [i.get('uuid'), i.get('name')],
+                'tokens': [i.get('uuid'), i.get('version'), i.get('name')],
                 'name': i.get('name'),
                 'version': i.get('version')
             };
