@@ -12,8 +12,7 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
         'click .toggle-raw': 'toggleRaw'
     },
     initialize: function() {
-        this.model.fetch();
-        this.listenTo(this.model, 'change', this.render, this);
+        this.listenTo(this.model, 'sync', this.render, this);
     },
 
     toggleRaw: function() {
@@ -47,7 +46,7 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
         }
     },
     show: function() {
-        this.render();
+        this.model.fetch();
         this._timer = setInterval(this.update.bind(this), 3000);
         var modal = this.$el.modal();
         var timer = this._timer;
