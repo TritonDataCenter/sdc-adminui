@@ -1533,7 +1533,6 @@ Marionette.CollectionView = Marionette.View.extend({
     this.closeEmptyView();
     this.closeChildren();
 
-    console.log(this.collection.at(0));
     if (this.collection && this.collection.length > 0) {
       this.showCollection();
     } else {

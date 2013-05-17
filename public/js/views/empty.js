@@ -46,7 +46,7 @@ var EmptyView = Backbone.Marionette.View.extend({
         var content = null;
         if (data.error) {
             content = data.errorMessage;
-        } else if (data.loaded === false || typeof(data.loaded) === undefined) {
+        } else if (data.loaded === false || typeof(data.loaded) === 'undefined') {
             content = data.loadingMessage;
         } else {
             content = data.emptyMessage;
