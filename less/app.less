@@ -49,26 +49,32 @@ html { height: 100%; }
   border: none;
 
   h1 {
+    position: relative;
+
     font-size: 26px;
     font-weight: 300;
+
     .uuid {
       text-transform: lowercase;
       #font > .monospace(12px);
     }
 
+    .actions { .pull-right; }
 
     .resource-status {
-      width: 180px;
+      position: absolute;
+      width: 200px;
+
       text-transform: uppercase;
       font-size: 14px;
       color: #aaa;
-      span { font-weight: bold; }
+      display: block;
+      top: 5px;
+      left: 500px;
 
-      margin-left: 20px;
-      display: inline-block;
+      span { font-weight: bold; }
     }
 
-    .actions { .pull-right; }
   }
 
   &+.actions {
@@ -331,6 +337,7 @@ h1.branding {
   .page-header {
     .version { color: @grayLight; font-size: 18px;}
     .resource-status {
+      left: 400px;
       .active { color: @green; }
       .unactivated { color: @yellow;}
     }
@@ -664,7 +671,7 @@ h1.branding {
     .running {
       color: #00a733;
     }
-    margin-left: 80px;
+    left: 500px;
   }
 
 

@@ -50,14 +50,32 @@ module.exports = Backbone.Marionette.CompositeView.extend({
         return { emptyViewModel: this.collection };
     },
     initialize: function() {
-        console.log(this.collection);
-        this.listenTo(this.collection, 'sync', this.updateRecordCount, this);
+        this.collection.comparator = function(i) {
+            return -(new Date(i.get('published_at')).getTime());
+        };
+        this.listenTo(this.collection, 'request', this.onFetch, this);
+        this.listenTo(this.collection, 'sync', this.onSync, this);
     },
-    updateRecordCount: function() {
+    onFetch: function() {
+        this.$('caption').hide();
+    },
+    onSync: function() {
+        this.$('caption').show();
         this.$('.record-count').html(this.collection.length);
+        this.collection.sort();
+        this.render();
     },
     onShow: function() {
+        this.$('caption').hide();
         this.collection.fetch();
+    },
+    appendHtml: function(cv, iv, index) {
+        var $container = this.$('tbody');
+        if ($container.children().size() <= index) {
+            $container.append(iv.el);
+        } else {
+            $container.children().eq(index).after(iv.el);
+        }
+
     }
 });
-
