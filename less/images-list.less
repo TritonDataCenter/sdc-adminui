@@ -1,0 +1,21 @@
+.images-list {
+  .table;
+  th.state { width: 80px; }
+  td.state .active { background: @green; text-transform: uppercase; font-weight: bold;}
+  td.state .disabled { background: @gray; }
+  td.state .unactivated { background: @yellow; }
+  th.os { width: 120px; }
+  th.published { width: 120px;}
+  th.visibility { width: 100px;}
+  .uuid {
+    font-size: 12px;
+    color: @grayLight;
+    font-style: italic;
+    font-family: monospace;
+  }
+  td.visibility {
+    width: 100px;
+    .public { font-weight: bold;}
+    .private { font-weight: bold;}
+  }
+}

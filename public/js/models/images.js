@@ -1,7 +1,8 @@
 var Backbone = require('backbone');
-var Image = require('./image');
+var Collection = require('./collection');
+var Img = require('./image');
 
-module.exports = Backbone.Collection.extend({
-    model: Image,
+module.exports = Collection.extend({
+    model: Img,
     url: '/_/images'
 });

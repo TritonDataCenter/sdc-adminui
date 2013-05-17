@@ -23,6 +23,7 @@ var View = Backbone.View.extend({
 
         this.$el.append(node);
 
+        window.scrollTo(0, this.$el.offset().top);
         node.slideDown();
         setTimeout(function() {
             node.slideUp(function() {

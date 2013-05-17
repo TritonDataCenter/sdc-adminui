@@ -21,13 +21,21 @@ var EmptyView = Backbone.Marionette.View.extend({
     initialize: function(options) {
         options = options || {};
 
-        this.model = options.emptyViewModel || options.model || {};
+        this.model = options.emptyViewModel || options.collection || options.model || {};
+
         this.emptyMessage = this.emptyMessage || options.emptyMessage || DEFAULT_EMPTY_MESSAGE;
         this.loadingMessage = this.loadingMessage || options.loadingMessage || DEFAULT_LOADING_MESSAGE;
         this.errorMessage = this.errorMessage || options.errorMessage || DEFAULT_ERROR_MESSAGE;
 
-        this.listenTo(this.model, 'request', this.renderLoading);
-        this.listenTo(this.model, 'sync', this.renderLoaded);
+        if (typeof(this.model.isFetched) === 'function') {
+            this.loaded = this.model.isFetched();
+            this.listenTo(this.model, 'fetch:start', this.renderLoading);
+            this.listenTo(this.model, 'fetch:done', this.renderLoaded);
+        } else {
+            this.listenTo(this.model, 'request', this.renderLoading);
+            this.listenTo(this.model, 'sync', this.renderLoaded);
+        }
+
         this.listenTo(this.model, 'error', function(m, err) {
             this.error = err;
             this.render();
@@ -38,7 +46,7 @@ var EmptyView = Backbone.Marionette.View.extend({
         var content = null;
         if (data.error) {
             content = data.errorMessage;
-        } else if (data.loaded === false) {
+        } else if (data.loaded === false || typeof(data.loaded) === undefined) {
             content = data.loadingMessage;
         } else {
             content = data.emptyMessage;
@@ -52,6 +60,7 @@ var EmptyView = Backbone.Marionette.View.extend({
         }
         return html;
     },
+
     render: function() {
         this.$el.html(this.template(this.serializeData()));
     },
@@ -71,7 +80,7 @@ var EmptyView = Backbone.Marionette.View.extend({
             this.tagName = 'tr';
         }
 
-        return {
+        var d = {
             'error': this.error,
             'columns': this.columns,
             'loaded': this.loaded,
@@ -79,6 +88,7 @@ var EmptyView = Backbone.Marionette.View.extend({
             'emptyMessage': this.emptyMessage,
             'errorMessage': this.errorMessage
         };
+        return d;
     }
 });
 

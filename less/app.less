@@ -8,6 +8,9 @@
 @import "typeahead.less";
 @import "lib/bootstrap-tags.less";
 
+@import "images-list.less";
+@import "image-import.less";
+
 
 
 body { height: 100%; }
@@ -323,34 +326,6 @@ h1.branding {
 }
 
 
-#page-images {
-  .images-table {
-    th.state { width: 80px; }
-    td.state .active { background: @green; text-transform: uppercase; font-weight: bold;}
-    td.state .disabled { background: @gray; }
-    td.state .unactivated { background: @yellow; }
-    th.os { width: 120px; }
-    th.published { width: 120px;}
-    th.visibility { width: 100px;}
-    .uuid {
-      font-size: 12px;
-      color: @grayLight;
-      font-style: italic;
-      font-family: monospace;
-    }
-    td.visibility {
-      width: 100px;
-      .public { font-weight: bold;}
-      .private { font-weight: bold;}
-    }
-  }
-}
-
-#page-image-import {
-  textarea {
-    #font > .monospace(11px, normal, 1.2);
-  }
-}
 
 #page-image {
   .page-header {
@@ -1027,9 +1002,9 @@ ul.attributes {
 
     .summary {
       cursor: pointer;
-      background: lighten(@red, 48%);
-      border: 1px solid lighten(@red, 20%);
+      background: lighten(@red, 40%);
       padding: 18px;
+      border-bottom: 1px solid #fff;
     }
 
     .details {

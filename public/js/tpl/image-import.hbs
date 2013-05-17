@@ -1,43 +1,14 @@
-<form class="form-horizontal" method="post">
-  <div class="page-header">
-    <h2>Import Image</h2>
-  </div>
+<div class="page-header">
+  <h2>Import Image</h2>
+</div>
 
-  <legend>Select Import Source</legend>
-  <div class="control-group">
-    <label class="radio">
-      <input type="radio" name="import-source" value="url">
-      Import from Image API image URL
-    </label>
-
-
-    <label class="radio">
-      <input type="radio" name="import-source" value="manifest">
-      Import from image manifest
-    </label>
-  </div>
-
-  <div class="alert alert-error">
-    Alerts
-  </div>
+<div class="source-select">
+  <select class="image-source">
+    <option value="https://images.joyent.com/">images.joyent.com</option>
+    <option value="https://updates.joyent.com/">updates.joyent.com</option>
+  </select>
+</div>
 
 
-  <div class="control-group manifest">
-    <label class="control-label">Manifest (.dsmanifest)</label>
-    <div class="controls">
-      <textarea rows="18" class="span8 input input-xlarge" name="manifest"></textarea>
-    </div>
-  </div>
-
-  <div class="control-group url">
-    <label class="control-label">URL to dataset</label>
-    <div class="controls">
-      <input type="text" class="input input-xlarge">
-      <p class="help-block">
-        Example: https://images.joyent.com/images/7456f2b0-67ac-11e0-b5ec-832e6cf079
-      </p>
-    </div>
-  </div>
-
-  <button class="btn btn-primary" class="import">Import</button>
-</form>
+<h3>Select Image to Import</h3>
+<div class="images-list-region"></div>
