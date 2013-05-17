@@ -64,7 +64,7 @@ var User = module.exports = Model.extend({
     },
 
     signout: function() {
-        window.localStorage.clear();
+        window.localStorage.removeItem('api-token');
         this.trigger('unauthenticated');
     }
 });

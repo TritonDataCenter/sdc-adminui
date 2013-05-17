@@ -33,7 +33,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'images/:uuid': 'showImage',
         'networks/:uuid': 'showNetwork',
         'packages/:uuid': 'showPackage',
-        'monitoring': 'showMonitoring',
         'servers/:uuid': 'showServer',
         '*default': 'defaultAction'
     },
@@ -56,12 +55,21 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         });
     },
 
-    start: function(app) {
+    checkAuth: function() {
+        var xhr = $.ajax({
+            type: 'GET',
+            url: '/_/auth',
+            async: false
+        });
+        return (xhr.status !== 403);
+    },
+
+    start: function() {
         this.listenTo(this.app.vent, 'showview', this.presentView, this);
         this.listenTo(this.app.vent, 'signout', this.signout, this);
         this.listenTo(this.app.user, 'authenticated', this.didAuthenticate, this);
 
-        if (this.app.user.authenticated()) {
+        if (this.user.authenticated()) {
             this.setupRequestToken();
         }
 
@@ -88,7 +96,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             this.showSignin();
             return false;
         } else {
-            return true;
+            return this.checkAuth();
         }
     },
 
@@ -100,7 +108,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             });
             this.app.chrome.show(appView);
         }
-        console.log('presentView: ' + viewName);
 
         var View = Views[viewName];
 
