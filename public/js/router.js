@@ -43,6 +43,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     didAuthenticate: function() {
         this.setupRequestToken();
+        this._checkAuth = true;
         if (typeof(Backbone.history.fragment) !== 'undefined') {
             Backbone.history.loadUrl(Backbone.history.fragment);
         }
@@ -56,12 +57,16 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     checkAuth: function() {
-        var xhr = $.ajax({
-            type: 'GET',
-            url: '/_/auth',
-            async: false
-        });
-        return (xhr.status !== 403);
+        if (this._checkAuth === true) {
+            return true;
+        } else {
+            var xhr = $.ajax({
+                type: 'GET',
+                url: '/_/auth',
+                async: false
+            });
+            return (xhr.status !== 403);
+        }
     },
 
     start: function() {

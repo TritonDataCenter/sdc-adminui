@@ -1,8 +1,8 @@
-
 /**
  * ./signin !!
  */
 
+var _ = require('underscore');
 var Backbone = require('backbone');
 var tplSignin = require('../tpl/signin.hbs');
 
@@ -53,21 +53,10 @@ var View = Backbone.Marionette.ItemView.extend({
         this.ui.alert.hide();
     },
 
-    focus: function() {
-        if (this.ui.usernameField.val().length === 0) {
-            this.ui.usernameField.focus();
-        } else {
-            this.ui.passwordField.focus();
-        }
-    },
-
     authenticate: function(e) {
         e.preventDefault();
         this.hideMessage();
-        this.model.authenticate(
-            this.ui.usernameField.val(),
-            this.ui.passwordField.val()
-        );
+        this.model.authenticate(this.ui.usernameField.val(), this.ui.passwordField.val());
     },
 
     onRender: function() {
@@ -75,7 +64,7 @@ var View = Backbone.Marionette.ItemView.extend({
     },
 
     onShow: function() {
-        this.focus();
+        this.$("input[value='']:not(:checkbox,:button):visible:first").focus();
     }
 
 });
