@@ -297,7 +297,7 @@ h1.branding {
   .ssh-keys {
     .items {
       overflow-y: scroll;
-      height: (4px*62);
+      max-height: (4px*62);
       margin-bottom: 10px;
     }
     .details, .actions { display: inline-block; vertical-align: middle;}
@@ -337,7 +337,7 @@ h1.branding {
   .page-header {
     .version { color: @grayLight; font-size: 18px;}
     .resource-status {
-      left: 400px;
+      left: 460px;
       .active { color: @green; }
       .unactivated { color: @yellow;}
     }
@@ -860,12 +860,12 @@ ul.attributes {
       &>div { vertical-align:top; display: inline-block; }
       strong { display: block; }
       .provision-ip-range {
-        width: 240px;
+        width: 200px;
       }
       .resolvers { width: 120px;  }
-      .gateway { width: 140px;}
+      .gateway { width: 100px;}
       .name {
-        width: 180px;
+        width: 200px;
         a { display: block; clear: both; font-weight: bold; }
       }
       .subnet {
@@ -874,7 +874,7 @@ ul.attributes {
         font-size: 10px;
       }
       .vlan {
-        width: 100px;
+        width: 50px;
       }
       strong { font-size: 12px; color: @grayLight;}
       .actions {
@@ -954,6 +954,11 @@ ul.attributes {
     .flags { }
     .flags span { display: inline-block; margin-right: 10px;}
 
+    .resource-status {
+      left: 300px;
+      .active { color: @green;}
+      .inactive { color: @grayLight;}
+    }
 
     .networks-list {
       #page-networks > .networks-list;
@@ -962,7 +967,12 @@ ul.attributes {
       li .gateway { width: 100px; }
     }
 
-    .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority {
+    .owner {
+      strong { vertical-align: top; }
+      .uuid { font-family: @monoFontFamily; font-size: 10px;}
+    }
+
+    .owner, .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority {
       .widget-content;
 
       strong {

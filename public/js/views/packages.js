@@ -6,6 +6,8 @@ var PackagesTemplate = require('../tpl/packages.hbs');
 var PackagesListItemTemplate = require('../tpl/packages-list-item.hbs');
 var PackageForm = require('./packages-form');
 
+var User = require('../models/user');
+
 var adminui = require('../adminui');
 
 var PackagesListItemView = Backbone.Marionette.ItemView.extend({
@@ -94,17 +96,32 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
     },
     events: {
         'click .edit': 'onEdit',
-        'click .traits': 'onTraits'
+        'click .traits': 'onTraits',
+        'click .login': 'navigateToUser'
     },
 
     initialize: function(options) {
         var nets = _.map(this.model.get('networks') || [], function(uuid) {
             return {uuid: uuid};
         });
+
+        if (this.model.get('owner_uuid')) {
+            this.owner = new User({uuid: this.model.get('owner_uuid')});
+            this.listenTo(this.owner, 'sync', this.populateUser);
+        }
         this.networks = new Networks();
         this.networks.reset(nets);
         this.networksView = new NetworksList({ collection: this.networks });
         this.listenTo(this.networksView, 'select', this.onSelectNetwork);
+    },
+
+    navigateToUser: function(e) {
+        e.preventDefault();
+        adminui.vent.trigger('showview', 'user', {uuid: this.owner.get('uuid')});
+    },
+
+    populateUser: function() {
+        this.$('.owner .login').html(this.owner.get('login'));
     },
 
     onEdit: function() {
@@ -153,6 +170,10 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
                 networksView.children.findByModel(n).render();
             });
         });
+
+        if (this.owner) {
+            this.owner.fetch();
+        }
     }
 
 });
@@ -245,14 +266,10 @@ var PackagesView = Backbone.Marionette.Layout.extend({
             return;
         }
 
-        this.$(".sidebar").animate({
-            opacity: 1
-        });
+        this.$(".sidebar").animate({ opacity: 1 });
 
         if ((!this.detail.currentView) || (this.detail.currentView.model !== pkg || (false === this.detail.currentView instanceof(PackageDetail)))) {
-            this.detail.show(new PackageDetail({
-                model: pkg
-            }));
+            this.detail.show(new PackageDetail({ model: pkg }));
         }
 
         if (!this.packages.get(pkg.get('uuid'))) {

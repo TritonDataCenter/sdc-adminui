@@ -2,8 +2,11 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 require('backbone.modelbinder');
+
+var adminui = require('../adminui');
 var FormTemplate = require('../tpl/packages-form.hbs');
 var Package = require('../models/package');
+var UserInput = require('../views/typeahead-user');
 
 var PackageForm = Backbone.Marionette.ItemView.extend({
     template: FormTemplate,
@@ -45,8 +48,8 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
 
     onCancel: function(e) {
         e.preventDefault();
+
         if (this.model.isNew()) {
-            console.log(this.model.isNew());
             this.vent.trigger('showpackage');
         } else {
             this.vent.trigger('showpackage', this.model);
@@ -56,16 +59,23 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
     onSubmit: function(e) {
         e.preventDefault();
         var self = this;
+        this.model.set({owner_uuid: this.$('#package-owner').val()});
         this.model.save(null, {
+            patch: true,
             success: function(model, resp) {
-                console.log(model);
                 self.vent.trigger('showpackage', model);
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: "Package saved succesfully."
+                });
             }
         });
     },
 
     onRender: function() {
         this.modelBinder.bind(this.model, this.el);
+        this.userInput = new UserInput({el: this.$('#package-owner')});
+        this.userInput.render();
     },
 
     onClose: function() {
