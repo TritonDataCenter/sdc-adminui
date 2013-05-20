@@ -2,6 +2,8 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 var Packages = require('../models/packages');
+var NetworkPools = require('../models/network-pools');
+
 var PackagesTemplate = require('../tpl/packages.hbs');
 var PackagesListItemTemplate = require('../tpl/packages-list-item.hbs');
 var PackageForm = require('./packages-form');
@@ -88,6 +90,7 @@ Handlebars.registerHelper('normalize', function(v) {
 var Networks = require('../models/networks');
 var Network = require('../models/network');
 var NetworksList = require('../views/networks-list');
+var NetworkPoolsList = require('../views/network-pools-list');
 var NetworksDetailView = require('./networks-detail');
 var PackageDetail = Backbone.Marionette.ItemView.extend({
     template: PackagesDetailTemplate,
@@ -101,7 +104,7 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function(options) {
-        var nets = _.map(this.model.get('networks') || [], function(uuid) {
+        this.nets = _.map(this.model.get('networks') || [], function(uuid) {
             return {uuid: uuid};
         });
 
@@ -109,9 +112,10 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
             this.owner = new User({uuid: this.model.get('owner_uuid')});
             this.listenTo(this.owner, 'sync', this.populateUser);
         }
-        this.networks = new Networks();
-        this.networks.reset(nets);
+
+        this.networks = new Networks(this.nets);
         this.networksView = new NetworksList({ collection: this.networks });
+
         this.listenTo(this.networksView, 'select', this.onSelectNetwork);
     },
 
@@ -157,19 +161,64 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
         this.traitsEditor.show();
     },
 
-    onRender: function() {
-        if (0 === this.networks.length) {
-            this.$('.networks').hide();
-        }
+    renderNetworks: function() {
         this.$('.networks-list').html(this.networksView.el);
         this.networksView.render();
         var networksView = this.networksView;
         var networks = this.networks;
+
         networks.each(function(n) {
             n.fetch().done(function() {
                 networksView.children.findByModel(n).render();
+            }).fail(function() {
+                networksView.children.findByModel(n).remove();
             });
         });
+
+    },
+    renderNetworkPools: function() {
+        var networks = new Networks();
+        networks.fetch().done(done.bind(this));
+
+        function done() {
+            this.networkPools = new NetworkPools(this.nets);
+
+            var networkPools = this.networkPools;
+            var size = networkPools.length;
+            var n = 0;
+            var self = this;
+
+            networkPools.each(function(n) {
+                n.fetch().done(function() {
+                    ok();
+                }).fail(function() {
+                    networkPools.remove(n);
+                    ok();
+                });
+            });
+
+            function ok() {
+                n++;
+                if (n === size) {
+                    self.networkPoolsView = new NetworkPoolsList({
+                        networks: networks,
+                        collection: networkPools
+                    });
+                    self.$('.network-pools-list').html(self.networkPoolsView.el);
+                    self.networkPoolsView.render();
+                }
+            }
+
+        }
+    },
+
+    onRender: function() {
+        if (0 === this.networks.length) {
+            this.$('.networks').hide();
+        }
+
+        this.renderNetworks();
+        this.renderNetworkPools();
 
         if (this.owner) {
             this.owner.fetch();

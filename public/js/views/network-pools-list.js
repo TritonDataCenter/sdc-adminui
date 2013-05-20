@@ -66,8 +66,9 @@ module.exports = Backbone.Marionette.CollectionView.extend({
     attributes: {
         'class': 'unstyled network-pools-list'
     },
+
     initialize: function(options) {
-        this.networks = options.networks;
+        this.networks = options.networks || new Networks();
     },
 
     onEditNetworkPool: function(model) {

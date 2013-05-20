@@ -827,27 +827,30 @@ ul.attributes {
 }
 
 #page-networks {
-  .network-pools-list>ul>li {
-    margin-bottom: 1em;
+  .network-pools-list {
+    ul>li {
+      margin-bottom: 1em;
 
-    .network-pool-header {
-      .widget-header;
-      cursor: pointer;
-      font-size: 12px;
-      padding: 10px;
+      .network-pool-header {
+        .widget-header;
+        cursor: pointer;
+        font-size: 12px;
+        padding: 10px;
 
-      .name { margin-right: 20px; }
-      .uuid {
-        float: right;
-        color: @grayLight;
-        #font > .monospace(10px);
+        .name { margin-right: 20px; }
+        .uuid {
+          float: right;
+          color: @grayLight;
+          #font > .monospace(10px);
+        }
+        .edit { margin-left: 10px; float: right; font-weight: bold; visibility: hidden;};
+        .delete { margin-left: 10px; font-weight: bold; color: @red; float: right; visibility: hidden;}
+        &:hover .delete { text-decoration: none; visibility: visible; }
+        &:hover .edit { text-decoration: none; visibility: visible; }
+
+        .network-count { font-style: italic; font-size: 10px; text-transform: uppercase; color: @grayLight;}
       }
-      .edit { margin-left: 10px; float: right; font-weight: bold; visibility: hidden;};
-      .delete { margin-left: 10px; font-weight: bold; color: @red; float: right; visibility: hidden;}
-      &:hover .delete { text-decoration: none; visibility: visible; }
-      &:hover .edit { text-decoration: none; visibility: visible; }
 
-      .network-count { font-style: italic; font-size: 10px; text-transform: uppercase; color: @grayLight;}
     }
   }
 
@@ -962,9 +965,13 @@ ul.attributes {
 
     .networks-list {
       #page-networks > .networks-list;
-      li .name { width: 120px; }
-      li .vlan { width: 50px; }
+      li .name { width: 180px; }
+      li .vlan { width: 60px; }
+      li .provision-ip-range { display: none;}
       li .gateway { width: 100px; }
+    }
+    .network-pools-list {
+      #page-networks > .network-pools-list;
     }
 
     .owner {
