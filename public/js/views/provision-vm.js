@@ -375,7 +375,10 @@ var View = Backbone.Marionette.ItemView.extend({
                     {'image_uuid': values['image_uuid'] },
                     {'size': quotaMib }
                 ];
+
+                // KVM does not need top level image_uuid and quota passed in
                 delete values['image_uuid'];
+                delete values['quota'];
             }
 
             if (values['brand'] === 'kvm' && this.userKeys) {
