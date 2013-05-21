@@ -8,11 +8,6 @@ var Vm = Model.extend({
 
     idAttribute: 'uuid',
 
-    defaults: {
-        nics: [],
-        snapshots: []
-    },
-
     update: function(attrs, cb) {
         $.post(this.url() + '?action=update', attrs, function(data) {
             var job = new Job({

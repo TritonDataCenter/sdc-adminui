@@ -57,7 +57,7 @@ var TypeaheadUser = require('./typeahead-user');
 var ImageTypeaheadView = require('../tpl/typeahead-image.hbs');
 var ServerTypeaheadView = require('../tpl/typeahead-server.hbs');
 var View = Backbone.Marionette.ItemView.extend({
-    name: 'provision-vm',
+    url: 'provision',
 
     sidebar: 'vms',
 
@@ -140,6 +140,7 @@ var View = Backbone.Marionette.ItemView.extend({
             name: 'images',
             local: source,
             valueKey: 'uuid',
+            cache: false,
             template: ImageTypeaheadView
         });
     },
@@ -358,27 +359,30 @@ var View = Backbone.Marionette.ItemView.extend({
             values['max_swap'] = pkg.get('max_swap');
 
             // quota value needs to be in GiB
-            values['quota'] = pkg.get('quota');
-            if (values['quota']) {
-                values['quota'] = Math.ceil(Number(values['quota']) / 1024);
+            var quotaMib = pkg.get('quota');
+            if (quotaMib) {
+                quotaMib = Number(quotaMib);
+                values['quota'] = Math.ceil(Number(quotaMib) / 1024);
             }
+
             values['vcpus'] = pkg.get('vcpus');
             values['zfs_io_priority'] = pkg.get('zfs_io_priority');
             values['ram'] = pkg.get('max_physical_memory');
-        }
 
-        if (values['brand'] === 'kvm') {
-            values['disks'] = [
-                {'image_uuid': values['image_uuid'] },
-                {'size': values['quota'] }
-            ];
-            delete values['image_uuid'];
-        }
+            if (values['brand'] === 'kvm') {
+                // disk size passed in as MiB.
+                values['disks'] = [
+                    {'image_uuid': values['image_uuid'] },
+                    {'size': quotaMib }
+                ];
+                delete values['image_uuid'];
+            }
 
-        if (values['brand'] === 'kvm' && this.userKeys) {
-            values.customer_metadata = {
-                root_authorized_keys: this.userKeys.join("\n")
-            };
+            if (values['brand'] === 'kvm' && this.userKeys) {
+                values.customer_metadata = {
+                    root_authorized_keys: this.userKeys.join("\n")
+                };
+            }
         }
 
 

@@ -8,7 +8,7 @@ var AppView = require('./views/app');
 var Views = {
     'vms': require('./views/vms'),
     'vm': require('./views/vm'),
-    'provision-vm': require('./views/provision-vm'),
+    'provision': require('./views/provision-vm'),
     'servers': require('./views/servers'),
     'server': require('./views/server'),
     'dashboard': require('./views/dashboard'),

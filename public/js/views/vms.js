@@ -88,7 +88,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     provision: function() {
-        app.vent.trigger('showview', 'provision-vm', {});
+        app.vent.trigger('showview', 'provision', {});
     },
 
 
