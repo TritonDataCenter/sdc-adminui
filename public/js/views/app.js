@@ -9,6 +9,7 @@
 
 
 var Backbone = require('backbone');
+var adminui = require('./adminui');
 
 var Topbar = require('./topbar');
 var Mainnav = require('./mainnav');
@@ -61,11 +62,12 @@ var AppView = Backbone.Marionette.Layout.extend({
     onRender: function() {
         this.mainnav.attachView(this.mainnavView);
         this.mainnavView.setElement(this.$("#mainnav"));
-        this.notifier.setElement(this.$("#notifications"));
 
-        this.topbar.attachView(this.topbarView);
+
         this.topbarView.setElement(this.$("#topbar"));
-        this.topbarView.renderLoginName();
+        this.topbarView.onShow();
+
+        this.notifier.setElement(this.$("#notifications"));
 
         return this;
     }

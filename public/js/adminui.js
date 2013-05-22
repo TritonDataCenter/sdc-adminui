@@ -44,13 +44,13 @@ jQuery.extend({
 });
 
 
-var adminui = module.exports = new Backbone.Marionette.Application();
-
+var adminui = window.$a = module.exports = new Backbone.Marionette.Application();
 adminui.addInitializer(function(options) {
     var Router = require('./router');
     this.addRegions({chrome:"#chrome"});
     this.pinger = new Pinger();
     this.router = new Router({app: adminui});
+    this.state = new Backbone.Model();
 });
 
 adminui.on('start', function() {

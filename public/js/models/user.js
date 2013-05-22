@@ -37,6 +37,10 @@ var User = module.exports = Model.extend({
         return window.localStorage.getItem('admin-uuid');
     },
 
+    getDatacenter: function() {
+        return window.localStorage.getItem('dc');
+    },
+
     authenticate: function(user, pass) {
         var self = this;
 
@@ -53,10 +57,17 @@ var User = module.exports = Model.extend({
         $.post("/_/auth", authData, function(data) {
             self.set(data.user);
             window.localStorage.setItem('api-token', data.token);
+            window.localStorage.setItem('dc', data.dc);
             window.localStorage.setItem('admin-uuid', data.adminUuid);
+
             window.localStorage.setItem('user-uuid', data.user.uuid);
             window.localStorage.setItem('user-login', data.user.login);
-            self.trigger('authenticated', self);
+
+            self.trigger('authenticated', {
+                user: self,
+                adminUuid: data.adminUuid,
+                dc: data.dc
+            });
         }).error(function(xhr) {
             var err = JSON.parse(xhr.responseText);
             self.trigger('error', err.message);

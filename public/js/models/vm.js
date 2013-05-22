@@ -111,7 +111,9 @@ var Vm = Model.extend({
     saveCustomerMetadata: function(cb) {
         $.put(this.url() + '/customer_metadata', this.get('customer_metadata'), function(data) {
             var job = new Job({ uuid: data.job_uuid });
-            cb(job);
+            cb(null, job);
+        }).fail(function(err) {
+            cb(err);
         });
     },
 

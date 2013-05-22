@@ -41,12 +41,18 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         this.app.user = this.app.user || (this.user = User.currentUser());
     },
 
-    didAuthenticate: function() {
+    didAuthenticate: function(data) {
         this.setupRequestToken();
+        this.setupDatacenter();
+
         this._checkAuth = true;
         if (typeof(Backbone.history.fragment) !== 'undefined') {
             Backbone.history.loadUrl(Backbone.history.fragment);
         }
+    },
+
+    setupDatacenter: function() {
+        this.app.state.set({datacenter: this.user.getDatacenter() });
     },
 
     setupRequestToken: function() {
@@ -69,13 +75,22 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
+    renderTitle: function() {
+        document.title = [
+            this.app.state.get('datacenter'),
+            'Operations Portal'
+        ].join(' | ');
+    },
+
     start: function() {
         this.listenTo(this.app.vent, 'showview', this.presentView, this);
         this.listenTo(this.app.vent, 'signout', this.signout, this);
         this.listenTo(this.app.user, 'authenticated', this.didAuthenticate, this);
+        this.listenTo(this.app.state, 'change:datacenter', this.renderTitle);
 
         if (this.user.authenticated()) {
             this.setupRequestToken();
+            this.setupDatacenter();
         }
 
         var self = this;

@@ -6,22 +6,28 @@ var Topbar = Backbone.Marionette.ItemView.extend({
         'click a.signout': 'signout'
     },
 
-    initialize: function(options) {
-        this.user = options.user;
+    initialize: function() {
+        this.listenTo(app.state, 'change:datacenter', this.renderDatacenter);
     },
 
     signout: function() {
         app.vent.trigger('signout');
     },
 
-    renderLoginName: function() {
-        this.$('.acc-controls .login-name').html(this.user.get('login'));
+    onShow: function() {
+        this.renderDatacenter();
+        this.renderLoginName();
     },
 
-    serializeData: function() {
-        return {
-            user: this.user
-        };
+    renderDatacenter: function() {
+        var datacenter = app.state.get('datacenter');
+        this.$('.datacenter').html(datacenter);
+    },
+
+    renderLoginName: function() {
+        var login = app.user.get('login');
+
+        this.$('.acc-controls .login-name').html(login);
     }
 });
 
