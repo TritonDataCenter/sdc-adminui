@@ -48,7 +48,7 @@ var View = Backbone.Marionette.CompositeView.extend({
         this.listenTo(this.vm, 'change:snapshots', this.resetSnapshots, this);
     },
     resetSnapshots: function(vm, n) {
-        this.collection.update(vm.get('snapshots'));
+        this.collection.set(vm.get('snapshots'));
     },
     onBeforeItemAdded: function(view) {
         view.vm = this.vm;
