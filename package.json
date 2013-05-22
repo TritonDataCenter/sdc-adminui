@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#fe44e70",
+    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#fd7b93ea9cee2e64731ae83867ad01c140e0a7bd",
     "ldapjs": "0.6.3",
     "sockjs": "0.3.x",
     "node-uuid": "1.4.0",
