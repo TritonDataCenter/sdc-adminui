@@ -55,7 +55,7 @@ var Jobs = Collection.extend({
         opts = opts || {};
         opts.data = $.param(params);
 
-        return Backbone.Collection.prototype.fetch.call(this, opts);
+        return Collection.prototype.fetch.call(this, opts);
     }
 });
 
