@@ -68,7 +68,8 @@ var ServicesListItemView = Backbone.Marionette.ItemView.extend({
             el: this.$('.instances'),
             collection: this.instances
         });
-        this.instances.fetch({data: { service_uuid: this.model.get('uuid') } } );
+        this.instances.params = { service_uuid: this.model.get('uuid') };
+        this.instances.fetch();
     }
 });
 
