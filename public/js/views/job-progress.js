@@ -57,6 +57,11 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
     update: function() {
         this.model.fetch({success: this.onUpdate.bind(this)});
     },
+
+    onRender: function() {
+        this.$('.modal-body').scrollTop(this.$('.modal-body')[0].scrollHeight);
+    },
+
     onUpdate: function() {
         var execution = this.model.get('execution');
 
