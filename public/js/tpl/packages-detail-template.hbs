@@ -1,15 +1,14 @@
 <div class="page-header">
+  <div class="resource-status">
+    {{#if active}}
+    <span class="active">ACTIVE</span>
+    {{else}}
+    <span class="inactive">INACTIVE</span>
+    {{/if}}
+  </div>
   <h1>
     {{name}}
     {{version}}
-    <div class="resource-status">
-      STATUS
-      {{#if active}}
-      <span class="active">ACTIVE</span>
-      {{else}}
-      <span class="inactive">INACTIVE</span>
-      {{/if}}
-    </div>
     <div class="actions">
       <button class="btn btn-small edit"><i class="icon-pencil"></i> Edit Package</button>
     </div>

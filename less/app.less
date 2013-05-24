@@ -51,7 +51,7 @@ html { height: 100%; }
 
   .resource-status {
     &>span {
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       text-transform: uppercase;
       font-size: 12px;
       color: #FFF;
@@ -959,8 +959,8 @@ ul.attributes {
 
     .resource-status {
       left: 300px;
-      .active { color: @activeColor;}
-      .inactive { color: @grayLight;}
+      .active { background: @activeColor;}
+      .inactive { background: @gray;}
     }
 
     .networks-list {
