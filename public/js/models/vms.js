@@ -55,10 +55,8 @@ module.exports = Collection.extend({
     },
 
     fetch: function(opts) {
-        var params = _.extend(this.pagingParams, this.params);
-
         opts = opts || {};
-        opts.data = $.param(params);
+        opts.params = _.extend(this.pagingParams, this.params);
 
         return Collection.prototype.fetch.call(this, opts);
     }

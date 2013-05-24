@@ -84,7 +84,7 @@ var UserView = Backbone.Marionette.ItemView.extend({
                 owner_uuid: this.model.get('uuid'),
                 state: 'active'
             },
-            per_page: 1000
+            perPage: 1000
         });
 
         this.sshkeys = new SSHKeys({user: this.model.get('uuid') });
