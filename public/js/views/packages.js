@@ -270,10 +270,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
-        var packagesList = new PackagesList({
-            collection: this.packages,
-            vent: this.vent
-        });
+        var packagesList = new PackagesList({collection: this.packages, vent: this.vent });
 
         this.ui.searchInput.on('input', this.search.bind(this));
 
@@ -285,6 +282,8 @@ var PackagesView = Backbone.Marionette.Layout.extend({
         });
         var that = this;
         this.packages.fetch().done(function() {
+            that.packages.sort();
+            packagesList.render();
             that.showInitialPackage();
         });
         this.list.show(packagesList);

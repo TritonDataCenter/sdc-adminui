@@ -13,10 +13,14 @@ var Packages = Backbone.Collection.extend({
         });
 
         this.reset(filtered);
+        this.sort();
     },
 
-    comparator: function(pkg) {
-        return pkg.get("name");
+    comparator: function(p) {
+        return [
+            p.get('name'),
+            p.get('version')
+        ];
     },
 
     fetchActive: function() {
