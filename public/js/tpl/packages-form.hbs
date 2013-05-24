@@ -83,7 +83,9 @@
         <div class="controls">
           <input type="number" class="input-small" id="package-cpu-cap"
            {{#if uuid}}readonly{{/if}}
-          name="cpu_cap" min="1" max="10000" placeholder="cpu cap">
+          name="cpu_cap" min="20" max="10000" placeholder="cpu cap">
+
+          <p class="help-inline">Min 20. This is = to % of CPU. 400% = 4 CPUs</p>
         </div>
       </div>
 
