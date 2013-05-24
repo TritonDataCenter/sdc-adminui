@@ -12,14 +12,15 @@
 @import "image-import.less";
 
 
+@activeColor: #00d295;
 
 body { height: 100%; }
 html { height: 100%; }
 
 #chrome { min-height: 100%; padding-bottom: 20px;}
 #content a { cursor: pointer;}
-#content section { margin-bottom: 10px;}
-#footer { height: 24px; background: #dfe7ec;}
+#content section { margin-bottom: 10px; }
+#footer { height: 24px; background: #dfe7ec; }
 
 .btn-primary {
   &.disabled,
@@ -43,13 +44,24 @@ html { height: 100%; }
 }
 
 .page-header {
-  margin-bottom: 10px;
   .clearfix;
+  margin-bottom: 10px;
   overflow: hidden;
   border: none;
 
+  .resource-status {
+    &>span {
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: #FFF;
+      padding: 4px 6px;
+      background: #222;
+      font-weight: bold;
+    }
+  }
+
   h1 {
-    position: relative;
     font-size: 26px;
     font-weight: 300;
 
@@ -59,20 +71,6 @@ html { height: 100%; }
     }
 
     .actions { .pull-right; }
-
-    .resource-status {
-      position: absolute;
-      width: 200px;
-
-      text-transform: uppercase;
-      font-size: 14px;
-      color: #aaa;
-      display: block;
-      top: 5px;
-      left: 500px;
-
-      span { font-weight: bold; }
-    }
 
   }
 
@@ -176,7 +174,16 @@ h1.branding {
     .login-name { margin: 0 8px; }
   }
   .datacenter, .branding { display: inline-block;}
-  .datacenter { padding: 5px 10px; background: @orange; color: #FFF; margin-right: 10px;}
+  .datacenter {
+    padding: 4px 12px;
+    font-weight: bold;
+    background: #77b7d2;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #FFF;
+    margin-right: 10px;
+  }
 }
 
 #rootnav {
@@ -297,7 +304,7 @@ h1.branding {
 
 #page-user {
   .user-details th { width: 100px;}
-  .user-details .provisioning.approved { color: @green; }
+  .user-details .provisioning.approved { color: @activeColor; }
   .user-details .provisioning.disabled { color: @red; }
   .ssh-keys {
     .items {
@@ -340,11 +347,12 @@ h1.branding {
 
 #page-image {
   .page-header {
-    .version { color: @grayLight; font-size: 18px;}
+    overflow: visible;
+    .version { color: @grayLight; font-size: 14px;}
     .resource-status {
-      left: 460px;
-      .active { color: @green; }
-      .unactivated { color: @yellow;}
+      .active { background: @activeColor; }
+      .inactive { background: @red; }
+      .unactivated { background: @yellow; }
     }
   }
   .basic {
@@ -433,7 +441,7 @@ h1.branding {
   th.alias { }
   td.alias a { cursor: pointer; }
   th.package { width: 140px;}
-  span.running { background-color: #4cc658; }
+  span.running { background-color: @activeColor; }
   span.destroyed { background-color: @grayDark; }
 }
 
@@ -474,7 +482,7 @@ h1.branding {
     td.last-status>div { font-size: 12px; opacity: 0.5;}
     th.memory { width: 100px;}
     .status { width: 80px; }
-    .status span.running { background: #4cc658;}
+    .status span.running { background: @activeColor; }
   }
 }
 
@@ -494,6 +502,11 @@ h1.branding {
 
 
 #page-server {
+  .resource-status {
+    .running { background: @activeColor; }
+    .unknown { background: lighten(@red, 20%); }
+    .server-setting-up { background: @yellow; }
+  }
   .rack .none { color: @grayLight;}
   .overview {
     .item { .widget-content; }
@@ -559,7 +572,7 @@ h1.branding {
     button { padding: 2px 6px;}
   }
 
-  .enabled { color: @green; }
+  .enabled { color: @activeColor; }
   .disabled { color: @red; }
 
   .server-nics {
@@ -603,7 +616,7 @@ h1.branding {
         height: 6px;
         background: @grayDark; }
 
-      .link-status.up { background: @green; }
+      .link-status.up { background: @activeColor; }
 
       .lbl {
         #font > .monospace(10px);
@@ -636,23 +649,6 @@ h1.branding {
     .item-content { width: 110px; text-align: right;}
     .change { padding: 8px; }
   }
-
-  .server-state-container {
-    margin-left: 80px;
-    width: 200px;
-    display: inline-block;
-
-    .server-state.running {
-      color: #00a733;
-    }
-    .server-state.unknown {
-      color: lighten(@red, 20%);
-    }
-    .server-setting-up {
-      color: @yellow;
-    }
-
-  }
 }
 
 #server-nics-edit {
@@ -673,10 +669,7 @@ h1.branding {
   .dropdown-menu .delete { color: red; }
 
   .resource-status {
-    .running {
-      color: #00a733;
-    }
-    left: 500px;
+    .running { background: @activeColor; }
   }
 
 
@@ -966,7 +959,7 @@ ul.attributes {
 
     .resource-status {
       left: 300px;
-      .active { color: @green;}
+      .active { color: @activeColor;}
       .inactive { color: @grayLight;}
     }
 
@@ -1368,10 +1361,8 @@ ul.attributes {
     .widget-content;
     font-size: 12px;
     padding: 8px;
-    .state {
-      color: @red;
-    }
-    .state.running { color: @green; }
+    .state { color: @red; }
+    .state.running { color: @activeColor; }
     .alias, .uuid, .state, .ram { display: inline-block;}
     .alias { color: @grayLight; width: 100px;}
     .uuid {

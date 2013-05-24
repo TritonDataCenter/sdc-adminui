@@ -1,15 +1,16 @@
 <div class="page-header">
-  <h1>
-    <span class="name">{{name}}</span> <span class="version">{{version}}</span>
     <div class="resource-status">
-      Status:
       {{#if active}}
       <span class="active">active</span>
+      {{else}}
+      <span class="inactive">inactive</span>
       {{/if}}
       {{#if unactivated}}
       <span class="unactivated">unactivated</span>
       {{/if}}
     </div>
+  <h1>
+    <span class="name">{{name}}</span> <span class="version">{{version}}</span>
   </h1>
 </div>
 

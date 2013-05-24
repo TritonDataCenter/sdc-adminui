@@ -1,18 +1,14 @@
 <div class="page-header">
-  <h1>{{hostname}}
+  <div class="resource-status">
+    {{#if setting_up}}
+    <span class="server-setting-up">Setting Up</span>
+    {{else}}
+    <span class="server-state {{status}}">{{status}}</span>
+    {{/if}}
+  </div>
+  <h1>
+    {{hostname}}
     <small class="uuid">{{uuid}}</small>
-    <div class="resource-status server-state-container">
-      Status &nbsp;
-      {{#if setting_up}}
-      <span class="server-setting-up">
-        Setting Up
-      </span>
-      {{else}}
-      <span class="server-state {{status}}">
-        {{status}}
-      </span>
-      {{/if}}
-    </div>
   </h1>
 </div>
 
