@@ -54,8 +54,9 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
             filterPanel.show();
         }
     }
-
 });
+
+
 
 module.exports = Backbone.Marionette.ItemView.extend({
     name: 'vms',
@@ -83,8 +84,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.listenTo(this.filterView, 'query', this.query, this);
         this.listenTo(this.collection, 'error', this.onError, this);
         this.listenTo(this.collection, 'request', this.hideSummary, this);
-        this.listenTo(this.collection, 'sync', this.updateCount, this);
-        this.listenTo(this.collection, 'sync', this.listView.render, this);
+        this.listenTo(this.collection, 'sync', this.updateCount, this.listView.render, this);
     },
 
     provision: function() {
@@ -153,6 +153,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.filterView.render();
 
         this.query({state: 'running'});
+
         return this;
     },
 

@@ -1,8 +1,10 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
-var User = require('./user');
 
-var Users = Backbone.Collection.extend({
+var User = require('./user');
+var Collection = require('./collection');
+
+var Users = Collection.extend({
     model: User,
     url: '/_/users',
 
@@ -63,12 +65,10 @@ var Users = Backbone.Collection.extend({
     },
 
     fetch: function(opts) {
-        var params = _.extend(this.pagingParams, this.params);
-
         opts = opts || {};
-        opts.data = $.param(params);
+        opts.params = this.pagingParams;
 
-        return Backbone.Collection.prototype.fetch.call(this, opts);
+        return Collection.prototype.fetch.call(this, opts);
     }
 });
 

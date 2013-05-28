@@ -15,7 +15,8 @@ var Collection = Backbone.Collection.extend({
     },
     fetch: function(opts) {
         opts = opts || {};
-        opts.data = _.defaults(this.params, opts.params);
+        opts.data = _.chain(this.params).clone().defaults(opts.params).value();
+        delete opts.params;
 
         var xhr = Backbone.Collection.prototype.fetch.call(this, opts);
         var self = this;

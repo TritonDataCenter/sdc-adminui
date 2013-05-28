@@ -23,7 +23,7 @@ module.exports = Collection.extend({
         if (this.objectCount) {
             this.objectCount = Number(this.objectCount);
         }
-        return Backbone.Collection.prototype.parse.apply(this, arguments);
+        return Collection.prototype.parse.apply(this, arguments);
     },
 
     firstPage: function() {
@@ -56,7 +56,7 @@ module.exports = Collection.extend({
 
     fetch: function(opts) {
         opts = opts || {};
-        opts.params = _.extend(this.pagingParams, this.params);
+        opts.params = this.pagingParams;
 
         return Collection.prototype.fetch.call(this, opts);
     }
