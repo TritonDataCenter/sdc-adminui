@@ -5,7 +5,9 @@ var app = require('../adminui');
 
 var Server = require('../models/server');
 var Nics = require('../models/nics');
+var Vms = require('../models/vms');
 
+var VmsList = require('./vms-list');
 var NotesView = require('./notes');
 var BaseView = require('./base');
 var JSONEditor = require('./traits-editor');
@@ -42,7 +44,8 @@ var ServerView = Backbone.Marionette.ItemView.extend({
     },
 
     modelEvents: {
-        'change': 'render'
+        'change': 'render',
+        'error': 'onError'
     },
 
     initialize: function(options) {
@@ -55,8 +58,14 @@ var ServerView = Backbone.Marionette.ItemView.extend({
 
         this.listenTo(this.nics, 'sync', this.mergeSysinfo);
 
-        this.model.fetch();
-        this.nics.fetchNics();
+        this.vms = new Vms({
+            params: {
+                server_uuid: this.model.get('uuid'),
+                state: 'active'
+            },
+            perPage: 1000
+        });
+        this.vmsList = new VmsList({collection: this.vms });
     },
 
     mergeSysinfo: function(nics) {
@@ -102,6 +111,15 @@ var ServerView = Backbone.Marionette.ItemView.extend({
     toggleReserve: function() {
         var newValue = !this.model.get('reserved');
         this.model.save({'reserved': newValue}, {patch: true});
+    },
+
+    onError: function(e, xhr, s) {
+        app.vent.trigger('notification', {
+            level: 'error',
+            message: 'Error retreving Server Information. CNAPI said: ' + xhr.responseData.message,
+            persistent: true
+        });
+        this.close();
     },
 
     showManageNics: function() {
@@ -323,7 +341,15 @@ var ServerView = Backbone.Marionette.ItemView.extend({
         }
     },
 
+    onShow: function() {
+        this.model.fetch();
+        this.nics.fetchNics();
+        this.vms.fetch();
+    },
+
     onRender: function() {
+        this.vmsList.setElement(this.$('.vms-list tbody')).render();
+
         this.notesView = new NotesView({
             itemUuid: this.model.get('uuid'),
             el: this.$('.notes')

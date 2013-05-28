@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var Job = require('./job');
-var Server = Backbone.Model.extend({
+var Model = require('./model');
+var Server = Model.extend({
     urlRoot: '/_/servers',
 
     idAttribute: 'uuid',
