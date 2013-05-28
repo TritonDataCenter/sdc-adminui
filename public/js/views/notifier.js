@@ -19,19 +19,31 @@ var View = Backbone.View.extend({
 
         var node = $("<div class='notification'></div>").addClass(level);
         node.html(notification.message);
+
+        var close = $('<a><i class="icon-remove-sign"></i></a>');
+        close.on('click', function() {
+            node.slideUp(function() {
+                node.remove();
+            });
+        });
+
         node.hide();
 
         this.$el.append(node);
 
         window.scrollTo(0, this.$el.offset().top);
-        node.slideDown();
-        setTimeout(function() {
-            node.slideUp(function() {
-                node.remove();
-            });
-        }, this.timeout);
-    },
-    _createNode: function(t) {
+
+        node.slideDown(function() {
+            node.append(close);
+        });
+
+        if (! notification.persistent) {
+            setTimeout(function() {
+                node.slideUp(function() {
+                    node.remove();
+                });
+            }, this.timeout);
+        }
     }
 
 });
