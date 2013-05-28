@@ -1,9 +1,11 @@
-var adminui = require('../adminui');
 var Backbone = require('backbone');
-var Jobs = require('../models/jobs');
 var moment = require('moment');
 
+var adminui = require('../adminui');
+var Jobs = require('../models/jobs');
+
 var JobProgressView = require('./job-progress');
+var JobDetailsView = require('./job');
 
 var JobsItemViewTemplate = require('../tpl/jobs-item.hbs');
 var JobsItemView = Backbone.Marionette.ItemView.extend({
@@ -12,6 +14,15 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
     events: {
         "click a.name": "showJobDetails"
     },
+    initialize: function(options) {
+        options.showDetailsInModal = options.showdetailsInModal || false;
+
+        if (options.showDetailsInModal) {
+            this.detailsView = JobProgressView;
+        } else {
+            this.detailsView = JobDetailsView;
+        }
+    },
     serializeData: function() {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this, arguments);
         data.when = moment(data.exec_after).format('lll');
@@ -19,10 +30,14 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
     },
     showJobDetails: function(e) {
         e.preventDefault();
-        var detailsView = new JobProgressView({
-            model: this.model
-        });
-        detailsView.show();
+        var View = this.detailsView;
+
+        if (this.detailsView === JobProgressView) {
+            var detailsView = View({model: this.model});
+            detailsView.show();
+        } else {
+            adminui.vent.trigger('showview', 'job', { model: this.model });
+        }
     }
 });
 

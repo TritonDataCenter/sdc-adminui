@@ -19,6 +19,7 @@ var Views = {
     'image': require('./views/image'),
     'image-import': require('./views/image-import'),
     'jobs': require('./views/jobs'),
+    'job': require('./views/job'),
     'networks': require('./views/networks'),
     'services': require('./views/services')
 };
@@ -31,6 +32,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'users/:uuid': 'showUser',
         'image-import': 'showImageImport',
         'images/:uuid': 'showImage',
+        'jobs/:uuid': 'showJob',
         'networks/:uuid': 'showNetwork',
         'packages/:uuid': 'showPackage',
         'servers/:uuid': 'showServer',
@@ -185,6 +187,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     showImage: function(uuid) {
         if (this.authenticated()) {
             this.presentView('image', { uuid: uuid });
+        }
+    },
+
+    showJob: function(uuid) {
+        if (this.authenticated())  {
+            this.presentView('job', { uuid: uuid });
         }
     },
 

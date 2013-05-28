@@ -1,12 +1,15 @@
-var Backbone = require('backbone');
-var Job = Backbone.Model.extend({
-    defaults: {
-        "name": ""
-    },
+var Model = require('./model');
+var Job = Model.extend({
+    defaults: {},
 
     urlRoot: "/_/jobs",
 
     idAttribute: "uuid",
+
+    finished: function() {
+        var execution = this.get('execution');
+        return execution === 'canceled' || execution === 'succeeded' || execution === 'failed';
+    },
 
     startWatching: function() {
         var self = this;
@@ -16,6 +19,7 @@ var Job = Backbone.Model.extend({
     },
 
     stopWatching: function() {
+        console.log(this);
         clearInterval(this._interval);
     }
 });

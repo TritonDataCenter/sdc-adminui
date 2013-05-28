@@ -1,0 +1,83 @@
+<div class="page-header">
+  <div class="resource-status">
+    <span class="execution {{execution}}">{{execution}}</span>
+  </div>
+
+  <div class="pull-right">
+    {{#unless finished}}
+    <span class="wait">
+      Working... <img src="/img/job-progress-loading.gif">
+    </span>
+    {{/unless}}
+  </div>
+
+  <h1>Job {{name}} <small class="uuid">{{uuid}}</small></h1>
+</div>
+
+<section>
+  {{#if params.vm_uuid}}
+  <div class="vm widget-content">
+    <strong>Virtual Machine</strong>
+    <span class="value">
+      <a href="/vms/{{params.vm_uuid}}">{{params.vm_uuid}}</a>
+    </span>
+  </div>
+  {{/if}}
+
+  {{#if params.server_uuid}}
+  <div class="server widget-content">
+    <strong>Server</strong>
+    <span class="value">
+      <a href="/servers/{{params.server_uuid}}">{{params.server_uuid}}</a>
+    </span>
+  </div>
+  {{/if}}
+</section>
+
+<section>
+  <h2>Task Summary</h2>
+<div class="summary">
+  <div class="chain-results">
+    <ol>
+      {{#each chain_results}}
+      <li class="{{#if error}}error{{/if}}">
+        <div class="task">
+          <div class="name">{{name}}</div>
+          <div class="result">{{result}}</div>
+          {{#if error}}
+          <div class="error">
+            {{#if error.message}}
+            {{error.message}}
+            {{else}}
+            {{error}}
+            {{/if}}
+          </div>
+          {{/if}}
+        </div>
+        <div class="time">
+          <div class="started-at">
+            <i class="icon-play"></i> {{started_at}}
+          </div>
+          <div class="finished-at">
+            <i class="icon-stop"></i> {{finished_at}}
+          </div>
+        </div>
+        <div class="duration">
+          <i class="icon-time"></i><div class="value">{{duration}}</div>
+        </div>
+      </li>
+      {{/each}}
+    </ol>
+  </div>
+</div>
+</section>
+
+<section>
+  <h2>Job Parameters</h2>
+  <div class="params"></div>
+</section>
+
+<section>
+<h2>Raw Output</h2>
+<div class="raw"></div>
+</section>

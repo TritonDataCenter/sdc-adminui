@@ -13,6 +13,8 @@
 
 
 @activeColor: #00d295;
+@dangerColor: lighten(@red, 20%);
+@warningColor: @yellow;
 
 body { height: 100%; }
 html { height: 100%; }
@@ -305,7 +307,7 @@ h1.branding {
 #page-user {
   .user-details th { width: 100px;}
   .user-details .provisioning.approved { color: @activeColor; }
-  .user-details .provisioning.disabled { color: @red; }
+  .user-details .provisioning.disabled { color: @dangerColor; }
   .ssh-keys {
     .items {
       overflow-y: scroll;
@@ -363,8 +365,8 @@ h1.branding {
     .version { color: @grayLight; font-size: 14px;}
     .resource-status {
       .active { background: @activeColor; }
-      .inactive { background: @red; }
-      .unactivated { background: @yellow; }
+      .inactive { background: @dangerColor; }
+      .unactivated { background: @warningColor; }
     }
   }
   .basic {
@@ -687,6 +689,7 @@ h1.branding {
 
   .resource-status {
     .running { background: @activeColor; }
+    .failed { background: @dangerColor; }
   }
 
 
@@ -1075,12 +1078,11 @@ ul.attributes {
       font-weight: bold;
     }
 
-
-    .faults>li+li { margin-top: .5em;}
-
     .faults>li {
       .fault-time { font-size: 11px; color: #FFF; float: right;}
+
       .fault-name { font-weight: bold; font-size: 12px; float: left; }
+
       .fault-message {
         clear: both;
         font-weight: normal;
@@ -1091,6 +1093,8 @@ ul.attributes {
         .border-radius(2px);
       }
     }
+
+    .faults>li+li { margin-top: .5em;}
   }
 }
 
@@ -1257,7 +1261,7 @@ ul.attributes {
       font-size: 13px;
       &.succeeded span { background: @activeColor; }
       &.canceled span { background: @gray; }
-      &.failed span { background: @red; }
+      &.failed span { background: @dangerColor; }
     }
   }
 }
@@ -1353,6 +1357,68 @@ ul.attributes {
 }
 
 
+#page-job {
+  .params, .raw {
+    .box-sizing(border-box);
+    overflow-x: scroll;
+    padding: 10px;
+    background: #333;
+    color: #fff;
+    #font > .monospace(10px);
+    line-height: 1.2;
+    white-space: pre;
+  }
+
+  .server, .vm {
+    strong { display: inline-block; width: 200px; text-transform: uppercase; color: @gray; font-weight: normal;}
+    .value { #font > .monospace(12px) }
+  }
+
+  .resource-status .succeeded {
+    background-color: @activeColor;
+  }
+  .resource-status .failed {
+    background-color: @dangerColor;
+  }
+  .resource-status .queued {
+    background-color: @warningColor;
+  }
+  .resource-status .canceled {
+    background-color: @grayDark;
+  }
+
+  .chain-results {
+    li {
+      padding: 5px 10px;
+      background: #f3f3f3;
+      margin-bottom: 0.5em; font-size: 12px;
+    }
+    li.error {
+      background: lighten(@red, 40%);
+      * {
+        color: #fff;
+      }
+    }
+    li > * {
+      display: inline-block;
+      vertical-align: top;
+    }
+    .name { font-weight: bold; }
+    .task { width: 360px;}
+    .time { padding-right: 5px; color: @grayLight; font-size: 10px; text-align: right; }
+    .duration {
+      margin-left: 250px;
+      font-size: 20px;
+      padding: 10px;
+      color: @grayLight;
+      .value {
+        display: inline-block;
+        width: 80px;
+        text-align: right;
+      }
+    }
+  }
+}
 
 #page-services {
   .application {
