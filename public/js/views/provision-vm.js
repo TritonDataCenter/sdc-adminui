@@ -69,8 +69,7 @@ var View = Backbone.Marionette.ItemView.extend({
         'typeahead:selected input#input-image': 'onSelectImage',
         'input input#input-image': 'onSelectImage',
         'blur input[type=text]': 'checkFields',
-        'blur input#input-owner': 'onBlurOwnerField',
-        'change input[type=checkbox]': 'checkFields'
+        'blur input#input-owner': 'onBlurOwnerField'
     },
 
     modelEvents: {
@@ -110,12 +109,6 @@ var View = Backbone.Marionette.ItemView.extend({
 
         this.listenTo(this.imagesCollection, 'sync', this.prepareImageInput);
         this.listenTo(this.serversCollection, 'sync', this.prepareServerInput);
-        this.listenTo(this.networks, 'sync', function(n) {
-            this.populateNetworks(n, 'Networks');
-        }, this);
-        this.listenTo(this.networkPools, 'sync', function(n) {
-            this.populateNetworks(n, 'Network Pools');
-        }, this);
 
         this.imagesCollection.fetch();
         this.serversCollection.fetch();
@@ -184,10 +177,19 @@ var View = Backbone.Marionette.ItemView.extend({
         if (this.networks.length) {
             this.networks.reset();
         }
-        this.$('.networks-select').find('select optgroup').remove();
+        this.$('.networks-select .chosen').empty();
 
-        this.networks.fetch({data: {provisionable_by: u.get('uuid') }});
-        this.networkPools.fetch({data: {provisionable_by: u.get('uuid') }});
+        var self = this;
+        $.when(
+            this.networks.fetch({data: {provisionable_by: u.get('uuid') }}),
+            this.networkPools.fetch({data: {provisionable_by: u.get('uuid') }})
+        ).then(function() {
+            self.createNetworkSelect();
+            self.createNetworkSelect();
+            self.createNetworkSelect();
+            self.createNetworkSelect();
+        });
+
 
         this.sshKeys = new SSHKeys({user: u});
         this.listenTo(this.sshKeys, 'sync', this.onFetchKeys);
@@ -209,13 +211,46 @@ var View = Backbone.Marionette.ItemView.extend({
         this.$('.no-sshkeys-warning').show();
     },
 
+    createNetworkSelect: function() {
+        var $select = $('<select data-placeholder="Select a Network" name="networks[]"></select>');
+        $select.append("<option></option>");
+
+        var $optgroup = $('<optgroup />').attr('label', 'Networks');
+        this.networks.each(function(n) {
+            var $elm = $("<option />").attr('value', n.get('uuid'));
+            if (n.get('subnet')) {
+                $elm.html([n.get('name'), n.get('subnet')].join(' - '));
+            } else {
+                $elm.html(n.get('name'));
+            }
+            $optgroup.append($elm);
+        });
+
+        $select.append($optgroup);
+
+        var $optgroup2 = $('<optgroup />').attr('label', 'Network Pools');
+        this.networkPools.each(function(n) {
+            var $elm = $("<option />").attr('value', n.get('uuid'));
+            if (n.get('subnet')) {
+                $elm.html([n.get('name'), n.get('subnet')].join(' - '));
+            } else {
+                $elm.html(n.get('name'));
+            }
+            $optgroup.append($elm);
+        });
+        $select.append($optgroup2);
+        $select.show();
+
+        this.$('.networks-select .chosen').append($select);
+        $select.chosen({allow_single_deselect: true });
+        this.$('.control-group-networks').show();
+    },
+
     onRender: function() {
         this.userInput = new TypeaheadUser({el: this.$('[name=owner]') });
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
         this.userInput.render();
 
-
-        this.$('.networks-select select').chosen();
         this.packageSelect.setElement(this.$('select[name=package]')).render();
         this.$('.control-group-networks').hide();
         this.$('.package-preview-container').append(this.packagePreview.render().el);
@@ -230,24 +265,6 @@ var View = Backbone.Marionette.ItemView.extend({
     },
     onShow: function() {
         this.$("input:not([disabled]):first").focus();
-    },
-
-    populateNetworks: function(networks, kind) {
-        var $select = this.$('.networks-select select');
-        var $optgroup = $('<optgroup />').attr('label', kind);
-        networks.each(function(n) {
-            var $elm = $("<option />").attr('value', n.get('uuid'));
-            if (n.get('subnet')) {
-                $elm.html([n.get('name'), n.get('subnet')].join(' - '));
-            } else {
-                $elm.html(n.get('name'));
-            }
-            $optgroup.append($elm);
-        }, this);
-        $select.append($optgroup);
-        $select.trigger('liszt:updated');
-
-        this.$('.control-group-networks').show();
     },
 
     onSelectImage: function(e, datum) {
@@ -389,8 +406,9 @@ var View = Backbone.Marionette.ItemView.extend({
         }
 
 
-        var networksChecked = this.ui.form.find('.networks-select select').val();
-        values.networks = networksChecked;
+        var networksChecked = this.$('.networks-select select').map(function() { return $(this).val(); });
+        values.networks = _.compact($.makeArray(networksChecked));
+        console.log(values.networks);
 
         return values;
     },
