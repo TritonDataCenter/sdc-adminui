@@ -19,8 +19,14 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     }
 });
 
-module.exports = require('./collection').extend({
+module.exports = require('./composite').extend({
     itemView: ItemView,
+    itemViewContainer: 'tbody',
+    attributes: {
+        'class':'vms-list'
+    },
+
+    template: require('../tpl/vms-list.hbs'),
     emptyView: require('./empty').extend({
         loadingMessage: 'Loading Virtual Machines...',
         emptyMessage: 'No Virtual Machines found',

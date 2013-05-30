@@ -2,10 +2,9 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 
-var ko = require('knockout');
-var kb = require('knockback');
 var BaseView = require('./base');
 var VmsList = require('./vms-list');
+var LimitsView = require('./user-limits');
 var Vms = require('../models/vms');
 var SSHKeys = require('../models/sshkeys');
 var UserForm = require('./user-form');
@@ -64,9 +63,13 @@ var SSHKeysList = Backbone.Marionette.CollectionView.extend({
 });
 
 var User = require('../models/user');
-var UserView = Backbone.Marionette.ItemView.extend({
+var UserView = Backbone.Marionette.Layout.extend({
     template: require('../tpl/user.hbs'),
     id: 'page-user',
+    regions: {
+        'limitsRegion': '.limits-region',
+        'vmsRegion': '.vms-region'
+    },
     events: {
         'click .edit-user': 'onClickEditUser',
         'click .add-key': 'onClickAddKey'
@@ -108,11 +111,14 @@ var UserView = Backbone.Marionette.ItemView.extend({
 
         this.sshkeys = new SSHKeys({user: this.model.get('uuid') });
         this.vmsList = new VmsList({collection: this.vms });
+        this.limitsList = new LimitsView({ user: this.model.get('uuid')});
         this.sshkeysList = new SSHKeysList({collection: this.sshkeys });
     },
 
     onRender: function() {
-        this.vmsList.setElement(this.$('.vms-list tbody')).render();
+        this.vmsRegion.show(this.vmsList);
+        this.limitsRegion.show(this.limitsList);
+
         this.sshkeysList.setElement(this.$('.ssh-keys .items')).render();
 
         this.sshkeys.fetch();

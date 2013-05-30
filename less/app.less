@@ -305,11 +305,29 @@ h1.branding {
 }
 
 #page-user {
-  .user-details th { width: 100px;}
-  .user-details .provisioning.approved { color: @activeColor; }
-  .user-details .provisioning.disabled { color: @dangerColor; }
-  .user-details .registered-developer.yes { color: @activeColor; }
-  .user-details .registered-developer.no { color: @dangerColor; }
+  .user-details {
+    th { width: 140px;}
+    .provisioning.approved { color: @activeColor; }
+    .provisioning.disabled { color: @dangerColor; }
+    .registered-developer.yes { color: @activeColor; }
+    .registered-developer.no { color: @dangerColor; }
+  }
+
+  .limits-list {
+    ul li {
+      .datacenter {
+        .widget-content;
+        .widget-header;
+      }
+      .limit {
+        .widget-content;
+        .image { color: @grayLight; display: inline-block; width: 200px; font-weight: bold; }
+        .value { display: inline-block; width: 200px; }
+      }
+    }
+  }
+
+
   .ssh-keys {
     .items {
       overflow-y: scroll;
@@ -328,6 +346,8 @@ h1.branding {
 
   }
 }
+
+
 
 #sshkey-view {
   textarea {
