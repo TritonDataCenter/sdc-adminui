@@ -81,7 +81,7 @@ var VmView = Backbone.Marionette.ItemView.extend({
             uuid: this.vm.get('owner_uuid')
         });
 
-        if (!this.owner.get('cn')) {
+        if (!this.owner.get('dn')) {
             this.owner.fetch();
         }
 
