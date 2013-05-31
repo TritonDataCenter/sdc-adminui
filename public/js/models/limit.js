@@ -3,11 +3,15 @@ var _ = require('underscore');
 
 var Limit = Model.extend({
     idAttribute: 'datacenter',
-    initialize: function(attrs, options) {
-        this.user = options.user;
-    },
     urlRoot: function() {
         return _.str.sprintf('/_/users/%s/limits', this.user);
+    },
+    initialize: function(attrs, options) {
+        if (this.collection) {
+            this.user = this.collection.user;
+        } else {
+            this.user = options.user;
+        }
     }
 });
 

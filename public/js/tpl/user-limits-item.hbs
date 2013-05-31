@@ -1,4 +1,9 @@
-<div class="datacenter">{{datacenter}}</div>
+<div class="datacenter">{{datacenter}}
+  <div class="actions">
+    <a class="edit"><i class="icon-pencil"></i> Edit</a>
+    <a class="del"><i class="icon-trash"></i></a>
+  </div>
+</div>
 {{#each limits}}
 <div class="limit">
   <div class="image">{{this.image}}</div>

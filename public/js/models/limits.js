@@ -1,5 +1,5 @@
-var Collection = require('./collection');
 var _ = require('underscore');
+var Collection = require('./collection');
 var Limit = require('./limit');
 
 var Limits = Collection.extend({
@@ -8,6 +8,7 @@ var Limits = Collection.extend({
         return _.str.sprintf('/_/users/%s/limits', this.user);
     },
     initialize: function(objects, options) {
+        Collection.prototype.initialize.call(this, arguments);
         if (typeof(options.user) === 'undefined') {
             throw new TypeError('options.user required');
         }

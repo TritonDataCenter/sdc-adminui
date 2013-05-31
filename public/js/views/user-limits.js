@@ -9,6 +9,36 @@ var CompositeView = require('./composite');
 var ItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'li',
     template: require('../tpl/user-limits-item.hbs'),
+    events: {
+        'click a.edit': 'onClickEdit',
+        'click a.del': 'onClickDestroy'
+    },
+    onClickEdit: function() {
+        var self = this;
+
+        var form = new UserLimitsForm({
+            model: this.model,
+            user: this.model.collection.user
+        });
+
+        form.render();
+
+        this.$el.hide();
+        this.$el.after(form.el);
+        form.on('cancel', function() {
+            self.$el.show();
+        });
+        form.on('limit:saved', function(model) {
+            self.render();
+            self.$el.fadeIn();
+        });
+    },
+    onClickDestroy: function() {
+        var confirm = window.confirm("Are you sure you want to remove limits for datacenter: " + this.model.get('datacenter'));
+        if (confirm) {
+            this.model.destroy();
+        }
+    },
     serializeData: function() {
         var attrs = Backbone.Marionette.ItemView.prototype.serializeData.apply(this, arguments);
         var data = {
@@ -31,32 +61,52 @@ var LimitsView = CompositeView.extend({
     template: require('../tpl/user-limits.hbs'),
     itemView: ItemView,
     itemViewContainer: 'ul',
-
+    itemViewOptions: function() {
+        return { emptyViewModel: this.collection };
+    },
     attributes: {
         'class':'limits-list'
     },
 
     events: {
-        'click .add-limit': 'showLimitForm'
+        'click .add-limit': 'onClickAddLimit'
     },
 
     initialize: function(options) {
         if (typeof(options.user) === 'undefined') {
             throw new TypeError('options.user user uuid required');
-        } else {
-            this.collection = new Limits([], {user: options.user});
         }
+
+        this.collection = new Limits([], {user: options.user});
+        CompositeView.prototype.initialize.apply(this, arguments);
     },
 
-    showLimitForm: function() {
-        var form = new UserLimitsForm();
+    onClickAddLimit: function() {
+        this.showLimitForm();
+    },
+
+    showLimitForm: function(model) {
+        var self = this;
         var addLimitButton = this.$('.add-limit');
+        var form = new UserLimitsForm({
+            model: model,
+            user: this.collection.user
+        });
+
         form.render();
+
         this.$('ul').after(form.el);
         addLimitButton.hide();
+
         form.on('cancel', function() {
             addLimitButton.show();
         });
+
+        form.on('limit:saved', function(model) {
+            addLimitButton.show();
+            self.collection.fetch();
+        });
+        form.focus();
     },
 
     onShow: function() {
