@@ -101,7 +101,7 @@ var UserView = Backbone.Marionette.Layout.extend({
             this.model = new User({uuid: options.uuid });
         }
 
-        this.vms = new Vms({
+        this.vms = new Vms(null, {
             params: {
                 owner_uuid: this.model.get('uuid'),
                 state: 'active'

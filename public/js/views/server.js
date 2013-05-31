@@ -19,11 +19,14 @@ var ServerSetup = require('./server-setup');
 var ServerNicsEdit = require('./server-nics-edit');
 
 var ServerTemplate = require('../tpl/server.hbs');
-var ServerView = Backbone.Marionette.ItemView.extend({
+var ServerView = Backbone.Marionette.Layout.extend({
     id: 'page-server',
     sidebar: 'servers',
 
     template: ServerTemplate,
+    regions: {
+        'vmsRegion': '.vms-region'
+    },
 
     events: {
         'click .setup': 'showSetupModal',
@@ -58,7 +61,7 @@ var ServerView = Backbone.Marionette.ItemView.extend({
 
         this.listenTo(this.nics, 'sync', this.mergeSysinfo);
 
-        this.vms = new Vms({
+        this.vms = new Vms(null, {
             params: {
                 server_uuid: this.model.get('uuid'),
                 state: 'active'
@@ -348,17 +351,19 @@ var ServerView = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        this.vmsList.setElement(this.$('.vms-list tbody')).render();
+        this.vmsRegion.show(this.vmsList);
 
         this.notesView = new NotesView({
             itemUuid: this.model.get('uuid'),
             el: this.$('.notes')
         });
+
         this.notesView.render();
         this.nicsView = new ServerNicsView({
             nics: this.nics,
             el: this.$('.nics')
         });
+
         this.nicsView.render();
         this.$("[data-toggle=tooltip]").tooltip();
     }

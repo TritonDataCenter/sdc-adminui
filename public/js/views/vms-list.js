@@ -40,7 +40,16 @@ module.exports = require('./composite').extend({
             emptyViewModel: this.collection
         };
     },
+    onRender: function() {
+        console.log(this.collection.length);
+        if (this.collection.length) {
+            this.$('caption').show();
+        } else {
+            this.$('caption').hide();
+        }
+    },
     onSync: function() {
+        this.$('caption').show();
         this.$('.record-count').html(this.collection.objectCount);
         this.$('.current-count').html(this.collection.length);
     }
