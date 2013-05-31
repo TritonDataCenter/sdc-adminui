@@ -58,13 +58,17 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
 
 
 
-module.exports = Backbone.Marionette.ItemView.extend({
+module.exports = Backbone.Marionette.Layout.extend({
     name: 'vms',
     id: 'page-vms',
     template: VmsTemplate,
 
     url: function() {
         return 'vms';
+    },
+
+    regions: {
+        'listRegion': '.list-region'
     },
 
     ui: {
@@ -84,7 +88,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.listenTo(this.filterView, 'query', this.query, this);
         this.listenTo(this.collection, 'error', this.onError, this);
         this.listenTo(this.collection, 'request', this.hideSummary, this);
-        this.listenTo(this.collection, 'sync', this.updateCount, this.listView.render, this);
     },
 
     provision: function() {
@@ -134,6 +137,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     onShow: function() {
         this.$('.alert').hide();
 
+        this.listRegion.show(this.listView);
         $(window).on('scroll', this.onScroll.bind(this));
     },
 
@@ -141,14 +145,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.$('.vms-list caption').hide();
     },
 
-    updateCount: function() {
-        this.$('.record-count').html(this.collection.objectCount);
-        this.$('.current-count').html(this.collection.length);
-        this.$('.vms-list caption').show();
-    },
-
     onRender: function() {
-        this.listView.setElement(this.$('tbody')).render();
         this.filterView.setElement(this.$('.vms-filter'));
         this.filterView.render();
 

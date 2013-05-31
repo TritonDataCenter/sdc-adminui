@@ -25,6 +25,9 @@ module.exports = require('./composite').extend({
     attributes: {
         'class':'vms-list'
     },
+    collectionEvents: {
+        'sync': 'onSync'
+    },
 
     template: require('../tpl/vms-list.hbs'),
     emptyView: require('./empty').extend({
@@ -36,5 +39,10 @@ module.exports = require('./composite').extend({
         return {
             emptyViewModel: this.collection
         };
+    },
+    onSync: function() {
+        this.$('.record-count').html(this.collection.objectCount);
+        this.$('.current-count').html(this.collection.length);
     }
+
 });
