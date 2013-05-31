@@ -41,7 +41,6 @@ module.exports = require('./composite').extend({
         };
     },
     onRender: function() {
-        console.log(this.collection.length);
         if (this.collection.length) {
             this.$('caption').show();
         } else {
