@@ -389,7 +389,7 @@ var VmView = Backbone.Marionette.ItemView.extend({
             '.owner-link': {
                 attributes: [{
                     'observe':'owner_uuid',
-                    'name': 'class',
+                    'name': 'href',
                     'onGet': function(v) {
                         return '/users/'+v;
                     }
