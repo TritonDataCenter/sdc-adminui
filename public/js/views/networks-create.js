@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+require('backbone.syphon');
 var _ = require('underscore');
 
 var Template = require('../tpl/networks-create.hbs');
@@ -27,7 +28,8 @@ var View = Backbone.Marionette.ItemView.extend({
     events: {
         'submit form': 'onSubmit',
         'click .save': 'onSubmit',
-        'click .create-new-nic-tag': 'onClickCreateNewNicTag'
+        'click .create-new-nic-tag': 'onClickCreateNewNicTag',
+        'click .add-route': 'onAddRoute'
     },
 
     ui: {
@@ -43,7 +45,6 @@ var View = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function() {
-        this.modelBinder = new Backbone.ModelBinder();
         this.model = new Network();
         this.nicTags = new NicTags();
         this.nicTagsSelect = new Backbone.Marionette.CollectionView({
@@ -64,6 +65,16 @@ var View = Backbone.Marionette.ItemView.extend({
 
     onSubmit: function(e) {
         e.preventDefault();
+        var data = Backbone.Syphon.serialize(this);
+        data.resolvers = data.resolvers.split(" ");
+        var routes = {};
+        _.each(data.routes, function(data, i) {
+            routes[data.subnet] = data.gateway;
+        });
+        data.routes = routes;
+        data.nic_tag = this.$('select[name=nic_tag]').val();
+        console.log(data);
+        this.model.set(data);
         this.model.save();
     },
 
@@ -92,10 +103,26 @@ var View = Backbone.Marionette.ItemView.extend({
                 $field.after(errmsg);
             }
         }, this);
+
         this.ui.alert.find('.error').html(err.message);
         this.ui.alert.show();
     },
 
+    onAddRoute: function() {
+        var l = $('.routes-controls').length.toString();
+
+        var controls = $('.routes-controls:last').clone();
+        $('input:first', controls).attr('name', 'routes['+l+'][subnet]').val('');
+        $('input:last', controls).attr('name', 'routes['+l+'][gateway]').val('');
+        $('.routes-controls:last').after(controls);
+    },
+
+    serializeData: function() {
+        var data = Backbone.Marionette.ItemView.prototype.serializeData.apply(this, arguments);
+        data.resolvers = (this.model.get('resolvers') || []).join(' ');
+
+        return data;
+    },
 
 
     onRender: function() {
@@ -104,26 +131,14 @@ var View = Backbone.Marionette.ItemView.extend({
         this.userInput = new TypeaheadUserInput({el: this.$('[name=owner_uuid]') });
         this.userInput.render();
         this.nicTags.fetch();
-        var bindings = Backbone.ModelBinder.createDefaultBindings(this.el, 'name');
-        bindings['resolvers'].converter = function(direction, value, attrName, model) {
-            if (direction === 'ModelToView') {
-                return (value || []).join(',');
-            } else {
-                return value.split(',');
-            }
-        };
-        this.modelBinder.bind(this.model, this.el, bindings);
     },
 
     show: function() {
         this.render();
         this.$('.alert').hide();
         this.$el.modal('show');
-    },
-
-    onClose: function() {
-        this.modelBinder.unbind();
     }
+
 });
 
 module.exports = View;

@@ -60,6 +60,15 @@ var shimConfig = {
         }
     },
     'backbone.modelbinder': { path: './lib/Backbone.ModelBinder', exports: null },
+
+    'backbone.syphon': {
+        path: './lib/backbone.syphon',
+        exports: null,
+        depends: {
+            'backbone': 'Backbone',
+            'underscore': '_'
+        }
+    },
     'backbone.stickit': {
         path: './lib/backbone.stickit',
         exports: null,
