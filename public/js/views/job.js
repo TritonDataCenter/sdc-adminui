@@ -75,6 +75,11 @@ var JobView = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         this.$('.raw').html(JSON.stringify(this.model.attributes, null, 2));
         this.$('.params').html(JSON.stringify(this.model.get('params'), null, 2));
+        this.model.getJobInfo(this.renderInfo);
+    },
+
+    renderInfo: function(info) {
+        this.$('.info').html(JSON.stringify(info, null, 2));
     },
 
     onShow: function() {

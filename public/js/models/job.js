@@ -11,6 +11,12 @@ var Job = Model.extend({
         return execution === 'canceled' || execution === 'succeeded' || execution === 'failed';
     },
 
+    getJobInfo: function(callback) {
+        $.get(this.url() + '/info', function(info) {
+            callback(info);
+        });
+    },
+
     startWatching: function() {
         var self = this;
         this._interval = setInterval(function() {

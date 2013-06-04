@@ -36,40 +36,40 @@
 
 <section>
   <h2>Task Summary</h2>
-<div class="summary">
-  <div class="chain-results">
-    <ol>
-      {{#each chain_results}}
-      <li class="{{#if error}}error{{/if}}">
-        <div class="task">
-          <div class="name">{{name}}</div>
-          <div class="result">{{result}}</div>
-          {{#if error}}
-          <div class="error">
-            {{#if error.message}}
-            {{error.message}}
-            {{else}}
-            {{error}}
+  <div class="summary">
+    <div class="chain-results">
+      <ol>
+        {{#each chain_results}}
+        <li class="{{#if error}}error{{/if}}">
+          <div class="task">
+            <div class="name">{{name}}</div>
+            <div class="result">{{result}}</div>
+            {{#if error}}
+            <div class="error">
+              {{#if error.message}}
+              {{error.message}}
+              {{else}}
+              {{error}}
+              {{/if}}
+            </div>
             {{/if}}
           </div>
-          {{/if}}
-        </div>
-        <div class="time">
-          <div class="started-at">
-            <i class="icon-play"></i> {{started_at}}
+          <div class="time">
+            <div class="started-at">
+              <i class="icon-play"></i> {{started_at}}
+            </div>
+            <div class="finished-at">
+              <i class="icon-stop"></i> {{finished_at}}
+            </div>
           </div>
-          <div class="finished-at">
-            <i class="icon-stop"></i> {{finished_at}}
+          <div class="duration">
+            <i class="icon-time"></i><div class="value">{{duration}}</div>
           </div>
-        </div>
-        <div class="duration">
-          <i class="icon-time"></i><div class="value">{{duration}}</div>
-        </div>
-      </li>
-      {{/each}}
-    </ol>
+        </li>
+        {{/each}}
+      </ol>
+    </div>
   </div>
-</div>
 </section>
 
 <section>
@@ -78,6 +78,12 @@
 </section>
 
 <section>
-<h2>Raw Output</h2>
-<div class="raw"></div>
+  <h2>Info Output</h2>
+  <div class="info"></div>
 </section>
+
+<section>
+  <h2>Raw Output</h2>
+  <div class="raw"></div>
+</section>
+
