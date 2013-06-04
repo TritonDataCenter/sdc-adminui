@@ -104,7 +104,8 @@ var UserView = Backbone.Marionette.Layout.extend({
         this.vms = new Vms(null, {
             params: {
                 owner_uuid: this.model.get('uuid'),
-                state: 'active'
+                state: 'active',
+                sort: 'create_timestamp.desc'
             },
             perPage: 1000
         });

@@ -31,7 +31,7 @@ var CreateProbeController = require('../controllers/create-probe');
  * options.uuid uuid of VM
  * options.vm vm attrs
  */
-var VmView = Backbone.Marionette.ItemView.extend({
+var VmView = Backbone.Marionette.Layout.extend({
     template: require('../tpl/vm.hbs'),
     id: 'page-vm',
     sidebar: 'vms',
@@ -48,6 +48,9 @@ var VmView = Backbone.Marionette.ItemView.extend({
         'click .image-name-version': 'clickedImage',
         'click .resize': 'clickedResize',
         'click .change-owner': 'clickChangeOwner'
+    },
+    regions: {
+        'nicsRegion': '.nics-region'
     },
 
     url: function() {
@@ -290,10 +293,8 @@ var VmView = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        this.nicsList = new NicsList({
-            vm: this.vm,
-            el: this.$('.nics')
-        });
+        this.nicsList = new NicsList({ vm: this.vm });
+        this.nicsRegion.show(this.nicsList);
 
         this.snapshotsListView = new SnapshotsList({
             vm: this.vm,
@@ -310,7 +311,6 @@ var VmView = Backbone.Marionette.ItemView.extend({
         this.renderTags();
         this.renderMetadata();
         this.renderSnapshots();
-        this.renderNics();
 
         this.stickit(this.image, {
             '.image-uuid': 'uuid',

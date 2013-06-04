@@ -9,7 +9,7 @@ module.exports = Collection.extend({
 
     url: "/_/vms",
 
-    initialize: function(options) {
+    initialize: function(models, options) {
         this.options = options || {};
         this.pagingParams = {
             page: this.options.page || 1,
