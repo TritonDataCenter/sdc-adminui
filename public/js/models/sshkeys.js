@@ -10,7 +10,8 @@ var SSHKeys = Collection.extend({
     url: function() {
         return '/_/users/' + this.uuid + '/keys';
     },
-    initialize: function(options) {
+    initialize: function(models, options) {
+        options = options || {};
         if (typeof(options.user) === 'object') {
             this.uuid = options.user.get('uuid');
         } else if (typeof(options.user) === 'string') {

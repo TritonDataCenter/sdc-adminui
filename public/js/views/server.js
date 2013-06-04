@@ -22,7 +22,6 @@ var ServerTemplate = require('../tpl/server.hbs');
 var ServerView = Backbone.Marionette.Layout.extend({
     id: 'page-server',
     sidebar: 'servers',
-
     template: ServerTemplate,
     regions: {
         'vmsRegion': '.vms-region'
@@ -68,7 +67,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
             },
             perPage: 1000
         });
-        this.vmsList = new VmsList({collection: this.vms });
     },
 
     mergeSysinfo: function(nics) {
@@ -345,13 +343,16 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     onShow: function() {
+        console.log('onShow');
+
         this.model.fetch();
         this.nics.fetchNics();
+        var self = this;
         this.vms.fetch();
     },
 
     onRender: function() {
-        this.vmsRegion.show(this.vmsList);
+        console.log(this.model);
 
         this.notesView = new NotesView({
             itemUuid: this.model.get('uuid'),
@@ -366,6 +367,9 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
         this.nicsView.render();
         this.$("[data-toggle=tooltip]").tooltip();
+
+        var vmsList = new VmsList({collection: this.vms });
+        this.vmsRegion.show(vmsList);
     }
 });
 

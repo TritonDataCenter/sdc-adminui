@@ -185,14 +185,24 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     showImage: function(uuid) {
+        var self = this;
         if (this.authenticated()) {
-            this.presentView('image', { uuid: uuid });
+            var Img = require('./models/image');
+            var img = new Img({uuid: uuid});
+            img.fetch().done(function() {
+                self.presentView('image', { image: img });
+            });
         }
     },
 
     showJob: function(uuid) {
-        if (this.authenticated())  {
-            this.presentView('job', { uuid: uuid });
+        var self = this;
+        if (this.authenticated()) {
+            var Job = require('./models/job');
+            var job = new Job({uuid: uuid});
+            job.fetch().done(function() {
+                self.presentView('job', { model: job });
+            });
         }
     },
 
@@ -203,22 +213,37 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     showVm: function(uuid) {
+        var self = this;
         if (this.authenticated()) {
-            this.presentView('vm', { uuid: uuid });
+            var Vm = require('./models/vm');
+            var vm = new Vm({uuid: uuid});
+            vm.fetch().done(function() {
+                self.presentView('vm', { vm: vm });
+            });
         }
     },
 
     showUser: function(uuid) {
         console.log(_.str.sprintf('[route] showUser: %s', uuid));
+        var self = this;
         if (this.authenticated()) {
-            this.presentView('user', {uuid: uuid});
+            var User = require('./models/user');
+            var user = new User({uuid: uuid});
+            user.fetch().done(function() {
+                self.presentView('user', { user: user });
+            });
         }
     },
 
     showServer: function(uuid) {
         console.log(_.str.sprintf('[route] showServer: %s', uuid));
+        var self = this;
         if (this.authenticated()) {
-            this.presentView('server', { uuid: uuid });
+            var Server = require('./models/server');
+            var server = new Server({uuid: uuid});
+            server.fetch().done(function() {
+                self.presentView('server', { server: server });
+            });
         }
     },
 

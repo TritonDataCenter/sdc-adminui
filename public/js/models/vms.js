@@ -15,7 +15,6 @@ module.exports = Collection.extend({
             page: this.options.page || 1,
             perPage: this.options.perPage || 15
         };
-        this.params = this.options.params || {};
     },
 
     parse: function(resp, options) {

@@ -110,7 +110,7 @@ var UserView = Backbone.Marionette.Layout.extend({
             perPage: 1000
         });
 
-        this.sshkeys = new SSHKeys({user: this.model.get('uuid') });
+        this.sshkeys = new SSHKeys(null, {user: this.model.get('uuid') });
         this.vmsList = new VmsList({collection: this.vms });
         this.limitsList = new LimitsView({ user: this.model.get('uuid')});
         this.sshkeysList = new SSHKeysList({collection: this.sshkeys });

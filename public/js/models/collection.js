@@ -2,8 +2,10 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 var Collection = Backbone.Collection.extend({
-    initialize: function(models, options) {
-        Backbone.Collection.prototype.initialize.call(this, arguments);
+    constructor: function(models, options) {
+        Backbone.Collection.apply(this, arguments);
+
+        options = options || {};
 
         if (options && options.params) {
             this.params = options.params;
