@@ -9,26 +9,31 @@
 				<span data-bind="text: key" type="text"></span>
 			</td>
 			<td class="value">
-				<!-- ko if: multiline -->
+				<!-- ko if: toolong -->
 				<a class="view" data-bind="click: showAction">View Contents</a>
 				<!-- /ko -->
-				<!-- ko ifnot: multiline -->
+				<!-- ko ifnot: toolong -->
 				<span class="value" data-bind="text: value" type="text"></span>
 				<!-- /ko -->
+
+        <!-- ko ifnot: $parent.readonly -->
 				<div class="row-actions">
 					<a class="edit" data-bind="click: editAction"><i class="icon-edit"></i> Edit</a>
 					<a class="remove"><i class="icon-trash" data-bind="click: removeAction"></i></a>
 				</div>
+        <!-- /ko -->
 			</td>
 		</tr>
 	</tbody>
-	<tfoot>
-		<tr>
-			<td colspan="2">
-				<button class="btn" data-bind="click: addAction">
+  <!-- ko ifnot: readonly -->
+  <tfoot>
+    <tr>
+      <td colspan="2">
+        <button class="btn" data-bind="click: addAction">
           <i class="icon-plus-sign"></i> Add Metadata
         </button>
       </td>
-   </tr>
-	</tfoot>
+    </tr>
+  </tfoot>
+  <!-- /ko -->
 </table>

@@ -103,7 +103,17 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.listenTo(this.vm, 'change:nics', this.renderNics, this);
         this.listenTo(this.vm, 'sync', this.loadImage);
 
-        this.metadataListView = new MetadataList({vm: this.vm});
+        this.customerMetadataListView = new MetadataList({
+            vm: this.vm,
+            property: 'customer_metadata'
+        });
+
+        this.internalMetadataListView = new MetadataList({
+            vm: this.vm,
+            property: 'internal_metadata',
+            readonly: true
+        });
+
         this.tagsListView = new TagsList({model: this.vm});
 
         this.vm.fetch();
@@ -285,7 +295,8 @@ var VmView = Backbone.Marionette.Layout.extend({
     },
 
     renderMetadata: function() {
-        this.metadataListView.setElement(this.$('.metadata')).render();
+        this.customerMetadataListView.setElement(this.$('.customer-metadata')).render();
+        this.internalMetadataListView.setElement(this.$('.internal-metadata')).render();
     },
 
     renderSnapshots: function() {

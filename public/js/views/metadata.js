@@ -13,9 +13,10 @@ var MetadataViewModel = function(m) {
     m = m || {};
     this.key = ko.observable(m.key);
     this.value = ko.observable(m.value);
-    this.multiline = ko.computed(function() {
-        return (/\n/).test(this.value());
+    this.toolong = ko.computed(function() {
+        return (/\n/).test(this.value()) || this.value().length > 30;
     }, this);
+
     this.dataIsGood = ko.computed(function() {
         return this.key() && this.value();
     }, this);
@@ -30,6 +31,11 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
         if (!options.vm) {
             throw new TypeError('options.vm required');
         }
+        if (!options.property) {
+            throw new TypeError('options.property required');
+        }
+        this.property = options.property;
+        this.readonly = options.readonly || false;
         this.vm = options.vm;
         this.metadata = ko.observableArray([]);
     },
@@ -54,7 +60,7 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
         viewModel.removeAction = this.removeItem;
         viewModel.saveAction = function(m) {
             self.metadata.push(m);
-            self.save(function(err, job) {
+            self.save(function(job) {
                 adminui.vent.trigger('showjob', job);
                 view.modal('hide').remove();
             });
@@ -70,7 +76,7 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
 
     removeItem: function(m) {
         this.metadata.remove(m);
-        this.save(function(err, job) {
+        this.save(function(job) {
             adminui.vent.trigger('showjob', job);
         });
     },
@@ -80,8 +86,9 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
         _(this.metadata()).each(function(m) {
             data[m.key()] = m.value();
         });
-        this.vm.set({ customer_metadata: data });
-        this.vm.saveCustomerMetadata(cb);
+        var obj = {};
+        obj[this.property] = data;
+        this.vm.update(obj, cb);
         return data;
     },
 
@@ -91,7 +98,7 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
             show: false
         });
         m.saveAction = function() {
-            this.save(function(err, job) {
+            this.save(function(job) {
                 view.modal('hide');
                 adminui.vent.trigger('showjob', job);
             });
@@ -105,7 +112,7 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.metadata.removeAll();
-        _.each(this.vm.get('customer_metadata'), function(v, k) {
+        _.each(this.vm.get(this.property), function(v, k) {
             var viewModel = new MetadataViewModel({
                 key: k,
                 value: v
@@ -117,6 +124,7 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
         }, this);
 
         ko.applyBindings({
+            readonly: this.readonly,
             metadata: this.metadata,
             addAction: this.showAddPane
         }, this.el);
