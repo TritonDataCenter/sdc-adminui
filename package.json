@@ -14,7 +14,7 @@
     "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#03e098c338b5cf3cf7f8eda4d1d6e5e",
     "sockjs": "0.3.x",
     "node-uuid": "1.4.0",
-    "bunyan": "0.21.1",
+    "bunyan": "0.21.3",
     "assert-plus": "0.1.0",
     "restify": "2.4.1",
     "filed": "0.0.7",
