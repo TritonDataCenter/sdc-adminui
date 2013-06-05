@@ -42,8 +42,18 @@ var PackageSelectOption = Backbone.Marionette.ItemView.extend({
 var PackageSelect = Backbone.Marionette.CollectionView.extend({
     itemView: PackageSelectOption,
     tagName: 'select',
+    collectionEvents: {
+        'sync': 'onSync'
+    },
     events: {
         'change': 'onChange'
+    },
+    onSync: function(e) {
+        this.$el.trigger("liszt:updated");
+    },
+    onRender: function() {
+        this.$el.prepend('<option></option>');
+        this.$el.chosen({width: '280px'});
     },
     onChange: function(e) {
         var uuid = $(e.target).val();
@@ -191,7 +201,7 @@ var View = Backbone.Marionette.ItemView.extend({
         });
 
 
-        this.sshKeys = new SSHKeys({user: u});
+        this.sshKeys = new SSHKeys(null, {user: u});
         this.listenTo(this.sshKeys, 'sync', this.onFetchKeys);
         this.sshKeys.fetch();
     },
@@ -408,7 +418,6 @@ var View = Backbone.Marionette.ItemView.extend({
 
         var networksChecked = this.$('.networks-select select').map(function() { return $(this).val(); });
         values.networks = _.compact($.makeArray(networksChecked));
-        console.log(values.networks);
 
         return values;
     },

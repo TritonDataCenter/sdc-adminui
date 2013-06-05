@@ -34,7 +34,9 @@
       <div class="control-group">
         <label class="control-label">Package</label>
         <div class="controls">
-          <select name="package"></select>
+          <div class="chosen chosen-xlarge">
+            <select name="package" data-placeholder="Select a Package"></select>
+          </div>
         </div>
 
         <div class="package-preview-container"></div>
@@ -43,7 +45,8 @@
       <div class="control-group">
         <label class="control-label">Image</label>
         <div class="controls">
-          <input id="input-image" type="text" placeholder="enter UUID or search image by name" class="input-xlarge" name="image">
+          <input id="input-image" type="text"
+            placeholder="enter UUID or search image by name" class="input-xlarge" name="image">
           <span class="help-inline">Required</span>
           <span class="help-block">Image to provision machine with</span>
         </div>
