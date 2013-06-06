@@ -78,6 +78,7 @@ var View = Backbone.Marionette.ItemView.extend({
         'click .back': 'backToVirtualMachines',
         'typeahead:selected input#input-image': 'onSelectImage',
         'input input#input-image': 'onSelectImage',
+        'change select[name="networks[]"]': 'checkFields',
         'blur input[type=text]': 'checkFields',
         'blur input#input-owner': 'onBlurOwnerField'
     },
