@@ -12,7 +12,7 @@
     <div class="control-group">
       <label class="control-label">Network Pool Name</label>
       <div class="controls">
-        <input type="text" class="input" name="name" placeholder="name of network pool">
+        <input type="text" class="input" name="name" value="{{name}}" placeholder="name of network pool">
       </div>
     </div>
 
@@ -33,10 +33,19 @@
 
     <div class="control-group">
       <label class="control-label">Owner</label>
-      <div class="controls">
-        <input type="text" name="owner_uuid" class="input input-xlarge"></input>
-        <span class="help-block">Optionally select an owner</span>
-      </div>
+      {{#if owner_uuids.length}}
+        {{#each owner_uuids}}
+        <div class="controls">
+          <input type="text" name="owner_uuids[]" value="{{this}}" class="input input-xlarge"></input>
+          <span class="help-block">Optionally select an owner</span>
+        </div>
+        {{/each}}
+      {{else}}
+        <div class="controls">
+          <input type="text" name="owner_uuids[]" value="" class="input input-xlarge"></input>
+          <span class="help-block">Optionally select an owner</span>
+        </div>
+      {{/if}}
     </div>
 
   </div>{{!modal-body}}

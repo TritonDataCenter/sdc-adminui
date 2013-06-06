@@ -15,22 +15,22 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     ui: {
-        'ownerInput': 'input[name=owner_uuid]',
+        'ownerInput': 'input[name="owner_uuids[]"]',
         'nameInput': 'input[name=name]',
         'saveButton': 'button.save'
     },
 
     events: {
         'input input': 'enableSaveButton',
-        'blur input[name=owner_uuid]': 'onBlurOwnerField',
-        'focus input[name=owner_uuid]': 'onFocusOwnerField',
+        'blur input[name="owner_uuids[]"]': 'onBlurOwnerField',
+        'focus input[name="owner_uuids[]"]': 'onFocusOwnerField',
         'submit form': 'onSubmit'
     },
 
     initialize: function(options) {
         options = options || {};
         this.networks = options.networks || new Networks();
-        this.networkPool = options.networkPool || new NetworkPool();
+        this.model = this.networkPool = options.networkPool || new NetworkPool();
         this.userInput = new TypeaheadUser();
 
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
@@ -107,7 +107,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     onSubmit: function(e) {
         e.preventDefault();
         this.$('.alert').hide();
-        var data = this.$('form').serializeObject();
+        var data = Backbone.Syphon.serialize(this);
         this.networkPool.set(data);
         this.networkPool.save();
     },
@@ -122,7 +122,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.ui.saveButton.prop('disabled', true);
         this.stickit(this.networkPool, {
             'input[name=name]': 'name',
-            'input[name=owner_uuid]': 'owner_uuid'
+            'input[name="owner_uuids[]"]': 'owner_uuids'
         });
         this.$('select').chosen();
     },
