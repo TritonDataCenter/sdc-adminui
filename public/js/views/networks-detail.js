@@ -2,6 +2,7 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 var adminui = require('adminui');
+var User = require('../models/user');
 
 
 var Template = require('../tpl/networks-detail.hbs');
@@ -59,12 +60,25 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     attributes: {
         'class': 'modal'
     },
-    initialize: function() {
-        this.modelBinder = new Backbone.ModelBinder();
+
+    events: {
+        'click .owner-link': 'goToOwner'
     },
+
+    goToOwner: function(e) {
+        e.preventDefault();
+        var uuid = $(e.target).attr('data-owner-uuid');
+        this.close();
+        adminui.vent.trigger('showview', 'user', {uuid: uuid });
+    },
+
     url: function() {
         return _.str.sprintf('networks/%s', this.model.get('uuid'));
     },
+    onClose: function() {
+        this.$el.modal('hide');
+    },
+
     onRender: function() {
         var addresses = new Addresses({uuid: this.model.get('uuid') });
         var addressesTable = new AddressesTable({
@@ -72,7 +86,6 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
             collection: addresses
         });
         addresses.fetch();
-        this.modelBinder.bind(this.model, this.el);
 
         this.notesView = new NotesView({itemUuid: this.model.get('uuid'), el: this.$('.notes')});
         this.notesView.render();

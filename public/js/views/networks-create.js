@@ -69,12 +69,14 @@ var View = Backbone.Marionette.ItemView.extend({
         data.resolvers = data.resolvers.split(" ");
         var routes = {};
         _.each(data.routes, function(data, i) {
-            routes[data.subnet] = data.gateway;
+            if (data.subnet.length && data.gateway.length) {
+                routes[data.subnet] = data.gateway;
+            }
         });
         data.routes = routes;
         data.nic_tag = this.$('select[name=nic_tag]').val();
-        console.log(data);
         this.model.set(data);
+        console.log('save data:', data);
         this.model.save();
     },
 

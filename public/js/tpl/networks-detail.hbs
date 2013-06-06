@@ -6,8 +6,19 @@
   <ul class="unstyled attributes">
     <li>
       <strong>UUID</strong>
-      <div class="value" name="uuid">{{uuid}}</div>
+      <div class="value">{{uuid}}</div>
     </li>
+
+    {{#if owner_uuids}}
+    <li>
+      <strong>Owner</strong>
+      <div class="value">
+        {{#each owner_uuids}}
+        <a class="owner-link" data-owner-uuid="{{this}}" href="/users/{{this}}">{{this}}</a>
+        {{/each}}
+      </div>
+    </li>
+    {{/if}}
 
     <li>
       <strong>VLAN ID</strong>
