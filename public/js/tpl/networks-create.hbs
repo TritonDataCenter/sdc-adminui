@@ -18,11 +18,11 @@
     </div>
 
     <div class="control-group .owner">
-      <label class="control-label" for="network-resolvers">Owner</label>
+      <label class="control-label" for="network-owners">Owner</label>
       <div class="controls">
         <input class="input input-xlarge"
-        value="{{owner_uuid}}"
-         type="text" name="owner_uuid" placeholder="Search by login, email, uuid"></input>
+          value="{{owner_uuid}}"
+          type="text" name="owner_uuids[]" placeholder="Search by login, email, uuid"></input>
       </div>
     </div>
 
@@ -69,6 +69,7 @@
       <div class="controls routes-controls">
         <input type="text" name="routes[0][subnet]" class="span2" placeholder="IP or Subnet">
         <input type="text" name="routes[0][gateway]" class="span2" placeholder="Gateway">
+        <a class="remove-route"><i class="icon-remove"></i></a>
       </div>
 
       <div class="controls">

@@ -29,7 +29,8 @@ var View = Backbone.Marionette.ItemView.extend({
         'submit form': 'onSubmit',
         'click .save': 'onSubmit',
         'click .create-new-nic-tag': 'onClickCreateNewNicTag',
-        'click .add-route': 'onAddRoute'
+        'click .add-route': 'onAddRoute',
+        'click .remove-route': 'onRemoveRoute'
     },
 
     ui: {
@@ -88,7 +89,7 @@ var View = Backbone.Marionette.ItemView.extend({
             'provision_start_ip': '[name=provision_start_ip]',
             'provision_end_ip': '[name=provision_end_ip]',
             'resolvers': '[name=resolvers]',
-            'owner_uuid': '[name=owner_uuid]',
+            'owner_uuid': '[name="owner_uuids[]"]',
             'nic_tag': 'input[name=nic_tag]',
             'vlan_id': '[name=vlan_id]'
         };
@@ -117,6 +118,11 @@ var View = Backbone.Marionette.ItemView.extend({
         $('input:first', controls).attr('name', 'routes['+l+'][subnet]').val('');
         $('input:last', controls).attr('name', 'routes['+l+'][gateway]').val('');
         $('.routes-controls:last').after(controls);
+        $('.remove-route', controls).show();
+    },
+
+    onRemoveRoute: function(e) {
+        $(e.currentTarget).parent('.routes-controls').remove();
     },
 
     serializeData: function() {
@@ -130,9 +136,10 @@ var View = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         this.ui.newNicTagField.hide();
         this.nicTagsSelect.setElement(this.$('select[name=nic_tag]'));
-        this.userInput = new TypeaheadUserInput({el: this.$('[name=owner_uuid]') });
+        this.userInput = new TypeaheadUserInput({el: this.$('[name="owner_uuids[]"]') });
         this.userInput.render();
         this.nicTags.fetch();
+        this.$('.remove-route:first').hide();
     },
 
     show: function() {
