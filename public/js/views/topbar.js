@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var app = require('../adminui');
+var moment = require('moment');
 
 var Topbar = Backbone.Marionette.ItemView.extend({
     events: {
@@ -17,6 +18,17 @@ var Topbar = Backbone.Marionette.ItemView.extend({
     onShow: function() {
         this.renderDatacenter();
         this.renderLoginName();
+        this.renderTime();
+        this._timer = setInterval(this.renderTime.bind(this), 1000);
+    },
+
+    renderTime: function() {
+        var serverTime = moment().utc().format("LLL");
+        return this.$('.server-time time').html(serverTime);
+    },
+
+    onClose: function() {
+        clearInterval(this._timer);
     },
 
     renderDatacenter: function() {

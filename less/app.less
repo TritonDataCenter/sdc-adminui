@@ -167,11 +167,21 @@ h1.branding {
 }
 
 #topbar {
+  cursor: default;
   padding: 30px 10px 20px 10px;
   color: #666;
-  .acc-controls {
-    text-align: right;
+  line-height: 20px;
+
+  .server-time {
+    margin-top: 3px;
     font-size: 12px;
+    color: @grayLight;
+  }
+
+  .acc-controls {
+    margin-top: 3px;
+    font-size: 12px;
+    text-align:right;
     a.signout { cursor: pointer; text-transform: uppercase; }
     .login-name { margin: 0 8px; }
   }
