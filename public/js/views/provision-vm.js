@@ -146,6 +146,7 @@ var View = Backbone.Marionette.ItemView.extend({
             local: source,
             valueKey: 'uuid',
             cache: false,
+            limit: 8,
             template: ImageTypeaheadView
         });
     },
