@@ -1,6 +1,6 @@
 # Changelog
 
-``7.0.3`` -- Unreleased (master)
+``7.0.2 -- Unreleased`` (master)
 
 - ``ADMINUI-1387`` network pool creation owner assignment now working again
 - ``ADMINUI-1386`` network creation owner assignment now working again
