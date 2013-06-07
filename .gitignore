@@ -9,3 +9,4 @@ cscope.out
 smf/manifests/*.xml
 .DS_Store
 public/app.js
+npm-debug.log

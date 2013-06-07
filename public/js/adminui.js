@@ -15,7 +15,6 @@ var Backbone = require('backbone');
 Backbone.$ = require('jquery');
 require('backbone.stickit');
 require('backbone.marionette');
-require('caliper');
 
 var Pinger = require('./ping');
 
@@ -45,6 +44,7 @@ jQuery.extend({
 
 
 var adminui = window.$a = module.exports = new Backbone.Marionette.Application();
+adminui.version = require('../../package.json').version;
 adminui.addInitializer(function(options) {
     var Router = require('./router');
     this.addRegions({chrome:"#chrome"});

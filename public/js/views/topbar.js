@@ -19,7 +19,11 @@ var Topbar = Backbone.Marionette.ItemView.extend({
         this.renderDatacenter();
         this.renderLoginName();
         this.renderTime();
+        this.renderVersion();
         this._timer = setInterval(this.renderTime.bind(this), 1000);
+    },
+    renderVersion: function() {
+        this.$('.version').html(app.version);
     },
 
     renderTime: function() {

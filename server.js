@@ -24,7 +24,8 @@ var cfg = loadConfig(cfgFile);
 log.info('Initializing AdminUI');
 var adminui = require('./lib/adminui').createServer({
     config: cfg,
-    log: log
+    log: log,
+    version: require('./package.json').version
 });
 
 adminui.listen(function() {
