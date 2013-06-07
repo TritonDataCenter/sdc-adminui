@@ -1,7 +1,8 @@
 # Changelog
 
-``7.0.2 -- Unreleased`` (master)
+``7.0.3 -- Unreleased`` (master)
 
+- ``ADMINUI-1394`` link version number in header to changelog file
 - ``ADMINUI-1387`` network pool creation owner assignment now working again
 - ``ADMINUI-1386`` network creation owner assignment now working again
 - ``ADMINUI-1385`` network details view now shows owners
