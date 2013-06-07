@@ -32,8 +32,8 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
         var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this, arguments);
         data.chain_results = _.map(data.chain_results, function(task) {
             var t = _.clone(task);
-            t.started_at = moment(task.started_at).format('YYYY-MM-DD HH:mm:ss');
-            t.finished_at = moment(task.finished_at).format('YYYY-MM-DD HH:mm:ss');
+            t.started_at = moment(task.started_at).utc().format('YYYY-MM-DD HH:mm:ss');
+            t.finished_at = moment(task.finished_at).utc().format('YYYY-MM-DD HH:mm:ss');
             t.duration = moment(task.finished_at).diff(moment(task.started_at), 'seconds', true) + 's';
             return t;
         });

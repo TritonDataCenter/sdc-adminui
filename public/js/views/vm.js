@@ -360,7 +360,7 @@ var VmView = Backbone.Marionette.Layout.extend({
                 observe: 'create_timestamp',
                 onGet: function(date) {
                     if (date) {
-                        return moment(date).format('LLL');
+                        return moment(date).utc().format('LLL');
                     } else {
                         return '';
                     }
