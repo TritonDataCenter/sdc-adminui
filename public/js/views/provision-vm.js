@@ -90,7 +90,8 @@ var View = Backbone.Marionette.ItemView.extend({
     ui: {
         'form': 'form',
         'alert': '.alert',
-        'ownerInput': '#input-owner'
+        'ownerInput': '#input-owner',
+        'brandControls': '.control-group-brand'
     },
 
     initialize: function(options) {
@@ -267,7 +268,7 @@ var View = Backbone.Marionette.ItemView.extend({
         this.$('.package-preview-container').append(this.packagePreview.render().el);
 
         this.hideError();
-        this.$('.control-group-brand').hide();
+        this.ui.brandControls.hide();
         this.$('.no-sshkeys-warning').hide();
         this.checkFields();
 
@@ -285,28 +286,44 @@ var View = Backbone.Marionette.ItemView.extend({
         }
 
         if (! image) {
-            this.$('.control-group-brand').hide();
+            this.ui.brandControls.hide();
             return;
         }
-        if (image && image.requirements && image.requirements['brand']) {
-            this.$('.control-group-brand').hide();
+
+        if (image &&
+            image.requirements &&
+            image.requirements.brand &&
+            typeof(image.requirements.brand) === 'string') {
+            this.setBrand(image.requirements.brand);
+            this.ui.brandControls.hide();
         } else {
-            this.$('.control-group-brand').show();
+            this.ui.brandControls.show();
+            if (image.get('type') === 'zvol') {
+                this.setBrand('kvm');
+                this.disableBrands('joyent', 'joyent-minimal');
+            } else if (image.get('type') === 'zone-dataset') {
+                this.setBrand('joyent');
+                this.disableBrands('kvm');
+            } else {
+                this.disableBrands(false);
+            }
         }
 
-        if (image.get('type') === 'zvol') {
-            this.$('.control-group-brand').find('[name=brand]').val('kvm');
-            this.$('.control-group-brand').hide();
-        } else {
-            this.$('.control-group-brand').show();
-        }
+    },
 
-        if (image.get('os') === 'smartos') {
-            this.$('.control-group-brand option[value=kvm]').attr('disabled', true);
-        } else {
-            this.$('.control-group-brand option[value=kvm]').removeAttr('disabled');
-            this.$('.control-group-brand').show();
+    disableBrands: function() {
+        var brands = [];
+        if (arguments[0] !== false) {
+            brands = arguments;
         }
+        this.$('.control-group-brand option').removeAttr('disabled');
+        _.each(brands, function(b) {
+            this.$('.control-group-brand option[value='+b+']').attr('disabled', true);
+        }, this);
+    },
+
+    setBrand: function(brand) {
+        this.$('.control-group-brand').find('[name=brand]').val(brand);
     },
 
     checkFields: function() {
