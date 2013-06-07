@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var Model = require('./model');
+var Job = require('./job');
 
 
 var Img = module.exports = Model.extend({
@@ -37,7 +38,7 @@ var Img = module.exports = Model.extend({
         return ajax;
     },
 
-    adminImportRemote: function() {
+    adminImportRemote: function(callback) {
         var self = this;
         var source = this.collection.params.repository;
         $.ajax({
@@ -46,22 +47,18 @@ var Img = module.exports = Model.extend({
             type: 'POST',
             timeout: 180000 // 3 mins
         }).done(function(data) {
-            var img = new Img(data);
-            self.trigger('import:done', img);
+            var job = new Job({ uuid: data.job_uuid });
+            callback(null, job);
         }).fail(function(xhr, statusText, b) {
-            if (statusText === 'timeout') {
-                self.trigger('import:error', { message: 'timeout'});
-            } else {
-                var error = JSON.parse(xhr.responseText);
-                self.trigger('import:error', error);
-            }
+            var error = JSON.parse(xhr.responseText);
+            callback(error);
         });
     },
 
     toJSON: function() {
         var attrs = this.attributes;
         attrs.files = _.map(attrs.files, function(f) {
-            if(f.size) {
+            if (f.size) {
                 f.size_in_mb = _sizeToMB(f.size);
             }
             return f;

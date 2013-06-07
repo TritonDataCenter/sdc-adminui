@@ -54,6 +54,13 @@ var ImageView = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function(options) {
+        if (options.uuid) {
+            this.model = new Img({uuid: options.uuid});
+        } else if (options.image) {
+            this.model = options.image;
+        }
+        this.model.fetch();
+
         this.viewModel = new Backbone.Model();
         this.listenTo(this.viewModel, 'change:uploadform', this.onChangeUploadForm, this);
         this.listenTo(this.viewModel, 'change:progress', this.onChangeProgress, this);
@@ -62,14 +69,6 @@ var ImageView = Backbone.Marionette.ItemView.extend({
             uploadform: false,
             uploading: false
         });
-
-        if (options.uuid) {
-            this.model = new Img({uuid: options.uuid});
-        } else if (options.image) {
-            this.model = options.image;
-        }
-        this.model.fetch();
-
     },
 
     onClickShowUploadForm: function() {

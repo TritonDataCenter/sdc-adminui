@@ -6,6 +6,15 @@ var Job = Model.extend({
 
     idAttribute: "uuid",
 
+    initialize: function() {
+        this.listenTo(this, 'change:execution', this.onChangeExecution, this);
+    },
+
+    onChangeExecution: function() {
+        var exec = this.get('execution');
+        this.trigger('execution:'+exec);
+    },
+
     finished: function() {
         var execution = this.get('execution');
         return execution === 'canceled' || execution === 'succeeded' || execution === 'failed';

@@ -22,27 +22,19 @@ var ImportImageSelectorItem = ImagesList.prototype.itemView.extend({
         var source = this.model.collection.params.repository;
         var uuid = this.model.get('uuid');
 
-        var elm = $('<div class="image-importing modal"><div class="modal-body"><h1>' + this.model.get("name") + ' ' + this.model.get("version") + '<br> <small> is now being imported</small> <br><i class="icon-beer"></i><br><img src="/img/job-progress-loading.gif"></div></div>');
-        elm.modal();
-
-        this.listenTo(this.model, 'import:done', function(img) {
-            elm.modal('hide').remove();
-            app.vent.trigger('showview', 'image', {image: img });
-            app.vent.trigger('notification', {
-                level: 'success',
-                message: 'Image imported successfully'
+        this.model.adminImportRemote(function(err, job) {
+            if (err) {
+                app.vent.trigger('notification', {
+                    level: 'error',
+                    message: err.message
+                });
+                return;
+            }
+            app.vent.trigger('showjob', job );
+            self.listenTo(job, 'execution:succeeded', function() {
+                app.vent.trigger('showview', 'image', {uuid: job.get('params').image_uuid });
             });
         });
-
-        this.listenTo(this.model, 'import:error', function(err) {
-            elm.modal('hide').remove();
-            app.vent.trigger('notification', {
-                level: 'error',
-                message: err.message
-            });
-        });
-
-        this.model.adminImportRemote();
     }
 });
 
