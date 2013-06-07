@@ -1,6 +1,6 @@
-# Changelog
+# adminui Changelog
 
-``7.0.3``
+## 7.0.3
 
 - ``ADMINUI-1394`` link version number in header to changelog file
 - ``ADMINUI-1387`` network pool creation owner assignment now working again
