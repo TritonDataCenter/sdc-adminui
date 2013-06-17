@@ -1,6 +1,10 @@
 # adminui Changelog
 
-## 7.0.3
+## 1.0.4 (unreleased)
+
+- ``ADMINUI-1404`` Server page searches that return no results no longer stay in loading state
+
+## 1.0.3
 
 - ``ADMINUI-1394`` link version number in header to changelog file
 - ``ADMINUI-1387`` network pool creation owner assignment now working again

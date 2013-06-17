@@ -9,6 +9,8 @@ var Collection = Backbone.Collection.extend({
 
         if (options && options.params) {
             this.params = options.params;
+        } else {
+            this.params = {};
         }
         this.fetched = false;
     },

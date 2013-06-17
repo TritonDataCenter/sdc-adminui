@@ -89,7 +89,15 @@ var ServersView = require('./composite').extend({
     emptyView: require('./empty').extend({
         columns: 5
     }),
+
     itemView: ServersListItem,
+
+    itemViewOptions: function() {
+        return {
+            emptyViewModel: this.collection
+        };
+    },
+
     itemViewContainer: 'tbody',
     events: {
         'click .toggle-filter':'toggleFiltersPanel'
@@ -109,8 +117,9 @@ var ServersView = require('./composite').extend({
 
         this.listenTo(this.filterForm, 'query', this.filter, this);
         this.listenTo(this.collection, 'error', this.onError, this);
-        this.listenTo(this.collection, 'sync', this.onSync, this);
+
         this.listenTo(this.collection, 'request', this.onRequest, this);
+        this.listenTo(this.collection, 'sync', this.onSync, this);
     },
 
     onRequest: function() {
@@ -123,7 +132,7 @@ var ServersView = require('./composite').extend({
     },
 
     filter: function(params) {
-        this.collection.fetch({data: params});
+        this.collection.fetch({params: params});
     },
 
     toggleFiltersPanel: function(e) {

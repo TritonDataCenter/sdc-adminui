@@ -19,15 +19,19 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
         'change form.more select[name=server_uuid]': 'detailedSearch',
         'click .toggle-filter': 'toggleFiltersPanel'
     },
+
     initialize: function() {
         this.params = {};
     },
+
     template: require('../tpl/vms-filter.hbs'),
+
     onRender: function() {
         this.userInput = new UserInput({el: this.$('input[name=owner_uuid]')});
         this.userInput.render();
         this.$('.more').hide();
     },
+
     onQuick: function(e) {
         e.preventDefault();
 
@@ -36,12 +40,14 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
         params[obj.property] = obj.value;
         this.trigger('query', params);
     },
+
     detailedSearch: function(e) {
         e.preventDefault();
 
         var params = this.$('form.more').serializeObject();
         this.trigger('query', params);
     },
+
     toggleFiltersPanel: function(e) {
         var filterPanel = this.$('.more');
         var filterPanelVisible = (filterPanel.is(':visible'));

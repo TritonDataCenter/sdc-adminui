@@ -2,7 +2,7 @@
   "author": "Kevin Chan",
   "name": "adminui",
   "description": "SmartDataCenter Operations Portal",
-  "version": "7.0.3",
+  "version": "1.0.4",
   "repository": {
     "git": "git@git.joyent.com:adminui.git"
   },

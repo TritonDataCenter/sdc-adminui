@@ -1,7 +1,7 @@
-var Backbone = require('backbone');
 var Server = require('./server');
+var Collection = require('./collection');
 
-var Servers = Backbone.Collection.extend({
+var Servers = Collection.extend({
     url: "/_/servers",
     model: Server
 });
