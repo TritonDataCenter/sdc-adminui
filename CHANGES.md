@@ -2,6 +2,7 @@
 
 ## 1.0.4 (unreleased)
 
+- ``ADMINUI-1388`` Hostname searches are now no longer case case sensitive
 - ``ADMINUI-1397`` Fixes Cloud Analytics not able to predicate on metrics
 - ``ADMINUI-1400`` Fixes filtering servers by hostname
 - ``ADMINUI-1398`` Fixes fingerprint typo on users -> ssh keys
