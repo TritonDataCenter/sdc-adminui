@@ -2,6 +2,7 @@
 
 ## 1.0.4 (unreleased)
 
+- ``ADMINUI-1400`` Fixes an issue filtering servers by hostname
 - ``ADMINUI-1398`` Fixes fingerprint typo on users -> ssh keys
 - ``ADMINUI-1404`` Server page searches that return no results no longer stay in loading state
 
