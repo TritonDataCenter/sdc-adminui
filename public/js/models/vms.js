@@ -54,7 +54,8 @@ module.exports = Collection.extend({
     },
 
     fetch: function(opts) {
-        opts = opts || { params: {} };
+        opts = opts || {};
+        opts.params = opts.params || {};
         _.extend(opts.params, this.pagingParams);
 
         return Collection.prototype.fetch.call(this, opts);

@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var moment = require('moment');
 var _ = require('underscore');
+var adminui = require('../adminui');
 
 var JobProgressView = Backbone.Marionette.ItemView.extend({
     attributes: {
@@ -9,23 +10,16 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
     },
     template: require('../tpl/job-progress.hbs'),
     events: {
-        'click .toggle-raw': 'toggleRaw'
+        'click .job-details': 'navigateToJob'
     },
+
     initialize: function() {
         this.listenTo(this.model, 'sync', this.render, this);
     },
 
-    toggleRaw: function() {
-        this.$('.raw').html(JSON.stringify(this.model.attributes, null, 2));
-        this.$('.raw').toggle();
-        this.$('.summary').toggle();
-        if (this.$('.raw').is(':visible')) {
-            this.$('.modal-body').addClass('raw-enabled');
-            this.$('.toggle-raw').html('Show Summary');
-        } else {
-            this.$('.modal-body').removeClass('raw-enabled');
-            this.$('.toggle-raw').html('Show Raw');
-        }
+    navigateToJob: function() {
+        adminui.vent.trigger('showview', 'job', {model: this.model});
+        this.close();
     },
 
     serializeData: function() {
@@ -60,6 +54,11 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.$('.modal-body').scrollTop(this.$('.modal-body')[0].scrollHeight);
+    },
+
+    onClose: function() {
+        this.$el.modal('hide');
+        clearInterval(this._timer);
     },
 
     onUpdate: function() {
