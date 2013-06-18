@@ -489,7 +489,27 @@ h1.branding {
   span.type { float: right; background: #aaa;}
   th.alias { }
   td.alias a { cursor: pointer; }
-  th.package { width: 140px;}
+
+  th.ips, td.ips {
+    width: 140px;
+    padding-left: 20px;
+  }
+
+  td.ips span {
+    display: block;
+    font-size: 12px;
+    color: @gray;
+    font-family: monospace;
+  }
+
+  th.package {
+    width: 140px;
+  }
+
+  td.package {
+    color: @gray;
+    font-size: 12px;
+  }
   span.running { background-color: @activeColor; }
   span.destroyed { background-color: @grayDark; }
 }

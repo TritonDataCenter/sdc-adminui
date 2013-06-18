@@ -10,6 +10,14 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         'click .alias a': 'navigateToVmDetails'
     },
 
+    serializeData: function() {
+        var data = this.model.toJSON();
+        data.ips = data.nics.map(function(n) {
+            return n.ip;
+        });
+        return data;
+    },
+
     navigateToVmDetails: function(e) {
         if (e.metaKey || e.ctrlKey) {
             return;

@@ -16,5 +16,9 @@
   {{/if}}
   <span class="uuid">{{uuid}}</span>
 </td>
-<td class="memory">{{ ram }} MB</td>
+<td class="ips">
+  {{#each ips}}
+  <span>{{this}}</span>
+  {{/each}}
+</td>
 <td class="package">{{ package_name }} {{ package_version }}</td>
