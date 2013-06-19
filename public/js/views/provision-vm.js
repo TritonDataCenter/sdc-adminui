@@ -2,6 +2,7 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 
+
 /**
  * ./provision-vm.js
  *
@@ -18,10 +19,11 @@ var Networks = require('../models/networks');
 var NetworkPools = require('../models/network-pools');
 var User = require('../models/user');
 var Vm = require('../models/vm');
-
 var Job = require('../models/job');
+
 var JobProgressView = require('./job-progress');
 var PackagePreview = require('./package-preview');
+var UserPreview = require('./user-preview');
 
 var adminui = require('../adminui');
 
@@ -67,12 +69,16 @@ var TypeaheadUser = require('./typeahead-user');
 var ImageTypeaheadView = require('../tpl/typeahead-image.hbs');
 var ServerTypeaheadView = require('../tpl/typeahead-server.hbs');
 
-var View = Backbone.Marionette.ItemView.extend({
+var View = Backbone.Marionette.Layout.extend({
     url: 'provision',
 
     sidebar: 'vms',
 
     template: ProvisionVmTemplate,
+
+    regions: {
+        'userPreview': '.user-preview-region'
+    },
 
     events: {
         'submit form': 'provision',
@@ -171,6 +177,7 @@ var View = Backbone.Marionette.ItemView.extend({
 
     onBlurOwnerField: function(e) {
         var $field = this.ui.ownerInput;
+        var self = this;
         if (this.selectedUser && $field.val() === this.selectedUser.get('uuid')) {
             return;
         }
@@ -182,6 +189,7 @@ var View = Backbone.Marionette.ItemView.extend({
         } else {
             process.nextTick(function() {
                 $field.val('');
+                self.userPreview.close();
             });
         }
     },
@@ -205,6 +213,7 @@ var View = Backbone.Marionette.ItemView.extend({
 
     onSelectUser: function(u) {
         this.selectedUser = u;
+        this.userPreview.show(new UserPreview({model: u}));
         if (this.networks.length) {
             this.networks.reset();
         }
