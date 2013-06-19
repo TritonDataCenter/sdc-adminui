@@ -72,20 +72,19 @@ var AlarmsView = Backbone.Marionette.ItemView.extend({
 
         this.alarms.each(function(a) {
             if (a.get('probeGroup')) {
-                a.probeGroup = this.probeGroups.find(function(pg) {
-                    return pg.get('uuid') === a.get('probeGroup');
-                });
+                a.probeGroup = this.probeGroups.get(a.get('probeGroup')).toJSON();
             }
 
-            _(a.get('faults')).each(function(f) {
-                var faultProbe = f.probe;
-                if (faultProbe) {
-                    f.probe = this.probes.find(function(p) {
-                        return p.get('uuid') === faultProbe;
-                    });
-                }
-            }, this);
+            if (a.get('probe')) {
+                a.probe = this.probes.get(a.get('probe')).toJSON();
+            }
 
+            a.faults = _(a.get('faults')).map(function(f) {
+                if (f.probe) {
+                    f.probe = this.probes.get(f.probe).toJSON();
+                }
+                return f;
+            }, this);
         }, this);
 
         var vars = {
@@ -97,6 +96,7 @@ var AlarmsView = Backbone.Marionette.ItemView.extend({
         var open = vars.alarms.filter(function(a) {
             return a.get('suppressed') === false && a.get('closed') === false;
         });
+
         vars.alarms = new Backbone.Collection(open);
         return vars;
     },

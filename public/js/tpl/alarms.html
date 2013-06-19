@@ -10,9 +10,10 @@
 
       <div class="probe-name">
        <% if (alarm.probeGroup) { %>
-       <%= alarm.probeGroup.get('name') %>
-       <% } else { %>
-       <%= alarm.probe.get('name') %>
+       <%= alarm.probeGroup.name %>
+       <% } %>
+       <% if (alarm.probe) { %>
+       <%= alarm.probe.name %>
        <% } %>
      </div>
 
@@ -27,9 +28,9 @@
 
   <div class="details">
     <ul class="unstyled faults">
-    <% _.each(alarm.get('faults'), function(fault) { %>
+    <% _.each(alarm.faults, function(fault) { %>
     <li>
-      <div class="fault-name"><%= fault.probe.get('name') %></div>
+      <div class="fault-name"><%= fault.probe.name %></div>
       <div class="fault-time"><%= new Date(fault.event.time) %></div>
       <div class="fault-message"><%= fault.event.data.message %></div>
     </li>

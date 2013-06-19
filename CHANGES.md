@@ -2,6 +2,7 @@
 
 ## 1.0.4 (unreleased)
 
+- ``ADMINUI-1399`` Fixes issue in alarms dashboard tile where it may says no alarms when are indeed alarms
 - ``ADMINUI-1295`` Provision screen now shows basic information about the selected user
 - ``ADMINUI-1228`` Provision screen now allows operators to specify the primary network used
 - ``ADMINUI-1343`` Job Progress View "raw output" toggle has been replaced with a button that takes you to the job details view
