@@ -131,9 +131,13 @@ table.vertical { tr, td { border: none;}}
   }
 
   thead {
-    tr { .widget-header; }
+    tr {
+      border: 1px solid #e8eef2;
+    }
     th {
-      color: darken(#dfe7ec, 50%);
+      background: lighten(#e8eef2, 2%);
+      color: darken(#dfe7ec, 30%);
+      padding: 5px 8px;
       font-size: 13px;
       font-weight: normal;
       text-transform: uppercase;
@@ -184,22 +188,22 @@ h1.branding {
     a.signout { cursor: pointer; text-transform: uppercase; }
     .login-name { margin: 0 8px; }
   }
-  .datacenter, .branding { display: inline-block;}
-  .datacenter {
-    padding: 4px 12px;
-    font-weight: bold;
-    background: #77b7d2;
+  .datacenter, .branding {
+    display: inline-block;
+    font-weight: 300;
     letter-spacing: 1px;
     text-transform: uppercase;
-    font-size: 12px;
-    color: #FFF;
+    font-size: 24px;
+    color: #666;
+  }
+  .datacenter {
     margin-right: 10px;
   }
 }
 
 #rootnav {
-  border-top: 1px solid #d6dde2;
-  #gradient > .horizontal(#dfe7ec, #e8eef2);
+  // border-top: 1px solid #d6dde2;
+  background: lighten(#e8eef2, 3%);
   padding-top: 8px;
   padding-bottom: 8px;
 
@@ -220,7 +224,7 @@ h1.branding {
       font-size: 12px;
       display: block;
       text-transform: uppercase;
-      color: #4d779f;
+      color: lighten(#4d779f, 20%);
       .box-shadow(none);
     }
     li.active a {
