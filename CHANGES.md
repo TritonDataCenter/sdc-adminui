@@ -2,6 +2,7 @@
 
 ## 1.0.4 (unreleased)
 
+- ``ADMINUI-1228`` Provisioning now allows operators to specify the primary network used
 - ``ADMINUI-1343`` Job Progress View "raw output" toggle has been replaced with a button that takes you to the job details view
 - ``ADMINUI-1309`` VM listings now include VM's IP addresses
 - ``ADMINUI-1388`` Hostname searches are now no longer case case sensitive

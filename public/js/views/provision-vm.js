@@ -66,6 +66,7 @@ var ProvisionVmTemplate = require('../tpl/provision-vm.hbs');
 var TypeaheadUser = require('./typeahead-user');
 var ImageTypeaheadView = require('../tpl/typeahead-image.hbs');
 var ServerTypeaheadView = require('../tpl/typeahead-server.hbs');
+
 var View = Backbone.Marionette.ItemView.extend({
     url: 'provision',
 
@@ -185,12 +186,30 @@ var View = Backbone.Marionette.ItemView.extend({
         }
     },
 
+    populatePrimaryNetworks: function(selectedNets) {
+        var $select = this.$('.primary-network-select select');
+        var networks = this.networks;
+        var networkPools = this.networkPools;
+        $select.empty();
+        _.each(selectedNets, function(net) {
+            var n = networks.get(net.uuid) || networkPools.get(net.uuid);
+            var $elm = $("<option />").attr('value', n.get('uuid'));
+            if (n.get('subnet')) {
+                $elm.html([n.get('name'), n.get('subnet')].join(' - '));
+            } else {
+                $elm.html(n.get('name'));
+            }
+            $select.append($elm);
+        });
+    },
+
     onSelectUser: function(u) {
         this.selectedUser = u;
         if (this.networks.length) {
             this.networks.reset();
         }
         this.$('.networks-select .chosen').empty();
+        this.$('.primary-network-select select').empty();
 
         var self = this;
         $.when(
@@ -257,6 +276,7 @@ var View = Backbone.Marionette.ItemView.extend({
         this.$('.networks-select .chosen').append($select);
         $select.chosen({allow_single_deselect: true });
         this.$('.control-group-networks').show();
+        this.$('.control-group-primary-network').show();
     },
 
     onRender: function() {
@@ -266,13 +286,13 @@ var View = Backbone.Marionette.ItemView.extend({
 
         this.packageSelect.setElement(this.$('select[name=package]')).render();
         this.$('.control-group-networks').hide();
+        this.$('.control-group-primary-network').hide();
         this.$('.package-preview-container').append(this.packagePreview.render().el);
 
         this.hideError();
         this.ui.brandControls.hide();
         this.$('.no-sshkeys-warning').hide();
         this.checkFields();
-
 
         return this;
     },
@@ -340,6 +360,10 @@ var View = Backbone.Marionette.ItemView.extend({
             valid = false;
         } else {
             valid = true;
+        }
+
+        if (values.networks.length) {
+            this.populatePrimaryNetworks(values.networks);
         }
 
         if (!values.image_uuid && (!values.disks || !values.disks[0] || !values.disks[0].image_uuid)) {
@@ -436,7 +460,18 @@ var View = Backbone.Marionette.ItemView.extend({
 
 
         var networksChecked = this.$('.networks-select select').map(function() { return $(this).val(); });
-        values.networks = _.compact($.makeArray(networksChecked));
+        var primaryNetwork = this.$('.primary-network-select select').val();
+
+        values.networks = _.map(_.compact($.makeArray(networksChecked)), function(nuuid) {
+            var net = { uuid: nuuid };
+            if (nuuid === primaryNetwork) {
+                net.primary = true;
+            }
+
+            return net;
+        });
+
+        console.log(values);
 
         return values;
     },
