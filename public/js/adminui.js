@@ -42,7 +42,6 @@ jQuery.extend({
     }
 });
 
-
 var adminui = window.$a = module.exports = new Backbone.Marionette.Application();
 adminui.version = require('../../package.json').version;
 adminui.addInitializer(function(options) {

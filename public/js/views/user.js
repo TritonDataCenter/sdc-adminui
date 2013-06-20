@@ -12,6 +12,19 @@ var AddKeyView = require('./sshkey-create');
 
 var __CONFIRM_REMOVE_KEY = "Are you sure you want to remove this key from the user's account?";
 
+var VmsFilter = Backbone.Marionette.ItemView.extend({
+    events: {
+        'submit form': 'onSubmit'
+    },
+    onSubmit: function(e) {
+        e.preventDefault();
+
+        var data = Backbone.Syphon.serialize(this);
+        console.log('query data', data);
+        this.trigger('query', data);
+    }
+});
+
 var SSHKeyListItemTemplate = require('../tpl/sshkey-list-item.hbs');
 var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
     tagName: 'div',
@@ -114,14 +127,23 @@ var UserView = Backbone.Marionette.Layout.extend({
         this.vmsList = new VmsList({collection: this.vms });
         this.limitsList = new LimitsView({ user: this.model.get('uuid')});
         this.sshkeysList = new SSHKeysList({collection: this.sshkeys });
+        this.vmsFilter = new VmsFilter();
+    },
+
+    onShow: function() {
+        this.vmsRegion.show(this.vmsList);
+        this.limitsRegion.show(this.limitsList);
+        this.sshkeysList.setElement(this.$('.ssh-keys .items')).render();
+        this.vmsFilter.setElement(this.$('.vms-filter'));
+
+        this.listenTo(this.vmsFilter, 'query', this.onVmFilter);
+    },
+
+    onVmFilter: function(params) {
+        this.vms.fetch({params: params});
     },
 
     onRender: function() {
-        this.vmsRegion.show(this.vmsList);
-        this.limitsRegion.show(this.limitsList);
-
-        this.sshkeysList.setElement(this.$('.ssh-keys .items')).render();
-
         this.sshkeys.fetch();
         this.model.fetch();
         this.vms.fetch();
