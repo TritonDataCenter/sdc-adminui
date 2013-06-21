@@ -2,8 +2,6 @@
   <h1>
     <span class="cn"></span>
     <small class="uuid"></small>
-
-    <div class="actions"></div>
   </h1>
 </div>
 
@@ -44,11 +42,13 @@
             <td><span class="registered-developer"></span></td>
           </tr>
         </tbody>
+        {{#role "operators"}}
         <tfoot>
           <td colspan="2">
             <button class="edit-user btn"> <i class="icon-pencil"></i> Edit User Details</button>
           </td>
         </tfoot>
+        {{/role}}
         </table>
       </div>
     </div>
@@ -58,7 +58,9 @@
 
       <div class="ssh-keys">
         <div class="items"></div>
+        {{#role "operators"}}
         <button class="btn add-key"><i class="icon-plus-sign"></i> Add Key</button>
+        {{/role}}
       </div>
     </div>
   </div>

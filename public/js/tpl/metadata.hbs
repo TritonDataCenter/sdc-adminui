@@ -1,39 +1,44 @@
 <table class="table editable">
-	<thead>
-		<th>Name</th>
-		<th>Value</th>
-	</thead>
-	<tbody data-bind="foreach: metadata" class="unstyled">
-		<tr>
-			<td class="key">
-				<span data-bind="text: key" type="text"></span>
-			</td>
-			<td class="value">
-				<!-- ko if: toolong -->
-				<a class="view" data-bind="click: showAction">View Contents</a>
-				<!-- /ko -->
-				<!-- ko ifnot: toolong -->
-				<span class="value" data-bind="text: value" type="text"></span>
-				<!-- /ko -->
+  <thead>
+    <th>Name</th>
+    <th>Value</th>
+  </thead>
+  <tbody data-bind="foreach: metadata" class="unstyled">
+    <tr>
+      <td class="key">
+        <span data-bind="text: key" type="text"></span>
+      </td>
+      <td class="value">
+        <!-- ko if: toolong -->
+        <a class="view" data-bind="click: showAction">View Contents</a>
+        <!-- /ko -->
+        <!-- ko ifnot: toolong -->
+        <span class="value" data-bind="text: value" type="text"></span>
+        <!-- /ko -->
 
         <!-- ko ifnot: $parent.readonly -->
-				<div class="row-actions">
-					<a class="edit" data-bind="click: editAction"><i class="icon-edit"></i> Edit</a>
-					<a class="remove"><i class="icon-trash" data-bind="click: removeAction"></i></a>
-				</div>
-        <!-- /ko -->
-			</td>
-		</tr>
-	</tbody>
-  <!-- ko ifnot: readonly -->
-  <tfoot>
-    <tr>
-      <td colspan="2">
-        <button class="btn btn-info" data-bind="click: addAction">
-          <i class="icon-plus-sign"></i> Add Metadata
-        </button>
-      </td>
-    </tr>
-  </tfoot>
-  <!-- /ko -->
+        {{#role "operators"}}
+       <div class="row-actions">
+         <a class="edit" data-bind="click: editAction"><i class="icon-edit"></i> Edit</a>
+         <a class="remove"><i class="icon-trash" data-bind="click: removeAction"></i></a>
+       </div>
+       {{/role}}
+       <!-- /ko -->
+     </td>
+   </tr>
+ </tbody>
+ <!-- ko ifnot: readonly -->
+
+{{#role "operators"}}
+<tfoot>
+   <tr>
+    <td colspan="2">
+     <button class="btn btn-info" data-bind="click: addAction">
+      <i class="icon-plus-sign"></i> Add Metadata
+    </button>
+  </td>
+</tr>
+</tfoot>
+{{/role}}
+<!-- /ko -->
 </table>

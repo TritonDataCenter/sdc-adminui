@@ -1,20 +1,22 @@
 <div class="row">
-	<div class="span4">
-		<div class="sidebar">
-			<div class="page-header">
-				<h1>Packages</h1>
-				<button class="btn btn-info create">
-					<i class="icon-plus-sign icon-white"></i> Create Package
-				</button>
-			</div>
+  <div class="span4">
+    <div class="sidebar">
+      <div class="page-header">
+        <h1>Packages</h1>
+        {{#role "operators"}}
+        <button class="btn btn-info create">
+          <i class="icon-plus-sign icon-white"></i> Create Package
+        </button>
+        {{/role}}
+      </div>
 
-			<div class="search">
-				<input type="text" class="span3" placeholder="Filter by name or Billing ID">
-			</div>
+      <div class="search">
+        <input type="text" class="span3" placeholder="Filter by name or Billing ID">
+      </div>
 
-			<div id="list"></div>
-		</div>
-	</div>
+      <div id="list"></div>
+    </div>
+  </div>
 
-	<div id="detail" class="span8"></div>
+  <div id="detail" class="span8"></div>
 </div>

@@ -1,8 +1,10 @@
 <div class="page-header">
   <h1>Images
-  <div class="actions">
-    <a class="btn btn-success import-image">Import Image</a>
-  </div>
+    {{#role "operators"}}
+    <div class="actions">
+      <a class="btn btn-success import-image">Import Image</a>
+    </div>
+    {{/role}}
   </h1>
 </div>
 <div class="images-list-region"></div>

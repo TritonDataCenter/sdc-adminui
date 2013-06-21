@@ -27,7 +27,9 @@
     {{#if setting_up}}
     Setting up
     {{else}}
+    {{#role "operators"}}
     <button class="setup btn btn-info setup"><i class="icon-magic"></i> Setup Server</button>
+    {{/role}}
     {{/if}}
   {{/if}}
 </td>

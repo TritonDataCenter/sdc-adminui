@@ -54,7 +54,9 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     setupDatacenter: function() {
-        this.app.state.set({datacenter: this.user.getDatacenter() });
+        this.app.state.set({
+            datacenter: this.user.getDatacenter()
+        });
     },
 
     setupRequestToken: function() {

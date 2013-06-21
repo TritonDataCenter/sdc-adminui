@@ -33,10 +33,14 @@
         <div class="item-content">
           {{#if rack_identifier}}
             <span class="value">{{rack_identifier}}</span>
+            {{#role "operators"}}
             <a class="change-rack-id">Change <i class="icon-edit"></i></a>
+            {{/role}}
           {{else}}
             <span class="none">No Rack Assigned</span>
+            {{#role "operators"}}
             <a class="change-rack-id">Assign to Rack <i class="icon-edit"></i></a>
+            {{/role}}
           {{/if}}
         </div>
       </div>
@@ -46,10 +50,14 @@
         <div class="item-content">
           {{#if reserved}}
           <span class="disabled"><i class="icon-ban-circle"></i> Disabled</span>
+          {{#role "operators"}}
           <a class="change-reserve">Enable Provisioning <i class="icon-off"></i></a>
+          {{/role}}
           {{else}}
           <span class="enabled"><i class="icon-ok-circle"></i> Enabled</span>
+          {{#role "operators"}}
           <a class="change-reserve">Disable Provisioning <i class="icon-off"></i></a>
+          {{/role}}
           {{/if}}
         </div>
       </div>
@@ -79,7 +87,9 @@
         <div class="item-label">Next Boot</div>
         <div class="item-content">
           <span class="value">{{boot_platform}}</span>
+          {{#role "operators"}}
           <a class="change-platform"><i class="icon-edit"></i></a>
+          {{/role}}
         </div>
       </div>
     </div> {{! platform }}
@@ -91,9 +101,11 @@
 <div class="row">
   <div class="span12">
     <h3>Network Interfaces
-        <div class="actions pull-right">
-            <button class="btn btn-info manage-nics"><i class="icon-edit"></i> Manage Nics</i></button>
-        </div>
+      {{#role "operators"}}
+      <div class="actions pull-right">
+        <button class="btn btn-info manage-nics"><i class="icon-edit"></i> Manage Nics</i></button>
+      </div>
+      {{/role}}
     </h3>
     <div class="nics"></div>
   </div>
@@ -129,6 +141,7 @@
       </tbody>
     </table>
   </div>
+
   <div class="span4">
     <h3>Serial Console</h3>
     <div class="serial-console">
@@ -151,9 +164,11 @@
             <span class="serial-speed">{{serial_speed}}</span>
           </div>
         </div>
+        {{#role "operators"}}
         <div class="item change">
           <a class="pull-right change-serial-console">Change Console Settings <i class="icon-edit"></i></a>
         </div>
+        {{/role}}
       </div>
     </div>
   </div>
@@ -190,15 +205,17 @@
         </tr>
         {{/each}}
       </tbody>
+      {{#role "operators"}}
       <tfoot>
-      <td colspan="2"><button class="btn btn-small modify-traits"><i class="icon-edit"></i> Edit Traits</button></td>
-    </tfoot>
+        <td colspan="2"><button class="btn btn-small modify-traits"><i class="icon-edit"></i> Edit Traits</button></td>
+      </tfoot>
+      {{/role}}
     </table>
     {{else}}
-    <div class="zero-state">
-      There are no traits configured for this server.
-    </div>
-    <button class="btn btn-small modify-traits"><i class="icon-edit"></i> Assign Traits</button>
+    <div class="zero-state">There are no traits configured for this server.</div>
+      {{#role "operators"}}
+      <button class="btn btn-small modify-traits"><i class="icon-edit"></i> Assign Traits</button>
+      {{/role}}
     {{/if}}
   </div>
 
@@ -218,6 +235,7 @@
   </div>
 </section>
 
+{{#role operators}}
 <section>
 <div class="row">
   <div class="span12">
@@ -235,3 +253,4 @@
   </div>
 </div>
 </section>
+{{/role}}

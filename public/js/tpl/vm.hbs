@@ -5,6 +5,8 @@
     <small class="uuid vm-uuid"></small>
   </h1>
 </div>
+
+{{#role "operators"}}
 <div class="actions btn-group">
   <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
     Actions <span class="caret"></span>
@@ -22,6 +24,7 @@
     <li><a href="#" class="create-probe">Create Probe</a></li>
   </ul>
 </div> {{! page-header}}
+{{/role}}
 
 
 
@@ -37,7 +40,10 @@
           <th>Name</th>
           <td>
             <span class="alias"><span class="value vm-alias"></span></span>
+
+            {{#role "operators"}}
             <a class="mutate rename"><i class="icon-edit"></i> rename</a>
+            {{/role}}
             <span class="vm-uuid"></span>
           </td>
         </tr>
@@ -49,7 +55,9 @@
                 <span class="owner-name"></span> <i class="icon-user"></i>
               </a>
             </div>
+            {{#role "operators"}}
             <a class="mutate change-owner"><i class="icon-edit"></i> change</a>
+            {{/role}}
             <span class="owner-uuid">{{owner_uuid}}</span>
           </td>
         </tr>

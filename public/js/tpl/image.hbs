@@ -14,6 +14,7 @@
   </h1>
 </div>
 
+{{#role "operators"}}
 <div class="actions">
   <button class="btn change-publicity">
     {{#if public}}
@@ -35,6 +36,7 @@
   <a class="btn disable btn-danger"><i class="icon-remove-sign icon-white"></i> Disable Image</a>
   {{/if}}
 </div>
+{{/role}}
 
 
 <div class="row">
@@ -59,11 +61,12 @@
       {{/if}}<br>
     </div>
 
+    {{#role "operators"}}
     <div class="actions">
       <button type="button" class="btn manage-traits">Manage Traits</button>
       <button type="button" class="btn manage-tags">Manage Tags</button>
     </div>
-
+    {{/role}}
   </div>
 
 
@@ -112,9 +115,9 @@
 
     <section>
     <h3>Files
-      {{#if unactivated}}
-      <a class="show-upload-form btn">Upload a new file</a>
-      {{/if}}
+      {{#role "operators"}}
+      {{#if unactivated}}<a class="show-upload-form btn">Upload a new file</a>{{/if}}
+      {{/role}}
     </h3>
 
     <ul class="unstyled files">
@@ -217,7 +220,13 @@
     <section>
       <h3>Billing Tags</h3>
       <div class="billing-tags-container">
+        {{#role "operators"}}
         <input type="text" name="billing_tags">
+        {{/role}}
+
+        {{#role "readers"}}
+        {{billing_tags}}
+        {{/role}}
       </div>
     </section>
 
@@ -229,15 +238,11 @@
     <ul class="unstyled attributes requirements">
       <li>
         <strong>NIC Driver</strong>
-        <span class="value">
-          {{nic_driver}}
-        </span>
+        <span class="value">{{nic_driver}}</span>
       </li>
       <li>
         <strong>Disk Driver</strong>
-        <span class="value">
-          {{disk_driver}}
-        </span>
+        <span class="value">{{disk_driver}}</span>
       </li>
     </ul>
     </section>

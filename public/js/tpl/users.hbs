@@ -1,11 +1,12 @@
 <div class="page-header">
   <h1>Users &amp; Groups
+    {{#role "operators"}}
     <div class="actions">
       <button data-event="new-user" class="btn btn-primary">
-        <i class="icon-plus icon-white"></i>
-        New User
+        <i class="icon-plus icon-white"></i> New User
       </button>
     </div>
+    {{/role}}
   </h1>
 </div>
 

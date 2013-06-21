@@ -9,9 +9,11 @@
   <h1>
     {{name}}
     {{version}}
+    {{#role "operators"}}
     <div class="actions">
       <button class="btn btn-small edit"><i class="icon-pencil"></i> Edit Package</button>
     </div>
+    {{/role}}
   </h1>
 </div>
 
@@ -79,6 +81,8 @@
 </div>
 </section>
 
+{{#role "operators"}}
 <section>
   <button class="btn btn-small traits"><i class="icon-pencil"></i> Modify Traits used for Provisioning</button>
 </section>
+{{/role}}
