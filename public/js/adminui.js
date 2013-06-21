@@ -16,6 +16,21 @@ Backbone.$ = require('jquery');
 require('backbone.stickit');
 require('backbone.marionette');
 
+
+var Handlebars = require('handlebars-runtime');
+Handlebars.registerHelper('role', function(role, options) {
+    var args = Array.prototype.slice.call(arguments);
+    var opts = args.pop();
+    var userRoles = adminui.user.getRoles();
+
+    for (var i = 0; i <= args.length; i++) {
+        if (userRoles.indexOf(args[i]) !== -1) {
+            return opts.fn(this);
+        }
+    }
+    return '';
+});
+
 var Pinger = require('./ping');
 
 /* Extend jQuery with functions for PUT and DELETE requests. */

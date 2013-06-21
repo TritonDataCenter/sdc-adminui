@@ -37,6 +37,11 @@ var User = module.exports = Model.extend({
         return window.localStorage.getItem('admin-uuid');
     },
 
+    getRoles: function() {
+        var roles = window.localStorage.getItem('user-roles');
+        return JSON.parse(roles);
+    },
+
     getDatacenter: function() {
         return window.localStorage.getItem('dc');
     },
@@ -60,6 +65,7 @@ var User = module.exports = Model.extend({
             window.localStorage.setItem('dc', data.dc);
             window.localStorage.setItem('admin-uuid', data.adminUuid);
 
+            window.localStorage.setItem('user-roles', JSON.stringify(data.roles));
             window.localStorage.setItem('user-uuid', data.user.uuid);
             window.localStorage.setItem('user-login', data.user.login);
 
@@ -76,15 +82,23 @@ var User = module.exports = Model.extend({
 
     signout: function() {
         window.localStorage.removeItem('api-token');
+        window.localStorage.removeItem('user-roles');
         this.trigger('unauthenticated');
     }
 });
 
 User.currentUser = function() {
+    var roles = [];
+    try {
+        roles = JSON.parse(window.localStorage.getItem('user-roles'));
+    } catch (e) {
+        roles = [];
+    }
     return new User({
         'token': window.localStorage.getItem('api-token') || null,
         'uuid': window.localStorage.getItem('user-uuid') || null,
         'login': window.localStorage.getItem('user-login') || null,
-        'adminUuid': window.localStorage.getItem('admin-uuid') || null
+        'adminUuid': window.localStorage.getItem('admin-uuid') || null,
+        'roles': roles
     });
 };
