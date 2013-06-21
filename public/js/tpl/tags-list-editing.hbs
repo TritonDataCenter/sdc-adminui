@@ -1,29 +1,31 @@
 {{#if editing}}
 
-	<td class="key">
-		<input name="name" value="{{tag.name}}">
-	</td>
-	<td class="value">
-		<input name="value" value="{{tag.value}}"/>
-		<div class="editing-actions">
-			<button class="btn btn-mini btn-info save">Save</button>
-			<button class="btn btn-link cancel">Cancel</button>
-		</div>
-	</td>
+  <td class="key">
+    <input name="name" value="{{tag.name}}">
+  </td>
+  <td class="value">
+    <input name="value" value="{{tag.value}}"/>
+    <div class="editing-actions">
+      <button class="btn btn-mini btn-info save">Save</button>
+      <button class="btn btn-link cancel">Cancel</button>
+    </div>
+  </td>
 
 {{else}}
 
-	<td class="key">
-		<span>{{tag.name}}</span>
-	</td>
+  <td class="key">
+    <span>{{tag.name}}</span>
+  </td>
 
-	<td class="value">
-		<span data-key="{{name}}" class="editable">{{tag.value}}</span>
-		<div class="row-actions">
-			<a class="edit"><i class="icon-edit"></i> Edit</a>
-			<a class="remove"><i class="icon-trash"></i></a>
-		</div>
-	</td>
+  <td class="value">
+    <span data-key="{{name}}" class="editable">{{tag.value}}</span>
+    <div class="row-actions">
+      {{#role "operators"}}
+      <a class="edit"><i class="icon-edit"></i> Edit</a>
+      <a class="remove"><i class="icon-trash"></i></a>
+      {{/role}}
+    </div>
+  </td>
 
 
 {{/if}}
