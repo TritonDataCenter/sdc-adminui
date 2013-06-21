@@ -42,7 +42,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         '[name=password]': 'password',
         '[name=last_name]': 'sn',
         '[name=first_name]': 'givenname',
-        '[name=groups]': 'groups',
+        '[name="groups"]': 'groups',
         '[name=approved_for_provisioning]': 'approved_for_provisioning',
         '[name=registered_developer]': 'registered_developer'
     },

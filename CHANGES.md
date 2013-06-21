@@ -2,6 +2,7 @@
 
 ## 1.0.4 (unreleased)
 
+- ``ADMINUI-1407`` Can now assign user to the read-only operator group
 - ``ADMINUI-1301`` User details page vms can now be filtered by alias, status, and server uuid
 - ``ADMINUI-1399`` Fixes issue in alarms dashboard tile where it may says no alarms when are indeed alarms
 - ``ADMINUI-1295`` Provision screen now shows basic information about the selected user
