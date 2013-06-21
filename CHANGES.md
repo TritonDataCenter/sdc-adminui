@@ -2,6 +2,7 @@
 
 ## 1.0.4 (unreleased)
 
+- ``ADMINUI-1149`` Users now in the "readers" group have access to adminui in read-only mode
 - ``ADMINUI-1407`` Can now assign user to the read-only operator group
 - ``ADMINUI-1301`` User details page vms can now be filtered by alias, status, and server uuid
 - ``ADMINUI-1399`` Fixes issue in alarms dashboard tile where it may says no alarms when are indeed alarms
