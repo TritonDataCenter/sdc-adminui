@@ -59,11 +59,12 @@
  */
 .caGraphToolbar {
 	box-sizing: border-box;
+    -moz-box-sizing: border-box;
 	padding: 0 10px;
 	padding-top: 4px;
 	border-top: 1px solid #eee;
 	border-bottom: 1px solid #eee;
-		
+
 	background: #ddd;
 	width: 100%;
 }
@@ -109,14 +110,16 @@
 	height: 200px;
 	width: 100%;
 	white-space: nowrap;
-}
-
-.caGraphBody > div {
-	display: inline-block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .caGraphData {
+    margin-left: 240px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 	height: 100%;
+    position: relative;
 }
 
 
@@ -141,8 +144,10 @@
 
 div.caGraphData div.caSlider {
 	position: absolute;
-	right: 40px;
+	right: 10px;
 	height: 200px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 /*
@@ -154,9 +159,11 @@ div.caGraphData div.caSlider {
 .caGraphLegend {
 	background: #eee;
 	height: 100%;
-	width: 220px;
-	padding: 0 10px;
-	float: left;
+	width: 240px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: inline-block;
+    margin-top: -200px;
 }
 
 .caGraphHeatMap .caGraphLegend {
@@ -167,8 +174,10 @@ div.caGraphData div.caSlider {
 .caGraphLegendTable {
 	width: 100%;
 	border-collapse: collapse;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
-.caGraphLegendTable td { padding: 4px; font-family: "Menlo", "Bitstream Vera Sans Mono", "Consolas", monospace; font-size: 10px;}
+.caGraphLegendTable td { padding: 3px 5px; font-family: "Menlo", "Bitstream Vera Sans Mono", "Consolas", monospace; font-size: 10px;}
 
 .caGraphLegendComponent div {
 	overflow: hidden;
@@ -178,7 +187,7 @@ div.caGraphData div.caSlider {
 }
 
 .caGraphLegendValue {
-	width: 15px;
+	width: 25px;
 	text-align: right;
 }
 

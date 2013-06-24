@@ -74,6 +74,7 @@ a {
 	width: 960px;
 
 	min-height: 85%;
+    -moz-box-sizing: border-box;
 	box-sizing: border-box;
 
 	padding-top: 20px;
@@ -131,6 +132,7 @@ a {
 	border-top-width: 1px;
 	box-shadow: rgba(0, 0, 0, 0.0470588) 0px 1px 1px 0px inset;
 	box-sizing: border-box;
+    -moz-box-sizing: border-box;
 	color: rgb(51, 51, 51);
 	display: block;
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
