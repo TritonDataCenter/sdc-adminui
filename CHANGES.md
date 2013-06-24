@@ -2,6 +2,7 @@
 
 ## 1.0.4 (unreleased)
 
+- ``ADMINUI-1150`` Role based access control (currently supports roles: readers, operators)
 - ``ADMINUI-1406`` Fixes Cloud Analytiics rendering issues in Firefox
 - ``ADMINUI-1149`` Users now in the "readers" group have access to adminui in read-only mode
 - ``ADMINUI-1407`` Can now assign user to the read-only operator group
