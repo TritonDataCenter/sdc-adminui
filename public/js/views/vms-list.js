@@ -2,6 +2,8 @@ var Backbone = require('backbone');
 var ItemTemplate = require('../tpl/vms-list-item.hbs');
 var adminui = require('../adminui');
 
+var Images = require('../models/images');
+
 var ItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
     template: ItemTemplate,
@@ -12,6 +14,10 @@ var ItemView = Backbone.Marionette.ItemView.extend({
 
     serializeData: function() {
         var data = this.model.toJSON();
+        data.image = this.images.get(data.image_uuid);
+        if (data.image) {
+            data.image = data.image.toJSON();
+        }
         data.ips = data.nics.map(function(n) {
             return n.ip;
         });
@@ -48,6 +54,19 @@ module.exports = require('./composite').extend({
             emptyViewModel: this.collection
         };
     },
+
+    initialize: function() {
+        var self = this;
+        this.images = new Images();
+        this.images.fetch().done(function() {
+            self.render();
+        });
+    },
+
+    onBeforeItemAdded: function(iv) {
+        iv.images = this.images;
+    },
+
     onRender: function() {
         if (this.collection.length) {
             this.$('caption').show();

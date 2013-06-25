@@ -2,7 +2,7 @@
   "author": "Kevin Chan",
   "name": "adminui",
   "description": "SmartDataCenter Operations Portal",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "repository": {
     "git": "git@git.joyent.com:adminui.git"
   },
@@ -22,7 +22,7 @@
     "redis": "0.8.3",
     "moray": "git+ssh://git@git.joyent.com:node-moray.git#e5db01d",
     "npm": "~1.2.18",
-    "browserify": "2.17.x",
+    "browserify": "2.20.x",
     "browserify-shim": "~2.0.3",
     "underscore": "~1.4.4",
     "underscore.string": "~2.3.1",
@@ -32,7 +32,8 @@
     "mime": "~1.2.9",
     "clone": "~0.1.6",
     "glob": "~3.1.21",
-    "async": "~0.2.7"
+    "async": "~0.2.7",
+    "uglify-js": "~2.3.6"
   },
   "devDependencies": {
     "mocha": "~1.9.0",

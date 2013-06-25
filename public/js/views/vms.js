@@ -9,19 +9,20 @@ var Vms = require('../models/vms');
 var VmsList = require('./vms-list');
 var VmsTemplate = require('../tpl/vms.hbs');
 var UserInput = require('./typeahead-user');
+var Images = require('../models/images');
+
+var ImageTypeaheadView = require('../tpl/typeahead-image.hbs');
 
 var FilterForm = Backbone.Marionette.ItemView.extend({
     events: {
         'submit form.quick': 'onQuick',
         'submit form.more': 'detailedSearch',
-        'change form.more select[name=state]': 'detailedSearch',
-        'change form.more select[name=alias]': 'detailedSearch',
-        'change form.more select[name=server_uuid]': 'detailedSearch',
         'click .toggle-filter': 'toggleFiltersPanel'
     },
 
     initialize: function() {
         this.params = {};
+        this.images = new Images();
     },
 
     template: require('../tpl/vms-filter.hbs'),
@@ -29,7 +30,33 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         this.userInput = new UserInput({el: this.$('input[name=owner_uuid]')});
         this.userInput.render();
+
+        var self = this;
+        this.images.fetch().done(function() {
+            self.prepareImageInput();
+        });
+
         this.$('.more').hide();
+    },
+
+    prepareImageInput: function() {
+        var source = this.images.map(function(i) {
+            return {
+                'uuid': i.get('uuid'),
+                'tokens': [i.get('uuid'), i.get('version'), i.get('name')],
+                'name': i.get('name'),
+                'version': i.get('version')
+            };
+        });
+
+        this.$("input[name=image_uuid]").typeahead({
+            name: 'images',
+            local: source,
+            valueKey: 'uuid',
+            cache: false,
+            limit: 8,
+            template: ImageTypeaheadView
+        });
     },
 
     onQuick: function(e) {

@@ -1,6 +1,10 @@
 # adminui Changelog
 
-## 1.0.4 (unreleased)
+## 1.0.5 (unreleased)
+
+- ``ADMINUI-1310`` Display image name on vms list and allow filtering by image name
+
+## 1.0.4
 
 - ``ADMINUI-1150`` Role based access control (currently supports roles: readers, operators)
 - ``ADMINUI-1406`` Fixes Cloud Analytiics rendering issues in Firefox

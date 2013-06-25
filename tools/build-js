@@ -8,6 +8,8 @@ var glob = require('glob');
 var format = require('util').format;
 var join = path.join;
 
+var uglify = require('uglify-js');
+
 
 var root = path.resolve(__dirname, '..', 'public', 'js');
 
@@ -102,13 +104,23 @@ var t = new Date().getTime();
 var outputPath = path.join(root, '..', 'app.js');
 var tmpPath = format('%s.%s', outputPath, t);
 
+console.log('Generating bundle');
 b.bundle({debug:true}, function(err, src) {
     if (err) {
         console.error(err);
         process.exit(1);
     }
-    fs.writeFileSync(tmpPath, src);
+    var res = src;
+    if (!process.env['SKIP_MINIFY']) {
+        console.log("Minifying output");
+        res = uglify.minify(src, {fromString: true}).code;
+    }
+
+    console.log("Writing bundle file");
+    fs.writeFileSync(tmpPath, res);
     fs.renameSync(tmpPath, outputPath);
+
     console.log('Build succeeded: ', outputPath);
+
     process.exit(0);
 });
