@@ -2,6 +2,7 @@
 
 ## 1.0.5 (unreleased)
 
+- ``ADMINUI-1415`` When changing views, adminui now scrolls you to top of page automatically
 - ``ADMINUI-1310`` Display image name on vms list and allow filtering by image name
 
 ## 1.0.4
