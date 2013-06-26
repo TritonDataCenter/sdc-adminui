@@ -40,6 +40,10 @@ var AppView = Backbone.Marionette.Layout.extend({
 
         this.listenTo(this.vent, 'error', this.onError, this);
         this.listenTo(this.vent, 'showjob', this.onShowjob, this);
+
+        this.content.on('show', function(view) {
+            $(document.body).scrollTop(122);
+        });
     },
 
     onError: function(err) {
