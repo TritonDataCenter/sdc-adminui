@@ -13,7 +13,9 @@
     <tr><td class="empty">This VM does not have any snapshots.</td></tr>
     {{/unless}}
   </tbody>
+  {{#role "operators"}}
+  <tfoot>
+    <td><button class="btn btn-info"><i class="icon-camera"></i> Create Snapshot</button> </h3></td>
+  </tfoot>
+  {{/role}}
 </table>
-{{#role "operators"}}
-<button class="btn btn-info"><i class="icon-camera"></i> Create Snapshot</button> </h3>
-{{/role}}
