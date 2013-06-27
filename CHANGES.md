@@ -1,20 +1,21 @@
 # adminui Changelog
 
-## 1.0.6 (unreleased)
+## 1.0.6 ``unreleased``
 
 ## 1.0.5
 
 - ``ADMINUI-1417`` Firewall rules are now shown on vm details page
 - ``ADMINUI-1415`` When changing views, adminui now scrolls you to top of page automatically
 - ``ADMINUI-1310`` Display image name on vms list and allow filtering by image name
-
-## 1.0.4
-
 - ``ADMINUI-1150`` Role based access control (currently supports roles: readers, operators)
 - ``ADMINUI-1406`` Fixes Cloud Analytiics rendering issues in Firefox
 - ``ADMINUI-1149`` Users now in the "readers" group have access to adminui in read-only mode
 - ``ADMINUI-1407`` Can now assign user to the read-only operator group
 - ``ADMINUI-1301`` User details page vms can now be filtered by alias, status, and server uuid
+
+
+## 1.0.4
+
 - ``ADMINUI-1399`` Fixes issue in alarms dashboard tile where it may says no alarms when are indeed alarms
 - ``ADMINUI-1295`` Provision screen now shows basic information about the selected user
 - ``ADMINUI-1228`` Provision screen now allows operators to specify the primary network used
