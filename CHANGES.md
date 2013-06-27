@@ -1,7 +1,10 @@
 # adminui Changelog
 
-## 1.0.5 (unreleased)
+## 1.0.6 (unreleased)
 
+## 1.0.5
+
+- ``ADMINUI-1417`` Firewall rules are now shown on vm details page
 - ``ADMINUI-1415`` When changing views, adminui now scrolls you to top of page automatically
 - ``ADMINUI-1310`` Display image name on vms list and allow filtering by image name
 
