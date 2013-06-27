@@ -15,9 +15,10 @@ var TagsList = require('./tags-list');
 var NicsList = require('./nics');
 var MetadataList = require('./metadata');
 var SnapshotsList = require('./snapshots');
+var FWRulesList = require('./fwrules-list');
 
 var ResizeVmView = require('./resize-vm');
-var JobsView = require('./jobs');
+var JobsList = require('./jobs-list');
 
 var JobProgressView = require('./job-progress');
 var VmChangeOwner = require('./vm-change-owner');
@@ -50,7 +51,9 @@ var VmView = Backbone.Marionette.Layout.extend({
         'click .change-owner': 'clickChangeOwner'
     },
     regions: {
-        'nicsRegion': '.nics-region'
+        'nicsRegion': '.nics-region',
+        'fwrulesRegion': '.fwrules-region',
+        'jobsListRegion': '.jobs-list-region'
     },
 
     url: function() {
@@ -72,7 +75,7 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.owner = new User();
         this.image = new Img();
         this.server = new Server();
-        this.jobsView = new JobsView({params: {vm_uuid: this.vm.get('uuid')}});
+        this.jobsListView = new JobsList({params: {vm_uuid: this.vm.get('uuid')}});
 
         this.server.set({ uuid: this.vm.get('server_uuid') });
 
@@ -307,6 +310,9 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.nicsList = new NicsList({ vm: this.vm });
         this.nicsRegion.show(this.nicsList);
 
+        this.fwrulesList = new FWRulesList({vm: this.vm });
+        this.fwrulesRegion.show(this.fwrulesList);
+
         this.snapshotsListView = new SnapshotsList({
             vm: this.vm,
             el: this.$('.snapshots')
@@ -423,8 +429,7 @@ var VmView = Backbone.Marionette.Layout.extend({
             '.server-uuid': 'uuid'
         });
 
-        this.jobsView.setElement(this.$('.jobs-container')).render();
-
+        this.jobsListRegion.show(this.jobsListView);
 
         return this;
     }

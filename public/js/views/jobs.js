@@ -2,65 +2,23 @@ var Backbone = require('backbone');
 var moment = require('moment');
 
 var adminui = require('../adminui');
+
+var JobsList = require('./jobs-list');
+
 var Jobs = require('../models/jobs');
 
-var JobProgressView = require('./job-progress');
-var JobDetailsView = require('./job');
-
-var JobsItemViewTemplate = require('../tpl/jobs-item.hbs');
-var JobsItemView = Backbone.Marionette.ItemView.extend({
-    template: JobsItemViewTemplate,
-    tagName: 'tr',
-    events: {
-        "click a.name": "showJobDetails"
-    },
-    initialize: function(options) {
-        options.showDetailsInModal = options.showdetailsInModal || false;
-
-        if (options.showDetailsInModal) {
-            this.detailsView = JobProgressView;
-        } else {
-            this.detailsView = JobDetailsView;
-        }
-    },
-    serializeData: function() {
-        var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this, arguments);
-        data.when = moment(data.exec_after).utc().format('lll');
-        return data;
-    },
-    showJobDetails: function(e) {
-        e.preventDefault();
-        var View = this.detailsView;
-
-        if (this.detailsView === JobProgressView) {
-            var detailsView = View({model: this.model});
-            detailsView.show();
-        } else {
-            adminui.vent.trigger('showview', 'job', { model: this.model });
-        }
-    }
-});
-
-
-var JobsTemplate = require('../tpl/jobs.hbs');
-
-var EmptyView = require('./empty');
-var JobsItemEmptyView = EmptyView.extend({columns: 3});
-
-var JobsView = Backbone.Marionette.CompositeView.extend({
+var JobsView = Backbone.Marionette.Layout.extend({
     name: 'jobs',
     id: 'page-jobs',
-    template: JobsTemplate,
-    itemView: JobsItemView,
-    itemViewContainer: 'tbody',
-    itemViewOptions: function() {
-        return { emptyViewModel: this.collection };
+    template: require('../tpl/jobs.hbs'),
+
+    regions: {
+        'jobsListRegion': '.jobs-list-region'
     },
+
     url: function() {
         return '/jobs';
     },
-
-    emptyView: JobsItemEmptyView,
 
     initialize: function(options) {
         options = options || {};
@@ -80,6 +38,7 @@ var JobsView = Backbone.Marionette.CompositeView.extend({
     },
 
     onShow: function() {
+        this.jobsListRegion.show(new JobsList());
         $(window).on('scroll', this.onScroll.bind(this));
     },
 
