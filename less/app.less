@@ -9,9 +9,11 @@
 @import "lib/bootstrap-tags.less";
 
 @import "images-list.less";
-@import "fwrules-list.less";
 @import "image-import.less";
 @import "user-preview.less";
+
+@import "fwrules-list.less";
+@import "fwrules-form.less";
 
 
 @activeColor: #00d295;
@@ -792,6 +794,13 @@ h1.branding {
   }
   .snapshots {
     .empty { color: @grayLight; }
+  }
+  .fwrules {
+    .actions {
+      display: inline-block;
+      float: right;
+      font-size: 18px;
+     }
   }
 }
 

@@ -16,6 +16,7 @@ var NicsList = require('./nics');
 var MetadataList = require('./metadata');
 var SnapshotsList = require('./snapshots');
 var FWRulesList = require('./fwrules-list');
+var FWRulesForm = require('./fwrules-form');
 
 var ResizeVmView = require('./resize-vm');
 var JobsList = require('./jobs-list');
@@ -48,12 +49,14 @@ var VmView = Backbone.Marionette.Layout.extend({
         'click .package': 'clickedPackage',
         'click .image-name-version': 'clickedImage',
         'click .resize': 'clickedResize',
-        'click .change-owner': 'clickChangeOwner'
+        'click .change-owner': 'clickChangeOwner',
+        'click .show-fwrules-form': 'clickShowFwrulesForm'
     },
     regions: {
         'nicsRegion': '.nics-region',
-        'fwrulesRegion': '.fwrules-region',
-        'jobsListRegion': '.jobs-list-region'
+        'jobsListRegion': '.jobs-list-region',
+        'fwrulesListRegion': '.fwrules-list-region',
+        'fwrulesFormRegion': '.fwrules-form-region'
     },
 
     url: function() {
@@ -135,6 +138,13 @@ var VmView = Backbone.Marionette.Layout.extend({
             this.image.set({uuid: this.vm.get('image_uuid')});
         }
         this.image.fetch();
+
+        this.listenTo(this.fwrulesFormRegion, 'show', function() {
+            this.$('.show-fwrules-form').hide();
+        }, this);
+        this.listenTo(this.fwrulesFormRegion, 'close', function() {
+            this.$('.show-fwrules-form').show();
+        }, this);
     },
 
     clickedStartVm: function(e) {
@@ -240,6 +250,22 @@ var VmView = Backbone.Marionette.Layout.extend({
         });
     },
 
+    clickShowFwrulesForm: function() {
+        var self = this;
+        this.fwrulesForm = new FWRulesForm({vm: this.vm });
+
+        this.fwrulesForm.on('close', function() {
+            this.fwrulesFormRegion.close();
+        }, this);
+
+        this.fwrulesForm.on('rule:created', function() {
+            this.fwrulesFormRegion.close();
+            this.fwrulesList.collection.fetch();
+        }, this);
+
+        this.fwrulesFormRegion.show(this.fwrulesForm);
+    },
+
     clickedRename: function() {
         var vm = this.vm;
         var renameBtn = this.$('.alias .rename');
@@ -311,7 +337,7 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.nicsRegion.show(this.nicsList);
 
         this.fwrulesList = new FWRulesList({vm: this.vm });
-        this.fwrulesRegion.show(this.fwrulesList);
+        this.fwrulesListRegion.show(this.fwrulesList);
 
         this.snapshotsListView = new SnapshotsList({
             vm: this.vm,

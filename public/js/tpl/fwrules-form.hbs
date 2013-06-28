@@ -1,0 +1,29 @@
+<h3>New Firewall Rule</h3>
+
+<form method="post">
+  <div class="input-prepend">
+    <span class="add-on">FROM</span>
+    <input type="text" class="span6" name="fromPredicate">
+  </div>
+
+  <div class="clearfix"></div>
+
+  <div class="input-prepend">
+    <span class="add-on">TO</span>
+    <input type="text" class="span6" name="toPredicate">
+  </div>
+
+  <div class="clearfix"></div>
+
+  <select name="action" class="span2">
+    <option value="ALLOW">ALLOW</option>
+    <option value="BLOCK">BLOCK</option>
+  </select>
+
+  <input type="text" class="span5" name="actionPredicate">
+
+  <div class="clearfix"></div>
+
+  <button type="submit" class="btn btn-info"><i class="icon-save icon-white"></i> Save</i></button>
+  <button type="button" class="btn cancel btn-link"><i class="icon-close"></i> Cancel</i></button>
+</form>
