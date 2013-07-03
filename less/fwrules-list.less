@@ -1,23 +1,42 @@
 ul.fwrules-list {
-  #font > .monospace(12px);
-  li { margin-bottom: .5em; }
+  li { margin-bottom: .5em; display: block; clear: both; overflow: hidden;}
   li:last-child { margin: 0; }
 
-  li>div {
-    display: inline-block;
-    padding-left: 6px; padding-right: 6px;
-    background: @grayLighter;
+  .actions {
+   float: right;
+   a { font-size: 12px;}
+
+  .delete-rule { color: @dangerColor; }
+  .enable-rule { color: @activeColor;}
+  .disable-rule { color: @dangerColor;}
   }
-
-  .to {
-    background: @infoBackground;
-    color: #333;
+  .rule.disabled {
+    >div {
+      text-decoration: line-through;
+      background: @grayLighter;
+      color: @gray;
+    }
   }
+  .rule {
+    float: left;
 
-  .from-predicate { color: #FFF; background: @grayLight; }
-  .to-predicate { color: #FFF; background: @grayLight; }
+    >div {
+      display: inline-block;
+      padding-left: 6px; padding-right: 6px;
+      #font > .monospace(12px);
+      background: @grayLighter;
+    }
 
-  .action { color: #FFF; font-weight: bold;}
-  .ALLOW { background: @activeColor; }
-  .BLOCK { background: @dangerColor; }
+    .to {
+      background: @infoBackground;
+      color: #333;
+    }
+
+    .from-predicate { color: #FFF; background: @grayLight; }
+    .to-predicate { color: #FFF; background: @grayLight; }
+
+    .action { color: #FFF; font-weight: bold;}
+    .ALLOW { background: @activeColor; }
+    .BLOCK { background: @dangerColor; }
+  }
 }

@@ -66,7 +66,10 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
             data.action,
             data.actionPredicate
         );
-        this.model.set({rule: rule});
+        this.model.set({
+            enabled: data.enabled,
+            rule: rule
+        });
         this.model.save();
     }
 });

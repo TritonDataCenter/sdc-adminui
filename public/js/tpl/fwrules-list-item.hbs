@@ -1,9 +1,19 @@
-<div class="from-predicate">{{fromPredicate}}</div>
-<div class="to">
-  <i class="icon-long-arrow-right"></i>
+<div class="rule {{#unless enabled}}disabled{{/unless}}">
+  <div class="from-predicate">{{fromPredicate}}</div>
+  <div class="to">
+    <i class="icon-long-arrow-right"></i>
+  </div>
+
+  <div class="to-predicate">{{toPredicate}}</div>
+
+  <div class="action {{action}}">{{action}}</div>
+  <div class="action-predicate">{{actionPredicate}}</div>
 </div>
-
-<div class="to-predicate">{{toPredicate}}</div>
-
-<div class="action {{action}}">{{action}}</div>
-<div class="action-predicate">{{actionPredicate}}</div>
+<div class="actions">
+  {{#if enabled}}
+  <a class="btn disable-rule"><i class="icon-remove"></i> Disable</a>
+  {{else}}
+  <a class="btn enable-rule"><i class="icon-ok-sign"></i> Enable</a>
+  {{/if}}
+  <a class="btn delete-rule"><i class="icon-trash"></i></a>
+</div>
