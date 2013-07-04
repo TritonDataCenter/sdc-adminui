@@ -121,6 +121,25 @@ var VmView = Backbone.Marionette.Layout.extend({
         });
 
         this.tagsListView = new TagsList({model: this.vm});
+        this.nicsList = new NicsList({ vm: this.vm });
+        this.fwrulesList = new FWRulesList({vm: this.vm });
+
+
+        this.fwrulesList.on('itemview:edit:rule', function(iv) {
+            iv.$el.addClass('editing');
+            this.fwrulesForm = new FWRulesForm({model: iv.model });
+            this.fwrulesFormRegion.show(this.fwrulesForm);
+
+            this.fwrulesForm.on('close', function() {
+                iv.$el.removeClass('editing');
+                this.fwrulesFormRegion.close();
+            }, this);
+
+            this.fwrulesForm.on('rule:saved', function() {
+                this.fwrulesFormRegion.close();
+                this.fwrulesList.collection.fetch();
+            }, this);
+        }, this);
 
         this.vm.fetch();
     },
@@ -252,18 +271,19 @@ var VmView = Backbone.Marionette.Layout.extend({
 
     clickShowFwrulesForm: function() {
         var self = this;
+
         this.fwrulesForm = new FWRulesForm({vm: this.vm });
+        this.fwrulesFormRegion.show(this.fwrulesForm);
 
         this.fwrulesForm.on('close', function() {
             this.fwrulesFormRegion.close();
         }, this);
 
-        this.fwrulesForm.on('rule:created', function() {
+        this.fwrulesForm.on('rule:saved', function() {
             this.fwrulesFormRegion.close();
             this.fwrulesList.collection.fetch();
         }, this);
 
-        this.fwrulesFormRegion.show(this.fwrulesForm);
     },
 
     clickedRename: function() {
@@ -333,10 +353,9 @@ var VmView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
-        this.nicsList = new NicsList({ vm: this.vm });
+
         this.nicsRegion.show(this.nicsList);
 
-        this.fwrulesList = new FWRulesList({vm: this.vm });
         this.fwrulesListRegion.show(this.fwrulesList);
 
         this.snapshotsListView = new SnapshotsList({

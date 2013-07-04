@@ -1,10 +1,16 @@
+{{#if uuid}}
+<h3>Modify Existing Firewall Rule</h3>
+{{else}}
 <h3>New Firewall Rule</h3>
+{{/if}}
 
 <form method="post">
   <div class="input-prepend">
     <span class="add-on">FROM</span>
     <input type="text" class="span6" name="fromPredicate">
   </div>
+
+  <input name="owner_uuid" type="hidden">
 
   <div class="clearfix"></div>
 

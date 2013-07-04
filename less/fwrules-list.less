@@ -1,15 +1,20 @@
 ul.fwrules-list {
   li { margin-bottom: .5em; display: block; clear: both; overflow: hidden;}
   li:last-child { margin: 0; }
+  li.editing {
+    background: lighten(@yellow, 40%);
+    .opacity(50);
+    .actions { visibility: hidden;}
+  }
 
   .actions {
-   float: right;
-   a { font-size: 12px;}
+    float: right;
+    a { font-size: 12px;}
 
-  .delete-rule { color: @dangerColor; }
-  .enable-rule { color: @activeColor;}
-  .disable-rule { color: @dangerColor;}
-  }
+   .delete-rule { color: @dangerColor; }
+   .enable-rule { color: @activeColor;}
+   .disable-rule { color: @dangerColor;}
+ }
   .rule.disabled {
     >div {
       text-decoration: line-through;
@@ -19,6 +24,7 @@ ul.fwrules-list {
   }
   .rule {
     float: left;
+    margin-top: 4px;
 
     >div {
       display: inline-block;

@@ -23,8 +23,22 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
 
     template: require('../tpl/fwrules-form.hbs'),
 
-    initialize: function() {
-        this.model = new FWRule();
+    initialize: function(options) {
+        if (!options.model) {
+            this.model = new FWRule();
+        }
+        if (options.vm && options.vm.get('owner_uuid')) {
+            this.model.set({owner_uuid: options.vm.get('owner_uuid')});
+        }
+        if (this.model.isNew() && options.vm) {
+            this.model.set({rule: 'FROM any TO vm '+options.vm.get('uuid') + ' ALLOW '});
+        }
+    },
+
+    onRender: function() {
+        var data = this.model.toJSON();
+        _.extend(data, this.model.tokenizeRule());
+        Backbone.Syphon.deserialize(this, data);
     },
 
     onShow: function() {
@@ -47,12 +61,13 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
 
     onSync: function(model, resp, options) {
         var job = new Job({uuid: resp.job_uuid});
-        adminui.vent.trigger('showjob', job);
-        var self = this;
-        job.on('execution:succeeded', function() {
-            self.trigger('rule:created');
-            self.trigger('close');
+
+        this.listenTo(job, 'execution:succeeded', function() {
+            this.trigger('rule:saved');
+            this.trigger('close');
         });
+
+        adminui.vent.trigger('showjob', job);
     },
 
     onSubmit: function(e) {

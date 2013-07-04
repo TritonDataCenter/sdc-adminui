@@ -2,6 +2,11 @@
 
 ## 1.0.6 ``unreleased``
 
+- ``ADMINUI-1420`` ability to create firewall rules
+- ``ADMINUI-1421`` ability to enable/disable firewall rules
+- ``ADMINUI-1422`` ability to delete a firewall rule
+- ``ADMINUI-1423`` abiilty to edit firewall rule
+
 ## 1.0.5
 
 - ``ADMINUI-1417`` Firewall rules are now shown on vm details page

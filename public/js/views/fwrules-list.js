@@ -2,12 +2,14 @@ var Backbone = require('backbone');
 var Job = require('../models/job');
 var FWRules = require('../models/fwrules');
 var adminui = require('../adminui');
+var _ = require('underscore');
 
 var FWRulesListItem = Backbone.Marionette.ItemView.extend({
     tagName: 'li',
     template: require('../tpl/fwrules-list-item.hbs'),
     events: {
         'click .enable-rule': 'onEnableRule',
+        'click .edit-rule': 'onEditRule',
         'click .disable-rule': 'onDisableRule',
         'click .delete-rule': 'onDeleteRule'
     },
@@ -20,23 +22,21 @@ var FWRulesListItem = Backbone.Marionette.ItemView.extend({
     onDeleteRule: function() {
         this.trigger('delete:rule');
     },
+    onEditRule: function() {
+        this.trigger('edit:rule');
+    },
+
     serializeData: function() {
-        var data = this.model.toJSON();
-        var reg = (/(FROM) (.*) (TO) (.*) (ALLOW|BLOCK) (.*)/);
-        var m = data.rule.match(reg);
-        var vars = {};
-        vars.from = m[1];
-        vars.fromPredicate = m[2];
+        var rule = this.model.tokenizeRule();
+        var vars = this.model.toJSON();
 
         if (vars.fromPredicate === ('vm ' + this.model.collection.params.vm_uuid)) {
             vars.fromPredicate = 'THIS VM';
         }
-        vars.enabled = data.enabled;
-        vars.to = m[3];
-        vars.toPredicate = m[4];
-        vars.action = m[5];
-        vars.actionPredicate = m[6];
+        _.extend(vars, rule);
 
+        vars.enabled = this.model.get('enabled');
+        vars.owner_uuid = this.model.get('owner_uuid');
         return vars;
     }
 });
