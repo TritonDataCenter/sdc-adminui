@@ -247,6 +247,16 @@ caConf.prototype.fieldLabel = function (fieldname)
 	return (this.cc_fields[fieldname]['label']);
 };
 
+caConf.prototype.fieldType = function (fieldname)
+{
+	return (this.cc_fields[fieldname]['type']);
+};
+
+caConf.prototype.typeInfo = function (type)
+{
+	return (this.cc_types[type]);
+};
+
 /* iterate available metrics (used to build initial selector) */
 caConf.prototype.eachMetric = function (func)
 {
@@ -416,6 +426,36 @@ caInstn.prototype.baseMetric = function ()
 	    'module': this.ci_instn['module'],
 	    'stat': this.ci_instn['stat']
 	});
+};
+
+caInstn.prototype.unitScale = function ()
+{
+	var decomps = this.ci_instn['decomposition'];
+	var field, arity, type, metric;
+
+	if (decomps.length > 0) {
+		field = decomps[0];
+		arity = this.ci_conf.fieldArity(field);
+
+		if (arity != 'numeric' && decomps.length > 1) {
+			field = decomps[1];
+			arity = this.ci_conf.fieldArity(field);
+		}
+
+		if (arity == 'numeric')
+			type = this.ci_conf.fieldType(field);
+	}
+
+	if (!arity || arity != 'numeric') {
+		metric = this.ci_conf.metricRaw(
+		    this.ci_instn['module'], this.ci_instn['stat']);
+		type = metric['type'];
+	}
+
+	if (type === null)
+		return (null);
+
+	return (this.ci_conf.typeInfo(type));
 };
 
 /*
@@ -1796,6 +1836,13 @@ caWidgetChart.prototype.tick = function ()
 	this.update();
 };
 
+caWidgetChart.prototype.tickFormat = function ()
+{
+	var instn = this.instn();
+	var scale = instn.unitScale();
+	return (caTickFormat.bind(null, scale));
+};
+
 /*
  * Update the legend to display the given rows.  The legend is intended to
  * display a set of components representing a breakdown of the metric in the
@@ -2044,7 +2091,8 @@ caWidgetLineGraph.prototype.initGraph = function ()
 
 	this.cl_yaxis = new Rickshaw.Graph.Axis.Y({
 	    'graph': this.cl_rickshaw,
-	    'ticks': 5
+	    'ticks': 5,
+	    'tickFormat': this.tickFormat()
 	});
 
 	this.cl_yaxis.render();
@@ -2378,7 +2426,8 @@ caWidgetHeatMap.prototype.initGraph = function ()
 	this.cm_rickshaw.render();
 	this.cm_yaxis = new Rickshaw.Graph.Axis.Y({
 	    'graph': this.cm_rickshaw,
-	    'ticks': 5
+	    'ticks': 5,
+	    'tickFormat': this.tickFormat()
 	});
 	this.cm_yaxis.render();
 	var unit = new Rickshaw.Fixtures.Time().unit('minute');
@@ -2710,4 +2759,32 @@ function caPredicateToEnglish(conf, pred, parenthesize)
 	}
 
 	return (rv);
+}
+
+function caTickFormat(scale, y)
+{
+	if (scale && scale['base'] == 2) {
+		if (y < 1024)
+			return (y + scale['abbr']);
+		if (y < 1024 * 1024)
+			return (Math.floor(y / 1024) + 'K' + scale['abbr']);
+		if (y < 1024 * 1024 * 1024)
+			return (Math.floor(y / 1024 / 1024) +
+			    'M' + scale['abbr']);
+		return (Math.floor(y / 1024 / 1024 / 1024) + 'G' +
+		    scale['abbr']);
+	}
+
+	if (scale && scale['power'] == -9) {
+		/* something measured in nanoX (e.g., nanoseconds) */
+		if (y < 1000)
+			return (y + 'n' + scale['abbr']);
+		if (y < 1000000)
+			return (Math.floor(y / 1000) + 'u' + scale['abbr']);
+		if (y < 1000000000)
+			return (Math.floor(y / 1000000) + 'm' + scale['abbr']);
+		return (Math.floor(y / 1000000000) + scale['abbr']);
+	}
+
+	return (y);
 }
