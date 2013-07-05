@@ -10,18 +10,18 @@
 		"url": "ldaps://{{^ufds_remote_ip}}{{{ufds_domain}}}{{/ufds_remote_ip}}{{{ufds_remote_ip}}}",
 		"bindDN": "{{{ufds_ldap_root_dn}}}",
 		"bindPassword": "{{{ufds_ldap_root_pw}}}",
+		"clientTimeout": 240000,
 		"cache": {
 			"size": 5000,
 			"expiry": 60
 		},
-		"clientTimeout": 240000,
-		"maxConnections": 1
 	},
+	"adminUuid": "{{{ufds_admin_uuid}}}",
 	"ufds": {
+		"clientTimeout": 240000,
 		"url": "ldaps://{{{UFDS_SERVICE}}}",
 		"bindDN": "{{{ufds_ldap_root_dn}}}",
 		"bindPassword": "{{{ufds_ldap_root_pw}}}",
-		"adminUuid": "{{{ufds_admin_uuid}}}",
 		"cache": {
 			"size": 1000,
 			"expiry": 300
