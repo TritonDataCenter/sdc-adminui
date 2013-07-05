@@ -6,6 +6,7 @@
 - ``ADMINUI-1421`` ability to enable/disable firewall rules
 - ``ADMINUI-1422`` ability to delete a firewall rule
 - ``ADMINUI-1423`` abiilty to edit firewall rule
+- ``ADMINUI-1410`` Fixes an issue where adminui does not reconnect to UFDS on headnode reboot
 
 ## 1.0.5
 
