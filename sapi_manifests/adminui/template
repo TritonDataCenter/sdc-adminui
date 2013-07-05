@@ -14,7 +14,7 @@
 		"cache": {
 			"size": 5000,
 			"expiry": 60
-		},
+		}
 	},
 	"adminUuid": "{{{ufds_admin_uuid}}}",
 	"ufds": {
