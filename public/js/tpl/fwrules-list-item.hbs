@@ -9,6 +9,7 @@
   <div class="action {{action}}">{{action}}</div>
   <div class="action-predicate">{{actionPredicate}}</div>
 </div>
+{{#role "operators"}}
 <div class="actions">
   <a class="btn edit-rule"><i class="icon-pencil"></i> Modify</a>
   {{#if enabled}}
@@ -18,3 +19,4 @@
   {{/if}}
   <a class="btn delete-rule"><i class="icon-trash"></i></a>
 </div>
+{{/role}}

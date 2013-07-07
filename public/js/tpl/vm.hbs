@@ -163,9 +163,11 @@
     <div class="span12">
       <h2>
         Firewall Rules
+        {{#role "operators"}}
         <div class="actions">
           <a class="show-fwrules-form"><i class="icon-plus-sign"></i> Create Firewall Rule</a>
         </div>
+        {{/role}}
       </h2>
       <div class="fwrules-form-region"></div>
       <div class="fwrules-list-region"></div>
