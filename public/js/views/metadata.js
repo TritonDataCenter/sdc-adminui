@@ -14,6 +14,9 @@ var MetadataViewModel = function(m) {
     this.key = ko.observable(m.key);
     this.value = ko.observable(m.value);
     this.toolong = ko.computed(function() {
+        if (! this.value()) {
+            return false;
+        }
         return (/\n/).test(this.value()) || this.value().length > 30;
     }, this);
 
