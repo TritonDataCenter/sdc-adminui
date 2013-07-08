@@ -25,7 +25,11 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
     },
     serializeData: function() {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this, arguments);
-        data.when = moment(data.exec_after).utc().format('lll');
+        if (data.exec_after) {
+            data.when = moment(data.exec_after).utc().format('lll');
+        } else {
+            data.when = 'unknown';
+        }
         return data;
     },
     showJobDetails: function(e) {

@@ -2,6 +2,7 @@
 
 ## 1.0.6 ``unreleased``
 
+- ``ADMINUI-1429`` Fixed issue where nic jobs causes VM details jobs list not render properly
 - ``ADMINUI-1420`` ability to create firewall rules
 - ``ADMINUI-1421`` ability to enable/disable firewall rules
 - ``ADMINUI-1422`` ability to delete a firewall rule
