@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
-
+var Networks = require('../models/networks');
+var Nics = require('../models/nics');
 
 var NicsRowView = require('./nics-row');
 var JobProgress = require('./job-progress');
@@ -16,14 +17,28 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
     initialize: function(options)  {
         this.model = options.vm;
         this.selectedNics = new Backbone.Collection();
-        this.collection = new Backbone.Collection(this.model.get('nics'));
+        this.collection = new Nics(null, {
+            params: {
+                belongs_to_type: 'zone',
+                belongs_to_uuid: this.model.get('uuid')
+            }
+        });
+        this.collection.fetch();
 
+        this.networks = new Networks();
+        this.networks.fetch();
+
+        this.listenTo(this.networks, 'sync', this.networksLoaded, this);
         this.listenTo(this.selectedNics, 'add remove reset', this.onChangeSelectedNics, this);
         this.listenTo(this.model, 'change:nics', this.resetNics, this);
     },
 
-    resetNics: function(vm) {
-        this.collection.reset(vm.get('nics'));
+    networksLoaded: function() {
+        this.render();
+    },
+
+    resetNics: function() {
+        this.collection.fetch();
     },
 
     onClickRemoveNics: function() {
@@ -37,13 +52,11 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
         this.model.removeNics(macs, function(job) {
             var jobView = new JobProgress({model: job});
             jobView.show();
-            self.listenTo(jobView, 'execution', function(st) {
-                if (st === 'succeeded') {
-                    self.selectedNics.each(function(n) {
-                        self.collection.remove(n);
-                    });
-                    self.selectedNics.reset();
-                }
+            self.listenTo(jobView, 'succeeded', function() {
+                self.selectedNics.each(function(n) {
+                    self.collection.remove(n);
+                });
+                self.selectedNics.reset();
             });
         });
     },
@@ -73,6 +86,7 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
     onBeforeItemAdded: function(itemView) {
         this.listenTo(itemView, 'select', this.onSelectNic, this);
         this.listenTo(itemView, 'deselect', this.onDeselectNic, this);
+        itemView.network = this.networks.get(itemView.model.get('network_uuid'));
     },
 
     onSelectNic: function(nic) {

@@ -75,6 +75,7 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     url: function() {
         return _.str.sprintf('networks/%s', this.model.get('uuid'));
     },
+
     onClose: function() {
         this.$el.modal('hide');
     },

@@ -53,9 +53,11 @@ var ServerView = Backbone.Marionette.Layout.extend({
     initialize: function(options) {
         this.model = options.server || new Server({uuid: options.uuid});
 
-        this.nics = new Nics({
-            belongs_to_type: 'server',
-            belongs_to_uuid: this.model.get('uuid')
+        this.nics = new Nics(null, {
+            params: {
+                belongs_to_type: 'server',
+                belongs_to_uuid: this.model.get('uuid')
+            }
         });
 
         this.listenTo(this.nics, 'sync', this.mergeSysinfo);
@@ -343,10 +345,8 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     onShow: function() {
-        console.log('onShow');
-
         this.model.fetch();
-        this.nics.fetchNics();
+        this.nics.fetch();
         var self = this;
         this.vms.fetch();
     },

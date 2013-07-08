@@ -138,7 +138,7 @@ var ServerNicsEditView = Backbone.Marionette.ItemView.extend({
         this.listenTo(job, 'change:execution', function(j) {
             var execution = j.get('execution');
             if (execution === 'succeeded') {
-                this.nics.fetchNics();
+                this.nics.fetch();
             }
         }, this);
     },
