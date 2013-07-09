@@ -9,7 +9,13 @@
 <section>
   <div class="row">
     <div class="span6">
-      <h3>User Details</h3>
+      <h3>User Details
+        {{#role "operators"}}
+        <div class="actions">
+          <button class="edit-user btn btn-link"> <i class="icon-pencil"></i> Modify User</button>
+        </div>
+        {{/role}}
+      </h3>
       <div class="user-details">
         <table class="table">
           <tbody>
@@ -42,25 +48,21 @@
             <td><span class="registered-developer"></span></td>
           </tr>
         </tbody>
-        {{#role "operators"}}
-        <tfoot>
-          <td colspan="2">
-            <button class="edit-user btn"> <i class="icon-pencil"></i> Edit User Details</button>
-          </td>
-        </tfoot>
-        {{/role}}
         </table>
       </div>
     </div>
 
     <div class="span6">
-      <h3>SSH Keys</h3>
+      <h3>SSH Keys
+        <div class="actions">
+          {{#role "operators"}}
+          <button class="btn btn-link add-key"><i class="icon-plus-sign"></i> Add Key</button>
+          {{/role}}
+        </div>
+      </h3>
 
       <div class="ssh-keys">
         <div class="items"></div>
-        {{#role "operators"}}
-        <button class="btn add-key"><i class="icon-plus-sign"></i> Add Key</button>
-        {{/role}}
       </div>
     </div>
   </div>
@@ -69,7 +71,6 @@
 <section>
   <div class="row">
     <div class="span12">
-      <h3>Datacenter Limits</h3>
       <div class="limits-region"></div>
     </div>
   </div>

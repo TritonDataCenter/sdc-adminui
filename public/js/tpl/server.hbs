@@ -103,7 +103,7 @@
     <h3>Network Interfaces
       {{#role "operators"}}
       <div class="actions pull-right">
-        <button class="btn btn-info manage-nics"><i class="icon-edit"></i> Manage Nics</i></button>
+        <button class="btn-link manage-nics"><i class="icon-edit"></i> Manage Nics</i></button>
       </div>
       {{/role}}
     </h3>
@@ -188,7 +188,14 @@
       {{/each}}
     </div>
 
-    <h3>Traits</h3>
+    <h3>Traits
+      {{#role "operators"}}
+      <div class="actions">
+        <button class="btn btn-link modify-traits"><i class="icon-edit"></i> Edit Traits</button>
+      </div>
+      {{/role}}
+    </h3>
+
     {{#if traits.length}}
     <table class="traits table">
       <thead>
@@ -205,11 +212,6 @@
         </tr>
         {{/each}}
       </tbody>
-      {{#role "operators"}}
-      <tfoot>
-        <td colspan="2"><button class="btn btn-small modify-traits"><i class="icon-edit"></i> Edit Traits</button></td>
-      </tfoot>
-      {{/role}}
     </table>
     {{else}}
     <div class="zero-state">There are no traits configured for this server.</div>

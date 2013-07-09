@@ -103,6 +103,14 @@ h2 small { font-size: 18px; }
 h3 small { font-size: 14px; }
 h4 small { font-size: 14px; }
 
+h3 .actions {
+  display: inline-block;
+  float: right;
+  .btn-link {
+    font-size: 18px;
+  }
+}
+
 .alert {
   h4.alert-heading { font-weight: 400; font-size: 13px; }
   ul li { font-size: 13px;}
@@ -747,8 +755,12 @@ h1.branding {
     min-height: 150px;
   }
 }
-#page-vms {
-  .vms-filter { padding: 15px; }
+#page-vms, #page-user {
+  .vms-filter {
+    .widget-content;
+    box-sizing: border-box;
+    padding: 15px;
+  }
   .vms-filter .quick>.icon-search { font-size: 18px; color: @grayLight; margin-right: 10px;}
   .vms-filter .quick>div { margin-bottom:0;}
 }
@@ -794,13 +806,6 @@ h1.branding {
   }
   .snapshots {
     .empty { color: @grayLight; }
-  }
-  .fwrules {
-    .actions {
-      display: inline-block;
-      float: right;
-      font-size: 18px;
-     }
   }
 }
 

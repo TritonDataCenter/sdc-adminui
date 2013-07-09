@@ -6,15 +6,15 @@
     <span class="inactive">INACTIVE</span>
     {{/if}}
   </div>
-  <h1>
+  <h2>
     {{name}}
     {{version}}
     {{#role "operators"}}
-    <div class="actions">
-      <button class="btn btn-small edit"><i class="icon-pencil"></i> Edit Package</button>
+    <div class="actions pull-right">
+      <button class="btn btn-link edit"><i class="icon-pencil"></i> Edit Package</button>
     </div>
     {{/role}}
-  </h1>
+  </h2>
 </div>
 
 {{#if owner_uuid}}
@@ -83,6 +83,6 @@
 
 {{#role "operators"}}
 <section>
-  <button class="btn btn-small traits"><i class="icon-pencil"></i> Modify Traits used for Provisioning</button>
+  <button class="btn btn-link traits"><i class="icon-pencil"></i> Modify Traits used for Provisioning</button>
 </section>
 {{/role}}
