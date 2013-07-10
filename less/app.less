@@ -567,7 +567,16 @@ h1.branding {
       font-family: monospace;
     }
 
-    .reserved { float: right; background: @warningBackground; padding: 0 4px; }
+    .last-platform {
+      padding: 0 8px;
+      i { margin-right: 6px;}
+      margin-right: 3px;
+    }
+    .reserved { float: right; background: @warningBackground; padding: 0 6px; }
+    .last-platform {
+      i { margin-right: 5px;}
+      background: #f3f3f3; padding: 0 4px;
+      float: right; font-size: 12px; color: @grayLight;}
 
     th.last-status { width: 140px;}
     td.last-status>div { font-size: 12px; opacity: 0.5;}

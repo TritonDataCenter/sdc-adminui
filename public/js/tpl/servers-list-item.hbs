@@ -9,18 +9,14 @@
   </span>
 </td>
 <td class="name">
-  {{#if reserved}}
   <span class="reserved"><i class="icon-lock"></i></span>
-  {{/if}}
+  <div class="last-platform"><i class="icon-picture"></i> {{current_platform}}</div>
   <a href="/servers/{{uuid}}">{{hostname}}</a>
   <span class="uuid">{{uuid}}</span>
 </td>
 <td class="last-status">
   <div class="last-boot"><i class="icon-off"></i> {{last_boot}}</div>
   <div class="last-heartbeat"><i class="icon-heart"></i> {{last_heartbeat}}</div>
-</td>
-<td class="memory">
-  <span class="ram">{{ram}} MB</span>
 </td>
 <td>
   {{#if not_setup}}

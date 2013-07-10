@@ -53,6 +53,11 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
+        this.$(".last-platform").tooltip({
+            title: _.str.sprintf('Platform Version', this.model.get('current_platform')),
+            placement: 'top',
+            container: 'body'
+        });
         this.$(".last-boot").tooltip({
             title: _.str.sprintf('Last boot at %s',
                 moment(this.model.get('last_boot')).utc().format('LLL')),
