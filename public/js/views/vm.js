@@ -94,6 +94,16 @@ var VmView = Backbone.Marionette.Layout.extend({
             this.owner.fetch();
         }
 
+        this.listenTo(this.image, 'error', function(image, xhr, options) {
+            if (xhr.status === 404) {
+                this.$('.image-name-version').html('No Image Information Available');
+                this.$('.image-name-version').addClass('disabled');
+            } else {
+                this.$('.image-name-version').html('Error retrieving image information');
+                this.$('.image-name-version').addClass('error');
+            }
+        }, this );
+
         this.listenTo(this.vm, 'change:owner_uuid', function(m) {
             this.owner.set({uuid: m.get('owner_uuid')});
             this.owner.fetch();
@@ -123,6 +133,14 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.tagsListView = new TagsList({model: this.vm});
         this.nicsList = new NicsList({ vm: this.vm });
         this.fwrulesList = new FWRulesList({vm: this.vm });
+
+        this.listenTo(this.fwrulesFormRegion, 'show', function() {
+            this.$('.show-fwrules-form').hide();
+        }, this);
+
+        this.listenTo(this.fwrulesFormRegion, 'close', function() {
+            this.$('.show-fwrules-form').show();
+        }, this);
 
 
         this.fwrulesList.on('itemview:edit:rule', function(iv) {
@@ -156,14 +174,9 @@ var VmView = Backbone.Marionette.Layout.extend({
         } else {
             this.image.set({uuid: this.vm.get('image_uuid')});
         }
+        // XXX
+        this.image.set({uuid: 'asdfasdfasdfasd'});
         this.image.fetch();
-
-        this.listenTo(this.fwrulesFormRegion, 'show', function() {
-            this.$('.show-fwrules-form').hide();
-        }, this);
-        this.listenTo(this.fwrulesFormRegion, 'close', function() {
-            this.$('.show-fwrules-form').show();
-        }, this);
     },
 
     clickedStartVm: function(e) {
