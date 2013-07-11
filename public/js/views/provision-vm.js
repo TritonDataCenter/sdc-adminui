@@ -149,7 +149,7 @@ var View = Backbone.Marionette.Layout.extend({
         });
 
         this.$("input[name=image]").typeahead({
-            name: 'images',
+            // name: 'images',
             local: source,
             valueKey: 'uuid',
             cache: false,
