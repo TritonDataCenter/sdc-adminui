@@ -2,6 +2,7 @@
 
 ## 1.0.6 ``unreleased``
 
+- ``ADMINUI-1433`` sdc and platform version for servers are now displayed on server list
 - ``ADMINUI-1431`` Fixes an issue where destructive actions are not showing up for CNs
 - ``ADMINUI-1374`` VM Nics list now includes network name and abilty to view network details
 - ``ADMINUI-1429`` Fixed issue where nic jobs causes VM details jobs list not render properly

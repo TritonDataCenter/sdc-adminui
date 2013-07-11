@@ -9,8 +9,13 @@
   </span>
 </td>
 <td class="name">
+  {{#if reserved}}
   <span class="reserved"><i class="icon-lock"></i></span>
-  <div class="last-platform"><i class="icon-picture"></i> {{current_platform}}</div>
+  {{/if}}
+  <div class="last-platform">
+    <span class="sdc"><i class="icon-picture"></i> {{sdc_version}}</span>
+    <span class="platform">{{current_platform}}</span>
+  </div>
   <a href="/servers/{{uuid}}">{{hostname}}</a>
   <span class="uuid">{{uuid}}</span>
 </td>
@@ -23,6 +28,7 @@
     {{#if setting_up}}
     Setting up
     {{else}}
+
     {{#role "operators"}}
     <button class="setup btn btn-info setup"><i class="icon-magic"></i> Setup Server</button>
     {{/role}}
