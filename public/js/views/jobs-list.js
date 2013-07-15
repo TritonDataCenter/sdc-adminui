@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var moment = require('moment');
 
+
 var adminui = require('../adminui');
 var Jobs = require('../models/jobs');
 
@@ -25,8 +26,8 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
     },
     serializeData: function() {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this, arguments);
-        if (data.exec_after) {
-            data.when = moment(data.exec_after).utc().format('lll');
+        if (data.created_at) {
+            data.when = moment(data.created_at).utc().format('lll');
         } else {
             data.when = 'unknown';
         }
