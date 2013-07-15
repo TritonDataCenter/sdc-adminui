@@ -49,11 +49,11 @@ var Jobs = Collection.extend({
         }
     },
 
-    fetch: function(opts) {
-        var params = _.extend(this.pagingParams, this.params);
 
+    fetch: function(opts) {
         opts = opts || {};
-        opts.data = $.param(params);
+        opts.params = opts.params || {};
+        _.extend(opts.params, this.pagingParams);
 
         return Collection.prototype.fetch.call(this, opts);
     }

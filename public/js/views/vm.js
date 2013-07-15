@@ -78,7 +78,10 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.owner = new User();
         this.image = new Img();
         this.server = new Server();
-        this.jobsListView = new JobsList({params: {vm_uuid: this.vm.get('uuid')}});
+        this.jobsListView = new JobsList({
+            perPage: 1000,
+            params: {vm_uuid: this.vm.get('uuid')}
+        });
 
         this.server.set({ uuid: this.vm.get('server_uuid') });
 
@@ -174,8 +177,6 @@ var VmView = Backbone.Marionette.Layout.extend({
         } else {
             this.image.set({uuid: this.vm.get('image_uuid')});
         }
-        // XXX
-        this.image.set({uuid: 'asdfasdfasdfasd'});
         this.image.fetch();
     },
 

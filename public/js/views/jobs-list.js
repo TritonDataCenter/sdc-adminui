@@ -54,12 +54,17 @@ var JobsList = Backbone.Marionette.CompositeView.extend({
     attributes: {
         class: 'jobs-list'
     },
+
     template: require('../tpl/jobs-list.hbs'),
+
     itemView: JobsItemView,
+
     itemViewContainer: 'tbody',
+
     itemViewOptions: function() {
         return { emptyViewModel: this.collection };
     },
+
     url: function() {
         return '/jobs';
     },
@@ -68,7 +73,10 @@ var JobsList = Backbone.Marionette.CompositeView.extend({
 
     initialize: function(options) {
         options = options || {};
-        this.collection = options.collection || new Jobs();
+        this.collection = options.collection || new Jobs({
+            perPage: options.perPage,
+            page: options.page
+        });
         if (options.params) {
             this.collection.params = options.params;
         }

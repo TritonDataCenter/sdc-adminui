@@ -2,6 +2,7 @@
 
 ## 1.0.6 ``unreleased``
 
+- ``ADMINUI-1436`` Fixes an issue where the jobs page doesn''t have paging
 - ``ADMINUI-1434`` Fixes an issue where recently imported images are not immediately available for provisoning
 - ``ADMINUI-1433`` sdc and platform version for servers are now displayed on server list
 - ``ADMINUI-1431`` Fixes an issue where destructive actions are not showing up for CNs
