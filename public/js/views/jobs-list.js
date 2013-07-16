@@ -31,6 +31,7 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
         } else {
             data.when = 'unknown';
         }
+        data[data.execution] = true
         return data;
     },
     showJobDetails: function(e) {
@@ -83,6 +84,11 @@ var JobsList = Backbone.Marionette.CompositeView.extend({
         }
         this.collection.fetch();
         this.listenTo(this.collection, 'error', this.onError);
+    },
+
+    query: function(params) {
+        this.collection.params = params;
+        this.collection.fetch();
     },
 
     next: function() {

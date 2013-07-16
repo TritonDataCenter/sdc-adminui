@@ -1,5 +1,9 @@
 <td class="execution {{execution}}">
-  <span class="label">{{execution}}</label>
+  <span class="label">
+    {{#if succeeded}}<i class="icon-ok-sign"></i>{{/if}}
+    {{#if failed}}<i class="icon-remove-sign"></i>{{/if}}
+    {{execution}}
+  </label>
 </td>
 <td><a class="name">{{name}}</a> <div class="uuid">{{uuid}}</div></td>
 <td>{{when}}</td>
