@@ -19,7 +19,7 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
     setup: function() {
         var server = this.model;
         var self = this;
-        var hostname = this.$('.custom-hostname').val();
+        var hostname = this.$('input[name=hostname]').val();
         this.model.setup({hostname: hostname}, function(job) {
             app.vent.trigger('showjob', job);
             self.listenTo(job, 'execution', function(status) {

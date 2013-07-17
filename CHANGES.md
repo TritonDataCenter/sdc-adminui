@@ -1,7 +1,7 @@
 # adminui Changelog
 
 ## 1.0.6 ``unreleased``
-
+- ``ADMINUI-1442`` Fixes an issue where setting custom hostname during server setup doesn''t get passed through
 - ``ADMINUI-1436`` Fixes an issue where the jobs page doesn''t have paging
 - ``ADMINUI-1434`` Fixes an issue where recently imported images are not immediately available for provisoning
 - ``ADMINUI-1433`` sdc and platform version for servers are now displayed on server list
