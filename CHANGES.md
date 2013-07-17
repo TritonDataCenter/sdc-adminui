@@ -1,6 +1,10 @@
 # adminui Changelog
 
-## 1.0.6 ``unreleased``
+## 1.0.7 (unreleased)
+
+## 1.0.6
+
+- ``ADMINUI-1435`` Fixes an issue about owner_uuids when editing network pools
 - ``ADMINUI-1442`` Fixes an issue where setting custom hostname during server setup doesn''t get passed through
 - ``ADMINUI-1436`` Fixes an issue where the jobs page doesn''t have paging
 - ``ADMINUI-1434`` Fixes an issue where recently imported images are not immediately available for provisoning

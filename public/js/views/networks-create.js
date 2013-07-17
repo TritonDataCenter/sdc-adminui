@@ -66,8 +66,11 @@ var View = Backbone.Marionette.ItemView.extend({
 
     onSubmit: function(e) {
         e.preventDefault();
+
         var data = Backbone.Syphon.serialize(this);
+        data.owner_uuids = _.compact(data.owner_uuids);
         data.resolvers = data.resolvers.split(" ");
+
         var routes = {};
         _.each(data.routes, function(data, i) {
             if (data.subnet.length && data.gateway.length) {
