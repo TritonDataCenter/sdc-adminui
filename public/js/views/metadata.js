@@ -1,51 +1,110 @@
 var Backbone = require('backbone');
-var ko = require('knockout');
 var _ = require('underscore');
 
 var adminui = require('adminui');
 
-var BaseView = require('./base');
-var metadataViewModalTemplate = require('../tpl/metadata-view-modal.hbs');
-var metadataEditModalTemplate = require('../tpl/metadata-edit-modal.hbs');
 var JobProgressView = require('./job-progress');
 
-var MetadataViewModel = function(m) {
-    m = m || {};
-    this.key = ko.observable(m.key);
-    this.value = ko.observable(m.value);
-    this.toolong = ko.computed(function() {
-        if (! this.value()) {
-            return false;
-        }
-        return (/\n/).test(this.value()) || this.value().length > 30;
-    }, this);
-
-    this.dataIsGood = ko.computed(function() {
-        return this.key() && this.value();
-    }, this);
-};
-
 var MetadataList = Backbone.Marionette.ItemView.extend({
-
+    attributes: {
+        'class':'metadata-list'
+    },
     template: require("../tpl/metadata.hbs"),
+    events: {
+        'click .save': 'onClickSave',
+        'click .cancel': 'onClickCancel',
+        'keyup textarea.value:last': 'onKeyup'
+    },
 
     initialize: function(options) {
-        _.bindAll(this);
         if (!options.vm) {
             throw new TypeError('options.vm required');
         }
+
         if (!options.property) {
             throw new TypeError('options.property required');
         }
+
+        this.vm = options.vm;
         this.property = options.property;
         this.readonly = options.readonly || false;
-        this.vm = options.vm;
-        this.metadata = ko.observableArray([]);
+        this.editing = false;
+    },
+
+    onClickSave: function()  {
+        var metadata = this.serializeForm();
+        var view = this;
+        var data = {};
+        data[this.property] = this.serializeForm();
+        this.vm.update(data, function(job) {
+            adminui.vent.trigger('showjob', job);
+            job.on('execution:succeeded', function() {
+                view.exitEditingMode();
+                view.vm.fetch();
+            });
+        });
+    },
+
+    onClickCancel: function() {
+        this.exitEditingMode();
+    },
+
+    exitEditingMode: function() {
+        this.editing = false;
+        this.render();
+        this.trigger('editing:end');
+    },
+
+    editingMode: function() {
+        this.editing = true;
+        this.render();
+        this.trigger('editing:begin');
+    },
+
+    onRender: function() {
+        if (this.editing) {
+            this.$('textarea').autosize();
+        }
+    },
+
+    onKeyup: function(e) {
+        var v = $(e.target).val();
+        if (v && v.length) {
+            this.addNewEmptyRow();
+        }
+    },
+
+    serializeForm: function() {
+        var data = {};
+        this.$('tr').each(function(i, tr) {
+            var k = $('input', tr).val();
+            var v = $('textarea', tr).val();
+            if (k && v && k.length && v.length) {
+                data[k] = v;
+            }
+        });
+        return data;
+    },
+
+    addNewEmptyRow: function() {
+        var node = $('<tr><td class="key"><input type="text" name="key" /></td><td class="value"><textarea name="value" class="value"></textarea></td></tr>')
+        this.$('tbody').append(node);
+    },
+
+    serializeData: function() {
+        var metadata = this.vm.get(this.property);
+
+        data = {};
+        data.metadata = [];
+        data.editing = this.editing;
+        _(metadata).each(function(v, k) {
+            data.metadata.push({key: k, value: v});
+        });
+        return data;
     },
 
     showContent: function(m) {
         var view = $(metadataViewModalTemplate()).modal();
-        ko.applyBindings(m, view.get(0));
         view.modal('show');
     },
 
@@ -58,79 +117,14 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
         });
 
         var viewModel = new MetadataViewModel();
-        viewModel.editAction = this.edit;
-        viewModel.showAction = this.showContent;
-        viewModel.removeAction = this.removeItem;
-        viewModel.saveAction = function(m) {
-            self.metadata.push(m);
-            self.save(function(job) {
-                adminui.vent.trigger('showjob', job);
-                view.modal('hide').remove();
-            });
-        };
-
-        ko.applyBindings(viewModel, view.get(0));
-        view.on('shown', function() {
-            console.log('shown');
-            view.find('input:first').focus();
-        });
-        view.modal('show');
-    },
-
-    removeItem: function(m) {
-        this.metadata.remove(m);
-        this.save(function(job) {
-            adminui.vent.trigger('showjob', job);
-        });
     },
 
     save: function(cb) {
         var data = {};
-        _(this.metadata()).each(function(m) {
-            data[m.key()] = m.value();
-        });
         var obj = {};
         obj[this.property] = data;
         this.vm.update(obj, cb);
         return data;
-    },
-
-    edit: function(m) {
-        var view = $(metadataEditModalTemplate()).modal({
-            backdrop: 'static',
-            show: false
-        });
-        m.saveAction = function() {
-            this.save(function(job) {
-                view.modal('hide');
-                adminui.vent.trigger('showjob', job);
-            });
-        }.bind(this);
-        ko.applyBindings(m, view.get(0));
-        view.on('shown', function() {
-            view.find('textarea').focus();
-        });
-        view.modal('show');
-    },
-
-    onRender: function() {
-        this.metadata.removeAll();
-        _.each(this.vm.get(this.property), function(v, k) {
-            var viewModel = new MetadataViewModel({
-                key: k,
-                value: v
-            });
-            viewModel.editAction = this.edit;
-            viewModel.showAction = this.showContent;
-            viewModel.removeAction = this.removeItem;
-            this.metadata.push(viewModel);
-        }, this);
-
-        ko.applyBindings({
-            readonly: this.readonly,
-            metadata: this.metadata,
-            addAction: this.showAddPane
-        }, this.el);
     }
 });
 

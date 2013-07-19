@@ -102,10 +102,6 @@ var FWRulesList = require('./collection').extend({
         }, this);
     },
 
-    onItemViewDisableRule: function() {
-        console.log('disable-rule');
-    },
-
     onShow: function() {
         this.collection.fetch();
     }

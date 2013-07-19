@@ -2,6 +2,8 @@
 
 ## 1.0.7 (unreleased)
 
+- ``ADMINUI-1428`` VM Metadata editor rewritten to be able to edit the entire metadata object before saving
+
 ## 1.0.6
 
 - ``ADMINUI-1435`` Fixes an issue about owner_uuids when editing network pools

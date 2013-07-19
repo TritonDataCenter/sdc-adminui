@@ -135,18 +135,29 @@
   </div>
 </section>
 
-<section>
+<section class="customer-metadata">
   <div class="row">
-    <div class="span6">
-      <h3>Customer Metadata</h3>
-      <div class="customer-metadata"></div>
-    </div>
-    <div class="span6">
-      <h3>Internal Metadata</h3>
-      <div class="internal-metadata"></div>
+    <div class="span12">
+      <h3>
+        Customer Metadata
+        {{#role "operators"}}
+        <div class="actions">
+          <button class="btn-link edit-metadata"><i class="icon icon-pencil"></i> Edit Metadata</button>
+        </div>
+        {{/role}}
+      </h3>
+      <div class="customer-metadata-region"></div>
     </div>
   </div>
+  <div class="row">
+    <div class="span12">
+      <h3>Internal Metadata</h3>
+      <div class="internal-metadata-region"></div>
+    </div>
+  </div>
+  <div class="metadata-form-region"></div>
 </section>
+
 
 <section>
   <div class="row">

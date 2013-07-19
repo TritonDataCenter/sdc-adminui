@@ -3,42 +3,50 @@
     <th>Name</th>
     <th>Value</th>
   </thead>
-  <tbody data-bind="foreach: metadata" class="unstyled">
+
+  <tbody class="unstyled">
+    {{#each metadata}}
     <tr>
       <td class="key">
-        <span data-bind="text: key" type="text"></span>
+        {{#if ../editing}}
+        <input type="text" name="key" value="{{key}}" />
+        {{else}}
+        <span class="value" type="text">{{key}}</span>
+        {{/if}}
+      </td>
+
+      <td class="value">
+        {{#if ../editing}}
+        <textarea name="value" class="value">{{value}}</textarea>
+        {{else}}
+        <span class="value" type="text">{{value}}</span>
+        {{/if}}
+      </td>
+    </tr>
+    {{/each}}
+    {{#if editing}}
+    <tr>
+      <td class="key">
+        <input type="text" name="key" value="" />
       </td>
       <td class="value">
-        <!-- ko if: toolong -->
-        <a class="view" data-bind="click: showAction">View Contents</a>
-        <!-- /ko -->
-        <!-- ko ifnot: toolong -->
-        <span class="value" data-bind="text: value" type="text"></span>
-        <!-- /ko -->
-
-        <!-- ko ifnot: $parent.readonly -->
-        {{#role "operators"}}
-       <div class="row-actions">
-         <a class="edit" data-bind="click: editAction"><i class="icon-edit"></i> Edit</a>
-         <a class="remove"><i class="icon-trash" data-bind="click: removeAction"></i></a>
-       </div>
-       {{/role}}
-       <!-- /ko -->
-     </td>
-   </tr>
- </tbody>
- <!-- ko ifnot: readonly -->
-
-{{#role "operators"}}
-<tfoot>
-   <tr>
-    <td colspan="2">
-     <button class="btn" data-bind="click: addAction">
-      <i class="icon-plus-sign"></i> Add Metadata
-    </button>
-  </td>
-</tr>
-</tfoot>
-{{/role}}
-<!-- /ko -->
+        <textarea name="value" class="value"></textarea>
+      </td>
+    </tr>
+    {{/if}}
+  </tbody>
+  {{#if editing}}
+  <tfoot>
+    <tr>
+      <td colspan="2">
+        <button class="btn btn-primary save pull-right">
+          <i class="icon-plus-sign"></i> Save Metadata
+        </button>
+        <button class="btn cancel pull-right">
+          <i class="icon-plus-sign"></i> Cancel
+        </button>
+      </td>
+    </tr>
+  </tfoot>
+  {{/if}}
 </table>

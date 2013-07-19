@@ -21,6 +21,11 @@ var shimConfig = {
         depends: {'jquery': '$'},
         exports: null
     },
+    'jquery.autosize': {
+        path: './lib/jquery.autosize',
+        depends: {'jquery': '$'},
+        exports: null
+    },
     'jquery.chosen': { path: './lib/chosen.jquery', exports: null },
     'bootstrap': { path: './lib/bootstrap', exports: null },
     'bootstrap.tags': {

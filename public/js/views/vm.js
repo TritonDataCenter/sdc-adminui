@@ -50,13 +50,16 @@ var VmView = Backbone.Marionette.Layout.extend({
         'click .image-name-version': 'clickedImage',
         'click .resize': 'clickedResize',
         'click .change-owner': 'clickChangeOwner',
-        'click .show-fwrules-form': 'clickShowFwrulesForm'
+        'click .show-fwrules-form': 'clickShowFwrulesForm',
+        'click .edit-metadata': 'clickEditMetadata'
     },
     regions: {
         'nicsRegion': '.nics-region',
         'jobsListRegion': '.jobs-list-region',
         'fwrulesListRegion': '.fwrules-list-region',
-        'fwrulesFormRegion': '.fwrules-form-region'
+        'fwrulesFormRegion': '.fwrules-form-region',
+        'internalMetadataRegion': '.internal-metadata-region',
+        'customerMetadataRegion': '.customer-metadata-region'
     },
 
     url: function() {
@@ -118,6 +121,7 @@ var VmView = Backbone.Marionette.Layout.extend({
         }, this);
 
         this.listenTo(this.vm, 'change:customer_metadata', this.renderMetadata, this);
+        this.listenTo(this.vm, 'change:internal_metadata', this.renderMetadata, this);
         this.listenTo(this.vm, 'change:tags', this.renderTags, this);
         this.listenTo(this.vm, 'change:nics', this.renderNics, this);
         this.listenTo(this.vm, 'sync', this.loadImage);
@@ -283,6 +287,28 @@ var VmView = Backbone.Marionette.Layout.extend({
         });
     },
 
+    clickEditMetadata: function(e) {
+        this.listenTo(
+            this.customerMetadataListView,
+            'editing:begin',
+            function() {
+                this.$('.edit-metadata').hide();
+                var top = this.$('section.customer-metadata').offset().top;
+                $("html, body").animate({ scrollTop: top + "px" });
+            },
+        this);
+
+        this.listenTo(
+            this.customerMetadataListView,
+            'editing:end',
+            function() {
+                this.$('.edit-metadata').show();
+            },
+        this);
+
+        this.customerMetadataListView.editingMode();
+    },
+
     clickShowFwrulesForm: function() {
         var self = this;
 
@@ -358,8 +384,8 @@ var VmView = Backbone.Marionette.Layout.extend({
     },
 
     renderMetadata: function() {
-        this.customerMetadataListView.setElement(this.$('.customer-metadata')).render();
-        this.internalMetadataListView.setElement(this.$('.internal-metadata')).render();
+        this.customerMetadataRegion.show(this.customerMetadataListView);
+        this.internalMetadataRegion.show(this.internalMetadataListView);
     },
 
     renderSnapshots: function() {
