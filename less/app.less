@@ -9,6 +9,7 @@
 @import "lib/bootstrap-tags.less";
 
 @import "images-list.less";
+@import "servers-list.less";
 @import "image-import.less";
 @import "user-preview.less";
 
@@ -556,41 +557,6 @@ h1.branding {
 
 
 #page-servers {
-  .servers-list {
-    td a { cursor: pointer; }
-    .uuid {
-      font-size: 12px;
-      color: @grayLight;
-      font-style: italic;
-      display: block;
-      width: 280px;
-      font-family: monospace;
-    }
-
-    .last-platform {
-      i { margin-right: 6px;}
-      margin-right: 3px;
-
-      .sdc {
-        padding: 3px;
-        background: #bbb; color: #FFF;
-      }
-      .platform {
-        padding: 3px;
-      }
-    }
-    .reserved { float: right; background: @warningBackground; padding: 0 6px; }
-    .last-platform {
-      i { margin-right: 5px;}
-      background: #f3f3f3; padding: 0 4px;
-      float: right; font-size: 12px; color: @grayLight;}
-
-    th.last-status { width: 140px;}
-    td.last-status>div { font-size: 12px; opacity: 0.5;}
-    th.memory { width: 100px;}
-    .status { width: 80px; }
-    .status span.running { background: @activeColor; }
-  }
 }
 
 .key-value-list {

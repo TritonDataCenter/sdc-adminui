@@ -1,37 +1,48 @@
-<td class="status">
-  <span class="
-    label {{#if running}}{{status}}{{else}}label-warning{{/if}}
-    ">
-    {{#if running}}
-      <i class="icon-ok-sign icon-white"></i>
-    {{/if}}
-    {{status}}
-  </span>
-</td>
-<td class="name">
+<div class="status {{status}}"></div>
+
+<div class="name">
+  <a href="/servers/{{uuid}}">{{hostname}}</a>
   {{#if reserved}}
   <span class="reserved"><i class="icon-lock"></i></span>
   {{/if}}
-  <div class="last-platform">
-    <span class="sdc"><i class="icon-picture"></i> {{sdc_version}}</span>
-    <span class="platform">{{current_platform}}</span>
-  </div>
-  <a href="/servers/{{uuid}}">{{hostname}}</a>
   <span class="uuid">{{uuid}}</span>
-</td>
-<td class="last-status">
-  <div class="last-boot"><i class="icon-off"></i> {{last_boot}}</div>
-  <div class="last-heartbeat"><i class="icon-heart"></i> {{last_heartbeat}}</div>
-</td>
-<td>
+</div>
+
+{{#if setup}}
+<div class="memory-usage">
+  <div class="memory-usage-stat">
+    <strong>Avail</strong>
+    <span class="avail">{{memory_available_mb}}</span> of <span class="total">{{memory_total_mb}} MB</span>
+  </div>
+  <div class="memory-usage-graph"></div>
+</div>
+{{else}}
+<div class="setup-status">
   {{#if not_setup}}
     {{#if setting_up}}
     Setting up
     {{else}}
 
     {{#role "operators"}}
-    <button class="setup btn btn-info setup"><i class="icon-magic"></i> Setup Server</button>
+    Requires Setup
+    <button class="setup btn setup"><i class="icon-magic"></i> Setup this Server</button>
     {{/role}}
     {{/if}}
   {{/if}}
-</td>
+</div>
+
+{{/if}}
+
+<div class="last-status">
+  <div class="last-platform">
+    <strong><i class="icon-location-arrow"></i></strong>
+    <span>{{sdc_version}}.{{current_platform}}</span>
+  </div>
+
+  <div class="last-boot">
+    <strong><i class="icon-power-off"></i></strong><span>{{last_boot}}</span>
+  </div>
+  <div class="last-heartbeat">
+    <strong><i class="icon-heart"></i></strong><span>{{last_heartbeat}}</span></div>
+  </div>
+</div>

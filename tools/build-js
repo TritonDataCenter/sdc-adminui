@@ -78,7 +78,11 @@ var shimConfig = {
             'backbone': 'Backbone',
             'underscore': '_'
         }
-    }
+    },
+    'raphael': {
+        path: './lib/raphael-min',
+        exports: 'Raphael'
+    },
 };
 
 Object.keys(shimConfig).forEach(function(k) {

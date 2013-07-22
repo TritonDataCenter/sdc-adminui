@@ -1,7 +1,7 @@
 # adminui Changelog
 
 ## 1.0.7 (unreleased)
-
+- ``ADMINUI-1445`` Server list view now shows memory consumption information for each node
 - ``ADMINUI-1428`` VM Metadata editor rewritten to be able to edit the entire metadata object before saving
 
 ## 1.0.6
