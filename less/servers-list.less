@@ -1,15 +1,19 @@
 .servers-list {
   .zero-state {
     text-align: center;
-    display:block;
+    display: block;
   }
+
   .servers-list-item {
-    margin-bottom: 10px;
     .widget-content;
+    padding: 0;
+
+    margin-bottom: 10px;
     overflow: hidden;
+
     .status {
       float: left;
-      width: 10px;
+      width: 15px;
       margin-right: 10px;
       height: 80px;
       &.running { background: @activeColor; }
