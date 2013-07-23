@@ -15,6 +15,7 @@ var Views = {
     'users': require('./views/users'),
     'user': require('./views/user'),
     'packages': require('./views/packages'),
+    'settings': require('./views/settings'),
     'images': require('./views/images'),
     'image': require('./views/image'),
     'image-import': require('./views/image-import'),

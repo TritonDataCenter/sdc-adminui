@@ -44,6 +44,10 @@
           <li data-view="services"><a href="/services">Services</a></li>
 
           <li class="fishbulb"><a href="/fishbulb" target="fishbulb"><i class="icon-bar-chart"></i> Analytics</a></li>
+
+          {{#role "operators"}}
+          <li class="settings" data-view="settings"><a href="/services"><i class="icon-cog"></i></a></li>
+          {{/role}}
         </ul>
       </div>
     </div>
