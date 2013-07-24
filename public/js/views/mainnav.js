@@ -16,7 +16,7 @@ var Mainnav = Backbone.Marionette.ItemView.extend({
         }
 
         e.preventDefault();
-        var li = $(e.target).parent();
+        var li = $(e.currentTarget);
         var view = li.attr("data-view");
         this.highlight(view);
         this.vent.trigger("showview", view);

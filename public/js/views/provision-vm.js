@@ -113,6 +113,7 @@ var View = Backbone.Marionette.Layout.extend({
             collection: this.packages
         });
 
+        this.settings = require('../models/settings');
         this.selectedPackage = new Package();
         this.packagePreview = new PackagePreview({model: this.selectedPackage});
 
@@ -199,17 +200,27 @@ var View = Backbone.Marionette.Layout.extend({
 
     populatePrimaryNetworks: function(selectedNets) {
         var $select = this.$('.primary-network-select select');
+
         var networks = this.networks;
         var networkPools = this.networkPools;
+
+        var settings = this.settings;
+
         $select.empty();
         _.each(selectedNets, function(net) {
             var n = networks.get(net.uuid) || networkPools.get(net.uuid);
             var $elm = $("<option />").attr('value', n.get('uuid'));
+
+            if (settings.get('provision.preset_primary_network') == net.uuid) {
+                $elm.prop('selected', true);
+            }
+
             if (n.get('subnet')) {
                 $elm.html([n.get('name'), n.get('subnet')].join(' - '));
             } else {
                 $elm.html(n.get('name'));
             }
+
             $select.append($elm);
         });
     },
@@ -217,21 +228,35 @@ var View = Backbone.Marionette.Layout.extend({
     onSelectUser: function(u) {
         this.selectedUser = u;
         this.userPreview.show(new UserPreview({model: u}));
+
+        var settings = this.settings;
+
         if (this.networks.length) {
             this.networks.reset();
         }
+
         this.$('.networks-select .chosen').empty();
         this.$('.primary-network-select select').empty();
 
         var self = this;
         $.when(
+            this.settings.fetch(),
             this.networks.fetch({data: {provisionable_by: u.get('uuid') }}),
             this.networkPools.fetch({data: {provisionable_by: u.get('uuid') }})
         ).then(function() {
-            self.createNetworkSelect();
-            self.createNetworkSelect();
-            self.createNetworkSelect();
-            self.createNetworkSelect();
+            var networkPresets = settings.get('provision.preset_networks') || [];
+
+            while (networkPresets.length < 4) {
+                networkPresets.push(null);
+            }
+
+            _.each(networkPresets, function(uuid) {
+                self.createNetworkSelect(uuid);
+            });
+
+            var values = self.extractFormValues();
+            self.populatePrimaryNetworks(values.networks);
+            self.checkFields();
         });
 
 
@@ -255,13 +280,18 @@ var View = Backbone.Marionette.Layout.extend({
         this.$('.no-sshkeys-warning').show();
     },
 
-    createNetworkSelect: function() {
+    createNetworkSelect: function(uuid) {
         var $select = $('<select data-placeholder="Select a Network" name="networks[]"></select>');
         $select.append("<option></option>");
 
         var $optgroup = $('<optgroup />').attr('label', 'Networks');
         this.networks.each(function(n) {
             var $elm = $("<option />").attr('value', n.get('uuid'));
+
+            if (uuid === n.get('uuid')) {
+                $elm.prop('selected', true);
+            }
+
             if (n.get('subnet')) {
                 $elm.html([n.get('name'), n.get('subnet')].join(' - '));
             } else {
@@ -275,6 +305,11 @@ var View = Backbone.Marionette.Layout.extend({
         var $optgroup2 = $('<optgroup />').attr('label', 'Network Pools');
         this.networkPools.each(function(n) {
             var $elm = $("<option />").attr('value', n.get('uuid'));
+
+            if (uuid === n.get('uuid')) {
+                $elm.prop('selected', true);
+            }
+
             if (n.get('subnet')) {
                 $elm.html([n.get('name'), n.get('subnet')].join(' - '));
             } else {
@@ -282,11 +317,15 @@ var View = Backbone.Marionette.Layout.extend({
             }
             $optgroup.append($elm);
         });
+
         $select.append($optgroup2);
         $select.show();
 
         this.$('.networks-select .chosen').append($select);
-        $select.chosen({allow_single_deselect: true });
+        $select.chosen({
+            width: "200px",
+            allow_single_deselect: true
+        });
         this.$('.control-group-networks').show();
         this.$('.control-group-primary-network').show();
     },
@@ -361,6 +400,7 @@ var View = Backbone.Marionette.Layout.extend({
 
     checkFields: function() {
         this.hideError();
+
         var values = this.extractFormValues();
         var valid;
         var image_uuid;
@@ -384,6 +424,8 @@ var View = Backbone.Marionette.Layout.extend({
             image_uuid = values['image_uuid'] || values['disks'][0]['image_uuid'];
             valid = valid && true;
         }
+
+        console.log('Current Provision Values', values);
 
         if (valid) {
             this.enableProvisionButton();
@@ -482,8 +524,6 @@ var View = Backbone.Marionette.Layout.extend({
 
             return net;
         });
-
-        console.log(values);
 
         return values;
     },

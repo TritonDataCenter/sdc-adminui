@@ -2,6 +2,7 @@
 
 ## 1.0.7 (unreleased)
 
+- ``ADMINUI-1443`` It is now possible to configure provisioning networking presets
 - ``ADMINUI-1451`` Fixes an issue where an operator is unable to remove a network from a network pool
 - ``ADMINUI-1445`` Server list view now shows memory consumption information for each node
 - ``ADMINUI-1428`` VM Metadata editor rewritten to be able to edit the entire metadata object before saving
