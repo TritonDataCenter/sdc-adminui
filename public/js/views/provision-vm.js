@@ -55,7 +55,10 @@ var PackageSelect = Backbone.Marionette.CollectionView.extend({
     },
     onRender: function() {
         this.$el.prepend('<option></option>');
-        this.$el.chosen({width: '280px'});
+        this.$el.chosen({
+            disable_search_threshold: 5,
+            width: '280px'
+        });
     },
     onChange: function(e) {
         var uuid = $(e.target).val();

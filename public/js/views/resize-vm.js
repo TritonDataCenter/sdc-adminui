@@ -8,7 +8,7 @@ var ViewModel = Backbone.Model.extend({});
 var View = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/resize-vm.hbs'),
     attributes: {
-        'class': 'modal'
+        'class': 'modal resize-vm'
     },
     events: {
         'click button': 'onClickResize'
@@ -85,6 +85,7 @@ var View = Backbone.Marionette.ItemView.extend({
                 }
             }
         });
+        this.$('select').chosen();
     },
     show: function() {
         this.render();

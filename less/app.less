@@ -863,6 +863,12 @@ h1.branding {
   }
 }
 
+.resize-vm {
+  .modal-body {
+    overflow: visible;
+  }
+}
+
 #page-provision {
   .user-preview-region {
     margin-left: 180px;
@@ -873,14 +879,16 @@ h1.branding {
 }
 
 .package-preview {
-  background: #efefef;
-  padding: 10px;
+  background: #fff;
+  padding: 8px 8px;
   width: 300px;
   margin-top: 1em;
-  font-size: 11px;
+  font-size: 13px;
+  .title { font-weight: bold; font-size: 14px;}
 
   strong, span { display: inline-block; }
-  strong { width: 140px;}
+  strong { font-weight: normal; width: 140px;}
+  span { font-weight: bold; }
 }
 
 /** Attributes styling **/
