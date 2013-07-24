@@ -21,7 +21,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     events: {
-        'input input': 'enableSaveButton',
+        'input input': 'checkInput',
+        'change select': 'checkInput',
         'blur input[name="owner_uuids[]"]': 'onBlurOwnerField',
         'focus input[name="owner_uuids[]"]': 'onFocusOwnerField',
         'submit form': 'onSubmit'
@@ -41,8 +42,35 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.selectedUser = null;
     },
 
+    checkInput: function() {
+        if (this.validNetworks() && this.validPoolName()) {
+            this.enableSaveButton();
+        } else {
+            this.disableSaveButton();
+        }
+    },
+
+    validPoolName: function() {
+        var val = this.$('input[name=name]').val();
+        return (val.length > 0);
+    },
+
+    validNetworks: function() {
+        var val = this.$('select').val();
+
+        if (val === null || val.length === 0) {
+            return false;
+        } else {
+            return true;
+        }
+    },
+
     enableSaveButton: function() {
         this.$('button.save').prop('disabled', false);
+    },
+
+    disableSaveButton: function() {
+        this.$('button.save').prop('disabled', true);
     },
 
     serializeData: function() {
@@ -61,7 +89,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
             networks: networks
         };
     },
-
 
     onFocusOwnerField: function(e) {
         this.selectedUser = null;
@@ -125,7 +152,9 @@ module.exports = Backbone.Marionette.ItemView.extend({
             'input[name=name]': 'name',
             'input[name="owner_uuids[]"]': 'owner_uuids'
         });
-        this.$('select').chosen();
+        this.$('select').chosen({
+            width: "280px"
+        });
     },
 
     show: function() {
