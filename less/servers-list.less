@@ -49,15 +49,44 @@
 
 
     .memory-usage {
-      padding: 20px 10px;
-      padding-top: 25px;
+      padding: 12px 10px;
+      padding-top: 18px;
+      padding-bottom: 0;
       width: 300px;
       float: left;
-      .memory-usage-stat {
-        font-size: 12px;
+
+      .memory-usage-total {
         color: @grayLight;
+        font-size: 12px;
+        text-transform: uppercase;
         text-align: right;
-        .avail { color: #00d295;}
+        padding: 5px 0;
+        strong {
+          font-weight: 200;
+          color: @grayLight;
+          font-weight: 100;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          padding: 0 5px;
+        }
+        span {
+          font-weight: 400;
+        }
+      }
+      .memory-usage-avail {
+        font-size: 12px;
+        text-align: right;
+        strong {
+          color: @grayLight;
+          font-weight: 100;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          padding: 0 5px;
+        }
+        .avail {
+          font-size: 18px;
+          color: #00d295;}
+          font-weight: 400;
       }
       .memory-usage-graph {
         line-height: 0;

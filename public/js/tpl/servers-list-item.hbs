@@ -10,11 +10,16 @@
 
 {{#if setup}}
 <div class="memory-usage">
-  <div class="memory-usage-stat">
-    <strong>Avail</strong>
-    <span class="avail">{{memory_available_mb}}</span> of <span class="total">{{memory_total_mb}} MB</span>
+  <div class="memory-usage-avail">
+    <strong>Available</strong>
+    <span class="avail">{{memory_available_gb}} GB</span>
   </div>
   <div class="memory-usage-graph"></div>
+  <div class="memory-usage-total">
+    <strong>Total</strong>
+    <span class="total">{{memory_total_gb}} GB</span>
+  </div>
+</div>
 </div>
 {{else}}
 <div class="setup-status">

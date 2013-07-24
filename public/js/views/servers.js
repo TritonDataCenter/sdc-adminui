@@ -49,7 +49,9 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
             last_boot: moment(data.last_boot).fromNow(),
             last_heartbeat: moment(data.last_heartbeat).fromNow(),
             memory_available_mb: _.str.sprintf("%0.1f", data.memory_available_bytes/1024/1024),
-            memory_total_mb: _.str.sprintf("%0.1f", data.memory_total_bytes/1024/1024)
+            memory_total_mb: _.str.sprintf("%0.1f", data.memory_total_bytes/1024/1024),
+            memory_available_gb: _.str.sprintf("%0.1f", data.memory_available_bytes/1024/1024/1024),
+            memory_total_gb: _.str.sprintf("%0.1f", data.memory_total_bytes/1024/1024/1024)
         });
         data.memory_used_percent = (data.memory_available_mb / data.memory_total_mb);
         console.log(data);
