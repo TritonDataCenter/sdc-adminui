@@ -30,12 +30,13 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
             return {};
         }
 
+        if (data.created_at) {
+            data.when = moment(data.created_at).utc().format('lll');
+        } else {
+            data.when = 'unknown';
+        }
+
         if (data.name.indexOf('update') !== -1 && data.params) {
-            if (data.created_at) {
-                data.when = moment(data.created_at).utc().format('lll');
-            } else {
-                data.when = 'unknown';
-            }
 
             var summary = []
             if (data.params.new_owner_uuid) {
