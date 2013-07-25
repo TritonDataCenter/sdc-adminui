@@ -1,7 +1,7 @@
 # adminui Changelog
 
 ## 1.0.7 (unreleased)
-
+- ``ADMINUI-1448`` Jobs lists now display a summary of updates in vm update jobs
 - ``ADMINUI-1453`` Jobs page now allows filtering by name
 - ``ADMINUI-1443`` It is now possible to configure provisioning networking presets
 - ``ADMINUI-1451`` Fixes an issue where an operator is unable to remove a network from a network pool
