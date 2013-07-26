@@ -1,10 +1,15 @@
 <div class="page-header">
   <h1>Servers
     <div class="actions">
-      <button class="toggle-filter btn" data-toggle="button"><i class="icon-filter"></i> Filter Options</button>
+      {{!
+      <button class="toggle-boot-options btn-link">Manage Default Boot Options</button>
+      }}
     </div>
   </h1>
 </div>
+
+<div class="default-boot-options-region"></div>
+<div class="servers-filter-region"></div>
 
 <div class="row">
   <div class="span12 servers-list">
@@ -13,29 +18,5 @@
       <span class="record-count"></span> Servers
     </div>
   </div>
-
-  <div class="span3 servers-filter">
-    <div class="filter-panel">
-      <h4>Filter Options</h4>
-      <form>
-        <label>Data Center</label>
-        <select name="dc" disabled></select>
-
-        <label>UUID</label>
-        <input type="text" name="uuid" placeholder="UUID">
-
-        <label>Hostname</label>
-        <input type="text" name="hostname" placeholder="Hostname">
-
-        <label>Setup State</label>
-        <select name="setup">
-          <option value="">any</option>
-          <option value="true">setup</option>
-          <option value="false">not setup</option>
-        </select>
-
-        <button class="btn btn-large btn-info">Apply Filters</button>
-      </form>
-    </div>
-  </div>
 </div>
+
