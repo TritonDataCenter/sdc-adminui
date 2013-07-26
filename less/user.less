@@ -1,0 +1,52 @@
+@import "__vms-list";
+
+#page-user {
+  .vms-list { .__vms-list; }
+  .vms-filter { .__vms-filter; }
+
+  .user-details {
+    th { width: 140px;}
+    .provisioning.approved { color: @activeColor; }
+    .provisioning.disabled { color: @dangerColor; }
+    .registered-developer.yes { color: @activeColor; }
+    .registered-developer.no { color: @dangerColor; }
+  }
+
+  .limits-list {
+    ul li {
+      .datacenter {
+        .widget-content;
+        .widget-header;
+        .actions {
+          float: right;
+          a.edit { color: @gray; }
+          a.del { color: @dangerColor; margin-left: 10px; }
+        }
+      }
+      .limit {
+        .widget-content;
+        .image { color: @grayLight; display: inline-block; width: 200px; font-weight: bold; }
+        .value { display: inline-block; width: 200px; }
+      }
+    }
+  }
+
+
+  .ssh-keys {
+    .items {
+      overflow-y: scroll;
+      max-height: (4px*62);
+      margin-bottom: 10px;
+    }
+    .details, .actions { display: inline-block; vertical-align: middle;}
+    .details { width: 380px;}
+
+    .item {
+      .widget-content;
+      .fingerprint { #font > .monospace(10px); line-height: 20px; color: @grayLight; }
+      .remove { display: inline-block; font-size: 12px; text-decoration: none; color: @red; padding: 8px; visibility: hidden;}
+      &:hover .remove { visibility: visible; };
+    }
+
+  }
+}

@@ -1,0 +1,76 @@
+
+#job-progress {
+  width: 640px;
+  margin-left: -320px;
+  .job-details {
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .modal-header small {
+    color: @grayLight;
+    font-style: italic;
+    font-family: monospace;
+  }
+  .chain-results {
+    li {
+      padding: 5px 10px;
+      background: #f3f3f3;
+      margin-bottom: 0.5em; font-size: 12px; }
+    li.error {
+      background: rgb(255, 202, 202);
+    }
+    li > * {
+      display: inline-block;
+      vertical-align: top;
+    }
+    .name { font-weight: bold; }
+    .task { width: 360px;}
+    .time { padding-right: 5px; color: @grayLight; font-size: 10px; text-align: right; }
+    .duration {
+      .value {
+        display: inline-block;
+        width: 40px;
+        text-align: right;
+        color: @gray;
+        font-size: 10px;
+      }
+    }
+  }
+  .modal-body.raw-enabled {
+    padding: 0;
+  }
+  .raw {
+    max-height: inherit;
+    overflow-x: scroll;
+    .box-sizing(border-box);
+    padding: 10px;
+    display: none;
+    background: #222;
+    color: #fff;
+    #font > .monospace(10px);
+    line-height: 1.2;
+    white-space: pre;
+  }
+  .wait {
+    float: left;
+    padding: 10px;
+    margin-left: 10px;
+    font-size: 14px;
+    line-height: 14px;
+    color: #888;
+    img { margin-left: 10px;}
+  }
+  .execution {
+    background: #333;
+    text-transform: uppercase;
+    font-size: 14px;
+    line-height: 14px;
+    padding: 10px;
+    font-weight: bold;
+    float: left;
+    color: #fff;
+    span { color: yellow; }
+    .succeeded { color: #a8ff00; }
+    .failed { color: #ff4200; }
+   }
+}

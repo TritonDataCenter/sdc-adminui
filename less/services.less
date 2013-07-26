@@ -1,0 +1,43 @@
+#page-services {
+  .application {
+    .info {
+      h4 {
+        color: #555;
+        text-transform: uppercase;
+      }
+    }
+    margin-bottom: 1em;
+    clear: both;
+    overflow: hidden;
+  }
+  .services {
+    .service-name {
+      .widget-header;
+      font-size: 12px;
+      padding: 5px 10px;
+    }
+  }
+  .service+.service { margin-top: 1em;}
+  .instance {
+    .widget-content;
+    font-size: 12px;
+    padding: 8px;
+    .state { color: @red; }
+    .state.running { color: @activeColor; }
+    .alias, .uuid, .state, .ram { display: inline-block;}
+    .alias { color: @grayLight; width: 100px;}
+    .uuid {
+      width: 280px;
+      font-style: italic;
+      color: @grayLight;
+      #font > .monospace(10px, normal, 1.2);
+    }
+    .state { width: 100px;}
+    a {
+      cursor: pointer;
+    }
+
+    .ram { width: 100px;}
+  }
+}
+

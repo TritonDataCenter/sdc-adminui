@@ -1,0 +1,81 @@
+#page-image {
+  .page-header {
+    overflow: visible;
+    .version { color: @grayLight; font-size: 14px;}
+    .resource-status {
+      .active { background: @activeColor; }
+      .inactive { background: @dangerColor; }
+      .unactivated { background: @warningColor; }
+    }
+  }
+  .basic {
+    .os-image { text-align: center; }
+
+    p {
+     padding: 10px;
+     text-align: center;
+    }
+
+    .state {
+      width: 140px; margin: 0 auto;
+    }
+    .visibility { text-align: center;}
+    button { margin-top: 1em;}
+    .actions { text-align: center; margin-top: 40px;}
+  }
+
+  .details {
+    .show-upload-form { font-size: 14px; .pull-right; }
+    .text-warning { font-size: 14px; float: right;}
+  }
+  .billing-tags-container {
+    .tags { #bootstrap-tags; }
+  }
+
+  .fileinput { display: none; }
+
+  a.show-upload-form {
+    cursor: pointer;
+  }
+
+  .files {
+    li {
+      .widget-content;
+    }
+    li.upload {
+      display: none;
+      padding: 20px;
+      overflow: hidden;
+      .upload-actions { margin-top: 10px; .pull-right;}
+      .select { display: inline-block; width: 300px; }
+      .compression { width: 200px;display: inline-block;  font-size: 12px;}
+      .compression select { padding: 3px; height: 24px; margin: 0;}
+      .add-file {
+        cursor: pointer;
+      }
+    }
+
+    li.progress {
+      padding: 8px;
+    }
+
+    li.empty { padding: 0 8px; }
+
+    li.file.to-be-removed {
+      .opacity(40);
+      span {text-decoration: line-through; }
+    }
+    li.file {
+      .sha1, .size, .compression {
+        display: inline-block;
+      }
+      .sha1 {
+        width: 320px;
+        #font > .monospace(11px, normal, 1.2);
+      }
+      .compression { color: @grayLight;}
+      .size { width: 200px; }
+    }
+  }
+}
+

@@ -1,0 +1,168 @@
+@import "__vms-list";
+#page-server {
+  .vms-list {
+    .__vms-list;
+  }
+
+  .key-value-list {
+    width: 100%;
+    .item { clear: both; }
+    .item-label, .item-content { padding: 8px; display: inline-block; vertical-align: top; }
+    .item-label { font-weight: 400; width: 150px; color: #888;}
+    .item-content {
+      text-align: justify;
+      overflow: visible;
+      height: 20px;
+      vertical-align: middle;
+      width: 350px;
+    }
+  }
+
+  .resource-status {
+    .running { background: @activeColor; }
+    .unknown { background: lighten(@red, 20%); }
+    .server-setting-up { background: @yellow; }
+  }
+  .rack .none { color: @grayLight;}
+  .overview {
+    .item { .widget-content; }
+    .item-label, .item-content { display: inline-block; }
+    .item-label { width: 140px; }
+    .item-content { width: 360px; }
+  }
+
+  table.hardware {
+    .table;
+    tbody th { width: 140px; }
+  }
+
+  table.traits { .table; }
+  a { cursor: pointer; }
+
+  .disks {
+    .disk {
+      .widget-content;
+      .name { display: inline-block; width: 200px; }
+      .size { display: inline-block; width: 200px; }
+    }
+  }
+
+  .change-platform { margin-left: 5px;}
+  .change-platform-form {
+    line-height: 1em;
+    select { margin: 0; padding: 1px; }
+    button { margin: 0; padding: 3px 8px; }
+    select { width: 150px;}
+  }
+
+
+  .change-reservation-ratio { float: right; }
+  .btn-reservation-ratio { display: none; }
+  input.reservation-ratio {
+    margin-top: -4px;
+    padding: 4px 8px;
+    margin-bottom: 0;
+    text-align: left;
+    width: 100px;
+    display: inline-block;
+    background: lighten(@yellow, 42%);
+    border: none;
+  }
+  span.reservation-ratio {
+    margin-top: -4px;
+    padding: 0;
+    display: inline-block;
+    width: 140px;
+  }
+
+  .rack {
+    .change-rack-id { visibility: hidden; .pull-right; }
+    .item-content:hover .change-rack-id { visibility: visible; };
+  }
+
+  .change-reserve { float: right;}
+
+  .change-rack-form, .change-reserve {
+    input, button {  margin:0; font-size: 12px;}
+    input { padding: 2px;}
+    button { padding: 2px 6px;}
+  }
+
+  .enabled { color: @activeColor; }
+  .disabled { color: @red; }
+
+  .server-nics {
+    li+li {
+      border-top: none;
+    }
+    li {
+      .widget-content;
+
+      & > div {
+        display: inline-block;
+        vertical-align: top;
+      }
+
+      padding: 8px;
+
+      .name-container { width: 160px; }
+      .ip-container { width: 140px; }
+      .netmask-container { width: 140px; }
+      .vlan-id-container { width: 80px;}
+      .resolvers-container { width: 150px; }
+      .nic-tag-container { width: 100px;}
+      .nic-tags-provided-container { width: 100px;}
+
+      .name {
+        display: block;
+        #font > .monospace(12px);
+        font-weight: bold;
+      }
+      .mac {
+        display: block;
+        #font > .monospace(10px);
+        color: @grayLight;
+      }
+
+      .link-status {
+        .border-radius(2px);
+        margin: 0 12px;
+        margin-top: 14px;
+        width: 20px;
+        height: 6px;
+        background: @grayDark; }
+
+      .link-status.up { background: @activeColor; }
+
+      .lbl {
+        #font > .monospace(10px);
+        color: @grayLight;
+        display: block;
+      }
+      .value {
+        #font > .monospace(10px);
+        display: block;
+        color: @grayDarker;
+      }
+
+    }
+  }
+
+  .platform {
+    .item { .widget-content; }
+    .item-content { width: 194px; text-align: right;}
+    .item-label, .item-content { display: inline-block;}
+    .item-label { width: 100px; }
+    .item-content { width: 240px;}
+  }
+  .rack > * { vertical-align: top; font-size: 10p x;}
+
+  .serial-console {
+    overflow: hidden;
+    margin-top: 10px;
+    input { width: 100px;}
+
+    .item-content { width: 110px; text-align: right;}
+    .change { padding: 8px; }
+  }
+}

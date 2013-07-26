@@ -1,0 +1,67 @@
+#page-networks {
+  .network-pools-list {
+    ul>li {
+      margin-bottom: 1em;
+
+      .network-pool-header {
+        .widget-header;
+        cursor: pointer;
+        font-size: 12px;
+        padding: 10px;
+
+        .name { margin-right: 20px; }
+        .uuid {
+          float: right;
+          color: @grayLight;
+          #font > .monospace(10px);
+        }
+        .edit { margin-left: 10px; float: right; font-weight: bold; visibility: hidden;};
+        .delete { margin-left: 10px; font-weight: bold; color: @red; float: right; visibility: hidden;}
+        &:hover .delete { text-decoration: none; visibility: visible; }
+        &:hover .edit { text-decoration: none; visibility: visible; }
+
+        .network-count { font-style: italic; font-size: 10px; text-transform: uppercase; color: @grayLight;}
+      }
+
+    }
+  }
+
+  .networks-list {
+    li {
+      .widget-content;
+      display: block;
+      padding: 10px;
+
+      &>div { vertical-align:top; display: inline-block; }
+      strong { display: block; }
+      .provision-ip-range {
+        width: 200px;
+      }
+      .resolvers { width: 120px;  }
+      .gateway { width: 100px;}
+      .name {
+        width: 260px;
+        a { display: block; clear: both; font-weight: bold; }
+      }
+      .subnet {
+        color: @grayDark;
+        font-family: @monoFontFamily;
+        font-size: 10px;
+      }
+      .vlan {
+        width: 50px;
+      }
+      strong { font-size: 12px; color: @grayLight;}
+      .actions {
+        a.delete-network { color: @red; text-decoration: none;}
+       float: right; vertical-align: middle; color: @red; visibility: hidden;}
+      &:hover .actions { visibility: visible; }
+      .value {
+        color: @grayDark;
+        font-family: @monoFontFamily;
+        font-size: 10px;
+      }
+    }
+  }
+}
+

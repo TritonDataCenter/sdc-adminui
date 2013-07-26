@@ -1,5 +1,10 @@
 @import "bootstrap.less";
 @import "variables.less";
+
+@activeColor: #00d295;
+@dangerColor: lighten(@red, 20%);
+@warningColor: @yellow;
+
 @import "lib/typeahead.js-bootstrap.less";
 @import "lib/chosen.js-bootstrap.less";
 
@@ -13,13 +18,37 @@
 @import "image-import.less";
 @import "user-preview.less";
 
+@import "vm.less";
+@import "vms.less";
+
+@import "iamge.less";
+
+@import "job-progress.less";
+
+@import "dashboard.less";
+
+@import "users.less";
+@import "user.less";
+
+@import "networks.less";
+@import "network.less";
+
+@import "packages.less";
+
+@import "server.less";
+@import "servers.less";
+
+@import "services.less";
+
+@import "jobs.less";
+@import "job.less";
+
+@import "provision.less";
+
 @import "fwrules-list.less";
 @import "fwrules-form.less";
 
 
-@activeColor: #00d295;
-@dangerColor: lighten(@red, 20%);
-@warningColor: @yellow;
 
 body { height: 100%; }
 html { height: 100%; }
@@ -254,128 +283,8 @@ h1.branding {
   overflow: hidden;
 }
 
-#page-dashboard {
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-
-  .row {
-    margin-bottom: 20px;
-  }
-
-  .alarms-container {
-    font-size: 24px;
-    text-align: center;
-    line-height: 1.5em;
-    font-weight: bold;
-    color: #FFF;
-    .has-alarms {
-      overflow: hidden;
-    }
-    .no-alarms {
-      .widget-content;
-      .box-sizing(border-box);
-      strong {
-        font-weight: 300;
-        display: block;
-        color: #62C2B4;
-        font-size: 38px;
-        padding: 10px 0;
-      }
-      font-size: 14px;
-      font-weight: 200;
-      color: #aaa;
-      padding: 20px 48px;
-    }
-  }
-
-  .servers .counter .value { color: #6595B5;}
-
-  .counter {
-    .box-sizing(border-box);
-    .widget-content;
-    text-align: center;
-    font-size: 14px;
-    padding: 15px 0;
-
-    .name {
-      display: block;
-      text-transform: uppercase;
-      color: #888;
-      padding: 6px 0;
-    }
-
-    .value {
-      font-weight: 300;
-      font-size: 38px;
-      padding: 10px 0;
-      display: block;
-      color: #62C2B4;
-    }
 
 
-  }
-}
-
-#page-users {
-  .users-container { .widget-container; }
-  .page-header button { margin-top: 14px;}
-
-  th.login { width: 260px; }
-  th.name {  }
-  th.email { width: 260px; }
-
-  .unnamed { color: @grayLight; font-style: italic;}
-  .cn { font-size: 12px;}
-  .email { font-size: 12px;}
-  .uuid { #font > .monospace(10px); color: @grayLight; display:block; }
-}
-
-#page-user {
-  .user-details {
-    th { width: 140px;}
-    .provisioning.approved { color: @activeColor; }
-    .provisioning.disabled { color: @dangerColor; }
-    .registered-developer.yes { color: @activeColor; }
-    .registered-developer.no { color: @dangerColor; }
-  }
-
-  .limits-list {
-    ul li {
-      .datacenter {
-        .widget-content;
-        .widget-header;
-        .actions {
-          float: right;
-          a.edit { color: @gray; }
-          a.del { color: @dangerColor; margin-left: 10px; }
-        }
-      }
-      .limit {
-        .widget-content;
-        .image { color: @grayLight; display: inline-block; width: 200px; font-weight: bold; }
-        .value { display: inline-block; width: 200px; }
-      }
-    }
-  }
-
-
-  .ssh-keys {
-    .items {
-      overflow-y: scroll;
-      max-height: (4px*62);
-      margin-bottom: 10px;
-    }
-    .details, .actions { display: inline-block; vertical-align: middle;}
-    .details { width: 380px;}
-
-    .item {
-      .widget-content;
-      .fingerprint { #font > .monospace(10px); line-height: 20px; color: @grayLight; }
-      .remove { display: inline-block; font-size: 12px; text-decoration: none; color: @red; padding: 8px; visibility: hidden;}
-      &:hover .remove { visibility: visible; };
-    }
-
-  }
-}
 
 #user-form {
   .modal-body { max-height: 480px; }
@@ -415,327 +324,6 @@ h1.branding {
 
 
 
-#page-image {
-  .page-header {
-    overflow: visible;
-    .version { color: @grayLight; font-size: 14px;}
-    .resource-status {
-      .active { background: @activeColor; }
-      .inactive { background: @dangerColor; }
-      .unactivated { background: @warningColor; }
-    }
-  }
-  .basic {
-    .os-image { text-align: center; }
-
-    p {
-     padding: 10px;
-     text-align: center;
-    }
-
-    .state {
-      width: 140px; margin: 0 auto;
-    }
-    .visibility { text-align: center;}
-    button { margin-top: 1em;}
-    .actions { text-align: center; margin-top: 40px;}
-  }
-
-  .details {
-    .show-upload-form { font-size: 14px; .pull-right; }
-    .text-warning { font-size: 14px; float: right;}
-  }
-  .billing-tags-container {
-    .tags {
-      #bootstrap-tags;
-    }
-  }
-
-  .fileinput { display: none; }
-  a.show-upload-form {
-    cursor: pointer;
-  }
-
-  .files {
-    li {
-      .widget-content;
-    }
-    li.upload {
-      display: none;
-      padding: 20px;
-      overflow: hidden;
-      .upload-actions { margin-top: 10px; .pull-right;}
-      .select { display: inline-block; width: 300px; }
-      .compression { width: 200px;display: inline-block;  font-size: 12px;}
-      .compression select { padding: 3px; height: 24px; margin: 0;}
-      .add-file {
-        cursor: pointer;
-      }
-    }
-
-    li.progress {
-      padding: 8px;
-    }
-
-    li.empty { padding: 0 8px; }
-
-    li.file.to-be-removed {
-      .opacity(40);
-      span {text-decoration: line-through; }
-    }
-    li.file {
-      .sha1, .size, .compression {
-        display: inline-block;
-      }
-      .sha1 {
-        width: 320px;
-        #font > .monospace(11px, normal, 1.2);
-      }
-      .compression { color: @grayLight;}
-      .size { width: 200px; }
-    }
-  }
-}
-
-.vms-list tr {
-  th.status { width: 80px; }
-  th.memory, td.memory { width: 80px; text-align: right; padding-right: 30px; }
-  .uuid {
-    font-size: 12px;
-    font-style: italic;
-    display: block;
-    color: @grayLight;
-    font-family: monospace;
-  }
-  span.type { float: right; background: #aaa;}
-  th.alias { }
-  td.alias a { cursor: pointer; }
-
-  th.ips, td.ips {
-    width: 140px;
-    padding-left: 20px;
-  }
-
-  td.ips span {
-    display: block;
-    font-size: 12px;
-    color: @gray;
-    font-family: monospace;
-  }
-
-  th.package {
-    width: 140px;
-  }
-
-  td.package-image {
-    div { clear: both;}
-    span { margin-left: 2px;}
-    color: @gray;
-    font-size: 12px;
-  }
-  span.running { background-color: @activeColor; }
-  span.destroyed { background-color: @grayDark; }
-}
-
-.notifications {
-  width: 440px;
-
-  text-align: left;
-
-  ul {
-    text-align: left;
-    list-style: none; margin: 0;
-  }
-
-  li { padding: 1em; border-bottom: 1px solid #eee; }
-  li .progress { margin-bottom: 0;}
-  li .details>* { display: inline-block; font-size: 11px; }
-  li .details .name { text-transform: uppercase; width: 100px; }
-  li .details .current-step { width: 240px; }
-  li .details .execution { width: 40px; font-weight: bold;}
-}
-
-
-#page-servers {
-  .filter-options {
-    .widget-content;
-    .box-sizing(border-box);
-    padding: 15px;
-    margin-bottom: 10px;
-    .input-append, .input-prepend { margin: 0;}
-    label {
-      color: @gray;
-      font-size: 12px;
-      padding: 0 3px;
-      text-transform: uppercase;
-    }
-  }
-}
-
-.key-value-list {
-  width: 100%;
-  .item { clear: both; }
-  .item-label, .item-content { padding: 8px; display: inline-block; vertical-align: top; }
-  .item-label { font-weight: 400; width: 150px; color: #888;}
-  .item-content {
-    text-align: justify;
-    overflow: visible;
-    height: 20px;
-    vertical-align: middle;
-    width: 350px;
-  }
-}
-
-
-#page-server {
-  .resource-status {
-    .running { background: @activeColor; }
-    .unknown { background: lighten(@red, 20%); }
-    .server-setting-up { background: @yellow; }
-  }
-  .rack .none { color: @grayLight;}
-  .overview {
-    .item { .widget-content; }
-    .item-label, .item-content { display: inline-block; }
-    .item-label { width: 140px; }
-    .item-content { width: 360px; }
-  }
-
-  table.hardware {
-    .table;
-    tbody th { width: 140px; }
-  }
-
-  table.traits { .table; }
-  a { cursor: pointer; }
-
-  .disks {
-    .disk {
-      .widget-content;
-      .name { display: inline-block; width: 200px; }
-      .size { display: inline-block; width: 200px; }
-    }
-  }
-
-  .change-platform { margin-left: 5px;}
-  .change-platform-form {
-    line-height: 1em;
-    select { margin: 0; padding: 1px; }
-    button { margin: 0; padding: 3px 8px; }
-    select { width: 150px;}
-  }
-
-
-  .change-reservation-ratio { float: right; }
-  .btn-reservation-ratio { display: none; }
-  input.reservation-ratio {
-    margin-top: -4px;
-    padding: 4px 8px;
-    margin-bottom: 0;
-    text-align: left;
-    width: 100px;
-    display: inline-block;
-    background: lighten(@yellow, 42%);
-    border: none;
-  }
-  span.reservation-ratio {
-    margin-top: -4px;
-    padding: 0;
-    display: inline-block;
-    width: 140px;
-  }
-
-  .rack {
-    .change-rack-id { visibility: hidden; .pull-right; }
-    .item-content:hover .change-rack-id { visibility: visible; };
-  }
-
-  .change-reserve { float: right;}
-
-  .change-rack-form, .change-reserve {
-    input, button {  margin:0; font-size: 12px;}
-    input { padding: 2px;}
-    button { padding: 2px 6px;}
-  }
-
-  .enabled { color: @activeColor; }
-  .disabled { color: @red; }
-
-  .server-nics {
-    li+li {
-      border-top: none;
-    }
-    li {
-      .widget-content;
-
-      & > div {
-        display: inline-block;
-        vertical-align: top;
-      }
-
-      padding: 8px;
-
-      .name-container { width: 160px; }
-      .ip-container { width: 140px; }
-      .netmask-container { width: 140px; }
-      .vlan-id-container { width: 80px;}
-      .resolvers-container { width: 150px; }
-      .nic-tag-container { width: 100px;}
-      .nic-tags-provided-container { width: 100px;}
-
-      .name {
-        display: block;
-        #font > .monospace(12px);
-        font-weight: bold;
-      }
-      .mac {
-        display: block;
-        #font > .monospace(10px);
-        color: @grayLight;
-      }
-
-      .link-status {
-        .border-radius(2px);
-        margin: 0 12px;
-        margin-top: 14px;
-        width: 20px;
-        height: 6px;
-        background: @grayDark; }
-
-      .link-status.up { background: @activeColor; }
-
-      .lbl {
-        #font > .monospace(10px);
-        color: @grayLight;
-        display: block;
-      }
-      .value {
-        #font > .monospace(10px);
-        display: block;
-        color: @grayDarker;
-      }
-
-    }
-  }
-
-  .platform {
-    .item { .widget-content; }
-    .item-content { width: 194px; text-align: right;}
-    .item-label, .item-content { display: inline-block;}
-    .item-label { width: 100px; }
-    .item-content { width: 240px;}
-  }
-  .rack > * { vertical-align: top; font-size: 10p x;}
-
-  .serial-console {
-    overflow: hidden;
-    margin-top: 10px;
-    input { width: 100px;}
-
-    .item-content { width: 110px; text-align: right;}
-    .change { padding: 8px; }
-  }
-}
 
 #server-nics-edit {
   width: 700px;
@@ -750,69 +338,8 @@ h1.branding {
     min-height: 150px;
   }
 }
-#page-vms, #page-user {
-  .vms-filter {
-    .widget-content;
-    .box-sizing(border-box);
-    padding: 15px;
-    margin-bottom: 10px;
-    .input-append, .input-prepend { margin: 0;}
-    label {
-      color: @gray;
-      font-size: 12px;
-      padding: 0 3px;
-      text-transform: uppercase;
-    }
-  }
-  .vms-filter .quick>.icon-search { font-size: 18px; color: @grayLight; margin-right: 10px;}
-  .vms-filter .quick>div { margin-bottom:0;}
-}
 
-#page-vm {
-  .dropdown-menu .delete { color: red; }
 
-  .resource-status {
-    .running { background: @activeColor; }
-    .failed { background: @dangerColor; }
-  }
-
-  .image-name-version.disabled { color: @grayLight; cursor: pointer; }
-  .image-name-version.error { color: @dangerColor; }
-
-  .vms-details {
-    .alias {
-      input { margin: 0; padding: 0; }
-    }
-    .server-hostname { cursor: pointer; }
-    .uuid {
-      font-size: 10px;
-      color: @grayLight;
-      font-style: italic;
-      font-family: monospace;
-    }
-    .overview {
-      .table;
-      tr { .widget-content; }
-      tbody {
-        th { width: 100px;}
-        td .mutate { visibility: hidden; }
-        td:hover .mutate { visibility: visible; }
-        td>*:first-child { display: inline-block; width: 500px; };
-      }
-    }
-    .vm-uuid,
-    .server-uuid,
-    .owner-uuid,
-    .billing-id,
-    .image-uuid {
-      .uuid;
-      .pull-right;
-    }
-  }
-  .snapshots {
-    .empty { color: @grayLight; }
-  }
-}
 
 .filter-panel {
   .box-sizing(border-box);
@@ -890,14 +417,6 @@ h1.branding {
   }
 }
 
-#page-provision {
-  .user-preview-region {
-    margin-left: 180px;
-  }
-  .package-preview-container {
-    margin-left: 180px;
-  }
-}
 
 .package-preview {
   background: #fff;
@@ -933,80 +452,6 @@ ul.attributes {
   }
 }
 
-#page-network {
-  td.belongs-to strong { display: inline-block; width: 70px; color: #aaa; }
-  td.belongs-to small {
-    font-style: italic;
-    #font > .monospace(12px);
-  }
-}
-
-#page-networks {
-  .network-pools-list {
-    ul>li {
-      margin-bottom: 1em;
-
-      .network-pool-header {
-        .widget-header;
-        cursor: pointer;
-        font-size: 12px;
-        padding: 10px;
-
-        .name { margin-right: 20px; }
-        .uuid {
-          float: right;
-          color: @grayLight;
-          #font > .monospace(10px);
-        }
-        .edit { margin-left: 10px; float: right; font-weight: bold; visibility: hidden;};
-        .delete { margin-left: 10px; font-weight: bold; color: @red; float: right; visibility: hidden;}
-        &:hover .delete { text-decoration: none; visibility: visible; }
-        &:hover .edit { text-decoration: none; visibility: visible; }
-
-        .network-count { font-style: italic; font-size: 10px; text-transform: uppercase; color: @grayLight;}
-      }
-
-    }
-  }
-
-  .networks-list {
-    li {
-      .widget-content;
-      display: block;
-      padding: 10px;
-
-      &>div { vertical-align:top; display: inline-block; }
-      strong { display: block; }
-      .provision-ip-range {
-        width: 200px;
-      }
-      .resolvers { width: 120px;  }
-      .gateway { width: 100px;}
-      .name {
-        width: 260px;
-        a { display: block; clear: both; font-weight: bold; }
-      }
-      .subnet {
-        color: @grayDark;
-        font-family: @monoFontFamily;
-        font-size: 10px;
-      }
-      .vlan {
-        width: 50px;
-      }
-      strong { font-size: 12px; color: @grayLight;}
-      .actions {
-        a.delete-network { color: @red; text-decoration: none;}
-       float: right; vertical-align: middle; color: @red; visibility: hidden;}
-      &:hover .actions { visibility: visible; }
-      .value {
-        color: @grayDark;
-        font-family: @monoFontFamily;
-        font-size: 10px;
-      }
-    }
-  }
-}
 
 #network-details {
   width: 640px;
@@ -1031,94 +476,6 @@ ul.attributes {
   .modal-body { overflow: visible;}
 }
 
-
-#page-packages {
-  .page-header { margin-bottom: 0; }
-
-  .sidebar {
-    border-right: 1px solid #DFE7EC;
-
-    .search {
-      clear: both;
-      padding-top: 10px;
-      input { font-size: 12px; }
-    }
-  }
-
-  #list {
-    overflow-y: scroll;
-    max-height: 500px;
-
-    ul li a {
-      color: @grayLight;
-      overflow: hidden; cursor: pointer;
-      padding: 5px 12px;
-
-      .name { display: inline-block; }
-      .version {
-        display: inline-block;
-        color: @grayDark;
-        font-family: @monoFontFamily;
-        font-size: 10px;
-        margin-left: 10px;
-      }
-    }
-    ul li.active {
-      border-right: 1px solid #dfe7ec;
-    }
-    ul li.active a {
-      color: #333;
-      background: #DFE7EC;
-    }
-    ul a:hover { background: none; }
-    ul li.active .version {}
-    ul li.active .name {}
-  }
-
-  #detail {
-    .flags { }
-    .flags span { display: inline-block; margin-right: 10px;}
-
-    .resource-status {
-      left: 300px;
-      .active { background: @activeColor;}
-      .inactive { background: @gray;}
-    }
-
-    .networks-list {
-      #page-networks > .networks-list;
-      li .name { width: 180px; }
-      li .vlan { width: 60px; }
-      li .provision-ip-range { display: none;}
-      li .gateway { width: 100px; }
-    }
-    .network-pools-list {
-      #page-networks > .network-pools-list;
-    }
-
-    .owner {
-      strong { vertical-align: top; }
-      .uuid { font-family: @monoFontFamily; font-size: 10px;}
-    }
-
-    .owner, .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority {
-      .widget-content;
-
-      strong {
-        margin-left: 10px;
-        .opacity(60);
-        display: inline-block;
-        width: 300px;
-      }
-
-      .value {
-        display: inline-block;
-      }
-    }
-  }
-
-  .billing-id .value { font-family: @monoFontFamily; font-size: 10px;}
-}
 
 
 
@@ -1366,42 +723,6 @@ ul.attributes {
 }
 
 
-#page-jobs {
-  .jobs-filter {
-    .widget-content;
-    .box-sizing(border-box);
-    padding: 15px;
-    .input-append, .input-prepend { margin: 0;}
-    label {
-      color: @grayLight;
-      margin: 0; padding: 10px; display: inline-block;
-      padding-left: 30px;
-    }
-  }
-}
-
-.jobs-list {
-  table {
-    .uuid { #font > .monospace(12px); color: @grayLight; }
-    .actions { width: 140px; }
-    .when { width: 200px;}
-    small {
-     color: @grayLight;
-     background: @warningBackground;
-     text-transform: uppercase;
-     font-size: 10px;
-     margin-left: 5px;
-    }
-    .execution {
-      width: 100px;
-      font-weight: bold;
-      font-size: 13px;
-      &.succeeded span { background: @activeColor; }
-      &.canceled span { background: @gray; }
-      &.failed span { background: @dangerColor; }
-    }
-  }
-}
 
 #traits-editor {
   textarea {
@@ -1416,188 +737,8 @@ ul.attributes {
   .error { float: left; color: red; }
 }
 
-#job-progress {
-  width: 640px;
-  margin-left: -320px;
-  .job-details {
-    font-size: 14px;
-    cursor: pointer;
-  }
-  .modal-header small {
-    color: @grayLight;
-    font-style: italic;
-    font-family: monospace;
-  }
-  .chain-results {
-    li {
-      padding: 5px 10px;
-      background: #f3f3f3;
-      margin-bottom: 0.5em; font-size: 12px; }
-    li.error {
-      background: rgb(255, 202, 202);
-    }
-    li > * {
-      display: inline-block;
-      vertical-align: top;
-    }
-    .name { font-weight: bold; }
-    .task { width: 360px;}
-    .time { padding-right: 5px; color: @grayLight; font-size: 10px; text-align: right; }
-    .duration {
-      .value {
-        display: inline-block;
-        width: 40px;
-        text-align: right;
-        color: @gray;
-        font-size: 10px;
-      }
-    }
-  }
-  .modal-body.raw-enabled {
-    padding: 0;
-  }
-  .raw {
-    max-height: inherit;
-    overflow-x: scroll;
-    .box-sizing(border-box);
-    padding: 10px;
-    display: none;
-    background: #222;
-    color: #fff;
-    #font > .monospace(10px);
-    line-height: 1.2;
-    white-space: pre;
-  }
-  .wait {
-    float: left;
-    padding: 10px;
-    margin-left: 10px;
-    font-size: 14px;
-    line-height: 14px;
-    color: #888;
-    img { margin-left: 10px;}
-  }
-  .execution {
-    background: #333;
-    text-transform: uppercase;
-    font-size: 14px;
-    line-height: 14px;
-    padding: 10px;
-    font-weight: bold;
-    float: left;
-    color: #fff;
-    span { color: yellow; }
-    .succeeded { color: #a8ff00; }
-    .failed { color: #ff4200; }
-   }
-}
 
 
-#page-job {
-  .params, .raw, .info {
-    .box-sizing(border-box);
-    overflow-x: scroll;
-    padding: 10px;
-    background: #333;
-    color: #fff;
-    #font > .monospace(10px);
-    line-height: 1.2;
-    white-space: pre;
-  }
-
-  .server, .vm {
-    strong { display: inline-block; width: 200px; text-transform: uppercase; color: @gray; font-weight: normal;}
-    .value { #font > .monospace(12px) }
-  }
-
-  .resource-status .succeeded {
-    background-color: @activeColor;
-  }
-  .resource-status .failed {
-    background-color: @dangerColor;
-  }
-  .resource-status .queued {
-    background-color: @warningColor;
-  }
-  .resource-status .canceled {
-    background-color: @grayDark;
-  }
-
-  .chain-results {
-    li {
-      padding: 5px 10px;
-      background: #f3f3f3;
-      margin-bottom: 0.5em; font-size: 12px;
-    }
-    li.error {
-      background: lighten(@red, 40%);
-      * {
-        color: #fff;
-      }
-    }
-    li > * {
-      display: inline-block;
-      vertical-align: top;
-    }
-    .name { font-weight: bold; }
-    .task { width: 360px;}
-    .time { padding-right: 5px; color: @grayLight; font-size: 10px; text-align: right; }
-    .duration {
-      margin-left: 250px;
-      font-size: 20px;
-      padding: 10px;
-      color: @grayLight;
-      .value {
-        display: inline-block;
-        width: 80px;
-        text-align: right;
-      }
-    }
-  }
-}
-
-#page-services {
-  .application {
-    .info {
-      h4 {
-        color: #555;
-        text-transform: uppercase;
-      }
-    }
-    margin-bottom: 1em;
-    clear: both;
-    overflow: hidden;
-  }
-  .services {
-    .service-name {
-      .widget-header;
-      font-size: 12px;
-      padding: 5px 10px;
-    }
-  }
-  .service+.service { margin-top: 1em;}
-  .instance {
-    .widget-content;
-    font-size: 12px;
-    padding: 8px;
-    .state { color: @red; }
-    .state.running { color: @activeColor; }
-    .alias, .uuid, .state, .ram { display: inline-block;}
-    .alias { color: @grayLight; width: 100px;}
-    .uuid {
-      width: 280px;
-      font-style: italic;
-      color: @grayLight;
-      #font > .monospace(10px, normal, 1.2);
-    }
-    .state { width: 100px;}
-    a {
-      cursor: pointer;
-    }
-
-    .ram { width: 100px;}
-  }
-}
 
 
 #application-create {

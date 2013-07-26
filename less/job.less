@@ -1,0 +1,62 @@
+#page-job {
+  .params, .raw, .info {
+    .box-sizing(border-box);
+    overflow-x: scroll;
+    padding: 10px;
+    background: #333;
+    color: #fff;
+    #font > .monospace(10px);
+    line-height: 1.2;
+    white-space: pre;
+  }
+
+  .server, .vm {
+    strong { display: inline-block; width: 200px; text-transform: uppercase; color: @gray; font-weight: normal;}
+    .value { #font > .monospace(12px) }
+  }
+
+  .resource-status .succeeded {
+    background-color: @activeColor;
+  }
+  .resource-status .failed {
+    background-color: @dangerColor;
+  }
+  .resource-status .queued {
+    background-color: @warningColor;
+  }
+  .resource-status .canceled {
+    background-color: @grayDark;
+  }
+
+  .chain-results {
+    li {
+      padding: 5px 10px;
+      background: #f3f3f3;
+      margin-bottom: 0.5em; font-size: 12px;
+    }
+    li.error {
+      background: lighten(@red, 40%);
+      * {
+        color: #fff;
+      }
+    }
+    li > * {
+      display: inline-block;
+      vertical-align: top;
+    }
+    .name { font-weight: bold; }
+    .task { width: 360px;}
+    .time { padding-right: 5px; color: @grayLight; font-size: 10px; text-align: right; }
+    .duration {
+      margin-left: 250px;
+      font-size: 20px;
+      padding: 10px;
+      color: @grayLight;
+      .value {
+        display: inline-block;
+        width: 80px;
+        text-align: right;
+      }
+    }
+  }
+}

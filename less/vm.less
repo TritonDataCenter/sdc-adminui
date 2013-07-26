@@ -1,0 +1,50 @@
+@import '__jobs-list';
+
+#page-vm {
+  .jobs-list {
+    .__jobs-list;
+  }
+  .dropdown-menu .delete { color: red; }
+
+  .resource-status {
+    .running { background: @activeColor; }
+    .failed { background: @dangerColor; }
+  }
+
+  .image-name-version.disabled { color: @grayLight; cursor: pointer; }
+  .image-name-version.error { color: @dangerColor; }
+
+  .vms-details {
+    .alias {
+      input { margin: 0; padding: 0; }
+    }
+    .server-hostname { cursor: pointer; }
+    .uuid {
+      font-size: 10px;
+      color: @grayLight;
+      font-style: italic;
+      font-family: monospace;
+    }
+    .overview {
+      .table;
+      tr { .widget-content; }
+      tbody {
+        th { width: 100px;}
+        td .mutate { visibility: hidden; }
+        td:hover .mutate { visibility: visible; }
+        td>*:first-child { display: inline-block; width: 500px; };
+      }
+    }
+    .vm-uuid,
+    .server-uuid,
+    .owner-uuid,
+    .billing-id,
+    .image-uuid {
+      .uuid;
+      .pull-right;
+    }
+  }
+  .snapshots {
+    .empty { color: @grayLight; }
+  }
+}

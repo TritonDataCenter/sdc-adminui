@@ -1,0 +1,88 @@
+#page-packages {
+  .page-header { margin-bottom: 0; }
+
+  .sidebar {
+    border-right: 1px solid #DFE7EC;
+
+    .search {
+      clear: both;
+      padding-top: 10px;
+      input { font-size: 12px; }
+    }
+  }
+
+  #list {
+    overflow-y: scroll;
+    max-height: 500px;
+
+    ul li a {
+      color: @grayLight;
+      overflow: hidden; cursor: pointer;
+      padding: 5px 12px;
+
+      .name { display: inline-block; }
+      .version {
+        display: inline-block;
+        color: @grayDark;
+        font-family: @monoFontFamily;
+        font-size: 10px;
+        margin-left: 10px;
+      }
+    }
+    ul li.active {
+      border-right: 1px solid #dfe7ec;
+    }
+    ul li.active a {
+      color: #333;
+      background: #DFE7EC;
+    }
+    ul a:hover { background: none; }
+    ul li.active .version {}
+    ul li.active .name {}
+  }
+
+  #detail {
+    .flags { }
+    .flags span { display: inline-block; margin-right: 10px;}
+
+    .resource-status {
+      left: 300px;
+      .active { background: @activeColor;}
+      .inactive { background: @gray;}
+    }
+
+    .networks-list {
+      #page-networks > .networks-list;
+      li .name { width: 180px; }
+      li .vlan { width: 60px; }
+      li .provision-ip-range { display: none;}
+      li .gateway { width: 100px; }
+    }
+    .network-pools-list {
+      #page-networks > .network-pools-list;
+    }
+
+    .owner {
+      strong { vertical-align: top; }
+      .uuid { font-family: @monoFontFamily; font-size: 10px;}
+    }
+
+    .owner, .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority {
+      .widget-content;
+
+      strong {
+        margin-left: 10px;
+        .opacity(60);
+        display: inline-block;
+        width: 300px;
+      }
+
+      .value {
+        display: inline-block;
+      }
+    }
+  }
+
+  .billing-id .value { font-family: @monoFontFamily; font-size: 10px;}
+}
+

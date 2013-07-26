@@ -1,0 +1,22 @@
+.__jobs-list {
+  table {
+    .uuid { #font > .monospace(12px); color: @grayLight; }
+    .actions { width: 140px; }
+    .when { width: 200px;}
+    small {
+     color: @grayLight;
+     background: @warningBackground;
+     text-transform: uppercase;
+     font-size: 10px;
+     margin-left: 5px;
+    }
+    .execution {
+      width: 100px;
+      font-weight: bold;
+      font-size: 13px;
+      &.succeeded span { background: @activeColor; }
+      &.canceled span { background: @gray; }
+      &.failed span { background: @dangerColor; }
+    }
+  }
+}
