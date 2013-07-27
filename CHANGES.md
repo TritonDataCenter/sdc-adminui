@@ -2,6 +2,7 @@
 
 ## 1.0.7 (unreleased)
 
+- ``ADMINUI-1458`` hostname search now matches any part of string
 - ``ADMINUI-1456`` Fixes vm filtering on user details page:wq
 - ``ADMINUI-1448`` Jobs lists now display a summary of updates in vm update jobs
 - ``ADMINUI-1453`` Jobs page now allows filtering by name
