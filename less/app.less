@@ -37,6 +37,7 @@
 
 @import "server.less";
 @import "servers.less";
+@import "server-boot-options.less";
 
 @import "services.less";
 
@@ -63,6 +64,9 @@ html { height: 100%; }
   &[disabled] {
     background: desaturate(@btnPrimaryBackground, 30%);
   }
+}
+.btn-link.disabled {
+  color: @grayLight;
 }
 
 .text-warning { background: lighten(@warningBackground, 4%) ;}

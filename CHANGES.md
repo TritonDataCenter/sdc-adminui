@@ -2,6 +2,7 @@
 
 ## 1.0.7 (unreleased)
 
+- ``ADMINUI-1441`` ability to configure boot param defaults for servers
 - ``ADMINUI-1460`` fixes an issue that prevents package updates
 - ``ADMINUI-1458`` hostname search now matches any part of string
 - ``ADMINUI-1456`` Fixes vm filtering on user details page:wq

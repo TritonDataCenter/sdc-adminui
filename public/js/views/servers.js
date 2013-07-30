@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
-
+var app = require('adminui');
+var ServerBootOptionsView = require('./server-boot-options');
 
 var SlidingPanelRegionType = Backbone.Marionette.Region.extend({
     open: function(view) {
@@ -50,6 +51,10 @@ var ServersView = Backbone.Marionette.Layout.extend({
         return 'servers';
     },
     regions: {
+        'bootOptionsRegion': {
+            selector: '.default-boot-options-region',
+            regionType: SlidingPanelRegionType
+        },
         'listRegion': '.servers-list-region',
         'filterRegion': '.servers-filter-region'
     },
@@ -80,8 +85,42 @@ var ServersView = Backbone.Marionette.Layout.extend({
     onShow: function() {
         this.listRegion.show(this.serversList);
         this.filterRegion.show(this.filterForm);
+    },
+
+    toggleBootOptions: function() {
+        var bootOptionsButton = this.$('.toggle-boot-options');
+        var bootOptionsRegion = this.bootOptionsRegion;
+
+        function close() {
+            bootOptionsRegion.close();
+            bootOptionsButton.removeClass('disabled');
+        }
+
+        function saved() {
+            app.vent.trigger('notification', {
+                level: 'success',
+                message: 'Default Boot Options updated'
+            });
+            close();
+        }
+
+        if (this.bootOptionsRegion.currentView) {
+            close();
+        } else {
+            bootOptionsButton.addClass('disabled');
+
+            var bootOptions = new Backbone.Model();
+            bootOptions.url = '/_/boot/default';
+            var bootOptionsView = new ServerBootOptionsView({ model: bootOptions });
+            bootOptionsView.on('saved', saved);
+            bootOptionsView.on('cancel', close);
+
+            bootOptions.fetch().done(function() {
+                bootOptionsRegion.show(bootOptionsView);
+            });
+        }
     }
-})
+});
 
 module.exports = ServersView;
 
