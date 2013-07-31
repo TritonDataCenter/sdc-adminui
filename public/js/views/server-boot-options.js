@@ -6,7 +6,9 @@ module.exports = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/server-boot-options.hbs'),
     events: {
         'click .save': 'onSave',
-        'click .cancel': 'onCancel'
+        'click .cancel': 'onCancel',
+        'keydown textarea': 'onInputKeydown',
+        'keyup textarea': 'onInputKeyup'
     },
 
     serializeData: function() {
@@ -14,6 +16,26 @@ module.exports = Backbone.Marionette.ItemView.extend({
         data.kernel_args = JSON.stringify(data.kernel_args, null, 2);
         return data;
     },
+
+    onInputKeydown: function() {
+        this.$('.error').text();
+        this.$('.error').hide();
+        this.$('.save').prop('disabled', true);
+    },
+
+    onInputKeyup: _.debounce(function() {
+        var text = this.$('textarea').val();
+        try {
+            var json = JSON.parse(text);
+            this.$('.error').text();
+            this.$('.error').hide();
+            this.$('.save').prop('disabled', false);
+        } catch (e) {
+            this.$('.error').text(e.message)
+            this.$('.error').show();
+            this.$('.save').prop('disabled', true);
+        }
+    }, 200),
 
     onRender: function() {
         this.$('textarea').autosize();

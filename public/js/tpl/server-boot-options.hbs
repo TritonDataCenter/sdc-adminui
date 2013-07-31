@@ -4,11 +4,13 @@
       <label>Default Platform</label>
     </div>
     <div class="controls">
-      <input class="input" type="text" value="{{platform}}" />
+      <input class="input" type="text" name="platform" value="{{platform}}" />
     </div>
   </div>
   <div class="control-group">
-    <div class="control-label"><label>Kernel Arguments</label></div>
+    <div class="control-label"><label>Kernel Arguments
+      <span class="error"></span>
+    </label></div>
     <div class="controls">
       <textarea>{{kernel_args}}</textarea>
     </div>
