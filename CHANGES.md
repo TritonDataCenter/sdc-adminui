@@ -2,6 +2,7 @@
 
 ## 1.0.7 (unreleased)
 
+- ``ADMINUI-1465`` Fixes an issue (OSX) where the ssh keys container does not show scrollbars until users scroll
 - ``ADMINUI-1441`` ability to configure boot param defaults for servers
 - ``ADMINUI-1460`` fixes an issue that prevents package updates
 - ``ADMINUI-1458`` hostname search now matches any part of string
