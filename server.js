@@ -32,6 +32,11 @@ adminui.listen(function() {
     log.info('Ready to rock!');
 });
 
-process.on('uncaughtException', function(e) {
-    log.fatal(e, '*** Uncaught Exception ***');
+process.on('uncaughtException', function preventOtherError(e) {
+    if (e && e.name && e.name === 'OtherError' &&
+        /request\stimeout/.test(e.message)) {
+        return;
+    } else {
+        throw e;
+    }
 });
