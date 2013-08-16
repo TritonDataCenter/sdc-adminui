@@ -22,6 +22,7 @@ var Views = {
     'jobs': require('./views/jobs'),
     'job': require('./views/job'),
     'networks': require('./views/networks'),
+    'network': require('./views/network'),
     'services': require('./views/services')
 };
 
@@ -170,8 +171,13 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     showNetwork: function(uuid) {
+        var self = this;
         if (this.authenticated()) {
-            this.presentView('networks', { uuid: uuid });
+            var Network = require('./models/network');
+            var net = new Network({uuid: uuid});
+            net.fetch().done(function() {
+                self.presentView('network', { model: net });
+            });
         }
     },
 

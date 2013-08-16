@@ -1,6 +1,5 @@
 var Backbone = require('backbone');
 var adminui = require('../adminui');
-var NetworksDetailView = require('./networks-detail');
 
 var NicsRowView = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
@@ -12,8 +11,7 @@ var NicsRowView = Backbone.Marionette.ItemView.extend({
     },
 
     gotoNetwork: function() {
-        var view = new NetworksDetailView({model: this.network});
-        view.render().$el.modal();
+        adminui.vent.trigger('showview', 'network', {model: this.network});
     },
 
     serializeData: function() {

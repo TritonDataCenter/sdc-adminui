@@ -29,7 +29,6 @@ var AddressesTableRow = Backbone.Marionette.ItemView.extend({
         if (type === 'zone') {
             adminui.vent.trigger('showview', 'vm', {uuid: uuid });
         }
-        (this.$el.parents('.modal').modal('hide'));
     },
     templateHelpers: {
         belongs_to_url: function() {
@@ -57,10 +56,7 @@ var NotesView = require('./notes');
 var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     template: Template,
     id: 'network-details',
-    attributes: {
-        'class': 'modal'
-    },
-
+    sidebar: 'networks',
     events: {
         'click .owner-link': 'goToOwner'
     },

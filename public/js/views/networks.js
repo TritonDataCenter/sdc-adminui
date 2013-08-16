@@ -12,7 +12,6 @@ var NetworkPoolsListView = require('./network-pools-list');
 
 var NetworkPoolsFormView = require('./network-pools-form');
 var NetworksCreateView = require('./networks-create');
-var NetworksDetailView = require('./networks-detail');
 
 var ___NETWORK_POOL_CREATED = function(networkPool) {
     return _.str.sprintf('Network Pool <strong>%s</strong> created successfully.',
@@ -97,8 +96,7 @@ var NetworksView = Backbone.Marionette.ItemView.extend({
     },
 
     showNetwork: function(network) {
-        var view = new NetworksDetailView({model: network});
-        view.render().$el.modal();
+        adminui.vent.trigger('showview', 'network', {model: network});
     },
 
     renderNetworkPoolsList: function() {

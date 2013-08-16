@@ -91,7 +91,6 @@ var Networks = require('../models/networks');
 var Network = require('../models/network');
 var NetworksList = require('../views/networks-list');
 var NetworkPoolsList = require('../views/network-pools-list');
-var NetworksDetailView = require('./networks-detail');
 var PackageDetail = Backbone.Marionette.ItemView.extend({
     template: PackagesDetailTemplate,
     url: function() {
@@ -133,9 +132,7 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
     },
 
     onSelectNetwork: function(model) {
-        var view = new NetworksDetailView({model: model});
-        view.render();
-        view.$el.modal('show');
+        adminui.vent.trigger('showview', 'network', {model: this.model });
     },
 
     onSaveTraits: function(traits) {
