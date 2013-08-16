@@ -447,6 +447,16 @@ var VmView = Backbone.Marionette.Layout.extend({
             '.vm-memory': 'ram',
             '.vm-swap': 'max_swap',
             '.vm-uuid': 'uuid',
+            '.last-modified': {
+                observe: 'last_modified',
+                onGet: function(date) {
+                    if (date) {
+                        return moment(date).utc().format('LLL');
+                    } else {
+                        return '';
+                    }
+                }
+            },
             '.created': {
                 observe: 'create_timestamp',
                 onGet: function(date) {
