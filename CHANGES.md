@@ -2,6 +2,7 @@
 
 ## 1.0.7 (unreleased)
 
+- ``ADMINUI-1472`` Add SNGL as available brand for VM provisioning 
 - ``ADMINUI-1465`` Fixes an issue (OSX) where the ssh keys container does not show scrollbars until users scroll
 - ``ADMINUI-1441`` ability to configure boot param defaults for servers
 - ``ADMINUI-1460`` fixes an issue that prevents package updates

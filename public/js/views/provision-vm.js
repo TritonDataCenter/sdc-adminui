@@ -211,7 +211,7 @@ var View = Backbone.Marionette.Layout.extend({
             var n = networks.get(net.uuid) || networkPools.get(net.uuid);
             var $elm = $("<option />").attr('value', n.get('uuid'));
 
-            if (settings.get('provision.preset_primary_network') == net.uuid) {
+            if (settings.get('provision.preset_primary_network') === net.uuid) {
                 $elm.prop('selected', true);
             }
 
