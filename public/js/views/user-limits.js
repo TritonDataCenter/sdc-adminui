@@ -50,6 +50,8 @@ var ItemView = Backbone.Marionette.ItemView.extend({
             if (k === 'datacenter') {
                 return;
             }
+            k = _.str.trim(k);
+            v = _.str.trim(v);
             data.limits.push({image: k, value: v});
         });
 

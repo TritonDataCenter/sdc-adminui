@@ -48,6 +48,8 @@ var UserLimitsForm = Backbone.Marionette.ItemView.extend({
             var i = $(this).find('input[name=image]').val();
             var v = $(this).find('input[name=value]').val();
             if (i && v) {
+                i = _.str.trim(i);
+                v = _.str.trim(v);
                 obj[i] = v;
             }
         });
