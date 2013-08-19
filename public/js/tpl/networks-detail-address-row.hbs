@@ -7,9 +7,12 @@
   <small>{{belongs_to_uuid}}</small>
   {{/if}}
 </td>
-<td>
+<td style="text-align: right">
   {{#if reserved}}
   <span class="label label-info">Reserved</span>
+  <a class="unreserve">Unreserve</a>
+  {{else}}
+  <a class="reserve">Reserve</a>
   {{/if}}
 </td>
 <td>

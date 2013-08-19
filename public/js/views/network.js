@@ -8,14 +8,30 @@ var User = require('../models/user');
 var Template = require('../tpl/networks-detail.hbs');
 
 var Addresses = require('../models/addresses');
-
 var AddressesTableRowTemplate = require('../tpl/networks-detail-address-row.hbs');
 var AddressesTableRow = Backbone.Marionette.ItemView.extend({
     tagName: "tr",
+
     template: AddressesTableRowTemplate,
-    events: {
-        'click .belongs-to a': 'navigateToItem'
+
+    modelEvents: {
+        'sync': 'render'
     },
+
+    events: {
+        'click .belongs-to a': 'navigateToItem',
+        'click .reserve': 'reserve',
+        'click .unreserve': 'unreserve'
+    },
+
+    reserve: function() {
+        this.model.save({reserved: true}, {patch: true});
+    },
+
+    unreserve: function() {
+        this.model.save({reserved: false}, {patch: true});
+    },
+
     navigateToItem: function(e) {
         if (e) {
             e.preventDefault();
@@ -30,6 +46,7 @@ var AddressesTableRow = Backbone.Marionette.ItemView.extend({
             adminui.vent.trigger('showview', 'vm', {uuid: uuid });
         }
     },
+
     templateHelpers: {
         belongs_to_url: function() {
             var uuid = this.belongs_to_uuid;
@@ -55,7 +72,7 @@ var NotesView = require('./notes');
 
 var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     template: Template,
-    id: 'network-details',
+    id: 'page-network',
     sidebar: 'networks',
     events: {
         'click .owner-link': 'goToOwner'

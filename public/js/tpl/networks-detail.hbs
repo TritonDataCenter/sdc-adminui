@@ -4,65 +4,70 @@
   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 </div>
 
-<ul class="unstyled attributes">
-  <li>
-    <strong>UUID</strong>
-    <div class="value">{{uuid}}</div>
-  </li>
+<section>
 
-  {{#if owner_uuids}}
-  <li>
-    <strong>Owner</strong>
-    <div class="value">
-      {{#each owner_uuids}}
-      <a class="owner-link" data-owner-uuid="{{this}}" href="/users/{{this}}">{{this}}</a>
-      {{/each}}
-    </div>
-  </li>
-  {{/if}}
+  <ul class="unstyled attributes">
+    <li>
+      <strong>UUID</strong>
+      <div class="value">{{uuid}}</div>
+    </li>
 
-  <li>
-    <strong>VLAN ID</strong>
-    <div class="value" name="vlan_id">{{vlan_id}}</div>
-  </li>
+    {{#if owner_uuids}}
+    <li>
+      <strong>Owner</strong>
+      <div class="value">
+        {{#each owner_uuids}}
+        <a class="owner-link" data-owner-uuid="{{this}}" href="/users/{{this}}">{{this}}</a>
+        {{/each}}
+      </div>
+    </li>
+    {{/if}}
 
-  <li>
-    <strong>Network</strong>
-    <div class="value" name="subnet">{{subnet}}</div>
-  </li>
-  <li>
+    <li>
+      <strong>VLAN ID</strong>
+      <div class="value" name="vlan_id">{{vlan_id}}</div>
+    </li>
 
-    <strong>Gateway</strong>
-    <div class="value" name="gateway">{{gateway}}</div>
-  </li>
+    <li>
+      <strong>Network</strong>
+      <div class="value" name="subnet">{{subnet}}</div>
+    </li>
+    <li>
 
-  <li>
-    <strong>Netmask</strong>
-    <div class="value" name="netmask">{{netmask}}</div>
-  </li>
+      <strong>Gateway</strong>
+      <div class="value" name="gateway">{{gateway}}</div>
+    </li>
 
-  <li>
-    <strong>IP Range</strong>
-    <div class="value">
-      <span name="provision_start_ip">{{provision_start_ip}}</span>
-      -
-      <span name="provision_end_ip">{{provision_end_ip}}</span>
-    </div>
-  </li>
+    <li>
+      <strong>Netmask</strong>
+      <div class="value" name="netmask">{{netmask}}</div>
+    </li>
 
-  <li>
-    <strong>NIC Tag</strong>
-    <div class="value" name="nic_tag">{{nic_tag}}</div>
-  </li>
+    <li>
+      <strong>IP Range</strong>
+      <div class="value">
+        <span name="provision_start_ip">{{provision_start_ip}}</span>
+        -
+        <span name="provision_end_ip">{{provision_end_ip}}</span>
+      </div>
+    </li>
 
-  <li>
-    <strong>Resolvers</strong>
-    <div class="value" name="resolvers">{{resolvers}}</div>
-  </li>
-</ul>
+    <li>
+      <strong>NIC Tag</strong>
+      <div class="value" name="nic_tag">{{nic_tag}}</div>
+    </li>
 
-<h3>IP Address Allocations</h3>
-<table class="table addresses">
-  <tbody></tbody>
-</table>
-<div class="notes"></div>
+    <li>
+      <strong>Resolvers</strong>
+      <div class="value" name="resolvers">{{resolvers}}</div>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h3>IP Address Allocations</h3>
+  <table class="table addresses">
+    <tbody></tbody>
+  </table>
+  <div class="notes"></div>
+</section>
