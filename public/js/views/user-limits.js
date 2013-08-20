@@ -29,16 +29,20 @@ var ItemView = Backbone.Marionette.ItemView.extend({
             self.$el.show();
         });
         form.on('limit:saved', function(model) {
-            self.render();
+            self.model.collection.fetch({reset: true}).done(function() {
+                self.render();
+            });
             self.$el.fadeIn();
         });
     },
+
     onClickDestroy: function() {
         var confirm = window.confirm("Are you sure you want to remove limits for datacenter: " + this.model.get('datacenter'));
         if (confirm) {
             this.model.destroy();
         }
     },
+
     serializeData: function() {
         var attrs = Backbone.Marionette.ItemView.prototype.serializeData.apply(this, arguments);
         var data = {
@@ -80,7 +84,6 @@ var LimitsView = CompositeView.extend({
         }
 
         this.collection = new Limits([], {user: options.user});
-        CompositeView.prototype.initialize.apply(this, arguments);
     },
 
     onClickAddLimit: function() {
@@ -106,7 +109,9 @@ var LimitsView = CompositeView.extend({
 
         form.on('limit:saved', function(model) {
             addLimitButton.show();
-            self.collection.fetch();
+            self.collection.fetch({reset: true}).done(function() {
+                self.render();
+            });
         });
         form.focus();
     },
