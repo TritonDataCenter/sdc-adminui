@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
+var Images = require('../models/images');
 
 var Limit = require('../models/limit');
 
@@ -19,10 +20,27 @@ var UserLimitsForm = Backbone.Marionette.ItemView.extend({
             this.model = new Limit({}, {user: options.user});
             this.delegateEvents();
         }
+        this.imagesCollection = new Images([], {
+            params: { repository: 'https://images.joyent.com' }
+        });
+        this.listenTo(this.imagesCollection, 'sync', this.renderImagesTypeahead, this);
+        this.imagesCollection.fetch();
     },
+
+    renderImagesTypeahead: function() {
+        var names = this.imagesCollection.pluck('name');
+        var uniqueNames = _.uniq(names);
+        var uniqueNamesSorted = _.sortBy(uniqueNames, function(n) {
+            return n;
+        });
+        this.uniqueImageNames = uniqueNamesSorted;
+        this.$('input[name=image]').typeahead({local: this.uniqueImageNames});
+    },
+
     focus: function() {
         this.$('input:first').focus();
     },
+
     onCancel: function() {
         this.trigger('cancel');
         this.close();
@@ -65,10 +83,12 @@ var UserLimitsForm = Backbone.Marionette.ItemView.extend({
             this.addLimitInput();
         }
     },
+
     addLimitInput: function() {
         var el = this.$('.limits-input:last-child').clone();
-        $('input', el).val('');
         el.appendTo(this.$('.limits-inputs'));
+        $('input', el).val('');
+        $('input[name=image]', el).typeahead({local: this.uniqueImageNames});
     },
 
     serializeData: function() {
