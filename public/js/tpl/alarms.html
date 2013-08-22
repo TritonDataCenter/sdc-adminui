@@ -31,8 +31,9 @@
     <% _.each(alarm.faults, function(fault) { %>
     <li>
       <div class="fault-name"><%= fault.probe.name %></div>
-      <div class="fault-time"><%= new Date(fault.event.time) %></div>
+      <div class="fault-time"><%= moment(fault.event.time).utc().format('LLL') %></div>
       <div class="fault-message"><%= fault.event.data.message %></div>
+      <div class="fault-details"><%= JSON.stringify(fault.event.data.details, null, 2) %></div>
     </li>
     <% }); %>
   </ul>

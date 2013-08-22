@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
+var moment = require('moment');
 
 var Alarms = require('../models/alarms');
 var Alarm = require('../models/alarm');

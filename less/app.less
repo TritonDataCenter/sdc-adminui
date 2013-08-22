@@ -534,9 +534,19 @@ ul.attributes {
     }
 
     .faults>li {
-      .fault-time { font-size: 11px; color: #FFF; float: right;}
+      .fault-time { font-size: 11px; color: #000; font-weight: normal; float: right;}
 
       .fault-name { font-weight: bold; font-size: 12px; float: left; }
+
+      .fault-details {
+        #font > .monospace(10px);
+        white-space: pre;
+        line-height: 10px;
+        font-weight: normal;
+        padding: 10px;
+        background: #FFF;
+        border-top: 1px solid #eee;
+      }
 
       .fault-message {
         clear: both;
