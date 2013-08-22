@@ -41,7 +41,9 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
     },
     show: function() {
         this.model.fetch();
-        this._timer = setInterval(this.update.bind(this), 3000);
+        if (! this._timer) {
+            this._timer = setInterval(this.update.bind(this), 3000);
+        }
         var modal = this.$el.modal();
         var timer = this._timer;
         modal.on('hidden', function() {

@@ -28,9 +28,11 @@ var Job = Model.extend({
 
     startWatching: function() {
         var self = this;
-        this._interval = setInterval(function() {
-            self.fetch();
-        }, 1000);
+        if (!this._interval) {
+            this._interval = setInterval(function() {
+                self.fetch();
+            }, 3000);
+        }
     },
 
     stopWatching: function() {
