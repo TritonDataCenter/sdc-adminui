@@ -69,13 +69,31 @@ var AddressesTable = Backbone.Marionette.CollectionView.extend({
 });
 
 var NotesView = require('./notes');
+var NetworkForm = require('../views/networks-create');
 
 var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     template: Template,
     id: 'page-network',
     sidebar: 'networks',
     events: {
-        'click .owner-link': 'goToOwner'
+        'click .owner-link': 'goToOwner',
+        'click .edit-network': 'editNetwork'
+    },
+
+    editNetwork: function() {
+        var view = this.networkForm = new NetworkForm({model: this.model});
+        var self = this;
+        this.listenTo(view, 'saved', function(network) {
+            self.model.fetch();
+            view.$el.modal('hide').remove();
+            adminui.vent.trigger('notification', {
+                level: 'success',
+                message: "Updated network successfully."
+            });
+            view.close();
+        });
+
+        this.networkForm.show();
     },
 
     goToOwner: function(e) {

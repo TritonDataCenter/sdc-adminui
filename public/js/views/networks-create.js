@@ -46,7 +46,9 @@ var View = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function() {
-        this.model = new Network();
+        if (!this.model) {
+            this.model = new Network();
+        }
         this.nicTags = new NicTags();
         this.nicTagsSelect = new Backbone.Marionette.CollectionView({
             itemView: NicTagSelectItem,
@@ -130,6 +132,11 @@ var View = Backbone.Marionette.ItemView.extend({
 
     serializeData: function() {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.apply(this, arguments);
+        var routes = data.routes;
+        data.routes = [];
+        for (var subnet in routes) {
+            data.routes.push({subnet: subnet, gateway: routes[subnet]});
+        }
         data.resolvers = (this.model.get('resolvers') || []).join(' ');
 
         return data;
@@ -137,11 +144,14 @@ var View = Backbone.Marionette.ItemView.extend({
 
 
     onRender: function() {
+        var self = this;
         this.ui.newNicTagField.hide();
         this.nicTagsSelect.setElement(this.$('select[name=nic_tag]'));
         this.userInput = new TypeaheadUserInput({el: this.$('[name="owner_uuids[]"]') });
         this.userInput.render();
-        this.nicTags.fetch();
+        this.nicTags.fetch().done(function() {
+            self.$('select[name=nic_tag]').val(self.model.get('nic_tag'));
+        });
         this.$('.remove-route:first').hide();
     },
 

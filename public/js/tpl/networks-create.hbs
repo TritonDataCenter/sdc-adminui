@@ -1,6 +1,10 @@
 <form class="form-horizontal">
   <div class="modal-header">
+    {{#if uuid}}
+    <h1>Edit Network</h1>
+    {{else}}
     <h1>Create Network</h1>
+    {{/if}}
   </div>
 
   <div class="modal-body">
@@ -65,12 +69,21 @@
 
     <div class="control-group">
       <label class="control-label" for="network-provision-start-ip">Routes</label>
-
+      {{#if routes.length}}
+      {{#each routes}}
+      <div class="controls routes-controls">
+        <input type="text" name="routes[{{@index}}][subnet]" value="{{subnet}}" class="span2" placeholder="IP or Subnet">
+        <input type="text" value="{{gateway}}" name="routes[{{@index}}][gateway]" class="span2" placeholder="Gateway">
+        <a class="remove-route"><i class="icon-remove"></i></a>
+      </div>
+      {{/each}}
+      {{else}}
       <div class="controls routes-controls">
         <input type="text" name="routes[0][subnet]" class="span2" placeholder="IP or Subnet">
         <input type="text" name="routes[0][gateway]" class="span2" placeholder="Gateway">
         <a class="remove-route"><i class="icon-remove"></i></a>
       </div>
+      {{/if}}
 
       <div class="controls">
         <a class="add-route">Add another route</a>
