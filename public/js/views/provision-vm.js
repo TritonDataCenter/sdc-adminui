@@ -524,6 +524,7 @@ var View = Backbone.Marionette.Layout.extend({
 
             return net;
         });
+        console.log(values);
 
         return values;
     },

@@ -74,10 +74,20 @@
     <section>
     <h3>Overview</h3>
     <ul class="unstyled attributes">
+
       <li>
         <strong>UUID</strong>
         <span class="value uuid">{{uuid}}</span>
       </li>
+
+      {{#if origin}}
+      <li>
+        <strong>Image Origin</strong>
+        <span class="value">
+          <a class="origin" href="/images/{{origin}}"><span class="origin-name-version"></span></a>
+        </span>
+      </li>
+      {{/if}}
 
       <li>
         <strong>Owner</strong>

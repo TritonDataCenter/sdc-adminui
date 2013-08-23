@@ -9,9 +9,13 @@ var JSONEditor = require('./traits-editor');
 var TagsListView = require('./tags-list');
 var Img = require('../models/image');
 var ImageView = Backbone.Marionette.ItemView.extend({
-    sidebar: 'images',
+
     id: 'page-image',
+
+    sidebar: 'images',
+
     template: require('../tpl/image.hbs'),
+
     url: function() {
         return _.str.sprintf('images/%s', this.model.get('uuid'));
     },
@@ -20,6 +24,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         'click .activate': 'onClickActivate',
         'click .disable': 'onClickDisable',
         'click .enable': 'onClickEnable',
+        'click .origin': 'onClickOrigin',
         'click .add-file': 'onClickAddFile',
         'click .show-upload-form': 'onClickShowUploadForm',
         'click .cancel-upload-form': 'onClickCancelUploadForm',
@@ -60,6 +65,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
             this.model = options.image;
         }
         this.model.fetch();
+        this.listenTo(this.model, 'sync', this.onImageReady, this);
 
         this.viewModel = new Backbone.Model();
         this.listenTo(this.viewModel, 'change:uploadform', this.onChangeUploadForm, this);
@@ -152,6 +158,16 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         }
     },
 
+    onImageReady: function() {
+        var self = this;
+        if (this.model.get('origin')) {
+            var origin = self.origin = new Img({uuid: this.model.get('origin')});
+            origin.fetch().done(function() {
+                self.$('.origin-name-version').html(origin.nameWithVersion());
+            });
+        }
+    },
+
     onChangeUploadForm: function(model, value) {
         if (value) {
             this.$('.add-file').html('Select image file to upload');
@@ -166,6 +182,11 @@ var ImageView = Backbone.Marionette.ItemView.extend({
             }
         }
         this.$('.upload button.start-upload').prop("disabled", true);
+    },
+
+    onClickOrigin: function(e) {
+        e.preventDefault();
+        adminui.vent.trigger('showview', 'image', {uuid: this.origin.get('uuid')});
     },
 
     onError: function(model, res) {
