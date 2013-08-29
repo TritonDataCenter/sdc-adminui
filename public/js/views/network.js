@@ -72,9 +72,13 @@ var NotesView = require('./notes');
 var NetworkForm = require('../views/networks-create');
 
 var NetworkDetailView = Backbone.Marionette.ItemView.extend({
+
     template: Template,
+
     id: 'page-network',
+
     sidebar: 'networks',
+
     events: {
         'click .owner-link': 'goToOwner',
         'click .edit-network': 'editNetwork'
