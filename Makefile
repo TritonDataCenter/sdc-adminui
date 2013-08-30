@@ -97,11 +97,9 @@ release: all deps docs $(SMF_MANIFESTS)
 	@mkdir -p $(TMPDIR)/site
 	@touch $(TMPDIR)/site/.do-not-delete-me
 	cp -r $(ROOT)/* $(TMPDIR)/root/opt/smartdc/adminui/
-	@mkdir -p $(TMPDIR)/root/opt/smartdc/sdc-boot/scripts
-	cp $(ROOT)/sdc-boot/*.sh \
-	    $(TMPDIR)/root/opt/smartdc/sdc-boot/
-	cp $(ROOT)/deps/sdc-scripts/*.sh \
-	    $(TMPDIR)/root/opt/smartdc/sdc-boot/scripts/
+	mkdir -p $(TMPDIR)/root/opt/smartdc/sdc-boot
+	cp -R $(ROOT)/deps/sdc-scripts/* $(TMPDIR)/root/opt/smartdc/sdc-boot/
+	cp -R $(ROOT)/sdc-boot/* $(TMPDIR)/root/opt/smartdc/sdc-boot/
 	rm -rf $(TMPDIR)/root/opt/smartdc/adminui/sdc-boot
 	(cd $(TMPDIR) && $(TAR) -jcf $(ROOT)/$(RELEASE_TARBALL) root site)
 	@rm -rf $(TMPDIR)
