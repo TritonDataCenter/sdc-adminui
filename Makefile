@@ -125,3 +125,4 @@ else
 endif
 include ./tools/mk/Makefile.smf.targ
 
+sdc-scripts: deps/sdc-scripts/.git
