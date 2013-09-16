@@ -32,6 +32,7 @@ var PackagesListItemView = Backbone.Marionette.ItemView.extend({
             this.highlight();
         }
     },
+
     unhighlight: function() {
         this.$el.siblings().removeClass('active');
     },
@@ -171,8 +172,8 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
                 networksView.children.findByModel(n).remove();
             });
         });
-
     },
+
     renderNetworkPools: function() {
         var networks = new Networks();
         networks.fetch().done(done.bind(this));
@@ -262,7 +263,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
         adminui.vent.trigger('error', {
             xhr: xhr,
             context: 'packages / ufds',
-            message: 'error occured while retrieving package information'
+            message: 'error occurred while retrieving package information'
         });
     },
 
@@ -278,11 +279,18 @@ var PackagesView = Backbone.Marionette.Layout.extend({
             adminui.router.applyUrl(view);
         });
         var that = this;
-        this.packages.fetch().done(function() {
-            that.packages.sort();
+        if (that.packagesCache && that.packagesCache.length) {
+            that.packages.reset(that.packagesCache);
             packagesList.render();
             that.showInitialPackage();
-        });
+        } else {
+            this.packages.fetch().done(function() {
+                that.packages.sort();
+                that.packagesCache = that.packages.models;
+                packagesList.render();
+                that.showInitialPackage();
+            });
+        }
         this.list.show(packagesList);
     },
 

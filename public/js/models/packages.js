@@ -3,11 +3,23 @@ var Package = require('./package');
 var Packages = Backbone.Collection.extend({
     model: Package,
     url: '/_/packages',
+    initialize: function() {
+        this.packagesCache = null;
+        this.on('sync', this.populateCache, this);
+    },
+    populateCache: function() {
+        this.packagesCache = this.models;
+    },
     search: function(val) {
         if (val.length === 0) {
-            this.fetch();
+            if (this.packagesCache && this.packagesCache.length) {
+                this.reset(this.packagesCache);
+            } else {
+                this.fetch();
+            }
             return;
         }
+
         var filtered = this.filter(function(m) {
             return m.get('uuid') === val || m.get('name').indexOf(val) !== -1;
         });
