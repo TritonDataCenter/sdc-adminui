@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#5922fa14",
+    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#9a18f7ba",
     "sockjs": "0.3.x",
     "node-uuid": "1.4.0",
     "bunyan": "0.21.3",
