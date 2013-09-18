@@ -1,14 +1,20 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
+var adminui = require('../adminui');
 
 
-var BaseView = require('./base');
 var VmsList = require('./vms-list');
 var LimitsView = require('./user-limits');
 var Vms = require('../models/vms');
 var SSHKeys = require('../models/sshkeys');
 var UserForm = require('./user-form');
 var AddKeyView = require('./sshkey-create');
+
+var Networks = require('../models/networks');
+var NetworksList = require('../views/networks-list');
+
+var NetworkPools = require('../models/network-pools');
+var NetworkPoolsList = require('../views/network-pools-list');
 
 var __CONFIRM_REMOVE_KEY = "Are you sure you want to remove this key from the user's account?";
 
@@ -20,7 +26,6 @@ var VmsFilter = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
 
         var data = Backbone.Syphon.serialize(this);
-        console.log('query data', data);
         this.trigger('query', data);
     }
 });
@@ -75,13 +80,18 @@ var SSHKeysList = Backbone.Marionette.CollectionView.extend({
     }
 });
 
+
+
+
 var User = require('../models/user');
 var UserView = Backbone.Marionette.Layout.extend({
     template: require('../tpl/user.hbs'),
     id: 'page-user',
     regions: {
         'limitsRegion': '.limits-region',
-        'vmsRegion': '.vms-region'
+        'vmsRegion': '.vms-region',
+        'networksRegion': '.networks-region',
+        'networkPoolsRegion': '.network-pools-region'
     },
     events: {
         'click .edit-user': 'onClickEditUser',
@@ -107,6 +117,39 @@ var UserView = Backbone.Marionette.Layout.extend({
         view.render();
     },
 
+    renderNetworkPools: function() {
+        var self = this;
+        var user = this.model;
+
+        self.networkPools = new NetworkPools(null, {params: { provisionable_by: self.model.get('uuid')} });
+        self.networkPoolsView = new NetworkPoolsList({
+            networks: self.allNetworks,
+            collection: self.networkPools
+        });
+
+        self.networkPoolsRegion.show(self.networkPoolsView);
+
+        self.listenTo(self.networkPoolsView, 'select', function(model) {
+            adminui.vent.trigger('showview', 'network', {model: model});
+        }, self);
+
+        self.listenTo(self.networkPools, 'sync', function(collection, resp, options) {
+            var filtered = collection.filter(function(m) {
+                var ownerUuids = m.get('owner_uuids') || [];
+                return (ownerUuids.indexOf(user.get('uuid')) !== -1);
+            });
+
+            if (filtered.length === 0) {
+                self.networkPoolsRegion.close();
+                return;
+            }
+
+            collection.reset(filtered);
+        });
+
+        self.networkPools.fetch();
+    },
+
     initialize: function(options) {
         if (options.user) {
             this.model = options.user;
@@ -123,6 +166,32 @@ var UserView = Backbone.Marionette.Layout.extend({
             perPage: 1000
         });
 
+        var user = this.model;
+        var self = this;
+
+        this.allNetworks = new Networks();
+        this.allNetworks.fetch().done(function() {
+            self.renderNetworkPools.apply(self);
+        });
+
+        this.networks = new Networks(null, {params: { provisionable_by: this.model.get('uuid')} });
+        this.networksView = new NetworksList({ collection: this.networks });
+
+        this.listenTo(this.networks, 'sync', function(collection, resp, options) {
+            var filtered = collection.filter(function(m) {
+                var ownerUuids = m.get('owner_uuids') || [];
+                return (ownerUuids.indexOf(user.get('uuid')) !== -1);
+            });
+            collection.reset(filtered);
+        });
+
+        this.listenTo(this.networksView, 'select', function(model) {
+            adminui.vent.trigger('showview', 'network', {model: model});
+        }, this);
+
+
+
+
         this.sshkeys = new SSHKeys(null, {user: this.model.get('uuid') });
         this.vmsList = new VmsList({collection: this.vms });
         this.limitsList = new LimitsView({ user: this.model.get('uuid')});
@@ -133,6 +202,7 @@ var UserView = Backbone.Marionette.Layout.extend({
     onShow: function() {
         this.vmsRegion.show(this.vmsList);
         this.limitsRegion.show(this.limitsList);
+        this.networksRegion.show(this.networksView);
         this.sshkeysList.setElement(this.$('.ssh-keys .items')).render();
         this.vmsFilter.setElement(this.$('.vms-filter'));
 
@@ -147,6 +217,7 @@ var UserView = Backbone.Marionette.Layout.extend({
         this.sshkeys.fetch();
         this.model.fetch();
         this.vms.fetch();
+        this.networks.fetch();
 
         this.stickit(this.model, {
             '.cn': 'cn',
