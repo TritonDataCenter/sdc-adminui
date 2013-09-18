@@ -88,7 +88,7 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         var view = this.networkForm = new NetworkForm({model: this.model});
         var self = this;
         this.listenTo(view, 'saved', function(network) {
-            self.model.fetch();
+            self.model.fetch().done(this.render);
             view.$el.modal('hide').remove();
             adminui.vent.trigger('notification', {
                 level: 'success',

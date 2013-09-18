@@ -2,6 +2,7 @@
 
 ## 1.0.7 (unreleased)
 
+- ``ADMINUI-1492`` Fixes an issue where updating a network does not update view with changes
 - ``ADMINUI-1490`` Private network are now shown on user details page
 - ``ADMINUI-1489`` Should provide ability to search users by company
 - ``ADMINUI-1488`` Improved packages view so that it caches the initial packages fetch for subsequent searches
