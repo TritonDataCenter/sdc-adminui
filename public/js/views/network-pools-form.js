@@ -135,7 +135,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         this.$('.alert').hide();
         var data = Backbone.Syphon.serialize(this);
-        data.owner_uuids = _.compact(data.owner_uuids)
+        data.owner_uuids = _.compact(data.owner_uuids);
         this.networkPool.set(data);
         this.networkPool.save();
     },

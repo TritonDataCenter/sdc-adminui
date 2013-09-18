@@ -94,7 +94,7 @@ var View = Backbone.Marionette.ItemView.extend({
             'provision_start_ip': '[name=provision_start_ip]',
             'provision_end_ip': '[name=provision_end_ip]',
             'resolvers': '[name=resolvers]',
-            'owner_uuid': '[name="owner_uuids[]"]',
+            'owner_uuids': '[name="owner_uuids[]"]',
             'nic_tag': 'input[name=nic_tag]',
             'vlan_id': '[name=vlan_id]'
         };
@@ -134,6 +134,9 @@ var View = Backbone.Marionette.ItemView.extend({
         var data = Backbone.Marionette.ItemView.prototype.serializeData.apply(this, arguments);
         var routes = data.routes;
         data.routes = [];
+        if (data.owner_uuids) {
+            data.owner_uuid = data.owner_uuids[0];
+        }
         for (var subnet in routes) {
             data.routes.push({subnet: subnet, gateway: routes[subnet]});
         }
