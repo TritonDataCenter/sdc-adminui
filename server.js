@@ -33,6 +33,7 @@ adminui.listen(function() {
 });
 
 process.on('uncaughtException', function preventOtherError(e) {
+    log.fatal('Uncaught Exception', e);
     if (e && e.name && e.name === 'OtherError' &&
         /request\stimeout/.test(e.message)) {
         return;

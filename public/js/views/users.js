@@ -1,13 +1,12 @@
-var Backbone = require('backbone');
-
-
 // UsersView
+
+var Backbone = require('backbone');
+var adminui = require('../adminui');
+
 var UserForm = require('./user-form');
-var BaseView = require('./base');
 var Users = require('../models/users');
 var UserView = require('./user');
 var tplUsers = require('../tpl/users.hbs');
-var adminui = require('../adminui');
 
 var UsersListItem = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/users-list-item.hbs'),

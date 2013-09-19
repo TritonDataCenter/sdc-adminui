@@ -9,7 +9,6 @@ var Vms = require('../models/vms');
 
 var VmsList = require('./vms-list');
 var NotesView = require('./notes');
-var BaseView = require('./base');
 var JSONEditor = require('./traits-editor');
 var JobProgressView = require('./job-progress');
 var ChangeRackForm = require('./server-change-rack');

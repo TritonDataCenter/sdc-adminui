@@ -1,6 +1,5 @@
 var Backbone = require('backbone');
 var JobProgressView = require('./job-progress');
-var BaseView = require('./base');
 var tplVmDelete = require('../tpl/vm-delete.hbs');
 
 module.exports = Backbone.Marionette.ItemView.extend({
