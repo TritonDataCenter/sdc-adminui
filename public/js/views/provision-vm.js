@@ -369,18 +369,19 @@ var View = Backbone.Marionette.Layout.extend({
             this.setBrand(image.requirements.brand);
             this.ui.brandControls.hide();
         } else {
-            this.ui.brandControls.show();
             if (image.get('type') === 'zvol') {
                 this.setBrand('kvm');
-                this.disableBrands('joyent', 'joyent-minimal');
+                this.disableBrands('joyent');
+                this.ui.brandControls.hide();
             } else if (image.get('type') === 'zone-dataset') {
                 this.setBrand('joyent');
                 this.disableBrands('kvm');
+                this.ui.brandControls.hide();
             } else {
+                this.ui.brandControls.show();
                 this.disableBrands(false);
             }
         }
-
     },
 
     disableBrands: function() {
