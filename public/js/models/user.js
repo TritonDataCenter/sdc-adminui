@@ -8,10 +8,8 @@ var Model = require('./model');
 
 
 var User = module.exports = Model.extend({
+    urlRoot: '/_/users',
     idAttribute: 'uuid',
-
-    urlRoot: "/_/users",
-
     parse: function(resp) {
         var data = Model.prototype.parse.apply(this, arguments);
         data.groups = this.parseGroups(data.memberof);

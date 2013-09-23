@@ -18,7 +18,12 @@
 
         <label class="control-label" for="package-name">Name</label>
         <div class="controls">
-          <input type="text" id="package-name" {{#if uuid}}readonly{{/if}} name="name" placeholder="Name of the package">
+          <input type="text"
+          value="{{name}}"
+          id="package-name"
+          {{#if uuid}}readonly{{/if}}
+          name="name"
+          placeholder="Name of the package">
         </div>
       </div>
 
@@ -26,19 +31,35 @@
         <label class="control-label" for="package-version">Version</label>
 
         <div class="controls">
-          <input type="text" id="package-version" {{#if uuid}}readonly{{/if}} name="version" placeholder="Version">
+          <input type="text"
+          value="{{version}}"
+          id="package-version"
+          {{#if uuid}}readonly{{/if}}
+          name="version" placeholder="Version">
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label" for="package-version">Owner</label>
-
+      <div class="control-group package-owners">
+        <label class="control-label" for="package-owner">Owners</label>
+        {{#unless owner_uuid.length}}
         <div class="controls">
-          <input type="text" id="package-owner"
-          class="input-xlarge"
-          name="owner_uuid"
+          <input type="text"
+          class="input-xlarge package-owner"
+          name="owner_uuid[]"
           placeholder="Search by login or uuid">
         </div>
+        {{else}}
+        {{#each owner_uuid}}
+        <div class="controls">
+          <input type="text"
+          value="{{this}}"
+          class="input-xlarge package-owner"
+          name="owner_uuid[]"
+          placeholder="Search by login or uuid">
+        </div>
+        {{/each}}
+        {{/unless}}
+        <a class="add-owner-entry">Add Another Owner</a>
       </div>
 
 
@@ -49,6 +70,7 @@
           <div class="input-append">
             <input type="number" class="input-small" id="package-memory"  {{#if uuid}}readonly{{/if}} name="max_physical_memory"
             min="64"
+            value="{{max_physical_memory}}"
             placeholder="memory">
             <span class="add-on">MB</span>
           </div>
@@ -59,7 +81,7 @@
         <label class="control-label" for="package-memory">Swap</label>
         <div class="controls">
           <div class="input-append">
-            <input type="number" class="input-small" id="package-swap"  {{#if uuid}}readonly{{/if}} name="max_swap" min="64" placeholder="swap">
+            <input type="number" class="input-small" id="package-swap"  {{#if uuid}}readonly{{/if}} name="max_swap" value="{{max_swap}}" min="64" placeholder="swap">
             <span class="add-on">MB</span>
           </div>
         </div>
@@ -69,7 +91,7 @@
         <label class="control-label" for="package-vcpus">Number of CPUs</label>
         <div class="controls">
           <div class="input-append">
-            <input type="number" class="input-small" id="package-vcpus"
+            <input type="number" value="{{vcpus}}" class="input-small" id="package-vcpus"
              {{#if uuid}}readonly{{/if}}
               name="vcpus" min="1" placeholder="cores">
             <span class="add-on">cores</span>
@@ -81,10 +103,11 @@
       <div class="control-group">
         <label class="control-label" for="package-cap-cpu">CPU Cap</label>
         <div class="controls">
-          <input type="number" class="input-small" id="package-cpu-cap"
-           {{#if uuid}}readonly{{/if}}
+          <input type="number"
+          value="{{cpu_cap}}"
+          class="input-small" id="package-cpu-cap"
+          {{#if uuid}}readonly{{/if}}
           name="cpu_cap" min="20" max="10000" placeholder="cpu cap">
-
           <p class="help-inline">Min 20. This is = to % of CPU. 400% = 4 CPUs</p>
         </div>
       </div>
@@ -92,8 +115,10 @@
       <div class="control-group">
         <label class="control-label" for="package-vcpus">Max Lightweight Processes</label>
         <div class="controls">
-          <input type="number" class="input-small" id="package-max-processes"
-           {{#if uuid}}readonly{{/if}}
+          <input type="number"
+          value="{{max_lwps}}"
+          class="input-small" id="package-max-processes"
+          {{#if uuid}}readonly{{/if}}
           name="max_lwps" min="250" placeholder="threads">
         </div>
       </div>
@@ -106,6 +131,7 @@
           <div class="input-append">
             <input type="number"
              {{#if uuid}}readonly{{/if}}
+             value="{{quota}}"
              class="input-medium" name="quota" id="package-quota" min="1" placeholder="disk quota">
             <span class="add-on">MB</span>
           </div>
@@ -117,25 +143,31 @@
         <div class="controls">
           <input type="number"
             class="span2"
-           {{#if uuid}}readonly{{/if}}
-           class="span3"
-           min="1"
-           max="1000"
-           name="zfs_io_priority"
-           id="package-io-priority" min="1" placeholder="Disk IO Priority">
-
-          <p class="help-inline">1 for minimun, 1000 for maximum</p>
-        </div>
+            {{#if uuid}}readonly{{/if}}
+            class="span3"
+            min="1"
+            max="1000"
+            name="zfs_io_priority"
+            value="{{zfs_io_priority}}"
+            id="package-io-priority"
+            min="1"
+            placeholder="Disk IO Priority">
+            <p class="help-inline">1 for minimun, 1000 for maximum</p>
+          </div>
       </div>
 
       <div class="control-group">
         <div class="controls">
           <label class="checkbox">
-            <input type="checkbox" name="active"> Activate Package
+            <input type="checkbox"
+            {{#if active}}checked{{/if}}
+            name="active"> Activate Package
           </label>
 
           <label class="checkbox">
-            <input type="checkbox" name="default"> Make this the Default Package
+            <input type="checkbox"
+            {{#if default}}checked{{/if}}
+            name="default"> Make this the Default Package
           </label>
         </div>
       </div>

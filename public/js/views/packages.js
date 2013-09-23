@@ -108,24 +108,24 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
             return {uuid: uuid};
         });
 
-        if (this.model.get('owner_uuid')) {
-            this.owner = new User({uuid: this.model.get('owner_uuid')});
-            this.listenTo(this.owner, 'sync', this.populateUser);
-        }
-
         this.networks = new Networks(this.nets);
         this.networksView = new NetworksList({ collection: this.networks });
 
         this.listenTo(this.networksView, 'select', this.onSelectNetwork);
     },
 
-    navigateToUser: function(e) {
-        e.preventDefault();
-        adminui.vent.trigger('showview', 'user', {uuid: this.owner.get('uuid')});
+    serializeData: function() {
+        var data = _.clone(this.model.toJSON());
+        var owner_uuid = this.model.get('owner_uuid');
+        if (typeof(owner_uuid) === 'string') {
+            data.owner_uuid = [owner_uuid];
+        }
+        return data;
     },
 
-    populateUser: function() {
-        this.$('.owner .login').html(this.owner.get('login'));
+    navigateToUser: function(e) {
+        e.preventDefault();
+        adminui.vent.trigger('showview', 'user', {uuid: $(e.target).attr('uuid')});
     },
 
     onEdit: function() {
@@ -218,9 +218,13 @@ var PackageDetail = Backbone.Marionette.ItemView.extend({
         this.renderNetworks();
         this.renderNetworkPools();
 
-        if (this.owner) {
-            this.owner.fetch();
-        }
+        this.$('.owner .login').each(function(i, elm) {
+            var user = new User({uuid: $(elm).attr('data-uuid')});
+            user.fetch().done(function(u) {
+                console.log(user);
+                $(elm).html(user.get('login'));
+            });
+        });
     }
 
 });

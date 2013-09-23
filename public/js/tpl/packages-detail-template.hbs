@@ -19,10 +19,14 @@
 
 {{#if owner_uuid}}
 <div class="owner">
-  <strong>Owner</strong>
-  <div class="value">
-    <a class="login"></a>
-    <div class="uuid">{{owner_uuid}}</div>
+  <strong>Owners</strong>
+  <div class="owners">
+    {{#each owner_uuid}}
+    <div class="value">
+      <a class="login" data-uuid="{{this}}"></a>
+      <div class="uuid">{{this}}</div>
+    </div>
+    {{/each}}
   </div>
 </div>
 {{/if}}

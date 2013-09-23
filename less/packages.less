@@ -61,11 +61,8 @@
     .network-pools-list {
       #page-networks > .network-pools-list;
     }
-
-    .owner {
-      strong { vertical-align: top; }
-      .uuid { font-family: @monoFontFamily; font-size: 10px;}
-    }
+    form .package-owners .controls { margin-bottom: 1em; }
+    form .package-owners .add-owner-entry { clear: both; margin-left: 180px;}
 
     .owner, .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority {
       .widget-content;
@@ -81,6 +78,19 @@
         display: inline-block;
       }
     }
+
+
+    .owners {
+      display: inline-block;
+      width: 240px;
+    }
+
+    .owner {
+      strong { vertical-align: top; width: 200px;}
+      .value { clear: both; }
+      .uuid { font-family: @monoFontFamily; font-size: 10px;}
+    }
+
   }
 
   .billing-id .value { font-family: @monoFontFamily; font-size: 10px;}

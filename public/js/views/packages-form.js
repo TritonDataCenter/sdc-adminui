@@ -15,17 +15,34 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
     },
     events: {
         'submit': 'onSubmit',
+        'click a.add-owner-entry': 'onAddOwnerEntry',
         'click button[type=cancel]': 'onCancel'
     },
     initialize: function(options) {
         options = options || {};
-        this.modelBinder = new Backbone.ModelBinder();
 
         if (!options.model) {
             this.model = new Package({
                 version: "1.0.0"
             });
         }
+    },
+
+    onAddOwnerEntry: function() {
+        var node = $(['<div class="controls">',
+        '<input type="text"',
+        'class="input-xlarge"',
+        'name="owner_uuid[]"',
+        'placeholder="Search by login or uuid">',
+        '</div>'].join(''));
+
+        this.$('.add-owner-entry').before(node);
+
+        var userInput = new UserInput({
+            el: $('input', node)
+        });
+        userInput.render();
+        userInput.el.focus();
     },
 
     onError: function(model, xhr) {
@@ -58,9 +75,14 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
 
     onSubmit: function(e) {
         e.preventDefault();
+
+        var values = Backbone.Syphon.serialize(this);
+        values.owner_uuid = _.compact(values.owner_uuid);
+
+        console.log('package values', values);
+
         var self = this;
-        this.model.set({owner_uuid: this.$('#package-owner').val()});
-        this.model.save(null, {
+        this.model.save(values, {
             patch: true,
             success: function(model, resp) {
                 self.vent.trigger('showpackage', model);
@@ -71,15 +93,17 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
             }
         });
     },
-
-    onRender: function() {
-        this.modelBinder.bind(this.model, this.el);
-        this.userInput = new UserInput({el: this.$('#package-owner')});
-        this.userInput.render();
+    serializeData: function() {
+        var data = this.model.toJSON();
+        if (data.owner_uuid && _.isArray(data.owner_uuid) === false) {
+            data.owner_uuid = [data.owner_uuid];
+        }
+        return data;
     },
 
-    onClose: function() {
-        this.modelBinder.unbind();
+    onRender: function() {
+        this.userInput = new UserInput({el: this.$('.package-owner')});
+        this.userInput.render();
     },
 
     onShow: function() {
