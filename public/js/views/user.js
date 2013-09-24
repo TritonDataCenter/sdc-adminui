@@ -95,7 +95,8 @@ var UserView = Backbone.Marionette.Layout.extend({
     },
     events: {
         'click .edit-user': 'onClickEditUser',
-        'click .add-key': 'onClickAddKey'
+        'click .add-key': 'onClickAddKey',
+        'click .toggle-2fa': 'onToggle2fa'
     },
 
     sidebar: 'users',
@@ -213,11 +214,46 @@ var UserView = Backbone.Marionette.Layout.extend({
         this.vms.fetch({params: params});
     },
 
+    onToggle2fa: function() {
+        var self = this;
+        var url = '/_/users/'+this.model.get('uuid')+'/2fa';
+        $.get(url, function(d) {
+            var enabled = !d.enabled;
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                type: 'patch',
+                data: {enabled: enabled}
+            }).done(function() {
+                self.fetchAndRender2fa();
+            });
+        });
+    },
+
+    fetchAndRender2fa: function() {
+
+        var self = this;
+
+        $.get('/_/users/'+this.model.get('uuid')+'/2fa', function(d) {
+            var text = '';
+            if (d.enabled) {
+                self.$('.portal-2fa').html('enabled');
+                self.$('.toggle-2fa').html('Disable');
+            } else {
+                self.$('.toggle-2fa').html('Enable');
+                self.$('.portal-2fa').html('disabled');
+            }
+        });
+
+    },
+
     onRender: function() {
         this.sshkeys.fetch();
         this.model.fetch();
         this.vms.fetch();
         this.networks.fetch();
+
+        this.fetchAndRender2fa();
 
         this.stickit(this.model, {
             '.cn': 'cn',

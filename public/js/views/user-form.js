@@ -44,7 +44,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         '[name=first_name]': 'givenname',
         '[name="groups"]': 'groups',
         '[name=approved_for_provisioning]': 'approved_for_provisioning',
-        '[name=registered_developer]': 'registered_developer'
+        '[name=registered_developer]': 'registered_developer',
     },
 
     updateCommonName: function(e) {
