@@ -11,18 +11,29 @@ var Views = {
     'provision': require('./views/provision-vm'),
     'servers': require('./views/servers'),
     'server': require('./views/server'),
-    'dashboard': require('./views/dashboard'),
+
     'users': require('./views/users'),
     'user': require('./views/user'),
+
     'packages': require('./views/packages'),
+    'packages-form': require('./views/packages-form'),
+    'package': require('./views/package'),
+
+    'dashboard': require('./views/dashboard'),
+
     'settings': require('./views/settings'),
+
     'images': require('./views/images'),
     'image': require('./views/image'),
+
     'image-import': require('./views/image-import'),
+
     'jobs': require('./views/jobs'),
     'job': require('./views/job'),
+
     'networks': require('./views/networks'),
     'network': require('./views/network'),
+
     'services': require('./views/services')
 };
 
@@ -182,8 +193,13 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     showPackage: function(uuid) {
+        var self = this;
         if (this.authenticated()) {
-            this.presentView('packages', { uuid: uuid });
+            var Package = require('./models/package');
+            var p = new Package({uuid: uuid});
+            p.fetch().done(function() {
+                self.presentView('package', { model: p });
+            });
         }
     },
 

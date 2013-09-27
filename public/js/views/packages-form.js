@@ -1,8 +1,6 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 
-require('backbone.modelbinder');
-
 var adminui = require('../adminui');
 var FormTemplate = require('../tpl/packages-form.hbs');
 var Package = require('../models/package');
@@ -18,13 +16,12 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         'click a.add-owner-entry': 'onAddOwnerEntry',
         'click button[type=cancel]': 'onCancel'
     },
+
     initialize: function(options) {
         options = options || {};
 
         if (!options.model) {
-            this.model = new Package({
-                version: "1.0.0"
-            });
+            this.model = new Package({ version: "1.0.0" });
         }
     },
 
@@ -41,6 +38,7 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         var userInput = new UserInput({
             el: $('input', node)
         });
+
         userInput.render();
         userInput.el.focus();
     },
@@ -67,9 +65,9 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
 
         if (this.model.isNew()) {
-            this.vent.trigger('showpackage');
+            adminui.vent.trigger('showview', 'packages');
         } else {
-            this.vent.trigger('showpackage', this.model);
+            adminui.vent.trigger('showview', 'packages', { model: this.model });
         }
     },
 
@@ -85,7 +83,7 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         this.model.save(values, {
             patch: true,
             success: function(model, resp) {
-                self.vent.trigger('showpackage', model);
+                adminui.vent.trigger('showview', 'package', {model:  model});
                 adminui.vent.trigger('notification', {
                     level: 'success',
                     message: "Package saved succesfully."
@@ -93,6 +91,7 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
             }
         });
     },
+
     serializeData: function() {
         var data = this.model.toJSON();
         if (data.owner_uuid && _.isArray(data.owner_uuid) === false) {
