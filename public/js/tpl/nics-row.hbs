@@ -3,7 +3,9 @@
   <input type="checkbox">
   {{/role}}
 </td>
-<td><a class="network-name">{{network_name}}</a></td>
+<td><a class="network-name">{{network_name}}</a>
+  {{#if primary}}<span class="primary">PRIMARY</span>{{/if}}
+</td>
 <td>{{ip}}</td>
 <td>{{mac}}</td>
 <td>{{netmask}}</td>

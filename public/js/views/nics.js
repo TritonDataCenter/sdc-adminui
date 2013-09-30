@@ -9,6 +9,9 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
     template: require('../tpl/nics.hbs'),
     itemView: NicsRowView,
     itemViewContainer: 'tbody',
+    attributes: {
+        id: "vm-nics"
+    },
     events: {
         'click button.add-nic': 'onClickAddNic',
         'click button.remove-nics': 'onClickRemoveNics'

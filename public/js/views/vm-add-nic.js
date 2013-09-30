@@ -21,7 +21,8 @@ var VmAddNicView = Backbone.Marionette.ItemView.extend({
         var vm = this.vm;
         var netuuid = this.selectedNetwork.get('uuid');
         vm.addNics([{
-            uuid: netuuid
+            uuid: netuuid,
+            primary: this.$('.primary').is(':checked')
         }], function(job) {
             self.$el.modal('hide').remove();
             var view = new JobProgress({
