@@ -11,6 +11,16 @@ var User = require('../models/user');
 
 var adminui = require('../adminui');
 
+var Handlebars = require('handlebars-runtime');
+Handlebars.registerHelper('normalize', function(v) {
+    v = Number(v);
+    if (v % 1024 === 0) {
+        return _.str.sprintf("%d GB", v / 1024);
+    }
+
+    return _.str.sprintf("%d MB", v);
+});
+
 var PackagesListItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'li',
     template: PackagesListItemTemplate,

@@ -1,4 +1,14 @@
 <a>
 	<div class="name">{{name}}</div>
   <div class="version">{{version}}</div>
+
+  <div class="memory">
+    <small>RAM</small>
+    {{max_physical_memory}} MB
+  </div>
+
+  <div class="quota">
+    <small>DISK</small>
+    {{normalize quota}}
+  </div>
 </a>

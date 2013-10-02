@@ -19,11 +19,25 @@
       overflow: hidden;
       cursor: pointer;
       padding: 5px 12px;
+      >div {
+        color: @grayLight;
+        display: inline-block;
+        small { color: #ccc; font-size: 10px;}
+      }
+      .memory {
+        width: 140px;
+      }
+      .quota {
+        display: inline-block;
+      }
 
       .name {
         width: 200px;
-        display: inline-block; }
+        color: @linkColor;
+        display: inline-block;
+      }
       .version {
+        width: 200px;
         display: inline-block;
         color: @grayDark;
         font-family: @monoFontFamily;
