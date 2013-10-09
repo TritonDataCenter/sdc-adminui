@@ -477,11 +477,6 @@ var View = Backbone.Marionette.Layout.extend({
 
         if (pkg) {
             values['billing_id'] = pkg.get('uuid');
-            values['package_name'] = pkg.get('name');
-            values['package_version'] = pkg.get('version');
-            values['cpu_cap'] = pkg.get('cpu_cap');
-            values['max_lwps'] = pkg.get('max_lwps');
-            values['max_swap'] = pkg.get('max_swap');
 
             // quota value needs to be in GiB
             var quotaMib = pkg.get('quota');
@@ -490,9 +485,6 @@ var View = Backbone.Marionette.Layout.extend({
                 values['quota'] = Math.ceil(Number(quotaMib) / 1024);
             }
 
-            values['vcpus'] = pkg.get('vcpus');
-            values['zfs_io_priority'] = pkg.get('zfs_io_priority');
-            values['ram'] = pkg.get('max_physical_memory');
 
             if (values['brand'] === 'kvm') {
                 // disk size passed in as MiB.
@@ -525,7 +517,8 @@ var View = Backbone.Marionette.Layout.extend({
 
             return net;
         });
-        console.log(values);
+
+        console.log("Provision Values:", values);
 
         return values;
     },
