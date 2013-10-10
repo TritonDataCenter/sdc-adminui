@@ -15,6 +15,8 @@ var ChangeRackForm = require('./server-change-rack');
 var ChangePlatformForm = require('./server-change-platform');
 var ServerNicsView = require('./server-nics');
 var ServerSetup = require('./server-setup');
+
+var JobsList = require('./jobs-list');
 var ServerNicsEdit = require('./server-nics-edit');
 
 var ServerTemplate = require('../tpl/server.hbs');
@@ -23,7 +25,8 @@ var ServerView = Backbone.Marionette.Layout.extend({
     sidebar: 'servers',
     template: ServerTemplate,
     regions: {
-        'vmsRegion': '.vms-region'
+        'vmsRegion': '.vms-region',
+        'jobsRegion': '.jobs-region'
     },
 
     events: {
@@ -68,6 +71,12 @@ var ServerView = Backbone.Marionette.Layout.extend({
             },
             perPage: 1000
         });
+
+        this.jobsListView = new JobsList({
+            perPage: 1000,
+            params: {server_uuid: this.model.get('uuid')}
+        });
+
     },
 
     mergeSysinfo: function(nics) {
@@ -346,7 +355,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
     onShow: function() {
         this.model.fetch();
         this.nics.fetch();
-        var self = this;
         this.vms.fetch();
     },
 
@@ -363,6 +371,8 @@ var ServerView = Backbone.Marionette.Layout.extend({
             nics: this.nics,
             el: this.$('.nics')
         });
+
+        this.jobsRegion.show(this.jobsListView);
 
         this.nicsView.render();
         this.$("[data-toggle=tooltip]").tooltip();
