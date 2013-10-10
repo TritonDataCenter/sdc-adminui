@@ -1,5 +1,13 @@
 <a>
-	<div class="name">{{name}}</div>
+  <div class="status">
+    {{#if active}}
+    <span class="active">ACTIVE</span>
+    {{else}}
+    <span class="inactive">INACTIVE</span>
+    {{/if}}
+  </div>
+
+  <div class="name">{{name}}</div>
   <div class="version">{{version}}</div>
 
   <div class="memory">
