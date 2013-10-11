@@ -10,34 +10,33 @@ set -o xtrace
 PATH=/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin
 
 role=adminui
-app_name=$role
-
-CONFIG_AGENT_LOCAL_MANIFESTS_DIRS=/opt/smartdc/$role
 
 # Include common utility functions (then run the boilerplate)
 source /opt/smartdc/boot/lib/util.sh
+CONFIG_AGENT_LOCAL_MANIFESTS_DIRS=/opt/smartdc/$role
 sdc_common_setup
 
 # Identify this as a smartdc zone
 mkdir -p /var/smartdc/adminui
 mkdir -p /opt/smartdc/adminui
 
-# Location for ssl cert
+# We need to generate our own self signed certificate for Nginx.
 mkdir -p /opt/smartdc/adminui/etc/ssl
-
-# We need to generate our own self signed certificate for Nginx:
 echo "Generating SSL Certificate"
 /opt/local/bin/openssl req -x509 -nodes -subj '/CN=*' \
-  -newkey rsa:4096 -days 365 \
+    -newkey rsa:4096 -days 365 \
     -keyout /opt/smartdc/adminui/etc/ssl/default.pem \
     -out /opt/smartdc/adminui/etc/ssl/default.pem
 
-# Add node_modules/bin to PATH
+# Extend the PATH for convenience.
 echo -e "\nexport PATH=\$PATH:/opt/smartdc/adminui/node_modules/.bin:/opt/smartdc/adminui/build/node/bin" >> /root/.bashrc
 
-echo "Adding log rotation"
-logadm -w adminui -C 48 -s 100m -p 1h \
-    /var/svc/log/smartdc-application-adminui:default.log
+# Log rotation.
+sdc_log_rotation_add amon-agent /var/svc/log/*amon-agent*.log 1g
+sdc_log_rotation_add config-agent /var/svc/log/*config-agent*.log 1g
+sdc_log_rotation_add registrar /var/svc/log/*registrar*.log 1g
+sdc_log_rotation_add $role /var/svc/log/*$role*.log 1g
+sdc_log_rotation_setup_end
 
 # All done, run boilerplate end-of-setup
 sdc_setup_complete
