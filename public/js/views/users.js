@@ -56,6 +56,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     id: "page-users",
     sidebar: 'users',
     events: {
+        'keyup input[name=quicksearch]': 'onQuickSearch',
         'click button[data-event=new-user]': 'newUser'
     },
 
@@ -70,6 +71,15 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.listenTo(this.collection, 'error', this.onError, this);
         this.listenTo(this.collection, 'request', this.onRequest, this);
         this.listenTo(this.collection, 'sync', this.onSync, this);
+    },
+
+    onQuickSearch: function() {
+        var query = this.$('input[name=quicksearch]').val();
+        var params = {};
+        params.q = query;
+        this.collection.firstPage();
+        this.collection.params = params;
+        this.collection.fetch();
     },
 
 
