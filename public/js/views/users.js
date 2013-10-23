@@ -1,6 +1,8 @@
 // UsersView
 
+var _ = require('underscore');
 var Backbone = require('backbone');
+
 var adminui = require('../adminui');
 
 var UserForm = require('./user-form');
@@ -25,6 +27,10 @@ var UsersListItem = Backbone.Marionette.ItemView.extend({
     }
 });
 
+
+
+
+
 var EmptyView = require('./empty').extend({columns:3});
 var UsersList = Backbone.Marionette.CompositeView.extend({
     emptyView: EmptyView,
@@ -36,19 +42,6 @@ var UsersList = Backbone.Marionette.CompositeView.extend({
     itemViewContainer: 'tbody'
 });
 
-var FilterForm = Backbone.View.extend({
-    events: {
-        'submit form': 'onSubmit',
-        'change input': 'onSubmit',
-        'change select': 'onSubmit'
-    },
-    onSubmit: function(e) {
-        e.preventDefault();
-
-        var params = this.$('form').serializeObject();
-        this.trigger('query', params);
-    }
-});
 
 module.exports = Backbone.Marionette.ItemView.extend({
     template: tplUsers,
@@ -56,7 +49,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     id: "page-users",
     sidebar: 'users',
     events: {
-        'keyup input[name=quicksearch]': 'onQuickSearch',
+        'input input[name=quicksearch]': 'onQuickSearch',
         'click button[data-event=new-user]': 'newUser'
     },
 
@@ -66,26 +59,24 @@ module.exports = Backbone.Marionette.ItemView.extend({
             collection: this.collection
         });
 
-        this.filterView = new FilterForm();
-
         this.listenTo(this.collection, 'error', this.onError, this);
         this.listenTo(this.collection, 'request', this.onRequest, this);
         this.listenTo(this.collection, 'sync', this.onSync, this);
+
+        this.throttledQuery = _.debounce(this.query, 200);
     },
 
     onQuickSearch: function() {
         var query = this.$('input[name=quicksearch]').val();
         var params = {};
         params.q = query;
-        this.collection.firstPage();
-        this.collection.params = params;
-        this.collection.fetch();
+        this.throttledQuery(params);
     },
-
 
     query: function(params) {
         this.$('.alert').hide();
         this.collection.firstPage();
+        this.collection.reset();
         this.collection.params = params;
         this.collection.fetch();
     },
@@ -99,7 +90,9 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onShow: function() {
+        this.collection.fetch();
         this.$('.alert').hide();
+        this.$('input').focus();
         $(window).on('scroll', this.onScroll.bind(this));
     },
 
@@ -110,6 +103,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
             }
         }
     },
+
     next: function() {
         if (this.collection.hasNext()) {
             this.collection.next();
@@ -133,13 +127,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        this.filterView.setElement(this.$('.users-filter'));
         this.usersListView.setElement(this.$('.users-list'));
         this.usersListView.render();
-
-        this.listenTo(this.filterView, 'query', this.query, this);
-        this.collection.fetch();
-
         return this;
     },
 
