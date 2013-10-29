@@ -1,9 +1,9 @@
-<div class="user-icon">
-  <i class="icon-user icon-3x"></i>
+<div class="user-icon"
+  style="background-image: url(https://www.gravatar.com/avatar/{{emailhash}}?d=identicon&s=60);">
 </div>
 
 <div class="details">
-  <div class="span6">
+  <div class="span7">
     <a href="/users/{{uuid}}" class="login-link">
       <span class="login">{{login}}</span>
       <div class="name">
@@ -23,14 +23,14 @@
     <span class="uuid">{{uuid}}</span>
     <div class="email">{{email}}</div>
   </div>
-  <div class="span4">
+  <div class="span3">
     <span class="provisioning">
       Provisioning
-    {{#if approved_for_provisioning }}
+      {{#if approved_for_provisioning }}
       <strong class="enabled">Enabled</strong>
-    {{else}}
+      {{else}}
       <strong class="disabled">Disabled</strong>
-    {{/if}}
+      {{/if}}
     </span>
   </div>
 </div>
