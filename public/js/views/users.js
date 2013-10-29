@@ -12,9 +12,17 @@ var tplUsers = require('../tpl/users.hbs');
 
 var UsersListItem = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/users-list-item.hbs'),
-    tagName: 'tr',
+    attributes: {
+        'class': 'users-list-item'
+    },
     events: {
-        'click a.login': 'onClickLoginName'
+        'click a.login-link': 'onClickLoginName'
+    },
+    serializeData: function() {
+        var data = _.clone(this.model.toJSON());
+        data.approved_for_provisioning = data.approved_for_provisioning === "true" ?
+            true : false;
+        return data;
     },
     onClickLoginName: function(e) {
         if (e.metaKey || e.ctrlKey) {
@@ -31,7 +39,7 @@ var UsersListItem = Backbone.Marionette.ItemView.extend({
 
 
 
-var EmptyView = require('./empty').extend({columns:3});
+var EmptyView = require('./empty').extend();
 var UsersList = Backbone.Marionette.CompositeView.extend({
     emptyView: EmptyView,
     template: require('../tpl/users-list.hbs'),
@@ -39,7 +47,7 @@ var UsersList = Backbone.Marionette.CompositeView.extend({
     itemViewOptions: function() {
         return { emptyViewModel: this.collection };
     },
-    itemViewContainer: 'tbody'
+    itemViewContainer: '.users-list'
 });
 
 
@@ -91,6 +99,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     onShow: function() {
         this.collection.fetch();
+        this.$('.caption').hide();
         this.$('.alert').hide();
         this.$('input').focus();
         $(window).on('scroll', this.onScroll.bind(this));
@@ -117,13 +126,18 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onSync: function(c) {
-        this.$('.record-count').html(this.collection.objectCount);
-        this.$('.current-count').html(this.collection.length);
-        this.$('caption').show();
+        this.collection.objectCount = this.collection.objectCount || 0;
+        if (this.collection.objectCount && this.collection.length) {
+            this.$('.record-count').html(this.collection.objectCount);
+            this.$('.current-count').html(this.collection.length);
+            this.$('.caption').show();
+        } else {
+            this.$('.caption').hide();
+        }
     },
 
     onRequest: function() {
-        this.$('caption').hide();
+        this.$('.caption').hide();
     },
 
     onRender: function() {

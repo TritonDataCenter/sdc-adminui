@@ -2,13 +2,78 @@
   .users-container { .widget-container; }
   .page-header button { margin-top: 14px;}
 
-  th.login { width: 260px; }
-  th.name {  }
-  th.email { width: 260px; }
+  .user-icon {
+    .icon-user { color: #aaa; }
 
-  .unnamed { color: @grayLight; font-style: italic;}
-  .cn { font-size: 12px;}
-  .email { font-size: 12px;}
-  .uuid { #font > .monospace(10px); color: @grayLight; display:block; }
+    vertical-align: top;
+    padding-left: 40px;
+    padding-right: 10px;
+    padding-top: 25px;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .details {
+    display: inline-block;
+    padding: 20px;
+  }
+
+  .users-list {
+    .zero-state {
+      text-align: center;
+      display: block;
+    }
+  }
+
+  .users-list-item {
+    .widget-content;
+    padding: 0;
+    margin-bottom: 10px;
+    overflow: hidden;
+
+    .status {
+      float: left;
+      width: 15px;
+      margin-right: 10px;
+      height: 80px;
+      &.running { background: @activeColor; }
+      &.unavailable { background: @dangerColor;}
+      &.unknown { background: @dangerColor;}
+    }
+
+
+    a { cursor: pointer; }
+    a:hover { text-decoration: underline; }
+    .login {
+      font-size: 18px;
+      display: inline;
+    }
+   .name {
+      background: #FFF;
+      font-size: 14px;
+      color: #aaa;
+      display: inline;
+    }
+
+    .cn { padding-right: 2px; color: #444; }
+    .company { padding-left: 2px; color: #444; }
+    .email { font-size: 12px; line-height: 20px; }
+    .uuid {
+      font-size: 12px;
+      line-height: 20px;
+      color: @grayLight;
+      font-style: italic;
+      display: block;
+      font-family: monospace;
+      #font > .monospace(10px); color: @grayLight; display: block;
+    }
+
+    .provisioning { text-transform: uppercase; font-size: 12px; color: #888; }
+    .provisioning strong { text-transform: uppercase; }
+    .provisioning strong.enabled { color: @activeColor; }
+    .provisioning strong.disabled { color: @dangerColor; }
+
+  }
+
 }
 

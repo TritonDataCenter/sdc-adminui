@@ -1,14 +1,36 @@
-<td>
-  <a href="/users/{{uuid}}" class="login">{{login}}</a>
-  <span class="uuid">{{uuid}}</span>
-</td>
-<td>
-  <span class="cn">
-    {{#if cn}}
-      {{cn}}
-    {{else}}
-      <span class="unnamed">unnamed</span>
-    {{/if}}
+<div class="user-icon">
+  <i class="icon-user icon-3x"></i>
+</div>
 
-  </span>
-<td class="email">{{email}}</td>
+<div class="details">
+  <div class="span6">
+    <a href="/users/{{uuid}}" class="login-link">
+      <span class="login">{{login}}</span>
+      <div class="name">
+        <span class="cn">
+          {{#if cn}}
+          {{cn}}
+          {{else}}
+          <span class="unnamed">&lt;unnamed&gt;</span>
+          {{/if}}
+        </span>
+        {{#if company}}
+        @ <span class="company">{{company}}</span>
+        {{/if}}
+      </div>
+    </a>
+
+    <span class="uuid">{{uuid}}</span>
+    <div class="email">{{email}}</div>
+  </div>
+  <div class="span4">
+    <span class="provisioning">
+      Provisioning
+    {{#if approved_for_provisioning }}
+      <strong class="enabled">Enabled</strong>
+    {{else}}
+      <strong class="disabled">Disabled</strong>
+    {{/if}}
+    </span>
+  </div>
+</div>
