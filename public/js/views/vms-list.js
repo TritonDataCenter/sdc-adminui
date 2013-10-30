@@ -12,6 +12,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         'click .alias a': 'navigateToVmDetails'
     },
 
+
     serializeData: function() {
         var data = this.model.toJSON();
         data.image = this.images.get(data.image_uuid);
@@ -39,6 +40,9 @@ module.exports = require('./composite').extend({
     attributes: {
         'class':'vms-list'
     },
+    events: {
+        'click a.more': 'onNext'
+    },
     collectionEvents: {
         'sync': 'onSync'
     },
@@ -61,10 +65,15 @@ module.exports = require('./composite').extend({
         this.images.fetch().done(function() {
             self.render();
         });
+
     },
 
     onBeforeItemAdded: function(iv) {
         iv.images = this.images;
+    },
+
+    onNext: function() {
+        this.next();
     },
 
     onRender: function() {
@@ -74,8 +83,22 @@ module.exports = require('./composite').extend({
             this.$('caption').hide();
         }
     },
+
+    next: function() {
+        if (this.collection.hasNext()) {
+            this.collection.next();
+            this.collection.fetch({remove: false});
+        }
+    },
+
+
     onSync: function() {
         this.$('caption').show();
+        if (this.collection.objectCount === this.collection.length) {
+            this.$('.more').hide();
+        } else {
+            this.$('.more').show();
+        }
         this.$('.record-count').html(this.collection.objectCount);
         this.$('.current-count').html(this.collection.length);
     }

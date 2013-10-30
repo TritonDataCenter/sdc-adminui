@@ -164,7 +164,7 @@ var UserView = Backbone.Marionette.Layout.extend({
                 state: 'active',
                 sort: 'create_timestamp.desc'
             },
-            perPage: 1000
+            perPage: 20
         });
 
         var user = this.model;

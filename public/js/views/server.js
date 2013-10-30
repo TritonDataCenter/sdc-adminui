@@ -69,7 +69,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
                 server_uuid: this.model.get('uuid'),
                 state: 'active'
             },
-            perPage: 1000
+            perPage: 20
         });
 
         this.jobsListView = new JobsList({
@@ -357,6 +357,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         this.nics.fetch();
         this.vms.fetch();
     },
+
 
     onRender: function() {
         console.log(this.model);

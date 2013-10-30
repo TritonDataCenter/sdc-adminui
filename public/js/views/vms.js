@@ -115,7 +115,7 @@ module.exports = Backbone.Marionette.Layout.extend({
 
     initialize: function(options) {
         this.filterView = new FilterForm();
-        this.collection = new Vms();
+        this.collection = new Vms(null, { perPage: 20 });
         this.listView = new VmsList({ collection: this.collection });
 
         this.listenTo(this.filterView, 'query', this.query, this);
@@ -136,10 +136,8 @@ module.exports = Backbone.Marionette.Layout.extend({
     },
 
 
-    onScroll: function(e) {
-        if ($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
-            this.next();
-        }
+    onMoreVms: function(e) {
+        this.next();
     },
 
     next: function() {
@@ -171,7 +169,6 @@ module.exports = Backbone.Marionette.Layout.extend({
         this.$('.alert').hide();
 
         this.listRegion.show(this.listView);
-        $(window).on('scroll', this.onScroll.bind(this));
     },
 
     hideSummary: function() {

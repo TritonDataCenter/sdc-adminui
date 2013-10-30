@@ -58,7 +58,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
     sidebar: 'users',
     events: {
         'input input[name=quicksearch]': 'onQuickSearch',
-        'click button[data-event=new-user]': 'newUser'
+        'click button[data-event=new-user]': 'newUser',
+        'click a.more': 'next'
     },
 
     initialize: function() {
@@ -102,15 +103,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.$('.caption').hide();
         this.$('.alert').hide();
         this.$('input').focus();
-        $(window).on('scroll', this.onScroll.bind(this));
-    },
-
-    onScroll: function(e) {
-        if (this.collection.length) {
-            if ($(window).scrollTop() + $(window).height() > $(document).height() - 20) {
-                this.next();
-            }
-        }
     },
 
     next: function() {
@@ -128,6 +120,11 @@ module.exports = Backbone.Marionette.ItemView.extend({
     onSync: function(c) {
         this.collection.objectCount = this.collection.objectCount || 0;
         if (this.collection.objectCount && this.collection.length) {
+            if (this.collection.objectCount === this.collection.length) {
+                this.$('.more').hide();
+            } else {
+                this.$('.more').show();
+            }
             this.$('.record-count').html(this.collection.objectCount);
             this.$('.current-count').html(this.collection.length);
             this.$('.caption').show();
