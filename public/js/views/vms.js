@@ -120,7 +120,6 @@ module.exports = Backbone.Marionette.Layout.extend({
 
         this.listenTo(this.filterView, 'query', this.query, this);
         this.listenTo(this.collection, 'error', this.onError, this);
-        this.listenTo(this.collection, 'request', this.hideSummary, this);
     },
 
     provision: function() {
@@ -169,10 +168,6 @@ module.exports = Backbone.Marionette.Layout.extend({
         this.$('.alert').hide();
 
         this.listRegion.show(this.listView);
-    },
-
-    hideSummary: function() {
-        this.$('.vms-list caption').hide();
     },
 
     onRender: function() {

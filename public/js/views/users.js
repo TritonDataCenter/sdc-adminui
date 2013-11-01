@@ -128,13 +128,14 @@ module.exports = Backbone.Marionette.ItemView.extend({
             this.$('.record-count').html(this.collection.objectCount);
             this.$('.current-count').html(this.collection.length);
             this.$('.caption').show();
+            this.$('.caption').css('visibility', 'visible');
         } else {
-            this.$('.caption').hide();
+            this.$('.caption').css('visibility', 'hidden');
         }
     },
 
     onRequest: function() {
-        this.$('.caption').hide();
+        this.$('.caption').css('visibility', 'hidden');
     },
 
     onRender: function() {

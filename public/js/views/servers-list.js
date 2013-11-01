@@ -106,7 +106,7 @@ var ServersList = module.exports = require('./collection').extend({
     itemViewOptions: function() {
         return {
             emptyViewModel: this.collection
-        }
+        };
     },
 
     initialize: function(options) {
@@ -126,7 +126,8 @@ var ServersList = module.exports = require('./collection').extend({
             xhr: xhr
         });
     },
-    onRender: function() {
+
+    onShow: function() {
         this.collection.fetch();
     }
 });

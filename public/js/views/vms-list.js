@@ -53,6 +53,7 @@ module.exports = require('./composite').extend({
         emptyMessage: 'No Virtual Machines found',
         columns: 4
     }),
+
     itemViewOptions: function() {
         return {
             emptyViewModel: this.collection
@@ -65,7 +66,7 @@ module.exports = require('./composite').extend({
         this.images.fetch().done(function() {
             self.render();
         });
-
+        this.listenTo(this.collection, 'request', this.onRequest, this);
     },
 
     onBeforeItemAdded: function(iv) {
@@ -78,9 +79,9 @@ module.exports = require('./composite').extend({
 
     onRender: function() {
         if (this.collection.length) {
-            this.$('caption').show();
+            this.$('caption').css('visibility', 'visible');
         } else {
-            this.$('caption').hide();
+            this.$('caption').css('visibility', 'hidden');
         }
     },
 
@@ -91,14 +92,17 @@ module.exports = require('./composite').extend({
         }
     },
 
+    onRequest: function() {
+        this.$('caption').css('visibility', 'hidden');
+    },
 
     onSync: function() {
-        this.$('caption').show();
         if (this.collection.objectCount === this.collection.length) {
             this.$('.more').hide();
         } else {
             this.$('.more').show();
         }
+        this.$('caption').css('visibility', 'visible');
         this.$('.record-count').html(this.collection.objectCount);
         this.$('.current-count').html(this.collection.length);
     }
