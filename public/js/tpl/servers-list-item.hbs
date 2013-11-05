@@ -11,8 +11,12 @@
 {{#if setup}}
 <div class="memory-usage">
   <div class="memory-usage-avail">
-    <strong>Available</strong>
-    <span class="avail">{{memory_available_gb}} GB</span>
+    <strong>Provisionable</strong>
+    <span class="avail
+    {{#unless memory_provisionable_percent}}
+    full
+    {{/unless}}
+    ">{{memory_provisionable_gb}} GB</span>
   </div>
   <div class="memory-usage-graph"></div>
   <div class="memory-usage-total">

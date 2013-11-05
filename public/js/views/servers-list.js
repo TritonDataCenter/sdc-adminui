@@ -41,12 +41,17 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
             not_setup: data.setup === false,
             last_boot: moment(data.last_boot).fromNow(),
             last_heartbeat: moment(data.last_heartbeat).fromNow(),
-            memory_available_mb: _.str.sprintf("%0.1f", data.memory_available_bytes/1024/1024),
+            memory_provisionable_mb: _.str.sprintf("%0.1f", data.memory_provisionable_bytes/1024/1024),
             memory_total_mb: _.str.sprintf("%0.1f", data.memory_total_bytes/1024/1024),
-            memory_available_gb: _.str.sprintf("%0.1f", data.memory_available_bytes/1024/1024/1024),
-            memory_total_gb: _.str.sprintf("%0.1f", data.memory_total_bytes/1024/1024/1024)
+            memory_available_gb: _.str.sprintf("%0.1f", data.memory_provisionable_bytes/1024/1024/1024),
+            memory_provisionable_gb: _.str.sprintf("%0.1f", data.memory_total_bytes/1024/1024/1024),
+            memory_total_gb: _.str.sprintf("%0.1f", data.memory_total_bytes/1024/1024/1024),
         });
-        data.memory_used_percent = (data.memory_available_mb / data.memory_total_mb);
+        if (data.memory_provisionable_mb < 0) {
+            data.memory_provisionable_mb = 0;
+            data.memory_provisionable_gb = 0;
+        }
+        data.memory_provisionable_percent = (data.memory_provisionable_mb / data.memory_total_mb);
         console.log(data);
         return data;
     },
@@ -78,7 +83,10 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
     },
     drawMemoryGraph: function() {
         var $node = this.$('.memory-usage-graph');
-        var avail = this.model.get('memory_available_bytes');
+        var avail = this.model.get('memory_provisionable_bytes');
+        if (avail < 0) {
+            avail = 0;
+        }
         var total = this.model.get('memory_total_bytes');
         var used = total - avail;
         var w = $node.width();
