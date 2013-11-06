@@ -89,6 +89,7 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
         }
         var total = this.model.get('memory_total_bytes');
         var used = total - avail;
+
         var w = $node.width();
         var h = 4;
         var paper = new Raphael($node.get(0), w, h);

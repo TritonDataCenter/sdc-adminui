@@ -203,6 +203,9 @@ var VmView = Backbone.Marionette.Layout.extend({
     },
 
     clickedOwnerName: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
         e.preventDefault();
         this.vent.trigger('showview', 'user', {
             user: this.owner

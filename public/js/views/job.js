@@ -47,11 +47,17 @@ var JobView = Backbone.Marionette.ItemView.extend({
     },
 
     navigateToServer: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
         e.preventDefault();
         adminui.vent.trigger('showview', 'server', {uuid: this.model.get('params').server_uuid});
     },
 
     navigateToVm: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
         e.preventDefault();
         adminui.vent.trigger('showview', 'vm', {uuid: this.model.get('params').vm_uuid});
     },

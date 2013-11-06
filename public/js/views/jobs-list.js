@@ -38,7 +38,7 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
 
         if (data.name.indexOf('update') !== -1 && data.params) {
 
-            var summary = []
+            var summary = [];
             if (data.params.new_owner_uuid) {
                 summary.push('change owner');
             }
@@ -48,7 +48,7 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
             }
 
             if (data.params.alias) {
-               summary.push('rename');
+                summary.push('rename');
             }
             data.summary = summary.join(' + ');
         }
@@ -56,10 +56,14 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
 
         console.log(data);
 
-        data[data.execution] = true
+        data[data.execution] = true;
         return data;
     },
     showJobDetails: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+
         e.preventDefault();
         var View = this.detailsView;
 
