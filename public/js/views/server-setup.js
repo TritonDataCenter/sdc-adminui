@@ -11,12 +11,14 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
         'class': 'modal'
     },
     events: {
+        'submit form': 'setup',
         'click .setup': 'setup'
     },
     initialize: function(options) {
         this.viewModel = new ViewModel({customHostname: false});
     },
-    setup: function() {
+    setup: function(e) {
+        e.preventDefault();
         var server = this.model;
         var self = this;
         var hostname = this.$('input[name=hostname]').val();
