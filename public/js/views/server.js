@@ -378,8 +378,8 @@ var ServerView = Backbone.Marionette.Layout.extend({
         this.nicsView.render();
         this.$("[data-toggle=tooltip]").tooltip();
 
-        var vmsList = new VmsList({collection: this.vms });
-        this.vmsRegion.show(vmsList);
+        this.vmsListView = new VmsList({collection: this.vms });
+        this.vmsRegion.show(this.vmsListView);
     }
 });
 
