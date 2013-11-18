@@ -41,10 +41,10 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
             var total = self._bytesToGb(res.total);
             self.$('.server-total-memory').html(_.str.sprintf('%.2f GB', total));
 
-            var available = self._bytesToGb(res.available);
-            self.$('.server-available-memory').html(_.str.sprintf('%.2f', available));
+            var provisionable = self._bytesToGb(res.provisionable);
+            self.$('.server-provisionable-memory').html(_.str.sprintf('%.2f', provisionable));
 
-            var percent = ((res.total - res.available) / res.total) * 100;
+            var percent = ((res.total - res.provisionable) / res.total) * 100;
             self.$('.server-utilization-percent').html(
                 _.str.sprintf('%.2f%%', percent)
             );
