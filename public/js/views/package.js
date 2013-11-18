@@ -98,7 +98,7 @@ var PackageDetail = module.exports = Backbone.Marionette.ItemView.extend({
     onTraits: function() {
         this.traitsEditor = new TraitsEditor({
             data: this.model.get('traits'),
-            title: _.str.sprintf('Trats for package: %s', this.model.get('name'))
+            title: _.str.sprintf('Traits for package: %s', this.model.get('name'))
         });
         this.listenTo(this.traitsEditor, 'save', this.onSaveTraits, this);
         this.traitsEditor.show();
