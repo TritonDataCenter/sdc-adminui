@@ -5,6 +5,8 @@ var User = require('./models/user');
 var SigninView = require('./views/signin');
 var AppView = require('./views/app');
 
+var NotFoundView = require('./views/error/not-found');
+
 var Views = {
     'vms': require('./views/vms'),
     'vm': require('./views/vm'),
@@ -52,6 +54,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         '*default': 'defaultAction'
     },
     initialize: function(options) {
+        _.bindAll(this);
         this.app = options.app;
         this.app.user = this.app.user || (this.user = User.currentUser());
     },
@@ -109,6 +112,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     start: function() {
         this.listenTo(this.app.vent, 'showview', this.presentView, this);
         this.listenTo(this.app.vent, 'signout', this.signout, this);
+        this.listenTo(this.app.vent, 'notfound', this.notFound, this);
         this.listenTo(this.app.user, 'authenticated', this.didAuthenticate, this);
         this.listenTo(this.app.state, 'change:datacenter', this.renderTitle);
 
@@ -144,7 +148,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
-    presentView: function(viewName, args) {
+    initializeAppView: function() {
         if (false === this.app.chrome.currentView instanceof AppView) {
             var appView = new AppView({
                 vent: this.app.vent,
@@ -152,18 +156,31 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             });
             this.app.chrome.show(appView);
         }
+    },
 
+    presentView: function(viewName, args) {
+        this.initializeAppView();
         var View = Views[viewName];
 
         if (typeof(View) === 'undefined') {
-            throw "View not found: " + viewName;
+            this.notFound({
+                view: viewName,
+                args: args
+            });
+            console.log("View not found: " + viewName);
+        } else {
+            var view = new View(args);
+
+            this.applySidebar(view);
+            this.applyUrl(view);
+            this.app.chrome.currentView.content.show(view, args);
         }
+    },
 
-        var view = new View(args);
-
-        this.applySidebar(view);
-        this.applyUrl(view);
-        this.app.chrome.currentView.content.show(view, args);
+    notFound: function(args) {
+        this.initializeAppView();
+        var view = new NotFoundView(args);
+        this.app.chrome.currentView.content.show(view);
     },
 
     applySidebar: function(view) {
@@ -195,6 +212,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             var net = new Network({uuid: uuid});
             net.fetch().done(function() {
                 self.presentView('network', { model: net });
+            }).fail(function(xhr) {
+                self.notFound({
+                    view: 'networks',
+                    args: {uuid: uuid},
+                    xhr: xhr
+                });
             });
         }
     },
@@ -206,6 +229,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             var p = new Package({uuid: uuid});
             p.fetch().done(function() {
                 self.presentView('package', { model: p });
+            }).fail(function(xhr) {
+                self.notFound({
+                    view: 'package',
+                    args: {uuid: uuid},
+                    xhr: xhr
+                });
             });
         }
     },
@@ -223,6 +252,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             var img = new Img({uuid: uuid});
             img.fetch().done(function() {
                 self.presentView('image', { image: img });
+            }).fail(function(xhr) {
+                self.notFound({
+                    view: 'image',
+                    args: {uuid: uuid},
+                    xhr: xhr
+                });
             });
         }
     },
@@ -234,6 +269,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             var job = new Job({uuid: uuid});
             job.fetch().done(function() {
                 self.presentView('job', { model: job });
+            }).fail(function(xhr) {
+                self.notFound({
+                    view: 'image',
+                    args: {uuid: uuid},
+                    xhr: xhr
+                });
             });
         }
     },
@@ -251,6 +292,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             var vm = new Vm({uuid: uuid});
             vm.fetch().done(function() {
                 self.presentView('vm', { vm: vm });
+            }).fail(function(xhr) {
+                self.notFound({
+                    view: 'vm',
+                    args: {uuid: uuid},
+                    xhr: xhr
+                });
             });
         }
     },
@@ -263,6 +310,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             var user = new User({uuid: uuid});
             user.fetch().done(function() {
                 self.presentView('user', { user: user });
+            }).fail(function(xhr) {
+                self.notFound({
+                    view: 'user',
+                    args: {uuid: uuid},
+                    xhr: xhr
+                });
             });
         }
     },
@@ -275,6 +328,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             var server = new Server({uuid: uuid});
             server.fetch().done(function() {
                 self.presentView('server', { server: server });
+            }).fail(function(xhr) {
+                self.notFound({
+                    view: 'server',
+                    args: {uuid: uuid},
+                    xhr: xhr
+                });
             });
         }
     },

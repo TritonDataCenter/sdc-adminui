@@ -79,7 +79,7 @@ html { height: 100%; }
   border: 1px solid darken(#e8eef2, 5%);
 }
 .widget-content {
-  border: 1px solid #eee;
+  border: 1px solid #f3f3f3;
   #gradient > .vertical(#f8f8f8, #fafafa);
   padding: 10px 14px;
 }
@@ -159,13 +159,21 @@ h3 .actions {
 
 form.unstyled { margin: 0; padding: 0;}
 table.vertical { tr, td { border: none;}}
+.record-summary {
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #888;
+  padding: 8px 12px;
+}
 
 .table {
   margin-bottom: 0;
   caption {
-    border-top: 1px solid #eee;
     text-align: left;
-    font-size: 13px;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #aaa;
     padding: 8px 12px;
   }
 
@@ -216,15 +224,15 @@ h1.branding {
 }
 
 #topbar {
+  background: lighten(#e8eef2, 3%);
   cursor: default;
-  padding: 30px 10px 20px 10px;
+  padding: 16px 10px 16px 10px;
   color: #666;
   line-height: 20px;
 
   .server-time {
     margin-top: 3px;
     font-size: 12px;
-    color: @grayLight;
   }
 
   .acc-controls {
@@ -239,7 +247,7 @@ h1.branding {
     font-weight: 300;
     letter-spacing: 1px;
     text-transform: uppercase;
-    font-size: 24px;
+    font-size: 16px;
     color: #666;
   }
   .datacenter {
@@ -250,8 +258,8 @@ h1.branding {
 #rootnav {
   // border-top: 1px solid #d6dde2;
   background: lighten(#e8eef2, 3%);
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding: 0;
+  margin-bottom: 8px;
 
   .navbar { margin-bottom: 0;}
   .navbar-inner {
@@ -273,6 +281,10 @@ h1.branding {
       color: lighten(#4d779f, 20%);
       .box-shadow(none);
     }
+    li.active {
+      padding-bottom: 0;
+      background: #fff;
+   }
     li.active a {
       color: @textColor;
       .box-shadow(none);

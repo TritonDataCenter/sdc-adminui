@@ -60,10 +60,12 @@ module.exports = Backbone.Marionette.CompositeView.extend({
         this.$('caption').hide();
     },
     onSync: function() {
-        this.$('caption').show();
-        this.$('.record-count').html(this.collection.length);
         this.collection.sort();
         this.render();
+    },
+    onRender: function() {
+        this.$('caption').show();
+        this.$('.record-count').html(this.collection.length || 0);
     },
     onShow: function() {
         this.$('caption').hide();
