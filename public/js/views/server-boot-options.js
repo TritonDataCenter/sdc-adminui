@@ -1,4 +1,6 @@
 var Backbone = require('backbone');
+var Platforms = require('../models/platforms');
+
 var _ = require('underscore');
 
 module.exports = Backbone.Marionette.ItemView.extend({
@@ -10,6 +12,36 @@ module.exports = Backbone.Marionette.ItemView.extend({
         'keydown textarea': 'onInputKeydown',
         'keyup textarea': 'onInputKeyup'
     },
+
+    initialize: function(options) {
+        this.platforms = new Platforms();
+        this.listenTo(this.platforms, 'sync', this.populatePlatforms, this);
+    },
+
+    populatePlatforms: function(models) {
+        var self = this;
+        var $sel = self.$('select[name=platform]');
+
+        this.platforms.each(function(p) {
+            var label = p.get('version');
+
+            if (p.get('latest')) {
+                label = label + ' (latest)';
+            }
+
+            var n = $("<option/>");
+            n.val(p.get('version'));
+            n.html(label);
+
+            $sel.append(n);
+        });
+        $sel.val(this.model.get('version'));
+    },
+
+    onShow: function() {
+        this.platforms.fetch();
+    },
+
 
     serializeData: function() {
         var data = _.clone(this.model.toJSON());
@@ -31,7 +63,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
             this.$('.error').hide();
             this.$('.save').prop('disabled', false);
         } catch (e) {
-            this.$('.error').text(e.message)
+            this.$('.error').text(e.message);
             this.$('.error').show();
             this.$('.save').prop('disabled', true);
         }
@@ -51,7 +83,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
         var data = {
             kernel_args: JSON.parse(this.$('textarea').val()),
-            platform: this.$('.platform').val()
+            platform: this.$('[name=platform]').val()
         };
 
         this.model.save(data).done(function() {
