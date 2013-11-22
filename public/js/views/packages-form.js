@@ -8,9 +8,11 @@ var UserInput = require('../views/typeahead-user');
 
 var PackageForm = Backbone.Marionette.ItemView.extend({
     template: FormTemplate,
+    id: 'page-package-form',
     modelEvents: {
         'error': 'onError'
     },
+
     events: {
         'submit': 'onSubmit',
         'click a.add-owner-entry': 'onAddOwnerEntry',
@@ -77,6 +79,10 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         var values = Backbone.Syphon.serialize(this);
         values.owner_uuid = _.compact(values.owner_uuid);
 
+        if (this.options.mode === 'new-version') {
+            this.model.unset('uuid');
+        }
+
         console.log('package values', values);
 
         var self = this;
@@ -97,6 +103,10 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         if (data.owner_uuid && _.isArray(data.owner_uuid) === false) {
             data.owner_uuid = [data.owner_uuid];
         }
+        console.log(this.options.mode);
+        data.newVersionMode = this.options.mode === 'new-version';
+        data.changeOwnerMode = this.options.mode === 'change-owner';
+
         return data;
     },
 
@@ -106,7 +116,11 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
     },
 
     onShow: function() {
-        this.$('input:first').focus();
+        if (this.options.mode === 'new-version') {
+            this.$("#package-version").focus();
+        } else {
+            this.$('input:first').focus();
+        }
     }
 });
 

@@ -1,6 +1,11 @@
 <div class="page-header">
   {{#if uuid}}
-  <h2>Edit Package</h2>
+    {{#if changeOwnerMode}}
+      <h2>Change Package Owner</h2>
+    {{/if}}
+    {{#if newVersionMode}}
+      <h2>Create New Version of {{name}} {{version}}</h2>
+    {{/if}}
   {{else}}
   <h2>Create a new Package</h2>
   {{/if}}
@@ -9,10 +14,11 @@
 
 
 <div class="row">
-  <div class="span2"></div>
-  <div class="span10">
+  <div class="span12">
     <form class="form-horizontal">
       <div class="alert alert-block alert-error hide"></div>
+
+      {{#unless changeOwnerMode}}
       <div class="control-group">
         <span class="help-block" style="margin-bottom: 2em;">
           Name and version of the package is used to uniquely identify a package. Once a package with a specific version has been created, the properties making up the package cannot be modified. A new version must be created with the new properties.
@@ -23,26 +29,40 @@
           <input type="text"
           value="{{name}}"
           id="package-name"
-          {{#if uuid}}readonly{{/if}}
           name="name"
+          {{#if newVersionMode}}
+          readonly
+          {{/if}}
           placeholder="Name of the package">
         </div>
       </div>
+      {{/unless}}
 
+      {{#unless changeOwnerMode}}
       <div class="control-group">
         <label class="control-label" for="package-version">Version</label>
 
         <div class="controls">
+          {{#if newVersionMode}}
+          <p class="original-version">
+            Original Version {{version}} <br/>
+            Please specify a new version.
+          </p>
+          {{/if}}
           <input type="text"
+          {{#unless newVersionMode}}
           value="{{version}}"
+          {{/unless}}
           id="package-version"
-          {{#if uuid}}readonly{{/if}}
+          class="span3"
           name="version" placeholder="Version">
         </div>
       </div>
+      {{/unless}}
 
       <div class="control-group package-owners">
         <label class="control-label" for="package-owner">Owners</label>
+
         {{#unless owner_uuid.length}}
         <div class="controls">
           <input type="text"
@@ -65,12 +85,14 @@
       </div>
 
 
+      {{#unless changeOwnerMode}}
       <legend>CPU &amp; Memory</legend>
       <div class="control-group">
         <label class="control-label" for="package-memory">Memory</label>
         <div class="controls">
           <div class="input-append">
-            <input type="number" class="input-small" id="package-memory"  {{#if uuid}}readonly{{/if}} name="max_physical_memory"
+            <input type="number" class="input-small" id="package-memory"
+            name="max_physical_memory"
             min="64"
             value="{{max_physical_memory}}"
             placeholder="memory">
@@ -83,7 +105,8 @@
         <label class="control-label" for="package-memory">Swap</label>
         <div class="controls">
           <div class="input-append">
-            <input type="number" class="input-small" id="package-swap"  {{#if uuid}}readonly{{/if}} name="max_swap" value="{{max_swap}}" min="64" placeholder="swap">
+            <input type="number" class="input-small" id="package-swap"
+            name="max_swap" value="{{max_swap}}" min="64" placeholder="swap">
             <span class="add-on">MB</span>
           </div>
         </div>
@@ -93,8 +116,10 @@
         <label class="control-label" for="package-vcpus">Number of CPUs</label>
         <div class="controls">
           <div class="input-append">
-            <input type="number" value="{{vcpus}}" class="input-small" id="package-vcpus"
-             {{#if uuid}}readonly{{/if}}
+            <input type="number"
+              value="{{vcpus}}"
+              class="input-small"
+              id="package-vcpus"
               name="vcpus" min="1" placeholder="cores">
             <span class="add-on">cores</span>
           </div>
@@ -108,7 +133,6 @@
           <input type="number"
           value="{{cpu_cap}}"
           class="input-small" id="package-cpu-cap"
-          {{#if uuid}}readonly{{/if}}
           name="cpu_cap" min="20" max="10000" placeholder="cpu cap">
           <p class="help-inline">Min 20. This is = to % of CPU. 400% = 4 CPUs</p>
         </div>
@@ -120,7 +144,6 @@
           <input type="number"
           value="{{max_lwps}}"
           class="input-small" id="package-max-processes"
-          {{#if uuid}}readonly{{/if}}
           name="max_lwps" min="250" placeholder="threads">
         </div>
       </div>
@@ -132,7 +155,6 @@
         <div class="controls">
           <div class="input-append">
             <input type="number"
-             {{#if uuid}}readonly{{/if}}
              value="{{quota}}"
              class="input-medium" name="quota" id="package-quota" min="1" placeholder="disk quota">
             <span class="add-on">MB</span>
@@ -145,7 +167,6 @@
         <div class="controls">
           <input type="number"
             class="span2"
-            {{#if uuid}}readonly{{/if}}
             class="span3"
             min="1"
             max="1000"
@@ -157,6 +178,8 @@
             <p class="help-inline">1 for minimun, 1000 for maximum</p>
           </div>
       </div>
+
+      {{/unless}}
 
       <div class="control-group">
         <div class="controls">

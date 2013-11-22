@@ -1,0 +1,94 @@
+<div class="page-header">
+  <div class="resource-status">
+    {{#if active}}
+    <span class="active">ACTIVE</span>
+    {{else}}
+    <span class="inactive">INACTIVE</span>
+    {{/if}}
+  </div>
+  <h2>
+    Package
+    {{name}} {{version}}
+
+    {{#role "operators"}}
+    <div class="actions pull-right">
+      <button class="btn btn-link new-version"><i class="icon-pencil"></i> New Version</button>
+      <button class="btn btn-link change-owner"><i class="icon-pencil"></i> Package Settings</button>
+    </div>
+    {{/role}}
+  </h2>
+</div>
+
+{{#if owner_uuid}}
+<div class="owner">
+  <strong>Owners</strong>
+  <div class="owners">
+    {{#each owner_uuid}}
+    <div class="value">
+      <a class="login" data-uuid="{{this}}"></a>
+      <div class="uuid">{{this}}</div>
+    </div>
+    {{/each}}
+  </div>
+</div>
+{{/if}}
+
+<h3>Memory &amp; CPU</h3>
+
+<div class="memory">
+  <strong>RAM</strong>
+  <div class="value">{{normalize max_physical_memory}}</div>
+</div>
+
+<div class="vcpus">
+  <strong>VCPUs</strong>
+  <div class="value">{{vcpus}}</div>
+</div>
+
+<div class="swap">
+  <strong>Swap</strong>
+  <div class="value">{{max_swap}} MB</div>
+</div>
+
+<div class="cpu-cap">
+  <strong>CPU Cap (% CPU)</strong>
+  <div class="value">{{cpu_cap}}</div>
+</div>
+
+<div class="max-processes">
+  <strong>Max Lightweight Processes</strong>
+  <div class="value">{{max_lwps}}</div>
+</div>
+
+
+<h3>Storage</h3>
+<div class="quota">
+  <strong>Disk Quota</strong>
+  <div class="value">{{normalize quota}}</div>
+</div>
+
+<div class="io-priority">
+  <strong>ZFS IO Priority</strong>
+  <div class="value">{{zfs_io_priority}}</div>
+</div>
+
+<section class="networks">
+  <h3>Networks</h3>
+  <div class="networks-list"></div>
+  <div class="network-pools-list"></div>
+</section>
+
+<section>
+<h3>Billing</h3>
+
+<div class="billing-id">
+  <strong>Billing ID</strong>
+  <div class="value">{{uuid}}</div>
+</div>
+</section>
+
+{{#role "operators"}}
+<section>
+  <button class="btn btn-link traits"><i class="icon-pencil"></i> Modify Traits used for Provisioning</button>
+</section>
+{{/role}}

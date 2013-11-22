@@ -15,8 +15,7 @@ var NetworkPoolsList = require('../views/network-pools-list');
 var TraitsEditor = require('./traits-editor');
 
 
-
-var PackagesDetailTemplate = require('../tpl/packages-detail-template.hbs');
+var PackageTemplate = require('../tpl/package.hbs');
 
 var Handlebars = require('handlebars-runtime');
 Handlebars.registerHelper('normalize', function(v) {
@@ -32,16 +31,22 @@ Handlebars.registerHelper('normalize', function(v) {
 
 
 var PackageDetail = module.exports = Backbone.Marionette.ItemView.extend({
-    template: PackagesDetailTemplate,
+    template: PackageTemplate,
+
     attributes: {
         id: 'page-package'
     },
+
     sidebar: 'packages',
+
     url: function() {
         return ('packages/' + this.model.get('uuid'));
     },
+
     events: {
-        'click .edit': 'onEdit',
+        'click .change-owner': 'onChangeOwner',
+        'click .new-version': 'onNewVersion',
+        'click .-owner': 'onEditOwner',
         'click .traits': 'onTraits',
         'click .login': 'navigateToUser'
     },
@@ -73,8 +78,18 @@ var PackageDetail = module.exports = Backbone.Marionette.ItemView.extend({
         adminui.vent.trigger('showview', 'user', {uuid: $(e.target).attr('data-uuid')});
     },
 
-    onEdit: function() {
-        adminui.vent.trigger('showview', 'packages-form', {model: this.model });
+    onChangeOwner: function() {
+        adminui.vent.trigger('showview', 'packages-form', {
+            model: this.model,
+            mode: 'change-owner'
+        });
+    },
+
+    onNewVersion: function() {
+        adminui.vent.trigger('showview', 'packages-form', {
+            model: this.model,
+            mode: 'new-version'
+        });
     },
 
     onSelectNetwork: function(model) {
