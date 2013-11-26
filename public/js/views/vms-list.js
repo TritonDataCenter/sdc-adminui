@@ -3,6 +3,7 @@ var ItemTemplate = require('../tpl/vms-list-item.hbs');
 var adminui = require('../adminui');
 
 var Images = require('../models/images');
+var User = require('../models/user');
 
 var ItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
@@ -10,6 +11,21 @@ var ItemView = Backbone.Marionette.ItemView.extend({
 
     events: {
         'click .alias a': 'navigateToVmDetails'
+    },
+
+    initialize: function(options) {
+        this.user = new User({uuid: options.model.get('owner_uuid')});
+    },
+    onShow: function() {
+        var self = this;
+        var user = self.user;
+
+        this.user.fetch().done(function() {
+            self.$('.owner-name').html(user.get('login'));
+            if (user.get('company')) {
+                self.$('.owner-company').html("at " + user.get('company'));
+            }
+        });
     },
 
 
@@ -71,6 +87,7 @@ module.exports = require('./composite').extend({
 
     onBeforeItemAdded: function(iv) {
         iv.images = this.images;
+        iv.usersCache = new Backbone.Collection();
     },
 
     onNext: function() {
