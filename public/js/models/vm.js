@@ -75,13 +75,17 @@ var Vm = Model.extend({
     },
 
     addNics: function(networks, cb) {
-        $.post(this.url() + '?action=add_nics', {
+        var req = $.post(this.url() + '?action=add_nics', {
             networks: networks
-        }, function(data) {
+        });
+        req.done(function(data) {
             var job = new Job({
                 uuid: data.job_uuid
             });
-            cb(job);
+            cb(null, job);
+        });
+        req.fail(function(xhr, status, errThrown) {
+            cb(errThrown);
         });
     },
 
