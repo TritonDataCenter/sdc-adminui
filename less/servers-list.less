@@ -3,13 +3,35 @@
     text-align: center;
     display: block;
   }
+
   .servers-list-item:last-child {
     margin-bottom: 0;
   }
 
+
   .servers-list-item {
     .widget-content;
     padding: 0;
+
+    .traits {
+      margin-top: 4px;
+      font-size: 9px;
+
+      span {
+        color: #FFF;
+        padding: 2px 4px;
+        background: @grayDark;
+      }
+      .manta {
+        background: orange;
+      }
+      .customer {
+        background: green;
+      }
+      .ssd {
+        background: purple;
+      }
+    }
 
     margin-bottom: 10px;
     overflow: hidden;
@@ -36,10 +58,11 @@
 
     .name {
       float: left;
-      padding: 20px;
+      padding: 10px;
 
       .uuid {
         font-size: 10px;
+        line-height: 14px;
         color: @grayLight;
         font-style: italic;
         display: block;

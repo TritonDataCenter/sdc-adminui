@@ -6,6 +6,17 @@
   <span class="reserved"><i class="icon-lock"></i></span>
   {{/if}}
   <span class="uuid">{{uuid}}</span>
+  <div class="traits">
+    {{#if traits.ssd}}
+    <span class="ssd">SSD</span>
+    {{/if}}
+    {{#if traits.manta}}
+    <span class="manta">MANTA</span>
+    {{/if}}
+    {{#if traits.customer}}
+    <span class="customer">CUSTOMER</span>
+    {{/if}}
+  </div>
 </div>
 
 {{#if setup}}
@@ -25,7 +36,9 @@
   </div>
 </div>
 </div>
+
 {{else}}
+
 <div class="setup-status">
   {{#if not_setup}}
     {{#if setting_up}}
