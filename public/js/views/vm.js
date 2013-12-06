@@ -446,7 +446,12 @@ var VmView = Backbone.Marionette.Layout.extend({
         });
 
         this.stickit(this.vm, {
-            '.vm-alias': 'alias',
+            '.vm-alias': {
+                observe: 'alias',
+                onGet: function(alias) {
+                    return alias || '<UNNAMED>';
+                }
+            },
             '.vm-memory': 'ram',
             '.vm-swap': 'max_swap',
             '.vm-uuid': 'uuid',
