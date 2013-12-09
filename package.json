@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#9a18f7ba",
+    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#26d1dff0345ed7c01253d19eaad229deccc75bbf",
     "sockjs": "0.3.x",
     "node-uuid": "1.4.0",
     "bunyan": "0.22.0",
@@ -33,7 +33,8 @@
     "clone": "~0.1.6",
     "glob": "~3.1.21",
     "async": "~0.2.7",
-    "uglify-js": "~2.3.6"
+    "uglify-js": "~2.3.6",
+    "kang": "0.0.8"
   },
   "devDependencies": {
     "mocha": "~1.9.0",
