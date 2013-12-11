@@ -21,7 +21,9 @@ var Packages = Backbone.Collection.extend({
         }
 
         var filtered = this.filter(function(m) {
-            return m.get('owner_uuid') === val || m.get('uuid') === val || m.get('name').indexOf(val) !== -1;
+            return (m.get('owner_uuid') === val ||
+                m.get('uuid') === val ||
+                m.get('name').toLowerCase().indexOf(val.toLowerCase()) !== -1);
         });
 
         this.reset(filtered);

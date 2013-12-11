@@ -96,8 +96,6 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     onRender: function() {
         var packagesList = new PackagesList({collection: this.packages });
 
-        this.ui.searchInput.on('input', this.search.bind(this));
-
         var that = this;
 
         if (that.packagesCache && that.packagesCache.length) {
@@ -111,6 +109,10 @@ var PackagesView = Backbone.Marionette.Layout.extend({
             });
         }
         this.list.show(packagesList);
+    },
+    onShow: function() {
+        this.ui.searchInput.on('input', this.search.bind(this));
+        this.ui.searchInput.focus();
     },
 
     showCreateForm: function() {
