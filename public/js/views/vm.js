@@ -8,6 +8,7 @@ var Vm = require('../models/vm');
 var Img = require('../models/image');
 var Server = require('../models/server');
 var User = require('../models/user');
+var Package = require('../models/package');
 var Probes = require('../models/probes');
 
 var VMDeleteModal = require('./vm-delete-modal');
@@ -81,20 +82,23 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.owner = new User();
         this.image = new Img();
         this.server = new Server();
+        this.pkg = new Package();
         this.jobsListView = new JobsList({
             perPage: 1000,
             params: {vm_uuid: this.vm.get('uuid')}
         });
 
-        this.server.set({ uuid: this.vm.get('server_uuid') });
+        if (this.vm.get('billing_id')) {
+            this.pkg.set({ uuid: this.vm.get('billing_id') });
+            this.pkg.fetch();
+        }
 
+        this.server.set({ uuid: this.vm.get('server_uuid') });
         if (!this.server.get('last_modified')) {
             this.server.fetch();
         }
 
-        this.owner.set({
-            uuid: this.vm.get('owner_uuid')
-        });
+        this.owner.set({ uuid: this.vm.get('owner_uuid') });
 
         if (!this.owner.get('dn')) {
             this.owner.fetch();
@@ -118,6 +122,11 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.listenTo(this.vm, 'change:server_uuid', function(m) {
             this.server.set({uuid: m.get('server_uuid')});
             this.server.fetch();
+        }, this);
+
+        this.listenTo(this.vm, 'change:billing_id', function(m) {
+            this.pkg.set({uuid: m.get('billing_id')});
+            this.pkg.fetch();
         }, this);
 
         this.listenTo(this.vm, 'change:customer_metadata', this.renderMetadata, this);
@@ -213,14 +222,6 @@ var VmView = Backbone.Marionette.Layout.extend({
     },
 
     clickedPackage: function(e) {
-        if (e.metaKey || e.ctrlKey) {
-            return;
-        }
-
-        e.preventDefault();
-        this.vent.trigger('showview', 'packages', {
-            uuid: this.vm.get('billing_id')
-        });
     },
 
     clickedImage: function(e) {
@@ -504,8 +505,6 @@ var VmView = Backbone.Marionette.Layout.extend({
                     }
                 }]
             },
-            '.package-name': 'package_name',
-            '.package-version': 'package_version',
             '.owner-link': {
                 attributes: [{
                     'observe':'owner_uuid',
@@ -516,6 +515,11 @@ var VmView = Backbone.Marionette.Layout.extend({
                 }]
             },
             '.billing-id': 'billing_id'
+        });
+
+        this.stickit(this.pkg, {
+            '.package-name': 'name',
+            '.package-version': 'version',
         });
 
         this.stickit(this.server, {
