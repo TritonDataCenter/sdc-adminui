@@ -16,6 +16,7 @@ var ImageTypeaheadView = require('../tpl/typeahead-image.hbs');
 var FilterForm = Backbone.Marionette.ItemView.extend({
     events: {
         'submit form.quick': 'onQuick',
+        'change select.sort': 'onQuick',
         'submit form.more': 'detailedSearch',
         'click .toggle-filter': 'toggleFiltersPanel'
     },
@@ -65,6 +66,8 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
         var obj = this.$('form.quick').serializeObject();
         var params = {};
         params[obj.property] = obj.value;
+        params.sort = this.$("select[name=sort]").val();
+        console.log("query", params);
         this.trigger('query', params);
     },
 
@@ -131,7 +134,7 @@ module.exports = Backbone.Marionette.Layout.extend({
         this.ui.alert.hide();
         this.collection.params = params;
         this.collection.firstPage();
-        this.collection.fetch();
+        this.collection.fetch({reset: true});
     },
 
 
@@ -174,7 +177,7 @@ module.exports = Backbone.Marionette.Layout.extend({
         this.filterView.setElement(this.$('.vms-filter'));
         this.filterView.render();
 
-        this.query({state: 'running'});
+        this.query({state: 'running', sort: "create_timestamp.desc"});
 
         return this;
     },
