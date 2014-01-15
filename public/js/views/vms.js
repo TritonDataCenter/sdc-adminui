@@ -75,6 +75,7 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
 
         var params = this.$('form.more').serializeObject();
+        console.log("query", params);
         this.trigger('query', params);
     },
 
