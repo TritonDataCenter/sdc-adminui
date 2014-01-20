@@ -22,6 +22,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
 
         this.user.fetch().done(function() {
             self.$('.owner-name').html(user.get('login'));
+            self.$('.owner-name').attr("href", "/users/" + user.get('uuid'));
             if (user.get('company')) {
                 self.$('.owner-company').html("at " + user.get('company'));
             }
