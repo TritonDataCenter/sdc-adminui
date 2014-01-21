@@ -6,6 +6,7 @@ require('jquery.chosen');
 require('jquery.serializeObject');
 require('jquery.autosize');
 require('bootstrap');
+require('bootstrap.datetimepicker');
 
 $.fn.bootstrapTypeahead = $.fn.typeahead.noConflict();
 

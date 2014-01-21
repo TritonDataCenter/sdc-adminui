@@ -28,6 +28,11 @@ var shimConfig = {
     },
     'jquery.chosen': { path: './lib/chosen.jquery', exports: null },
     'bootstrap': { path: './lib/bootstrap', exports: null },
+    'bootstrap.datetimepicker' : {
+        path : './lib/bootstrap-datetimepicker.min.js',
+        depends: {'jquery': '$'},
+        exports: null,
+    },
     'bootstrap.tags': {
         path: './lib/bootstrap-tags',
         depends: {'jquery': '$'},

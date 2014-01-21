@@ -31,13 +31,18 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         this.userInput = new UserInput({el: this.$('input[name=owner_uuid]')});
         this.userInput.render();
-
         var self = this;
         this.images.fetch().done(function() {
             self.prepareImageInput();
         });
 
         this.$('.more').hide();
+        setTimeout(function() {
+            $('#datetimepicker-from').datetimepicker({language: 'en'});
+            $('#datetimepicker-to').datetimepicker({language: 'en'});
+        });
+    },
+    onShow: function() {
     },
 
     prepareImageInput: function() {
@@ -75,8 +80,18 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
 
         var params = this.$('form.more').serializeObject();
-        console.log("query", params);
+
+        if ($("#datetimepicker-from input").val().length) {
+            var provisioned_from = $("#datetimepicker-from").data('datetimepicker').getDate();
+            params.provisioned_from = provisioned_from.getTime();
+        }
+        if ($("#datetimepicker-to input").val().length) {
+            var provisioned_to = $("#datetimepicker-to").data('datetimepicker').getDate();
+            params.provisioned_to = provisioned_to.getTime();
+        }
+
         this.trigger('query', params);
+        console.log("query", params);
     },
 
     toggleFiltersPanel: function(e) {

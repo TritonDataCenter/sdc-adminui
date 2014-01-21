@@ -9,6 +9,7 @@
           <option value="owner">Owner UUID</option>
           <option value="package_name">Package Name</option>
           <option value="ip">IP Address</option>
+          <option value="alias">Alias</option>
         </select>
         <input class="span4" name="value" type="text">
       </div>
@@ -43,6 +44,12 @@
       <input type="text" name="image_uuid" placeholder="Search by image name">
     </div>
 
+    <div class="span3">
+      <label>Server UUID</label>
+      <input type="text" name="server_uuid" placeholder="Server UUID">
+    </div>
+
+
     <div class="span2">
       <label>State</label>
       <select name="state" class="span2">
@@ -54,17 +61,32 @@
       </select>
     </div>
 
-    <div class="span3">
-      <label>Alias</label>
-      <input type="text" name="alias" placeholder="alias">
+    <div class="span8">
+      <label>Provisioned Timestamp Between</label>
+      <div id="datetimepicker-from" class="input-append date">
+        <input data-format="yyyy-MM-dd hh:mm:ss" type="text"></input>
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+      </div>
+
+      <div class="input-append">
+        <span class="add-on"> AND </span>
+      </div>
+
+      <div id="datetimepicker-to" class="input-append date">
+        <input data-format="yyyy-MM-dd hh:mm:ss" type="text"></input>
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+          </i>
+        </span>
+      </div>
     </div>
 
-    <div class="span3">
-      <label>Server</label>
-      <input type="text" name="server_uuid" placeholder="Server UUID">
-    </div>
     <div class="span12">
-      <button class="btn btn-info"><i class="icon-filter icon-white"></i> Apply Filters</button>
+      <div class="buttons">
+        <button class="btn btn-info"><i class="icon-filter icon-white"></i> Apply Filters</button>
+      </div>
     </div>
   </form>
 </div>
