@@ -35,6 +35,8 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
         } else {
             data.when = 'unknown';
         }
+        console.log(this.model);
+        data.duration = this.model.duration();
 
         if (data.name.indexOf('update') !== -1 && data.params) {
 

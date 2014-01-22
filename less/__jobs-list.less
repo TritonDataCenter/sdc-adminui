@@ -1,6 +1,10 @@
 .__jobs-list {
   table {
-    .uuid { #font > .monospace(12px); color: @grayLight; }
+    .uuid {
+      #font > .monospace(10px);
+      color: @grayLight;
+      font-style: italic;
+    }
     .actions { width: 140px; }
     .when { width: 200px;}
     small {
@@ -9,6 +13,15 @@
      text-transform: uppercase;
      font-size: 10px;
      margin-left: 5px;
+    }
+
+    .duration {
+      font-size: 12px;
+      font-weight: 400;
+      strong {
+        color: #aaa;
+        font-weight: normal;
+      }
     }
     .execution {
       width: 100px;
