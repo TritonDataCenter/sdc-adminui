@@ -14,7 +14,7 @@
   {{#if tags.smartdc_type}}
   <span class="type label">{{tags.smartdc_type}}</span>
   {{/if}}
-  <span class="uuid">{{uuid}}</span>
+  <span class="uuid"><span class="selectable">{{uuid}}</span></span>
   <span class="owner">
     Owner: <a class="owner-name"></a>
     <span class="owner-company">
@@ -23,7 +23,7 @@
 </td>
 <td class="ips">
   {{#each ips}}
-  <span>{{this}}</span>
+  <span class="selectable">{{this}}</span>
   {{/each}}
 </td>
 <td class="package-image">

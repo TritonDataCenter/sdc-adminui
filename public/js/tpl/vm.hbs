@@ -2,7 +2,7 @@
   <div class="resource-status"><span class="vm-state"></span></div>
   <h1>
     <span class="vm-alias"></span>
-    <small class="uuid vm-uuid"></small>
+    <small class="uuid vm-uuid selectable"></small>
   </h1>
 </div>
 
@@ -44,7 +44,7 @@
             {{#role "operators"}}
             <a class="mutate rename"><i class="icon-edit"></i> rename</a>
             {{/role}}
-            <span class="vm-uuid"></span>
+            <span class="vm-uuid selectable"></span>
           </td>
         </tr>
         <tr>
@@ -58,7 +58,7 @@
             {{#role "operators"}}
             <a class="mutate change-owner"><i class="icon-edit"></i> change</a>
             {{/role}}
-            <span class="owner-uuid">{{owner_uuid}}</span>
+            <span class="owner-uuid selectable">{{owner_uuid}}</span>
           </td>
         </tr>
 
@@ -84,14 +84,14 @@
           <th>Image</th>
           <td>
             <a class="image-name-version"></a>
-            <span class="image-uuid"></span>
+            <span class="image-uuid selectable"></span>
           </td>
         </tr>
         <tr>
           <th>Server</th>
           <td>
             <a class="server-hostname"></a>
-            <span class="server-uuid"></span>
+            <span class="server-uuid selectable"></span>
           </td>
         </tr>
         <tr>
@@ -101,7 +101,7 @@
               <span class="package-name"></span>
               <span class="package-version"></span>
             </a>
-            <span class="billing-id"></span>
+            <span class="billing-id selectable"></span>
           </td>
         </tr>
         <tr>

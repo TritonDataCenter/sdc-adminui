@@ -122,9 +122,27 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
 
         var self = this;
+
         $(document).ajaxError(function(e, xhr, settings, exception) {
             if (xhr.status === 403) {
                 self.signout();
+            }
+        });
+
+
+        // enable selection
+        $(document).on('click', '.selectable', function() {
+            console.log('uuid click');
+            var range;
+
+            if (document.selection) {
+                range = document.body.createTextRange();
+                range.moveToElementText(this);
+                range.select();
+            } else if (window.getSelection) {
+                range = document.createRange();
+                range.selectNode(this);
+                window.getSelection().addRange(range);
             }
         });
     },
