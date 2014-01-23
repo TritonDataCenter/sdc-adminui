@@ -1,7 +1,7 @@
 <div class="page-header">
   {{#if uuid}}
     {{#if changeOwnerMode}}
-      <h2>Change Package Owner</h2>
+      <h2>Change Package Settings for {{name}} {{version}}</h2>
     {{/if}}
     {{#if newVersionMode}}
       <h2>Create New Version of {{name}} {{version}}</h2>
@@ -37,6 +37,13 @@
         </div>
       </div>
       {{/unless}}
+
+      <div class="control-group">
+        <label class="control-label" for="package-name">Description</label>
+        <div class="controls">
+          <textarea rows="3" class="span4" name="description">{{description}}</textarea>
+        </div>
+      </div>
 
       {{#unless changeOwnerMode}}
       <div class="control-group">

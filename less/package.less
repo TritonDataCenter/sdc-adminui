@@ -21,7 +21,7 @@
   form .package-owners .controls { margin-bottom: 1em; }
   form .package-owners .add-owner-entry { clear: both; margin-left: 180px;}
 
-  .owner, .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority {
+  .owner, .description, .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority {
     .widget-content;
 
     strong {
@@ -34,6 +34,14 @@
     .value {
       display: inline-block;
     }
+  }
+  .description {
+    font-weight: bold;
+    padding-left: 24px;
+    padding-right: 24px;
+    margin-bottom: 1em;
+    white-space: pre-wrap;
+    line-height: 1.5em;
   }
 
 
