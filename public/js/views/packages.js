@@ -1,6 +1,8 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 
+var CollectionView = require('./collection');
+
 var Packages = require('../models/packages');
 
 var PackagesTemplate = require('../tpl/packages.hbs');
@@ -8,6 +10,7 @@ var PackagesListItemTemplate = require('../tpl/packages-list-item.hbs');
 var PackageForm = require('./packages-form');
 
 var User = require('../models/user');
+var UserInput = require('./typeahead-user');
 
 var adminui = require('../adminui');
 
@@ -34,8 +37,15 @@ var PackagesListItemView = Backbone.Marionette.ItemView.extend({
 
 
 
-var PackagesList = Backbone.Marionette.CollectionView.extend({
+var PackagesList = CollectionView.extend({
     tagName: 'ul',
+    emptyView: require('./empty'),
+    itemViewOptions: function() {
+        return {
+            emptyViewModel: this.collection
+        };
+    },
+
     attributes: {
         'class': 'nav'
     },
@@ -65,7 +75,14 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     },
 
     events: {
-        'click button.create': 'showCreateForm'
+        'submit form': 'onSubmitSearchForm',
+        'click button.search': 'search',
+        'input input': 'search',
+        'change select[name=state]': 'search',
+        'change select[name=ram-op]': 'search',
+        'change select[name=disk-op]': 'search',
+        'click button.create': 'showCreateForm',
+        'blur input[name=owner_uuid]': 'onFinishSelectUser'
     },
 
     ui: {
@@ -83,6 +100,8 @@ var PackagesView = Backbone.Marionette.Layout.extend({
         options = options || {};
         this.packages = new Packages();
         this.listenTo(this.packages, 'error', this.onError);
+
+        this.filterOptions = {};
     },
 
     onError: function(model, xhr) {
@@ -94,22 +113,19 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
-        var packagesList = new PackagesList({collection: this.packages });
+        var packagesList = new PackagesList({ collection: this.packages });
 
-        var that = this;
-
-        if (that.packagesCache && that.packagesCache.length) {
-            that.packages.reset(that.packagesCache);
+        this.packages.fetch().done(function() {
             packagesList.render();
-        } else {
-            this.packages.fetch().done(function() {
-                that.packages.sort();
-                that.packagesCache = that.packages.models;
-                packagesList.render();
-            });
-        }
+        });
+
+        this.userInput = new UserInput({el: this.$('input[name=owner_uuid]')});
+        this.listenTo(this.userInput, 'selected', this.onSelectUser);
+        this.userInput.render();
+
         this.list.show(packagesList);
     },
+
     onShow: function() {
         this.ui.searchInput.on('input', this.search.bind(this));
         this.ui.searchInput.focus();
@@ -119,9 +135,77 @@ var PackagesView = Backbone.Marionette.Layout.extend({
         adminui.vent.trigger('showview', 'packages-form');
     },
 
+    onSubmitSearchForm: function(e) {
+        e.preventDefault();
+    },
+
+    onSelectUser: function(u) {
+        if (u && this.$('[name=owner_uuid]').val() === u.get('uuid')) {
+            this.filterOptions['owner_uuids'] = [u.get('uuid')];
+        } else {
+            delete this.filterOptions['owner_uuids'];
+        }
+        this.search();
+    },
+
+    onFinishSelectUser: function() {
+        console.log('onFinishSelectUser');
+        if (this.$('input[name=owner_uuid]').val().length !== 36) {
+            console.log('no uuid');
+            var self = this;
+            setTimeout(function() {
+                self.$('input[name=owner_uuid]').val('');
+            }, 10);
+            delete this.filterOptions['owner_uuids'];
+        }
+    },
+
     search: function() {
-        var val = this.ui.searchInput.val();
-        this.packages.search(val);
+        var params = this.getFilterOptions();
+        console.log('search params', params);
+        this.packages.fetch({ params: params }, {reset: true});
+    },
+
+    getFilterOptions: function() {
+        var state = this.$('select[name=state]').val();
+        if (state === 'active') {
+            this.filterOptions['active'] = true;
+        } else if (state === 'inactive') {
+            this.filterOptions['active'] = false;
+        } else {
+            delete this.filterOptions['active'];
+        }
+
+        if (this.$('input[name=name]').val()) {
+            this.filterOptions['name'] = this.$('input[name=name]').val();
+        } else {
+            delete this.filterOptions['name'];
+        }
+
+        if (this.$('input[name=billing_id]').val()) {
+            this.filterOptions['billing_id'] = this.$('select[name=billing_id]').val();
+        } else {
+            delete this.filterOptions['billing_id'];
+        }
+
+        var ram_val = this.$('input[name="ram-value"]').val();
+        var ram_op = this.$('select[name=ram-op]').val();
+        if (ram_val && ram_val.length) {
+            this.filterOptions['max_physical_memory'] = {};
+            this.filterOptions['max_physical_memory'][ram_op] = ram_val;
+        } else {
+            delete this.filterOptions['max_physical_memory'];
+        }
+        var disk_val = this.$('input[name="disk-value"]').val();
+        var disk_op = this.$('select[name="disk-op"]').val();
+        if (disk_val && disk_val.length) {
+            this.filterOptions['quota'] = {};
+            this.filterOptions['quota'][disk_op] = Number(disk_val) * 1024;
+        } else {
+            delete this.filterOptions['quota'];
+        }
+
+        return this.filterOptions;
     },
 
     showForm: function(model) {

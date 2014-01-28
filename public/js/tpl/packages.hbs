@@ -13,8 +13,61 @@
       </h1>
     </div>
 
-    <div class="search">
-      <input type="text" class="span12" placeholder="Filter by Billing ID, Owner UUID, or Package name">
+    <div id="package-search">
+      <form class="unstyled">
+        <input type="text" name="billing_id" class="span3" placeholder="Quick Find Billing ID">
+
+        <fieldset>
+          <label>State</label>
+          <select name="state" class="span3">
+            <option value="">any</option>
+            <option value="active">active</option>
+            <option value="inactive">inactive</option>
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <div class="input-prepend">
+            <label>Package Name</label>
+            <input type="text" placeholder="Package Name" name="name"></input>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <div class="input-prepend">
+            <label>Owner UUID</label>
+            <input type="text" placeholder="Search by login, uuid, or email" name="owner_uuid"></input>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <div class="input-prepend">
+            <label>RAM</label>
+            <select name="ram-op" style="width: 50px;">
+              <option value="=">=</option>
+              <option value=">=">&gt;=</option>
+              <option value="<=">&lt;=</option>
+            </select>
+            <input type="text" class="span2" name="ram-value"></input>
+            <span class="add-on">MB</span>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <div class="input-prepend">
+            <label>Disk Quota</label>
+            <select name="disk-op" style="width: 50px;">
+              <option value="=">=</option>
+              <option value=">=">&gt;=</option>
+              <option value="<=">&lt;=</option>
+            </select>
+            <input type="text" class="span2" name="disk-value"></input>
+            <span class="add-on">GB</span>
+          </div>
+        </fieldset>
+
+        <button class="search btn btn-primary btn-block"><i class="icon-search"></i> SEARCH</button>
+      </form>
     </div>
 
     <div id="list"></div>
