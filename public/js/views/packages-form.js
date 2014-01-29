@@ -69,7 +69,7 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         if (this.model.isNew()) {
             adminui.vent.trigger('showview', 'packages');
         } else {
-            adminui.vent.trigger('showview', 'packages', { model: this.model });
+            adminui.vent.trigger('showview', 'package', { model: this.model });
         }
     },
 
