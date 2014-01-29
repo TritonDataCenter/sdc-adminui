@@ -31,7 +31,7 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         var node = $(['<div class="controls">',
         '<input type="text"',
         'class="input-xlarge"',
-        'name="owner_uuid[]"',
+        'name="owner_uuids[]"',
         'placeholder="Search by login or uuid">',
         '</div>'].join(''));
 
