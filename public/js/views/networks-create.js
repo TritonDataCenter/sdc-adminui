@@ -1,5 +1,7 @@
 var Backbone = require('backbone');
+
 require('backbone.syphon');
+
 var _ = require('underscore');
 
 var Template = require('../tpl/networks-create.hbs');
@@ -17,7 +19,12 @@ var NicTagSelectItem = Backbone.View.extend({
     }
 });
 
-var View = Backbone.Marionette.ItemView.extend({
+var CreateNicTagView = require('./create-nic-tag');
+
+var View = Backbone.Marionette.Layout.extend({
+    regions: {
+        'createNicTagRegion': '.create-nic-tag-region'
+    },
     template: Template,
     attributes: {
         'class': 'modal'
@@ -36,7 +43,7 @@ var View = Backbone.Marionette.ItemView.extend({
     ui: {
         'alert': '.alert',
         'nicTagSelect': 'select[name=nic_tag]',
-        'newNicTagField': 'input[name=nic_tag]',
+        'newNicTagForm': '.nic-tag-form',
         'createNewNicTagButton': '.create-new-nic-tag'
     },
 
@@ -57,9 +64,23 @@ var View = Backbone.Marionette.ItemView.extend({
     },
 
     onClickCreateNewNicTag: function() {
+        var self = this;
         this.ui.nicTagSelect.hide();
         this.ui.createNewNicTagButton.hide();
-        this.ui.newNicTagField.show().focus();
+
+        var createNicTagView = new CreateNicTagView();
+        this.createNicTagRegion.show(createNicTagView);
+        createNicTagView.on('save', function(tag) {
+            self.nicTags.fetch().done(function() {
+                self.ui.nicTagSelect.val(tag.get('name'));
+                self.ui.nicTagSelect.show();
+                self.ui.createNewNicTagButton.show();
+            });
+        });
+        createNicTagView.on('close', function() {
+            self.ui.nicTagSelect.show();
+            self.ui.createNewNicTagButton.show();
+        });
     },
 
     onSaved: function() {
@@ -148,8 +169,11 @@ var View = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         var self = this;
-        this.ui.newNicTagField.hide();
+
+        this.ui.newNicTagForm.hide();
+
         this.nicTagsSelect.setElement(this.$('select[name=nic_tag]'));
+
         this.userInput = new TypeaheadUserInput({el: this.$('[name="owner_uuids[]"]') });
         this.userInput.render();
         this.nicTags.fetch().done(function() {
