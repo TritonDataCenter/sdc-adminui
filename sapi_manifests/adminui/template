@@ -64,6 +64,9 @@
 			"imgapi": {
 				"url": "http://{{{IMGAPI_SERVICE}}}"
 			},
+			"papi": {
+				"url": "http://{{{PAPI_SERVICE}}}"
+			},
 			"sapi": {
 				"url": "http://{{{SAPI_SERVICE}}}"
 			},
