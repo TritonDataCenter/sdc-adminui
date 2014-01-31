@@ -1,69 +1,11 @@
 #page-package {
-
-  .package-versions-region {
-    float: left;
-    width: 180px;
-    padding: 10px 0;
-
-
-    .new-version {
-      font-size: 11px;
-      border-radius: 0;
-      padding-top: 2px;
-      padding-bottom: 2px;
-      margin-bottom: 1em;
-    }
-
-    .title {
-      padding: 0 10px;
-      text-transform: uppercase;
-      padding-bottom: 1em;
-      font-size: 10px;
-    }
-
-    ul { margin:0;}
-    li { padding: 5px 15px; }
-    li a {
-      display: block;
-      color: #888;
-      #font > .monospace(10px);
-    }
-
-    li.active { background: #f3f3f3; }
-    li.active a { color: #333; }
-
-    li .version { display: inline-block; }
-
-    li .state { display: inline-block; float: right; }
-    li .state > * {
-      font-weight: 400;
-      margin-top: 3px;
-      font-size: 8px;
-      color: #fff;
-      padding: 3px 5px;
-      line-height: 1;
-      display: block;
-    }
-    li .state .active { background: @activeColor; display: block; }
-    li .state .inactive { background: @grayLight; }
-  }
-
-
-
-  .package-details {
-    width: 720px;
-    float: right;
-  }
-
-
-
   .flags { }
   .flags span { display: inline-block; margin-right: 10px;}
 
   .resource-status {
     left: 300px;
     .active { background: @activeColor;}
-    .inactive { background: @grayLight;}
+    .inactive { background: @gray;}
   }
 
   .networks-list {

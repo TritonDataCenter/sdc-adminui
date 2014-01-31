@@ -2,7 +2,7 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var adminui = require('adminui');
 
-var Packages = require('../models/packages');
+
 var Networks = require('../models/networks');
 var Network = require('../models/network');
 
@@ -29,52 +29,12 @@ Handlebars.registerHelper('normalize', function(v) {
 
 
 
-var PackageVersions = Backbone.Marionette.CompositeView.extend({
-    template: require('../tpl/package-versions.hbs'),
-    attributes: {
-        'id': 'package-versions'
-    },
-    itemView: Backbone.Marionette.ItemView.extend({
-        tagName: 'li',
-        template: require('../tpl/package-versions-row.hbs'),
-        events: {
-            'click a': 'onClickPackageVersion'
-        },
-        onClickPackageVersion: function() {
-            adminui.vent.trigger('showview', 'package', {model: this.model });
-        },
-        onRender: function() {
-            if (this.package.get('uuid') === this.model.get('uuid')) {
-                this.$el.addClass('active');
-                console.log(this.model);
-            }
-        }
-    }),
-    itemViewContainer: 'ul',
-    initialize: function(options) {
-        if (typeof(options.package) !== 'object') {
-            throw TypeError('options.package should be a package model');
-        }
-        this.package = options.package;
-        this.collection = new Packages();
-    },
-    onBeforeItemAdded: function(iv) {
-        iv.package = this.package;
-    },
-    onShow: function() {
-        this.collection.fetch({params: {name: this.package.get('name')}});
-    }
-});
 
-
-var PackageDetail = module.exports = Backbone.Marionette.Layout.extend({
+var PackageDetail = module.exports = Backbone.Marionette.ItemView.extend({
     template: PackageTemplate,
 
     attributes: {
         id: 'page-package'
-    },
-    regions: {
-        'versionsRegion': '.package-versions-region'
     },
 
     sidebar: 'packages',
@@ -98,10 +58,6 @@ var PackageDetail = module.exports = Backbone.Marionette.Layout.extend({
 
         this.networks = new Networks(this.nets);
         this.networksView = new NetworksList({ collection: this.networks });
-
-        this.packageVersionsView = new PackageVersions({
-            package: this.model
-        });
 
         this.listenTo(this.networksView, 'select', this.onSelectNetwork);
     },
@@ -213,10 +169,6 @@ var PackageDetail = module.exports = Backbone.Marionette.Layout.extend({
 
         }
     },
-    onShow: function() {
-        this.versionsRegion.show(this.packageVersionsView);
-    },
-
 
     onRender: function() {
         if (0 === this.networks.length) {
