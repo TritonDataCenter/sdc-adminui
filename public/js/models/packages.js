@@ -7,11 +7,9 @@ var Packages = Backbone.Collection.extend({
         this.packagesCache = null;
         this.on('sync', this.populateCache, this);
     },
-
     populateCache: function() {
         this.packagesCache = this.models;
     },
-
     search: function(val) {
         if (val.length === 0) {
             if (this.packagesCache && this.packagesCache.length) {

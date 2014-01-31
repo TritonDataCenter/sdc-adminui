@@ -83,12 +83,6 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
             this.model.unset('uuid');
         }
 
-
-        _.each(values, function(v, k) {
-            if (typeof(v) === 'string' && /^\d+$/.test(v)) {
-                values[k] = Number(v);
-            }
-        });
         console.log('package values', values);
 
         var self = this;
