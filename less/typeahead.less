@@ -3,6 +3,10 @@
   display: block;
   padding: 2px 15px;
 }
+.tt-suggestion.tt-cursor {
+  background: @linkColor;
+  color: #fff;
+}
 .twitter-typeahead+.help-inline {
   margin-bottom: -5px;
 }
@@ -15,6 +19,28 @@
 .twitter-typeahead {
   .tt-hint { background-color: #fff;}
 }
+
+.tt-loading {
+  position: relative;
+  background: #eee;
+  width: 50px;
+  top: -25px;
+  left: 230px;
+  font-size: 11px;
+  text-align: center;
+}
+.tt-empty {
+  padding: 2px 15px;
+}
+.tt-empty strong,
+.tt-suggestion.tt-cursor strong  {
+  background: @btnWarningBackgroundHighlight;
+  color: #fff;
+}
+.tt-suggestion strong  {
+  background: @warningBackground;
+}
+
 .tt-dataset-users {
   width: 280px;
   .login { font-weight: bold; }
@@ -34,7 +60,7 @@
   width: 280px;
   .name { display: block; font-weight: bold; }
   .version { color: @gray; font-size: 11px; }
-  .version strong { font-weight: 300;}
+  .version b { font-weight: 300;}
   .tt-is-under-cursor {
     .version { color: #fff; }
   }

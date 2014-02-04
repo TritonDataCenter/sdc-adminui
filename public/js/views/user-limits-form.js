@@ -4,6 +4,8 @@ var Images = require('../models/images');
 
 var Limit = require('../models/limit');
 
+var Bloodhound = require('bloodhound');
+
 var UserLimitsForm = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/user-limits-form.hbs'),
     events: {
@@ -33,8 +35,25 @@ var UserLimitsForm = Backbone.Marionette.ItemView.extend({
         var uniqueNamesSorted = _.sortBy(uniqueNames, function(n) {
             return n;
         });
-        this.uniqueImageNames = uniqueNamesSorted;
-        this.$('input[name=image]').typeahead({local: this.uniqueImageNames});
+        this.uniqueImageNames = uniqueNamesSorted.map(function(n) {
+            return {value: n};
+        });
+
+        this.engine = new Bloodhound({
+            name: 'images-unique',
+            local: this.uniqueImageNames,
+            datumTokenizer: function(datum) {
+                return [datum.value];
+            },
+            queryTokenizer: function(query) {
+                return Bloodhound.tokenizers.whitespace(query);
+            },
+            limit: 8
+        });
+
+        this.engine.initialize();
+
+        this.$('input[name=image]').typeahead(null, {source: this.engine.ttAdapter() });
     },
 
     focus: function() {
@@ -88,7 +107,7 @@ var UserLimitsForm = Backbone.Marionette.ItemView.extend({
         var el = this.$('.limits-input:last-child').clone();
         el.appendTo(this.$('.limits-inputs'));
         $('input', el).val('');
-        $('input[name=image]', el).typeahead({local: this.uniqueImageNames});
+        $('input[name=image]', el).typeahead(null, {source: this.engine.ttAdapter() });
     },
 
     serializeData: function() {

@@ -38,17 +38,8 @@ var shimConfig = {
         depends: {'jquery': '$'},
         exports: null
     },
-    'typeahead': { path: './lib/typeahead', exports: null },
-    'knockback': {
-        path: './lib/knockback',
-        exports: null,
-        depends: {'knockout': 'ko'}
-    },
-    'knockout': {
-        path: './lib/knockout-min',
-        exports: 'ko',
-        depends: {'underscore': '_', 'jquery': '$'}
-    },
+    'typeahead': { path: './lib/typeahead.jquery', exports: null },
+    'bloodhound': { path: './lib/bloodhound', exports: 'Bloodhound'},
     'backbone': {
         path: './lib/backbone',
         exports: null,

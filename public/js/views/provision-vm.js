@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
+var Bloodhound = require('bloodhound');
 
 
 
@@ -20,6 +21,9 @@ var NetworkPools = require('../models/network-pools');
 var User = require('../models/user');
 var Vm = require('../models/vm');
 var Job = require('../models/job');
+
+var TypeaheadServerView = require('./typeahead-server');
+var TypeaheadImageView = require('./typeahead-image');
 
 var JobProgressView = require('./job-progress');
 var PackagePreview = require('./package-preview');
@@ -69,8 +73,8 @@ var PackageSelect = Backbone.Marionette.CollectionView.extend({
 var ProvisionVmTemplate = require('../tpl/provision-vm.hbs');
 
 var TypeaheadUser = require('./typeahead-user');
-var ImageTypeaheadView = require('../tpl/typeahead-image.hbs');
-var ServerTypeaheadView = require('../tpl/typeahead-server.hbs');
+var ImageTypeaheadTpl = require('../tpl/typeahead-image.hbs');
+var ServerTypeaheadTpl = require('../tpl/typeahead-server.hbs');
 
 var View = Backbone.Marionette.Layout.extend({
     url: 'provision',
@@ -86,8 +90,6 @@ var View = Backbone.Marionette.Layout.extend({
     events: {
         'submit form': 'provision',
         'click .back': 'backToVirtualMachines',
-        'typeahead:selected input#input-image': 'onSelectImage',
-        'input input#input-image': 'onSelectImage',
         'change select[name="networks[]"]': 'checkFields',
         'blur input[type=text]': 'checkFields',
         'blur input#input-owner': 'onBlurOwnerField'
@@ -125,59 +127,15 @@ var View = Backbone.Marionette.Layout.extend({
             this.selectedPackage.set(pkg.attributes);
         }, this);
 
-        this.imagesCollection = new Images();
-        this.serversCollection = new Servers();
         this.networks = new Networks();
         this.networkPools = new NetworkPools();
 
-        this.listenTo(this.imagesCollection, 'sync', this.prepareImageInput);
-        this.listenTo(this.serversCollection, 'sync', this.prepareServerInput);
-
-        this.imagesCollection.fetch();
-        this.serversCollection.fetch();
         this.packages.fetchActive();
     },
 
     backToVirtualMachines: function() {
         adminui.vent.trigger('showview', 'vms');
     },
-
-    prepareImageInput: function(images) {
-        var source = images.map(function(i) {
-            return {
-                'uuid': i.get('uuid'),
-                'tokens': [i.get('uuid'), i.get('version'), i.get('name')],
-                'name': i.get('name'),
-                'version': i.get('version')
-            };
-        });
-
-        this.$("input[name=image]").typeahead({
-            // name: 'images',
-            local: source,
-            valueKey: 'uuid',
-            cache: false,
-            limit: 8,
-            template: ImageTypeaheadView
-        });
-    },
-    prepareServerInput: function(servers) {
-        var source = servers.map(function(s) {
-            return {
-                'uuid': s.get('uuid'),
-                'tokens': [s.get('hostname'), s.get('uuid')],
-                'hostname': s.get('hostname')
-            };
-        });
-
-        this.$("input[name=server]").typeahead({
-            name: 'servers',
-            local: source,
-            valueKey: 'uuid',
-            template: ServerTypeaheadView
-        });
-    },
-
 
     onBlurOwnerField: function(e) {
         var $field = this.ui.ownerInput;
@@ -335,6 +293,14 @@ var View = Backbone.Marionette.Layout.extend({
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
         this.userInput.render();
 
+        this.serverInput = new TypeaheadServerView({el: this.$('input[name=server]')});
+        this.serverInput.render();
+
+        this.imageInput = new TypeaheadImageView({el: this.$('input[name=image]')});
+        this.listenTo(this.userInput, 'selected', this.onSelectImage);
+        this.imageInput.render();
+
+
         this.packageSelect.setElement(this.$('select[name=package]')).render();
         this.$('.control-group-networks').hide();
         this.$('.control-group-primary-network').hide();
@@ -354,7 +320,7 @@ var View = Backbone.Marionette.Layout.extend({
     onSelectImage: function(e, datum) {
         var image = null;
         if (datum && datum.uuid) {
-            image = this.imagesCollection.get(datum.uuid);
+            image = this.imageInput.imagesCollection.get(datum.uuid);
         }
 
         if (! image) {
@@ -426,8 +392,6 @@ var View = Backbone.Marionette.Layout.extend({
             valid = valid && true;
         }
 
-        console.log('Current Provision Values', values);
-
         if (valid) {
             this.enableProvisionButton();
         } else {
@@ -447,7 +411,6 @@ var View = Backbone.Marionette.Layout.extend({
         var formData = this.ui.form.serializeObject();
         var values = {
             image_uuid: formData.image,
-            ram: formData.memory,
             owner_uuid: formData.owner,
             brand: formData.brand,
             alias: formData.alias
@@ -459,7 +422,7 @@ var View = Backbone.Marionette.Layout.extend({
 
 
         if (formData.image.length) {
-            var image = this.imagesCollection.get(formData.image);
+            var image = this.imageInput.imagesCollection.get(formData.image);
             if (image) {
                 var imageReqs = image.get('requirements') || {};
 
@@ -471,7 +434,6 @@ var View = Backbone.Marionette.Layout.extend({
                 }
             }
         }
-
 
         var pkg = this.packages.get(formData['package']);
 
