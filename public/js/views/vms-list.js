@@ -4,6 +4,7 @@ var adminui = require('../adminui');
 
 var Images = require('../models/images');
 var User = require('../models/user');
+var Package = require('../models/package');
 
 var ItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
@@ -15,10 +16,14 @@ var ItemView = Backbone.Marionette.ItemView.extend({
 
     initialize: function(options) {
         this.user = new User({uuid: options.model.get('owner_uuid')});
+        this.pkg = new Package({uuid: options.model.get('billing_id')});
     },
+
     onShow: function() {
         var self = this;
-        var user = self.user;
+        var user = this.user;
+        var pkg = this.pkg;
+        var vm = this.model;
 
         this.user.fetch().done(function() {
             self.$('.owner-name').html(user.get('login'));
@@ -27,6 +32,13 @@ var ItemView = Backbone.Marionette.ItemView.extend({
                 self.$('.owner-company').html("at " + user.get('company'));
             }
         });
+
+        if (! (vm.get('package_name') && vm.get('package_version'))) {
+            pkg.fetch().done(function() {
+                self.$('.package-name').html(pkg.get('name'));
+                self.$('.package-version').html(pkg.get('version'));
+            });
+        }
     },
 
 
@@ -80,9 +92,7 @@ module.exports = require('./composite').extend({
     initialize: function() {
         var self = this;
         this.images = new Images();
-        this.images.fetch().done(function() {
-            self.render();
-        });
+        this.images.fetch().done(this.render);
         this.listenTo(this.collection, 'request', this.onRequest, this);
     },
 
