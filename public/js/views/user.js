@@ -26,6 +26,11 @@ var VmsFilter = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
 
         var data = Backbone.Syphon.serialize(this);
+        _.each(data, function(v, k) {
+            if (typeof(data[k]) === 'string' && data[k].length === 0) {
+                delete data[k];
+            }
+        });
         this.trigger('query', data);
     }
 });

@@ -90,7 +90,6 @@ module.exports = require('./composite').extend({
     },
 
     initialize: function() {
-        var self = this;
         this.images = new Images();
         this.images.fetch().done(this.render);
         this.listenTo(this.collection, 'request', this.onRequest, this);
