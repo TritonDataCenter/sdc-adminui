@@ -43,16 +43,15 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
             last_heartbeat: moment(data.last_heartbeat).fromNow(),
             memory_provisionable_mb: _.str.sprintf("%0.1f", data.memory_provisionable_bytes/1024/1024),
             memory_total_mb: _.str.sprintf("%0.1f", data.memory_total_bytes/1024/1024),
-            memory_available_gb: _.str.sprintf("%0.1f", data.memory_provisionable_bytes/1024/1024/1024),
-            memory_provisionable_gb: _.str.sprintf("%0.1f", data.memory_total_bytes/1024/1024/1024),
+            memory_available_gb: _.str.sprintf("%0.1f", data.memory_available_bytes/1024/1024/1024),
+            memory_provisionable_gb: _.str.sprintf("%0.1f", data.memory_provisionable_bytes/1024/1024/1024),
             memory_total_gb: _.str.sprintf("%0.1f", data.memory_total_bytes/1024/1024/1024),
         });
-        if (data.memory_provisionable_mb < 0) {
-            data.memory_provisionable_mb = 0;
-            data.memory_provisionable_gb = 0;
+        if (Number(data.memory_provisionable_mb) < 0) {
+            data.memory_provisionable_mb = "0";
+            data.memory_provisionable_gb = "0";
         }
-        data.memory_provisionable_percent = (data.memory_provisionable_mb / data.memory_total_mb);
-        console.log(data);
+        data.memory_provisionable_percent = (Number(data.memory_provisionable_mb) / Number(data.memory_total_mb));
         return data;
     },
 
@@ -89,6 +88,9 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
         }
         var total = this.model.get('memory_total_bytes');
         var used = total - avail;
+        if (used < 0) {
+            used = 0;
+        }
 
         var w = $node.width();
         var h = 4;
@@ -120,12 +122,16 @@ var ServersList = module.exports = require('./collection').extend({
 
     initialize: function(options) {
         this.collection = new Servers();
+        options = options || {};
+        if (options.params) {
+            this.collection.params = options.params;
+        }
 
         _.bindAll(this);
     },
 
 
-    filter: function(params) {
+    query: function(params) {
         this.collection.fetch({params: params});
     },
 

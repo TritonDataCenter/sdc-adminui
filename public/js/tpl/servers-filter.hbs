@@ -13,12 +13,24 @@
 
       <div class="input-append">
         <label>Setup State</label>
-        <select name="setup">
+        <select name="setup" class="span2">
           <option value="">any</option>
           <option value="true">setup</option>
           <option value="false">not setup</option>
         </select>
       </div>
+
+      <div class="input-append" style="margin-left: 10px;">
+        <label>Sort By</label>
+        <span class="add-on"><i class="icon-sort"></i></span>
+        <select name="sort" class="span2 sort">
+          <option value="hostname">hostname</option>
+          <option value="provisionable_ram">provisionable ram</option>
+          <option value="current_platform">current platform</option>
+          <option value="current_platform">boot platform</option>
+        </select>
+      </div>
+
     </form>
   </div>
 </div>

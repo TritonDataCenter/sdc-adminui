@@ -6,7 +6,7 @@ var SlidingPanelRegionType = Backbone.Marionette.Region.extend({
     open: function(view) {
         this.$el.hide();
         this.$el.html(view.el);
-        this.$el.slideDown("fast")
+        this.$el.slideDown("fast");
     },
     close: function() {
         var view = this.currentView;
@@ -32,6 +32,9 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
         'submit form': 'onSubmit',
         'keyup input': 'onSubmit',
         'change select': 'onSubmit'
+    },
+    getQuery: function() {
+        return Backbone.Syphon.serialize(this);
     },
     onSubmit: function(e) {
         e.preventDefault();
@@ -60,13 +63,14 @@ var ServersView = Backbone.Marionette.Layout.extend({
     },
     initialize: function() {
         this.serversList = new ServersList();
-
+        this.serversList.collection.params = {sort: 'hostname'};
         this.listenTo(this.serversList.collection, 'error', this.onError, this);
         this.listenTo(this.serversList.collection, 'request', this.onRequest, this);
         this.listenTo(this.serversList.collection, 'sync', this.onSync, this);
 
         this.filterForm = new FilterForm();
-        this.listenTo(this.filterForm, 'query', this.serversList.filter);
+        this.listenTo(this.filterForm, 'query', this.serversList.query);
+
     },
 
     onRequest: function() {
