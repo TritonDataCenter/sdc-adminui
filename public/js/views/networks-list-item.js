@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var adminui = require('adminui');
 var NetworksListItemTemplate = require('../tpl/networks-list-item.hbs');
 var NetworksListItem = Backbone.Marionette.ItemView.extend({
     template: NetworksListItemTemplate,
@@ -16,6 +17,7 @@ var NetworksListItem = Backbone.Marionette.ItemView.extend({
         var confirm = window.confirm('Are you sure you want to delete this network?');
         if (confirm) {
             this.model.destroy();
+            adminui.vent.trigger('notificatino', {message: 'Network deleted.'});
         }
     },
 

@@ -11,7 +11,8 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     template: ItemTemplate,
 
     events: {
-        'click .alias a': 'navigateToVmDetails'
+        'click .alias a': 'navigateToVmDetails',
+        'click a.owner-name': 'navigateToOwnerDetails'
     },
 
     initialize: function(options) {
@@ -60,6 +61,13 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         }
         e.preventDefault();
         adminui.vent.trigger('showview', 'vm', { vm: this.model });
+    },
+    navigateToVmDetails: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+        e.preventDefault();
+        adminui.vent.trigger('showview', 'user', { user: this.user });
     }
 });
 

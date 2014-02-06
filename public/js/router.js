@@ -33,8 +33,11 @@ var Views = {
     'jobs': require('./views/jobs'),
     'job': require('./views/job'),
 
+    'networking': require('./views/networking'),
     'networks': require('./views/networks'),
     'network': require('./views/network'),
+
+    'nictag': require('./views/nictag'),
 
     'services': require('./views/services')
 };
@@ -51,6 +54,9 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'networks/:uuid': 'showNetwork',
         'packages/:uuid': 'showPackage',
         'servers/:uuid': 'showServer',
+        'nictags/:uuid': 'showNicTag',
+        'networking': 'showNetworking',
+        'networking/:tab': 'showNetworking',
         '*default': 'defaultAction'
     },
     initialize: function(options) {
@@ -223,6 +229,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
+    showNetworking: function(tab) {
+        if (this.authenticated()) {
+            this.presentView('networking', {tab: tab});
+        }
+    },
+
     showNetwork: function(uuid) {
         var self = this;
         if (this.authenticated()) {
@@ -239,6 +251,24 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             });
         }
     },
+
+    showNicTag: function(name) {
+        var self = this;
+        if (this.authenticated()) {
+            var Nictag = require('./models/nictag');
+            var nt = new Nictag({name: name});
+            nt.fetch().done(function() {
+                self.presentView('nictag', { model: nt });
+            }).fail(function(xhr) {
+                self.notFound({
+                    view: 'nictag',
+                    args: {name: name},
+                    xhr: xhr
+                });
+            });
+        }
+    },
+
 
     showPackage: function(uuid) {
         var self = this;

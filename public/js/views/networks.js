@@ -2,6 +2,9 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 var adminui = require('../adminui');
+var NicTags = require('../models/nictags');
+
+var React = require('react');
 
 var Networks = require('../models/networks');
 var NetworkPools = require('../models/network-pools');
@@ -23,9 +26,10 @@ var ___NETWORK_CREATED = function(network) {
 };
 
 
+
 var NetworksTemplate = require('../tpl/networks.hbs');
 
-var NetworksView = Backbone.Marionette.ItemView.extend({
+var NetworksView = Backbone.Marionette.Layout.extend({
     template: NetworksTemplate,
     name: "networks",
     url: 'networks',
@@ -36,6 +40,10 @@ var NetworksView = Backbone.Marionette.ItemView.extend({
     ui: {
         'networksList': '.networks-list',
         'networkPoolsList': '.network-pools-list'
+    },
+    regions: {
+        'networksListRegion': '.networks-list',
+        'networkPoolsListRegion': '.network-pools-list'
     },
     attributes: {
         "id":"page-networks"
@@ -55,14 +63,11 @@ var NetworksView = Backbone.Marionette.ItemView.extend({
             showDelete: true,
             collection: this.networks
         });
+
         this.networkPoolsList = new NetworkPoolsListView({
             networks: this.networks,
             collection: this.networkPools
         });
-
-        this.listenTo(this.networks, 'sync', this.renderNetworkPoolsList, this);
-        this.listenTo(this.networksList, 'select', this.showNetwork, this);
-        this.listenTo(this.networkPoolsList, 'select', this.showNetwork, this);
 
         this.networks.fetch().done(function() {
             networkPools.fetch();
@@ -99,12 +104,16 @@ var NetworksView = Backbone.Marionette.ItemView.extend({
         adminui.vent.trigger('showview', 'network', {model: network});
     },
 
-    renderNetworkPoolsList: function() {
-        this.ui.networkPoolsList.html(this.networkPoolsList.render().el);
+    onRender: function() {
+        this.listenTo(this.networksList, 'select', this.showNetwork, this);
+        this.listenTo(this.networkPoolsList, 'select', this.showNetwork, this);
     },
 
-    onRender: function() {
-        this.ui.networksList.html(this.networksList.render().el);
+    onShow: function() {
+        this.networkPoolsListRegion.show(this.networkPoolsList);
+        this.networksListRegion.show(this.networksList);
+
+        this.delegateEvents();
     }
 });
 

@@ -1,12 +1,13 @@
 .__vms-list {
   caption { padding: 0;}
 
-  .owner {
+  .owned-by {
     font-size: 12px;
     color: @grayLight;
     line-height: 12px;
+    width: 200px;
   }
-  .owner-name { cursor: pointer; }
+  .owner-name { cursor: pointer; margin-right: 5px;}
 
   .more {
     width: 100%;
@@ -18,21 +19,22 @@
   }
   .counters { padding: 10px;}
 
-  th.status { width: 80px; }
-  th.memory, td.memory { width: 80px; text-align: right; padding-right: 30px; }
+  td.status { width: 70px; }
+  td.memory { width: 80px; text-align: right; padding-right: 30px; }
   .uuid {
-    font-size: 12px;
+    font-size: 10px;
     font-style: italic;
     display: block;
     color: @grayLight;
     font-family: monospace;
   }
-  span.type { float: right; background: #aaa;}
+  span.type { float: right; background: #aaa; font-size: 10px; }
+
   th.alias { }
   td.alias a { cursor: pointer; }
 
-  th.ips, td.ips {
-    width: 140px;
+  td.ips {
+    width: 100px;
     padding-left: 20px;
   }
 

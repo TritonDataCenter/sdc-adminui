@@ -50,6 +50,7 @@
 
 @import "fwrules-list.less";
 @import "fwrules-form.less";
+@import "nictag.less";
 
 
 
@@ -765,5 +766,23 @@ ul.attributes {
   margin-top: -360px;
   .modal-body {
     max-height: 800px;
+  }
+}
+
+
+.nictags-component {
+  ul {
+    margin: 0;
+  }
+  ul li {
+    list-style: none;
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    background: #eee;
+    margin-right: 2px;
+  }
+  ul li:last-child {
+    margin-right: 0;
   }
 }

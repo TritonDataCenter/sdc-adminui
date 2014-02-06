@@ -89,8 +89,10 @@ Object.keys(shimConfig).forEach(function(k) {
 
 var b = shim(browserify(), shimConfig)
     .transform(require.resolve(join(root, './transforms/tpl')))
+    .transform(require('reactify'))
     .require('underscore', { expose: 'underscore' })
     .require('underscore.string', { expose: 'underscore.string' })
+    .require('react', { expose: 'React'})
     .require(require.resolve(join(root, './lib/d3.v3.js')), { expose: 'd3' })
     .require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery' })
     .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment' })
