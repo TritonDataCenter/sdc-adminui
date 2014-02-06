@@ -30,7 +30,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
             self.$('.owner-name').html(user.get('login'));
             self.$('.owner-name').attr("href", "/users/" + user.get('uuid'));
             if (user.get('company')) {
-                self.$('.owner-company').html("at " + user.get('company'));
+                self.$('.owner-company').html(user.get('company'));
             }
         });
 
@@ -62,7 +62,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         adminui.vent.trigger('showview', 'vm', { vm: this.model });
     },
-    navigateToVmDetails: function(e) {
+    navigateToOwnerDetails: function(e) {
         if (e.metaKey || e.ctrlKey) {
             return;
         }
