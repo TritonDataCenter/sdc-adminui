@@ -73,7 +73,7 @@ var ServicesListItemView = Backbone.Marionette.ItemView.extend({
     }
 });
 
-var ServicesListView = Backbone.Marionette.CompositeView.extend({
+var ServicesListView = Backbone.Marionette.CollectionView.extend({
     itemView: ServicesListItemView
 });
 
