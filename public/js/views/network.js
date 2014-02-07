@@ -77,7 +77,7 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
 
     id: 'page-network',
 
-    sidebar: 'networks',
+    sidebar: 'networking',
 
     events: {
         'click .owner-link': 'goToOwner',

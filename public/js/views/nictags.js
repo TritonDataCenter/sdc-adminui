@@ -1,5 +1,7 @@
 /** @jsx React.DOM */
 
+var adminui = require('adminui');
+
 var React = require('react');
 var NicTags = require('../models/nictags');
 
@@ -14,15 +16,24 @@ var NicTagsList = React.createClass({
         var self = this;
         var promise = nicTags.fetch();
         $.when(promise).then(function() {
-            self.setState({data: nicTags.toJSON()});
+            self.setState({data: nicTags});
         });
     },
+    onClick: function(nictag) {
+        adminui.vent.trigger('showview', 'nictag', { model: nictag });
+        return false;
+    },
     render: function() {
-        var listNodes = this.state.data.map(function(nictag) {
-            var url = "/nictags/" + nictag.name;
-            return (<li><a href={url}>{nictag.name}</a></li>);
-        });
-        return <div className="nictags-component"><ul>{listNodes}</ul></div>;
+        var nodes = this.state.data.map(function(nictag) {
+            var nc = nictag.toJSON();
+            var url = "/nictags/" + nc.name;
+            return (
+                <li key={nc.name}>
+                <a onClick={this.onClick.bind(this, nictag)} data-uuid={nc.name} href={url}>{nc.name}</a>
+                </li>
+                );
+        }, this);
+        return (<div className="nictags-component"><ul>{nodes}</ul></div>);
     }
 });
 

@@ -44,7 +44,7 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
 });
 
 var ServersView = Backbone.Marionette.Layout.extend({
-    name: 'servers',
+    sidebar: 'servers',
     id: 'page-servers',
     template: require('../tpl/servers.hbs'),
     events: {
@@ -61,6 +61,7 @@ var ServersView = Backbone.Marionette.Layout.extend({
         'listRegion': '.servers-list-region',
         'filterRegion': '.servers-filter-region'
     },
+
     initialize: function() {
         this.serversList = new ServersList();
         this.serversList.collection.params = {sort: 'hostname'};

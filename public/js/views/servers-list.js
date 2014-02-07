@@ -114,6 +114,10 @@ var ServersListItem = Backbone.Marionette.ItemView.extend({
 var ServersList = module.exports = require('./collection').extend({
     emptyView: require('./empty'),
     itemView: ServersListItem,
+    attributes: {
+        'class': 'servers-list'
+    },
+
     itemViewOptions: function() {
         return {
             emptyViewModel: this.collection
@@ -121,7 +125,7 @@ var ServersList = module.exports = require('./collection').extend({
     },
 
     initialize: function(options) {
-        this.collection = new Servers();
+        this.collection = this.collection || new Servers();
         options = options || {};
         if (options.params) {
             this.collection.params = options.params;

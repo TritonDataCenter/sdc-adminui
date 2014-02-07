@@ -2,29 +2,47 @@ var adminui = require('adminui');
 var Backbone = require('backbone');
 var Networks = require('../models/networks');
 var NetworksListView = require('./networks-list');
+var Servers = require('../models/servers');
+var ServersListView = require('./servers-list');
 
 module.exports = Backbone.Marionette.Layout.extend({
     template: require('../tpl/nictag.hbs'),
     attributes: {
         'id': 'page-nictag'
     },
+    sidebar: 'networking',
+    url: function() {
+        return '/nictags/' + this.model.get('name')     ;
+    },
     regions: {
-        "networksRegion": '.networks-region'
+        "networksRegion": '.networks-region',
+        "serversRegion": '.servers-region'
     },
     initialize: function() {
-        this.collection = new Networks(null, {nic_tag: this.model.get('name')});
-        this.networksView = new NetworksListView({ collection: this.collection });
+        this.networks = new Networks(null, {nic_tag: this.model.get('name')});
+        this.networksView = new NetworksListView({ collection: this.networks });
+
+        this.servers = new Servers(null, {
+            url: '/_/nic_tags/'+this.model.get('name') + '/servers'
+        });
+
+        this.serversView = new ServersListView({collection: this.servers });
+
+        this.listenTo(this.networksView, 'select', this.showNetwork, this);
         this.listenTo(this.networksView, 'select', this.showNetwork, this);
     },
     showNetwork: function(network) {
         adminui.vent.trigger('showview', 'network', {model: network});
     },
-    onRender: function() {
-    },
+
     onShow: function() {
-        this.collection.fetch().done(function() {
+        this.networks.fetch().done(function() {
             this.networksRegion.show(this.networksView);
         }.bind(this));
+
+        this.serversRegion.show(this.serversView);
+        // this.servers.fetch().done(function() {
+        // }.bind(this));
     }
 
 

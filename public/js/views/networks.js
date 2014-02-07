@@ -31,8 +31,8 @@ var NetworksTemplate = require('../tpl/networks.hbs');
 
 var NetworksView = Backbone.Marionette.Layout.extend({
     template: NetworksTemplate,
-    name: "networks",
     url: 'networks',
+    sidebar: 'networking',
     events: {
         'click button[name=create-network]': 'showCreateNetworkForm',
         'click button[name=create-network-pool]': 'showCreateNetworkPoolForm'
