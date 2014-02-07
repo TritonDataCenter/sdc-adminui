@@ -27,6 +27,7 @@ var Networking = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.networksView = new NetworksView();
         this.nictagsView = new NictagsView();
+        this.currentView = this.options.tab === 'nictags' ? this.nictagsView : this.networksView;
     },
 
     makeActive: function(view) {
@@ -49,7 +50,7 @@ var Networking = Backbone.Marionette.Layout.extend({
         this.makeActive(this.options.tab || 'networks');
     },
     onShow: function() {
-        this.tabContent.show(this.networksView);
+        this.tabContent.show(this.currentView);
     }
 });
 

@@ -28,6 +28,7 @@ var NicTagsList = React.createClass({
 
 
 module.exports = Backbone.Marionette.View.extend({
+    sidebar: 'networking',
     onShow: function() {
         React.renderComponent(
         <div className="nic-tags">
