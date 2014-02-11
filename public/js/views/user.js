@@ -240,12 +240,12 @@ var UserView = Backbone.Marionette.Layout.extend({
         var self = this;
 
         $.get('/_/users/'+this.model.get('uuid')+'/2fa', function(d) {
-            var text = '';
             if (d.enabled) {
                 self.$('.portal-2fa').html('enabled');
                 self.$('.toggle-2fa').html('Disable');
             } else {
-                self.$('.toggle-2fa').html('Enable');
+                self.$('.toggle-2fa').hide();
+                self.$('.portal-2fa').addClass('disabled');
                 self.$('.portal-2fa').html('disabled');
             }
         });
