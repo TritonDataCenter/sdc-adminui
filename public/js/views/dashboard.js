@@ -94,14 +94,13 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
                 graph.render();
 
                 var xAxis = new Rickshaw.Graph.Axis.Time({
-                    ticks: 8,
                     graph: graph
                 });
                 xAxis.render();
 
                 var yAxis = new Rickshaw.Graph.Axis.Y({
                     graph: graph,
-                    ticks: 10,
+                    ticks: 4,
                     orientation: 'left',
                     element: self.$('.y_axis').get(0),
                     max: 10000000,
