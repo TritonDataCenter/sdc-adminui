@@ -31,7 +31,16 @@ var shimConfig = {
     'bootstrap.datetimepicker' : {
         path : './lib/bootstrap-datetimepicker.min.js',
         depends: {'jquery': '$'},
-        exports: null,
+        exports: null
+    },
+    'd3': {
+        path: './lib/d3.v3',
+        exports: 'd3'
+    },
+    'rickshaw': {
+        path: './lib/rickshaw',
+        depends: {'d3': 'd3'},
+        exports: null
     },
     'bootstrap.tags': {
         path: './lib/bootstrap-tags',
@@ -93,7 +102,6 @@ var b = shim(browserify(), shimConfig)
     .require('underscore', { expose: 'underscore' })
     .require('underscore.string', { expose: 'underscore.string' })
     .require('react', { expose: 'React'})
-    .require(require.resolve(join(root, './lib/d3.v3.js')), { expose: 'd3' })
     .require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery' })
     .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment' })
     .require(require.resolve(join(root, './adminui')), {expose: 'adminui', entry: true});

@@ -3,44 +3,44 @@
 </div>
 
 <div class="row">
-  <div class="counter span4">
+  <div class="counter vms span6">
     <div class="value vm-count"></div>
     <div class="name">Virtual Machines</div>
   </div>
-  <div class="counter span4">
-    <div class="value server-count">-</div>
-    <div class="name">Servers</div>
-  </div>
-  <div class="counter span4">
+  <div class="counter users span6">
     <div class="value user-count">-</div>
     <div class="name">Users</div>
   </div>
 </div>
 
-<div class="row servers">
-  <div class="counter span3">
-    <div class="value">
-      <span class="server-reserved">-</span> / <span class="server-count">-</span>
-    </div>
-    <div class="name">Servers Reserved</div>
-  </div>
 
-  <div class="counter span6">
-    <div class="value">
-      <span class="server-provisionable-memory"></span>
-      /
-      <span class="server-total-memory"></span>
+<div class="row">
+  <div class="span12">
+    <div class="servers">
+      <div class="graph-container">
+        <h6>Provisionable Memory</h6>
+        <div class="y_axis"></div>
+        <div class="server-provisionable-memory-graph"></div>
+      </div>
+      <div class="data">
+        <div class="stat">
+          <div class="name">Servers</div>
+          <div class="value"><span class="server-count">-</span></div>
+        </div>
+        <div class="stat">
+          <div class="name">Servers Reserved</div>
+          <div class="value"> <span class="server-reserved">-</span> / <span class="server-count">-</span> </div>
+        </div>
+        <div class="stat">
+          <div class="name">RAM Provisionable / Total </div>
+          <div class="value"> <span class="server-provisionable-memory"></span> / <span class="server-total-memory"></span> </div>
+        </div>
+        <div class="stat">
+          <div class="name">Utilization %</div>
+          <div class="value"><span class="server-utilization-percent"></span></div>
+        </div>
+      </div>
     </div>
-    <div class="name">
-      RAM Provisionable / Total
-    </div>
-  </div>
-
-  <div class="counter span3">
-    <div class="value">
-      <span class="server-utilization-percent"></span>
-    </div>
-    <div class="name">Utilization %</div>
   </div>
 </div>
 
