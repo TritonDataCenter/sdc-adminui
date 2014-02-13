@@ -55,10 +55,12 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
         this.model.removeNics(macs, function(job) {
             var jobView = new JobProgress({model: job});
             jobView.show();
+
             self.listenTo(jobView, 'succeeded', function() {
                 self.selectedNics.each(function(n) {
                     self.collection.remove(n);
                 });
+
                 self.selectedNics.reset();
             });
         });

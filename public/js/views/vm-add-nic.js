@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var Networks = require('../models/networks');
 var JobProgress = require('./job-progress');
+var _ = require('underscore');
 var VmAddNicView = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/vm-add-nic.hbs'),
     attributes: {
@@ -22,13 +23,18 @@ var VmAddNicView = Backbone.Marionette.ItemView.extend({
         var netuuid = this.selectedNetwork.get('uuid');
         vm.addNics([{
             uuid: netuuid,
-            primary: this.$('.primary').is(':checked')
+            primary: this.$('.primary').is(':checked'),
+            allow_dhcp_spoofing: this.$('[name=allow_dhcp_spoofing]').is(':checked'),
+            allow_ip_spoofing: this.$('[name=allow_ip_spoofing]').is(':checked'),
+            allow_mac_spoofing: this.$('[name=allow_mac_spoofing]').is(':checked'),
+            allow_restricted_traffic: this.$('[name=allow_restricted_traffic]').is(':checked'),
+            allow_unfiltered_promisc: this.$('[name=allow_unfiltered_promisc]').is(':checked')
         }], function(err, job) {
             if (err) {
                 window.alert('Error adding network interface ' + err);
                 return;
             }
-            self.$el.modal('hide').remove();
+            self.remove();
             var view = new JobProgress({
                 model: job
             });
@@ -73,12 +79,14 @@ var VmAddNicView = Backbone.Marionette.ItemView.extend({
             }
         };
 
-        this.$el.modal('show');
         this.networks.fetch({
             success: function() {
                 self.stickit(self.selectedNetwork, bindings);
             }
         });
+
+        this.$el.modal().on('hidden', this.remove.bind(this));
+        this.$el.modal('show');
     }
 });
 

@@ -397,9 +397,7 @@ var VmView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
-
         this.nicsRegion.show(this.nicsList);
-
         this.fwrulesListRegion.show(this.fwrulesList);
 
         this.snapshotsListView = new SnapshotsList({
