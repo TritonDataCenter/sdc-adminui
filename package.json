@@ -22,7 +22,7 @@
     "moray": "git+ssh://git@git.joyent.com:node-moray.git#324ef396300788163d350c7405ffdef567267fad",
     "browserify": "3.0.0",
     "browserify-shim": "~2.0.3",
-    "underscore": "~1.4.4",
+    "underscore": "~1.6",
     "underscore.string": "~2.3.1",
     "through": "~2.2.7",
     "handlebars": "1.0.11",

@@ -88,6 +88,22 @@ var Vm = Model.extend({
             cb(errThrown);
         });
     },
+    updateNics: function(nics, cb) {
+        var req = $.ajax({
+            url: this.url() + '?action=update_nics',
+            type: 'POST',
+            data: JSON.stringify({nics: nics}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+        req.done(function(data) {
+            var job = new Job({ uuid: data.job_uuid });
+            cb(null, job);
+        });
+        req.fail(function(xhr, status, errThrown) {
+            cb(errThrown);
+        });
+    },
 
     removeNics: function(macs, cb) {
         $.post(this.url() + '?action=remove_nics', {

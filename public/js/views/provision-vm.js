@@ -1,7 +1,8 @@
+/** @jsx React.DOM **/
+
 var Backbone = require('backbone');
 var _ = require('underscore');
 var Bloodhound = require('bloodhound');
-
 
 
 /**
@@ -9,6 +10,9 @@ var Bloodhound = require('bloodhound');
  *
  * Provision a VM
  */
+
+var React = require('react');
+var NicConfigComponent = require('../components/nic-config');
 
 var Images = require('../models/images');
 var Users = require('../models/users');
@@ -88,6 +92,7 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     events: {
+        'click .attach-network-interface': 'onAttachNetworkInterface',
         'submit form': 'provision',
         'click .back': 'backToVirtualMachines',
         'change select[name="networks[]"]': 'checkFields',
@@ -107,13 +112,14 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     initialize: function(options) {
-        _.bind(this, this.onSelectImage);
         this.vent = adminui.vent;
         this.model = new Vm();
         this.packages = new Packages();
         this.packageSelect = new PackageSelect({
             collection: this.packages
         });
+
+        this.nicSelects = [];
 
         this.settings = require('../models/settings');
         this.selectedPackage = new Package();
@@ -126,9 +132,6 @@ var View = Backbone.Marionette.Layout.extend({
         this.packageSelect.on('select', function(pkg) {
             this.selectedPackage.set(pkg.attributes);
         }, this);
-
-        this.networks = new Networks();
-        this.networkPools = new NetworkPools();
 
         this.packages.fetchActive();
     },
@@ -151,60 +154,53 @@ var View = Backbone.Marionette.Layout.extend({
         } else {
             process.nextTick(function() {
                 $field.val('');
+                self.$('.control-group-networks').hide();
                 self.userPreview.close();
+                self.removeAllNics();
             });
         }
     },
 
-    populatePrimaryNetworks: function(selectedNets) {
-        var $select = this.$('.primary-network-select select');
+    onAttachNetworkInterface: function(e) {
+        e.preventDefault();
+        this.createNetworkSelect();
+    },
 
-        var networks = this.networks;
-        var networkPools = this.networkPools;
-
-        var settings = this.settings;
-
-        $select.empty();
-        _.each(selectedNets, function(net) {
-            var n = networks.get(net.uuid) || networkPools.get(net.uuid);
-            var $elm = $("<option />").attr('value', n.get('uuid'));
-
-            if (settings.get('provision.preset_primary_network') === net.uuid) {
-                $elm.prop('selected', true);
-            }
-
-            if (n.get('subnet')) {
-                $elm.html([n.get('name'), n.get('subnet')].join(' - '));
-            } else {
-                $elm.html(n.get('name'));
-            }
-
-            $select.append($elm);
+    removeNic: function(nic) {
+        if (this.nicSelects.length === 1) {
+            alert('Cannot Remove last Network Interface');
+            return false;
+        }
+        var self = this;
+        React.unmountComponentAtNode(nic.getDOMNode());
+        $(nic.getDOMNode()).closest('.nic-config-container').fadeOut(function() {
+            this.remove();
+            self.nicSelects = _.without(self.nicSelects, nic);
+            console.debug(self.nicSelects.length);
         });
+    },
+    removeAllNics: function() {
+        _.each(this.nicSelects, function(nic) {
+            React.unmountComponentAtNode(nic.getDOMNode());
+            $(nic.getDOMNode()).closest('.nic-config-container').remove();
+        }, this);
+        this.nicSelects = [];
     },
 
     onSelectUser: function(u) {
         this.selectedUser = u;
         this.userPreview.show(new UserPreview({model: u}));
+        this.removeAllNics();
 
         var settings = this.settings;
 
-        if (this.networks.length) {
-            this.networks.reset();
-        }
-
-        this.$('.networks-select .chosen').empty();
-        this.$('.primary-network-select select').empty();
-
         var self = this;
         $.when(
-            this.settings.fetch(),
-            this.networks.fetch({data: {provisionable_by: u.get('uuid') }}),
-            this.networkPools.fetch({data: {provisionable_by: u.get('uuid') }})
+            this.settings.fetch()
         ).then(function() {
             var networkPresets = settings.get('provision.preset_networks') || [];
 
-            while (networkPresets.length < 4) {
+            while (networkPresets.length < 1) {
                 networkPresets.push(null);
             }
 
@@ -213,7 +209,6 @@ var View = Backbone.Marionette.Layout.extend({
             });
 
             var values = self.extractFormValues();
-            self.populatePrimaryNetworks(values.networks);
             self.checkFields();
         });
 
@@ -238,52 +233,47 @@ var View = Backbone.Marionette.Layout.extend({
         this.$('.no-sshkeys-warning').show();
     },
 
+    onNicConfigChange: function(prop, value, nic, com) {
+        if (prop === 'primary' && value === true) {
+            console.log(this.nicSelects);
+            _.each(this.nicSelects, function(c) {
+                console.log(c);
+                if (c !== com) {
+                    var n = c.getValue();
+                    n.primary = false;
+                    console.log({nic: n});
+                    c.setState({nic: n});
+                }
+            });
+        }
+        this.checkFields();
+    },
+
     createNetworkSelect: function(uuid) {
-        var $select = $('<select data-placeholder="Select a Network" name="networks[]"></select>');
-        $select.append("<option></option>");
+        var container = $('<div class="nic-config-container" />');
+        this.$('.network-selection').append(container);
 
-        var $optgroup = $('<optgroup />').attr('label', 'Networks');
-        this.networks.each(function(n) {
-            var $elm = $("<option />").attr('value', n.get('uuid'));
-
-            if (uuid === n.get('uuid')) {
-                $elm.prop('selected', true);
-            }
-
-            if (n.get('subnet')) {
-                $elm.html([n.get('name'), n.get('subnet')].join(' - '));
-            } else {
-                $elm.html(n.get('name'));
-            }
-            $optgroup.append($elm);
+        var component = new NicConfigComponent({
+            networkFilters: {provisionable_by: this.selectedUser.get('uuid')},
+            nic: { network_uuid: uuid },
+            onChange: this.onNicConfigChange.bind(this)
         });
 
-        $select.append($optgroup);
+        React.renderComponent(
+            <div>
+            <div className="nic-config-action">
+                <a className="remove" onClick={this.removeNic.bind(this, component)}>
+                    <i className="icon icon-remove"></i> Remove
+                </a>
+            </div>
+            <div className="nic-config-component">
+                {component}
+            </div>
+            </div>
+            , container.get(0));
 
-        var $optgroup2 = $('<optgroup />').attr('label', 'Network Pools');
-        this.networkPools.each(function(n) {
-            var $elm = $("<option />").attr('value', n.get('uuid'));
+        this.nicSelects.push(component);
 
-            if (uuid === n.get('uuid')) {
-                $elm.prop('selected', true);
-            }
-
-            if (n.get('subnet')) {
-                $elm.html([n.get('name'), n.get('subnet')].join(' - '));
-            } else {
-                $elm.html(n.get('name'));
-            }
-            $optgroup.append($elm);
-        });
-
-        $select.append($optgroup2);
-        $select.show();
-
-        this.$('.networks-select .chosen').append($select);
-        $select.chosen({
-            width: "200px",
-            allow_single_deselect: true
-        });
         this.$('.control-group-networks').show();
         this.$('.control-group-primary-network').show();
     },
@@ -303,7 +293,6 @@ var View = Backbone.Marionette.Layout.extend({
 
         this.packageSelect.setElement(this.$('select[name=package]')).render();
         this.$('.control-group-networks').hide();
-        this.$('.control-group-primary-network').hide();
         this.$('.package-preview-container').append(this.packagePreview.render().el);
 
         this.hideError();
@@ -379,10 +368,6 @@ var View = Backbone.Marionette.Layout.extend({
             valid = false;
         } else {
             valid = true;
-        }
-
-        if (values.networks.length) {
-            this.populatePrimaryNetworks(values.networks);
         }
 
         if (!values.image_uuid && (!values.disks || !values.disks[0] || !values.disks[0].image_uuid)) {
@@ -468,14 +453,10 @@ var View = Backbone.Marionette.Layout.extend({
         }
 
 
-        var networksChecked = this.$('.networks-select select').map(function() { return $(this).val(); });
-        var primaryNetwork = this.$('.primary-network-select select').val();
-
-        values.networks = _.map(_.compact($.makeArray(networksChecked)), function(nuuid) {
-            var net = { uuid: nuuid };
-            if (nuuid === primaryNetwork) {
-                net.primary = true;
-            }
+        values.networks = _.map(this.nicSelects, function(nic) {
+            var net = _.clone(nic.getValue());
+            net.uuid = net.network_uuid;
+            delete net.network_uuid
 
             return net;
         });
@@ -505,6 +486,10 @@ var View = Backbone.Marionette.Layout.extend({
         }, this);
         this.ui.alert.show();
     },
+
+
+
+
 
     provision: function(e) {
         var self = this;

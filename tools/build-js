@@ -42,6 +42,13 @@ var shimConfig = {
         depends: {'d3': 'd3'},
         exports: null
     },
+    'react-chosen': {
+        path: './lib/react-chosen',
+        depends: {
+            'react': 'React'
+        },
+        exports: 'Chosen'
+    },
     'bootstrap.tags': {
         path: './lib/bootstrap-tags',
         depends: {'jquery': '$'},

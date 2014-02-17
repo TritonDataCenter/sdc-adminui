@@ -1,5 +1,7 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
+var $ = require('jquery');
+
 var Marionette = require('backbone.marionette');
 var User = require('./models/user');
 var SigninView = require('./views/signin');
@@ -60,7 +62,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         '*default': 'defaultAction'
     },
     initialize: function(options) {
-        _.bindAll(this);
         this.app = options.app;
         this.app.user = this.app.user || (this.user = User.currentUser());
     },

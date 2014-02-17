@@ -5,10 +5,11 @@
     <tr>
       <th style="width: 20px"></th>
       <th>Network</th>
-      <th>IP</th>
-      <th>MAC Address</th>
-      <th>Netmask</th>
+      <th style="width: 120px;">IP</th>
+      <th style="width: 120px ;">Netmask</th>
+      <th style="width: 140px;">MAC Address</th>
       <th>Tag</th>
+      <th></th>
     </tr>
   </thead>
 
@@ -17,7 +18,7 @@
   {{#role "operators"}}
   <tfoot>
     <td colspan="6">
-      <button class="btn btn-danger remove-nics"><i class="icon-white icon-remove-sign"></i> Delete Selected NIC</button>
+      <button class="btn btn-danger remove-nics"><i class="icon-white icon-trash"></i></button>
       <button class="btn add-nic"><i class="icon-plus-sign"></i> Add New NIC</button>
     </td>
   </tfoot>
