@@ -17,5 +17,11 @@
 
 <div class="modal-footer">
   <button class="btn" data-dismiss="modal">Cancel</button>
-  <button class="btn btn-primary" type="submit">Attach Network Interface</button>
+  <button class="btn btn-primary" type="submit">
+    {{#if mac}}
+    Save Network Interface
+    {{else}}
+    Attach Network Interface
+    {{/if}}
+  </button>
 </div>

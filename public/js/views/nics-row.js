@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 var adminui = require('../adminui');
 
-var NicFormView = require('./vm-add-nic');
+var NicFormView = require('./vm-nic-form');
 
 
 /**

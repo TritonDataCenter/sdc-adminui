@@ -4,7 +4,7 @@ var Nics = require('../models/nics');
 
 var NicsRowView = require('./nics-row');
 var JobProgress = require('./job-progress');
-var AddNicView = require('./vm-add-nic');
+var AddNicView = require('./vm-nic-form');
 
 var NicsView = Backbone.Marionette.CompositeView.extend({
     template: require('../tpl/nics.hbs'),

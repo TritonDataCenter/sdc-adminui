@@ -383,10 +383,6 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.tagsListView.setElement(this.$('.tags-container')).render();
     },
 
-    renderNics: function() {
-        this.nicsList.render();
-    },
-
     renderMetadata: function() {
         this.customerMetadataRegion.show(this.customerMetadataListView);
         this.internalMetadataRegion.show(this.internalMetadataListView);
