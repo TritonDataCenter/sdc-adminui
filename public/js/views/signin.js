@@ -64,6 +64,12 @@ var View = Backbone.Marionette.ItemView.extend({
     },
 
     onShow: function() {
+        var w = $(window).width();
+        var h = $(window).height();
+        this.$el.css({
+            left: (w/2)-220 + 'px',
+            top: (h/2)-318/2 + 'px'
+        });
         this.$("input[value='']:not(:checkbox,:button):visible:first").focus();
     }
 
