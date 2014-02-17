@@ -130,8 +130,6 @@ var ServersList = module.exports = require('./collection').extend({
         if (options.params) {
             this.collection.params = options.params;
         }
-
-        _.bindAll(this);
     },
 
 

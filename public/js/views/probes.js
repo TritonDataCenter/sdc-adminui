@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var Probes = require('../models/probes');
 var Alarms = require('../models/alarms');
+var _ = require('underscore');
 
 var BaseView = require('./base');
 
@@ -15,8 +16,6 @@ var ProbeItemView = BaseView.extend({
     },
 
     initialize: function(options) {
-        _.bindAll(this);
-
         this.probe = options.probe;
         this.probe.on('remove', this.remove);
         this.probe.on('alarm', this.renderAlarm);
@@ -81,7 +80,7 @@ var ProbesView = BaseView.extend({
             alarms.each(function(a) {
                 var faults = a.get('faults');
                 _(faults).each(function(f) {
-                    if (f.probe == p.get('uuid')) {
+                    if (f.probe === p.get('uuid')) {
                         p.trigger('alarm', a);
                     }
                 });

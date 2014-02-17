@@ -19,8 +19,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function(options) {
-        _.bindAll(this);
-
         this.params = {};
         this.params.type = 'log-scan';
         this.params.machine = options.vm.get('uuid');
