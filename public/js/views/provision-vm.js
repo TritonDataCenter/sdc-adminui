@@ -95,7 +95,6 @@ var View = Backbone.Marionette.Layout.extend({
         'click .attach-network-interface': 'onAttachNetworkInterface',
         'submit form': 'provision',
         'click .back': 'backToVirtualMachines',
-        'change select[name="networks[]"]': 'checkFields',
         'blur input[type=text]': 'checkFields',
         'blur input#input-owner': 'onBlurOwnerField'
     },
@@ -380,6 +379,17 @@ var View = Backbone.Marionette.Layout.extend({
             image_uuid = values['image_uuid'] || values['disks'][0]['image_uuid'];
             valid = valid && true;
         }
+
+        var primaryNetwork = _.findWhere(values.networks, {primary: true});
+
+        if (! primaryNetwork) { valid = false; }
+
+        _.map(values.networks, function(n) {
+            if (typeof(n.uuid) !== 'string' || n.uuid.length === 0) {
+                valid = false;
+            }
+        });
+
 
         if (valid) {
             this.enableProvisionButton();
