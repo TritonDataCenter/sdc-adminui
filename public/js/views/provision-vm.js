@@ -204,8 +204,8 @@ var View = Backbone.Marionette.Layout.extend({
                 networkPresets.push(null);
             }
 
-            _.each(networkPresets, function(uuid) {
-                self.createNetworkSelect(uuid);
+            _.each(networkPresets, function(nic) {
+                self.createNetworkSelect(nic);
             });
 
             var values = self.extractFormValues();
@@ -249,26 +249,30 @@ var View = Backbone.Marionette.Layout.extend({
         this.checkFields();
     },
 
-    createNetworkSelect: function(uuid) {
+    createNetworkSelect: function(nic) {
+        if (typeof(nic) === 'string') {
+            nic = {network_uuid: nic};
+        }
+
         var container = $('<div class="nic-config-container" />');
         this.$('.network-selection').append(container);
 
         var component = new NicConfigComponent({
             networkFilters: {provisionable_by: this.selectedUser.get('uuid')},
-            nic: { network_uuid: uuid },
+            nic: nic,
             onChange: this.onNicConfigChange.bind(this)
         });
 
         React.renderComponent(
-            <div>
-            <div className="nic-config-action">
-                <a className="remove" onClick={this.removeNic.bind(this, component)}>
-                    <i className="icon icon-remove"></i> Remove
-                </a>
-            </div>
-            <div className="nic-config-component">
-                {component}
-            </div>
+            <div className="nic-config-component-container">
+                <div className="nic-config-action">
+                    <a className="remove" onClick={this.removeNic.bind(this, component)}>
+                        <i className="icon icon-remove"></i> Remove
+                    </a>
+                </div>
+                <div className="nic-config-component">
+                    {component}
+                </div>
             </div>
             , container.get(0));
 

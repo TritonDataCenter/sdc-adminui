@@ -10,13 +10,15 @@
  */
 var React = require('react');
 var Networks = require('../models/networks');
+var NetworkPools = require('../models/network-pools');
 var Chosen = require('react-chosen');
 
 var NicConfig = module.exports = React.createClass({
     getInitialState: function() {
         if (! this.props.nic) {
-            this.props.nic = {}
+            this.props.nic = {};
         }
+
         // normalize UUID to network_uuid
         if (this.props.nic.uuid) {
             this.props.nic.network_uuid = this.props.nic.uuid;
@@ -26,7 +28,8 @@ var NicConfig = module.exports = React.createClass({
         var state = {
             nic: this.props.nic,
             networkFilters: this.props.networkFilters || {},
-            networks: []
+            networks: [],
+            networkPools: []
         };
 
         console.log('NicConfig initial state', state);
@@ -34,14 +37,16 @@ var NicConfig = module.exports = React.createClass({
     },
     componentDidMount: function() {
         var self = this;
-        console.log(this.state.networkFilters);
 
         this.networks = new Networks();
-        this.networks.fetch({
-            params: this.state.networkFilters
-        }).done(function(networks) {
-            self.setState({ networks: networks });
-        });
+        this.networkPools = new NetworkPools();
+        $.when(
+            this.networks.fetch({ params: this.state.networkFilters }),
+            this.networkPools.fetch({ params: this.state.networkFilters })
+        ).done(function() {
+            self.setState({ networks: this.networks.toJSON() });
+            self.setState({ networkPools: this.networkPools.toJSON() });
+        }.bind(this));
     },
     onChange: function(e) {
         var value;
@@ -68,7 +73,7 @@ var NicConfig = module.exports = React.createClass({
         /* jshint ignore:begin  */
         return (
             <div className="nic-config">
-                <div className="control-group">
+                <div className="control-group control-group-network">
                     <label className="control-label">Network</label>
                     <div className="controls">
                     <Chosen onChange={this.onChange}
@@ -82,11 +87,16 @@ var NicConfig = module.exports = React.createClass({
                                 return (<option key={n.uuid} value={n.uuid}>{n.name} / {n.subnet} </option>)
                             })
                         }
+                        {
+                            this.state.networkPools.map(function(n) {
+                                return (<option key={n.uuid} value={n.uuid}>{n.name}</option>)
+                            })
+                        }
                     </Chosen>
                     </div>
                 </div>
 
-                <div className="control-group">
+                <div className="control-group control-group-primary">
                     <div className="controls">
                         <label className="checkbox">
                             <input onChange={this.onChange} checked={this.state.nic.primary} type="checkbox" className="primary" name="primary" /> Make this the primary NIC
@@ -94,7 +104,7 @@ var NicConfig = module.exports = React.createClass({
                     </div>
                 </div>
 
-                <div className="control-group spoofing-options">
+                <div className="control-group control-group-spoofing">
                     <label className="control-label">Spoofing Options</label>
                     <div className="controls">
                         <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label>

@@ -5,25 +5,20 @@
 <p class="widget-content">These preferences apply to all users of adminui on this datacenter.</p>
 
 <div class="row">
-  <div class="span4">
-    <h2>Provisioning Options</h2>
+  <div class="span3">
+    <h3>Provisioning Options</h3>
+    <p>
+      Settings configured here are pre-populated onto the provision page for convenience.
+    </p>
   </div>
-  <div class="span8">
-    <div class="control-group control-group-networks">
-      <label class="control-label"><h3>Preset Network Selection</h3></label>
-      <div class="networks-select controls">
-        <div class="chosen chosen-xlarge"></div>
+  <div class="span9">
+    <div class="control-group">
+      <label class="control-label"><h3>Preset NIC Selection</h3></label>
+      <div class="controls">
+        <div class="nic-selection-container"></div>
       </div>
     </div>
 
-    <div class="control-group control-group-primary-network">
-      <label class="control-label"><h3>Preset Primary Network Selection</h3></label>
-      <div class="primary-network-select controls">
-        <div class="chosen chosen-xlarge">
-          <select data-placeholder="Choose a Network..." name="primary_network"></select>
-        </div>
-      </div>
-    </div>
     <button class="btn save btn-primary">Save Changes</button>
   </div>
 </div>
