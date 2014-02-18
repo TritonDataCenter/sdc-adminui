@@ -1,7 +1,8 @@
 
 #job-progress {
-  width: 640px;
-  margin-left: -320px;
+  width: 680px;
+  margin-left: -340px;
+
   .job-details {
     font-size: 14px;
     cursor: pointer;
@@ -23,9 +24,15 @@
       display: inline-block;
       vertical-align: top;
     }
+    .started-at i {
+      padding-right: 5px;
+    }
+    .finished-at i {
+      padding-right: 5px;
+    }
     .name { font-weight: bold; }
-    .task { width: 360px;}
-    .time { padding-right: 5px; color: @grayLight; font-size: 10px; text-align: right; }
+    .task { width: 400px;}
+    .time { padding-right: 10px; color: @grayLight; font-size: 10px; text-align: right; }
     .duration {
       .value {
         display: inline-block;
@@ -60,16 +67,23 @@
     color: #888;
     img { margin-left: 10px;}
   }
+
   .execution {
+    float: left;
+    font-weight: bold;
+    text-align: center;
+    width: 100px;
     background: #333;
     text-transform: uppercase;
-    font-size: 14px;
-    line-height: 14px;
+    font-size: 12px;
+    line-height: 12px;
     padding: 10px;
-    font-weight: bold;
-    float: left;
     color: #fff;
-    span { color: yellow; }
+    .box-sizing(border-box);
+
+
+    .queued { color: yellow; }
+    .running { color: yellow; }
     .succeeded { color: #a8ff00; }
     .failed { color: #ff4200; }
    }
