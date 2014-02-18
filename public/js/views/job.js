@@ -149,11 +149,6 @@ var JobView = Backbone.Marionette.ItemView.extend({
         }
     },
 
-    serializeData: function() {
-        var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this, arguments);
-        return data;
-    },
-
     navigateToServer: function(e) {
         if (e.metaKey || e.ctrlKey) {
             return;
