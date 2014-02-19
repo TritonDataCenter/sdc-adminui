@@ -1,4 +1,10 @@
 #page-job {
+  .resource-actions {
+    .pull-right;
+  }
+  h1 small {
+    margin-left: 10px;
+  }
   .params, .raw, .info {
     .box-sizing(border-box);
     overflow-x: scroll;
@@ -18,19 +24,19 @@
   .resource-status .succeeded {
     background-color: @activeColor;
   }
+
   .resource-status .failed {
     background-color: @dangerColor;
   }
   .resource-status .queued {
     background-color: @warningColor;
   }
-
   .resource-status .running {
     background-color: @warningColor;
   }
 
   .resource-status .canceled {
-    background-color: @grayDark;
+    background-color: @grayLight;
   }
 
   .chain-results {

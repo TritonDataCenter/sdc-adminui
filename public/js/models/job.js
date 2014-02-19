@@ -28,6 +28,21 @@ var Job = Model.extend({
         });
     },
 
+    cancel: function(callback) {
+        var req = $.ajax({
+            url: this.url() + '/cancel',
+            type: 'POST'
+        });
+
+        req.done(function(res) {
+            callback(null, res);
+        });
+
+        req.fail(function(xhr, status, err) {
+            callback(err);
+        });
+    },
+
     startWatching: function() {
         var self = this;
         if (!this._interval) {

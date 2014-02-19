@@ -16,7 +16,7 @@ var JobProgressHeader = React.createClass({
         var job = this.state;
 
         return (
-            <div>
+            <div className="job-progress-header">
                 <h2>Job {job.name}</h2>
                 <small>{job.uuid}</small>
                 <a className="job-details pull-right">Job Details <i className="icon-fullscreen"></i></a>
@@ -76,6 +76,11 @@ var JobProgressFooter = React.createClass({
         return this.props.job;
     },
 
+    handleCancel: function(e) {
+        e.preventDefault();
+        this.props.onCancel();
+    },
+
     render: function() {
         var job = this.state;
 
@@ -83,8 +88,17 @@ var JobProgressFooter = React.createClass({
             <div>
             <div className="pull-left">
             <div className="execution"> <div className={job.execution}> {job.execution}</div> </div>
-            { (! job.finished) ? <span className="wait">Working... <img src="/img/job-progress-loading.gif" /></span> : '' }
+            { (!job.finished && job.execution !== 'canceled') ? <span className="wait">Working... <img src="/img/job-progress-loading.gif" /></span> : '' }
             </div>
+            {
+                (job.execution !== 'canceled' && !job.finished) ? (
+                    <button onClick={this.handleCancel}
+                        disabled={job.execution === 'canceling'}
+                        className={'btn ' + (job.execution !== 'canceling' ? 'btn-danger' : '')}>
+                        { (job.execution === 'canceling' ? 'Canceling...' : 'Cancel Job') }
+                        </button>) : ''
+            }
+
             <button className="btn" data-dismiss="modal">Close</button>
             </div>
         );
@@ -144,12 +158,18 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
         this.model.fetch({success: this.onUpdate.bind(this)});
     },
 
+    onCancel: function() {
+        this.model.cancel(function(err, job) {
+            console.log('cancel response', err, job);
+        });
+    },
+
     onRender: function() {
         var job = this.serializeData();
 
         this.header = <JobProgressHeader job={job} />;
         this.body = <JobProgressSummary job={job} />;
-        this.footer = <JobProgressFooter job={job} />;
+        this.footer = <JobProgressFooter onCancel={this.onCancel.bind(this)} job={job} />;
 
         this.component = React.renderComponent(
             <div>
@@ -175,8 +195,8 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
 
         var execution = this.model.get('execution');
 
-        if (execution === 'cancelled' ||
-            execution === 'succeeded' || execution === 'failed') {
+        console.log(execution);
+        if (execution === 'canceled' || execution === 'succeeded' || execution === 'failed') {
             this.trigger(execution);
             clearInterval(this._timer);
         }

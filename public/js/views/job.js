@@ -13,12 +13,26 @@ var JobDetailsComponent = React.createClass({
     componentWillMount: function() {
         this.state.job.on('change', this.forceUpdate);
     },
+
     componentWillUnmount: function() {
         this.state.job.off('change');
     },
+
     getInitialState: function() {
         return {job: this.props.job };
     },
+
+    handleCancel: function(e) {
+        e.preventDefault();
+        var job = this.state.job;
+
+        job.set({state: 'canceling'});
+        this.setState({job: this.state.job});
+        job.cancel(function(err, data) {
+            console.log('cancel job response', err, data);
+        });
+    },
+
     render: function() {
         var job = this.state.job.toJSON();
         job.finished = this.state.job.finished();
@@ -31,39 +45,46 @@ var JobDetailsComponent = React.createClass({
         });
 
         var chainResults = _.map(job.chain_results, function(task) {
-            return (<li className={task.error ? 'error' : ''}>
-                <div className="task">
-                    <div className="name">{task.name}</div>
-                    <div className="result">{task.result}</div>
-                    { (task.error) ? <div className="error">{task.error.message ? task.error.message : task.error }</div> : '' }
-                </div>
+            return (
+                <li key={task.name} className={task.error ? 'error' : ''}>
+                    <div className="task">
+                        <div className="name">{task.name}</div>
+                        <div className="result">{task.result}</div>
+                        { (task.error) ? <div className="error">{task.error.message ? task.error.message : task.error }</div> : '' }
+                    </div>
 
-                <div className="time">
-                <div className="started-at">
-                <i className="icon-play"></i> {task.started_at}
-                </div>
-                <div className="finished-at">
-                <i className="icon-stop"></i> {task.finished_at}
-                </div>
-                </div>
-                <div className="duration">
-                <i className="icon-time"></i><div className="value">{task.duration}</div>
-                </div>
-                </li>)
+                    <div className="time">
+                        <div className="started-at"><i className="icon-play"></i> {task.started_at}</div>
+                        <div className="finished-at"><i className="icon-stop"></i> {task.finished_at}</div>
+                    </div>
+                    <div className="duration"><i className="icon-time"></i><div className="value">{task.duration}</div></div>
+                </li>
+            )
         });
 
 
         return <div>
             <div className="page-header">
-              <div className="resource-status">
-                <span className={'execution ' + job.execution}>{job.execution}</span>
-              </div>
+                <div className="resource-status">
+                    <span className={'execution ' + job.execution}>{job.execution}</span>
+                    <div className="pull-right">
+                        {(! job.finished) ? <span className="wait">Working... <img src="/img/job-progress-loading.gif" /></span> : '' }
+                    </div>
+                </div>
 
-              <div className="pull-right">
-                {(! job.finished) ? <span className="wait">Working... <img src="/img/job-progress-loading.gif" /></span> : '' }
-              </div>
-
-              <h1>Job {job.name} <small className="uuid">{job.uuid}</small></h1>
+                <h1>
+                    Job {job.name} <small className="uuid selectable">{job.uuid}</small>
+                    <div className="resource-actions">
+                    {
+                        (!job.execution !== 'canceled' && !job.finished) ?
+                        <button onClick={this.handleCancel}
+                                disabled={job.execution === 'canceling'}
+                                className={'btn ' + (job.execution !== 'canceling' ? 'btn-danger' : '')}>
+                            { (job.execution === 'canceling' ? 'Canceling...' : 'Cancel Job') }
+                        </button> : ''
+                    }
+                    </div>
+                </h1>
             </div>
 
 
