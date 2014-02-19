@@ -1,5 +1,6 @@
 var Alarm = require('./alarm');
 var Backbone = require('backbone');
+var moment = require('moment');
 
 module.exports = Backbone.Collection.extend({
     model: Alarm,

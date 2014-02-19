@@ -70,7 +70,7 @@
       <div class="control-group package-owners">
         <label class="control-label" for="package-owner">Owners</label>
 
-        {{#unless owner_uuid.length}}
+        {{#unless owner_uuids.length}}
         <div class="controls">
           <input type="text"
           class="input-xlarge package-owner"
@@ -78,12 +78,12 @@
           placeholder="Search by login or uuid">
         </div>
         {{else}}
-        {{#each owner_uuid}}
+        {{#each owner_uuids}}
         <div class="controls">
           <input type="text"
           value="{{this}}"
           class="input-xlarge package-owner"
-          name="owner_uuid[]"
+          name="owner_uuids[]"
           placeholder="Search by login or uuid">
         </div>
         {{/each}}
