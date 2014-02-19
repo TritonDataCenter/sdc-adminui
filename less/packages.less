@@ -1,17 +1,25 @@
 #page-packages {
   .page-header { margin-bottom: 0; }
 
-  .sidebar {
-    border-right: 1px solid #DFE7EC;
-
-    .search {
-      clear: both;
-      padding-top: 10px;
-      input { font-size: 12px; }
+  #package-search {
+    float: left;
+    padding: 14px;
+    background: #f8f8f8;
+    overflow: hidden;
+    input, select { font-size: 12px; }
+    box-sizing: border-box;
+    width: 250px;
+    label {
+      font-size: 11px;
+      text-transform: uppercase;
     }
   }
 
   #list {
+    float: right;
+    width: 680px;
+    .zero-state { width: 100%;}
+
     ul li { margin-bottom: 0.5em;}
     ul li a {
       .widget-content;
@@ -19,7 +27,7 @@
 
       .status {
         color: #FFF;
-        width: 80px;
+        width: 70px;
         span {
           letter-spacing: 1px;
           text-transform: uppercase;
@@ -35,6 +43,7 @@
       overflow: hidden;
       cursor: pointer;
       padding: 5px 12px;
+
       >div {
         color: @grayLight;
         display: inline-block;
@@ -56,7 +65,7 @@
         display: inline-block;
       }
       .version {
-        width: 140px;
+        width: 120px;
         display: inline-block;
         color: @grayDark;
         font-family: @monoFontFamily;
