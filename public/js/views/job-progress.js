@@ -56,7 +56,7 @@ var JobProgressSummary = React.createClass({
                                 if (c.error) {
                                     return (
                                         <div className="error">
-                                        (c.error && c.error.message) ? c.error.message : c.error
+                                        {(c.error && c.error.message) ? c.error.message : c.error }
                                         </div>
                                     )
                                 }
