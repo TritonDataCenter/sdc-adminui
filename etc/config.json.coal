@@ -16,8 +16,8 @@
       "expiry": 300
     }
   },
+  "adminUuid": "930896af-bf8c-48d4-885c-6573a94b1853",
   "ufds": {
-    "adminUuid": "930896af-bf8c-48d4-885c-6573a94b1853",
     "url": "ldaps://10.99.99.18",
     "bindDN": "cn=root",
     "bindPassword": "secret",
@@ -43,13 +43,13 @@
         }
       },
       "amon": {
-        "url": "http://10.99.99.24"
+        "url": "http://10.99.99.25"
       },
       "ca": {
-        "url": "http://10.99.99.29:23181"
+        "url": "http://10.99.99.32:23181"
       },
       "vmapi": {
-        "url": "http://10.99.99.27"
+        "url": "http://10.99.99.28"
       },
       "imgapi": {
         "url": "http://10.99.99.21"
@@ -61,7 +61,13 @@
         "url": "http://10.99.99.10"
       },
       "sapi": {
-        "url": "http://10.99.99.32"
+        "url": "http://10.99.99.35"
+      },
+      "fwapi": {
+        "url": "http://10.99.99.27"
+      },
+      "papi": {
+        "url": "http://10.99.99.30"
       },
       "workflow": {
         "url": "http://10.99.99.19"
