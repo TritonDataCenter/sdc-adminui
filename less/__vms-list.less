@@ -62,11 +62,13 @@
     color: @gray;
     font-size: 12px;
   }
+
   .state {
     font-size: 10px;
     padding: 4px 6px;
     text-transform: uppercase;
+    &.stopped { background-color: @grayLight; color: #fff; }
     &.running { background-color: @activeColor; color: #fff; }
-    &.destroyed { background-color: @grayDark; }
+    &.destroyed { background-color: @grayDark; color: #fff; }
   }
 }

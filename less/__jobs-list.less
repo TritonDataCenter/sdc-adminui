@@ -23,13 +23,23 @@
         font-weight: normal;
       }
     }
+
     .execution {
       width: 100px;
-      font-weight: bold;
-      font-size: 13px;
-      &.succeeded span { background: @activeColor; }
-      &.canceled span { background: @gray; }
-      &.failed span { background: @dangerColor; }
+      text-align: right;
+      span {
+        width: 100px;
+        font-size: 10px;
+        line-height: 1;
+        padding: 4px 6px;
+        text-transform: uppercase;
+        text-align: center;
+        color: #fff;
+      }
+      .succeeded { background: @activeColor; }
+      .running { background-color: @activeColor; color: #fff; }
+      .canceled { background: @grayLight; }
+      .failed { background: @dangerColor; }
     }
   }
 }

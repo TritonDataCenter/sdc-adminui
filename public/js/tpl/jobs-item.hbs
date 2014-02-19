@@ -1,9 +1,5 @@
-<td class="execution {{execution}}">
-  <span class="label">
-    {{#if succeeded}}<i class="icon-ok-sign"></i>{{/if}}
-    {{#if failed}}<i class="icon-remove-sign"></i>{{/if}}
-    {{execution}}
-  </label>
+<td class="execution">
+  <span class="{{execution}}">{{execution}}</span>
 </td>
 <td>
   <a href="/jobs/{{uuid}}" class="name">{{name}} <small>{{summary}}</small></a>
