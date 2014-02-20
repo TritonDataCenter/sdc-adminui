@@ -16,7 +16,8 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
     events: {
         'submit': 'onSubmit',
         'click a.add-owner-entry': 'onAddOwnerEntry',
-        'click button[type=cancel]': 'onCancel'
+        'click button[type=cancel]': 'onCancel',
+        'input input': 'onChangeInput'
     },
 
     initialize: function(options) {
@@ -43,6 +44,21 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
 
         userInput.render();
         userInput.el.focus();
+    },
+
+    onChangeInput: function() {
+        console.log('changeInput');
+        this.checkFields();
+    },
+
+    checkFields: function() {
+        if (this.options.mode !== 'change-owner') {
+            if (this.$('input[name=version]').val().length) {
+                this.$('button[type=submit]').prop('disabled', false);
+            } else {
+                this.$('button[type=submit]').prop('disabled', true);
+            }
+        }
     },
 
     onError: function(model, xhr) {
@@ -119,6 +135,7 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         this.userInput = new UserInput({el: this.$('.package-owner')});
         this.userInput.render();
+        this.checkFields();
     },
 
     onShow: function() {
