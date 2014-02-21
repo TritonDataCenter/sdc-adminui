@@ -115,7 +115,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     onRender: function() {
         var packagesList = new PackagesList({ collection: this.packages });
 
-        this.packages.fetch().done(function() {
+        this.search().done(function() {
             packagesList.render();
         });
 
@@ -163,7 +163,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     search: function() {
         var params = this.getFilterOptions();
         console.log('search params', params);
-        this.packages.fetch({ params: params }, {reset: true});
+        return this.packages.fetch({ params: params }, {reset: true});
     },
 
     getFilterOptions: function() {
