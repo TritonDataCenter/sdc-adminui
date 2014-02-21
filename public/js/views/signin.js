@@ -63,14 +63,25 @@ var View = Backbone.Marionette.ItemView.extend({
         this.hideMessage();
     },
 
-    onShow: function() {
+    centerSigninBox: function() {
         var w = $(window).width();
         var h = $(window).height();
+        var x = (w/2)-220;
+        var y = (h/2)-318/2;
+        if (y < 0) { y = 0; }
         this.$el.css({
-            left: (w/2)-220 + 'px',
-            top: (h/2)-318/2 + 'px'
+            left: x + 'px',
+            top: y + 'px'
         });
+    },
+
+    onShow: function() {
+        this.centerSigninBox();
         this.$("input[value='']:not(:checkbox,:button):visible:first").focus();
+        $(window).on('resize', this.centerSigninBox.bind(this));
+    },
+    onClose: function() {
+        $(window).off('resize', this.centerSigninBox.bind(this));
     }
 
 });
