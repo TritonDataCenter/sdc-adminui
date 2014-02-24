@@ -1,9 +1,17 @@
 .images-list {
   .table;
-  th.state { width: 80px; }
-  td.state .active { background: @activeColor; text-transform: uppercase; font-weight: bold;}
-  td.state .disabled { background: @gray; }
-  td.state .unactivated { background: @yellow; }
+  .state span {
+    color: #fff;
+    font-size: 10px;
+    padding: 4px 6px;
+    text-transform: uppercase;
+
+    &.active { background: @activeColor; }
+    &.disabled { background: @gray; }
+    &.unactivated { background: @yellow; }
+  }
+
+  th.state { width: 60px; }
   th.os { width: 120px; }
   th.published { width: 120px;}
   th.visibility { width: 100px;}
