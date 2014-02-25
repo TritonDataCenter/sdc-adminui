@@ -25,7 +25,7 @@ var JobsView = Backbone.Marionette.Layout.extend({
     },
 
     onShow: function() {
-        this.jobsList = new JobsList();
+        this.jobsList = new JobsList({params: {'execution': 'failed'}});
         this.jobsFilter = new JobsFilter();
         this.jobsFilterRegion.show(this.jobsFilter);
         this.jobsListRegion.show(this.jobsList);

@@ -22,7 +22,7 @@ var View = module.exports = Backbone.Marionette.ItemView.extend({
         var params = Backbone.Syphon.serialize(this);
         _.each(params, function(value, key) {
             if (value.length === 0) {
-                delete params[key]
+                delete params[key];
             }
         });
         if (params.name) {
@@ -30,5 +30,8 @@ var View = module.exports = Backbone.Marionette.ItemView.extend({
         }
         this.trigger('query', params);
         return false;
+    },
+    onShow: function() {
+        this.$('[name=execution]').val('failed');
     }
 });
