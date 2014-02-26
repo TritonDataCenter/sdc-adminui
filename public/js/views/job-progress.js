@@ -120,7 +120,8 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
         'click .job-details': 'navigateToJob'
     },
 
-    initialize: function() { },
+    initialize: function() {
+    },
 
     navigateToJob: function() {
         adminui.vent.trigger('showview', 'job', {model: this.model});
@@ -147,6 +148,7 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
         if (! this._timer) {
             this._timer = setInterval(this.update.bind(this), 2000);
         }
+
         var modal = this.$el.modal();
         var timer = this._timer;
         modal.on('hidden', function() {
@@ -195,9 +197,9 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
 
         var execution = this.model.get('execution');
 
-        console.log(execution);
         if (execution === 'canceled' || execution === 'succeeded' || execution === 'failed') {
             this.trigger(execution);
+            this.trigger('finished', execution);
             clearInterval(this._timer);
         }
 

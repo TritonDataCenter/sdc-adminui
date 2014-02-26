@@ -1,8 +1,13 @@
+/**
+ * @jsx React.DOM
+ */
+
 var Backbone = require('backbone');
 var _ = require('underscore');
 var moment = require('moment');
 
 var adminui = require('../adminui');
+var React = require('react');
 
 var Vm = require('../models/vm');
 var Img = require('../models/image');
@@ -26,6 +31,35 @@ var JobProgressView = require('./job-progress');
 var VmChangeOwner = require('./vm-change-owner');
 var NotesView = require('./notes');
 var CreateProbeController = require('../controllers/create-probe');
+
+var FirewallToggleButton = React.createClass({
+    getInitialState: function() {
+        value = this.props.initialValue || false;
+        return {value: value};
+    },
+    toggleValue: function() {
+        var newValue = !this.state.value;
+        this.setState({value: newValue});
+        if (this.props.onToggle) {
+            this.props.onToggle(newValue);
+        }
+    },
+    render: function() {
+        var node;
+        if (this.state.value === true) {
+            node = [
+                <button key="on" onClick={this.toggleValue} className="btn btn-success">ON</button>,
+                <button key="off" onClick={this.toggleValue} className="btn">OFF</button>
+            ];
+        } else {
+            node = [
+                <button key="on" onClick={this.toggleValue} className="btn">ON</button>,
+                <button key="off" onClick={this.toggleValue} className="btn btn-danger">OFF</button>
+            ];
+        }
+        return <div className="firewall-toggle-button-component">{node}</div>;
+    }
+});
 
 
 /**
@@ -133,6 +167,7 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.listenTo(this.vm, 'change:internal_metadata', this.renderMetadata, this);
         this.listenTo(this.vm, 'change:tags', this.renderTags, this);
         this.listenTo(this.vm, 'change:nics', this.renderNics, this);
+        this.listenTo(this.vm, 'change:firewall_enabled', this.onFirewallStateChange, this);
         this.listenTo(this.vm, 'sync', this.loadImage);
 
         this.customerMetadataListView = new MetadataList({
@@ -362,7 +397,9 @@ var VmView = Backbone.Marionette.Layout.extend({
                 if (err) {
                     input.tooltip({placement: 'bottom', title: err.message}).tooltip('show');
                 } else {
-                    adminui.vent.trigger('showjob', job);
+                    var jobView = new JobProgressView({ model: job });
+                    jobView.show();
+
                     cancelAction();
                 }
             });
@@ -392,9 +429,30 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.snapshotsListView.render();
     },
 
+    onToggleFirewallEnabled: function(value) {
+        var vm = this.vm;
+        vm.update({firewall_enabled: value}, function(job) {
+            var jobView = new JobProgressView({ model: job });
+            jobView.on('finished', function() {
+                vm.fetch();
+            });
+            jobView.show();
+        });
+    },
+
+    onFirewallStateChange: function() {
+        this.fwToggleButton.setState({value: this.vm.get('firewall_enabled')});
+    },
+
     onRender: function() {
         this.nicsRegion.show(this.nicsList);
         this.fwrulesListRegion.show(this.fwrulesList);
+        this.fwToggleButton = new FirewallToggleButton({
+            initialValue: this.vm.get('firewall_enabled'),
+            onToggle: this.onToggleFirewallEnabled.bind(this)
+        });
+        React.renderComponent(this.fwToggleButton, this.$(".firewall-toggle-button").get(0));
+
 
         this.snapshotsListView = new SnapshotsList({
             vm: this.vm,
