@@ -92,14 +92,12 @@ var FWRulesList = require('./collection').extend({
     },
 
     onModelSync: function(model, resp) {
-        var job = new Job({uuid: resp.job_uuid});
-        adminui.vent.trigger('showjob', job);
-        var self = this;
-        job.on('execution:succeeded', function() {
-            setTimeout(function() {
-                self.collection.fetch();
-            }, 2000);
-        }, this);
+        adminui.vent.trigger('notification', {
+            level: 'success',
+            message: "Firewall rule deleted successfully."
+        });
+
+        this.collection.fetch();
     },
 
     onShow: function() {

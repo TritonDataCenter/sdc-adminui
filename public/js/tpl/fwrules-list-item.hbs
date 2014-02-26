@@ -1,4 +1,7 @@
 <div class="rule {{#unless enabled}}disabled{{/unless}}">
+  {{#if global}}
+  <div class="global"><i class="icon-globe"></i> GLOBAL</div>
+  {{/if}}
   <div class="from-predicate">{{fromPredicate}}</div>
   <div class="to">
     <i class="icon-long-arrow-right"></i>
@@ -9,6 +12,7 @@
   <div class="action {{action}}">{{action}}</div>
   <div class="action-predicate">{{actionPredicate}}</div>
 </div>
+
 {{#role "operators"}}
 <div class="actions">
   <a class="btn edit-rule"><i class="icon-pencil"></i> Modify</a>

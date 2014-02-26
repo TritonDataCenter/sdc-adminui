@@ -4,7 +4,6 @@ var adminui = require('../adminui');
 
 var sprintf = _.str.sprintf;
 var FWRule = require('../models/fwrule');
-var Job = require('../models/job');
 
 var FWRulesForm = Backbone.Marionette.ItemView.extend({
     attributes: {
@@ -60,14 +59,13 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
     },
 
     onSync: function(model, resp, options) {
-        var job = new Job({uuid: resp.job_uuid});
-
-        this.listenTo(job, 'execution:succeeded', function() {
-            this.trigger('rule:saved');
-            this.trigger('close');
+        adminui.vent.trigger('notification', {
+            level: 'success',
+            message: "Firewall rule saved successfully."
         });
 
-        adminui.vent.trigger('showjob', job);
+        this.trigger('rule:saved');
+        this.trigger('close');
     },
 
     onSubmit: function(e) {
@@ -83,7 +81,8 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
         );
         this.model.set({
             enabled: data.enabled,
-            rule: rule
+            rule: rule,
+            owner_uuid: data.owner_uuid
         });
         this.model.save();
     }
