@@ -110,8 +110,7 @@ var NicConfig = module.exports = React.createClass({
                         <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label>
                         <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label>
                         <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_mac_spoofing} name="allow_mac_spoofing" /> Allow MAC Spoofing</label>
-                        <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow DHCP Spoofing</label>
-                        <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_unfiltered_promisc} name="allow_unfiltered_promisc" /> Allow Unfiltered Traffic</label>
+                        <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow Restricted Traffic</label>
                     </div>
                 </div>
             </div>
