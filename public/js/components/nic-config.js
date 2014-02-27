@@ -29,8 +29,14 @@ var NicConfig = module.exports = React.createClass({
             nic: this.props.nic,
             networkFilters: this.props.networkFilters || {},
             networks: [],
-            networkPools: []
+            networkPools: [],
+            expandAntispoofingOptions: this.props.expandAntispoofingOptions
         };
+
+        if (typeof(state.expandAntispoofingOptions) !== 'boolean') {
+            console.warn('NicConfig expandAntispoofingOptions property is not a boolean, using defaults(true)');
+            state.expandAntispoofingOptions = true;
+        }
 
         console.log('NicConfig initial state', state);
         return state;
@@ -47,6 +53,9 @@ var NicConfig = module.exports = React.createClass({
             self.setState({ networks: this.networks.toJSON() });
             self.setState({ networkPools: this.networkPools.toJSON() });
         }.bind(this));
+    },
+    expandAntiSpoofOptions: function() {
+        this.setState({expandAntispoofingOptions: true});
     },
     onChange: function(e) {
         var value;
@@ -81,17 +90,21 @@ var NicConfig = module.exports = React.createClass({
                             width="240px"
                             placeholder="Select a Network"
                             value={this.state.nic.network_uuid}>
-                        <option value="">Select a Network</option>
-                        {
-                            this.state.networks.map(function(n) {
-                                return (<option key={n.uuid} value={n.uuid}>{n.name} / {n.subnet} </option>)
-                            })
-                        }
-                        {
-                            this.state.networkPools.map(function(n) {
-                                return (<option key={n.uuid} value={n.uuid}>{n.name}</option>)
-                            })
-                        }
+                        <optgroup label="Networks">
+                            <option value="">Select a Network</option>
+                            {
+                                this.state.networks.map(function(n) {
+                                    return (<option key={n.uuid} value={n.uuid}> {n.name} - {n.subnet} </option>)
+                                })
+                            }
+                        </optgroup>
+                        <optgroup label="Network Pools">
+                            {
+                                this.state.networkPools.map(function(n) {
+                                    return (<option key={n.uuid} value={n.uuid}> {n.name}</option>)
+                                })
+                            }
+                        </optgroup>
                     </Chosen>
                     </div>
                 </div>
@@ -104,15 +117,24 @@ var NicConfig = module.exports = React.createClass({
                     </div>
                 </div>
 
-                <div className="control-group control-group-spoofing">
-                    <label className="control-label">Spoofing Options</label>
-                    <div className="controls">
-                        <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label>
-                        <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label>
-                        <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_mac_spoofing} name="allow_mac_spoofing" /> Allow MAC Spoofing</label>
-                        <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow Restricted Traffic</label>
-                    </div>
-                </div>
+                {
+                    (this.state.expandAntispoofingOptions === false) ?
+                    (<a className="expand-antispoofing-options" onClick={this.expandAntiSpoofOptions}>Configure Anti-spoofing</a>) : ''
+                }
+
+                {
+
+                    (this.state.expandAntispoofingOptions === true) ?
+                        (<div className="control-group control-group-spoofing">
+                            <label className="control-label">Anti-Spoofing Options</label>
+                            <div className="controls">
+                            <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label>
+                            <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label>
+                            <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_mac_spoofing} name="allow_mac_spoofing" /> Allow MAC Spoofing</label>
+                            <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow Restricted Traffic</label>
+                            </div>
+                        </div>) : ''
+                }
             </div>
         )
         /* jshint ignore:end */

@@ -263,6 +263,7 @@ var View = Backbone.Marionette.Layout.extend({
 
 
         var component = new NicConfigComponent({
+            expandAntispoofingOptions: false,
             networkFilters: {provisionable_by: this.selectedUser.get('uuid')},
             nic: nic,
             onChange: this.onNicConfigChange.bind(this)
