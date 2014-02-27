@@ -240,7 +240,6 @@ var View = Backbone.Marionette.Layout.extend({
                 if (c !== com) {
                     var n = c.getValue();
                     n.primary = false;
-                    console.log({nic: n});
                     c.setState({nic: n});
                 }
             });
@@ -253,14 +252,22 @@ var View = Backbone.Marionette.Layout.extend({
             nic = {network_uuid: nic};
         }
 
+        // If this is the first nic, make it the primary nic by default
+        if (nic === null && this.nicSelects.length === 0) {
+            nic = {};
+            nic.primary = true;
+        }
+
         var container = $('<div class="nic-config-container" />');
         this.$('.network-selection').append(container);
+
 
         var component = new NicConfigComponent({
             networkFilters: {provisionable_by: this.selectedUser.get('uuid')},
             nic: nic,
             onChange: this.onNicConfigChange.bind(this)
         });
+
 
         React.renderComponent(
             <div className="nic-config-component-container">
@@ -305,6 +312,7 @@ var View = Backbone.Marionette.Layout.extend({
 
         return this;
     },
+
     onShow: function() {
         this.$("input:not([disabled]):first").focus();
     },
