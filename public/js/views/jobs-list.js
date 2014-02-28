@@ -9,6 +9,7 @@ var JobProgressView = require('./job-progress');
 var JobDetailsView = require('./job');
 
 var JobsItemViewTemplate = require('../tpl/jobs-item.hbs');
+
 var JobsItemView = Backbone.Marionette.ItemView.extend({
     template: JobsItemViewTemplate,
     tagName: 'tr',
@@ -36,7 +37,8 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
             data.when = 'unknown';
         }
         // console.log(this.model);
-        data.duration = this.model.duration();
+        data.duration = parseFloat(Math.round(this.model.duration() * 100) / 100).toFixed(2);
+
 
         if (data.name.indexOf('update') !== -1 && data.params) {
 
