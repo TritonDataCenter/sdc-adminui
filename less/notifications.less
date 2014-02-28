@@ -1,21 +1,23 @@
 #notifications {
-  a {
-    position: absolute;
-    right: 30px;
-    color: @red;
-  }
-  position: relative;
+  position: fixed;
   text-align: center;
   z-index: 50;
+  a {
+    position: absolute;
+    cursor: pointer;
+    right: 30px;
+    color: @grayDark;
+  }
   .notifications {
     overflow: visible;
+    text-align: center;
     z-index: 51;
-    position: absolute;
+    position: fixed;
   }
   .notification {
     width: auto;
-    min-width: 300px;
-    padding: 10px;
+    min-width: 500px;
+    padding: 5px;
     &.success {
       color: @successText;
       border: 1px solid @successBorder;

@@ -7,7 +7,7 @@ var View = Backbone.View.extend({
             this.vent = options.vent;
             this.applyBindings();
         }
-        this.timeout = options.timeout || 5000;
+        this.timeout = options.timeout || 7500;
     },
 
     applyBindings: function() {
@@ -24,14 +24,16 @@ var View = Backbone.View.extend({
         close.on('click', function() {
             node.slideUp(function() {
                 node.remove();
-            });
+            }, 100);
         });
 
         node.hide();
 
         this.$el.append(node);
-
-        window.scrollTo(0, this.$el.offset().top);
+        this.$el.css({
+            left: ($(window).width() / 2) -  ($(node).width() / 2),
+            top: 0
+        });
 
         node.slideDown(function() {
             node.append(close);
