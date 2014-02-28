@@ -27,7 +27,7 @@ var Topbar = Backbone.Marionette.ItemView.extend({
     },
 
     renderTime: function() {
-        var serverTime = moment().utc().format("LLL");
+        var serverTime = moment().utc().format("MMM D h:mm");
         return this.$('.server-time time').html(serverTime);
     },
 

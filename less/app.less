@@ -235,8 +235,19 @@ h1.branding {
   line-height: 20px;
 
   .server-time {
-    margin-top: 3px;
+    opacity: 0.7;
+    .box-sizing(border-box);
+    color: @grayLight;
+    time { color: @grayDark; }
+    position: fixed;
+    top: 100%;
+    padding: 5px 8px;
+    line-height: 1;
+
+    margin-top: -22px;
+    background: #f8f8f8;
     font-size: 12px;
+    left: 0;
   }
 
   .acc-controls {
