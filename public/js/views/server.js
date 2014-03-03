@@ -71,12 +71,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
             },
             perPage: 20
         });
-
-        this.jobsListView = new JobsList({
-            perPage: 1000,
-            params: {server_uuid: this.model.get('uuid')}
-        });
-
     },
 
     mergeSysinfo: function(nics) {
@@ -360,7 +354,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
 
     onRender: function() {
-        console.log(this.model);
+        console.log('Server', this.model);
 
         this.notesView = new NotesView({
             itemUuid: this.model.get('uuid'),
@@ -371,6 +365,11 @@ var ServerView = Backbone.Marionette.Layout.extend({
         this.nicsView = new ServerNicsView({
             nics: this.nics,
             el: this.$('.nics')
+        });
+
+        this.jobsListView = new JobsList({
+            perPage: 100,
+            params: {server_uuid: this.model.get('uuid')}
         });
 
         this.jobsRegion.show(this.jobsListView);

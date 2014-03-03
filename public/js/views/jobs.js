@@ -1,10 +1,177 @@
+/** @jsx React.DOM */
 var Backbone = require('backbone');
+var _ = require('underscore');
 var moment = require('moment');
 
 var adminui = require('../adminui');
-
+var React = require('react');
+var Chosen = require('react-chosen');
 var JobsList = require('./jobs-list');
 var JobsFilter = require('./jobs-filter');
+
+var PRESET_FILTERS = [
+    {
+        name: 'Recent Jobs | last 24 hours',
+        params: function() {
+            return {
+                since: moment().subtract('hours', 24).toDate().getTime()
+            };
+        }
+    },
+    {
+        name: 'Recent Failed | last 24 hours',
+        params: function() {
+            return {
+                since: moment().subtract('hours', 24).toDate().getTime(),
+                execution: 'failed'
+            };
+        }
+    },
+    {
+        name: 'All Jobs | last 72 hours',
+        params: function() {
+            return {
+                since: moment().subtract('hours', 72).toDate().getTime()
+            };
+        }
+    }
+];
+
+var DatePicker = React.createClass({
+    componentDidMount: function() {
+        var n = this.refs.datepicker.getDOMNode();
+        this.dateTimePicker = $(n).datetimepicker({language: 'en'});
+        this.dateTimePicker.on('changeDate', this.onChange);
+    },
+    onChange: function(e) {
+        console.log('DatePicker change', e);
+        this.props.onChange({value: e.date });
+    },
+    render: function() {
+        return (<div ref="datepicker" className="date-picker input-append">
+            <input ref="input" value={this.props.value} data-format="yyyy-MM-dd hh:mm:ss" type="text"></input>
+            <span className="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+        </div>)
+    }
+});
+
+var JobExecutionCriteria = React.createClass({
+    onChange: function(e, val) {
+        if (this.props.onChange) {
+            this.props.onChange({value: val.selected});
+        }
+    },
+    render: function() {
+        var node;
+        node = (<Chosen width="140px" value={this.props.value} onChange={this.onChange} ref="chosen" name="execution">
+            <option value="">any</option>
+            <option value="succeeded">succeeded</option>
+            <option value="failed">failed</option>
+            <option value="running">running</option>
+            <option value="queued">queued</option>
+            <option value="canceled">canceled</option>
+        </Chosen>)
+        return <div className="criteria criteria-execution">{node}</div>;
+    }
+});
+
+var JobDateCriteria = React.createClass({
+    onChange: function(e) {
+        if (this.props.onChange) {
+            this.props.onChange({value: e.value});
+        }
+    },
+    render: function() {
+        var value;
+        if (this.props.value) {
+            if (typeof(this.props.value) === 'number') {
+                value = moment(this.props.value);
+            } else {
+                value = moment(this.props.value);
+            }
+            value = value.utc().format("YYYY-MM-DD HH:mm:ss")
+        } else {
+            value = "";
+        }
+        var node = (<DatePicker onChange={this.onChange} value={value} />)
+        return <div className="criteria criteria-date">{node}</div>;
+    }
+});
+
+
+var JobCriterias = React.createClass({
+    getInitialState: function() {
+        var state = {};
+        if (this.props.initialCriteria && this.props.initialCriteria.params) {
+            state = this.props.initialCriteria.params();
+        } else {
+            state = {};
+        }
+        return state;
+    },
+    onExecutionChange: function(change) {
+        this.setState({execution: change.value});
+        if (this.props.onChange) {
+            this.props.onChange({
+                params: this.state
+            });
+        }
+    },
+    onDateSinceChange: function(change) {
+        console.log('onDateSinceChange', change.value);
+        this.setState({since: change.value});
+        if (this.props.onChange) {
+            this.props.onChange({
+                params: this.state
+            });
+        }
+    },
+    onDateUtilChange: function(change) {
+        console.log('onDateUntilChange', change.value);
+        this.setState({until: change.value});
+        if (this.props.onChange) {
+            this.props.onChange({
+                params: this.state
+            });
+        }
+    },
+    render: function() {
+        return <ul className="unstyled">
+            <li><span className="criteria-name">Execution</span><JobExecutionCriteria name="execution" onChange={this.onExecutionChange} value={this.state.execution} /></li>
+            <li><span className="criteria-name">Since</span><JobDateCriteria name="since" onChange={this.onDateSinceChange} value={this.state.since} /></li>
+            <li><span className="criteria-name">Until</span><JobDateCriteria name="until" onChange={this.onDateUtilChange} value={this.state.until} /></li>
+        </ul>;
+    }
+});
+
+
+var JobFiltersList = React.createClass({
+    propTypes: {
+        filters: React.PropTypes.array,
+        filter: React.PropTypes.object,
+        onFilter: React.PropTypes.func
+    },
+    onFilter: function(f) {
+        var params = (typeof(f.params) === 'function') ? f.params() : f.params;
+        if (this.props.onFilter) {
+            this.props.onFilter({name: f.name, params: params});
+        }
+    },
+    render: function() {
+        var liNodes = _.map(this.props.filters, function(f) {
+            var pieces = f.name.split('|');
+            var name = pieces[0];
+            var time = pieces[1];
+            return <a key={f.name}
+                        className={f.name === this.props.filter.name ? 'current' : ''}
+                        onClick={this.onFilter.bind(this, f)}><span className="name"> {name} </span>
+                            <span className="timerange"> { time } </span>
+                    </a>;
+        }, this);
+
+        return <ul className="unstyled">{liNodes}</ul>;
+    }
+});
 
 var JobsView = Backbone.Marionette.Layout.extend({
     name: 'jobs',
@@ -12,8 +179,7 @@ var JobsView = Backbone.Marionette.Layout.extend({
     template: require('../tpl/jobs.hbs'),
 
     regions: {
-        'jobsListRegion': '.jobs-list-region',
-        'jobsFilterRegion': '.jobs-filter-region'
+        'jobsListRegion': '.jobs-list-region'
     },
 
     url: function() {
@@ -24,15 +190,43 @@ var JobsView = Backbone.Marionette.Layout.extend({
         options = options || {};
     },
 
-    onShow: function() {
-        this.jobsList = new JobsList({params: {'execution': 'failed'}});
-        this.jobsFilter = new JobsFilter();
-        this.jobsFilterRegion.show(this.jobsFilter);
-        this.jobsListRegion.show(this.jobsList);
+    onFilterChange: function(f) {
+        this.jobCriteras.replaceState(f.params);
+        this.jobFilters.setProps({filter: f});
+        var params = _.clone(f.params);
+        for (var k in f.params) {
+            if (f.params[k] === "") {
+                delete f.params[k];
+            }
+            if (k === 'until' || k === 'since') {
+                if (typeof(f.params[k]) === 'object') {
+                    f.params[k] = moment(f.params[k]).utc().toDate().getTime();
+                }
+            }
+        }
+        this.jobsList.query(f.params);
+    },
 
-        this.listenTo(this.jobsFilter, 'query', function(params) {
-            this.jobsList.query(params);
-        }, this);
+    onShow: function() {
+        var initialFilter = PRESET_FILTERS[0];
+
+        this.jobFilters = new JobFiltersList({
+            filters: PRESET_FILTERS,
+            filter: initialFilter,
+            onFilter: this.onFilterChange.bind(this)
+        });
+
+        React.renderComponent(this.jobFilters, this.$('.job-filters-list').get(0));
+
+        this.jobCriteras = new JobCriterias({
+            onChange: this.onFilterChange.bind(this),
+            initialCriteria: initialFilter
+        });
+
+        React.renderComponent(this.jobCriteras, this.$('.jobs-criteria-container').get(0));
+
+        this.jobsList = new JobsList({params: initialFilter.params() });
+        this.jobsListRegion.show(this.jobsList);
     },
 });
 
