@@ -6,6 +6,7 @@ var moment = require('moment');
 var adminui = require('../adminui');
 var React = require('react');
 var Chosen = require('react-chosen');
+var Jobs = require('../models/jobs');
 var JobsList = require('./jobs-list');
 var JobsFilter = require('./jobs-filter');
 
@@ -151,6 +152,22 @@ var JobFiltersList = React.createClass({
         filter: React.PropTypes.object,
         onFilter: React.PropTypes.func
     },
+    getInitialState: function() {
+        var self = this;
+        var counters = {};
+        this.props.filters.map(function(f) {
+            counters[f.name] = '?';
+            var j = new Jobs({perPage: 100});
+            j.params = f.params();
+            j.fetch().done(function(r) {
+                var c = (r.length > 99) ? '99+' : r.length;
+                var counters = _.clone(self.state.counters);
+                counters[f.name] = c;
+                self.setState({counters: counters});
+            })
+        });
+        return { counters: counters }
+    },
     onFilter: function(f) {
         var params = (typeof(f.params) === 'function') ? f.params() : f.params;
         if (this.props.onFilter) {
@@ -162,11 +179,14 @@ var JobFiltersList = React.createClass({
             var pieces = f.name.split('|');
             var name = pieces[0];
             var time = pieces[1];
-            return <a key={f.name}
+            return <li key={f.name}>
+                    <a
                         className={f.name === this.props.filter.name ? 'current' : ''}
-                        onClick={this.onFilter.bind(this, f)}><span className="name"> {name} </span>
+                        onClick={this.onFilter.bind(this, f)}>
+                        <span className="counter">{this.state.counters[f.name]}</span>
+                        <span className="name"> {name} </span>
                             <span className="timerange"> { time } </span>
-                    </a>;
+                    </a></li>;
         }, this);
 
         return <ul className="unstyled">{liNodes}</ul>;

@@ -4,8 +4,9 @@
   .jobs-criteria-container {
     background: #f8f8f8;
     padding: 20px;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     margin-bottom: 10px;
+
     >ul>li {
       display: inline-block;
       vertical-align: top;
@@ -13,8 +14,9 @@
     }
     .criteria-name {
       color: @gray;
-      font-size:
-      padding: 10px;
+      font-size: 12px;
+      padding: 0;
+      text-transform: uppercase;
     }
     .date-picker input {
       width: 140px;
@@ -23,8 +25,28 @@
     }
   }
   .job-filters-list {
-    a { display: block; padding: 5px; }
-    a.current { background: #f3f3f3; color: #333; }
+    a {
+      font-size: 12px;
+      display: block;
+      padding: 5px; }
+    a:hover { text-decoration: none; }
+    a.current {
+     background: #f3f3f3;
+     color: #333;
+   }
+    a span.counter {
+      font-weight: bold;
+      width: 22px;
+      text-align: right;
+      padding-right: 5px;
+      padding-top: 5px;
+      padding-bottom: 4px;
+      font-size: 9px;
+      background: #b8b8b8;
+      color: #fff;
+      line-height: 1;
+      display: inline-block;
+    }
     a span.name {
       margin-left: 8px;
     }
