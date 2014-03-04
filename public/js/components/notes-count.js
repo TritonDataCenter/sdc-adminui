@@ -55,15 +55,21 @@ var NotesPanel = React.createClass({
         $(this.refs.input.getDOMNode()).focus();
     },
     render: function() {
-        var nodes = _.map(this.props.notes, function(note) {
-            return <li key={note.uuid}>
+        var nodes;
+        if (this.props.notes.length === 0) {
+            nodes = [<li>There are no notes to display.</li>]
+        } else {
+            nodes = _.map(this.props.notes, function(note) {
+                return <li key={note.uuid}>
                 <div className="meta">
-                    <div className="author"><UserLink uuid={note.owner_uuid} /></div>
-                    <div className="date">{moment(note.created).utc().format("LLL")}</div>
+                <div className="author"><UserLink uuid={note.owner_uuid} /></div>
+                <div className="date">{moment(note.created).utc().format("LLL")}</div>
                 </div>
                 <div className="note">{note.note}</div>
-            </li>
-        });
+                </li>
+            });
+        }
+
         return <div className="notes-panel">
             <ul className="notes-list">{nodes}</ul>
             <form onSubmit={this.handleSubmit}>
