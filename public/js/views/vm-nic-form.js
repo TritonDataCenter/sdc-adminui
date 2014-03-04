@@ -41,7 +41,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                     window.alert('Error adding network interface ' + err);
                     return;
                 }
-                self.remove();
+                self.$el.modal('hide').remove();
                 var view = new JobProgress({ model: job });
                 view.show();
                 self.listenTo(view, 'execution', function(st) {
