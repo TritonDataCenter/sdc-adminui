@@ -50,6 +50,7 @@ var NotesPanel = React.createClass({
         e.preventDefault();
         var value = this.refs.input.getDOMNode().value;
         this.props.handleSave({note: value});
+        this.refs.input.getDOMNode().value = '';
     },
     focus: function() {
         $(this.refs.input.getDOMNode()).focus();
@@ -62,8 +63,8 @@ var NotesPanel = React.createClass({
             nodes = _.map(this.props.notes, function(note) {
                 return <li key={note.uuid}>
                 <div className="meta">
-                <div className="author"><UserLink uuid={note.owner_uuid} /></div>
-                <div className="date">{moment(note.created).utc().format("LLL")}</div>
+                    <div className="author"><UserLink uuid={note.owner_uuid} /></div>
+                    <div className="date">{moment(note.created).utc().format("LLL")}</div>
                 </div>
                 <div className="note">{note.note}</div>
                 </li>
