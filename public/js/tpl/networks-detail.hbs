@@ -1,14 +1,15 @@
 <div class="page-header">
   <h1>Network
     <span name="name">{{name}}</span> / <span name="subnet">{{subnet}}</span>
+    {{#role "operators"}}
     <div class="actions">
-      <a class="edit-network"><i class="icon-pencil"></i> Edit Network</a>
+      <a class="btn btn-info edit-network"><i class="icon-pencil"></i> Edit Network</a>
     </div>
+    {{/role}}
   </h1>
 </div>
 
 <section>
-
   <ul class="unstyled attributes">
     <li>
       <strong>UUID</strong>

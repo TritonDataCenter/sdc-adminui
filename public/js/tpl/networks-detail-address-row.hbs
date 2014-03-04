@@ -6,17 +6,22 @@
   {{else}}
   <small>{{belongs_to_uuid}}</small>
   {{/if}}
+
 </td>
-<td style="text-align: right">
-  {{#if reserved}}
-  <span class="label label-info">Reserved</span>
-  <a class="unreserve">Unreserve</a>
-  {{else}}
-  <a class="reserve">Reserve</a>
-  {{/if}}
+<td>
+  <div class="reservation">
+    {{#if reserved}}
+    <span class="label label-info">Reserved</span>
+    <a class="btn unreserve">Unreserve</a>
+    {{else}}
+    <a class="btn reserve">Reserve</a>
+    {{/if}}
+  </div>
 </td>
 <td>
   {{#if free}}
   <span class="label label-info">Free</span>
   {{/if}}
+
+  <div class="notes-container"></div>
 </td>

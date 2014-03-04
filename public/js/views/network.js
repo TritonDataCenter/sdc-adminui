@@ -4,11 +4,16 @@ var _ = require('underscore');
 var adminui = require('adminui');
 var User = require('../models/user');
 
-
 var Template = require('../tpl/networks-detail.hbs');
+
+
+var React = require('react');
 
 var Addresses = require('../models/addresses');
 var AddressesTableRowTemplate = require('../tpl/networks-detail-address-row.hbs');
+
+var NotesCountComponent = require('../components/notes-count');
+
 var AddressesTableRow = Backbone.Marionette.ItemView.extend({
     tagName: "tr",
 
@@ -60,7 +65,15 @@ var AddressesTableRow = Backbone.Marionette.ItemView.extend({
                 return null;
             }
             return _.str.sprintf('/%s/%s', prefix, uuid);
-        }
+        },
+    },
+    onRender: function() {
+        var networkUuid = this.model.collection.uuid;
+        var ip = this.model.get('ip');
+        var item = [networkUuid, ip].join('.');
+        React.renderComponent(
+            new NotesCountComponent({item: item}),
+            this.$('.notes-container').get(0));
     }
 });
 
