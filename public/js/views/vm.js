@@ -29,7 +29,7 @@ var JobsList = require('./jobs-list');
 
 var JobProgressView = require('./job-progress');
 var VmChangeOwner = require('./vm-change-owner');
-var NotesView = require('./notes');
+var NotesComponent = require('../components/notes-count');
 
 var FirewallToggleButton = React.createClass({
     getInitialState: function() {
@@ -443,20 +443,17 @@ var VmView = Backbone.Marionette.Layout.extend({
             initialValue: this.vm.get('firewall_enabled'),
             onToggle: this.onToggleFirewallEnabled.bind(this)
         });
-        React.renderComponent(this.fwToggleButton, this.$(".firewall-toggle-button").get(0));
+
+        React.renderComponent(
+            new NotesComponent({item: this.vm.get('uuid')}),
+            this.$('.notes-component-container').get(0)
+        );
 
 
         this.snapshotsListView = new SnapshotsList({
             vm: this.vm,
             el: this.$('.snapshots')
         });
-
-        this.notesView = new NotesView({
-            itemUuid: this.vm.get('uuid'),
-            el: this.$('.notes')
-        });
-
-        this.notesView.render();
 
         this.renderTags();
         this.renderMetadata();

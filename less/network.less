@@ -14,77 +14,10 @@
   a.reserve { margin-left: 20px;  font-size: 12px; padding: 4px; line-height: 1;}
   a.unreserve { margin-left: 20px;  font-size: 12px; padding: 4px 8px; line-height: 1; }
 
-  .notes-panel {
-    position: absolute;
-    width: 280px;
-    background: #FFF;
-    ul {
-      max-height: 220px;
-      overflow-y: scroll;
-      margin: 0;
-      li {
-        padding: 5px;
-        list-style: none;
-        margin: 0;
-        font-size: 11px;
 
-        .meta>div {
-          display: inline-block;
-        }
-        .date { font-size: 10px; color: @grayLight; margin-left: 5px;}
-        .note { line-height: 14px; font-size: 12px; }
-      }
-    }
-
-
-
-    form {
-      .box-sizing(border-box);
-      overflow: hidden;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      background: #f0f0f0;
-
-      button {
-        float: right;
-        vertical-align: middle;
-        padding: 12px;
-        text-align: center;
-      }
-
-      textarea {
-        float: left;
-        height: 33px;
-        width: 225px;
-        padding: 5px;
-        margin: 0;
-        border: none;
-        font-size: 11px;
-        background: transparent;
-        outline: none;
-      }
-    }
-  }
-
-  .notes-container {
+  .notes-component-container {
     float: left;
-    i { margin-right: 6px;}
-    a { text-decoration: none; }
-    .notes-count {
-      background: #eee;
-      padding: 2px 6px;
-      color: @grayLight;
-    }
-    .notes-count.has-notes {
-      color: @activeColor;
-    }
-    .notes-count.open,
-    .notes-count.has-notes.open {
-      background: #fff;
-    }
   }
-
 
   .reservation {
     float: right;

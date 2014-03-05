@@ -1,0 +1,91 @@
+.notes-component {
+  i { margin-right: 6px;}
+  a { text-decoration: none; }
+  .notes-count {
+    background: #eee;
+    padding: 2px 6px;
+    color: @grayLight;
+  }
+  .notes-count.has-notes {
+    color: @activeColor;
+  }
+  .notes-count.open,
+  .notes-count.has-notes.open {
+    background: #fff;
+  }
+
+  .notes-panel {
+    position: absolute;
+    width: 280px;
+    border: 2px solid #eee;
+    border-top: #fff;
+    background: #FFF;
+
+    ul {
+      min-height: 220px;
+      max-height: 220px;
+      overflow-y: auto;
+      margin: 0;
+      li {
+        padding: 5px;
+        list-style: none;
+        margin: 0;
+        font-size: 11px;
+
+        .meta>div {
+          display: inline-block;
+        }
+        .meta>.actions {
+          float: right;
+          .archive { color: @dangerColor; }
+        }
+
+        .date { font-size: 10px; color: @grayLight; margin-left: 5px;}
+        .note { line-height: 14px; font-size: 12px; }
+      }
+
+      li.archived {
+        .author { color: #aaa;}
+        .note { color: #aaa;}
+        text-decoration: line-through; opacity: 0.8;
+      }
+    }
+
+
+
+    form {
+      .box-sizing(border-box);
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      background: #f8f8f8;
+
+      button {
+        background: @btnInfoBackground;
+        vertical-align: middle;
+        border: none;
+        display: block;
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        font-size: 10px;
+        text-align: center;
+        .box-sizing(border-box);
+      }
+
+      textarea {
+        .box-sizing(border-box);
+        line-height: 14px; font-size: 12px;
+        height: 64px;
+        width: 100%;
+        padding: 5px;
+        margin: 0;
+        border: none;
+        background: transparent;
+        outline: none;
+      }
+    }
+  }
+
+}

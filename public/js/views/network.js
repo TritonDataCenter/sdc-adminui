@@ -73,7 +73,7 @@ var AddressesTableRow = Backbone.Marionette.ItemView.extend({
         var item = [networkUuid, ip].join('.');
         React.renderComponent(
             new NotesCountComponent({item: item}),
-            this.$('.notes-container').get(0));
+            this.$('.notes-component-container').get(0));
     }
 });
 
