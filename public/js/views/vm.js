@@ -30,7 +30,6 @@ var JobsList = require('./jobs-list');
 var JobProgressView = require('./job-progress');
 var VmChangeOwner = require('./vm-change-owner');
 var NotesView = require('./notes');
-var CreateProbeController = require('../controllers/create-probe');
 
 var FirewallToggleButton = React.createClass({
     getInitialState: function() {
@@ -78,7 +77,6 @@ var VmView = Backbone.Marionette.Layout.extend({
         'click .stop': 'clickedStopVm',
         'click .reboot': 'clickedRebootVm',
         'click .delete': 'clickedDeleteVm',
-        'click .create-probe': 'clickedCreateProbe',
         'click .rename': 'clickedRename',
         'click .owner-name': 'clickedOwnerName',
         'click .package': 'clickedPackage',
@@ -267,12 +265,6 @@ var VmView = Backbone.Marionette.Layout.extend({
         e.preventDefault();
         this.vent.trigger('showview', 'image', {
             uuid: this.image.get('uuid')
-        });
-    },
-
-    clickedCreateProbe: function() {
-        var createProbeController = new CreateProbeController({
-            vm: this.vm
         });
     },
 
