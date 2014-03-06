@@ -61,7 +61,7 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
     },
 
     onClickRemoveNics: function() {
-        var confirm = window.confirm('Are you sure you want to remove selected nics?');
+        var confirm = window.confirm('Are you sure you want to remove selected nics? This will reboot the VM.');
         if (! confirm) {
             return;
         }
@@ -75,6 +75,7 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
             self.listenTo(jobView, 'succeeded', function() {
                 self.selectedNics.each(this.collection.remove);
                 self.selectedNics.reset();
+                self.resetNics();
             });
         });
     },
