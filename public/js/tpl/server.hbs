@@ -12,11 +12,14 @@
   </h1>
 </div>
 
-{{#unless setup}}
-<div class="btn-group pull-right actions">
-  <button class="btn btn-info setup">Setup Server</button>
+<div class="actions">
+  <div class="notes-component-container"></div>
+  {{#unless setup}}
+    <div class="btn-group pull-right">
+      <button class="btn btn-info setup">Setup Server</button>
+    </div>
+  {{/unless}}
 </div>
-{{/unless}}
 
 <section>
 <div class="row">
@@ -177,7 +180,7 @@
 
 <section>
 <div class="row">
-  <div class="span8">
+  <div class="span6">
     <h3>Disks</h3>
     <div class="disks">
       {{#each disks}}
@@ -187,7 +190,8 @@
       </div>
       {{/each}}
     </div>
-
+  </div>
+  <div class="span6">
     <h3>Traits
       {{#role "operators"}}
       <div class="actions">
@@ -220,15 +224,10 @@
       {{/role}}
     {{/if}}
   </div>
-
-  <div class="span4">
-    <div class="notes"></div>
-  </div>
 </div>
-
 </section>
 
-<section>
+<section style="margin-top: 48px;">
   <div class="row">
     <div class="span12">
       <ul class="nav nav-tabs">

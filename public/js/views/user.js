@@ -10,6 +10,8 @@ var SSHKeys = require('../models/sshkeys');
 var UserForm = require('./user-form');
 var AddKeyView = require('./sshkey-create');
 
+var NotesComponent = require('../components/notes');
+
 var Networks = require('../models/networks');
 var NetworksList = require('../views/networks-list');
 
@@ -253,6 +255,10 @@ var UserView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
+        React.renderComponent(
+            new NotesComponent({item: this.model.get('uuid')}),
+            this.$('.notes-component-container').get(0)
+        );
         this.sshkeys.fetch();
         this.model.fetch();
         this.vms.fetch();

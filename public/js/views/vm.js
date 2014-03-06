@@ -29,7 +29,7 @@ var JobsList = require('./jobs-list');
 
 var JobProgressView = require('./job-progress');
 var VmChangeOwner = require('./vm-change-owner');
-var NotesComponent = require('../components/notes-count');
+var NotesComponent = require('../components/notes');
 
 var FirewallToggleButton = React.createClass({
     getInitialState: function() {

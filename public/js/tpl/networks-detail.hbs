@@ -1,12 +1,14 @@
 <div class="page-header">
   <h1>Network
     <span name="name">{{name}}</span> / <span name="subnet">{{subnet}}</span>
-    {{#role "operators"}}
-    <div class="actions">
-      <a class="btn btn-info edit-network"><i class="icon-pencil"></i> Edit Network</a>
-    </div>
-    {{/role}}
   </h1>
+</div>
+
+<div class="actions">
+  <div class="notes-component-container"></div>
+  {{#role "operators"}}
+  <a class="btn btn-info edit-network"><i class="icon-pencil"></i> Edit Network</a>
+  {{/role}}
 </div>
 
 <section>
@@ -73,5 +75,4 @@
   <table class="table addresses">
     <tbody></tbody>
   </table>
-  <div class="notes"></div>
 </section>

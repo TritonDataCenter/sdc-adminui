@@ -14,35 +14,8 @@ var Note = require('../models/note');
 var moment = require('moment');
 
 var User = require('../models/user');
-var UserLink = React.createClass({
-    getInitialState: function() {
-        return {
-            user: {},
-            loaded: false
-        };
-    },
-    componentDidMount: function() {
-        var user = this.user = new User({uuid: this.props.uuid});
-        var self = this;
-        var req = this.user.fetch();
-        req.done(function() {
-            self.setState({user: user, loaded: true});
-        });
-    },
-    handleClick: function() {
-        if (this.props.handleClick) {
-            this.props.handleClick(this.state.user);
-        }
-    },
-    render: function() {
-        if (this.state.loaded) {
-            var user = this.state.user.toJSON();
-            return <a className="user-link-component" onClick={this.handleClick} href={"/users/" + this.props.uuid}>{user.cn}</a>
-        } else {
-            return <a className="user-link-component loading" onClick={this.handleClick} href={"/users/" + this.props.uuid}>Loading</a>
-        }
-    }
-});
+var UserLink = require('../components/user-link');
+
 
 var NotesPanelNode = React.createClass({
     propTypes: {
@@ -85,8 +58,12 @@ var NotesPanel = React.createClass({
     handleSubmit: function(e) {
         e.preventDefault();
         var value = this.refs.input.getDOMNode().value;
+        if (value.length === 0) {
+            return false;
+        }
         this.props.handleSave({note: value});
         this.refs.input.getDOMNode().value = '';
+        this.setState({disableButton: true});
     },
     handleArchive: function(note) {
         console.log('NotesPanel', 'handleArchive', note);
@@ -109,10 +86,11 @@ var NotesPanel = React.createClass({
     render: function() {
         var nodes;
         if (this.props.notes.length === 0) {
-            nodes = [<li>There are no notes to display.</li>];
+            nodes = [<li className="no-notes">There are no notes to display.</li>];
         } else {
             nodes = _.map(this.props.notes, function(note) {
                 return <NotesPanelNode
+                    key={note.uuid}
                     onArchive={this.handleArchive}
                     onUnarchive={this.handleUnarchive}
                     note={note} />

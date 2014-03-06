@@ -7,8 +7,10 @@ var Server = require('../models/server');
 var Nics = require('../models/nics');
 var Vms = require('../models/vms');
 
+var React = require('react');
+var NotesComponent = require('../components/notes');
+
 var VmsList = require('./vms-list');
-var NotesView = require('./notes');
 var JSONEditor = require('./traits-editor');
 var JobProgressView = require('./job-progress');
 var ChangeRackForm = require('./server-change-rack');
@@ -356,12 +358,10 @@ var ServerView = Backbone.Marionette.Layout.extend({
     onRender: function() {
         console.log('Server', this.model);
 
-        this.notesView = new NotesView({
-            itemUuid: this.model.get('uuid'),
-            el: this.$('.notes')
-        });
+        React.renderComponent(
+            new NotesComponent({item: this.model.get('uuid')}),
+            this.$('.notes-component-container').get(0));
 
-        this.notesView.render();
         this.nicsView = new ServerNicsView({
             nics: this.nics,
             el: this.$('.nics')

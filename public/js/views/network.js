@@ -12,7 +12,7 @@ var React = require('react');
 var Addresses = require('../models/addresses');
 var AddressesTableRowTemplate = require('../tpl/networks-detail-address-row.hbs');
 
-var NotesCountComponent = require('../components/notes-count');
+var NotesComponent = require('../components/notes');
 
 var AddressesTableRow = Backbone.Marionette.ItemView.extend({
     tagName: "tr",
@@ -72,7 +72,7 @@ var AddressesTableRow = Backbone.Marionette.ItemView.extend({
         var ip = this.model.get('ip');
         var item = [networkUuid, ip].join('.');
         React.renderComponent(
-            new NotesCountComponent({item: item}),
+            new NotesComponent({item: item}),
             this.$('.notes-component-container').get(0));
     }
 });
@@ -81,7 +81,6 @@ var AddressesTable = Backbone.Marionette.CollectionView.extend({
     itemView: AddressesTableRow
 });
 
-var NotesView = require('./notes');
 var NetworkForm = require('../views/networks-create');
 
 var NetworkDetailView = Backbone.Marionette.ItemView.extend({
@@ -129,15 +128,16 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
+        React.renderComponent(
+            new NotesComponent({item: this.model.get('uuid')}),
+            this.$('.notes-component-container').get(0)
+        );
         var addresses = new Addresses({uuid: this.model.get('uuid') });
         var addressesTable = new AddressesTable({
             el: this.$(".addresses tbody"),
             collection: addresses
         });
         addresses.fetch();
-
-        this.notesView = new NotesView({itemUuid: this.model.get('uuid'), el: this.$('.notes')});
-        this.notesView.render();
     }
 });
 

@@ -5,6 +5,9 @@ var NetworksListView = require('./networks-list');
 var Servers = require('../models/servers');
 var ServersListView = require('./servers-list');
 
+var React = require('react');
+var NotesComponent = require('../components/notes');
+
 module.exports = Backbone.Marionette.Layout.extend({
     template: require('../tpl/nictag.hbs'),
     attributes: {
@@ -43,6 +46,13 @@ module.exports = Backbone.Marionette.Layout.extend({
         this.serversRegion.show(this.serversView);
         // this.servers.fetch().done(function() {
         // }.bind(this));
+    },
+
+    onRender: function() {
+        React.renderComponent(
+            new NotesComponent({ item: this.model.get('uuid')}),
+            this.$('.notes-component-container').get(0)
+        );
     }
 
 

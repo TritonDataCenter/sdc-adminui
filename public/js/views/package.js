@@ -17,6 +17,9 @@ var TraitsEditor = require('./traits-editor');
 
 var PackageTemplate = require('../tpl/package.hbs');
 
+var React = require('react');
+var NotesComponent = require('../components/notes');
+
 var Handlebars = require('handlebars-runtime');
 Handlebars.registerHelper('normalize', function(v) {
     v = Number(v);
@@ -222,6 +225,10 @@ var PackageDetail = module.exports = Backbone.Marionette.Layout.extend({
         if (0 === this.networks.length) {
             this.$('.networks').hide();
         }
+
+        React.renderComponent(
+            new NotesComponent({item: this.model.get('billing_id')}),
+            this.$('.notes-component-container').get(0))
 
         this.renderNetworks();
         this.renderNetworkPools();

@@ -1,14 +1,14 @@
 <div class="page-header">
-    <div class="resource-status">
-      {{#if active}}
-      <span class="active">active</span>
-      {{else}}
-      <span class="inactive">inactive</span>
-      {{/if}}
-      {{#if unactivated}}
-      <span class="unactivated">unactivated</span>
-      {{/if}}
-    </div>
+  <div class="resource-status">
+    {{#if active}}
+    <span class="active">active</span>
+    {{else}}
+    <span class="inactive">inactive</span>
+    {{/if}}
+    {{#if unactivated}}
+    <span class="unactivated">unactivated</span>
+    {{/if}}
+  </div>
   <h1>
     <span class="name">{{name}}</span> <span class="version">{{version}}</span>
   </h1>
@@ -16,6 +16,7 @@
 
 {{#role "operators"}}
 <div class="actions">
+  <div class="notes-component-container"></div>
   <button class="btn change-publicity">
     {{#if public}}
     <i class="icon-lock"></i> Make Image Private

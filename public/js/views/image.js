@@ -2,6 +2,9 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var moment = require('moment');
 
+var React = require('react');
+var NotesComponent = require('../components/notes');
+
 
 var adminui = require('../adminui');
 
@@ -201,6 +204,10 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         this.tagsList = new TagsListView({model: this.model});
         this.tagsList.setElement(this.$('.tags-container'));
         this.tagsList.render();
+
+        React.renderComponent(
+            new NotesComponent({item: this.model.get('uuid')}),
+            this.$('.notes-component-container').get(0));
 
         this.renderBillingTags();
     },
