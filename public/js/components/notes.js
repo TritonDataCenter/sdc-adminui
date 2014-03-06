@@ -1,6 +1,5 @@
 /** @jsx React.DOM **/
 var React = require('react');
-var Notes = require('../models/notes');
 
 /*
     item_uuid: { type: "string", unique: false },
@@ -10,9 +9,11 @@ var Notes = require('../models/notes');
     archived: { type: "string", unique: false }
 */
 
-var Note = require('../models/note');
 var moment = require('moment');
+var _ = require('underscore');
 
+var Notes = require('../models/notes');
+var Note = require('../models/note');
 var User = require('../models/user');
 var UserLink = require('../components/user-link');
 
@@ -57,7 +58,7 @@ var NotesPanel = React.createClass({
     },
     handleSubmit: function(e) {
         e.preventDefault();
-        var value = this.refs.input.getDOMNode().value;
+        var value = _.str.trim(this.refs.input.getDOMNode().value);
         if (value.length === 0) {
             return false;
         }
