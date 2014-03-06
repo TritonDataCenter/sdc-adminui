@@ -44,6 +44,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                 self.$el.modal('hide').remove();
                 var view = new JobProgress({ model: job });
                 view.show();
+
                 self.listenTo(view, 'execution', function(st) {
                     if (st === 'succeeded') {
                         vm.fetch();
@@ -72,7 +73,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                     window.alert('Error updating network interfaces ' + err);
                     return;
                 }
-                self.remove();
+                self.$el.modal('hide').remove();
                 var view = new JobProgress({
                     model: job
                 });
@@ -99,10 +100,12 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
             this.enableButtons();
         }
     },
+
     onRender: function() {
         this.nicConfig = React.renderComponent(
             new NicConfigComponent({
                 nic: this.model.toJSON(),
+                expandAntispoofOptions: false,
                 onChange: this.onNicPropertyChange.bind(this)
             }),
             this.$('.nic-config-component').get(0));

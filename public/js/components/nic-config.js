@@ -14,6 +14,10 @@ var NetworkPools = require('../models/network-pools');
 var Chosen = require('react-chosen');
 
 var NicConfig = module.exports = React.createClass({
+    propTypes: {
+        expandAntispoofOptions: React.PropTypes.bool,
+        nic: React.PropTypes.object
+    },
     getInitialState: function() {
         if (! this.props.nic) {
             this.props.nic = {};
@@ -30,12 +34,12 @@ var NicConfig = module.exports = React.createClass({
             networkFilters: this.props.networkFilters || {},
             networks: [],
             networkPools: [],
-            expandAntispoofingOptions: this.props.expandAntispoofingOptions
+            expandAntispoofOptions: this.props.expandAntispoofOptions
         };
 
-        if (typeof(state.expandAntispoofingOptions) !== 'boolean') {
-            console.warn('NicConfig expandAntispoofingOptions property is not a boolean, using defaults(true)');
-            state.expandAntispoofingOptions = true;
+        if (typeof(state.expandAntispoofOptions) !== 'boolean') {
+            console.warn('NicConfig expandAntispoofOptions property is not a boolean, using defaults(true)');
+            state.expandAntispoofOptions = true;
         }
 
         console.log('NicConfig initial state', state);
@@ -54,8 +58,8 @@ var NicConfig = module.exports = React.createClass({
             self.setState({ networkPools: this.networkPools.toJSON() });
         }.bind(this));
     },
-    expandAntiSpoofOptions: function() {
-        this.setState({expandAntispoofingOptions: true});
+    expandAntispoofOptions: function() {
+        this.setState({expandAntispoofOptions: true});
     },
     onChange: function(e) {
         var value;
@@ -79,6 +83,10 @@ var NicConfig = module.exports = React.createClass({
         return this.state.nic;
     },
     render: function() {
+        var nic = this.state.nic;
+        var expandAntispoofOptions = (nic.allow_dhcp_spoofing || nic.allow_ip_spoofing ||
+            nic.allow_mac_spoofing || nic.allow_restricted_traffic || this.state.expandAntispoofOptions);
+
         /* jshint ignore:begin  */
         return (
             <div className="nic-config">
@@ -118,13 +126,13 @@ var NicConfig = module.exports = React.createClass({
                 </div>
 
                 {
-                    (this.state.expandAntispoofingOptions === false) ?
-                    (<a className="expand-antispoofing-options" onClick={this.expandAntiSpoofOptions}>Configure Anti-spoofing</a>) : ''
+                    (expandAntispoofOptions === false) ?
+                    (<a className="expand-antispoofing-options" onClick={this.expandAntispoofOptions}>Configure Anti-spoofing</a>) : ''
                 }
 
                 {
 
-                    (this.state.expandAntispoofingOptions === true) ?
+                    (expandAntispoofOptions === true) ?
                         (<div className="control-group control-group-spoofing">
                             <label className="control-label">Anti-Spoofing Options</label>
                             <div className="controls">
