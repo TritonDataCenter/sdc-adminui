@@ -14,11 +14,26 @@
 
 <div class="actions">
   <div class="notes-component-container"></div>
+  {{#role "operators"}}
+  <div class="btn-group">
+    <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
+      Actions <span class="caret"></span>
+    </a>
+
+    <ul class="dropdown-menu">
+      <li><a class="reboot"><i class="icon icon-refresh"></i> Reboot Server</a></li>
+      <li class="divider"></li>
+      <li><a class="factory-reset"><i class="icon icon-repeat"></i> Factory Reset</a></li>
+      <!--- <li><a class="forget"><i class="icon icon-trash"></i> Forget Server</a></li>-->
+    </ul>
+  </div>
+
   {{#unless setup}}
     <div class="btn-group pull-right">
       <button class="btn btn-info setup">Setup Server</button>
     </div>
   {{/unless}}
+  {{/role}}
 </div>
 
 <section>

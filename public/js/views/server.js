@@ -318,7 +318,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     factoryReset: function() {
-        var confirm = window.confirm('Are you sure you want to run Factory Reset on this Server?');
+        var confirm = window.confirm('!!!!!! WARNING !!!!!!! \n\nAre you sure you want to run Factory Reset on this Server?');
         if (confirm) {
             this.model.factoryReset(function(job) {
                 app.vent.trigger('showjob', job);
@@ -327,7 +327,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     reboot: function() {
-        var confirm = window.confirm('Are you sure you want to reboot this server? All customer zones will be rebooted');
+        var confirm = window.confirm('!!!!!!! WARNING !!!!!!!! \n\nAre you sure you want to reboot this server? All customer zones will be rebooted');
         if (confirm) {
             this.model.reboot(function(job) {
                 app.vent.trigger('showjob', job);
@@ -336,7 +336,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     forget: function() {
-        var confirm = window.confirm('Are you sure you want to remove this server?');
+        var confirm = window.confirm('!!!!!!!!! WARNING !!!!!!!! \n\nAre you sure you want to remove this server?');
         if (confirm) {
             this.model.forget(function(err) {
                 app.vent.trigger('notification', {
