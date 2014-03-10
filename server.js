@@ -13,7 +13,7 @@ function loadConfig(file) {
 
 var log = require('bunyan').createLogger({
     name: 'adminui',
-    level: 'info',
+    level: process.env.LOG || 'info',
     serializers: restify.bunyan.serializers
 });
 
@@ -34,10 +34,4 @@ adminui.listen(function() {
 
 process.on('uncaughtException', function preventOtherError(e) {
     log.fatal('Uncaught Exception', e);
-    if (e && e.name && e.name === 'OtherError' &&
-        /request\stimeout/.test(e.message)) {
-        return;
-    } else {
-        throw e;
-    }
 });
