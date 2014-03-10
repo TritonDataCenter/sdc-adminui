@@ -23,8 +23,8 @@
     <ul class="dropdown-menu">
       <li><a class="reboot"><i class="icon icon-refresh"></i> Reboot Server</a></li>
       <li class="divider"></li>
-      <li><a class="factory-reset"><i class="icon icon-repeat"></i> Factory Reset</a></li>
-      <!--- <li><a class="forget"><i class="icon icon-trash"></i> Forget Server</a></li>-->
+      <li><a class="factory-reset"><i class="icon icon-repeat"></i> Factory Reset (DANGER)</a></li>
+      <li><a class="forget"><i class="icon icon-trash"></i> Forget Server (DANGER)</a></li>
     </ul>
   </div>
 
@@ -264,23 +264,3 @@
     </div>
   </div>
 </section>
-
-{{#role "operators"}}
-<section>
-<div class="row">
-  <div class="span12">
-    <br>
-    <div class="well" style="overflow: hidden">
-      <p>The following actions are destructive and cannot be undone.</p>
-      <div class="pull-left">
-        <a class="btn btn-warning reboot"><i class="icon icon-white icon-refresh"></i> Reboot Server</a>
-      </div>
-      <div class="pull-right">
-        <a class="btn btn-danger factory-reset"><i class="icon icon-white icon-repeat"></i> Factory Reset</a>
-        <a class="btn btn-danger forget"><i class="icon icon-white icon-trash"></i> Forget Server</a>
-      </div>
-    </div>
-  </div>
-</div>
-</section>
-{{/role}}
