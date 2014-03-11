@@ -3,7 +3,9 @@ var adminui = require('adminui');
 var NetworksListItemTemplate = require('../tpl/networks-list-item.hbs');
 var NetworksListItem = Backbone.Marionette.ItemView.extend({
     template: NetworksListItemTemplate,
+
     tagName: 'li',
+
     initialize: function(options) {
         this.showDelete = options.showDelete || false;
     },
@@ -16,8 +18,9 @@ var NetworksListItem = Backbone.Marionette.ItemView.extend({
     onClickDeleteNetwork: function() {
         var confirm = window.confirm('Are you sure you want to delete this network?');
         if (confirm) {
+            this.trigger('destroy');
             this.model.destroy();
-            adminui.vent.trigger('notificatino', {message: 'Network deleted.'});
+            adminui.vent.trigger('notification', {message: 'Network deleted.'});
         }
     },
 

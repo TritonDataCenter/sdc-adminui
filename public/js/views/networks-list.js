@@ -34,14 +34,6 @@ var NetworksListView = Backbone.Marionette.CollectionView.extend({
             xhr: res,
             context: 'napi / networks'
         });
-    },
-
-    onBeforeItemAdded: function(itemView) {
-        this.listenTo(itemView, 'select', this.onSelect, this);
-    },
-
-    onSelect: function(model)  {
-        this.trigger('select', model);
     }
 });
 

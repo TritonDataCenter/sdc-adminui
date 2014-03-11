@@ -105,8 +105,12 @@ var NetworksView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
-        this.listenTo(this.networksList, 'select', this.showNetwork, this);
-        this.listenTo(this.networkPoolsList, 'select', this.showNetwork, this);
+        this.listenTo(this.networksList, 'itemview:select', this.showNetwork, this);
+        this.listenTo(this.networksList, 'itemview:destroy', this.refreshList, this);
+        this.listenTo(this.networkPoolsList, 'itemview:select', this.showNetwork, this);
+    },
+    refreshList: function() {
+        this.networks.fetch({reset: true});
     },
 
     onShow: function() {
