@@ -125,6 +125,7 @@ var ServersList = module.exports = require('./collection').extend({
     },
 
     initialize: function(options) {
+        _.bindAll(this, 'query');
         this.collection = this.collection || new Servers();
         options = options || {};
         if (options.params) {
@@ -134,7 +135,7 @@ var ServersList = module.exports = require('./collection').extend({
 
 
     query: function(params) {
-        this.collection.fetch({params: params});
+        this.collection.fetch({params: params}, {reset: true});
     },
 
     onError: function(model, xhr) {

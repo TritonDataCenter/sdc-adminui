@@ -42,7 +42,8 @@ var ServerView = Backbone.Marionette.Layout.extend({
         'click .reboot': 'reboot',
         'click .forget': 'forget',
         'click .change-reserve': 'toggleReserve',
-        'click .manage-nics': 'showManageNics'
+        'click .manage-nics': 'showManageNics',
+        'click .manage-link-aggr': 'showManageLinkAggr'
     },
 
     url: function() {
@@ -173,6 +174,17 @@ var ServerView = Backbone.Marionette.Layout.extend({
                 self.render();
             });
         });
+    },
+
+    showManageLinkAggr: function() {
+        var $node = $("<div id='server-link-aggr-modal' class='modal'><div class='modal-body unstyled'></div></div>");
+        $node.modal();
+        var container = $node.find('.modal-body').get(0);
+
+        var ManageLinkAggr = require('../components/server-link-aggr/main');
+        React.renderComponent(new ManageLinkAggr({
+            server: this.model.get('uuid')
+        }), container);
     },
 
     showChangeReservationRatio: function() {

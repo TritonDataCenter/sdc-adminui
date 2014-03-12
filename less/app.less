@@ -358,6 +358,11 @@ h1.branding {
 
 
 
+#server-link-aggr-modal {
+  .modal-body {
+    max-height: 600px;
+  }
+}
 #server-nics-edit {
   width: 700px;
   .modal-body {
@@ -795,4 +800,61 @@ ul.attributes {
   ul li:last-child {
     margin-right: 0;
   }
+}
+
+
+.link-aggr-component {
+  h1 { font-size: 18px; padding: 0 15px; line-height: 32px;  }
+  .new-link-aggr { float: right; margin-top: -40px; margin-right: 15px; }
+  .link-aggr-list, .link-aggr-form {
+    overflow: hidden;
+    background: #eee;
+    padding: 15px;
+  }
+
+  .link-aggr-form {
+    .alert { margin-bottom: 0; };
+    .btn {
+      margin-top: 12px;
+    }
+  }
+  .link-aggr-form form {
+    padding: 10px;
+    background: #fff;
+    .nics {
+      margin-bottom: 4px;
+      .nic { padding: 5px; margin-bottom: 1px; }
+      .nic.selected { background: @successBackground; }
+      .nic > * { display: inline-block;  }
+      .nic > label { margin: 0 10px; }
+      .nic .mac { #font > .monospace(12px);}
+      .nic > label input[type=checkbox] { margin: 0; margin-top: -2px; margin-right: 10px;   }
+    }
+  }
+
+  .link-aggr-list {
+    .link-aggr {
+      padding: 10px;
+      background: #fff;
+    }
+    .link-aggr-name {
+      vertical-align: top;
+      display: inline-block;
+      font-weight: bold;
+      width: 100px;
+    }
+    .mac {
+       #font > .monospace(12px);
+    }
+    .link-aggr-interfaces {
+      display: inline-block;
+    }
+    .link-aggr-interface {
+      padding-left: 10px;
+      border-left: 3px solid @activeColor;
+      margin-left: 10px;
+    }
+
+  }
+
 }
