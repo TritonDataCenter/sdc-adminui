@@ -6,23 +6,31 @@ var _ = require('underscore');
 
 var LinkAggregationsList = React.createClass({
     propTypes: {
-        linkAggregations: React.PropTypes.array.required
+        linkAggregations: React.PropTypes.array.required,
+        onEdit: React.PropTypes.func,
+        onDelete: React.PropTypes.func
     },
     render: function() {
         return (<div className="link-aggr-list">
         {
             this.props.linkAggregations.map(function(link) {
-                return <div key={link.name} className="link-aggr">
+                return <div key={link.id} className="link-aggr">
                     <div className="link-aggr-name">{link.name}</div>
                     <div className="link-aggr-interfaces">
                     {
                         link.macs.map(function(mac) {
-                            return <div key={mac} className="link-aggr-interface">{mac}</div>
-                        })
+                            return <div key={mac} className="link-aggr-interface">
+                                {mac}
+                            </div>
+                        }, this)
                     }
                     </div>
+                    <div className="actions">
+                        <button onClick={this.props.onEdit.bind(null, link)} className="btn btn-edit"><i className="icon-pencil"></i> Edit</button>
+                        <button onClick={this.props.onDelete.bind(null, link)} className="btn btn-delete"><i className="icon-trash"></i> Delete</button>
+                    </div>
                 </div>
-            })
+            }, this)
         }
         </div>);
     }
@@ -34,19 +42,27 @@ var NicTags = require('../../models/nictags');
 var Nics = require('../../models/nics');
 var LinkAggregationForm = React.createClass({
     propTypes: {
-        server: React.PropTypes.string.required
+        server: React.PropTypes.string.required,
+        initialLinkAggr: React.PropTypes.object
     },
     getInitialState: function() {
-        return {
+        var obj = {
             nictags: [],
-            nics: [],
-            linkAggr: {
+            nics: []
+        }
+
+        if (this.props.initialLinkAggr) {
+            obj.linkAggr = this.props.initialLinkAggr
+        } else {
+            obj.linkAggr = {
                 name: '',
                 macs: [],
                 nic_tags_provided: [],
                 lacp_mode: 'off'
-            },
-        };
+            }
+        }
+
+        return obj;
     },
     componentWillMount: function() {
         this.nics = new Nics();
@@ -82,7 +98,6 @@ var LinkAggregationForm = React.createClass({
     },
     onChangeName: function(e) {
         var linkAggr = this.state.linkAggr;
-        console.log(e.target.value);
         linkAggr.name = e.target.value.replace(/[^a-zA-Z0-9]+$/g,'').toLowerCase();
         this.setState({linkAggr: linkAggr});
     },
@@ -93,6 +108,7 @@ var LinkAggregationForm = React.createClass({
     },
     onChangeNicTags: function(e, o) {
         var linkAggr = this.state.linkAggr;
+        linkAggr.nic_tags_provided = linkAggr.nic_tags_provided || [];
         if (o.selected) {
             linkAggr.nic_tags_provided.push(o.selected);
         } else if (o.deselected) {
@@ -150,11 +166,11 @@ var LinkAggregationForm = React.createClass({
                             }
                             return (
                                 <div className={ nicClasses.join(' ')} key={nic.get('mac')}>
-                                <label>
-                                    <input checked={selected} type="checkbox" onChange={this.onChangeNicSelect} value={nic.get('mac')} />
-                                    <span className="mac">{nic.get('mac')}</span>
-                                </label>
-                                <div className="tag">{nic.get('nic_tag')}</div>
+                                    <label>
+                                        <input checked={selected} type="checkbox" onChange={this.onChangeNicSelect} value={nic.get('mac')} />
+                                        <span className="mac">{nic.get('mac')}</span>
+                                    </label>
+                                    <div className="tag">{nic.get('nic_tag')}</div>
                                 </div>
                             )
                         }, this)
@@ -208,7 +224,10 @@ var Component = React.createClass({
     },
     newLinkAggr: function(e) {
         e.preventDefault();
-        this.setState({mode: 'new'});
+        this.setState({
+            mode: 'new',
+            formValues: {}
+        });
     },
     onLinkAggregationFormBack: function() {
         this.setState({mode: 'list'});
@@ -217,18 +236,42 @@ var Component = React.createClass({
         this.setState({mode: 'list'});
         this.refreshAggregations();
     },
+    handleDelete: function(aggr) {
+        var model = new LinkAggrModel(aggr);
+        var res = model.destroy().done(function() {
+        this.refreshAggregations();
+        }.bind(this));
+    },
+    handleEdit: function(aggr) {
+        this.setState({
+            mode: 'edit',
+            formValues: aggr
+        });
+    },
     render: function() {
         var nodes;
         if (this.state.mode === 'new') {
             nodes = [
                 <LinkAggregationForm
-                handleSaved={this.onLinkAggregationSaved}
-                handleBack={this.onLinkAggregationFormBack} server={this.props.server} />
+                    handleSaved={this.onLinkAggregationSaved}
+                    handleBack={this.onLinkAggregationFormBack}
+                    server={this.props.server} />
+            ];
+        } else if (this.state.mode === 'edit') {
+            nodes = [
+                <LinkAggregationForm
+                    handleSaved={this.onLinkAggregationSaved}
+                    handleBack={this.onLinkAggregationFormBack}
+                    initialLinkAggr={this.state.formValues}
+                    server={this.props.server} />
             ];
         } else if (this.state.mode === 'list') {
             nodes = [
                 <button onClick={this.newLinkAggr} className="btn btn-info new-link-aggr"><i className="icon-plus"></i> Link Aggregation</button>,
-                <LinkAggregationsList linkAggregations={this.state.linkAggregations} />,
+                <LinkAggregationsList
+                    onEdit={this.handleEdit}
+                    onDelete={this.handleDelete}
+                    linkAggregations={this.state.linkAggregations} />,
                 <div className="buttons">
                 <button className="btn" data-dismiss="modal">Close</button>
                 </div>
