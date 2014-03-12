@@ -227,8 +227,11 @@ var Component = React.createClass({
             ];
         } else if (this.state.mode === 'list') {
             nodes = [
-                <button onClick={this.newLinkAggr} className="btn btn-info new-link-aggr">New Link Aggregation</button>,
-                <LinkAggregationsList linkAggregations={this.state.linkAggregations} />
+                <button onClick={this.newLinkAggr} className="btn btn-info new-link-aggr"><i className="icon-plus"></i> Link Aggregation</button>,
+                <LinkAggregationsList linkAggregations={this.state.linkAggregations} />,
+                <div className="buttons">
+                <button className="btn" data-dismiss="modal">Close</button>
+                </div>
             ];
         }
         return <div className="link-aggr-component">
