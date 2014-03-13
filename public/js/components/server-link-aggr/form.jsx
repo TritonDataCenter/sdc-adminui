@@ -1,9 +1,25 @@
 
-var NicTags = require('../../models/nictags');
-var Nics = require('../../models/nics');
 var Chosen = require('react-chosen');
 var api = require('adminui-api');
 
+var ErrorPanel = React.createClass({
+    propTypes: {
+        error: React.PropTypes.object
+    },
+    render: function() {
+        if ((!this.props.error) || this.props.error.length === 0) {
+            return <div className="alert alert-error" style={ {display: 'none'} }></div>;
+        }
+
+        return (<div className="alert alert-error">
+            {
+                this.props.error.errors.map(function(err) {
+                    return <div><strong>{err.field}</strong> - {err.message}</div>
+                })
+            }
+        </div>)
+    }
+});
 
 var LinkAggregationForm = module.exports = React.createClass({
     propTypes: {
@@ -31,9 +47,6 @@ var LinkAggregationForm = module.exports = React.createClass({
         return obj;
     },
     componentWillMount: function() {
-        api
-        this.nics = new Nics();
-        this.nics.params = {belongs_to_uuid: this.props.server};
         api.get('/_/nics')
             .query({belongs_to_uuid: this.props.server})
             .end(function(err, res) {
@@ -91,8 +104,13 @@ var LinkAggregationForm = module.exports = React.createClass({
             api.post('/_/linkaggrs');
 
         req.send(this.state.linkAggr)
-            .end(function(err, res) {
-                this.props.onSaved(res);
+            .end(function(res) {
+                if (res.error) {
+                    console.error('Error creating link aggr', res);
+                    this.setState({error: res.body});
+                } else {
+                    this.props.onSaved(res.body);
+                }
             }.bind(this));
     },
     isValid: function() {
@@ -107,6 +125,7 @@ var LinkAggregationForm = module.exports = React.createClass({
         return (
             <div className="link-aggr-form">
             <div className="alert"><strong>NOTE</strong> Any changes to Link Aggregations requires a reboot.</div>
+            <ErrorPanel error={this.state.error} />
             <form onSubmit={this.handleSubmit} className="form-horizontal">
                 <div className="control-group">
                     <label className="control-label">Name</label>
@@ -170,7 +189,7 @@ var LinkAggregationForm = module.exports = React.createClass({
             <button
                 className="btn btn-primary save"
                 disabled={ this.isValid() ? '' : 'disabled'}
-                onClick={this.handleSubmit}>Save</button>
+                onClick={this.handleSubmit}>Save Aggregation</button>
             <button className="btn back" onClick={this.props.handleBack}>Back</button>
             </div>
         )
