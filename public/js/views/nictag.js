@@ -22,7 +22,8 @@ module.exports = Backbone.Marionette.Layout.extend({
         "serversRegion": '.servers-region'
     },
     initialize: function() {
-        this.networks = new Networks(null, {nic_tag: this.model.get('name')});
+        this.networks = new Networks();
+        this.networks.params = {nic_tag: this.model.get('name')};
         this.networksView = new NetworksListView({ collection: this.networks });
 
         this.servers = new Servers(null, {
