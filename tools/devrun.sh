@@ -1,6 +1,6 @@
 #!/bin/sh
 echo "***** Supervising public/js files for changes"
-SKIP_MINIFY=true ./node_modules/.bin/supervisor -w public/js/,tools/build-js -e 'js|hbs' -n exit tools/build-js &
+SKIP_MINIFY=true ./node_modules/.bin/supervisor -w public/js/,tools/build-js -e 'js|jsx|hbs' -n exit tools/build-js &
 
 port=$(cat `pwd`/etc/config.json | json sslport)
 

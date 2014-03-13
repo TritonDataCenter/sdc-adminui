@@ -109,6 +109,8 @@ var b = shim(browserify(), shimConfig)
     .require('underscore', { expose: 'underscore' })
     .require('underscore.string', { expose: 'underscore.string' })
     .require('react', { expose: 'React'})
+    .require('superagent', { expose: 'superagent' })
+    .require(require.resolve(join(root, './request')), { expose: 'adminui-api' })
     .require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery' })
     .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment' })
     .require(require.resolve(join(root, './adminui')), {expose: 'adminui', entry: true});
