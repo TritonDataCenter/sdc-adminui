@@ -11,7 +11,6 @@
 var Backbone = require('backbone');
 var adminui = require('./adminui');
 
-var Topbar = require('./topbar');
 var Mainnav = require('./mainnav');
 var Notifier = require('./notifier');
 
@@ -24,8 +23,7 @@ var AppView = Backbone.Marionette.Layout.extend({
     attributes: {id:"app"},
 
     regions: {
-        'topbar': "#topbar",
-        'mainnav': "#mainnav",
+        'mainnav': "#rootnav",
         'content': "#content"
     },
 
@@ -34,8 +32,10 @@ var AppView = Backbone.Marionette.Layout.extend({
         this.user = options.user;
         this.vent = options.vent;
 
-        this.topbarView = new Topbar({ user: this.user });
-        this.mainnavView = new Mainnav({ vent: this.vent});
+        this.mainnavView = new Mainnav({
+            user: this.user,
+            vent: this.vent
+        });
         this.notifier = new Notifier({ vent: this.vent });
 
         this.listenTo(this.vent, 'error', this.onError, this);
@@ -65,12 +65,8 @@ var AppView = Backbone.Marionette.Layout.extend({
 
     onRender: function() {
         this.mainnav.attachView(this.mainnavView);
-        this.mainnavView.setElement(this.$("#mainnav"));
-
-
-        this.topbarView.setElement(this.$("#topbar"));
-        this.topbarView.onShow();
-
+        this.mainnavView.setElement(this.$("#rootnav"));
+        this.mainnavView.onShow();
         this.notifier.setElement(this.$("#notifications"));
 
         return this;

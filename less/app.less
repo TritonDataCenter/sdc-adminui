@@ -60,7 +60,7 @@
 body { height: 100%; }
 html { height: 100%; }
 
-#chrome { min-height: 100%; }
+#chrome { min-height: 100%; background: #f0f0f0; }
 #content a { cursor: pointer;}
 #content section { margin-bottom: 10px; }
 #footer { height: 24px; background: #dfe7ec; }
@@ -80,9 +80,10 @@ html { height: 100%; }
 .widget-container {}
 
 .widget-header {
-  #gradient > .vertical(#e8eef2, darken(#e8eef2, 2%));
-  border: 1px solid darken(#e8eef2, 5%);
+  background: #e8e8e8;
+  color: #888888;
 }
+
 .widget-content {
   border: 1px solid #f3f3f3;
   #gradient > .vertical(#f8f8f8, #fafafa);
@@ -194,8 +195,8 @@ table.vertical { tr, td { border: none;}}
       border: 1px solid #e8eef2;
     }
     th {
-      background: lighten(#e8eef2, 2%);
-      color: darken(#dfe7ec, 30%);
+      background: #e8e8e8;
+      color: darken(#aaa, 30%);
       padding: 5px 8px;
       font-size: 13px;
       font-weight: normal;
@@ -219,21 +220,43 @@ table.vertical { tr, td { border: none;}}
 
 
 h1.branding {
-  .version {  }
-  .product { color: #ff6600; font-weight: 300;}
-  margin: 0;
-  line-height: 20px;
+  .product { color: #ff6600; font-weight: 300; font-weight: bold; }
   font-size: 14px;
   font-weight: 200;
   text-transform: uppercase;
 }
 
-#topbar {
-  background: lighten(#e8eef2, 3%);
-  cursor: default;
-  padding: 16px 10px 16px 10px;
-  color: #666;
-  line-height: 20px;
+#rootnav {
+  // border-top: 1px solid #d6dde2;
+  background: #e0e0e0;
+  padding: 0;
+  margin: 0;
+  height: 46px;
+
+  h1.branding {
+    .product { color: #000; font-weight: 300; display: inline-block; }
+    .datacenter { display: inline-block; font-weight: bold;}
+    text-align: center;
+    width: 120px;
+    padding: 2px 5px;
+    margin: 0;
+    float: left;
+  }
+
+  .acc-controls {
+    float: right;
+    padding: 13px 15px;
+    font-size: 13px;
+    display: block;
+    text-transform: uppercase;
+
+    .login-name { margin: 0 8px; }
+    a.signout {
+      cursor: pointer; text-transform: uppercase;
+      color: #666;
+    }
+  }
+
 
   .server-time {
     opacity: 0.7;
@@ -242,7 +265,7 @@ h1.branding {
     time { color: @grayDark; }
     position: fixed;
     top: 100%;
-    padding: 5px 8px;
+    padding: 10px 10px;
     line-height: 1;
 
     margin-top: -22px;
@@ -251,33 +274,8 @@ h1.branding {
     left: 0;
   }
 
-  .acc-controls {
-    margin-top: 3px;
-    font-size: 12px;
-    text-align:right;
-    a.signout { cursor: pointer; text-transform: uppercase; }
-    .login-name { margin: 0 8px; }
-  }
-  .datacenter, .branding {
-    display: inline-block;
-    font-weight: 300;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: 16px;
-    color: #666;
-  }
-  .datacenter {
-    margin-right: 10px;
-  }
-}
 
-#rootnav {
-  // border-top: 1px solid #d6dde2;
-  background: lighten(#e8eef2, 3%);
-  padding: 0;
-  margin-bottom: 8px;
-
-  .navbar { margin-bottom: 0;}
+  .navbar { margin-bottom: 0; display: inline-block; }
   .navbar-inner {
     padding: 0;
     background: none;
@@ -285,21 +283,21 @@ h1.branding {
     box-shadow: none;
     min-height: 0;
 
-    ul.nav { margin-bottom: 0; }
+    ul.nav { margin-bottom: 0; margin-right: 0; }
 
     li a {
-      padding: 5px 10px;
+      padding: 13px 15px;
       text-transform: uppercase;
       text-shadow: none;
       font-size: 12px;
       display: block;
       text-transform: uppercase;
-      color: lighten(#4d779f, 20%);
+      color: #666;
       .box-shadow(none);
     }
     li.active {
       padding-bottom: 0;
-      background: #fff;
+      background: #f0f0f0;
    }
     li.active a {
       color: @textColor;
@@ -310,7 +308,7 @@ h1.branding {
       .box-shadow(none);
     }
   }
-  li.settings { margin-left: 30px;}
+  li.settings { margin-left: 15px;}
 
 
   overflow: hidden;
