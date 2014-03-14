@@ -1,7 +1,7 @@
 
 var Chosen = require('react-chosen');
 var api = require('adminui-api');
-var ErrorAlert = require('../../error-alert.jsx');
+var ErrorAlert = require('../error-alert.jsx');
 
 var LinkAggregationForm = module.exports = React.createClass({
     propTypes: {
