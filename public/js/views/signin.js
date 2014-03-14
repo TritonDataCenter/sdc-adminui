@@ -66,8 +66,8 @@ var View = Backbone.Marionette.ItemView.extend({
     centerSigninBox: function() {
         var w = $(window).width();
         var h = $(window).height();
-        var x = (w/2)-220;
-        var y = (h/2)-318/2;
+        var x = (w/2)-this.$el.width()/2;
+        var y = (h/2)-this.$el.height()/2;
         if (y < 0) { y = 0; }
         this.$el.css({
             left: x + 'px',
