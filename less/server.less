@@ -27,8 +27,8 @@
 
   .key-value-list {
     width: 100%;
-    .item { clear: both; }
-    .item-label, .item-content { padding: 8px; display: inline-block; vertical-align: top; }
+    .item { clear: both; .widget-content; }
+    .item-label, .item-content { display: inline-block; }
     .item-label { font-weight: 400; width: 150px; color: #888;}
     .item-content {
       text-align: justify;
@@ -37,6 +37,7 @@
       vertical-align: middle;
       width: 350px;
     }
+    .change { overflow: hidden;}
   }
 
   .resource-status {
