@@ -13,6 +13,7 @@ var JobProgress = require('./job-progress');
 
 var VMNicForm = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/vm-nic-form.hbs'),
+    id: 'vm-nic-form',
     attributes: {
         'class': 'modal'
     },
