@@ -100,8 +100,8 @@ var NetworksView = Backbone.Marionette.Layout.extend({
         view.show();
     },
 
-    showNetwork: function(network) {
-        adminui.vent.trigger('showview', 'network', {model: network});
+    showNetwork: function(view) {
+        adminui.vent.trigger('showview', 'network', {model: view.model});
     },
 
     onRender: function() {

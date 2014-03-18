@@ -26,17 +26,17 @@ module.exports = Backbone.Marionette.Layout.extend({
         this.networks.params = {nic_tag: this.model.get('name')};
         this.networksView = new NetworksListView({ collection: this.networks });
 
+        this.listenTo(this.networksView, 'itemview:select', this.showNetwork, this);
+
         this.servers = new Servers(null, {
             url: '/_/nic_tags/'+this.model.get('name') + '/servers'
         });
 
         this.serversView = new ServersListView({collection: this.servers });
-
-        this.listenTo(this.networksView, 'select', this.showNetwork, this);
-        this.listenTo(this.networksView, 'select', this.showNetwork, this);
     },
     showNetwork: function(network) {
-        adminui.vent.trigger('showview', 'network', {model: network});
+        var net = network.model;
+        adminui.vent.trigger('showview', 'network', {model: net});
     },
 
     onShow: function() {

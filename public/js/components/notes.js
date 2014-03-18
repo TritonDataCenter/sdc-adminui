@@ -20,7 +20,7 @@ var UserLink = require('../components/user-link');
 
 var NotesPanelNode = React.createClass({
     propTypes: {
-        note: React.PropTypes.object.required
+        note: React.PropTypes.object.isRequired
     },
     handleArchive: function() {
         this.props.onArchive(this.props.note);
