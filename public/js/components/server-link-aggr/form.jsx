@@ -107,7 +107,7 @@ var LinkAggregationForm = module.exports = React.createClass({
         return (
             <div className="link-aggr-form">
             <div className="alert"><strong>NOTE</strong> Any changes to Link Aggregations requires a reboot.</div>
-            <ErrorPanel error={this.state.error} />
+            <ErrorAlert error={this.state.error} />
             <form onSubmit={this.handleSubmit} className="form-horizontal">
                 <div className="control-group">
                     <label className="control-label">Name</label>
