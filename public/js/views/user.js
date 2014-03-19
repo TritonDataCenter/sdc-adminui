@@ -1,6 +1,8 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var adminui = require('../adminui');
+var React = require('react');
+var ProvisioningLimits = require('../components/provisioning-limits/main.jsx');
 
 
 var VmsList = require('./vms-list');
@@ -209,7 +211,12 @@ var UserView = Backbone.Marionette.Layout.extend({
 
     onShow: function() {
         this.vmsRegion.show(this.vmsList);
-        this.limitsRegion.show(this.limitsList);
+        // this.limitsRegion.show(this.limitsList);
+
+        React.renderComponent(
+            new ProvisioningLimits({user: this.model.get('uuid')}),
+            this.$(this.limitsRegion.el).get(0)
+        );
         this.networksRegion.show(this.networksView);
         this.sshkeysList.setElement(this.$('.ssh-keys .items')).render();
         this.vmsFilter.setElement(this.$('.vms-filter'));

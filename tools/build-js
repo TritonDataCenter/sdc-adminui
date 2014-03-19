@@ -115,7 +115,7 @@ var b = shim(browserify(), shimConfig)
     .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment' })
     .require(require.resolve(join(root, './adminui')), {expose: 'adminui', entry: true});
 
-['*.js', 'views/*.js', 'models/*.js'].forEach(function(p) {
+['*.js', 'components/*.jsx', 'views/*.js', 'models/*.js'].forEach(function(p) {
     glob(join(p), {cwd: root}, function(err, files) {
         files.forEach(function(f) {
             var exposeAs = './' + f.substr(0, f.lastIndexOf('.'));
