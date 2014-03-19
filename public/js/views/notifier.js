@@ -22,9 +22,7 @@ var View = Backbone.View.extend({
 
         var close = $('<a><i class="icon-remove-sign"></i></a>');
         close.on('click', function() {
-            node.slideUp(function() {
-                node.remove();
-            }, 100);
+            node.remove();
         });
 
         node.hide();
