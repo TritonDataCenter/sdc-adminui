@@ -875,6 +875,24 @@
             that.$element.focus().trigger('shown')
 
         })
+
+        var $modalBody = that.$element.find('.modal-body');
+        var offset = that.$element.offset().top;
+        if (that.$element.height() + offset > $(window).height()) {
+            var newOffset = $(window).height() - that.$element.outerHeight();
+            if (newOffset < 0) {
+                var headerHeight = that.$element.find('.modal-header').outerHeight();
+                var footerHeight = that.$element.find('.modal-footer').outerHeight();
+
+                var newHeight = $(window).height() - headerHeight - footerHeight;
+                that.$element.css({top: 0});
+                that.$element.find('.modal-body').css({
+                    'max-height': newHeight-30
+                });
+            } else {
+                that.$element.css({top: newOffset});
+            }
+        }
       }
 
     , hide: function (e) {
