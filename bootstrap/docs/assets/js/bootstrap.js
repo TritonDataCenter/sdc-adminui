@@ -869,15 +869,20 @@
             .attr('aria-hidden', false)
 
           that.enforceFocus()
+          that.reposition();
 
           transition ?
             that.$element.one($.support.transition.end, function () { that.$element.focus().trigger('shown') }) :
             that.$element.focus().trigger('shown')
-
         })
-
+    }
+    , reposition: function() {
+        var that = this;
         var $modalBody = that.$element.find('.modal-body');
-        var offset = that.$element.offset().top;
+        var offset = that.$element.offset().top - $(window).scrollTop();
+        console.log(that.$element.height() + offset);
+        console.log($(window).height());
+
         if (that.$element.height() + offset > $(window).height()) {
             var newOffset = $(window).height() - that.$element.outerHeight();
             if (newOffset < 0) {
@@ -893,7 +898,8 @@
                 that.$element.css({top: newOffset});
             }
         }
-      }
+
+    }
 
     , hide: function (e) {
         e && e.preventDefault()
