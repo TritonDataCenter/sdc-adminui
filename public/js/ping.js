@@ -1,6 +1,7 @@
 var $ = require('jquery');
 var _ = require('underscore');
-var Backbone = require('backbone');
+var api = require('./request');
+var adminui = require('./adminui');
 
 var Pinger = function(options) {
     this.options = options || {};
@@ -15,7 +16,15 @@ Pinger.prototype.start = function() {
 };
 
 Pinger.prototype.ping = function() {
-    $.get('/_/ping', function() { console.log('.'); });
+    api.get('/_/ping').end(function(res) {
+        if (res.ok) {
+            console.log('.');
+            return;
+        }
+        if (res.forbidden) {
+            app.router.signout();
+        }
+    });
 };
 
 Pinger.prototype.stop = function() {

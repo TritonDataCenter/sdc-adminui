@@ -1,8 +1,12 @@
 var superagent = require('superagent');
-var app = require('./adminui');
 
 function attachAuthHeader(req) {
-    return req.set({'x-adminui-token': app.user.getToken()});
+    var app = require('./adminui');
+    if (app.user && app.user.getToken()) {
+        return req.set({'x-adminui-token': app.user.getToken()});
+    } else {
+        return req;
+    }
 }
 
 module.exports = {

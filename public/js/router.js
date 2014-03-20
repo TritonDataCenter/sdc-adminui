@@ -211,7 +211,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     applySidebar: function(view) {
         if (typeof(view.sidebar) === 'string') {
-            console.log('sidebar', view.sidebar);
             this.app.vent.trigger('mainnav:highlight', view.sidebar);
         } else {
             this.app.vent.trigger('mainnav:highlight', view.name);
