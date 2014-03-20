@@ -45,7 +45,8 @@ var Mainnav = Backbone.Marionette.ItemView.extend({
 
     renderLoginName: function() {
         var login = app.user.get('login');
-        this.$('.acc-controls .login-name').html(login);
+        this.$('.login-name').html(login);
+        this.$('.current-user').attr('href', '/users/'+app.user.get('uuid'));
     },
 
     onSelect: function(e) {
