@@ -1,4 +1,26 @@
+.provisioning-limits-form {
+    h1 { font-size: 18px; padding: 0 15px; line-height: 32px;  }
+    .buttons {
+      background: #fefefe;
+      text-align: right;
+      padding: 12px;
+    }
+    form {
+      padding-top: 1em;
+      padding-bottom: 1em;
+      background: #eee;
+    }
+}
+.provisioning-limits-list {
+  .widget-content;
+}
 .provisioning-limits-component {
+  .zero-state {
+    color: @grayLight;
+    text-align: center;
+    font-size: 13px;
+    padding: 32px 0;
+  }
   .limits-dc {
     .widget-content;
     overflow: hidden;
@@ -13,19 +35,21 @@
   .limits-dc-header {
     font-size: 10px;
     color: #ccc;
+
     .criteria-header {
       display: inline-block;
-      margin-left: 10px;
+      margin-left: 68px;
     }
+
     .limit-header {
       position: absolute;
-      left: 540px;
+      left: 687px;
       display: inline-block;
     }
   }
 
   .limit {
-    margin-left: 100px;
+    margin-left: 160px;
     margin-right: 10px;
     padding: 3px 8px;
 
@@ -33,21 +57,25 @@
     position: relative;
     font-size: 13px;
   }
+
   .limit+.limit {
     border-top: 1px solid #eee;
   }
+
   .limit>div {
     display: inline-block;
+    i { color: #ccc; }
   }
   .limit .check-criteria {
+    width: 300px;
     font-weight: 400;
     strong { font-weight: 200; color: #999; text-transform: uppercase; }
   }
-  i { color: #aaa; }
   .limit .by-criteria {
     position: absolute;
     left: 320px;
     .value {
+      margin-left: 20px;
       font-weight: bold;
       padding: 0 10px;
     }

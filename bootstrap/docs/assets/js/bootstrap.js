@@ -880,8 +880,6 @@
         var that = this;
         var $modalBody = that.$element.find('.modal-body');
         var offset = that.$element.offset().top - $(window).scrollTop();
-        console.log(that.$element.height() + offset);
-        console.log($(window).height());
 
         if (that.$element.height() + offset > $(window).height()) {
             var newOffset = $(window).height() - that.$element.outerHeight();
