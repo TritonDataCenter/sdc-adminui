@@ -1,87 +1,17 @@
 var React = require('react');
+var _ = require('underscore');
 var Limits = require('../../models/limits');
-var ProvisioningLimitsForm = require('./form.jsx');
 var adminui = require('../../adminui');
+var api = require('../../request');
+var Modal = require('./../modal.jsx');
+
+
+
+var ProvisioningLimitsList = require('./list.jsx');
+var ProvisioningLimitsForm = require('./form.jsx');
+
 var OS_VALUES = require('./constants').OPERATING_SYSTEMS;
 
-var BY_LABELS = {
-    "ram": "MB RAM",
-    "quota": "GB DISK",
-    "machines": "Machines"
-}
-
-var Modal = React.createClass({
-    getDefaultProps: function() {
-        return {
-            handleHidden: function() {},
-            handleShown: function() {}
-        }
-    },
-    componentDidMount: function() {
-        $(this.getDOMNode()).modal();
-        $(this.getDOMNode()).on('hidden', this.props.handleHidden);
-        $(this.getDOMNode()).on('shown', this.props.handleShown);
-    },
-    componentWillUnmount: function() {
-        $(this.getDOMNode()).modal('hide');
-        $(this.getDOMNode()).off('hidden', this.props.handleHidden);
-        $(this.getDOMNode()).off('shown', this.props.handleShown);
-    },
-    close: function() {
-        $(this.getDOMNode()).modal('hide');
-    },
-    open: function() {
-        $(this.getDOMNode()).modal('show');
-    },
-    render: function() {
-        return <div ref="modal" className="modal">
-            <div className="modal-body unstyled" style={ {overflow: 'visible' } }>{this.props.children}</div>
-        </div>
-    }
-});
-
-var ProvisioningLimitsList = React.createClass({
-    renderLimit: function(dclimit) {
-        var dc = dclimit.datacenter;
-        var limitsNodes = dclimit.limit.map(function(l) {
-            l.by = l.by || l.limitby;
-            var byLabel = BY_LABELS[l.by];
-            // New PROVISIONING LIMITS plugin
-            return (
-                <div key={JSON.stringify(l)} className="limit">
-                    { l[l.check] === 'any' ?
-                        <div className="check-criteria.any">ANY</div> :
-                        <div className={'check-criteria '+l.check}><strong>{l.check}</strong> {l[l.check]}</div>
-                    }
-                    <div className="by-criteria"><i className="icon icon-arrow-right"></i> <span className="value">{l.value}</span> {byLabel}</div>
-                </div>
-            )
-        });
-
-        return (<div key={dclimit.datacenter} className="limits-dc">
-            <h5>{dclimit.datacenter}</h5>
-            <div className="limits-dc-header">
-                <div className="criteria-header">CRITERIA</div>
-                <div className="limit-header">LIMIT</div>
-            </div>
-            {limitsNodes}
-            </div>);
-    },
-    renderZeroState: function() {
-        return <div className="zero-state">This user does not have any provisioning limits.</div>
-    },
-    render: function() {
-        return (
-            <div className="provisioning-limits-list">
-            {
-                this.props.limits.length
-                    ? this.props.limits.map(this.renderLimit)
-                    : this.renderZeroState()
-            }
-            </div>
-        )
-    }
-});
 
 module.exports = ProvisioningLimits = React.createClass({
     propTypes: {
@@ -103,6 +33,28 @@ module.exports = ProvisioningLimits = React.createClass({
             form: false
         }
     },
+    handleDelete: function(limit) {
+        var url = _.str.sprintf('/_/users/%s/limits/%s', this.props.user, limit.datacenter);
+        api.del(url).query(limit).end(function(res) {
+            if (res.ok) {
+                adminui.vent.trigger('notification', {
+                    message: _.str.sprintf('Successfully removed a limit for %s', limit.datacenter)
+                });
+                this.fetchLimits();
+            } else {
+                adminui.vent.trigger('notification', {
+                    level: 'error',
+                    message: _.str.sprintf('Error removing limit for %s', limit.datacenter)
+                });
+            }
+        }.bind(this));
+    },
+    handleEdit: function(limit) {
+        this.setState({
+            form: true,
+            formLimit: limit
+        });
+    },
     handleSaved: function() {
         if (this.state.form) {
             this.setState({form: false});
@@ -113,7 +65,9 @@ module.exports = ProvisioningLimits = React.createClass({
         this.fetchLimits();
     },
     showNewLimitForm: function() {
-        this.setState({form: true});
+        this.setState({
+            formLimit: {},
+            form: true});
     },
     handleClose: function() {
         if (this.state.form) {
@@ -123,15 +77,22 @@ module.exports = ProvisioningLimits = React.createClass({
     render: function() {
         return (
             <div className="provisioning-limits-component">
-                { this.state.form ? <Modal handleHidden={this.handleClose} ref="modal"><ProvisioningLimitsForm
-                    onSaved={this.handleSaved}
-                    user={this.props.user} ref="form" /></Modal> : '' }
+                { this.state.form ?
+                    <Modal handleHidden={this.handleClose} ref="modal">
+                        <ProvisioningLimitsForm
+                            onSaved={this.handleSaved}
+                            initialLimit={this.state.formLimit}
+                            user={this.props.user} ref="form" />
+                    </Modal> : '' }
                 <h3>Provisioning Limits
                     <div className="actions">
                         <button onClick={this.showNewLimitForm} className="btn btn-info"><i className="icon icon-plus-sign"></i> New Limit</button>
                     </div>
                 </h3>
-                <ProvisioningLimitsList limits={this.state.limits} />
+                <ProvisioningLimitsList
+                    handleEdit={this.handleEdit}
+                    handleDelete={this.handleDelete}
+                    limits={this.state.limits} />
             </div>
         );
     }

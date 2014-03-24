@@ -12,13 +12,15 @@ var DATACENTERS = require('./constants').DATACENTERS;
 
 var Form = module.exports = React.createClass({
     propTypes: {
-        user: React.PropTypes.string.isRequired
+        user: React.PropTypes.string.isRequired,
+        initialLimit: React.PropTypes.obj
     },
     getInitialState: function() {
         var state = {};
-        if (this.props.initialLimit) {
+        if (this.props.initialLimit && this.props.initialLimit.check) {
             state = this.fromLimit(this.props.initialLimit);
         } else {
+            this.props.initialLimit = null;
             state.limitUnit  = 'ram';
             state.criteriaType = 'any';
         }
@@ -62,7 +64,7 @@ var Form = module.exports = React.createClass({
 
     fromLimit: function(limit) {
         var state = {};
-        if (!limit.check || typeof(limit[limit.check]) === 'undefined') {
+        if (!limit.check || limit[limit.check] === 'any' || typeof(limit[limit.check]) === 'undefined') {
             state.criteriaType = 'any'
             state.criteriaValue = null;
         } else {
@@ -80,6 +82,7 @@ var Form = module.exports = React.createClass({
         if (this.state.criteriaType !== 'any' && (!this.state.criteriaValue || 0 === this.state.criteriaValue.length)) {
             valid = false;
         }
+        console.log('validation', this.state, valid);
 
         return valid;
     },
@@ -101,8 +104,13 @@ var Form = module.exports = React.createClass({
 
     handleSave: function() {
         var limit = this.toLimit();
-        api.post('/_/users/'+this.props.user + '/limits/'+limit.datacenter)
-            .send(limit)
+        var req;
+        if (this.props.initialLimit) {
+            req = api.patch(_.str.sprintf('/_/users/%s/limits/%s', this.props.user, limit.datacenter));
+        } else {
+            req = api.post(_.str.sprintf('/_/users/%s/limits/%s', this.props.user, limit.datacenter));
+        }
+        req.send(limit)
             .end(function(err, res) {
                 if (res.ok) {
                     this.props.onSaved(res);
@@ -112,7 +120,7 @@ var Form = module.exports = React.createClass({
 
     render: function() {
         return <div className="provisioning-limits-form">
-            { this.state.value ? <h1>Update Limit</h1> : <h1>Add New Limit</h1> }
+            { this.props.initialLimit ? <h1>Update Limit for {this.props.initialLimit.datacenter}</h1> : <h1>Add New Limit</h1> }
 
             <form onSubmit={this.handleSave} className="form-horizontal">
 

@@ -47,15 +47,16 @@
       display: inline-block;
     }
   }
-
   .limit {
     margin-left: 160px;
     margin-right: 10px;
     padding: 3px 8px;
-
     display: block;
     position: relative;
     font-size: 13px;
+  }
+  .limit.zero-state {
+    text-align: left;
   }
 
   .limit+.limit {
@@ -66,19 +67,37 @@
     display: inline-block;
     i { color: #ccc; }
   }
+
   .limit .check-criteria {
-    width: 300px;
+    width: 260px;
     font-weight: 400;
+    font-size: 14px;
     strong { font-weight: 200; color: #999; text-transform: uppercase; }
   }
+
+
   .limit .by-criteria {
+    font-size: 14px;
+    width: 160px;
     position: absolute;
-    left: 320px;
+    left: 225px;
     .value {
       margin-left: 20px;
-      font-weight: bold;
+      font-weight: 400;
       padding: 0 10px;
     }
-    strong { font-weight: 200; text-transform: uppercase; }
+    .unit { font-weight: 200; color: #999; text-transform: uppercase; }
+  }
+
+
+  .limit .actions {
+    position: absolute;
+    left: 520px;
+    a { text-transform: uppercase; font-size: 12px; margin-left: 10px; }
+    a.delete { color: @dangerColor; }
+    visibility: hidden;
+  }
+  .limit:hover .actions {
+    visibility: visible;
   }
 }
