@@ -1,6 +1,9 @@
 @import '__jobs-list';
 
 section.fwrules {
+  .fwrules-list-region {
+    .widget-content;
+  }
   .actions { font-size: 14px;}
   .firewall-toggle-button { display: inline-block; margin-right: 3px;}
 }
@@ -40,7 +43,7 @@ section.fwrules {
     }
     .overview {
       .table;
-      tr { .widget-content; }
+      th { padding-left: 13px; }
       tbody {
         th { width: 120px; }
         td .mutate { visibility: hidden; }
@@ -59,7 +62,7 @@ section.fwrules {
   }
   .snapshots {
     .rollback { color: @dangerColor; }
-    .empty { color: @grayLight; }
+    .empty { padding: 15px 0; color: @grayLight; text-align: center; }
   }
 
   .notes-component-container {
