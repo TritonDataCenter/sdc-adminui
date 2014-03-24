@@ -444,10 +444,12 @@ var VmView = Backbone.Marionette.Layout.extend({
             onToggle: this.onToggleFirewallEnabled.bind(this)
         });
 
-        React.renderComponent(
-            new NotesComponent({item: this.vm.get('uuid')}),
-            this.$('.notes-component-container').get(0)
-        );
+        if (adminui.user.role('operators')) {
+            React.renderComponent(
+                new NotesComponent({item: this.vm.get('uuid')}),
+                this.$('.notes-component-container').get(0)
+            );
+        }
 
 
         this.snapshotsListView = new SnapshotsList({

@@ -226,9 +226,11 @@ var PackageDetail = module.exports = Backbone.Marionette.Layout.extend({
             this.$('.networks').hide();
         }
 
-        React.renderComponent(
-            new NotesComponent({item: this.model.get('billing_id')}),
-            this.$('.notes-component-container').get(0))
+        if (adminui.user.role('operators')) {
+            React.renderComponent(
+                new NotesComponent({item: this.model.get('billing_id')}),
+                this.$('.notes-component-container').get(0))
+        }
 
         this.renderNetworks();
         this.renderNetworkPools();

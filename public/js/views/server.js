@@ -370,9 +370,11 @@ var ServerView = Backbone.Marionette.Layout.extend({
     onRender: function() {
         console.log('Server', this.model);
 
-        React.renderComponent(
-            new NotesComponent({item: this.model.get('uuid')}),
-            this.$('.notes-component-container').get(0));
+        if (app.user.role('operators')) {
+            React.renderComponent(
+                new NotesComponent({item: this.model.get('uuid')}),
+                this.$('.notes-component-container').get(0));
+        }
 
         this.nicsView = new ServerNicsView({
             nics: this.nics,

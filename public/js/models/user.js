@@ -35,6 +35,10 @@ var User = module.exports = Model.extend({
         return window.localStorage.getItem('admin-uuid');
     },
 
+    role: function(r) {
+        return this.getRoles().indexOf(r) >= 0;
+    },
+
     getRoles: function() {
         var roles = window.localStorage.getItem('user-roles');
         return JSON.parse(roles);

@@ -10,4 +10,8 @@
 <td>{{netmask}}</td>
 <td>{{mac}}</td>
 <td>{{nic_tag}}</td>
-<td><a class="configure-nic"><i class="icon icon-edit"></i></a></td>
+<td>
+    {{#role "operators"}}
+    <a class="configure-nic"><i class="icon icon-edit"></i></a>
+    {{/role}}
+</td>
