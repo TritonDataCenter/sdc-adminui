@@ -38,9 +38,9 @@ var NotesPanelNode = React.createClass({
                     <div className="actions">
                     {
                         (note.archived) ?
-                        <a onClick={this.handleUnarchive} data-uuid={note.uuid} className="unarchive"><i className="icon-undo"></i></a>
+                        <a onClick={this.handleUnarchive} data-uuid={note.uuid} className="unarchive"><i className="fa fa-undo"></i></a>
                         :
-                        <a onClick={this.handleArchive} data-uuid={note.uuid} className="archive"><i className="icon-trash"></i></a>
+                        <a onClick={this.handleArchive} data-uuid={note.uuid} className="archive"><i className="fa fa-trash"></i></a>
                     }
                     </div>
                 </div>
@@ -99,7 +99,7 @@ var NotesPanel = React.createClass({
         }
 
         return <div className="notes-panel">
-            <ul className="notes-list">{nodes}</ul>
+            <ul className="list-unstyled notes-list">{nodes}</ul>
             <form onSubmit={this.handleSubmit}>
                 <textarea onChange={this.onInput} placeholder="Write a note here..." ref="input" type="text"></textarea>
                 <button type="submit" disabled={this.state.disableButton} className="btn">SAVE</button>
@@ -210,7 +210,7 @@ module.exports = React.createClass({
         this.setState({dropdown: dropdown});
     },
     render: function() {
-        var classNames = ["notes-count"];
+        var classNames = ["notes-count btn btn-default"];
         var count = this.state.notes.length;
         console.info('NotesComponent: render', count);
 
@@ -224,7 +224,7 @@ module.exports = React.createClass({
 
         return (
             <div className="notes-component">
-                <a onClick={this.toggleDropdown} ref="counts" className={classNames.join(" ")}><i className="icon-comment"></i>{count}</a>
+                <a onClick={this.toggleDropdown} ref="counts" className={classNames.join(" ")}><i className="fa fa-comment"></i>{count}</a>
                 {
                     this.state.dropdown ?
                     <NotesPanel

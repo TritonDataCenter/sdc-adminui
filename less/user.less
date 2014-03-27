@@ -1,8 +1,5 @@
 @import "__vms-list";
 
-#user-form {
-  .modal-body { max-height: 480px; }
-}
 
 #page-user {
   .user-icon {
@@ -24,12 +21,12 @@
 
   .user-details {
     th { width: 140px;}
-    .provisioning.approved { color: @activeColor; }
-    .provisioning.disabled { color: @dangerColor; }
-    .registered-developer.yes { color: @activeColor; }
-    .registered-developer.no { color: @dangerColor; }
+    .provisioning.approved { color: @state-success-text; }
+    .provisioning.disabled { color: @state-danger-text; }
+    .registered-developer.yes { color: @state-success-text; }
+    .registered-developer.no { color: @state-danger-text; }
   }
-    .portal-2fa.disabled { color: @dangerColor; }
+    .portal-2fa.disabled { color: @state-danger-text; }
 
   .toggle-2fa { float: right; margin-right: 10px;}
 
@@ -41,12 +38,12 @@
         .actions {
           float: right;
           a.edit { color: @gray; }
-          a.del { color: @dangerColor; margin-left: 10px; }
+          a.del { color: @brand-danger; margin-left: 10px; }
         }
       }
       .limit {
         .widget-content;
-        .image { color: @grayLight; display: inline-block; width: 200px; font-weight: bold; }
+        .image { color: @gray-light; display: inline-block; width: 200px; font-weight: bold; }
         .value { display: inline-block; width: 200px; }
       }
     }
@@ -73,8 +70,13 @@
 
     .item {
       .widget-content;
-      .fingerprint { #font > .monospace(10px); line-height: 20px; color: @grayLight; }
-      .remove { display: inline-block; font-size: 12px; text-decoration: none; color: @red; padding: 8px; visibility: hidden;}
+      .fingerprint {
+        font-family: @font-family-monospace;
+        font-size: 10px;
+        line-height: 20px;
+        color: @gray-light;
+      }
+      .remove { display: inline-block; font-size: 12px; text-decoration: none; color: @brand-danger; padding: 8px; visibility: hidden;}
       &:hover .remove { visibility: visible; };
     }
 

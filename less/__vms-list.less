@@ -2,7 +2,7 @@
   caption { padding: 0;}
 
   .owned-by {
-    color: @grayLight;
+    color: @gray-light;
     width: 160px;
     font-size: 12px;
   }
@@ -13,7 +13,7 @@
     width: 100%;
     display: block;
     text-align: center;
-    background: @infoBackground;
+    background: @state-info-bg;
     padding: 10px;
     .box-sizing(border-box);
   }
@@ -24,7 +24,7 @@
     font-size: 10px;
     font-style: italic;
     display: block;
-    color: @grayLight;
+    color: @gray-light;
     font-family: monospace;
   }
   span.type {
@@ -67,8 +67,8 @@
     font-size: 10px;
     padding: 4px 6px;
     text-transform: uppercase;
-    &.stopped { background-color: @grayLight; color: #fff; }
-    &.running { background-color: @activeColor; color: #fff; }
-    &.destroyed { background-color: @grayDark; color: #fff; }
+    &.stopped { background-color: @gray-light; color: #fff; }
+    &.running { background-color: @brand-success; color: #fff; }
+    &.destroyed { background-color: @gray-dark; color: #fff; }
   }
 }

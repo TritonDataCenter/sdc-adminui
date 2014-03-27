@@ -55,7 +55,7 @@ var ServerNicsList = React.createClass({
         var nodes = this.props.nics.map(function(nic) {
             return <ServerNic key={nic.mac} nic={nic} />;
         });
-        return <ul className="unstyled">{nodes}</ul>
+        return <ul className="list-unstyled">{nodes}</ul>
     }
 });
 

@@ -33,7 +33,7 @@ var NicTagsList = React.createClass({
                 </li>
                 );
         }, this);
-        return (<div className="nictags-component"><ul>{nodes}</ul></div>);
+        return (<div className="nictags-component"><ul className="list-unstyled">{nodes}</ul></div>);
     }
 });
 

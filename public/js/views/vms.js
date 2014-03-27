@@ -37,9 +37,16 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
         });
 
         this.$('.more').hide();
+
         setTimeout(function() {
-            $('#datetimepicker-from').datetimepicker({language: 'en'});
-            $('#datetimepicker-to').datetimepicker({language: 'en'});
+            $('#datetimepicker-from').datetimepicker();
+            $('#datetimepicker-to').datetimepicker();
+            $('#datetimepicker-from').on('dp.change', function(e) {
+                $('#datetimepicker-to').data("DateTimePicker").setMinDate(e.date);
+            })
+            $('#datetimepicker-to').on('dp.change', function(e) {
+                $('#datetimepicker-from').data("DateTimePicker").setMaxDate(e.date);
+            })
         });
     },
     onShow: function() {
@@ -82,12 +89,12 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
         var params = this.$('form.more').serializeObject();
 
         if ($("#datetimepicker-from input").val().length) {
-            var provisioned_from = $("#datetimepicker-from").data('datetimepicker').getDate();
-            params.provisioned_from = provisioned_from.getTime();
+            var provisioned_from = $("#datetimepicker-from").data('DateTimePicker').getDate();
+            params.provisioned_from = provisioned_from.toDate().getTime();
         }
         if ($("#datetimepicker-to input").val().length) {
-            var provisioned_to = $("#datetimepicker-to").data('datetimepicker').getDate();
-            params.provisioned_to = provisioned_to.getTime();
+            var provisioned_to = $("#datetimepicker-to").data('DateTimePicker').getDate();
+            params.provisioned_to = provisioned_to.toDate().getTime();
         }
 
         this.trigger('query', params);
@@ -102,7 +109,9 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
         this.$('form.quick input').prop('disabled', !filterPanelVisible);
         if (filterPanelVisible) {
             filterPanel.hide();
+            this.$('.toggle-filter').html('Show More Filter Options')
         } else {
+            this.$('.toggle-filter').html('Show Less Filter Options')
             filterPanel.show();
         }
     }

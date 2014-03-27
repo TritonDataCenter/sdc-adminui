@@ -2,17 +2,9 @@
 
 #page-jobs {
   .jobs-criteria-container {
-    background: #f8f8f8;
-    padding: 20px;
-    padding-top: 10px;
-    padding-bottom: 0;
-    margin-bottom: 10px;
+    .widget-content;
+    overflow: hidden;
 
-    >ul>li {
-      display: inline-block;
-      vertical-align: top;
-      margin-right: 10px;
-    }
     .criteria-name {
       color: @gray;
       font-size: 12px;
@@ -20,11 +12,13 @@
       text-transform: uppercase;
     }
     .date-picker input {
-      width: 140px;
       cursor: default;
     }
     .criteria { }
   }
+
+
+
   .job-filters-list {
     a {
       font-size: 12px;
@@ -52,9 +46,10 @@
       margin-left: 8px;
     }
     a span.timerange {
-      color: @grayLight;
+      color: @gray-light;
       text-transform: uppercase;
       font-size: 10px;
+      margin-top: 2px;
       float: right;
       margin-right: 8px;
     }
@@ -64,9 +59,8 @@
     .widget-content;
     .box-sizing(border-box);
     padding: 15px;
-    .input-append, .input-prepend { margin: 0;}
     label {
-      color: @grayLight;
+      color: @gray-light;
       margin: 0; padding: 10px; display: inline-block;
       padding-left: 30px;
     }

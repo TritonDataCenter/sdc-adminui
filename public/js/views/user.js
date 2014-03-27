@@ -6,7 +6,6 @@ var ProvisioningLimits = require('../components/provisioning-limits/main.jsx');
 
 
 var VmsList = require('./vms-list');
-var LimitsView = require('./user-limits');
 var Vms = require('../models/vms');
 var SSHKeys = require('../models/sshkeys');
 var UserForm = require('./user-form');
@@ -204,7 +203,6 @@ var UserView = Backbone.Marionette.Layout.extend({
 
         this.sshkeys = new SSHKeys(null, {user: this.model.get('uuid') });
         this.vmsList = new VmsList({collection: this.vms });
-        this.limitsList = new LimitsView({ user: this.model.get('uuid')});
         this.sshkeysList = new SSHKeysList({collection: this.sshkeys });
         this.vmsFilter = new VmsFilter();
     },

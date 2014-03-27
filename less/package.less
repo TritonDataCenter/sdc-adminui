@@ -26,7 +26,8 @@
     li a {
       display: block;
       color: #888;
-      #font > .monospace(10px);
+      font-family: @font-family-monospace;
+      font-size: 10px;
     }
 
     li.active { background: #f3f3f3; }
@@ -44,8 +45,8 @@
       line-height: 1;
       display: block;
     }
-    li .state .active { background: @activeColor; display: block; }
-    li .state .inactive { background: @grayLight; }
+    li .state .active { background: @brand-success; display: block; }
+    li .state .inactive { background: @gray-light; }
   }
 
 
@@ -62,8 +63,8 @@
 
   .resource-status {
     left: 300px;
-    .active { background: @activeColor;}
-    .inactive { background: @grayLight;}
+    .active { background: @brand-success;}
+    .inactive { background: @gray-light;}
   }
 
   .networks-list {
@@ -115,28 +116,19 @@
   .owner {
     strong { vertical-align: top; width: 200px;}
     .value { clear: both; }
-    .uuid { font-family: @monoFontFamily; font-size: 10px;}
+    .uuid { font-family: @font-family-monospace; font-size: 10px;}
   }
 
 }
 
 #page-package-form {
   .add-owner-entry {
-    margin-left: 220px;
     padding: 10px;
     display: block;
   }
   .original-version {
     padding: 4px 8px;
-    background: @infoBackground;
+    background: @state-info-bg;
     width: 220px;
-  }
-  .form-horizontal {
-    .control-label {
-      width: 200px;
-    }
-    .controls {
-      margin-left: 220px;
-    }
   }
 }

@@ -86,7 +86,7 @@ module.exports = ProvisioningLimits = React.createClass({
                     </Modal> : '' }
                 <h3>Provisioning Limits
                     <div className="actions">
-                        <button onClick={this.showNewLimitForm} className="btn btn-info"><i className="icon icon-plus-sign"></i> New Limit</button>
+                        <button onClick={this.showNewLimitForm} className="btn btn-sm btn-info"><i className="fa fa-plus"></i> New Limit</button>
                     </div>
                 </h3>
                 <ProvisioningLimitsList

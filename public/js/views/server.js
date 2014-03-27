@@ -177,7 +177,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     showManageLinkAggr: function() {
-        var $node = $("<div id='server-link-aggr-modal' class='modal'><div class='modal-body unstyled'></div></div>");
+        var $node = $("<div id='server-link-aggr-modal' class='modal'><div class='modal-dialog'><div class='modal-content'><div class='modal-body'></div></div></div></div>");
         $node.modal();
         var container = $node.find('.modal-body').get(0);
 

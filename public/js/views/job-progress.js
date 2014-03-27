@@ -17,9 +17,9 @@ var JobProgressHeader = React.createClass({
 
         return (
             <div className="job-progress-header">
-                <h2>Job {job.name}</h2>
+                <h2 className="modal-title">Job {job.name}</h2>
                 <small>{job.uuid}</small>
-                <a className="job-details pull-right">Job Details <i className="icon-fullscreen"></i></a>
+                <a className="job-details pull-right">Job Details <i className="fa fa-fullscreen"></i></a>
             </div>
         );
     }
@@ -46,11 +46,11 @@ var JobProgressSummary = React.createClass({
                                 <div className="result">{c.result}</div>
                             </div>
                             <div className="time">
-                                <div className="started-at"><i className="icon-play"></i> {c.started_at}</div>
-                                <div className="finished-at"><i className="icon-stop"></i> {c.finished_at}</div>
+                                <div className="started-at"><i className="fa fa-play"></i> {c.started_at}</div>
+                                <div className="finished-at"><i className="fa fa-stop"></i> {c.finished_at}</div>
                             </div>
                             <div className="duration">
-                                <i className="icon-time"></i><div className="value">{c.duration}</div>
+                                <i className="fa fa-clock"></i><div className="value">{c.duration}</div>
                             </div>
                             {(function() {
                                 if (c.error) {
@@ -99,7 +99,7 @@ var JobProgressFooter = React.createClass({
                         </button>) : ''
             }
 
-            <button className="btn" data-dismiss="modal">Close</button>
+            <button className="btn btn-link" data-dismiss="modal">Close</button>
             </div>
         );
     }
@@ -111,7 +111,7 @@ var JobProgressFooter = React.createClass({
 
 var JobProgressView = Backbone.Marionette.ItemView.extend({
     attributes: {
-        'class': 'modal',
+        'class': 'modal modal-lg',
         'id': 'job-progress'
     },
     template: require('../tpl/job-progress.hbs'),
@@ -174,10 +174,12 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
         this.footer = <JobProgressFooter onCancel={this.onCancel.bind(this)} job={job} />;
 
         this.component = React.renderComponent(
-            <div>
-                <div className="modal-header">{this.header}</div>
-                <div className="modal-body">{this.body}</div>
-                <div className="modal-footer">{this.footer}</div>
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">{this.header}</div>
+                    <div className="modal-body">{this.body}</div>
+                    <div className="modal-footer">{this.footer}</div>
+                </div>
             </div>
         , this.$el.get(0));
     },

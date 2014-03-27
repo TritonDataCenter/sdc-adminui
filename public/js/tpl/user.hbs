@@ -1,7 +1,6 @@
 <div class="page-header">
   <h1>
-    <div class="user-icon"
-      style="background-image: url(https://www.gravatar.com/avatar/{{emailhash}}?d=identicon&s=65);">
+    <div class="user-icon" style="background-image: url(https://www.gravatar.com/avatar/{{emailhash}}?d=identicon&s=65);">
     </div>
 
     <span class="cn"></span>
@@ -15,14 +14,16 @@
 
 <section>
   <div class="row">
-    <div class="span6">
+    <div class="col-md-6">
       <h3>User Details
         {{#role "operators"}}
         <div class="actions">
-          <button class="edit-user btn btn-info"><i class="icon-pencil"></i> Modify User</button>
+          <button class="edit-user btn btn-sm btn-info"><i class="fa fa-pencil"></i> Modify User</button>
         </div>
         {{/role}}
       </h3>
+
+
       <div class="user-details">
         <table class="table">
           <tbody>
@@ -65,11 +66,11 @@
       </div>
     </div>
 
-    <div class="span6">
+    <div class="col-md-6">
       <h3>SSH Keys
         <div class="actions">
           {{#role "operators"}}
-          <button class="btn btn-info add-key"><i class="icon-plus-sign"></i> Add Key</button>
+          <button class="btn btn-info btn-sm add-key"><i class="fa fa-plus"></i> Add Key</button>
           {{/role}}
         </div>
       </h3>
@@ -83,7 +84,7 @@
 
 <section>
   <div class="row">
-    <div class="span12">
+    <div class="col-md-12">
       <div class="limits-region"></div>
     </div>
   </div>
@@ -91,7 +92,7 @@
 
 <section class="networks">
   <div class="row">
-    <div class="span12">
+    <div class="col-md-12">
       <h3>Networks &amp; Network Pools</h3>
       <div class="networks-region"></div>
       <div class="network-pools-region"></div>
@@ -101,13 +102,14 @@
 
 <section>
   <div class="row">
-    <div class="span12">
+    <div class="col-md-12">
       <h3>Virtual Machines</h3>
       <div class="container vms-filter">
-        <form class="unstyled more">
-          <div class="span2">
-            <label>State</label>
-            <select name="state" class="span2">
+        <form role="form" class="more">
+
+          <div class="form-group col-sm-2">
+            <label class="control-label">State</label>
+            <select class="form-control" name="state" class="col-md-2">
               <option value="active">active</option>
               <option value="running">running</option>
               <option value="stopped">stopped</option>
@@ -115,17 +117,17 @@
             </select>
           </div>
 
-          <div class="span3">
+          <div class="form-group col-sm-4">
             <label>Alias</label>
-            <input type="text" name="alias" placeholder="alias">
+            <input class="form-control" type="text" name="alias" placeholder="alias">
           </div>
 
-          <div class="span3">
+          <div class="form-group col-sm-3">
             <label>Server</label>
-            <input type="text" name="server_uuid" placeholder="Server UUID">
+            <input class="form-control" type="text" name="server_uuid" placeholder="Server UUID">
           </div>
 
-          <div class="span2">
+          <div class="form-group col-sm-2">
             <button class="btn btn-info" style="margin-top: 25px;"><i class="icon-filter icon-white"></i> Apply Filters</button>
           </div>
         </form>

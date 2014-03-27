@@ -14,12 +14,12 @@
   i { margin-right: 6px;}
   a { text-decoration: none; }
   .notes-count {
-    background: @btnBackgroundHighlight;
+    background: @btn-default-bg;
     padding: 2px 6px;
-    color: @grayLight;
+    color: @gray-light;
   }
   .notes-count.has-notes {
-    color: @activeColor;
+    color: @btn-success-color;
   }
   .notes-count.open,
   .notes-count.has-notes.open {
@@ -49,14 +49,14 @@
         }
         .meta>.actions {
           float: right;
-          .archive { color: @dangerColor; }
+          .archive { color: @brand-danger; }
         }
 
-        .date { font-size: 10px; color: @grayLight; margin-left: 5px;}
+        .date { font-size: 10px; color: @gray-light; margin-left: 5px;}
         .note { line-height: 14px; font-size: 12px; }
       }
       li.no-notes {
-        color: @grayLight;
+        color: @gray-light;
       }
 
       li.archived {
@@ -77,7 +77,7 @@
       background: #f8f8f8;
 
       button {
-        background: @btnInfoBackground;
+        background: @btn-info-bg;
         vertical-align: middle;
         border: none;
         display: block;

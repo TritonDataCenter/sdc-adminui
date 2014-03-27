@@ -78,7 +78,7 @@ var Component = React.createClass({
                     onDelete={this.handleDelete}
                     linkAggregations={this.state.linkAggregations} />,
                 <div className="buttons">
-                <button className="btn" data-dismiss="modal">Close</button>
+                <button className="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             ];
         }

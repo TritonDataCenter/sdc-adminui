@@ -106,21 +106,21 @@ var LinkAggregationForm = module.exports = React.createClass({
     render: function() {
         return (
             <div className="link-aggr-form">
-            <div className="alert"><strong>NOTE</strong> Any changes to Link Aggregations requires a reboot.</div>
+            <div className="alert alert-warning"><strong>NOTE</strong> Any changes to Link Aggregations requires a reboot.</div>
             <ErrorAlert error={this.state.error} />
             <form onSubmit={this.handleSubmit} className="form-horizontal">
-                <div className="control-group">
-                    <label className="control-label">Name</label>
-                    <div className="controls">
-                        <input type="text" ref="nameInput" onChange={this.onChangeName}
+                <div className="form-group">
+                    <label className="control-label col-sm-4">Name</label>
+                    <div className="controls col-sm-8">
+                        <input type="text" className="form-control" ref="nameInput" onChange={this.onChangeName}
                         value={this.state.linkAggr.name} placeholder="Example: aggr0" />
                     </div>
                 </div>
 
-                <div className="control-group">
-                    <label className="control-label">Control Protocol Mode</label>
-                    <div className="controls">
-                        <select value={this.state.linkAggr.lacp_mode} onChange={this.onChangeLacpMode} name="lacp_mode">
+                <div className="form-group">
+                    <label className="control-label col-sm-4">Control Protocol Mode</label>
+                    <div className="controls col-sm-8">
+                        <select className="form-control" value={this.state.linkAggr.lacp_mode} onChange={this.onChangeLacpMode} name="lacp_mode">
                             <option value="off">off</option>
                             <option value="active">active</option>
                             <option value="passive">passive</option>
@@ -128,9 +128,9 @@ var LinkAggregationForm = module.exports = React.createClass({
                     </div>
                 </div>
 
-                <div className="control-group">
-                    <label className="control-label">NICs to aggregate</label>
-                    <div className="controls">
+                <div className="form-group">
+                    <label className="control-label col-sm-4">NICs to aggregate</label>
+                    <div className="controls col-sm-8">
                     <div className="nics">
                     {
                         this.state.nics.map(function(nic) {
@@ -155,9 +155,9 @@ var LinkAggregationForm = module.exports = React.createClass({
                     </div>
                 </div>
 
-                <div className="control-group">
-                    <label className="control-label">NIC Tags Provided</label>
-                    <div className="controls">
+                <div className="form-group">
+                    <label className="control-label col-sm-4">NIC Tags Provided</label>
+                    <div className="controls col-sm-8">
                         <Chosen multiple="true" value={this.state.linkAggr.nic_tags_provided} onChange={this.onChangeNicTags}>
                         {
                             this.state.nictags.map(function(nictag) {
@@ -172,7 +172,7 @@ var LinkAggregationForm = module.exports = React.createClass({
                 className="btn btn-primary save"
                 disabled={ this.isValid() ? '' : 'disabled'}
                 onClick={this.handleSubmit}>Save Aggregation</button>
-            <button className="btn back" onClick={this.props.handleBack}>Back</button>
+            <button className="btn btn-link back" onClick={this.props.handleBack}>Back</button>
             </div>
         )
     }

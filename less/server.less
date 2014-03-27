@@ -41,11 +41,11 @@
   }
 
   .resource-status {
-    .running { background: @activeColor; }
-    .unknown { background: lighten(@red, 20%); }
-    .server-setting-up { background: @yellow; }
+    .running { background: @brand-success; }
+    .unknown { background: lighten(@state-danger-text, 20%); }
+    .server-setting-up { background: @state-warning-bg; }
   }
-  .rack .none { color: @grayLight;}
+  .rack .none { color: @gray-light;}
   .overview {
     .item { .widget-content; }
     .item-label, .item-content { display: inline-block; }
@@ -87,7 +87,7 @@
     text-align: left;
     width: 100px;
     display: inline-block;
-    background: lighten(@yellow, 42%);
+    background: lighten(@state-warning-bg, 42%);
     border: none;
   }
   span.reservation-ratio {
@@ -110,8 +110,8 @@
     button { padding: 2px 6px;}
   }
 
-  .enabled { color: @activeColor; }
-  .disabled { color: @red; }
+  .enabled { color: @brand-success; }
+  .disabled { color: @state-danger-text; }
 
   .server-nics {
     li+li {
@@ -137,34 +137,38 @@
 
       .name {
         display: block;
-        #font > .monospace(12px);
+        font-family: @font-family-monospace;
+        font-size: 12px;
         font-weight: bold;
       }
       .mac {
         display: block;
-        #font > .monospace(10px);
-        color: @grayLight;
+        font-family: @font-family-monospace;
+        font-size: 10px;
+        color: @gray-light;
       }
 
       .link-status {
-        .border-radius(2px);
+        border-radius: 2px;
         margin: 0 12px;
         margin-top: 14px;
         width: 20px;
         height: 6px;
-        background: @grayDark; }
+        background: @gray-dark; }
 
-      .link-status.up { background: @activeColor; }
+      .link-status.up { background: @brand-success; }
 
       .lbl {
-        #font > .monospace(10px);
-        color: @grayLight;
+        font-family: @font-family-monospace;
+        font-size: 10px;
+        color: @gray-light;
         display: block;
       }
       .value {
-        #font > .monospace(10px);
+        font-family: @font-family-monospace;
+        font-size: 10px;
         display: block;
-        color: @grayDarker;
+        color: @gray-darker;
       }
 
     }

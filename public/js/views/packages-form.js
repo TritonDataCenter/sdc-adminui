@@ -29,9 +29,8 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
     },
 
     onAddOwnerEntry: function() {
-        var node = $(['<div class="controls">',
-        '<input type="text"',
-        'class="input-xlarge"',
+        var node = $([ '<input type="text"',
+        'class="form-control"',
         'name="owner_uuids[]"',
         'placeholder="Search by login or uuid">',
         '</div>'].join(''));

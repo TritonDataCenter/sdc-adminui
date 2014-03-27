@@ -22,15 +22,18 @@
     .widget-content;
     font-size: 12px;
     padding: 8px;
-    .state { color: @red; }
-    .state.running { color: @activeColor; }
+    .state { color: @state-danger-text; }
+    .state.running { color: @state-success-text; }
     .alias, .uuid, .state, .ram { display: inline-block;}
-    .alias { color: @grayLight; width: 100px;}
+    .alias { color: @gray-light; width: 100px;}
     .uuid {
       width: 280px;
       font-style: italic;
-      color: @grayLight;
-      #font > .monospace(10px, normal, 1.2);
+      color: @gray-light;
+      font-family: @font-family-monospace;
+      font-size: 10px;
+      font-weight: normal;
+      line-height: 1.2;
     }
     .state { width: 100px;}
     a {

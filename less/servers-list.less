@@ -20,7 +20,7 @@
       span {
         color: #FFF;
         padding: 2px 4px;
-        background: @grayDark;
+        background: @gray-dark;
       }
       .manta {
         background: orange;
@@ -41,9 +41,9 @@
       width: 15px;
       margin-right: 10px;
       height: 80px;
-      &.running { background: @activeColor; }
-      &.unavailable { background: @dangerColor;}
-      &.unknown { background: @dangerColor;}
+      &.running { background: @brand-success; }
+      &.unavailable { background: @brand-danger;}
+      &.unknown { background: @brand-danger;}
     }
     .setup-status {
       width: 300px;
@@ -63,7 +63,7 @@
       .uuid {
         font-size: 10px;
         line-height: 14px;
-        color: @grayLight;
+        color: @gray-light;
         font-style: italic;
         display: block;
         width: 280px;
@@ -82,14 +82,14 @@
       float: left;
 
       .memory-usage-total {
-        color: @grayLight;
+        color: @gray-light;
         font-size: 12px;
         text-transform: uppercase;
         text-align: right;
         padding: 5px 0;
         strong {
           font-weight: 200;
-          color: @grayLight;
+          color: @gray-light;
           font-weight: 100;
           letter-spacing: 1px;
           text-transform: uppercase;
@@ -103,7 +103,7 @@
         font-size: 12px;
         text-align: right;
         strong {
-          color: @grayLight;
+          color: @gray-light;
           font-weight: 100;
           letter-spacing: 1px;
           text-transform: uppercase;
@@ -127,7 +127,7 @@
       width: 220px;
       float: right;
       i { padding: 0 4px; width: 8px;}
-      strong { font-weight: normal; text-transform: uppercase; padding-right: 8px; color: @grayLight;}
+      strong { font-weight: normal; text-transform: uppercase; padding-right: 8px; color: @gray-light;}
     }
 
     .last-boot { color: @gray;}
@@ -140,7 +140,7 @@
 
     .reserved {
       margin-left: 10px;
-      background: @warningBackground;
+      background: @state-warning-bg;
     }
   }
 

@@ -2,14 +2,20 @@
   <h1>Virtual Machines
     {{#role "operators"}}
     <div class="actions">
-      <button class="provision-button btn btn-primary"> <i class="icon-plus icon-white"></i> Provision a New VM </button>
+      <button class="provision-button btn btn-info"> <i class="fa fa-plus"></i> Provision Virtual Machine</button>
     </div>
     {{/role}}
   </h1>
 </div>
 
-<section class="widget-content vms-filter"></section>
+<div class="row">
+    <div class="col-md-12">
+        <section class="vms-filter"></section>
+    </div>
+</div>
 
 <div class="row">
-  <div class="list-region span12"></div>
+    <div class="col-md-12">
+        <div class="list-region"></div>
+    </div>
 </div>

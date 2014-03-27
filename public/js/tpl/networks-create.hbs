@@ -1,137 +1,166 @@
-<form class="form-horizontal">
-  <div class="modal-header">
-    {{#if uuid}}
-    <h1>Edit Network</h1>
-    {{else}}
-    <h1>Create Network</h1>
-    {{/if}}
-  </div>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <form class="form-horizontal">
+            <div class="modal-header">
+                {{#if uuid}} <h4 class="modal-title">Edit Network</h4> {{else}} <h4 class="modal-title">Create Network</h4> {{/if}}
+            </div>
 
-  <div class="modal-body">
-    <div class="alert alert-error">
-      <button type="button" class="close" data-dismiss="alert">×</button>
-      <strong>Error!</strong> <span class="error"></span>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <strong>Error!</strong> <span class="error"></span>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="network-name">Name</label>
+                    <div class="controls col-sm-5">
+                        <input type="text" id="network-name" value="{{name}}"
+                            class="form-control"
+                            name="name" placeholder="Name of the network">
+                    </div>
+                </div>
+
+                <div class="form-group .owner">
+                    <label class="control-label col-sm-4" for="network-owners">Owner</label>
+                    <div class="controls col-sm-6">
+                        <input class="form-control"
+                            value="{{owner_uuid}}"
+                            type="text" name="owner_uuids[]" placeholder="Search by login, email, uuid" />
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="network-gateway">Subnet</label>
+
+                    <div class="controls col-sm-6">
+                        <input type="text"
+                            class="form-control"
+                            id="netework-gateway"
+                            value="{{subnet}}"
+                            name="subnet" placeholder="Example: 10.12.0.1/24">
+                        <div class="help-block">
+                            Subnet needs to be specified in CIDR Notation
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="network-gateway">Gateway</label>
+
+                    <div class="controls col-sm-6">
+                        <input type="text"
+                            class="form-control"
+                            id="netework-gateway"
+                            value="{{gateway}}"
+                            name="gateway" placeholder="Gateway Address">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="network-provision-start-ip">Provision IP Range</label>
+
+                    <div class="col-sm-4" style="padding-right: 0;">
+                        <input type="text" id="netework-start-ip"
+                            class="form-control"
+                            value="{{provision_start_ip}}"
+                            name="provision_start_ip" placeholder="Start IP">
+                    </div>
+
+                    <div class="col-sm-4" style="padding-left: 0;">
+                        <input type="text" id="netework-end-ip"
+                            class="form-control"
+                            value="{{provision_end_ip}}"
+                            name="provision_end_ip" placeholder="End IP">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="network-provision-start-ip">Routes</label>
+                    <div class="col-sm-8">
+                        {{#if routes.length}}
+                        {{#each routes}}
+                        <div class="routes-controls row">
+                            <div class="col-sm-5">
+                                <input type="text" name="routes[{{@index}}][subnet]" value="{{subnet}}" class="form-control" placeholder="IP or Subnet">
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" value="{{gateway}}" name="routes[{{@index}}][gateway]" class="form-control" placeholder="Gateway">
+                            </div>
+                            <div class="col-sm-2">
+                                <a class="remove-route"><i class="icon-remove"></i></a>
+                            </div>
+                        </div>
+                        {{/each}}
+                        {{else}}
+                        <div class="routes-controls row">
+                            <div class="col-sm-5">
+                                <input type="text" name="routes[0][subnet]" class="form-control" placeholder="IP or Subnet">
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" name="routes[0][gateway]" class="form-control" placeholder="Gateway">
+                            </div>
+                            <div class="col-sm-2">
+                                <a class="remove-route"><i class="icon-remove"></i></a>
+                            </div>
+                        </div>
+                        {{/if}}
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a class="add-route">Add another route</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="network-nic-tag">NIC Tag</label>
+
+                    <div class="controls col-sm-6">
+                        <select class="form-control" name="nic_tag">
+                            <option>Select a nic tag</option>
+                            {{#each nic_tags}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}}
+                        </select>
+
+                        <button type="button" class="btn btn-link create-new-nic-tag">Create a New NIC Tag</button>
+                        <div class="create-nic-tag-region"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="network-resolvers">DNS Resolvers</label>
+
+                    <div class="controls col-sm-6">
+                        <input type="text"
+                            value="{{resolvers}}"
+                            id="netework-resolvers"
+                            class="form-control"
+                            name="resolvers"
+                            placeholder="DNS Resolvers">
+                        <p class="help-block">Separate each entry with s space</p>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="network-vlan-id">VLAN ID</label>
+
+                    <div class="controls col-sm-6">
+                        <input type="text"
+                        value="{{vlan_id}}"
+                        class="form-control"
+                        id="netework-vlan-id" name="vlan_id" placeholder="VLAN ID">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a class="btn" data-dismiss="modal">Cancel</a>
+                <button type="submit" class="btn btn-primary save">Save Network</button>
+            </div>
+        </form>
     </div>
-
-    <div class="control-group">
-      <label class="control-label" for="network-name">Name</label>
-      <div class="controls">
-        <input type="text" id="network-name" value="{{name}}"
-        name="name" placeholder="Name of the network">
-      </div>
-    </div>
-
-    <div class="control-group .owner">
-      <label class="control-label" for="network-owners">Owner</label>
-      <div class="controls">
-        <input class="input input-xlarge"
-          value="{{owner_uuid}}"
-          type="text" name="owner_uuids[]" placeholder="Search by login, email, uuid"></input>
-      </div>
-    </div>
-
-
-    <div class="control-group">
-      <label class="control-label" for="network-gateway">Subnet</label>
-
-      <div class="controls">
-        <input type="text"
-        id="netework-gateway"
-        value="{{subnet}}"
-        name="subnet" placeholder="Subnet">
-      </div>
-    </div>
-
-
-    <div class="control-group">
-      <label class="control-label" for="network-gateway">Gateway</label>
-
-      <div class="controls">
-        <input type="text"
-        id="netework-gateway"
-        value="{{gateway}}"
-        name="gateway" placeholder="Gateway Address">
-      </div>
-    </div>
-
-    <div class="control-group">
-      <label class="control-label" for="network-provision-start-ip">Provision IP Range</label>
-
-      <div class="controls">
-        <input type="text" id="netework-start-ip"
-        value="{{provision_start_ip}}"
-        class="span2" name="provision_start_ip" placeholder="Start IP">
-        <input type="text" id="netework-end-ip"
-        value="{{provision_end_ip}}"
-        class="span2" name="provision_end_ip" placeholder="End IP">
-      </div>
-    </div>
-
-    <div class="control-group">
-      <label class="control-label" for="network-provision-start-ip">Routes</label>
-      {{#if routes.length}}
-      {{#each routes}}
-      <div class="controls routes-controls">
-        <input type="text" name="routes[{{@index}}][subnet]" value="{{subnet}}" class="span2" placeholder="IP or Subnet">
-        <input type="text" value="{{gateway}}" name="routes[{{@index}}][gateway]" class="span2" placeholder="Gateway">
-        <a class="remove-route"><i class="icon-remove"></i></a>
-      </div>
-      {{/each}}
-      {{else}}
-      <div class="controls routes-controls">
-        <input type="text" name="routes[0][subnet]" class="span2" placeholder="IP or Subnet">
-        <input type="text" name="routes[0][gateway]" class="span2" placeholder="Gateway">
-        <a class="remove-route"><i class="icon-remove"></i></a>
-      </div>
-      {{/if}}
-
-      <div class="controls">
-        <a class="add-route">Add another route</a>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <label class="control-label" for="network-nic-tag">NIC Tag</label>
-
-      <div class="controls">
-        <select name="nic_tag">
-          <option>Select a nic tag</option>
-          {{#each nic_tags}}
-          <option value="{{name}}">{{name}}</option>
-          {{/each}}
-        </select>
-
-        <a class="btn create-new-nic-tag">Create a New NIC Tag</a>
-        <div class="create-nic-tag-region"></div>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <label class="control-label" for="network-resolvers">DNS Resolvers</label>
-
-      <div class="controls">
-        <input type="text"
-        value="{{resolvers}}"
-        id="netework-resolvers"
-        name="resolvers"
-        placeholder="DNS Resolvers">
-      </div>
-    </div>
-
-
-    <div class="control-group">
-      <label class="control-label" for="network-vlan-id">VLAN ID</label>
-
-      <div class="controls">
-        <input type="text"
-        value="{{vlan_id}}"
-        id="netework-vlan-id" name="vlan_id" placeholder="VLAN ID">
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-footer">
-    <a class="btn" data-dismiss="modal">Cancel</a>
-    <button type="submit" class="btn btn-primary save">Save Network</button>
-  </div>
-</form>
+</div>

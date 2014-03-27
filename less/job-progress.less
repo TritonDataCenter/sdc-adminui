@@ -1,38 +1,41 @@
-
 #job-progress {
-  width: 680px;
-  margin-left: -340px;
-
   .job-details {
     font-size: 14px;
     cursor: pointer;
   }
   .modal-header small {
-    color: @grayLight;
+    color: @gray-light;
     font-style: italic;
-    font-family: monospace;
+    font-family: @font-family-monospace;
   }
+
+
   .chain-results {
     li {
       padding: 5px 10px;
       background: #f3f3f3;
-      margin-bottom: 0.5em; font-size: 12px; }
+      margin-bottom: 0.5em; font-size: 12px;
+    }
+
     li.error {
       background: rgb(255, 202, 202);
     }
+
     li > * {
       display: inline-block;
       vertical-align: top;
     }
+    .started-at { width: 120px; }
     .started-at i {
       padding-right: 5px;
     }
+    .finished-at { width: 120px; }
     .finished-at i {
       padding-right: 5px;
     }
     .name { font-weight: bold; }
-    .task { width: 400px;}
-    .time { padding-right: 10px; color: @grayLight; font-size: 10px; text-align: right; }
+    .task { width: 300px;}
+    .time { padding-right: 10px; color: @gray-light; font-size: 10px; text-align: right; }
     .duration {
       .value {
         display: inline-block;
@@ -43,9 +46,6 @@
       }
     }
   }
-  .modal-body.raw-enabled {
-    padding: 0;
-  }
   .raw {
     max-height: inherit;
     overflow-x: scroll;
@@ -54,7 +54,8 @@
     display: none;
     background: #222;
     color: #fff;
-    #font > .monospace(10px);
+    font-family: @font-family-monospace;
+    font-size: 10px;
     line-height: 1.2;
     white-space: pre;
   }

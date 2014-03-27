@@ -1,34 +1,29 @@
-<div class="user-icon"
-  style="background-image: url(https://www.gravatar.com/avatar/{{emailhash}}?d=identicon&s=65);">
-</div>
+<div class="row">
+    <div class="col-sm-1">
+        <div class="user-icon" style="background-image: url(https://www.gravatar.com/avatar/{{emailhash}}?d=identicon&s=32);"> </div>
+    </div>
+    <div class="details col-sm-5">
+        <a href="/users/{{uuid}}" class="login-link">
+            <span class="login">{{login}}</span>
+            <div class="name">
+                <span class="cn"> {{#if cn}} {{cn}} {{/if}} </span>
+                {{#if company}} @ <span class="company">{{company}}</span> {{/if}}
+            </div>
+        </a>
+        <span class="uuid">{{uuid}}</span>
+    </div>
+    <div class="col-sm-3">
+        <div class="email"><strong>email</strong> {{email}}</div>
+    </div>
 
-<div class="details">
-  <div class="span7">
-    <a href="/users/{{uuid}}" class="login-link">
-      <span class="login">{{login}}</span>
-      <div class="name">
-        <span class="cn">
-          {{#if cn}}
-          {{cn}}
-          {{/if}}
+    <div class="col-sm-3">
+        <span class="provisioning">
+            Provisioning
+            {{#if approved_for_provisioning }}
+            <strong class="enabled">Enabled</strong>
+            {{else}}
+            <strong class="disabled">Disabled</strong>
+            {{/if}}
         </span>
-        {{#if company}}
-        @ <span class="company">{{company}}</span>
-        {{/if}}
-      </div>
-    </a>
-
-    <span class="uuid">{{uuid}}</span>
-    <div class="email">{{email}}</div>
-  </div>
-  <div class="span3">
-    <span class="provisioning">
-      Provisioning
-      {{#if approved_for_provisioning }}
-      <strong class="enabled">Enabled</strong>
-      {{else}}
-      <strong class="disabled">Disabled</strong>
-      {{/if}}
-    </span>
-  </div>
+    </div>
 </div>

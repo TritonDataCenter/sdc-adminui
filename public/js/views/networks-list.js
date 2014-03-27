@@ -11,7 +11,7 @@ var NetworksListEmptyView = require('./empty').extend({
 var NetworksListView = Backbone.Marionette.CollectionView.extend({
     tagName: 'ul',
     attributes: {
-        'class': 'unstyled networks-list'
+        'class': 'list-unstyled networks-list'
     },
     emptyView: NetworksListEmptyView,
     itemView: NetworksListItem,

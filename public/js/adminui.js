@@ -1,14 +1,12 @@
 var _ = require('underscore');
 _.str = require('underscore.string');
 
-var $ = require('jquery');
+var $ = jQuery = require('jquery');
 require('jquery.chosen');
 require('jquery.serializeObject');
 require('jquery.autosize');
 require('bootstrap');
 require('bootstrap.datetimepicker');
-
-$.fn.bootstrapTypeahead = $.fn.typeahead.noConflict();
 
 require('bootstrap.tags');
 require('typeahead');

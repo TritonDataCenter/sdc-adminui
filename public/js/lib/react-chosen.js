@@ -2,7 +2,7 @@ var Chosen = React.createClass({
   displayName: 'Chosen',
   componentDidUpdate: function() {
     // chosen doesn't refresh the options by itself, babysit it
-    $(this.getDOMNode()).trigger('liszt:updated');
+    $(this.getDOMNode()).trigger('chosen:updated');
   },
   componentDidMount: function(select) {
     $(select)
@@ -14,17 +14,26 @@ var Chosen = React.createClass({
         width: this.props.width,
         search_contains: true
       })
-      .on('liszt:maxselected', this.props.onMaxSelected)
+      .on('chosen:maxselected', this.props.onMaxSelected)
+      .on('chosen:showing_dropdown', this.props.onShowingDropdown)
+      .on('chosen:hiding_dropdown', this.props.onHidingDropdown)
+      .on('chosen:no_results', this.props.onNoResults)
+      .on('chosen:ready', this.props.onReady)
       .change(this.props.onChange);
   },
   componentWillUnmount: function() {
-    $(this.getDOMNode()).off('liszt:maxselected change');
+    $(this.getDOMNode()).off('chosen:ready chosen:maxselected chosen:showing_dropdown chosen:hiding_dropdown chosen:no_results change');
+  },
+  getDefaultProps: function() {
+    return {
+        width: '100%'
+    }
   },
   activate: function() {
-    $(this.getDOMNode()).trigger('liszt:activate');
+    $(this.getDOMNode()).trigger('chosen:activate');
   },
   open: function() {
-    $(this.getDOMNode()).trigger('liszt:open')
+    $(this.getDOMNode()).trigger('chosen:open')
   },
   close: function() {
     $(this.getDOMNode()).data('chosen').close_field();

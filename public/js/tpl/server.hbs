@@ -21,10 +21,10 @@
     </a>
 
     <ul class="dropdown-menu">
-      <li><a class="reboot"><i class="icon icon-refresh"></i> Reboot Server</a></li>
+      <li><a class="reboot"><i class="fa fa-refresh"></i> Reboot Server</a></li>
       <li class="divider"></li>
-      <li><a class="factory-reset"><i class="icon icon-repeat"></i> Factory Reset (DANGER)</a></li>
-      <li><a class="forget"><i class="icon icon-trash"></i> Forget Server (DANGER)</a></li>
+      <li><a class="factory-reset"><i class="fa fa-repeat"></i> Factory Reset (DANGER)</a></li>
+      <li><a class="forget"><i class="fa fa-trash-o"></i> Forget Server (DANGER)</a></li>
     </ul>
   </div>
 
@@ -38,7 +38,7 @@
 
 <section>
 <div class="row">
-  <div class="span7">
+  <div class="col-md-7">
     <h3>Overview</h3>
 
     <div class="overview">
@@ -94,7 +94,7 @@
     </div>
   </div>{{! /span}}
 
-  <div class="span5">
+  <div class="col-md-5">
     <h3>Platform</h3>
     <div class="platform">
       <div class="item current">
@@ -117,12 +117,12 @@
 
 <section>
 <div class="row">
-  <div class="span12">
+  <div class="col-md-12">
     <h3>Network Interfaces
       {{#role "operators"}}
       <div class="actions pull-right">
-        <button class="btn manage-nics"><i class="icon-edit"></i> Configure NIC Tags</i></button>
-        <button class="btn manage-link-aggr"><i class="icon-edit"></i> Link Aggregation</i></button>
+        <button class="btn btn-sm btn-default manage-nics"><i class="fa fa-edit"></i> Configure NIC Tags</i></button>
+        <button class="btn btn-sm btn-default manage-link-aggr"><i class="fa fa-edit"></i> Link Aggregation</i></button>
       </div>
       {{/role}}
     </h3>
@@ -133,7 +133,7 @@
 
 <section>
 <div class="row">
-  <div class="span8">
+  <div class="col-md-8">
     <h3>Hardware</h3>
     <table class="table hardware">
       <tbody>
@@ -161,7 +161,7 @@
     </table>
   </div>
 
-  <div class="span4">
+  <div class="col-md-4">
     <h3>Serial Console</h3>
     <div class="serial-console">
       <div class="key-value-list">
@@ -194,9 +194,8 @@
 </div>
 </section>
 
-<section>
-<div class="row">
-  <div class="span6">
+<section class="row">
+  <div class="col-md-6">
     <h3>Disks</h3>
     <div class="disks">
       {{#each disks}}
@@ -207,11 +206,11 @@
       {{/each}}
     </div>
   </div>
-  <div class="span6">
+  <div class="col-md-6">
     <h3>Traits
       {{#role "operators"}}
       <div class="actions">
-        <button class="btn modify-traits"><i class="icon-edit"></i> Modify Traits</button>
+        <button class="btn btn-default btn-small modify-traits"><i class="icon-edit"></i> Modify Traits</button>
       </div>
       {{/role}}
     </h3>
@@ -237,28 +236,25 @@
     <div class="zero-state">There are no traits configured for this server.</div>
     {{/if}}
   </div>
-</div>
 </section>
 
-<section style="margin-top: 48px;">
-  <div class="row">
-    <div class="span12">
-      <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#vms">Virtual Machines</a></li>
-        <li><a data-toggle="tab" href="#jobs">Jobs</a></li>
-      </ul>
+<section class="row">
+<div class="col-md-12">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#vms">Virtual Machines</a></li>
+    <li><a data-toggle="tab" href="#jobs">Jobs</a></li>
+  </ul>
 
-      <div class="tab-content">
-        <div class="tab-pane active" id="vms">
-          <h3>Virtual Machines</h3>
-          <div class="vms-region"></div>
-        </div>
+  <div class="tab-content">
+    <div class="tab-pane active" id="vms">
+      <h3>Virtual Machines</h3>
+      <div class="vms-region"></div>
+    </div>
 
-        <div class="tab-pane" id="jobs">
-          <h3>Jobs</h3>
-          <div class="jobs-region"></div>
-        </div>
-      </div>
+    <div class="tab-pane" id="jobs">
+      <h3>Jobs</h3>
+      <div class="jobs-region"></div>
     </div>
   </div>
-</section>
+</div>
+</div>

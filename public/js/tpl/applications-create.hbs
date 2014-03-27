@@ -1,58 +1,57 @@
-<div class="modal-header">
-  <h2>Create new Application</h2>
-</div>
-<div class="modal-body">
-  <form class="form form-horizontal">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Create new Application</h2>
+        </div>
+        <div class="modal-body">
+            <form class="form form-horizontal">
+                <div class="control-group">
+                    <label class="control-label">
+                        Application Name
+                    </label>
+                    <div class="controls">
+                        <input type="text" class="input">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        Owner
+                    </label>
+                    <div class="controls">
+                        <input type="text" class="input">
+                        <p class="help-block">Owner UUID of this application</p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        Parameters
+                    </label>
+                    <div class="controls">
+                        <textarea class="span4" rows="6"></textarea>
+                        <p class="help-block">Paramaters for provisioning</p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        Metadata
+                    </label>
+                    <div class="controls">
+                        <textarea class="span4" rows="6"></textarea>
+                        <p class="help-block">Metadata for application setup</p>
+                    </div>
+                </div>
 
-    <div class="control-group">
-      <label class="control-label">
-        Application Name
-      </label>
-      <div class="controls">
-        <input type="text" class="input">
-      </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        Configuration Manifests
+                    </label>
+                    <div class="controls">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary">Create Application</button>
+        </div>
     </div>
-
-    <div class="control-group">
-      <label class="control-label">
-        Owner
-      </label>
-      <div class="controls">
-        <input type="text" class="input">
-        <p class="help-block">Owner UUID of this application</p>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <label class="control-label">
-        Parameters
-      </label>
-      <div class="controls">
-        <textarea class="span4" rows="6"></textarea>
-        <p class="help-block">Paramaters for provisioning</p>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <label class="control-label">
-        Metadata
-      </label>
-      <div class="controls">
-        <textarea class="span4" rows="6"></textarea>
-        <p class="help-block">Metadata for application setup</p>
-      </div>
-    </div>
-  
-    <div class="control-group">
-      <label class="control-label">
-        Configuration Manifests
-      </label>
-      <div class="controls">
-      </div>
-    </div>
-  </form>
-</div>
-
-<div class="modal-footer">
-  <button class="btn btn-primary">Create Application</button>
 </div>

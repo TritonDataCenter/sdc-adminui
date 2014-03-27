@@ -11,42 +11,47 @@
     padding: 10px;
     background: #333;
     color: #fff;
-    #font > .monospace(10px);
+    font-family: @font-family-monospace;
+    font-size: 10px;
     line-height: 1.2;
     white-space: pre;
   }
 
   .server, .vm {
     strong { display: inline-block; width: 200px; text-transform: uppercase; color: @gray; font-weight: normal;}
-    .value { #font > .monospace(12px) }
+    .value {
+      font-family: @font-family-monospace;
+      font-size: 12px;
+    }
   }
 
   .resource-status .succeeded {
-    background-color: @activeColor;
+    background-color: @brand-success;
   }
 
   .resource-status .failed {
-    background-color: @dangerColor;
+    background-color: @state-danger-bg;
   }
   .resource-status .queued {
-    background-color: @warningColor;
+    background-color: @state-warning-bg;
   }
   .resource-status .running {
-    background-color: @warningColor;
+    background-color: @state-warning-bg;
   }
 
   .resource-status .canceled {
-    background-color: @grayLight;
+    background-color: @gray-light;
   }
 
   .chain-results {
     li {
       padding: 5px 10px;
       background: #f3f3f3;
-      margin-bottom: 0.5em; font-size: 12px;
+      margin-bottom: 0.5em;
+      font-size: 12px;
     }
     li.error {
-      background: lighten(@red, 40%);
+      background: @state-danger-bg;
       * {
         color: #fff;
       }
@@ -57,12 +62,12 @@
     }
     .name { font-weight: bold; }
     .task { width: 360px;}
-    .time { padding-right: 5px; color: @grayLight; font-size: 10px; text-align: right; }
+    .time { padding-right: 5px; color: @gray-light; font-size: 10px; text-align: right; }
     .duration {
       margin-left: 250px;
       font-size: 20px;
       padding: 10px;
-      color: @grayLight;
+      color: @gray-light;
       .value {
         display: inline-block;
         width: 80px;

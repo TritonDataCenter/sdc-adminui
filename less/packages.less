@@ -2,13 +2,10 @@
   .page-header { margin-bottom: 0; }
 
   #package-search {
-    float: left;
     padding: 14px;
     background: #f8f8f8;
     overflow: hidden;
     input, select { font-size: 12px; }
-    .box-sizing(border-box);
-    width: 250px;
     label {
       font-size: 11px;
       text-transform: uppercase;
@@ -16,8 +13,6 @@
   }
 
   #list {
-    float: right;
-    width: 680px;
     .zero-state { width: 100%;}
 
     ul li { margin-bottom: 0.5em;}
@@ -36,8 +31,8 @@
           padding: 4px 6px;
           font-weight: bold;
         }
-        .active { background: @activeColor;}
-        .inactive { background: @grayLight;}
+        .active { background: @brand-success;}
+        .inactive { background: @gray-light;}
       }
 
       overflow: hidden;
@@ -45,7 +40,7 @@
       padding: 5px 12px;
 
       >div {
-        color: @grayLight;
+        color: @gray-light;
         display: inline-block;
         small { color: #ccc; font-size: 10px;}
         font-size: 11px;
@@ -61,21 +56,21 @@
       .name {
         width: 240px;
         padding-left: 10px;
-        color: @linkColor;
+        color: @link-color;
         font-size: 11px;
         display: inline-block;
       }
       .version {
         width: 80px;
         display: inline-block;
-        color: @grayDark;
-        font-family: @monoFontFamily;
+        color: @gray-dark;
+        font-family: @font-family-monospace;
         font-size: 10px;
         margin-left: 10px;
       }
     }
   }
 
-  .billing-id .value { font-family: @monoFontFamily; font-size: 10px;}
+  .billing-id .value { font-family: @font-family-monospace; font-size: 10px;}
 }
 

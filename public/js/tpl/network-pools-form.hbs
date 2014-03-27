@@ -1,57 +1,67 @@
-<form class="form-horizontal">
-  <div class="modal-header">
-    {{#if networkPool.uuid}}
-    <h1>Edit Network Pool {{networkPool.name}}</h1>
-    {{else}}
-    <h1>Create Network Pool</h1>
-    {{/if}}
-  </div>
-
-  <div class="modal-body">
-    <div class="alert alert-block alert-error hide"></div>
-    <div class="control-group">
-      <label class="control-label">Network Pool Name</label>
-      <div class="controls">
-        <input type="text" class="input" name="name" value="{{name}}" placeholder="name of network pool">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        {{#if networkPool.uuid}}
+        <h4 class="modal-title">Edit Network Pool {{networkPool.name}}</h4>
+        {{else}}
+        <h4 class="modal-title">Create Network Pool</h4>
+        {{/if}}
       </div>
-    </div>
 
-    <div class="control-group">
-      <label class="control-label">Networks</label>
-      <div class="controls">
-        <div class="chosen chosen-xlarge">
-          <select class="chzn-select" name="networks" multiple>
-            {{#each networks}}
-            <option {{#if this.selected}}selected{{/if}}
-                value="{{this.uuid}}">{{this.name}} / {{this.subnet}}
-            </option>
+      <div class="modal-body">
+        <div class="alert alert-danger hide"></div>
+        <div class="form-group">
+          <label class="control-label col-sm-4">Network Pool Name</label>
+          <div class="controls col-sm-6">
+            <input type="text" class="form-control" name="name" value="{{name}}" placeholder="name of network pool">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-sm-4">Networks</label>
+          <div class="controls col-sm-6">
+            <div class="chosen">
+              <select class="form-control" width="100%" name="networks" multiple>
+                {{#each networks}}
+                <option {{#if this.selected}}selected{{/if}}
+                    value="{{this.uuid}}">{{this.name}} / {{this.subnet}}
+                </option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-4">Owner</label>
+            <div class="controls col-sm-6">
+            {{#if owner_uuids.length}}
+            {{#each owner_uuids}}
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input type="text" name="owner_uuids[]" value="{{this}}" class="form-control"></input>
+                        <span class="help-block">Optionally select an owner</span>
+                    </div>
+                </div>
             {{/each}}
-          </select>
+            {{else}}
+                <div class="row">
+                    <div class="controls col-sm-12">
+                        <input type="text" name="owner_uuids[]" value="" class="form-control"></input>
+                        <span class="help-block">Optionally select an owner</span>
+                    </div>
+                </div>
+            {{/if}}
+            </div>
         </div>
+
+      </div>{{!modal-body}}
+
+      <div class="modal-footer">
+        <a class="btn" data-dismiss="modal">Close</a>
+        <button type="submit" class="btn btn-primary save">Save Network Group</button>
       </div>
+    </form>
     </div>
-
-    <div class="control-group">
-      <label class="control-label">Owner</label>
-      {{#if owner_uuids.length}}
-        {{#each owner_uuids}}
-        <div class="controls">
-          <input type="text" name="owner_uuids[]" value="{{this}}" class="input input-xlarge"></input>
-          <span class="help-block">Optionally select an owner</span>
-        </div>
-        {{/each}}
-      {{else}}
-        <div class="controls">
-          <input type="text" name="owner_uuids[]" value="" class="input input-xlarge"></input>
-          <span class="help-block">Optionally select an owner</span>
-        </div>
-      {{/if}}
-    </div>
-
-  </div>{{!modal-body}}
-
-  <div class="modal-footer">
-    <a class="btn" data-dismiss="modal">Close</a>
-    <button type="submit" class="btn btn-primary save">Save Network Group</button>
-  </div>
-</form>
+</div>

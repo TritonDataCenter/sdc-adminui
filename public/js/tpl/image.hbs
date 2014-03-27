@@ -17,7 +17,7 @@
 {{#role "operators"}}
 <div class="actions">
   <div class="notes-component-container"></div>
-  <button class="btn change-publicity">
+  <button class="btn btn-success change-publicity">
     {{#if public}}
     <i class="icon-lock"></i> Make Image Private
     {{else}}
@@ -41,7 +41,7 @@
 
 
 <div class="row">
-  <div class="basic span4">
+  <div class="basic col-md-4">
     {{#if os}}
     <div class="os-image">
       <img src="/img/os-{{os}}.png">
@@ -64,17 +64,17 @@
 
     {{#role "operators"}}
     <div class="actions">
-      <button type="button" class="btn manage-traits">Manage Traits</button>
-      <button type="button" class="btn manage-tags">Manage Tags</button>
+      <button type="button" class="btn btn-info manage-traits">Manage Traits</button>
+      <button type="button" class="btn btn-info manage-tags">Manage Tags</button>
     </div>
     {{/role}}
   </div>
 
 
-  <div class="details span8">
+  <div class="details col-md-8">
     <section>
     <h3>Overview</h3>
-    <ul class="unstyled attributes">
+    <ul class="list-unstyled attributes">
 
       <li>
         <strong>UUID</strong>
@@ -131,7 +131,7 @@
       {{/role}}
     </h3>
 
-    <ul class="unstyled files">
+    <ul class="list-unstyled files">
       {{#if files.length}}
       <li class="file">
         {{#each files}}
@@ -180,7 +180,7 @@
 
     <section>
     <h3>Requirements</h3>
-    <ul class="unstyled attributes requirements">
+    <ul class="list-unstyled attributes requirements">
       <li>
         <strong>Networks</strong>
         <span class="value">
@@ -232,7 +232,7 @@
       <h3>Billing Tags</h3>
       <div class="billing-tags-container">
         {{#role "operators"}}
-        <input type="text" name="billing_tags">
+        <input type="text" class="form-control" name="billing_tags">
         {{/role}}
 
         {{#role "readers"}}
@@ -246,7 +246,7 @@
     {{#if nic_driver}}
     <section>
     <h3>Drivers</h3>
-    <ul class="unstyled attributes requirements">
+    <ul class="list-unstyled attributes requirements">
       <li>
         <strong>NIC Driver</strong>
         <span class="value">{{nic_driver}}</span>

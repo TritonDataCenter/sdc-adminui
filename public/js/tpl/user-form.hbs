@@ -1,82 +1,85 @@
-<form>
-  <div class="modal-header">
-    <a class="close" data-dismiss="modal">×</a>
-    <h3><span class="action"></span> User</h3>
-  </div>
-
-  <div class="modal-body">
-    <div class="alert alert-block alert-error hide"></div>
-    <div class="form-horizontal">
-      <fieldset>
-
-        <div class="control-group">
-          <label class="control-label">Login</label>
-          <div class="controls">
-            <input type="text" name="login" class="span3">
-          </div>
+<div class="modal-dialog">
+    <form class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h3 class="modal-title"><span class="action"></span> User</h3>
         </div>
 
-        <div class="control-group">
-          <label class="control-label">Password</label>
-          <div class="controls">
-            <input type="password" name="password" class="span3">
-          </div>
+        <div class="modal-body">
+            <div class="alert alert-block alert-error hide"></div>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-md-3">Login Name</label>
+                    <div class="col-md-7">
+                        <input type="text" name="login" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Password</label>
+                    <div class="col-md-7">
+                        <input type="password" placeholder="Change password" name="password" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Email Address</label>
+                    <div class="col-md-7">
+                        <input type="text" name="email" class="form-control col-md-7" placeholder="user@example.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Name</label>
+                    <div class="col-md-3">
+                        <input type="text" name="first_name" placeholder="given name" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="last_name" placeholder="last name" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Company</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" name="company" placeholder="Company name (ie Joyent)">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Phone Number</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" name="phone" placeholder="510-123-4567">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Role</label>
+                    <div class="controls col-md-7">
+                        <div class="radio">
+                            <label><input type="radio" name="groups" value=""> None</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="groups" value="readers"> Read-only Operator</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="groups" value="operators"> Full Access Operator</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3">Permissions</label>
+                    <div class="controls col-md-7">
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="approved_for_provisioning" value="true"> Approve For Provisioning</label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="registered_developer" value="true"> User is a Registered Developer</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="cn">
+        </div> {{! .modal-body}}
+
+        <div class="modal-footer">
+            <button data-dismiss="modal" class="btn btn-default">Close</button>
+            <button type="submit" class="save btn btn-primary">Save User</button>
         </div>
-
-        <div class="control-group">
-          <label class="control-label">Email Address</label>
-          <div class="controls">
-            <input type="text" name="email" placeholder="user@example.com">
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Name</label>
-          <div class="controls">
-            <input type="text" name="first_name" placeholder="given name" class="span2">
-            <input type="text" name="last_name" placeholder="last name" class="span2 add-on">
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Company</label>
-          <div class="controls">
-            <input type="text" name="company" placeholder="Joyent">
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Phone Number</label>
-          <div class="controls">
-            <input type="text" name="phone" placeholder="510-123-4567">
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label">Role</label>
-          <div class="controls">
-            <label class="radio"><input type="radio" name="groups" value=""> None</label>
-            <label class="radio"><input type="radio" name="groups" value="readers"> Read-only Operator</label>
-            <label class="radio"><input type="radio" name="groups" value="operators"> Full Access Operator</label>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Permissions</label>
-          <div class="controls">
-            <label class="checkbox"><input type="checkbox" name="approved_for_provisioning" value="true"> Approve For Provisioning</label>
-            <label class="checkbox"><input type="checkbox" name="registered_developer" value="true"> User is a Registered Developer</label>
-          </label>
-          </div>
-        </div>
-
-
-        <input type="hidden" name="cn">
-
-      </fieldset>
-    </div>
-  </div> {{! .modal-body }}
-  <div class="modal-footer">
-    <a data-dismiss="modal" class="btn">Close</a>
-    <button type="submit" class="save btn btn-primary">Save User</button>
-  </div>
-</form>
+    </form>
+</div>

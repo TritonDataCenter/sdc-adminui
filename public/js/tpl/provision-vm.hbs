@@ -1,94 +1,87 @@
 <div class="page" id="page-provision">
-  <div class="page-header">
-    <h1>Provision a Virtual Machine</h1>
-  </div>
-
-  <form class="form-horizontal span12">
-    <div class="alert alert-block alert-error">
-      <strong>OH SNAP!</strong> <span class="message"></span>
+    <div class="page-header">
+        <h1>Provision a Virtual Machine</h1>
     </div>
-
-      <div class="control-group">
-        <label class="control-label" for="input-owner">Owner</label>
-        <div class="controls">
-          <input id="input-owner" type="text" placeholder="Search by uuid, login or email" class="input-xlarge" name="owner">
-          <span class="help-inline">Required</span>
-          <div class="help-block no-sshkeys-warning">
-            <span class="text-warning">
-              Warning: This user does not have any SSH Keys.
-            </span>
-          </div>
-        </div>
-      </div>
-      <div class="user-preview-region"></div>
-
-      <div class="control-group">
-        <label class="control-label" for="input-alias">Alias</label>
-        <div class="controls">
-          <input id="input-alias" name="alias"
-          placeholder="name as it appears to the customer"
-          type="text" class="input-xlarge">
-          <span class="help-inline">Optional</span>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <label class="control-label">Package</label>
-        <div class="controls">
-          <div class="chosen chosen-xlarge">
-            <select name="package" data-placeholder="Select a Package"></select>
-          </div>
+    <form role="form" class="form-horizontal col-md-12">
+        <div class="alert alert-block alert-error">
+            <strong>OH SNAP!</strong> <span class="message"></span>
         </div>
 
-        <div class="package-preview-container"></div>
-      </div>
-
-      <div class="control-group">
-        <label class="control-label">Image</label>
-        <div class="controls">
-          <input id="input-image" type="text"
-            placeholder="enter UUID or search image by name" class="input-xlarge" name="image">
-          <span class="help-inline">Required</span>
-          <span class="help-block">Image to provision machine with</span>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="input-owner">Owner</label>
+            <div class="col-md-7">
+                <input id="input-owner" type="text" placeholder="Search by uuid, login or email" class="form-control " name="owner">
+                <span class="help-block">Required</span>
+                <div class="help-block no-sshkeys-warning">
+                    <span class="text-warning">
+                    Warning: This user does not have any SSH Keys.
+                    </span>
+                </div>
+                <div class="user-preview-region"></div>
+            </div>
         </div>
-      </div>
 
-      <div class="control-group">
-        <label class="control-label">Server</label>
-        <div class="controls">
-          <input id="input-server" type="text" placeholder="enter UUID or search by hostname" class="input-xlarge" name="server">
-          <span class="help-inline">Optional</span>
-          <span class="help-block">Server to provision machine to</span>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="input-alias">Alias</label>
+            <div class="col-md-7">
+                <input id="input-alias" name="alias"
+                placeholder="name as it appears to the customer"
+                type="text" class="form-control ">
+                <span class="help-block">Optional: Alias to provision VM with</span>
+            </div>
         </div>
-      </div>
 
-      <div class="control-group control-group-networks">
-        <label class="control-label">Network Interfaces</label>
-
-        <div class="controls">
-          <div class="network-selection"></div>
-          <a class="attach-network-interface">Attach Another NIC</a>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Package</label>
+            <div class="col-md-7">
+                <div class="chosen">
+                    <select name="package" data-placeholder="Select a Package"></select>
+                </div>
+                <div class="package-preview-container"></div>
+            </div>
         </div>
-      </div>
 
-      <div class="control-group control-group-brand">
-        <label class="control-label">Brand</label>
-        <div class="controls">
-          <select name="brand">
-            <option value="joyent">joyent</option>
-            <option value="joyent-minimal">joyent-minimal</option>
-            <option value="kvm">kvm</option>
-            <option value="sngl">sngl</option>
-          </select>
+        <div class="form-group">
+            <label class="control-label col-md-2">Image</label>
+            <div class="col-md-7">
+                <input id="input-image" type="text" placeholder="Enter UUID or search image by name"
+                class="form-control" name="image">
+                <span class="help-block">Required: Image to provision machine with</span>
+            </div>
         </div>
-      </div>
 
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Provision</button>
-        <button type="button" class="btn back">Back to Virtual Machines</button>
-      </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Server</label>
+            <div class="col-md-7">
+                <input id="input-server" type="text" placeholder="enter UUID or search by hostname" class="form-control " name="server">
+                <span class="help-block">Optional: Server to provision machine to</span>
+            </div>
+        </div>
 
+        <div class="form-group form-group-networks">
+            <label class="control-label col-md-2">Network Interfaces</label>
+            <div class="col-md-9">
+                <div class="network-selection"></div>
+                <a class="attach-network-interface">Attach Another NIC</a>
+            </div>
+        </div>
+
+        <div class="form-group form-group-brand">
+            <label class="control-label col-md-2">Brand</label>
+            <select class="form-control col-md-7" name="brand">
+                <option value="joyent">joyent</option>
+                <option value="joyent-minimal">joyent-minimal</option>
+                <option value="kvm">kvm</option>
+                <option value="sngl">sngl</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2">
+                <button type="submit" class="btn btn-primary">Provision Machine</button>
+                <button type="button" class="btn btn-link back">Back to Virtual Machines</button>
+            </div>
+        </div>
     </div>
-
 </form>
 </div>

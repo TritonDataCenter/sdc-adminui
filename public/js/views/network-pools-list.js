@@ -64,7 +64,7 @@ module.exports = Backbone.Marionette.CollectionView.extend({
         return { emptyViewModel: this.networks };
     },
     attributes: {
-        'class': 'unstyled network-pools-list'
+        'class': 'list-unstyled network-pools-list'
     },
 
     initialize: function(options) {

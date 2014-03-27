@@ -365,12 +365,12 @@ var VmView = Backbone.Marionette.Layout.extend({
         renameBtn.hide();
         value.hide();
 
-        var input = $('<input type="text">').val(this.vm.get('alias'));
-        var save = $('<button class="btn btn-primary btn-mini">').html('Save');
-        var cancel = $('<button class="btn btn-cancel btn-mini">').html('Cancel');
-        this.$('.alias').append(input);
-        this.$('.alias').append(save);
-        this.$('.alias').append(cancel);
+        var input = $('<input class="form-control input-sm" style="width:300px;" type="text">').val(this.vm.get('alias'));
+        var save = $('<button class="btn btn-primary btn-sm">').html('Save');
+        var cancel = $('<button class="btn btn-link btn-sm">').html('Cancel');
+        this.$('.alias form').append(input);
+        this.$('.alias form').append(save);
+        this.$('.alias form').append(cancel);
         input.keyup(function(e) {
             if (e.which === 13) {
                 save.click();

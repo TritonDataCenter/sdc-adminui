@@ -34,13 +34,16 @@
 
 <section class="vms-details">
   <div class="row">
-    <div class="span12">
+    <div class="col-md-12">
       <h3>Overview</h3>
       <table class="overview">
         <tr>
           <th>Name</th>
           <td>
-            <span class="alias"><span class="value vm-alias"></span></span>
+            <span class="alias">
+                <form class="form-inline"></form>
+                <span class="value vm-alias"></span>
+            </span>
 
             {{#role "operators"}}
             <a class="mutate rename"><i class="icon-edit"></i> rename</a>
@@ -116,7 +119,7 @@
           </td>
         </tr>
       </table>
-    </div>{{! span12}}
+    </div>{{! col-md-12}}
   </div>{{! row}}
 </section>{{! vms-details}}
 
@@ -124,7 +127,7 @@
 
 <section>
   <div class="row">
-    <div class="span12">
+    <div class="col-md-12">
       <div class="nics-region"></div>
     </div>
   </div>
@@ -133,21 +136,20 @@
 
 <section>
   <div class="row">
-    <div class="span12">
-      <div class="snapshots">
-      </div>
+    <div class="col-md-12">
+      <div class="snapshots"></div>
     </div>
   </div>
 </section>
 
 <section class="customer-metadata">
   <div class="row">
-    <div class="span12">
+    <div class="col-md-12">
       <h3>
         Customer Metadata
         {{#role "operators"}}
         <div class="actions">
-          <button class="btn-link edit-metadata"><i class="icon icon-pencil"></i> Edit Metadata</button>
+          <button class="btn-link edit-metadata"><i class="fa fa-pencil"></i> Edit Metadata</button>
         </div>
         {{/role}}
       </h3>
@@ -160,11 +162,11 @@
 
 <section>
   <div class="row">
-    <div class="span6">
+    <div class="col-md-6">
       <h3>Internal Metadata</h3>
       <div class="internal-metadata-region"></div>
     </div>
-    <div class="span6">
+    <div class="col-md-6">
       <h3>Tags</h3>
       <div class="tags-container"></div>
     </div>
@@ -173,7 +175,7 @@
 
 <section class="fwrules">
   <div class="row">
-    <div class="span12">
+    <div class="col-md-12">
       <h3>
         Firewall
         {{#role "operators"}}
@@ -191,7 +193,7 @@
 
 <section>
   <div class="row">
-    <div class="span12">
+    <div class="col-md-12">
       <h3>Jobs</h3>
       <div class="jobs-list-region"></div>
     </div>

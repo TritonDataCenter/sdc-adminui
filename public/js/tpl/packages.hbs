@@ -1,76 +1,86 @@
-<div class="row">
-  <div class="span12">
-    <div class="page-header">
-      <h1>Packages
-
+<div class="page-header">
+  <h1>Packages
         {{#role "operators"}}
         <div class="actions">
-          <button class="btn btn-info create">
-            <i class="icon-plus-sign icon-white"></i> Create Package
-          </button>
+            <button class="btn btn-info create">
+                <i class="fa fa-plus icon-white"></i> Create Package
+            </button>
         </div>
         {{/role}}
-      </h1>
-    </div>
+    </h1>
+</div>
 
-    <div id="package-search">
-      <form class="unstyled">
-        <input type="text" name="billing_id" class="span3" placeholder="Quick Find Billing ID">
+<div class="row">
+    <div id="package-search" class="col-md-3">
+      <form role="form">
+        <div class="form-group">
+            <label>Billing ID</label>
+            <input type="text" name="billing_id" class="form-control input-sm" placeholder="Quick Find Billing ID">
+        </div>
 
-        <fieldset>
-          <label>State</label>
-          <select name="state" class="span3">
-            <option value="">any</option>
-            <option selected="selected" value="active">active</option>
-            <option value="inactive">inactive</option>
-          </select>
-        </fieldset>
+        <div class="form-group">
+            <label>State</label>
+            <select class="form-control" name="state">
+                <option value="">any</option>
+                <option selected="selected" value="active">active</option>
+                <option value="inactive">inactive</option>
+            </select>
+        </div>
 
-        <fieldset>
-          <div class="input-prepend">
+        <div class="form-group">
             <label>Package Name</label>
-            <input type="text" placeholder="Package Name" name="name"></input>
-          </div>
-        </fieldset>
+            <input type="text" class="form-control"  placeholder="Package Name" name="name"></input>
+        </div>
 
-        <fieldset>
-          <div class="input-prepend">
+        <div class="form-group">
             <label>Owner UUID</label>
-            <input type="text" placeholder="Search by login, uuid, or email" name="owner_uuid"></input>
-          </div>
-        </fieldset>
+            <input class="form-control" type="text" placeholder="Search by login, uuid, or email" name="owner_uuid"></input>
+        </div>
 
-        <fieldset>
-          <div class="input-prepend">
+
+        <div class="form-group">
             <label>RAM</label>
-            <select name="ram-op" style="width: 50px;">
-              <option value="=">=</option>
-              <option value=">=">&gt;=</option>
-              <option value="<=">&lt;=</option>
-            </select>
-            <input type="text" class="span2" name="ram-value"></input>
-            <span class="add-on">MB</span>
-          </div>
-        </fieldset>
+            <div class="row">
+                <div class="col-sm-3" style="padding-right:0">
+                    <select class="form-control" name="ram-op">
+                        <option value="=">=</option>
+                        <option value=">=">&gt;=</option>
+                        <option value="<=">&lt;=</option>
+                    </select>
+                </div>
+                <div class="col-sm-9" style="padding-left:0;">
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="ram-value"></input>
+                        <span class="input-group-addon">MB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <fieldset>
-          <div class="input-prepend">
+        <div class="form-group">
             <label>Disk Quota</label>
-            <select name="disk-op" style="width: 50px;">
-              <option value="=">=</option>
-              <option value=">=">&gt;=</option>
-              <option value="<=">&lt;=</option>
-            </select>
-            <input type="text" class="span2" name="disk-value"></input>
-            <span class="add-on">GB</span>
-          </div>
-        </fieldset>
+            <div class="row">
+                <div class="col-sm-3" style="padding-right:0">
+                    <select class="form-control" name="disk-op">
+                        <option value="=">=</option>
+                        <option value=">=">&gt;=</option>
+                        <option value="<=">&lt;=</option>
+                    </select>
+                </div>
+                <div class="col-sm-9" style="padding-left:0;">
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="disk-value"></input>
+                        <span class="input-group-addon">GB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <button class="search btn btn-primary btn-block"><i class="icon-search"></i> SEARCH</button>
       </form>
     </div>
 
-    <div id="list"></div>
+    <div id="list" class="col-md-9"></div>
   </div>
 
 </div>

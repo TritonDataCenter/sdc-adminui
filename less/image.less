@@ -1,11 +1,11 @@
 #page-image {
   .page-header {
     overflow: visible;
-    .version { color: @grayLight; font-size: 14px;}
+    .version { color: @gray-light; font-size: 14px;}
     .resource-status {
-      .active { background: @activeColor; }
-      .inactive { background: @dangerColor; }
-      .unactivated { background: @warningColor; }
+      .active { background: @brand-success; }
+      .inactive { background: @brand-danger; }
+      .unactivated { background: @brand-warning; }
     }
   }
   .basic {
@@ -29,7 +29,6 @@
     .text-warning { font-size: 14px; float: right;}
   }
   .billing-tags-container {
-    .tags { #bootstrap-tags; }
   }
 
   .fileinput { display: none; }
@@ -79,9 +78,11 @@
       }
       .sha1 {
         width: 320px;
-        #font > .monospace(11px, normal, 1.2);
+        font-family: @font-family-monospace;
+        font-size: 12px;
+        line-height: 1.2;
       }
-      .compression { color: @grayLight;}
+      .compression { color: @gray-light;}
       .size { width: 200px; }
     }
   }

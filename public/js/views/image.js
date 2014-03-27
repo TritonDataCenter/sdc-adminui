@@ -205,9 +205,11 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         this.tagsList.setElement(this.$('.tags-container'));
         this.tagsList.render();
 
-        React.renderComponent(
-            new NotesComponent({item: this.model.get('uuid')}),
-            this.$('.notes-component-container').get(0));
+        if (adminui.user.role('operators')) {
+            React.renderComponent(
+                new NotesComponent({item: this.model.get('uuid')}),
+                this.$('.notes-component-container').get(0));
+        }
 
         this.renderBillingTags();
     },
@@ -217,8 +219,8 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         var val = billingTags.join(', ');
 
         this.$('input[name=billing_tags]').val(billingTags);
-        this.$('input[name=billing_tags]').tag({
-            placeholder: 'Enter new tag',
+        this.$('input[name=billing_tags]').tags({
+            promptText: 'Enter new tag',
             caseInsensitive: false,
             change: function(tags) {
                 model.save({billing_tags: tags}, {patch: true, silent: true});

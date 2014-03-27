@@ -14,7 +14,7 @@ section.fwrules {
 
 #page-vm {
   #vm-nics {
-    .primary { font-size: 10px; color: @activeColor; margin-left: 5px;}
+    .primary { font-size: 10px; color: @brand-success; margin-left: 5px;}
   }
   .jobs-list {
     .__jobs-list;
@@ -22,13 +22,13 @@ section.fwrules {
   .dropdown-menu .delete { color: red; }
 
   .resource-status {
-    .running { background: @activeColor; }
-    .failed { background: @dangerColor; }
-    .stopped { background: @grayLight; }
+    .running { background: @brand-success; }
+    .failed { background: @brand-danger; }
+    .stopped { background: @gray-light; }
   }
 
-  .image-name-version.disabled { color: @grayLight; cursor: pointer; }
-  .image-name-version.error { color: @dangerColor; }
+  .image-name-version.disabled { color: @gray-light; cursor: pointer; }
+  .image-name-version.error { color: @brand-danger; }
 
   .vms-details {
     .alias {
@@ -37,7 +37,7 @@ section.fwrules {
     .server-hostname { cursor: pointer; }
     .uuid {
       font-size: 10px;
-      color: @grayLight;
+      color: @gray-light;
       font-style: italic;
       font-family: monospace;
     }
@@ -61,8 +61,8 @@ section.fwrules {
     }
   }
   .snapshots {
-    .rollback { color: @dangerColor; }
-    .empty { padding: 15px 0; color: @grayLight; text-align: center; }
+    .rollback { color: @brand-danger; }
+    .empty { padding: 15px 0; color: @gray-light; text-align: center; }
   }
 
   .notes-component-container {

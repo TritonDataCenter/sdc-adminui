@@ -121,14 +121,15 @@ var View = Backbone.Marionette.Layout.extend({
         };
         var err = xhr.responseData;
         console.log('network creation validation failed', err);
-        this.$('.control-group').removeClass('error');
-        this.$('.help-inline', 'control-group').remove();
+        this.$('.form-groupo').removeClass('error');
+        this.$('.help-block', 'form-group').remove();
+
         _.each(err.errors, function(errObj) {
             var $field = $(fieldMap[errObj.field]);
-            var $controlGroup = $field.parents('.control-group');
-            $controlGroup.addClass('error');
+            var $controlGroup = $field.parents('.form-group');
+            $controlGroup.addClass('has-error');
             if (errObj.message) {
-                var errmsg = $("<div class='help-inline'>").html(errObj.message);
+                var errmsg = $("<div class='help-block text-danger'>").html(errObj.message);
                 $field.after(errmsg);
             }
         }, this);

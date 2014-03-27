@@ -2,7 +2,7 @@ ul.fwrules-list {
   li { margin-bottom: .5em; display: block; clear: both; overflow: hidden;}
   li:last-child { margin: 0; }
   li.editing {
-    background: lighten(@yellow, 40%);
+    background: lighten(@state-warning-bg, 40%);
     .opacity(50);
     .actions { visibility: hidden;}
   }
@@ -11,40 +11,41 @@ ul.fwrules-list {
     float: right;
     a { font-size: 12px;}
 
-   .delete-rule { color: @dangerColor; }
-   .enable-rule { color: @activeColor;}
-   .disable-rule { color: @dangerColor;}
+   .delete-rule { color: @state-danger-text; }
+   .enable-rule { color: @state-success-text; }
+   .disable-rule { color: @state-danger-text; }
  }
   .rule.disabled {
     >div {
       text-decoration: line-through;
-      background: @grayLighter;
+      background: @gray-lighter;
       color: @gray;
     }
   }
   .rule {
     float: left;
-    margin-top: 4px;
+    margin-top: 4pw;
 
     >div {
       display: inline-block;
       padding-left: 6px; padding-right: 6px;
-      #font > .monospace(12px);
-      background: @grayLighter;
+      font-family: @font-family-monospace;
+      font-size: @font-size-small;
+      background: @gray-lighter;
     }
 
-    .global { background: @grayDarker; color: #FFF; }
+    .global { background: @gray-darker; color: #FFF; }
 
     .to {
-      background: @infoBackground;
+      background: @state-info-bg;
       color: #333;
     }
 
-    .from-predicate { color: #FFF; background: @grayLight; }
-    .to-predicate { color: #FFF; background: @grayLight; }
+    .from-predicate { color: #FFF; background: @gray-light; }
+    .to-predicate { color: #FFF; background: @gray-light; }
 
     .action { color: #FFF; font-weight: bold;}
-    .ALLOW { background: @activeColor; }
-    .BLOCK { background: @dangerColor; }
+    .ALLOW { background: @brand-success; }
+    .BLOCK { background: @brand-danger; }
   }
 }

@@ -1,18 +1,23 @@
 <div class="page-header">
-  <h1>Users &amp; Groups
+    <h1>Users &amp; Groups
     {{#role "operators"}}
     <div class="actions">
-      <button data-event="new-user" class="btn btn-primary">
-        <i class="icon-plus icon-white"></i> New User
-      </button>
+        <button data-event="new-user" class="btn btn-primary">
+        <i class="fa fa-plus"></i> Create New User
+        </button>
     </div>
     {{/role}}
-  </h1>
+    </h1>
 </div>
 
+
 <div class="row">
-  <div class="users-search span12">
-    <input class="span12" type="text" name="quicksearch" placeholder="Search by UUID, Login, Name, Company or Email">
-  </div>
-  <div class="users-list span12"></div>
+    <div class="col-md-12">
+        <div class="users-search">
+            <input class="form-control" type="text" name="quicksearch" placeholder="Search by UUID, Login, Name, Company or Email">
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="users-list"></div>
+    </div>
 </div>

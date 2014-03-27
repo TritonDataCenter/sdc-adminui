@@ -120,14 +120,15 @@ var Form = module.exports = React.createClass({
 
     render: function() {
         return <div className="provisioning-limits-form">
-            { this.props.initialLimit ? <h1>Update Limit for {this.props.initialLimit.datacenter}</h1> : <h1>Add New Limit</h1> }
+            { this.props.initialLimit ?
+                <h4 className="modal-title">Update Limit for {this.props.initialLimit.datacenter}</h4> :
+                <h4 className="modal-title">Add New Limit</h4> }
 
             <form onSubmit={this.handleSave} className="form-horizontal">
-
-                <div className="control-group">
-                    <label className="control-label">Datacenter</label>
-                    <div className="controls">
-                        <Chosen placeholder="Select a Datacenter" value={this.state.datacenter} onChange={this.handleChangeDatacenter}>
+                <div className="form-group">
+                    <label className="col-md-4 control-label">Datacenter</label>
+                    <div className="col-md-7">
+                        <Chosen className="form-control" placeholder="Select a Datacenter" value={this.state.datacenter} onChange={this.handleChangeDatacenter}>
                         <option value=""></option>
                         {
                             DATACENTERS.map(function(d) {
@@ -138,35 +139,33 @@ var Form = module.exports = React.createClass({
                     </div>
                 </div>
 
-                <div className="control-group">
-                    <label className="control-label">Limit Provisions to</label>
-                    <div className="controls">
-                        <div className="input-append">
-                            <input onChange={this.handleChangeLimitValue}
-                                type="number"
-                                value={this.state.limitValue}
-                                style={ {width: 80} }
-                                className="add-on" />
-
-                            <Chosen onChange={this.handleChangeLimitUnit} value={this.state.limitUnit }>
-                                <option value="ram">MB of RAM</option>
-                                <option value="quota">GB of Disk Space</option>
-                                <option value="machines">Virtual Machines</option>
-                            </Chosen>
-                        </div>
+                <div className="form-group">
+                    <label className="col-md-4 control-label">Limit Provisions to</label>
+                    <div className="col-md-3" style={{ paddingRight: 0}}>
+                        <input onChange={this.handleChangeLimitValue}
+                            type="number"
+                            value={this.state.limitValue}
+                            className="form-control" />
+                    </div>
+                    <div className="col-md-4" style={{ paddingLeft: 0}}>
+                        <Chosen className="form-control" onChange={this.handleChangeLimitUnit} value={this.state.limitUnit }>
+                            <option value="ram">MB of RAM</option>
+                            <option value="quota">GB of Disk Space</option>
+                            <option value="machines">Virtual Machines</option>
+                        </Chosen>
                     </div>
                 </div>
 
-                <div className="control-group">
-                    <label className="control-label">For</label>
-                    <div className="controls">
-                    <div>
-                        <Chosen value={this.state.criteriaType } onChange={ this.handleChangeCriteriaType }>
-                            <option value="any">Any VM Type</option>
-                            <option value="os">Operating System...</option>
-                            <option value="image">Image...</option>
-                        </Chosen>
-                    </div>
+                <div className="form-group">
+                    <label className="control-label col-md-4">For</label>
+                    <div className="col-md-7">
+                        <div>
+                            <Chosen className="form-control" value={this.state.criteriaType } onChange={ this.handleChangeCriteriaType }>
+                                <option value="any">Any VM Type</option>
+                                <option value="os">Operating System...</option>
+                                <option value="image">Image...</option>
+                            </Chosen>
+                        </div>
 
                         { this.state.criteriaType === 'os' ?
                         <div>
@@ -182,7 +181,7 @@ var Form = module.exports = React.createClass({
 
                         { this.state.criteriaType === 'image' ?
                         <div>
-                            <Chosen onChange={this.handleChangeCriteriaValue} value={this.state.criteriaValue}>
+                            <Chosen className="form-control" onChange={this.handleChangeCriteriaValue} value={this.state.criteriaValue}>
                                     {
                                         this.state.images.map(function(i) {
                                             return <option value={i}>{i}</option>
@@ -197,7 +196,7 @@ var Form = module.exports = React.createClass({
 
             </form>
             <div className="buttons">
-                <button className="btn" data-dismiss="modal">Close</button>
+                <button className="btn btn-default" data-dismiss="modal">Close</button>
                 <button disabled={ this.isValid() ? '' : 'disabled' } onClick={this.handleSave} className="btn btn-primary" type="button">Save Limit</button>
             </div>
         </div>

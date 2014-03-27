@@ -44,7 +44,7 @@ var FWRulesListItem = Backbone.Marionette.ItemView.extend({
 var FWRulesList = require('./collection').extend({
     tagName: 'ul',
     attributes: {
-        'class': 'unstyled fwrules-list'
+        'class': 'list-unstyled fwrules-list'
     },
 
     itemView: FWRulesListItem,

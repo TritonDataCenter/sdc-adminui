@@ -1,21 +1,25 @@
-<div class="modal-header"><h2>Server Setup</h2></div>
-<div class="modal-body">
-  <p>Server setup installs the required software agents to enable provisioning on this server.</p>
-  <form class="form form-horizontal">
-    <div class="control-group">
-      <div class="controls">
-        <label class="checkbox">
-          <input class="custom-hostname" type="checkbox" /> Specify a custom hostname:
-        </label>
-        <div class="custom-hostname-container">
-          <input type="text" name="hostname" />
-          <p class="help-block"><span class="label label-warning">Hostname cannot be changed after setup</span></p>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header"><h2>Server Setup</h2></div>
+        <div class="modal-body">
+            <p>Server setup installs the required software agents to enable provisioning on this server.</p>
+            <form class="form form-horizontal">
+                <div class="form-group">
+                    <div class="controls">
+                        <div class="checkbox">
+                            <label><input class="custom-hostname" type="checkbox" /> Specify a custom hostname:</label>
+                        </div>
+                        <div class="custom-hostname-container">
+                            <input type="text" class="form-control" name="hostname" />
+                            <p class="help-block"><span class="label label-warning">Hostname cannot be changed after setup</span></p>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
-      </div>
+        <div class="modal-footer">
+            <button type="button" class="btn" data-dismiss="modal">Close</button>
+            <button class="btn btn-primary setup">Setup Server</button>
+        </div>
     </div>
-  </form>
-</div>
-<div class="modal-footer">
-  <button type="button" class="btn" data-dismiss="modal">Close</button>
-  <button class="btn btn-primary setup">Setup Server</button>
 </div>

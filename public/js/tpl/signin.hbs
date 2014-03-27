@@ -4,22 +4,22 @@
   <span class="datacenter"></span>
 </h1>
 
-<div class="alert alert-error">
+<div class="alert alert-danger">
   <span class="msg"></span>
 </div>
 
 <form class="form">
-  <div class="control-group">
-    <label class="control-label">Username</label>
-    <input class="input" type="text" value="{{login}}" autocomplete="off" name="username">
+  <div class="form-group">
+    <label class="control-label">Login</label>
+    <input class="form-control input-lg" type="text" value="{{login}}" placeholder="Enter operator login name" autocomplete="off" name="username">
   </div>
 
-  <div class="control-group">
+  <div class="form-group">
     <label class="control-label">Password</label>
-    <input class="input" type="password" name="password" value="">
+    <input class="form-control input-lg" type="password" placeholder="Enter operator password" name="password" value="">
   </div>
 
   <div class="controls">
-    <button type="submit" class="btn btn-large btn-info">Sign In to SmartDataCenter</button>
+    <button type="submit" class="btn input-lg btn-block btn-info">Sign In to SmartDataCenter</button>
   </div>
 </form>

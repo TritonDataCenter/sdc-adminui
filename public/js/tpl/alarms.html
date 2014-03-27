@@ -1,7 +1,7 @@
 <% var moment = require('moment') %>
 <% if (alarms.length) { %>
 <div class="alarms-container has-alarms">
-  <ul class="unstyled alarms-list">
+  <ul class="list-unstyled alarms-list">
    <% alarms.each(function(alarm) { %>
    <li data-uuid="<%= alarm.get('id') %>">
      <div class="summary">
@@ -28,7 +28,7 @@
    </div>
 
   <div class="details">
-    <ul class="unstyled faults">
+    <ul class="list-unstyled faults">
     <% _.each(alarm.faults, function(fault) { %>
     <li>
       <div class="fault-name"><%= fault.probe.name %></div>

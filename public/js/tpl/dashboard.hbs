@@ -1,53 +1,56 @@
-<div class="page-header">
-  <h1>Dashboard</h1>
-</div>
-
 <div class="row">
-  <div class="counter vms span6">
-    <div class="value vm-count"></div>
-    <div class="name">Virtual Machines</div>
-  </div>
-  <div class="counter users span6">
-    <div class="value user-count">-</div>
-    <div class="name">Users</div>
-  </div>
-</div>
-
-
-<div class="row">
-  <div class="span12">
-    <div class="servers">
-      <div class="graph-container">
-        <h6>Provisionable Memory</h6>
-        <div class="y_axis"></div>
-        <div class="server-provisionable-memory-graph"></div>
-      </div>
-      <div class="data">
-        <div class="stat">
-          <div class="name">Servers</div>
-          <div class="value"><span class="server-count">-</span></div>
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1>Dashboard</h1>
         </div>
-        <div class="stat">
-          <div class="name">Servers Reserved</div>
-          <div class="value"> <span class="server-reserved">-</span> / <span class="server-count">-</span> </div>
-        </div>
-        <div class="stat">
-          <div class="name">RAM Provisionable / Total </div>
-          <div class="value"> <span class="server-provisionable-memory"></span> / <span class="server-total-memory"></span> </div>
-        </div>
-        <div class="stat">
-          <div class="name">Utilization %</div>
-          <div class="value"><span class="server-utilization-percent"></span></div>
-        </div>
-      </div>
     </div>
-  </div>
 </div>
-
 <div class="row">
-  <div class="span6">
-    <div class="alarms-container">
-      <div id="dashboard-alarms" class="alarms"></div>
+    <div class="col-md-12">
+
+        <div class="row">
+            <div class="counter vms col-md-6">
+                <div class="value vm-count"></div>
+                <div class="name">Virtual Machines</div>
+            </div>
+            <div class="counter users col-md-6">
+                <div class="value user-count">-</div>
+                <div class="name">Users</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 servers">
+                <div class="graph-container">
+                    <h6>Provisionable Memory</h6>
+                    <div class="y_axis"></div>
+                    <div class="server-provisionable-memory-graph"></div>
+                </div>
+                <div class="data">
+                    <div class="stat">
+                        <div class="name">Servers</div>
+                        <div class="value"><span class="server-count">-</span></div>
+                    </div>
+                    <div class="stat">
+                        <div class="name">Servers Reserved</div>
+                        <div class="value"> <span class="server-reserved">-</span> / <span class="server-count">-</span> </div>
+                    </div>
+                    <div class="stat">
+                        <div class="name">RAM Provisionable / Total </div>
+                        <div class="value"> <span class="server-provisionable-memory"></span> / <span class="server-total-memory"></span> </div>
+                    </div>
+                    <div class="stat">
+                        <div class="name">Utilization %</div>
+                        <div class="value"><span class="server-utilization-percent"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="alarms-container">
+                    <div id="dashboard-alarms" class="alarms"></div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

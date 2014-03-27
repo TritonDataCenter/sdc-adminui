@@ -8,7 +8,6 @@ var React = require('react');
 var Chosen = require('react-chosen');
 var Jobs = require('../models/jobs');
 var JobsList = require('./jobs-list');
-var JobsFilter = require('./jobs-filter');
 
 var PRESET_FILTERS = [
     {
@@ -42,17 +41,21 @@ var DatePicker = React.createClass({
     componentDidMount: function() {
         var n = this.refs.datepicker.getDOMNode();
         this.dateTimePicker = $(n).datetimepicker({language: 'en'});
-        this.dateTimePicker.on('changeDate', this.onChange);
+        this.dateTimePicker.on('dp.change', this.onChange);
     },
     onChange: function(e) {
-        console.log('DatePicker change', e);
-        this.props.onChange({value: e.date });
+        this.props.onChange({value: e.date.utc().toDate() });
     },
     render: function() {
-        return (<div ref="datepicker" className="date-picker input-append">
-            <input ref="input" value={this.props.value} data-format="yyyy-MM-dd hh:mm:ss" type="text"></input>
-            <span className="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
-        </div>)
+        console.log(this.props.value);
+        return (
+            <div className="form-group">
+            <div ref="datepicker" className="input-group date-picker" data-date-format="YYYY-MM-DD HH:mm:ss">
+                <input ref="input" className="form-control" value={this.props.value}  type="text"></input>
+                <span className="input-group-addon"><span className="fa fa-calendar"></span></span>
+            </div>
+            </div>
+        )
     }
 });
 
@@ -64,7 +67,7 @@ var JobExecutionCriteria = React.createClass({
     },
     render: function() {
         var node;
-        node = (<Chosen width="140px" value={this.props.value} onChange={this.onChange} ref="chosen" name="execution">
+        node = (<Chosen className="form-control" value={this.props.value} onChange={this.onChange} ref="chosen" name="execution">
             <option value="">any</option>
             <option value="succeeded">succeeded</option>
             <option value="failed">failed</option>
@@ -72,7 +75,7 @@ var JobExecutionCriteria = React.createClass({
             <option value="queued">queued</option>
             <option value="canceled">canceled</option>
         </Chosen>)
-        return <div className="criteria criteria-execution">{node}</div>;
+        return <div className="form-group criteria criteria-execution">{node}</div>;
     }
 });
 
@@ -137,10 +140,10 @@ var JobCriterias = React.createClass({
         }
     },
     render: function() {
-        return <ul className="unstyled">
-            <li><span className="criteria-name">Execution</span><JobExecutionCriteria name="execution" onChange={this.onExecutionChange} value={this.state.execution} /></li>
-            <li><span className="criteria-name">Since</span><JobDateCriteria name="since" onChange={this.onDateSinceChange} value={this.state.since} /></li>
-            <li><span className="criteria-name">Until</span><JobDateCriteria name="until" onChange={this.onDateUtilChange} value={this.state.until} /></li>
+        return <ul className="list-unstyled">
+            <li className="col-md-4"><span className="criteria-name">Execution</span><JobExecutionCriteria name="execution" onChange={this.onExecutionChange} value={this.state.execution} /></li>
+            <li className="col-md-4" style={ {paddingRight:0} }><span className="criteria-name">Since</span><JobDateCriteria name="since" onChange={this.onDateSinceChange} value={this.state.since} /></li>
+            <li className="col-md-4" style={ {paddingLeft:0} }><span className="criteria-name">Until</span><JobDateCriteria name="until" onChange={this.onDateUtilChange} value={this.state.until} /></li>
         </ul>;
     }
 });
@@ -189,7 +192,7 @@ var JobFiltersList = React.createClass({
                     </a></li>;
         }, this);
 
-        return <ul className="unstyled">{liNodes}</ul>;
+        return <ul className="list-unstyled">{liNodes}</ul>;
     }
 });
 

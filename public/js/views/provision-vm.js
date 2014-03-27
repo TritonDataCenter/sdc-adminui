@@ -59,7 +59,7 @@ var PackageSelect = Backbone.Marionette.CollectionView.extend({
         'change': 'onChange'
     },
     onSync: function(e) {
-        this.$el.trigger("liszt:updated");
+        this.$el.trigger("chosen:updated");
     },
     onRender: function() {
         this.$el.prepend('<option></option>');
@@ -77,8 +77,6 @@ var PackageSelect = Backbone.Marionette.CollectionView.extend({
 var ProvisionVmTemplate = require('../tpl/provision-vm.hbs');
 
 var TypeaheadUser = require('./typeahead-user');
-var ImageTypeaheadTpl = require('../tpl/typeahead-image.hbs');
-var ServerTypeaheadTpl = require('../tpl/typeahead-server.hbs');
 
 var View = Backbone.Marionette.Layout.extend({
     url: 'provision',
@@ -107,7 +105,7 @@ var View = Backbone.Marionette.Layout.extend({
         'form': 'form',
         'alert': '.alert',
         'ownerInput': '#input-owner',
-        'brandControls': '.control-group-brand'
+        'brandControls': '.form-group-brand'
     },
 
     initialize: function(options) {
@@ -153,7 +151,7 @@ var View = Backbone.Marionette.Layout.extend({
         } else {
             process.nextTick(function() {
                 $field.val('');
-                self.$('.control-group-networks').hide();
+                self.$('.form-group-networks').hide();
                 self.userPreview.close();
                 self.removeAllNics();
             });
@@ -285,8 +283,8 @@ var View = Backbone.Marionette.Layout.extend({
 
         this.nicSelects.push(component);
 
-        this.$('.control-group-networks').show();
-        this.$('.control-group-primary-network').show();
+        this.$('.form-group-networks').show();
+        this.$('.form-group-primary-network').show();
     },
 
     onRender: function() {
@@ -298,12 +296,12 @@ var View = Backbone.Marionette.Layout.extend({
         this.serverInput.render();
 
         this.imageInput = new TypeaheadImageView({el: this.$('input[name=image]')});
-        this.listenTo(this.userInput, 'selected', this.onSelectImage);
+        this.listenTo(this.imageInput, 'selected', this.onSelectImage);
         this.imageInput.render();
 
 
         this.packageSelect.setElement(this.$('select[name=package]')).render();
-        this.$('.control-group-networks').hide();
+        this.$('.form-group-networks').hide();
         this.$('.package-preview-container').append(this.packagePreview.render().el);
 
         this.hideError();
@@ -356,14 +354,14 @@ var View = Backbone.Marionette.Layout.extend({
         if (arguments[0] !== false) {
             brands = arguments;
         }
-        this.$('.control-group-brand option').removeAttr('disabled');
+        this.$('.form-group-brand option').removeAttr('disabled');
         _.each(brands, function(b) {
-            this.$('.control-group-brand option[value='+b+']').attr('disabled', true);
+            this.$('.form-group-brand option[value='+b+']').attr('disabled', true);
         }, this);
     },
 
     setBrand: function(brand) {
-        this.$('.control-group-brand').find('[name=brand]').val(brand);
+        this.$('.form-group-brand').find('[name=brand]').val(brand);
     },
 
     checkFields: function() {
@@ -502,10 +500,10 @@ var View = Backbone.Marionette.Layout.extend({
         };
         var err = xhr.responseData;
         this.ui.alert.find('.message').html(err.message);
-        this.$('.control-group').removeClass('error');
+        this.$('.form-group').removeClass('error');
         _.each(err.errors, function(errObj) {
             var field = $(fieldMap[errObj.field]);
-            field.parents('.control-group').addClass('error');
+            field.parents('.form-group').addClass('error');
         }, this);
         this.ui.alert.show();
     },

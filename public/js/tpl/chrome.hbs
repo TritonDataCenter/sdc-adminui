@@ -1,45 +1,45 @@
 <div id="rootnav">
-  <h1 class="branding">
-    <span class="product">SDC</span>
-    <div class="datacenter"></div>
-  </h1>
+    <div class="row">
+        <h1 class="branding col-md-2">
+            <span class="product">SDC</span>
+            <div class="datacenter"></div>
+        </h1>
 
-  <div class="server-time">UTC: <time></time></div>
+        <div class="navbar col-md-8">
+            <ul class="nav navbar-nav">
+                <li data-view="dashboard"><a href="/dashboard"><i class="fa fa-home"></i></a></li>
+                <li class="fishbulb"><a title="Cloud Analytics" href="/fishbulb" target="fishbulb"><i class="fa fa-bar-chart-o"></i></a></li>
 
-  <div class="navbar">
-    <div class="navbar-inner">
-      <ul class="nav">
-        <li data-view="dashboard"><a href="/dashboard"><i class="icon-home"></i></a></li>
-        <li class="fishbulb"><a title="Cloud Analytics" href="/fishbulb" target="fishbulb"><i class="icon-bar-chart"></i></a></li>
+                <li data-view="vms"><a href="/vms">Virtual Machines</a></li>
+                <li data-view="servers"><a href="/servers">Servers</a></li>
+                <li data-view="users"><a href="/users">Users</a></li>
 
-        <li data-view="vms"><a href="/vms">Virtual Machines</a></li>
-        <li data-view="servers"><a href="/servers">Servers</a></li>
-        <li data-view="users"><a href="/users">Users</a></li>
+                <li data-view="images"><a href="/images">Images</a></li>
+                <li data-view="networking"><a href="/networks">Networking</a></li>
+                <li data-view="packages"><a href="/packages">Packages</a></li>
 
-        <li data-view="images"><a href="/images">Images</a></li>
-        <li data-view="networking"><a href="/networks">Networking</a></li>
-        <li data-view="packages"><a href="/packages">Packages</a></li>
-
-        <li data-view="jobs"><a href="/jobs">Jobs</a></li>
-        <li data-view="services"><a href="/services">Services</a></li>
+                <li data-view="jobs"><a href="/jobs">Jobs</a></li>
+                <li data-view="services"><a href="/services">Services</a></li>
 
 
-        {{#role "operators"}}
-        <li class="settings" data-view="settings"><a href="/services"><i class="icon-cog"></i></a></li>
-        {{/role}}
-      </ul>
+                {{#role "operators"}}
+                <li class="settings" data-view="settings"><a href="/services"><i class="fa fa-gear"></i></a></li>
+                {{/role}}
+            </ul>
+        </div>
+        <div class="acc-controls col-md-2">
+            <a class="current-user"><i class="fa fa-user"></i><span class="login-name"></span></a>
+            <a class="signout"><i class="fa fa-signout"></i></a>
+        </div>
     </div>
-  </div>
-  <div class="acc-controls">
-    <a class="current-user"><i class="icon-user"></i><span class="login-name"></span></a>
-    <a class="signout"><i class="icon-signout"></i></a>
-  </div>
+
+    <div class="server-time">UTC: <time></time></div>
 </div>
 
 <div id="notifications"></div>
 
 <div class="container">
-  <div class="row">
-    <div id="content" class="span12"></div>
-  </div>
+    <div class="row">
+        <div id="content" class="col-md-12"></div>
+    </div>
 </div>
