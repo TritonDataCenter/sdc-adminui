@@ -15,13 +15,13 @@ var ServerNic = React.createClass({
         return (
             <li key={nic.mac}>
                 <div className={'link-status ' + nic.link_status}></div>
-                <div className="name-container">
-                <span className="name">{nic.name}</span>
-                <span className="mac value">{nic.mac}</span>
+                    <div className="name-container">
+                    <span className="name">{nic.name}</span>
+                    <span className="mac value">{nic.mac}</span>
                 </div>
                 <div className="ip-container">
-                <span className="lbl">IP</span>
-                <span className="ip value">{nic.ip}</span>
+                    <span className="lbl">IP</span>
+                    <span className="ip value">{nic.ip}</span>
                 </div>
                 <div className="netmask-container">
                 <span className="lbl">NETMASK</span>

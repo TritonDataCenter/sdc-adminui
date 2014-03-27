@@ -26,11 +26,11 @@ var NicTagSelect = Backbone.Marionette.ItemView.extend({
                 if (model.get('selected') === true) {
                     var sel = _.str.sprintf('option[value=%s]:not(:selected)', tag);
                     this.$(sel).remove();
-                    this.$('select').trigger("liszt:updated");
+                    this.$('select').trigger("chosen:updated");
                 } else {
                     if (0 === this.$(_.str.sprintf('option[value=%s]', tag)).length) {
                         this.$('select').append($('<option />').val(tag).html(tag));
-                        this.$('select').trigger("liszt:updated");
+                        this.$('select').trigger("chosen:updated");
                     }
                 }
             }
@@ -41,9 +41,9 @@ var NicTagSelect = Backbone.Marionette.ItemView.extend({
             '<label class="control-label">{{this.name}}</label>',
             '<div class="controls">',
             '<div class="chosen">',
-            '<select data-placeholder="Choose a NIC Tag..."  class="chzn-select" multiple></select>',
+            '<select data-placeholder="Choose a NIC Tag..." class="form-control" multiple></select>',
             '</div>',
-            '<span class="help-inline mac"></span>',
+            '<span class="help-block mac"></span>',
             '</div>'
         ].join('\n');
     },
