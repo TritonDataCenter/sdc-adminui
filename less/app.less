@@ -228,7 +228,6 @@ h1.branding {
   background: #e0e0e0;
   padding: 0;
   margin: 0;
-  height: 46px;
 
   h1.branding {
     .product { color: #000; font-weight: 300; display: inline-block; }
@@ -236,12 +235,11 @@ h1.branding {
     text-align: center;
     padding: 0 5px;
     margin: 0;
-    line-height: 46px;
   }
 
   .acc-controls {
     padding: 13px 15px;
-    font-size: 13px;
+    font-size: 12px;
     text-transform: uppercase;
 
     .login-name { margin: 0 8px; }
@@ -270,45 +268,40 @@ h1.branding {
   }
 
 
-  .navbar {
+  .main-nav {
     margin-bottom: 0; display: inline-block;
     padding: 0;
     background: none;
     border: none;
     box-shadow: none;
     min-height: 0;
-    ul.nav {
-      margin-bottom: 0; margin-right: 0;
-      li a {
-        padding: 13px 15px;
-        text-transform: uppercase;
-        text-shadow: none;
-        font-size: 12px;
-        display: block;
-        text-transform: uppercase;
-        color: #888;
-        .box-shadow(none);
-      }
-      li.active {
-        padding-bottom: 0;
-        background: #f2f2f2;
-      }
-      li.active a {
-        font-weight: 400;
-        color: @text-color;
-        .box-shadow(none);
-      }
 
-      li:hover.active a {
-        .box-shadow(none);
-      }
+    li a {
+      padding: 13px 15px;
+      text-transform: uppercase;
+      text-shadow: none;
+      font-size: 12px;
+      display: block;
+      text-transform: uppercase;
+      color: #888;
+      .box-shadow(none);
+    }
+    li.active {
+      padding-bottom: 0;
+      background: #f2f2f2;
+    }
+    li.active a {
+      font-weight: 400;
+      color: @text-color;
+      .box-shadow(none);
+    }
+
+    li:hover.active a {
+      .box-shadow(none);
     }
   }
 
   li.settings { margin-left: 15px;}
-
-
-  overflow: hidden;
 } // rootnav
 
 

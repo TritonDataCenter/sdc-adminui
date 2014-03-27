@@ -1,12 +1,22 @@
-<div id="rootnav">
-    <div class="row">
-        <h1 class="branding col-md-2">
-            <span class="product">SDC</span>
-            <div class="datacenter"></div>
-        </h1>
+<div id="rootnav" class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-rootnav">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-brand">
+                <h1 class="branding">
+                    <span class="product">SDC</span>
+                    <div class="datacenter"></div>
+                </h1>
+            </div>
+        </div>
 
-        <div class="navbar col-md-8">
-            <ul class="nav navbar-nav">
+        <div class="collapse navbar-collapse col-md-8" id="navbar-collapse-rootnav">
+            <ul class="nav navbar-nav main-nav">
                 <li data-view="dashboard"><a href="/dashboard"><i class="fa fa-home"></i></a></li>
                 <li class="fishbulb"><a title="Cloud Analytics" href="/fishbulb" target="fishbulb"><i class="fa fa-bar-chart-o"></i></a></li>
 
@@ -27,7 +37,7 @@
                 {{/role}}
             </ul>
         </div>
-        <div class="acc-controls col-md-2">
+        <div class="acc-controls navbar-right">
             <a class="current-user"><i class="fa fa-user"></i><span class="login-name"></span></a>
             <a class="signout"><i class="fa fa-signout"></i></a>
         </div>
