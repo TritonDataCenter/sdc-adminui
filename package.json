@@ -33,9 +33,9 @@
     "async": "~0.2.7",
     "uglify-js": "^2.3.6",
     "kang": "0.0.8",
-    "reactify": "^0.7.0",
-    "envify": "^0.2.0",
-    "react": "^0.8.0",
+    "reactify": "^0.10.0",
+    "envify": "1.2.0",
+    "react": "^0.10.0",
     "superagent": "^0.17.0",
     "mocha-phantomjs": "^2.0.3",
     "mocha": "^1.9.0"

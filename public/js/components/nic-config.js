@@ -6,7 +6,7 @@
  * nic              Object  object containing nic properties
  * networkFilters   Object  params to pass to network fetch
  * value            String   uuid of initial selected network
- * onChange         Function fn(property, value, nicObject) callback to value changes
+ * onPropertyChange         Function fn(property, value, nicObject) callback to value changes
  */
 var React = require('react');
 var Networks = require('../models/networks');
@@ -16,8 +16,10 @@ var Chosen = require('react-chosen');
 var NicConfig = module.exports = React.createClass({
     propTypes: {
         expandAntispoofOptions: React.PropTypes.bool,
-        nic: React.PropTypes.object
+        nic: React.PropTypes.object,
+        onPropertyChange: React.PropTypes.func
     },
+
     getInitialState: function() {
         if (! this.props.nic) {
             this.props.nic = {};
@@ -43,6 +45,7 @@ var NicConfig = module.exports = React.createClass({
         }
 
         console.log('NicConfig initial state', state);
+        console.log('NicConfig initial props', this.props);
         return state;
     },
     componentDidMount: function() {
@@ -54,8 +57,10 @@ var NicConfig = module.exports = React.createClass({
             this.networks.fetch({ params: this.state.networkFilters }),
             this.networkPools.fetch({ params: this.state.networkFilters })
         ).done(function() {
-            self.setState({ networks: this.networks.toJSON() });
-            self.setState({ networkPools: this.networkPools.toJSON() });
+            self.setState({
+                networks: this.networks.toJSON(),
+                networkPools: this.networkPools.toJSON()
+            });
         }.bind(this));
     },
     expandAntispoofOptions: function() {
@@ -69,15 +74,14 @@ var NicConfig = module.exports = React.createClass({
             value = e.target.value;
         }
 
-        var prop =  e.target.getAttribute('name');
+        var prop = e.target.getAttribute('name');
         var nic = this.state.nic;
         nic[prop] = value;
         this.setState({nic: nic});
-        console.log('setState', prop, value);
-
-        if (this.props.onChange) {
-            this.props.onChange(prop, value, this.getValue(), this);
-        }
+        console.info('onChange', prop, value, nic);
+        console.info(this.props.onPropertyChange);
+        console.log(this.props);
+        this.props.onPropertyChange(prop, value, nic, this);
     },
     getValue: function() {
         return this.state.nic;
@@ -89,13 +93,13 @@ var NicConfig = module.exports = React.createClass({
 
         /* jshint ignore:begin  */
         return (
-            <div className="nic-config">
-                <div className="control-group control-group-network">
-                    <label className="control-label">Network</label>
-                    <div className="controls">
+            <div className="nic-config form-horizontal">
+                <div className="form-group form-group-network row">
+                    <label className="control-label col-md-4">Network</label>
+                    <div className="controls col-sm-5">
                     <Chosen onChange={this.onChange}
+                            className="form-control"
                             name="network_uuid"
-                            width="240px"
                             placeholder="Select a Network"
                             value={this.state.nic.network_uuid}>
                         <optgroup label="Networks">
@@ -117,11 +121,14 @@ var NicConfig = module.exports = React.createClass({
                     </div>
                 </div>
 
-                <div className="control-group control-group-primary">
-                    <div className="controls">
-                        <label className="checkbox">
-                            <input onChange={this.onChange} checked={this.state.nic.primary} type="checkbox" className="primary" name="primary" /> Make this the primary NIC
-                        </label>
+                <div className="form-group form-group-primary row">
+                    <div className="control-label col-md-4">
+                    &nbsp;
+                    </div>
+                    <div className="controls col-md-4">
+                        <div className="checkbox">
+                            <label><input onChange={this.onChange} checked={this.state.nic.primary} type="checkbox" className="primary" name="primary" /> Make this the primary NIC</label>
+                        </div>
                     </div>
                 </div>
 
@@ -133,13 +140,13 @@ var NicConfig = module.exports = React.createClass({
                 {
 
                     (expandAntispoofOptions === true) ?
-                        (<div className="control-group control-group-spoofing">
-                            <label className="control-label">Anti-Spoofing Options</label>
-                            <div className="controls">
-                            <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label>
-                            <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label>
-                            <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_mac_spoofing} name="allow_mac_spoofing" /> Allow MAC Spoofing</label>
-                            <label className="checkbox"><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow Restricted Traffic</label>
+                        (<div className="form-group form-group-spoofing row">
+                            <label className="control-label col-md-4">Anti-Spoofing Options</label>
+                            <div className="col-sm-5">
+                                <div className="checkbox"><label><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_mac_spoofing} name="allow_mac_spoofing" /> Allow MAC Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow Restricted Traffic</label></div>
                             </div>
                         </div>) : ''
                 }

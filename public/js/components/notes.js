@@ -113,7 +113,7 @@ module.exports = React.createClass({
         return { notes: [] };
     },
     propTypes: {
-        item: React.PropTypes.string.required
+        item: React.PropTypes.string.isRequired
     },
     handleUnarchive: function(item) {
         var note = new Note(item);

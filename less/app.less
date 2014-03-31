@@ -55,6 +55,7 @@
 
 @import "notes-component.less";
 @import "link-aggr-component.less";
+@import "nic-config-component.less";
 @import "provisioning-limits.less";
 
 
@@ -69,12 +70,7 @@ html { height: 100%; }
 #content section { margin-bottom: 10px; }
 #footer { height: 24px; background: #dfe7ec; }
 
-.btn-primary {
-  &.disabled,
-  &[disabled] {
-    background: desaturate(@btn-primary-bg, 30%);
-  }
-}
+
 .btn-link.disabled {
   color: @gray-light;
 }

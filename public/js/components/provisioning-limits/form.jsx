@@ -13,7 +13,7 @@ var DATACENTERS = require('./constants').DATACENTERS;
 var Form = module.exports = React.createClass({
     propTypes: {
         user: React.PropTypes.string.isRequired,
-        initialLimit: React.PropTypes.obj
+        initialLimit: React.PropTypes.object
     },
     getInitialState: function() {
         var state = {};

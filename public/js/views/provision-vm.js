@@ -13,6 +13,7 @@ var Bloodhound = require('bloodhound');
 
 var React = require('react');
 var NicConfigComponent = require('../components/nic-config');
+var MultiNicConfigComponent = require('../components/multi-nic-config');
 
 var Images = require('../models/images');
 var Users = require('../models/users');
@@ -90,7 +91,6 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     events: {
-        'click .attach-network-interface': 'onAttachNetworkInterface',
         'submit form': 'provision',
         'click .back': 'backToVirtualMachines',
         'blur input[type=text]': 'checkFields',
@@ -158,11 +158,6 @@ var View = Backbone.Marionette.Layout.extend({
         }
     },
 
-    onAttachNetworkInterface: function(e) {
-        e.preventDefault();
-        this.createNetworkSelect();
-    },
-
     removeNic: function(nic) {
         if (this.nicSelects.length === 1) {
             alert('Cannot Remove last Network Interface');
@@ -192,18 +187,17 @@ var View = Backbone.Marionette.Layout.extend({
         var settings = this.settings;
 
         var self = this;
+
         $.when(
             this.settings.fetch()
         ).then(function() {
             var networkPresets = settings.get('provision.preset_networks') || [];
 
             while (networkPresets.length < 1) {
-                networkPresets.push(null);
+                networkPresets.push({primary: true});
             }
 
-            _.each(networkPresets, function(nic) {
-                self.createNetworkSelect(nic);
-            });
+            self.renderMultiNicSelect(networkPresets);
 
             var values = self.extractFormValues();
             self.checkFields();
@@ -230,58 +224,26 @@ var View = Backbone.Marionette.Layout.extend({
         this.$('.no-sshkeys-warning').show();
     },
 
-    onNicConfigChange: function(prop, value, nic, com) {
-        if (prop === 'primary' && value === true) {
-            console.log(this.nicSelects);
-            _.each(this.nicSelects, function(c) {
-                console.log(c);
-                if (c !== com) {
-                    var n = c.getValue();
-                    n.primary = false;
-                    c.setState({nic: n});
-                }
-            });
-        }
+    onNicConfigChange: function(nics) {
+        this.selectedNics = nics;
         this.checkFields();
     },
 
-    createNetworkSelect: function(nic) {
-        if (typeof(nic) === 'string') {
-            nic = {network_uuid: nic};
-        }
-
-        // If this is the first nic, make it the primary nic by default
-        if (nic === null && this.nicSelects.length === 0) {
-            nic = {};
-            nic.primary = true;
-        }
-
-        var container = $('<div class="nic-config-container" />');
-        this.$('.network-selection').append(container);
-
-
-        var component = new NicConfigComponent({
-            expandAntispoofOptions: false,
-            networkFilters: {provisionable_by: this.selectedUser.get('uuid')},
-            nic: nic,
-            onChange: this.onNicConfigChange.bind(this)
+    renderMultiNicSelect: function(nics) {
+        nics = nics.map(function(nic) {
+            if (typeof(nic) === 'string') {
+                nic = {network_uuid: nic};
+            }
+            return nic;
         });
 
-
         React.renderComponent(
-            <div className="nic-config-component-container">
-                <div className="nic-config-action">
-                    <a className="remove" onClick={this.removeNic.bind(this, component)}>
-                        <i className="icon icon-remove"></i> Remove
-                    </a>
-                </div>
-                <div className="nic-config-component">
-                    {component}
-                </div>
-            </div>
-            , container.get(0));
-
-        this.nicSelects.push(component);
+            MultiNicConfigComponent({
+                expandAntispoofOptions: false,
+                networkFilters: {provisionable_by: this.selectedUser.get('uuid')},
+                nics: nics,
+                onChange: this.onNicConfigChange.bind(this)
+            }), this.$('.network-selection').get(0));
 
         this.$('.form-group-networks').show();
         this.$('.form-group-primary-network').show();
@@ -474,8 +436,8 @@ var View = Backbone.Marionette.Layout.extend({
         }
 
 
-        values.networks = _.map(this.nicSelects, function(nic) {
-            var net = _.clone(nic.getValue());
+        values.networks = _.map(this.selectedNics, function(nic) {
+            var net = _.clone(nic);
             net.uuid = net.network_uuid;
             delete net.network_uuid
 

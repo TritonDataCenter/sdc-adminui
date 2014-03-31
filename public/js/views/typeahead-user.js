@@ -24,13 +24,13 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
     },
 
     onTypeaheadSelect: function(e, datum) {
-        console.log('typeahead selected');
+        console.debug('typeahead selected');
         this.selectedUser = datum.model;
         this.trigger('selected', datum.model);
     },
 
     onTypeaheadClosed: function(e, suggestion, dataset) {
-        console.log('typeahead closed', suggestion);
+        console.debug('typeahead closed');
     },
 
     initializeEngine: function() {
