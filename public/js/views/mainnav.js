@@ -5,7 +5,7 @@ var moment = require('moment');
 var Mainnav = Backbone.Marionette.ItemView.extend({
     events: {
         'click a.signout': 'signout',
-        'click li[data-view]':'onSelect'
+        'click .main-nav li[data-view]':'onSelect'
     },
 
     initialize: function(options) {

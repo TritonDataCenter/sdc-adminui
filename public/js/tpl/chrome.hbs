@@ -7,13 +7,17 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+
             <div class="navbar-brand">
-                <h1 class="branding">
-                    <span class="product">SDC</span>
-                    <div class="datacenter"></div>
-                </h1>
+                <h1 class="branding"><span class="product">SDC</span> <div class="datacenter"></div></h1>
+            </div>
+
+            <div class="acc-controls navbar-text navbar-right">
+                <a class="current-user"><i class="fa fa-user"></i> <span class="login-name"></span></a>
+                <a class="signout"> <i class="fa fa-sign-out"></i> </a>
             </div>
         </div>
+
 
         <div class="collapse navbar-collapse col-md-8" id="navbar-collapse-rootnav">
             <ul class="nav navbar-nav main-nav">
@@ -33,13 +37,18 @@
 
 
                 {{#role "operators"}}
-                <li class="settings" data-view="settings"><a href="/services"><i class="fa fa-gear"></i></a></li>
+                <li class="settings" data-view="settings">
+                    <a href="/settings">
+                    <div class="visible-xs">
+                        Settings
+                    </div>
+                    <div class="hidden-xs">
+                        <i class="fa fa-gear"></i>
+                    </div>
+                    </a>
+                </li>
                 {{/role}}
             </ul>
-        </div>
-        <div class="acc-controls navbar-right">
-            <a class="current-user"><i class="fa fa-user"></i><span class="login-name"></span></a>
-            <a class="signout"><i class="fa fa-signout"></i></a>
         </div>
     </div>
 

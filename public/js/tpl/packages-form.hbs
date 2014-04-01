@@ -1,18 +1,18 @@
 <div class="row">
-  <div class="col-md-8 col-md-offset-2">
-<div class="page-header">
-  {{#if uuid}}
-    {{#if changeOwnerMode}}
-      <h2>Change Package Settings for {{name}} {{version}}</h2>
-    {{/if}}
-    {{#if newVersionMode}}
-      <h2>Create New Version of {{name}} {{version}}</h2>
-    {{/if}}
-  {{else}}
-  <h2>Create a new Package</h2>
-  {{/if}}
-</div>
-</div>
+    <div class="col-md-8 col-md-offset-2">
+        <div class="page-header">
+            {{#if uuid}}
+            {{#if changeOwnerMode}}
+            <h2>Change Package Settings for {{name}} {{version}}</h2>
+            {{/if}}
+            {{#if newVersionMode}}
+            <h2>Create New Version of {{name}} {{version}}</h2>
+            {{/if}}
+            {{else}}
+            <h2>Create a new Package</h2>
+            {{/if}}
+        </div>
+    </div>
 </div>
 
 
@@ -24,7 +24,7 @@
 
       {{#unless changeOwnerMode}}
       <div class="form-group">
-        <p class="help-block" style="margin-bottom: 2em;">
+        <p class="help-block col-md-offset-1">
           Name and version of the package is used to uniquely identify a package. Once a package with a specific version has been created, the properties making up the package cannot be modified. A new version must be created with the new properties.
           </p>
       </div>
@@ -199,7 +199,7 @@
         {{/unless}}
 
       <div class="form-group">
-        <div class="col-md-offset-4">
+        <div class="col-sm-offset-4 col-sm-8">
             <div class="checkbox">
                 <label><input type="checkbox" {{#if active}}checked{{/if}} name="active"> Activate Package</label>
             </div>
@@ -210,7 +210,7 @@
       </div>
 
     <div class="form-group">
-        <div class="col-md-offset-4">
+        <div class="col-sm-offset-4 col-sm-8">
             <button type="submit" class="btn btn-primary">
               {{#if uuid}} Save Package {{else}} Create Package {{/if}}
             </button>

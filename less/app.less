@@ -85,8 +85,7 @@ html { height: 100%; }
 }
 
 .widget-content {
-  border: 1px solid #f3f3f3;
-  #gradient > .vertical(#f8f8f8, #fafafa);
+  background: #fafafa;
   padding: 10px 14px;
 }
 
@@ -198,7 +197,7 @@ table.vertical { tr, td { border: none;}}
     }
   }
   tbody {
-    tr { background: #f8f8f8; }
+    tr { background: #fcfcfc; }
     th { font-weight: 400; color: #888;}
   }
 }
@@ -223,26 +222,22 @@ h1.branding {
 #rootnav {
   background: #e0e0e0;
   border: none;
-  padding: 0;
-  margin: 0;
 
   h1.branding {
     .product { color: #000; font-weight: 300; display: inline-block; }
     .datacenter { display: inline-block; font-weight: bold;}
     text-align: center;
-    padding: 0 5px;
     margin: 0;
   }
 
   .acc-controls {
-    padding: 13px 15px;
     font-size: 12px;
     text-transform: uppercase;
 
-    .login-name { margin: 0 8px; }
     .current-user { color: #666; }
     a.signout {
-      cursor: pointer; text-transform: uppercase;
+      cursor: pointer;
+       text-transform: uppercase;
       color: #666;
     }
   }
@@ -266,7 +261,6 @@ h1.branding {
 
 
   .main-nav {
-    margin-bottom: 0; display: inline-block;
     padding: 0;
     background: none;
     border: none;
@@ -295,7 +289,9 @@ h1.branding {
     }
   }
 
-  li.settings { margin-left: 15px;}
+  @media (min-width: @screen-md-min) {
+    li.settings { margin-left: 15px;}
+  }
 } // rootnav
 
 

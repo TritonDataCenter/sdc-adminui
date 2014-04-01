@@ -20,7 +20,7 @@
       Actions <span class="caret"></span>
     </a>
 
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu dropdown-menu-right">
       <li><a class="reboot"><i class="fa fa-refresh"></i> Reboot Server</a></li>
       <li class="divider"></li>
       <li><a class="factory-reset"><i class="fa fa-repeat"></i> Factory Reset (DANGER)</a></li>
@@ -165,21 +165,21 @@
     <h3>Serial Console</h3>
     <div class="serial-console">
       <div class="key-value-list">
-        <div class="item">
-          <div class="item-label">Default Console</div>
-          <div class="item-content">
+        <div class="item row">
+          <div class="item-label col-md-7">Default Console</div>
+          <div class="item-content col-md-5">
             <span class="default-console">{{default_console}}</span>
           </div>
         </div>
-        <div class="item">
-          <div class="item-label">Serial</div>
-          <div class="item-content">
+        <div class="item row">
+          <div class="item-label col-md-7">Serial</div>
+          <div class="item-content col-md-5">
             <span class="serial">{{serial}}</span>
           </div>
         </div>
-        <div class="item">
-          <div class="item-label">Serial Speed</div>
-          <div class="item-content">
+        <div class="item row">
+          <div class="item-label col-md-7">Serial Speed</div>
+          <div class="item-content col-md-5">
             <span class="serial-speed">{{serial_speed}}</span>
           </div>
         </div>
@@ -239,22 +239,22 @@
 </section>
 
 <section class="row">
-<div class="col-md-12">
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#vms">Virtual Machines</a></li>
-    <li><a data-toggle="tab" href="#jobs">Jobs</a></li>
-  </ul>
+    <div class="col-md-12">
+        <ul class="nav nav-pills">
+            <li class="active"><a data-toggle="tab" href="#vms">Virtual Machines</a></li>
+            <li><a data-toggle="tab" href="#jobs">Jobs</a></li>
+        </ul>
 
-  <div class="tab-content">
-    <div class="tab-pane active" id="vms">
-      <h3>Virtual Machines</h3>
-      <div class="vms-region"></div>
-    </div>
+        <div class="tab-content">
+            <div class="tab-pane active" id="vms">
+                <h3>Virtual Machines</h3>
+                <div class="vms-region"></div>
+            </div>
 
-    <div class="tab-pane" id="jobs">
-      <h3>Jobs</h3>
-      <div class="jobs-region"></div>
+            <div class="tab-pane" id="jobs">
+                <h3>Jobs</h3>
+                <div class="jobs-region"></div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-</div>
+</section>
