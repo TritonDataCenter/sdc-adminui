@@ -12,7 +12,7 @@ var LinkAggregationsList = require('./list.jsx');
 
 var Component = React.createClass({
     propTypes: {
-        server: React.PropTypes.string.required
+        server: React.PropTypes.string.isRequired
     },
     getInitialState: function() {
         return {
@@ -72,7 +72,7 @@ var Component = React.createClass({
             ];
         } else if (this.state.mode === 'list') {
             nodes = [
-                <button onClick={this.newLinkAggr} className="btn btn-info new-link-aggr"><i className="icon-plus"></i> Link Aggregation</button>,
+                <button onClick={this.newLinkAggr} className="btn btn-info new-link-aggr"><i className="fa fa-plus"></i> Link Aggregation</button>,
                 <LinkAggregationsList
                     onEdit={this.handleEdit}
                     onDelete={this.handleDelete}

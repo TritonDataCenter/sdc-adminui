@@ -168,11 +168,12 @@ var LinkAggregationForm = module.exports = React.createClass({
                     </div>
                 </div>
             </form>
-            <button
-                className="btn btn-primary save"
-                disabled={ this.isValid() ? '' : 'disabled'}
-                onClick={this.handleSubmit}>Save Aggregation</button>
-            <button className="btn btn-link back" onClick={this.props.handleBack}>Back</button>
+            <div className="pull-right">
+                <button className="btn btn-link back" onClick={this.props.handleBack}>Back</button>
+                <button className="btn btn-primary save"
+                    disabled={ this.isValid() ? '' : 'disabled'}
+                    onClick={this.handleSubmit}>Save Aggregation</button>
+            </div>
             </div>
         )
     }

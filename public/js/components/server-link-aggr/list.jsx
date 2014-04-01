@@ -1,6 +1,6 @@
 var LinkAggregationsList = module.exports = React.createClass({
     propTypes: {
-        linkAggregations: React.PropTypes.array.required,
+        linkAggregations: React.PropTypes.array.isRequired,
         onEdit: React.PropTypes.func,
         onDelete: React.PropTypes.func
     },
@@ -23,9 +23,9 @@ var LinkAggregationsList = module.exports = React.createClass({
                             }, this)
                         }
                         </div>
-                        <div className="actions">
-                            <button onClick={this.props.onEdit.bind(null, link)} className="btn btn-edit"><i className="icon-pencil"></i> Edit</button>
-                            <button onClick={this.props.onDelete.bind(null, link)} className="btn btn-delete"><i className="icon-trash"></i> Delete</button>
+                        <div className="actions pull-right">
+                            <button onClick={this.props.onEdit.bind(null, link)} className="btn btn-link btn-edit"><i className="icon-pencil"></i> Edit</button>
+                            <button onClick={this.props.onDelete.bind(null, link)} className="btn btn-link btn-delete"><i className="icon-trash"></i> Delete</button>
                         </div>
                     </div>
                 }, this)
