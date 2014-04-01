@@ -216,16 +216,20 @@ var ImageView = Backbone.Marionette.ItemView.extend({
     renderBillingTags: function() {
         var model = this.model;
         var billingTags = this.model.get('billing_tags') || [];
-        var val = billingTags.join(', ');
+        var readOnly = !adminui.user.role('operators');
 
-        this.$('input[name=billing_tags]').val(billingTags);
-        this.$('input[name=billing_tags]').tags({
+        var tagsWidget = this.$('.billing-tags').tags({
             promptText: 'Enter new tag',
+            readOnly: readOnly,
+            tagData: billingTags,
             caseInsensitive: false,
-            change: function(tags) {
-                model.save({billing_tags: tags}, {patch: true, silent: true});
-            }
+            afterAddingTag: change,
+            afterDeletingTag: change
         });
+
+        function change() {
+            model.save({billing_tags: tagsWidget.getTags() }, {patch: true, silent: true});
+        }
     },
 
 

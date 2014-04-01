@@ -230,13 +230,7 @@
     <section>
       <h3>Billing Tags</h3>
       <div class="billing-tags-container">
-        {{#role "operators"}}
-        <input type="text" class="form-control" name="billing_tags">
-        {{/role}}
-
-        {{#role "readers"}}
-        {{billing_tags}}
-        {{/role}}
+        <div class="billing-tags"></div>
       </div>
     </section>
 
