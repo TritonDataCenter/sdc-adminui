@@ -1,0 +1,161 @@
+var React = require('react');
+var User = require('../models/user');
+var adminui = require('../adminui');
+
+var UserTile = React.createClass({
+    propTypes: {
+        uuid: React.PropTypes.string.isRequired
+    },
+    getInitialState: function() {
+        return {
+            loading: true
+        }
+    },
+    componentDidMount: function() {
+        var user = new User({uuid: this.props.uuid });
+        var req = user.fetch();
+        req.done(function(res, x, y) {
+            this.setState({loading: false});
+            this.setState(res);
+        }.bind(this));
+
+        req.error(function() {
+            this.setState({
+                loading: false,
+                loadingFailed: true
+            });
+        }.bind(this));
+    },
+    navigateToUser: function(e) {
+        e.preventDefault();
+        adminui.vent.trigger('showview', 'user', {uuid: this.props.uuid });
+    },
+    render: function() {
+        var user = this.state;
+
+        if (this.state.loading) {
+            return <div className="user-tile loading" key={this.props.uuid}>
+                Fetching User Information <span className="fa fa-spinner fa-spin"></span>
+            </div>
+        }
+
+        if (this.state.loadingFailed) {
+            return <div className="user-tile failed" key={this.props.uuid}>
+                <div className="row">
+
+                    <div className="col-sm-1">&nbsp;</div>
+                    <div className="col-sm-2">
+                    { this.props.owner ? <span className="owner">owner</span> :''}
+                    </div>
+                    <div className="col-sm-9">
+                        <span className="text-warning">Unable to fetch User Information.</span>
+                        <span className="uuid">{this.props.uuid}</span>
+                    </div>
+                </div>
+            </div>
+        }
+
+        return (
+            <div className="user-tile" key={this.props.uuid}>
+                <div className="row">
+                    <div className="col-sm-1">
+                        <div className="user-icon" style={{
+                            background: 'url(https://www.gravatar.com/avatar/'+user.emailhash+'?d=identicon&s=32)',
+                            height: '32px',
+                            width: '32px'
+                        }}>
+                        </div>
+                    </div>
+                    <div className="col-sm-2">
+                        <a href={'/users/'+user.uuid} onClick={this.navigateToUser} className="login-link">
+                            <span className="login">{user.login}</span>
+                        </a>
+                        { this.props.owner ? <span className="owner">owner</span> :''}
+                    </div>
+                    <div className="col-sm-5">
+                            {user.cn}
+                            {
+                                user.company ? <span className="company"> @ {user.company}</span> : ''
+                            }
+                        <span className="uuid">{this.props.uuid}</span>
+                    </div>
+                    <div className="col-sm-4">
+                        <div className="email"><strong>email</strong> {user.email}</div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+});
+
+var TypeaheadUser = require('../views/typeahead-user');
+
+var ImageAclForm = React.createClass({
+    props: {
+        handleAddAcl: React.PropTypes.func
+    },
+    componentDidMount: function() {
+        this.typeAhead = new TypeaheadUser({el: $(this.refs.input.getDOMNode() )});
+        this.typeAhead.on('selected', this.onSelectUser, this);
+        this.typeAhead.render();
+        this.refs.input.getDOMNode().focus();
+    },
+    onSelectUser: function(u) {
+    },
+    onSubmit: function() {
+        this.props.handleAddAcl(this.refs.input.getDOMNode().value);
+    },
+    componentDidUnmount: function() {
+        this.typeAhead.off('selected');
+    },
+    render: function() {
+        return (<div className="image-acl-form">
+            <form className="form-horizontal">
+                <div className="form-group">
+                    <div className="col-sm-10" style={{ paddingRight: 0 }}>
+                        <input type="text" placeholder="Search for User by uuid, login, or email" ref="input" className="form-control user-select"/>
+                    </div>
+                    <div className="col-sm-2" style={{ paddingLeft: 0 }}>
+                        <button type="button" onClick={this.onSubmit} className="btn btn-block btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>);
+    }
+});
+
+module.exports = React.createClass({
+    propTypes: {
+        acl: React.PropTypes.array,
+        public: React.PropTypes.bool.isRequired,
+        owner: React.PropTypes.string,
+        form: React.PropTypes.bool
+    },
+    getDefaultProps: function() {
+        return {
+            acl: [],
+            owner: null,
+            form: false
+        };
+    },
+    render: function() {
+        var nodes = [];
+        if (this.props.public) {
+            nodes.push(<div className="acl-public">This image is available to everyone.</div>);
+        } else if (this.props.owner) {
+            nodes.push(<UserTile uuid={this.props.owner} owner></UserTile>);
+            if (this.props.acl.length) {
+                this.props.acl.map(function(uuid) {
+                    nodes.push(<UserTile uuid={uuid}>{uuid}</UserTile>);
+                });
+            }
+        }
+
+        return (<div className="image-acl-component">
+            <div className="image-acl-list">{nodes}</div>
+            {
+                this.props.form ? <ImageAclForm handleAddAcl={this.props.handleAddAcl} /> : ''
+            }
+        </div>);
+    }
+});

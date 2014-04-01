@@ -1,4 +1,33 @@
 #page-image {
+  .image-acl-form {
+    .widget-content;
+    .form-group { margin-bottom: 0;}
+  }
+  .image-acl-list {
+    .acl-public {
+      .widget-content;
+      text-align: center;
+      color: @brand-success;
+    }
+    .user-tile {
+      .widget-content;
+      .user-icon {
+        width: 32px;
+        height: 32px;
+      }
+      .owner {
+        color: @gray-light;
+      }
+      .uuid {
+        clear: both;
+        font-family: @font-family-monospace;
+        display: block;
+        color: @gray-light;
+        font-size: 10px;
+      }
+    }
+  }
+
   .page-header {
     overflow: visible;
     .version { color: @gray-light; font-size: 14px;}
@@ -19,14 +48,11 @@
     .state {
       width: 140px; margin: 0 auto;
     }
-    .visibility { text-align: center;}
-    button { margin-top: 1em;}
-    .actions { text-align: center; margin-top: 40px;}
+    .actions { text-align: center;}
   }
 
   .details {
     .show-upload-form { font-size: 14px; .pull-right; }
-    .text-warning { font-size: 14px; float: right;}
   }
   .billing-tags-container {
   }

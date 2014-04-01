@@ -18,6 +18,15 @@ var Img = module.exports = Model.extend({
     activate: function(cb) {
         $.post(this.url() + "?action=activate", cb);
     },
+    addAcl: function(acl) {
+        var url = this.url() + '/acl?action=add';
+        var ajax = $.ajax(url, {
+            data: JSON.stringify(acl),
+            contentType: 'application/json',
+            type: 'POST'
+        });
+        return ajax;
+    },
 
     disable: function(cb) {
         $.post(this.url() + "?action=disable", cb);

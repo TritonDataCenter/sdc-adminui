@@ -17,31 +17,25 @@
 {{#role "operators"}}
 <div class="actions">
   <div class="notes-component-container"></div>
-  <button class="btn btn-success change-publicity">
-    {{#if public}}
-    <i class="icon-lock"></i> Make Image Private
-    {{else}}
-    <i class="icon-unlock"></i> Make Image Public
-    {{/if}}
-  </button>
+
 
   {{#if enableable}}
-  <a class="btn btn-info enable"><i class="icon-ok-sign icon-white"></i> Enable Image</a>
+  <a class="btn btn-info enable"><i class="fa fa-ok-sign"></i> Enable Image</a>
   {{/if}}
 
   {{#if unactivated}}
-  <a class="btn activate btn-primary"><i class="icon-ok-sign icon-white"></i> Activate Image</a>
+  <a class="btn activate btn-primary"><i class="fa fa-ok-sign"></i> Activate Image</a>
   {{/if}}
 
   {{#if disableable}}
-  <a class="btn disable btn-danger"><i class="icon-remove-sign icon-white"></i> Disable Image</a>
+  <a class="btn disable btn-danger"><i class="fa fa-times"></i> Disable Image</a>
   {{/if}}
 </div>
 {{/role}}
 
 
 <div class="row">
-  <div class="basic col-md-4">
+  <div class="basic col-md-3">
     {{#if os}}
     <div class="os-image">
       <img src="/img/os-{{os}}.png">
@@ -50,27 +44,15 @@
 
     <p class="description">{{description}}</p>
 
-    <div class="visibility">
-      {{#if public}}
-      Image is available to the <strong>public</strong>
-      {{else}}
-      This image is <strong>restricted to the owner</strong>
-      {{#if acl.length}}
-      and
-      {{#each acl}} {{this}} {{/each}}
-      {{/if}}
-      {{/if}}<br>
-    </div>
-
     {{#role "operators"}}
     <div class="actions">
-      <button type="button" class="btn btn-info manage-traits">Manage Traits</button>
+      <button type="button" class="btn btn-info manage-traits">Modify Traits</button>
     </div>
     {{/role}}
   </div>
 
 
-  <div class="details col-md-8">
+  <div class="details col-md-9">
     <section>
     <h3>Overview</h3>
     <ul class="list-unstyled attributes">
@@ -178,6 +160,27 @@
     </section>
 
     <section>
+      <h3>
+        Image Access
+        <small>The following users have access to this image</small>
+
+        {{#if public}}
+            <button class="btn btn-default btn-sm change-publicity pull-right">
+                <i class="fa fa-lock"></i> Make Image Private
+            </button>
+        {{else}}
+            <button class="btn btn-success btn-sm change-publicity pull-right">
+                <i class="fa fa-unlock"></i> Make Image Public
+            </button>
+            <button class="btn btn-success btn-sm pull-right add-image-acl">
+                <i class="fa fa-plus"></i>
+            </button>
+        {{/if}}
+    </h3>
+      <div class="acl-container"></div>
+    </section>
+
+    <section>
     <h3>Requirements</h3>
     <ul class="list-unstyled attributes requirements">
       <li>
@@ -222,17 +225,22 @@
     </section>
 
 
-    <section>
-      <h3>Tags</h3>
-      <div class="tags-container"></div>
-    </section>
 
     <section>
-      <h3>Billing Tags</h3>
-      <div class="billing-tags-container">
-        <div class="billing-tags"></div>
-      </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>Tags</h3>
+                <div class="tags-container"></div>
+            </div>
+            <div class="col-sm-6">
+                <h3>Billing Tags</h3>
+                <div class="billing-tags-container">
+                    <div class="billing-tags"></div>
+                </div>
+            </div>
+        </div>
     </section>
+
 
 
 

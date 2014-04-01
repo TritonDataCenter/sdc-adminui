@@ -2,11 +2,12 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var moment = require('moment');
 
+var adminui = require('../adminui');
+
 var React = require('react');
+var ImageAclComponent = require('../components/image-acl.jsx');
 var NotesComponent = require('../components/notes');
 
-
-var adminui = require('../adminui');
 
 var JSONEditor = require('./traits-editor');
 var TagsListView = require('./tags-list');
@@ -33,6 +34,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         'click .cancel-upload-form': 'onClickCancelUploadForm',
         'click .start-upload': 'onClickStartUpload',
         'click .change-publicity': 'onClickChangePublicity',
+        'click .add-image-acl': 'onClickAddImageAcl',
         'click .manage-traits': 'onClickManageTraits',
         'click .manage-tags': 'onClickManageTags',
         'change .fileinput': 'onSelectFile'
@@ -205,11 +207,29 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         this.tagsList.setElement(this.$('.tags-container'));
         this.tagsList.render();
 
+
         if (adminui.user.role('operators')) {
-            React.renderComponent(
+            this.notesComponent = React.renderComponent(
                 new NotesComponent({item: this.model.get('uuid')}),
                 this.$('.notes-component-container').get(0));
         }
+        var self = this;
+
+        this.imageAclComponent = React.renderComponent(
+            new ImageAclComponent({
+                owner: this.model.get('owner'),
+                public: this.model.get('public'),
+                handleAddAcl: function(u) {
+                    self.model.addAcl([u]).done(function() {
+                        adminui.vent.trigger({
+                            level: 'success',
+                            message: 'Image ACL has been activated.'
+                        });
+                        self.model.fetch();
+                    });
+                },
+                acl: this.model.get('acl')}),
+            this.$('.acl-container').get(0));
 
         this.renderBillingTags();
     },
@@ -287,6 +307,10 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         this.viewModel.set({file:file});
     },
 
+    onClickAddImageAcl: function() {
+        this.imageAclComponent.setProps({ form: true });
+    },
+
     onClickStartUpload: function() {
         var xhr = new XMLHttpRequest();
         var file = this.viewModel.get('file');
@@ -311,7 +335,6 @@ var ImageView = Backbone.Marionette.ItemView.extend({
 
     onUploadProgress: function(e) {
         var pct = Math.floor(e.loaded/e.total * 100).toString() + '%';
-        console.log(pct);
         this.$('li.progress .bar').css('width', pct);
     },
 
