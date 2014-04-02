@@ -19,6 +19,7 @@ var ProvisioningLimitsList = module.exports = React.createClass({
         handleEdit: React.PropTypes.func,
         handleDelete: React.PropTypes.func
     },
+
     getDefaultProps: function() {
         return {
             handleEdit: function() {},
@@ -47,18 +48,18 @@ var ProvisioningLimitsList = module.exports = React.createClass({
                 var byLabel = UNIT_LABELS[l.by];
                 // New PROVISIONING LIMITS plugin
                 return (
-                    <div key={JSON.stringify(l)} className="limit">
+                    <div key={JSON.stringify(l)} className="limit row">
                             { l[l.check] === 'any' ?
-                                <div className="check-criteria.any">ANY</div>
+                                <div className="check-criteria.any col-sm-3">ANY</div>
                                 :
-                                <div className={'check-criteria '+l.check}><strong>{l.check}</strong> {l[l.check]}</div>
+                                <div className={'check-criteria col-sm-3 '+l.check}><strong>{l.check}</strong> {l[l.check]}</div>
                             }
-                        <div className="by-criteria">
-                            <i className="icon icon-arrow-right"></i>
+                        <div className="by-criteria col-sm-4">
+                            <i className="fa fa-arrow-right"></i>
                             <span className="value">{l.value}</span>
                             <span className="unit">{byLabel}</span>
                         </div>
-                        <div className="actions">
+                        <div className="actions col-sm-3">
                             <a onClick={this.handleEdit.bind(this, l)} className="edit"><i className="icon icon-pencil"></i> Edit</a>
                             <a onClick={this.handleDelete.bind(this, l)} className="delete"><i className="icon icon-trash"></i> Delete</a>
                         </div>
@@ -68,14 +69,18 @@ var ProvisioningLimitsList = module.exports = React.createClass({
         }
 
 
-        return (<div key={dclimit.datacenter} className="limits-dc">
-            <h5>{dclimit.datacenter}</h5>
-            <div className="limits-dc-header">
-                <div className="criteria-header">CRITERIA</div>
-                <div className="limit-header">LIMIT</div>
+        return (<div key={dclimit.datacenter} className="limits-dc row">
+            <div className="col-sm-3">
+                <h5>{dclimit.datacenter}</h5>
             </div>
-            {limitsNodes}
-            </div>);
+            <div className="col-sm-9">
+                <div className="limits-dc-header row">
+                    <div className="criteria-header col-sm-3">CRITERIA</div>
+                    <div className="limit-header col-sm-4">LIMIT</div>
+                </div>
+                {limitsNodes}
+            </div>
+        </div>);
     },
     renderZeroState: function() {
         return <div className="zero-state">This user does not have any provisioning limits.</div>

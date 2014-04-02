@@ -13,50 +13,31 @@
     overflow: hidden;
   }
   .limits-dc h5 {
-    display: block;
-    padding: 0;
     margin: 0;
-    width: 100px;
-    float: left;
+    font-size: 16px;
   }
   .limits-dc-header {
     font-size: 10px;
     color: #ccc;
-
-    .criteria-header {
-      display: inline-block;
-      margin-left: 68px;
-    }
-
-    .limit-header {
-      position: absolute;
-      left: 687px;
-      display: inline-block;
-    }
-  }
-  .limit {
-    margin-left: 160px;
-    margin-right: 10px;
-    padding: 3px 8px;
-    display: block;
-    position: relative;
-    font-size: 13px;
   }
   .limit.zero-state {
     text-align: left;
   }
 
+  .limit {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-size: 13px;
+  }
   .limit+.limit {
     border-top: 1px solid #eee;
   }
 
   .limit>div {
-    display: inline-block;
     i { color: #ccc; }
   }
 
   .limit .check-criteria {
-    width: 260px;
     font-weight: 400;
     font-size: 14px;
     strong { font-weight: 200; color: #999; text-transform: uppercase; }
@@ -65,9 +46,6 @@
 
   .limit .by-criteria {
     font-size: 14px;
-    width: 160px;
-    position: absolute;
-    left: 225px;
     .value {
       margin-left: 20px;
       font-weight: 400;
@@ -78,8 +56,6 @@
 
 
   .limit .actions {
-    position: absolute;
-    left: 520px;
     a { text-transform: uppercase; font-size: 12px; margin-left: 10px; }
     a.delete { color: @brand-danger; }
     visibility: hidden;
