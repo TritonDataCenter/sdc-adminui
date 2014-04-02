@@ -48,7 +48,7 @@ var UserTile = React.createClass({
                     { this.props.owner ? <span className="owner">owner</span> :''}
                     </div>
                     <div className="col-sm-9">
-                        <span className="text-warning">Unable to fetch User Information.</span>
+                        <span className="text-danger">Unable to fetch User Information.</span>
                         <span className="uuid">{this.props.uuid}</span>
                     </div>
                 </div>
@@ -92,7 +92,8 @@ var TypeaheadUser = require('../views/typeahead-user');
 
 var ImageAclForm = React.createClass({
     props: {
-        handleAddAcl: React.PropTypes.func
+        handleAddAcl: React.PropTypes.func,
+        handleCancel: React.PropTypes.func
     },
     componentDidMount: function() {
         this.typeAhead = new TypeaheadUser({el: $(this.refs.input.getDOMNode() )});
@@ -102,6 +103,9 @@ var ImageAclForm = React.createClass({
     },
     onSelectUser: function(u) {
     },
+    onCancel: function() {
+        this.props.handleCancel();
+    },
     onSubmit: function() {
         this.props.handleAddAcl(this.refs.input.getDOMNode().value);
     },
@@ -110,13 +114,14 @@ var ImageAclForm = React.createClass({
     },
     render: function() {
         return (<div className="image-acl-form">
-            <form className="form-horizontal">
+            <form className="form-horizontal" onSubmit={this.onSubmit}>
                 <div className="form-group">
-                    <div className="col-sm-10" style={{ paddingRight: 0 }}>
+                    <div className="col-sm-8" style={{ paddingRight: 0 }}>
                         <input type="text" placeholder="Search for User by uuid, login, or email" ref="input" className="form-control user-select"/>
                     </div>
-                    <div className="col-sm-2" style={{ paddingLeft: 0 }}>
-                        <button type="button" onClick={this.onSubmit} className="btn btn-block btn-primary">Save</button>
+                    <div className="col-sm-4" style={{ paddingLeft: 0 }}>
+                        <button type="button" onClick={this.onSubmit} className="btn btn-primary col-sm-6">Save</button>
+                        <button type="button" onClick={this.onCancel} className="btn btn-link">Cancel</button>
                     </div>
                 </div>
             </form>
@@ -129,13 +134,19 @@ module.exports = React.createClass({
         acl: React.PropTypes.array,
         public: React.PropTypes.bool.isRequired,
         owner: React.PropTypes.string,
-        form: React.PropTypes.bool
+        form: React.PropTypes.bool,
+        handleAddAcl: React.PropTypes.func,
+        handleRemoveAcl: React.PropTypes.func,
+        handleCancel: React.PropTypes.func
     },
     getDefaultProps: function() {
         return {
             acl: [],
             owner: null,
-            form: false
+            form: false,
+            handleAddAcl: function() {},
+            handleRemoveAcl: function() {},
+            handleCancel: function() {}
         };
     },
     render: function() {
@@ -146,16 +157,19 @@ module.exports = React.createClass({
             nodes.push(<UserTile uuid={this.props.owner} owner></UserTile>);
             if (this.props.acl.length) {
                 this.props.acl.map(function(uuid) {
-                    nodes.push(<UserTile uuid={uuid}>{uuid}</UserTile>);
-                });
+                    nodes.push(<UserTile uuid={uuid} />);
+                    nodes.push(<a className="remove-acl" data-uuid={uuid} onClick={this.props.handleRemoveAcl.bind(null, uuid)}><i className="fa fa-times"></i></a>);
+                }, this);
             }
         }
 
         return (<div className="image-acl-component">
             <div className="image-acl-list">{nodes}</div>
             {
-                this.props.form ? <ImageAclForm handleAddAcl={this.props.handleAddAcl} /> : ''
+                this.props.form ? <ImageAclForm
+                    handleCancel={this.props.handleCancel}
+                    handleAddAcl={this.props.handleAddAcl} /> : ''
             }
-        </div>);
+            </div>);
     }
 });

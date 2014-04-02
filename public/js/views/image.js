@@ -42,6 +42,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
 
     modelEvents: {
         'change': 'render',
+        'sync': 'render',
         'error': 'onError'
     },
 
@@ -213,19 +214,38 @@ var ImageView = Backbone.Marionette.ItemView.extend({
                 new NotesComponent({item: this.model.get('uuid')}),
                 this.$('.notes-component-container').get(0));
         }
-        var self = this;
 
-        this.imageAclComponent = React.renderComponent(
+
+        var model = this.model;
+        var self = this;
+        var imageAclComponent = this.imageAclComponent = React.renderComponent(
             new ImageAclComponent({
-                owner: this.model.get('owner'),
-                public: this.model.get('public'),
-                handleAddAcl: function(u) {
-                    self.model.addAcl([u]).done(function() {
-                        adminui.vent.trigger({
+                owner: model.get('owner'),
+                public: model.get('public'),
+                handleCancel: function() {
+                    imageAclComponent.setProps({ form: false });
+                    self.$('.add-image-acl').prop('disabled', false);
+                },
+                handleRemoveAcl: function(uuid) {
+                    model.removeAcl([uuid]).done(function(res) {
+                        imageAclComponent.setProps({acl: res.acl});
+                        adminui.vent.trigger('notification', {
                             level: 'success',
                             message: 'Image ACL has been activated.'
                         });
-                        self.model.fetch();
+                    });
+                },
+                handleAddAcl: function(u) {
+                    model.addAcl([u]).done(function(res) {
+                        self.$('.add-image-acl').prop('disabled', false);
+                        adminui.vent.trigger('notification', {
+                            level: 'success',
+                            message: 'Image ACL has been activated.'
+                        });
+                        imageAclComponent.setProps({
+                            form: false,
+                            acl: res.acl
+                        });
                     });
                 },
                 acl: this.model.get('acl')}),
@@ -257,7 +277,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         var self = this;
         this.model.activate(function() {
-            adminui.vent.trigger({
+            adminui.vent.trigger('notification', {
                 level: 'success',
                 message: 'Image has been activated.'
             });
@@ -269,7 +289,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         var self = this;
         this.model.disable(function() {
-            adminui.vent.trigger({
+            adminui.vent.trigger('notification', {
                 level: 'success',
                 message: 'Image has been disabled.'
             });
@@ -281,7 +301,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         var self = this;
         this.model.enable(function() {
-            adminui.vent.trigger({
+            adminui.vent.trigger('notification', {
                 level: 'success',
                 message: 'Image has been enabled.'
             });
@@ -309,6 +329,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
 
     onClickAddImageAcl: function() {
         this.imageAclComponent.setProps({ form: true });
+        this.$('.add-image-acl').prop('disabled', true);
     },
 
     onClickStartUpload: function() {
@@ -341,7 +362,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
     onUploadComplete: function(e) {
         this.viewModel.set({progress: false});
         this.viewModel.set({uploading: false});
-        adminui.vent.trigger('notificication', {
+        adminui.vent.trigger('notification', {
             level: 'success',
             message: 'Image file has been saved.'
         });
