@@ -11,6 +11,9 @@ var SSHKeys = require('../models/sshkeys');
 var UserForm = require('./user-form');
 var AddKeyView = require('./sshkey-create');
 
+var ImagesCollection = require('../models/images');
+var ImagesList = require('./images-list');
+
 var NotesComponent = require('../components/notes');
 
 var Networks = require('../models/networks');
@@ -99,7 +102,8 @@ var UserView = Backbone.Marionette.Layout.extend({
         'limitsRegion': '.limits-region',
         'vmsRegion': '.vms-region',
         'networksRegion': '.networks-region',
-        'networkPoolsRegion': '.network-pools-region'
+        'networkPoolsRegion': '.network-pools-region',
+        'imagesListRegion': '.images-list-region'
     },
     events: {
         'click .edit-user': 'onClickEditUser',
@@ -199,6 +203,12 @@ var UserView = Backbone.Marionette.Layout.extend({
         }, this);
 
 
+        this.imagesListView = new ImagesList({
+            collection: new ImagesCollection(null, {
+                params: { owner: this.model.get('uuid') }
+            })
+        });
+
 
 
         this.sshkeys = new SSHKeys(null, {user: this.model.get('uuid') });
@@ -215,9 +225,11 @@ var UserView = Backbone.Marionette.Layout.extend({
             new ProvisioningLimits({user: this.model.get('uuid')}),
             this.$(this.limitsRegion.el).get(0)
         );
+
         this.networksRegion.show(this.networksView);
         this.sshkeysList.setElement(this.$('.ssh-keys .items')).render();
         this.vmsFilter.setElement(this.$('.vms-filter'));
+        this.imagesListRegion.show(this.imagesListView);
 
         this.listenTo(this.vmsFilter, 'query', this.onVmFilter);
     },
