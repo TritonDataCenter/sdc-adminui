@@ -14,11 +14,12 @@
       Actions <span class="caret"></span>
     </a>
 
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu dropdown-menu-right">
       <li><a class="start">Start</a></li>
       <li><a class="stop">Stop</a></li>
       <li><a class="reboot">Reboot</a></li>
       <li class="divider"></li>
+      <li><a class="reprovision" href="#">Reprovision</a></li>
       <li><a class="resize" href="#">Resize</a></li>
       <li class="divider"></li>
       <li><a class="delete" href="#">Delete</a></li>
@@ -34,8 +35,7 @@
 
 <section class="vms-details">
   <div class="row">
-    <div class="col-md-12">
-      <h3>Overview</h3>
+    <div class="col-md-9">
       <table class="overview">
         <tr>
           <th>Name</th>
@@ -49,20 +49,6 @@
             <a class="mutate rename"><i class="icon-edit"></i> rename</a>
             {{/role}}
             <span class="vm-uuid selectable"></span>
-          </td>
-        </tr>
-        <tr>
-          <th>Owner</th>
-          <td>
-            <div>
-              <a class="owner-link" href="/users/{{owner_uuid}}">
-                <span class="owner-name"></span> <i class="icon-user"></i>
-              </a>
-            </div>
-            {{#role "operators"}}
-            <a class="mutate change-owner"><i class="icon-edit"></i> change</a>
-            {{/role}}
-            <span class="owner-uuid selectable">{{owner_uuid}}</span>
           </td>
         </tr>
 
@@ -120,7 +106,16 @@
         </tr>
       </table>
     </div>{{! col-md-12}}
-  </div>{{! row}}
+    <div class="col-md-3">
+        <div class="user-tile-icon">
+            <i class="fa fa-user"></i>
+        </div>
+        <a class="change-owner">
+            <i class="fa fa-pencil"></i> change
+        </a>
+        <div class="user-tile-container"></div>
+    </div>
+</div>{{! row}}
 </section>{{! vms-details}}
 
 

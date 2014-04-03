@@ -30,6 +30,7 @@ var JobsList = require('./jobs-list');
 var JobProgressView = require('./job-progress');
 var VmChangeOwner = require('./vm-change-owner');
 var NotesComponent = require('../components/notes');
+var UserTileComponent = require('../components/user-tile.jsx');
 
 var FirewallToggleButton = React.createClass({
     getInitialState: function() {
@@ -78,7 +79,6 @@ var VmView = Backbone.Marionette.Layout.extend({
         'click .reboot': 'clickedRebootVm',
         'click .delete': 'clickedDeleteVm',
         'click .rename': 'clickedRename',
-        'click .owner-name': 'clickedOwnerName',
         'click .package': 'clickedPackage',
         'click .image-name-version': 'clickedImage',
         'click .resize': 'clickedResize',
@@ -451,6 +451,10 @@ var VmView = Backbone.Marionette.Layout.extend({
             );
         }
 
+        React.renderComponent(
+            new UserTileComponent({uuid: this.vm.get('owner_uuid')}),
+            this.$('.user-tile-container').get(0));
+
 
         this.snapshotsListView = new SnapshotsList({
             vm: this.vm,
@@ -482,11 +486,6 @@ var VmView = Backbone.Marionette.Layout.extend({
                     }
                 }]
             }
-        });
-
-        this.stickit(this.owner, {
-            '.owner-name': 'cn',
-            '.owner-uuid': 'uuid'
         });
 
         this.stickit(this.vm, {
@@ -545,15 +544,6 @@ var VmView = Backbone.Marionette.Layout.extend({
                     observe: 'billing_id',
                     onGet: function(val) {
                         return '/packages/' + val;
-                    }
-                }]
-            },
-            '.owner-link': {
-                attributes: [{
-                    'observe':'owner_uuid',
-                    'name': 'href',
-                    'onGet': function(v) {
-                        return '/users/'+v;
                     }
                 }]
             },

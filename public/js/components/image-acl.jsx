@@ -1,7 +1,7 @@
 var React = require('react');
-var User = require('../models/user');
 var adminui = require('../adminui');
 
+var User = require('../models/user');
 var UserTile = React.createClass({
     propTypes: {
         uuid: React.PropTypes.string.isRequired

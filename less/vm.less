@@ -26,27 +26,62 @@ section.fwrules {
   .image-name-version.disabled { color: @gray-light; cursor: pointer; }
   .image-name-version.error { color: @brand-danger; }
 
-  .vms-details {
+  .change-owner {
+    position: absolute;
+    text-transform: uppercase;
+    font-size: 10px;
+    right: 24px;
+    top: 6px;
+    opacity: 0.3;
+    &:hover { opacity: 1; }
+  }
+
+  .user-tile-icon { position: absolute; padding: 12px; color: @gray-light; }
+  .user-tile {
+    .text-center();
+    .widget-content;
+    padding-top: 22px;
+    padding-bottom: 22px;
+    .email { font-size: 12px; }
+
+    .login-link {
+      display: block;
+      font-size: 18px;
+      margin-top: 1em;
+    }
+    .uuid { font-size: 8px; color: @gray-light; }
+    .company { color: @gray-light; }
+    .user-icon {
+      .center-block();
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+  }
+
+
+  .overview {
+    .table;
+
+    th { padding-left: 13px; }
+    tbody {
+      th { width: 120px; }
+      td .mutate { visibility: hidden; }
+      td:hover .mutate { visibility: visible; }
+      td>*:first-child { display: inline-block; width: auto; };
+    }
     .alias {
       input { margin: 0; padding: 0; }
     }
     .server-hostname { cursor: pointer; }
     .uuid {
-      font-size: 10px;
+      font-size: 8px;
+      margin-top: 4px;
       color: @gray-light;
-      font-style: italic;
-      font-family: monospace;
     }
-    .overview {
-      .table;
-      th { padding-left: 13px; }
-      tbody {
-        th { width: 120px; }
-        td .mutate { visibility: hidden; }
-        td:hover .mutate { visibility: visible; }
-        td>*:first-child { display: inline-block; width: 480px; };
-      }
-    }
+
     .vm-uuid,
     .server-uuid,
     .owner-uuid,
