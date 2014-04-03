@@ -43,6 +43,7 @@
   }
 
   .chain-results {
+    ol { list-style: decimal inside; }
     li {
       padding: 5px 10px;
       background: #f8f8f8;
@@ -60,8 +61,14 @@
       vertical-align: top;
     }
     .name { font-weight: bold; }
-    .task { width: 360px;}
-    .time { padding-right: 5px; color: @gray-light; text-align: right; }
+    .task {
+      width: 360px; margin-left: 20px;
+      .result { font-size: 12px; }
+     }
+    .time {
+      font-size: 12px;
+      margin-top: 4px;
+      padding-right: 5px; color: @gray-light; text-align: right; }
     .duration {
       margin-left: 220px;
       font-size: 18px;

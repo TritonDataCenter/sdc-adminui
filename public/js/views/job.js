@@ -110,7 +110,7 @@ var JobDetailsComponent = React.createClass({
               <h2>Task Summary</h2>
               <div className="summary">
                 <div className="chain-results">
-                  <ol>{chainResults}</ol>
+                  <ol className="list-unstyled">{chainResults}</ol>
                 </div>
               </div>
             </section>
