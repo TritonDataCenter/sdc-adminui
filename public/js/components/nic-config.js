@@ -78,9 +78,6 @@ var NicConfig = module.exports = React.createClass({
         var nic = this.state.nic;
         nic[prop] = value;
         this.setState({nic: nic});
-        console.info('onChange', prop, value, nic);
-        console.info(this.props.onPropertyChange);
-        console.log(this.props);
         this.props.onPropertyChange(prop, value, nic, this);
     },
     getValue: function() {
@@ -125,7 +122,7 @@ var NicConfig = module.exports = React.createClass({
                     <div className="control-label col-md-4">
                     &nbsp;
                     </div>
-                    <div className="controls col-md-4">
+                    <div className="controls col-md-6">
                         <div className="checkbox">
                             <label><input onChange={this.onChange} checked={this.state.nic.primary} type="checkbox" className="primary" name="primary" /> Make this the primary NIC</label>
                         </div>

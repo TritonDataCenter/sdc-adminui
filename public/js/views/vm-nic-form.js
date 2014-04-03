@@ -22,7 +22,6 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function(options) {
-        console.log('vm-add-nic', options);
         if (! this.model) {
             this.model = new Backbone.Model();
         }
@@ -96,9 +95,11 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
         this.$('button[type=submit]').prop('disabled', false);
     },
 
-    onNicPropertyChange: function(prop, value) {
-        if (this.model.get(prop) !== value) {
+    onNicPropertyChange: function(prop, value, nic) {
+        if (nic.network_uuid) {
             this.enableButtons();
+        } else {
+            this.disableButtons();
         }
     },
 
@@ -107,7 +108,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
             new NicConfigComponent({
                 nic: this.model.toJSON(),
                 expandAntispoofOptions: false,
-                onChange: this.onNicPropertyChange.bind(this)
+                onPropertyChange: this.onNicPropertyChange.bind(this)
             }),
             this.$('.nic-config-component').get(0));
 
