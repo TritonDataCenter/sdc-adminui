@@ -54,10 +54,10 @@ var JobDetailsComponent = React.createClass({
                     </div>
 
                     <div className="time">
-                        <div className="started-at"><i className="icon-play"></i> {task.started_at}</div>
-                        <div className="finished-at"><i className="icon-stop"></i> {task.finished_at}</div>
+                        <div className="started-at"><i className="fa fa-play"></i> {task.started_at}</div>
+                        <div className="finished-at"><i className="fa fa-stop"></i> {task.finished_at}</div>
                     </div>
-                    <div className="duration"><i className="icon-time"></i><div className="value">{task.duration}</div></div>
+                    <div className="duration"><i className="fa fa-clock-o"></i><div className="value">{task.duration}</div></div>
                 </li>
             )
         });

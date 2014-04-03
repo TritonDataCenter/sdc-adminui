@@ -6,7 +6,6 @@
     margin-left: 10px;
   }
   .params, .raw, .info {
-    .box-sizing(border-box);
     overflow-x: scroll;
     padding: 10px;
     background: #333;
@@ -46,9 +45,9 @@
   .chain-results {
     li {
       padding: 5px 10px;
-      background: #f3f3f3;
+      background: #f8f8f8;
+      overflow: hidden;
       margin-bottom: 0.5em;
-      font-size: 12px;
     }
     li.error {
       background: @state-danger-bg;
@@ -62,11 +61,11 @@
     }
     .name { font-weight: bold; }
     .task { width: 360px;}
-    .time { padding-right: 5px; color: @gray-light; font-size: 10px; text-align: right; }
+    .time { padding-right: 5px; color: @gray-light; text-align: right; }
     .duration {
-      margin-left: 250px;
-      font-size: 20px;
-      padding: 10px;
+      margin-left: 220px;
+      font-size: 18px;
+      padding: 7px;
       color: @gray-light;
       .value {
         display: inline-block;
