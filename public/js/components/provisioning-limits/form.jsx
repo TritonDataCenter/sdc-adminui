@@ -8,7 +8,6 @@ var api = require('../../request');
 var _ = require('underscore');
 
 var OPERATING_SYSTEMS = require('./constants').OPERATING_SYSTEMS;
-var DATACENTERS = require('./constants').DATACENTERS;
 
 var Form = module.exports = React.createClass({
     propTypes: {
@@ -25,15 +24,26 @@ var Form = module.exports = React.createClass({
             state.criteriaType = 'any';
         }
         state.images = [];
+        state.datacenters = [];
         return state;
     },
     componentDidMount: function() {
         this.loadImages();
+        this.loadDatacenters();
     },
     componentWillUnmount: function() {
         if (this.request) {
             this.request.abort();
         }
+    },
+    loadDatacenters: function() {
+        api.get('/_/datacenters').end(function(res) {
+            var dcs = res.body;
+            if (this.state.datacenter) {
+                dcs.push(this.state.datacenter);
+            }
+            this.setState({ datacenters: _.unique(dcs) });
+        }.bind(this));
     },
     loadImages: function() {
         var collection = new Images([], {
@@ -86,6 +96,7 @@ var Form = module.exports = React.createClass({
 
         return valid;
     },
+
     toLimit: function() {
         var state = this.state;
         var data = {};
@@ -101,7 +112,9 @@ var Form = module.exports = React.createClass({
         data.value = state.limitValue;
         return data;
     },
-
+    handleCancel: function() {
+        this.props.handleCancel();
+    },
     handleSave: function() {
         var limit = this.toLimit();
         var req;
@@ -120,83 +133,87 @@ var Form = module.exports = React.createClass({
 
     render: function() {
         return <div className="provisioning-limits-form">
-            { this.props.initialLimit ?
-                <h4 className="modal-title">Update Limit for {this.props.initialLimit.datacenter}</h4> :
-                <h4 className="modal-title">Add New Limit</h4> }
-
-            <form onSubmit={this.handleSave} className="form-horizontal">
-                <div className="form-group">
-                    <label className="col-md-4 control-label">Datacenter</label>
-                    <div className="col-md-7">
-                        <Chosen className="form-control" placeholder="Select a Datacenter" value={this.state.datacenter} onChange={this.handleChangeDatacenter}>
-                        <option value=""></option>
-                        {
-                            DATACENTERS.map(function(d) {
-                                return <option value={d}>{d}</option>
-                            })
-                        }
-                        </Chosen>
-                    </div>
+                <div className="modal-header">
+                { this.props.initialLimit ?
+                    <h4 className="modal-title">Update Limit for {this.props.initialLimit.datacenter}</h4> :
+                    <h4 className="modal-title">Add New Limit</h4> }
                 </div>
 
-                <div className="form-group">
-                    <label className="col-md-4 control-label">Limit Provisions to</label>
-                    <div className="col-md-3" style={{ paddingRight: 0}}>
-                        <input onChange={this.handleChangeLimitValue}
-                            type="number"
-                            value={this.state.limitValue}
-                            className="form-control" />
-                    </div>
-                    <div className="col-md-4" style={{ paddingLeft: 0}}>
-                        <Chosen className="form-control" onChange={this.handleChangeLimitUnit} value={this.state.limitUnit }>
-                            <option value="ram">MB of RAM</option>
-                            <option value="quota">GB of Disk Space</option>
-                            <option value="machines">Virtual Machines</option>
-                        </Chosen>
-                    </div>
-                </div>
-
-                <div className="form-group">
-                    <label className="control-label col-md-4">For</label>
-                    <div className="col-md-7">
-                        <div>
-                            <Chosen className="form-control" value={this.state.criteriaType } onChange={ this.handleChangeCriteriaType }>
-                                <option value="any">Any VM Type</option>
-                                <option value="os">Operating System...</option>
-                                <option value="image">Image...</option>
-                            </Chosen>
-                        </div>
-
-                        { this.state.criteriaType === 'os' ?
-                        <div>
-                            <Chosen onChange={this.handleChangeCriteriaValue} value={this.state.criteriaValue}>
+            <div className="modal-body">
+                <form onSubmit={this.handleSave} className="form-horizontal">
+                    <div className="form-group">
+                        <label className="col-md-4 control-label">Datacenter</label>
+                        <div className="col-md-7">
+                            <Chosen className="form-control" placeholder="Select a Datacenter" value={this.state.datacenter} onChange={this.handleChangeDatacenter}>
+                            <option value=""></option>
                             {
-                                OPERATING_SYSTEMS.map(function(o) {
-                                    return <option value={o}>{o}</option>
+                                this.state.datacenters.map(function(d) {
+                                    return <option value={d}>{d}</option>
                                 })
                             }
                             </Chosen>
                         </div>
-                        : '' }
-
-                        { this.state.criteriaType === 'image' ?
-                        <div>
-                            <Chosen className="form-control" onChange={this.handleChangeCriteriaValue} value={this.state.criteriaValue}>
-                                    {
-                                        this.state.images.map(function(i) {
-                                            return <option value={i}>{i}</option>
-                                        })
-                                    }
-                            </Chosen>
-                            </div>
-                        : '' }
-
                     </div>
-                </div>
 
-            </form>
-            <div className="buttons">
-                <button className="btn btn-default" data-dismiss="modal">Close</button>
+                    <div className="form-group">
+                        <label className="col-md-4 control-label">Limit Provisions to</label>
+                        <div className="col-md-3" style={{ paddingRight: 0}}>
+                            <input onChange={this.handleChangeLimitValue}
+                                type="number"
+                                value={this.state.limitValue}
+                                className="form-control" />
+                        </div>
+                        <div className="col-md-4" style={{ paddingLeft: 0}}>
+                            <Chosen className="form-control" onChange={this.handleChangeLimitUnit} value={this.state.limitUnit }>
+                                <option value="ram">MB of RAM</option>
+                                <option value="quota">GB of Disk Space</option>
+                                <option value="machines">Virtual Machines</option>
+                            </Chosen>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label className="control-label col-md-4">For</label>
+                        <div className="col-md-7">
+                            <div>
+                                <Chosen className="form-control" value={this.state.criteriaType } onChange={ this.handleChangeCriteriaType }>
+                                    <option value="any">Any VM Type</option>
+                                    <option value="os">Operating System...</option>
+                                    <option value="image">Image...</option>
+                                </Chosen>
+                            </div>
+
+                            { this.state.criteriaType === 'os' ?
+                            <div>
+                                <Chosen onChange={this.handleChangeCriteriaValue} value={this.state.criteriaValue}>
+                                {
+                                    OPERATING_SYSTEMS.map(function(o) {
+                                        return <option value={o}>{o}</option>
+                                    })
+                                }
+                                </Chosen>
+                            </div>
+                            : '' }
+
+                            { this.state.criteriaType === 'image' ?
+                            <div>
+                                <Chosen className="form-control" onChange={this.handleChangeCriteriaValue} value={this.state.criteriaValue}>
+                                        {
+                                            this.state.images.map(function(i) {
+                                                return <option value={i}>{i}</option>
+                                            })
+                                        }
+                                </Chosen>
+                                </div>
+                            : '' }
+
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div className="modal-footer">
+                <button className="btn btn-default" onClick={this.handleCancel}>Close</button>
                 <button disabled={ this.isValid() ? '' : 'disabled' } onClick={this.handleSave} className="btn btn-primary" type="button">Save Limit</button>
             </div>
         </div>

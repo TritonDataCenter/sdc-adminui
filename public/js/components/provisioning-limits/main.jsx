@@ -75,12 +75,14 @@ module.exports = ProvisioningLimits = React.createClass({
         }
     },
     render: function() {
+
         return (
             <div className="provisioning-limits-component">
                 { this.state.form ?
                     <Modal handleHidden={this.handleClose} ref="modal">
                         <ProvisioningLimitsForm
                             onSaved={this.handleSaved}
+                            handleCancel={this.handleClose}
                             initialLimit={this.state.formLimit}
                             user={this.props.user} ref="form" />
                     </Modal> : '' }

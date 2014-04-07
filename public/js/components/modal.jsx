@@ -8,7 +8,7 @@ var Modal = module.exports = React.createClass({
         }
     },
     componentDidMount: function() {
-        $(this.getDOMNode()).modal();
+        $(this.getDOMNode()).modal({keyboard: false});
         $(this.getDOMNode()).on('hidden', this.props.handleHidden);
         $(this.getDOMNode()).on('shown', this.props.handleShown);
     },
@@ -25,11 +25,11 @@ var Modal = module.exports = React.createClass({
     },
     render: function() {
         return <div ref="modal" className="modal">
-        <div className="modal-dialog">
-            <div className="modal-content">
-                <div className="modal-body" style={ {overflow: 'visible' } }>{this.props.children}</div>
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    { this.props.children }
                 </div>
             </div>
-        </div>
+        </div>;
     }
 });
