@@ -87,11 +87,15 @@ module.exports = ProvisioningLimits = React.createClass({
                             user={this.props.user} ref="form" />
                     </Modal> : '' }
                 <h3>Provisioning Limits
-                    <div className="actions">
-                        <button onClick={this.showNewLimitForm} className="btn btn-sm btn-info"><i className="fa fa-plus"></i> New Limit</button>
-                    </div>
+                    {
+                        adminui.user.role('operators') ?
+                        <div className="actions">
+                            <button onClick={this.showNewLimitForm} className="btn btn-sm btn-info"><i className="fa fa-plus"></i> New Limit</button>
+                        </div> : ''
+                    }
                 </h3>
                 <ProvisioningLimitsList
+                    mutable={adminui.user.role('operators')}
                     handleEdit={this.handleEdit}
                     handleDelete={this.handleDelete}
                     limits={this.state.limits} />

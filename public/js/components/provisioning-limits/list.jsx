@@ -59,10 +59,14 @@ var ProvisioningLimitsList = module.exports = React.createClass({
                             <span className="value">{l.value}</span>
                             <span className="unit">{byLabel}</span>
                         </div>
-                        <div className="actions col-sm-3">
-                            <a onClick={this.handleEdit.bind(this, l)} className="edit"><i className="icon icon-pencil"></i> Edit</a>
-                            <a onClick={this.handleDelete.bind(this, l)} className="delete"><i className="icon icon-trash"></i> Delete</a>
-                        </div>
+                            { this.props.mutable ?
+                            <div className="actions col-sm-3">
+                                <a onClick={this.handleEdit.bind(this, l)} className="edit"><i className="icon icon-pencil"></i> Edit</a>
+                                <a onClick={this.handleDelete.bind(this, l)} className="delete"><i className="icon icon-trash"></i> Delete</a>
+                            </div>
+                            : ''
+                            }
+
                     </div>
                 )
             }, this);
