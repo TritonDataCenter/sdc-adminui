@@ -139,7 +139,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
         // enable selection
         $(document).on('click', '.selectable', function() {
-            console.log('uuid click');
             var range;
 
             if (document.selection) {

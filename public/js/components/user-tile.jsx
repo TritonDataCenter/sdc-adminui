@@ -41,7 +41,6 @@ var UserTile = module.exports = React.createClass({
         if (this.state.loadingFailed) {
             return <div className="user-tile failed" key={this.props.uuid}>
                 <div className="row">
-
                     <div className="col-md-1">&nbsp;</div>
                     <div className="col-md-11">
                         <span className="text-danger">Unable to fetch User Information.</span>
@@ -69,13 +68,12 @@ var UserTile = module.exports = React.createClass({
                             </span>
                         </a>
                         <p>
-                        {user.cn}
-                        { user.company ? <div className="company">{user.company}</div> : '' }
+                        {user.cn} { user.company ? <div className="company">{user.company}</div> : '' }
                         </p>
                         <a className="email" href={"mailto:"+user.email}><i className="fa fa-envelope-o"></i> {user.email}</a>
                     </div>
                     <div className="col-md-12">
-                        <span className="uuid">{this.props.uuid}</span>
+                        <span className="uuid selectable">{this.props.uuid}</span>
                     </div>
                 </div>
             </div>
