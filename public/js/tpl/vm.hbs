@@ -110,9 +110,11 @@
         <div class="user-tile-icon">
             <i class="fa fa-user"></i>
         </div>
+        {{#role "operators"}}
         <a class="change-owner">
             <i class="fa fa-pencil"></i> change
         </a>
+        {{/role}}
         <div class="user-tile-container"></div>
     </div>
 </div>{{! row}}

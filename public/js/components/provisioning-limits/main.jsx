@@ -95,7 +95,7 @@ module.exports = ProvisioningLimits = React.createClass({
                     }
                 </h3>
                 <ProvisioningLimitsList
-                    mutable={adminui.user.role('operators')}
+                    readonly={adminui.user.role('operators')}
                     handleEdit={this.handleEdit}
                     handleDelete={this.handleDelete}
                     limits={this.state.limits} />
