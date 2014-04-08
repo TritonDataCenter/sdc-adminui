@@ -11,6 +11,7 @@ var React = require('react');
 
 var moment = require('moment');
 var _ = require('underscore');
+var Showdown = require('showdown');
 
 var Notes = require('../models/notes');
 var Note = require('../models/note');
@@ -30,21 +31,26 @@ var NotesPanelNode = React.createClass({
     },
     render: function() {
         var note = this.props.note;
+        var converter = new Showdown.converter();
+        var htmlNote = converter.makeHtml(note.note);
+
         return (
             <li className={note.archived ? 'archived': ''} key={note.uuid}>
                 <div className="meta">
-                    <div className="author"><UserLink uuid={note.owner_uuid} /></div>
+                    <div className="author">
+                    <UserLink uuid={note.owner_uuid} /></div>
                     <div className="date">{moment(note.created).utc().format("LLL")}</div>
                     <div className="actions">
                     {
                         (note.archived) ?
                         <a onClick={this.handleUnarchive} data-uuid={note.uuid} className="unarchive"><i className="fa fa-undo"></i></a>
                         :
-                        <a onClick={this.handleArchive} data-uuid={note.uuid} className="archive"><i className="fa fa-trash"></i></a>
+                        <a onClick={this.handleArchive} data-uuid={note.uuid} className="archive"><i className="fa fa-trash-o"></i></a>
                     }
                     </div>
                 </div>
-                <div className="note">{note.note}</div>
+                <span className="arrow fa fa-caret-up fa-2x"></span>
+                <div className="note" dangerouslySetInnerHTML={{__html: htmlNote}}></div>
             </li>
         );
     }
@@ -101,7 +107,7 @@ var NotesPanel = React.createClass({
         return <div className="notes-panel">
             <ul className="list-unstyled notes-list">{nodes}</ul>
             <form onSubmit={this.handleSubmit}>
-                <textarea onChange={this.onInput} placeholder="Write a note here..." ref="input" type="text"></textarea>
+                <textarea onChange={this.onInput} placeholder="Write a note here... (Markdown Formatting Supported)" ref="input" type="text"></textarea>
                 <button type="submit" disabled={this.state.disableButton} className="btn">SAVE</button>
             </form>
         </div>

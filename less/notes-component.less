@@ -19,7 +19,7 @@
     color: @gray-light;
   }
   .notes-count.has-notes {
-    color: @btn-success-color;
+    color: @brand-success;
   }
   .notes-count.open,
   .notes-count.has-notes.open {
@@ -33,12 +33,12 @@
     background: #FFF;
     box-shadow: 0 3px 3px rgba(0,0,0,0.2);
 
-    ul {
+    &>ul {
       min-height: 220px;
       max-height: 220px;
       overflow-y: auto;
       margin: 0;
-      li {
+      &>li {
         padding: 5px 8px;
         list-style: none;
         margin: 0;
@@ -53,7 +53,28 @@
         }
 
         .date { font-size: 10px; color: @gray-light; margin-left: 5px;}
-        .note { line-height: 14px; font-size: 12px; }
+        .arrow {
+          display: block;
+          height: 12px;
+          line-height: 5px;
+          height: 6px;
+          color: #fafafa;
+          // color: red;
+          padding-left: 15px;
+        }
+        .note {
+          line-height: 14px;
+          padding: 5px;
+          background: #fafafa;
+          font-size: 12px;
+          p { font-size: 12px; padding: 4px; margin-bottom: 0; }
+          ul { padding-left: 25px; }
+          li { list-style-type: disc }
+          h1 { font-size: 14px; margin-top: 0; margin-bottom: 5px; }
+          h2 { font-size: 13px; }
+          h3 { font-size: 12px; }
+          h4,h5,h6 { font-size: 12px; }
+        }
       }
       li.no-notes {
         color: @gray-light;
@@ -69,7 +90,6 @@
 
 
     form {
-      .box-sizing(border-box);
       overflow: hidden;
       margin: 0;
       padding: 0;
@@ -87,19 +107,21 @@
         color: #fff;
         font-size: 10px;
         text-align: center;
-        .box-sizing(border-box);
       }
 
       textarea {
-        .box-sizing(border-box);
-        line-height: 14px; font-size: 12px;
-        height: 64px;
+        line-height: 14px;
+        font-size: 12px;
+        height: 80px;
         width: 100%;
         padding: 10px;
         margin: 0;
         border: none;
         background: transparent;
         outline: none;
+      }
+      textarea:focus {
+        background: #fafafa;
       }
     }
   }

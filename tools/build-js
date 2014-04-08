@@ -40,6 +40,10 @@ var shimConfig = {
         path: './lib/d3.v3',
         exports: 'd3'
     },
+    'showdown': {
+        path: './lib/showdown',
+        exports: 'Showdown'
+    },
     'rickshaw': {
         path: './lib/rickshaw',
         depends: {'d3': 'd3'},
@@ -106,7 +110,9 @@ Object.keys(shimConfig).forEach(function(k) {
     }
 });
 
-var b = shim(browserify(), shimConfig)
+var b = shim(browserify({
+    extensions: ['jsx']
+}), shimConfig)
     .transform(require.resolve(join(root, './transforms/tpl')))
     .transform(require('reactify'))
     .require('underscore', { expose: 'underscore' })
@@ -115,6 +121,7 @@ var b = shim(browserify(), shimConfig)
     .require('superagent', { expose: 'superagent' })
     .require(require.resolve(join(root, './request')), { expose: 'adminui-api' })
     .require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery' })
+    .require(require.resolve(join(root, './lib/showdown')), { expose: 'showdown' })
     .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment' })
     .require(require.resolve(join(root, './adminui')), {expose: 'adminui', entry: true});
 
