@@ -23,7 +23,8 @@ var ProvisioningLimitsList = module.exports = React.createClass({
     getDefaultProps: function() {
         return {
             handleEdit: function() {},
-            handleDelete: function() {}
+            handleDelete: function() {},
+            readonly: false
         }
     },
 
@@ -59,10 +60,10 @@ var ProvisioningLimitsList = module.exports = React.createClass({
                             <span className="value">{l.value}</span>
                             <span className="unit">{byLabel}</span>
                         </div>
-                            { this.props.readonly ?
+                            { (!this.props.readonly) ?
                             <div className="actions col-sm-3">
-                                <a onClick={this.handleEdit.bind(this, l)} className="edit"><i className="icon icon-pencil"></i> Edit</a>
-                                <a onClick={this.handleDelete.bind(this, l)} className="delete"><i className="icon icon-trash"></i> Delete</a>
+                                <a onClick={this.handleEdit.bind(this, l)} className="edit"><i className="fa fa-pencil"></i> Edit</a>
+                                <a onClick={this.handleDelete.bind(this, l)} className="delete"><i className="fa fa-trash-o"></i> Delete</a>
                             </div>
                             : ''
                             }

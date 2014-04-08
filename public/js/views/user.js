@@ -221,7 +221,10 @@ var UserView = Backbone.Marionette.Layout.extend({
         this.vmsRegion.show(this.vmsList);
 
         React.renderComponent(
-            new ProvisioningLimits({user: this.model.get('uuid')}),
+            new ProvisioningLimits({
+                user: this.model.get('uuid'),
+                readonly: !adminui.user.role('operators')
+            }),
             this.$(this.limitsRegion.el).get(0)
         );
 

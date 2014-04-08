@@ -15,7 +15,8 @@ var OS_VALUES = require('./constants').OPERATING_SYSTEMS;
 
 module.exports = ProvisioningLimits = React.createClass({
     propTypes: {
-        user: React.PropTypes.string.isRequired
+        user: React.PropTypes.string.isRequired,
+        readonly: React.PropTypes.bool
     },
     fetchLimits: function() {
         var collection = new Limits(null, {user: this.props.user });
@@ -95,7 +96,7 @@ module.exports = ProvisioningLimits = React.createClass({
                     }
                 </h3>
                 <ProvisioningLimitsList
-                    readonly={adminui.user.role('operators')}
+                    readonly={this.props.readonly}
                     handleEdit={this.handleEdit}
                     handleDelete={this.handleDelete}
                     limits={this.state.limits} />
