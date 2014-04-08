@@ -135,6 +135,7 @@ module.exports = React.createClass({
         public: React.PropTypes.bool.isRequired,
         owner: React.PropTypes.string,
         form: React.PropTypes.bool,
+        readonly: React.PropTypes.bool,
         handleAddAcl: React.PropTypes.func,
         handleRemoveAcl: React.PropTypes.func,
         handleCancel: React.PropTypes.func
@@ -144,6 +145,7 @@ module.exports = React.createClass({
             acl: [],
             owner: null,
             form: false,
+            readonly: false,
             handleAddAcl: function() {},
             handleRemoveAcl: function() {},
             handleCancel: function() {}
@@ -158,7 +160,9 @@ module.exports = React.createClass({
             if (this.props.acl.length) {
                 this.props.acl.map(function(uuid) {
                     nodes.push(<UserTile uuid={uuid} />);
-                    nodes.push(<a className="remove-acl" data-uuid={uuid} onClick={this.props.handleRemoveAcl.bind(null, uuid)}><i className="fa fa-times"></i></a>);
+                    if (! this.props.readonly) {
+                        nodes.push(<a className="remove-acl" data-uuid={uuid} onClick={this.props.handleRemoveAcl.bind(null, uuid)}><i className="fa fa-times"></i></a>);
+                    }
                 }, this);
             }
         }

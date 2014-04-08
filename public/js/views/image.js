@@ -218,10 +218,12 @@ var ImageView = Backbone.Marionette.ItemView.extend({
 
         var model = this.model;
         var self = this;
+
         var imageAclComponent = this.imageAclComponent = React.renderComponent(
             new ImageAclComponent({
                 owner: model.get('owner'),
                 public: model.get('public'),
+                readonly: (!adminui.user.role('operators')),
                 handleCancel: function() {
                     imageAclComponent.setProps({ form: false });
                     self.$('.add-image-acl').prop('disabled', false);

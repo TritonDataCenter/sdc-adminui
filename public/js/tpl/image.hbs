@@ -105,18 +105,20 @@
         Access Control
         <small>The following users have access to this image</small>
 
-        {{#if public}}
-            <button class="btn btn-default btn-sm change-publicity pull-right">
-                <i class="fa fa-lock"></i> Make Image Private
-            </button>
-        {{else}}
-            <button class="btn btn-success btn-sm change-publicity pull-right">
-                <i class="fa fa-unlock"></i> Make Image Public
-            </button>
-            <button class="btn btn-success btn-sm pull-right add-image-acl">
-                <i class="fa fa-plus"></i>
-            </button>
-        {{/if}}
+        {{#role "operators"}}
+            {{#if public}}
+                <button class="btn btn-default btn-sm change-publicity pull-right">
+                    <i class="fa fa-lock"></i> Make Image Private
+                </button>
+            {{else}}
+                <button class="btn btn-success btn-sm change-publicity pull-right">
+                    <i class="fa fa-unlock"></i> Make Image Public
+                </button>
+                <button class="btn btn-success btn-sm pull-right add-image-acl">
+                    <i class="fa fa-plus"></i>
+                </button>
+            {{/if}}
+        {{/role}}
     </h3>
       <div class="acl-container"></div>
     </section>
