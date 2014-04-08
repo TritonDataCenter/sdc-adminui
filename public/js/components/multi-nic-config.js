@@ -28,9 +28,8 @@ var MultipleNicConfigComponent = module.exports = React.createClass({
     },
     onNicPropertyChange: function(prop, value, nic, com) {
         console.info('onNicPropertyChange', prop, value, nic);
-
+        var nics = this.state.nics;
         if (prop === 'primary' && value === true) {
-            var nics = this.state.nics;
             nics = _.map(nics, function(n) {
                 if (n === nic) {
                     n.primary = true;
@@ -39,9 +38,8 @@ var MultipleNicConfigComponent = module.exports = React.createClass({
                 }
                 return n;
             });
-            this.setState({nics: nics});
         }
-
+        this.setState({nics: nics});
         this.props.onChange(nics);
     },
     addNewNic: function() {

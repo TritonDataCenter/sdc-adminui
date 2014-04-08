@@ -3,7 +3,7 @@
         <h1>Provision a Virtual Machine</h1>
     </div>
     <form role="form" class="form-horizontal col-md-12">
-        <div class="alert alert-block alert-error">
+        <div class="alert alert-error">
             <strong>OH SNAP!</strong> <span class="message"></span>
         </div>
 
@@ -12,10 +12,8 @@
             <div class="col-md-7">
                 <input id="input-owner" type="text" placeholder="Search by uuid, login or email" class="form-control " name="owner">
                 <span class="help-block">Required</span>
-                <div class="help-block no-sshkeys-warning">
-                    <span class="text-warning">
+                <div class="help-block no-sshkeys-warning alert alert-warning">
                     Warning: This user does not have any SSH Keys.
-                    </span>
                 </div>
                 <div class="user-preview-region"></div>
             </div>
