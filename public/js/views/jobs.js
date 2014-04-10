@@ -47,7 +47,6 @@ var DatePicker = React.createClass({
         this.props.onChange({value: e.date.utc().toDate() });
     },
     render: function() {
-        console.log(this.props.value);
         return (
             <div className="form-group">
             <div ref="datepicker" className="input-group date-picker" data-date-format="YYYY-MM-DD HH:mm:ss">
@@ -140,7 +139,7 @@ var JobCriterias = React.createClass({
         }
     },
     render: function() {
-        return <ul className="list-unstyled">
+        return <ul className="list-unstyled row">
             <li className="col-md-4"><span className="criteria-name">Execution</span><JobExecutionCriteria name="execution" onChange={this.onExecutionChange} value={this.state.execution} /></li>
             <li className="col-md-4" style={ {paddingRight:0} }><span className="criteria-name">Since</span><JobDateCriteria name="since" onChange={this.onDateSinceChange} value={this.state.since} /></li>
             <li className="col-md-4" style={ {paddingLeft:0} }><span className="criteria-name">Until</span><JobDateCriteria name="until" onChange={this.onDateUtilChange} value={this.state.until} /></li>

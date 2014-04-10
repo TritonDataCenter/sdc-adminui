@@ -116,7 +116,6 @@ var JobsList = Backbone.Marionette.CompositeView.extend({
         if (options.params) {
             this.collection.params = options.params;
         }
-        this.collection.fetch();
         this.listenTo(this.collection, 'error', this.onError);
     },
 
@@ -133,6 +132,7 @@ var JobsList = Backbone.Marionette.CompositeView.extend({
     },
 
     onShow: function() {
+        this.collection.fetch();
         $(window).on('scroll', this.onScroll.bind(this));
     },
 

@@ -3,7 +3,6 @@
 #page-jobs {
   .jobs-criteria-container {
     .widget-content;
-    overflow: hidden;
 
     .criteria-name {
       color: @gray;
@@ -11,6 +10,12 @@
       padding: 0;
       text-transform: uppercase;
     }
+
+    .form-group {
+      margin-bottom: 0;
+    }
+
+
     .date-picker input {
       cursor: default;
     }
@@ -57,7 +62,6 @@
   .jobs-list { .__jobs-list; }
   .jobs-filter {
     .widget-content;
-    .box-sizing(border-box);
     padding: 15px;
     label {
       color: @gray-light;
