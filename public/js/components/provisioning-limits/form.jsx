@@ -61,7 +61,11 @@ var Form = module.exports = React.createClass({
         this.setState({criteriaType: c.selected })
     },
     handleChangeCriteriaValue: function(e, c) {
-        this.setState({criteriaValue: c.selected })
+        if (c) {
+            this.setState({criteriaValue: c.selected });
+        } else {
+            this.setState({criteriaValue: e.target.value });
+        }
     },
 
     handleChangeLimitValue: function(e) {
@@ -195,16 +199,9 @@ var Form = module.exports = React.createClass({
                             </div>
                             : '' }
 
+
                             { this.state.criteriaType === 'image' ?
-                            <div>
-                                <Chosen className="form-control" onChange={this.handleChangeCriteriaValue} value={this.state.criteriaValue}>
-                                        {
-                                            this.state.images.map(function(i) {
-                                                return <option value={i}>{i}</option>
-                                            })
-                                        }
-                                </Chosen>
-                                </div>
+                            <input className="form-control" placeholder="Image Name (example: ubuntu)" onChange={this.handleChangeCriteriaValue} value={this.state.criteriaValue} />
                             : '' }
 
                         </div>
@@ -214,7 +211,7 @@ var Form = module.exports = React.createClass({
             </div>
             <div className="modal-footer">
                 <button className="btn btn-default" onClick={this.handleCancel}>Close</button>
-                <button disabled={ this.isValid() ? '' : 'disabled' } onClick={this.handleSave} className="btn btn-primary" type="button">Save Limit</button>
+                <button disabled={ this.isValid() ? '' : 'disabled' } onClick={this.handleSave} className="btn btn-primary" type="submit">Save Limit</button>
             </div>
         </div>
     }
