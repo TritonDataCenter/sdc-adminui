@@ -111,7 +111,7 @@ var JobProgressFooter = React.createClass({
 
 var JobProgressView = Backbone.Marionette.ItemView.extend({
     attributes: {
-        'class': 'modal modal-lg',
+        'class': 'modal modal',
         'id': 'job-progress'
     },
     template: require('../tpl/job-progress.hbs'),

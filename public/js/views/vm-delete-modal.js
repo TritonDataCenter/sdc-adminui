@@ -5,7 +5,7 @@ var tplVmDelete = require('../tpl/vm-delete.hbs');
 module.exports = Backbone.Marionette.ItemView.extend({
     template: tplVmDelete,
     attributes: {
-        'class': 'modal hide fade'
+        'class': 'modal'
     },
 
     events: {
@@ -32,6 +32,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     clickedDelete: function(e) {
         var self = this;
         this.$el.modal('hide');
+        this.$el.remove();
         this.vm.del(function(job) {
             job.name = 'Delete VM';
             var jobView = new JobProgressView({
