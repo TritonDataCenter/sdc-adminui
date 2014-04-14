@@ -127,8 +127,10 @@ var Form = module.exports = React.createClass({
         } else {
             req = api.post(_.str.sprintf('/_/users/%s/limits/%s', this.props.user, limit.datacenter));
         }
-        req.send(limit)
-            .end(function(err, res) {
+        req.send({
+            limit: limit,
+            original: this.props.initialLimit
+        }).end(function(err, res) {
                 if (res.ok) {
                     this.props.onSaved(res);
                 }
