@@ -182,6 +182,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
+    presentPageComponent: function(viewName, args) {
+        var componentClass = Views[viewName];
+        var component = new componentClass(args);
+        React.renderComponent(component, this.app.chrome.currentView.content.$el.get(0))
+    },
+
     presentView: function(viewName, args) {
         this.initializeAppView();
 
