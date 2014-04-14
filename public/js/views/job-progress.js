@@ -8,12 +8,8 @@ var adminui = require('../adminui');
 
 var JobProgressHeader = React.createClass({
 
-    getInitialState: function() {
-        return this.props.job;
-    },
-
     render: function() {
-        var job = this.state;
+        var job = this.props.job;
 
         return (
             <div className="job-progress-header">
@@ -27,12 +23,8 @@ var JobProgressHeader = React.createClass({
 
 var JobProgressSummary = React.createClass({
 
-    getInitialState: function() {
-        return this.props.job;
-    },
-
     render: function() {
-        var job = this.state;
+        var job = this.props.job;
 
         return (
             <div className="summary">
@@ -72,9 +64,6 @@ var JobProgressSummary = React.createClass({
 
 var JobProgressFooter = React.createClass({
 
-    getInitialState: function() {
-        return this.props.job;
-    },
 
     handleCancel: function(e) {
         e.preventDefault();
@@ -82,7 +71,7 @@ var JobProgressFooter = React.createClass({
     },
 
     render: function() {
-        var job = this.state;
+        var job = this.props.job;
 
         return (
             <div>
@@ -105,13 +94,32 @@ var JobProgressFooter = React.createClass({
     }
 });
 
+var JobProgressComponent = React.createClass({
+    render: function() {
+        var job = this.props.job;
+        return <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <JobProgressHeader job={job} />
+                    </div>
+                    <div className="modal-body">
+                    <JobProgressSummary job={job} />
+                    </div>
+                    <div className="modal-footer">
+                    <JobProgressFooter onCancel={this.props.onCancel} job={job} />
+                    </div>
+                </div>
+            </div>
+    }
+});
+
 
 
 
 
 var JobProgressView = Backbone.Marionette.ItemView.extend({
     attributes: {
-        'class': 'modal modal',
+        'class': 'modal',
         'id': 'job-progress'
     },
     template: require('../tpl/job-progress.hbs'),
@@ -169,18 +177,8 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         var job = this.serializeData();
 
-        this.header = <JobProgressHeader job={job} />;
-        this.body = <JobProgressSummary job={job} />;
-        this.footer = <JobProgressFooter onCancel={this.onCancel.bind(this)} job={job} />;
-
         this.component = React.renderComponent(
-            <div className="modal-dialog">
-                <div className="modal-content">
-                    <div className="modal-header">{this.header}</div>
-                    <div className="modal-body">{this.body}</div>
-                    <div className="modal-footer">{this.footer}</div>
-                </div>
-            </div>
+            <JobProgressComponent job={job} onCancel={this.onCancel.bind(this)} />
         , this.$el.get(0));
     },
 
@@ -191,9 +189,7 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
 
     onUpdate: function() {
         var job = this.serializeData();
-        this.header.setState(job);
-        this.body.setState(job);
-        this.footer.setState(job);
+        this.component.setProps({job: job});
 
         this.$('.modal-body').scrollTop(this.$('.modal-body').get(0).scrollHeight);
 
