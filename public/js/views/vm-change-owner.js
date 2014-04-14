@@ -26,7 +26,10 @@ var View = Backbone.Marionette.ItemView.extend({
 
     show: function() {
         this.render();
-        this.$el.modal('show');
+        var self = this;
+        this.$el.modal('show').on('hidden.bs.modal', function() {
+            self.remove();
+        });
         this.$('input:first').focus();
     },
 
