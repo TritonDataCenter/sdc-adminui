@@ -29,8 +29,10 @@ var JobsList = require('./jobs-list');
 
 var JobProgressView = require('./job-progress');
 var VmChangeOwner = require('./vm-change-owner');
+
 var NotesComponent = require('../components/notes');
 var UserTileComponent = require('../components/user-tile.jsx');
+var ReprovisionVmComponent = require('../components/reprovision-vm.jsx');
 
 var FirewallToggleButton = React.createClass({
     getInitialState: function() {
@@ -79,6 +81,7 @@ var VmView = Backbone.Marionette.Layout.extend({
         'click .reboot': 'clickedRebootVm',
         'click .delete': 'clickedDeleteVm',
         'click .rename': 'clickedRename',
+        'click .reprovision': 'clickedReprovision',
         'click .package': 'clickedPackage',
         'click .image-name-version': 'clickedImage',
         'click .resize': 'clickedResize',
@@ -306,6 +309,23 @@ var VmView = Backbone.Marionette.Layout.extend({
             vm: this.vm
         });
         vmChangeOwner.show();
+    },
+
+    clickedReprovision: function() {
+        var self = this;
+        console.log('reprovision');
+        var $container = $('<div class="reprovision-vm-component-container"></div>');
+        $(document.body).append($container);
+        React.renderComponent(new ReprovisionVmComponent({
+            uuid: this.vm.get('uuid'),
+            handleJobCreated: function(job) {
+                var jobView = new JobProgressView({ model: job });
+                jobView.show();
+                self.listenTo(jobView, 'finished', function() {
+                    self.vm.fetch();
+                }, self);
+            }
+        }), $container.get(0));
     },
 
     clickedServerHostname: function(e) {

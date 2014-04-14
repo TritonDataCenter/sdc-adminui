@@ -74,6 +74,21 @@ var Vm = Model.extend({
         });
     },
 
+    reprovision: function(imageUuid, cb) {
+        var req = $.post(this.url() + '?action=reprovision', {
+            image_uuid: imageUuid
+        });
+        req.done(function(data) {
+            var job = new Job({
+                uuid: data.job_uuid
+            });
+            cb(null, job);
+        });
+        req.fail(function(xhr, status, errThrown) {
+            cb(errThrown);
+        });
+    },
+
     addNics: function(networks, cb) {
         var req = $.post(this.url() + '?action=add_nics', {
             networks: networks
