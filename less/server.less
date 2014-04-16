@@ -57,7 +57,15 @@
     tbody th { width: 140px; }
   }
 
-  table.traits { .table; }
+  table.traits {
+   .table;
+   .trait-value {
+      white-space: pre-wrap;
+      font-family: @font-family-monospace;
+      font-size: 14px;
+    }
+  }
+
   a { cursor: pointer; }
 
   .disks {
