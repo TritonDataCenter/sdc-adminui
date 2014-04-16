@@ -111,6 +111,11 @@ var ServerView = Backbone.Marionette.Layout.extend({
             };
         });
         data.traits = _.map(data.traits, function(v, k) {
+            if (typeof(v) === 'object') {
+                v = JSON.stringify(v, null, 2);
+            } else {
+                v = v.toString();
+            }
             return {name: k, value: v};
         });
         return data;
