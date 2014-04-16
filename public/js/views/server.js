@@ -332,8 +332,12 @@ var ServerView = Backbone.Marionette.Layout.extend({
     factoryReset: function() {
         var confirm = window.confirm('!!!!!! WARNING !!!!!!! \n\nAre you sure you want to run Factory Reset on this Server?');
         if (confirm) {
-            this.model.factoryReset(function(job) {
-                app.vent.trigger('showjob', job);
+            this.model.factoryReset(function(err, job) {
+                if (err) {
+                    window.alert(err);
+                } else {
+                    app.vent.trigger('showjob', job);
+                }
             });
         }
     },

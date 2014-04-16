@@ -21,11 +21,22 @@ var Server = Model.extend({
     },
 
     factoryReset: function(callback) {
-        $.post(this.url() + '?action=factory-reset', {}, function(data) {
+        var req = $.ajax({
+            url: this.url() + '?action=factory-reset',
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+
+        req.done(function(data) {
             var job = new Job({
                 uuid: data.job_uuid
             });
-            callback(job);
+            callback(null, job);
+        });
+
+        req.fail(function(xhr, status, err) {
+            callback(xhr.responseText);
         });
     },
 
