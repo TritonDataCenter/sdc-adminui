@@ -5,10 +5,6 @@
    <% alarms.each(function(alarm) { %>
    <li data-uuid="<%= alarm.get('id') %>">
      <div class="summary">
-      <div class="fault-count">
-       <%= alarm.get('numEvents') %>
-      </div>
-
       <div class="probe-name">
        <% if (alarm.probeGroup) { %>
        <%= alarm.probeGroup.name %>
@@ -17,14 +13,9 @@
        <%= alarm.probe.name %>
        <% } %>
      </div>
-
-     <div class="time-last-event">
-       <%= new Date(alarm.get('timeLastEvent')) %>
-     </div>
-
-     <div class="actions">
-       <a class="suppress"><i class="icon-remove icon-white"></i></a>
-     </div>
+     <div class="time-last-event"><%= new Date(alarm.get('timeLastEvent')) %></div>
+     <div class="actions"><a class="suppress"><i class="fa fa-times"></i></a></div>
+     <div class="fault-count"> <%= alarm.get('numEvents') %> </div>
    </div>
 
   <div class="details">
