@@ -104,6 +104,12 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
     serializeData: function() {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this);
+        data.total_quota = 0;
+
+        _.each(data.sysinfo['Disks'], function(v, k) {
+            data.total_quota += v['Size in GB'];
+        });
+
         data.disks = _.map(data.sysinfo['Disks'], function(v, k) {
             return {
                 name: k,
