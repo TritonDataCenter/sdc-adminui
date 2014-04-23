@@ -4,7 +4,7 @@
   {{/if}}
   <div class="from-predicate">{{fromPredicate}}</div>
   <div class="to">
-    <i class="icon-long-arrow-right"></i>
+    <i class="fa fa-long-arrow-right"></i>
   </div>
 
   <div class="to-predicate">{{toPredicate}}</div>
@@ -15,12 +15,12 @@
 
 {{#role "operators"}}
 <div class="actions">
-  <a class="btn edit-rule"><i class="icon-pencil"></i> Modify</a>
+  <a class="btn edit-rule"><i class="fa fa-pencil"></i> Modify</a>
   {{#if enabled}}
-  <a class="btn disable-rule"><i class="icon-remove"></i> Disable</a>
+  <a class="btn disable-rule"><i class="fa fa-times"></i> Disable</a>
   {{else}}
-  <a class="btn enable-rule"><i class="icon-ok-sign"></i> Enable</a>
+  <a class="btn enable-rule"><i class="fa fa-ok-sign"></i> Enable</a>
   {{/if}}
-  <a class="btn delete-rule"><i class="icon-trash"></i></a>
+  <a class="btn delete-rule"><i class="fa fa-trash-o"></i></a>
 </div>
 {{/role}}
