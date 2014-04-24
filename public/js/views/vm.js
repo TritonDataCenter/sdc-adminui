@@ -522,7 +522,7 @@ var VmView = Backbone.Marionette.Layout.extend({
                 observe: 'last_modified',
                 onGet: function(date) {
                     if (date) {
-                        return moment(date).utc().format('LLL');
+                        return moment(date).utc().format('D MMMM, YYYY HH:mm:ss z');
                     } else {
                         return '';
                     }
@@ -532,7 +532,7 @@ var VmView = Backbone.Marionette.Layout.extend({
                 observe: 'create_timestamp',
                 onGet: function(date) {
                     if (date) {
-                        return moment(date).utc().format('LLL');
+                        return moment(date).utc().format('D MMMM, YYYY HH:mm:ss z');
                     } else {
                         return '';
                     }

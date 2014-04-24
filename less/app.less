@@ -58,7 +58,6 @@
 @import "nic-config-component.less";
 @import "provisioning-limits.less";
 
-
 body { height: 100%; }
 html { height: 100%; }
 
@@ -79,7 +78,13 @@ label { font-weight: 400; }
 
 .text-warning { background: lighten(@state-warning-bg, 4%) ;}
 
-.widget-container {}
+.modal-content {
+  .box-shadow(none);
+  border-radius: 0;
+  border: none;
+}
+
+
 
 .widget-header {
   background: #e8e8e8;

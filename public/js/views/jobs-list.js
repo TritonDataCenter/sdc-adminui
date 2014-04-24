@@ -38,28 +38,9 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
         }
         // console.log(this.model);
         data.duration = parseFloat(Math.round(this.model.duration() * 100) / 100).toFixed(2);
-
-
-        if (data.name.indexOf('update') !== -1 && data.params) {
-
-            var summary = [];
-            if (data.params.new_owner_uuid) {
-                summary.push('change owner');
-            }
-
-            if (data.params.package_name) {
-                summary.push('resize');
-            }
-
-            if (data.params.alias) {
-                summary.push('rename');
-            }
-            data.summary = summary.join(' + ');
+        if (data.params.subtask) {
+            data.summary = data.params.subtask;
         }
-
-
-        // console.log(data);
-
         data[data.execution] = true;
         return data;
     },
