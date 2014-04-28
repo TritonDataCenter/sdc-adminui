@@ -52,12 +52,11 @@
           {{#if rack_identifier}}
             <span class="value">{{rack_identifier}}</span>
             {{#role "operators"}}
-            <a class="change-rack-id">Change <i class="icon-edit"></i></a>
+            <a class="change-rack-id"><i class="fa fa-pencil"></i></a>
             {{/role}}
           {{else}}
-            <span class="none">No Rack Assigned</span>
             {{#role "operators"}}
-            <a class="change-rack-id">Assign to Rack <i class="icon-edit"></i></a>
+            <a class="change-rack-id"><span class="none">No Rack Assigned <i class="fa fa-pencil"></i></span></a>
             {{/role}}
           {{/if}}
         </div>

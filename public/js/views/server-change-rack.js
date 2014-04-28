@@ -2,7 +2,7 @@ var Backbone = require('backbone');
 
 
 var ChangeRackFormTemplate = function() {
-    return '<input class="input input" type="text"><button class="btn btn-primary save">Save</button><button class="btn cancel">Cancel</button>';
+    return '<input class="form-control" type="text"><button class="btn btn-primary save">Save</button><button class="btn btn-link cancel">Cancel</button>';
 };
 
 var ChangeRackForm = Backbone.Marionette.ItemView.extend({
@@ -19,6 +19,9 @@ var ChangeRackForm = Backbone.Marionette.ItemView.extend({
         if (e.which === 13) {
             this.save();
         }
+    },
+    onRender: function() {
+        this.$('input').focus();
     },
     save: function() {
         var self = this;
