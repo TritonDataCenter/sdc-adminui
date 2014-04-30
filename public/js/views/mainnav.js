@@ -5,6 +5,7 @@ var moment = require('moment');
 var Mainnav = Backbone.Marionette.ItemView.extend({
     events: {
         'click a.signout': 'signout',
+        'click a.current-user': 'goToUser',
         'click .main-nav li[data-view]':'onSelect'
     },
 
@@ -36,6 +37,11 @@ var Mainnav = Backbone.Marionette.ItemView.extend({
 
     onClose: function() {
         clearInterval(this._timer);
+    },
+
+    goToUser: function(e) {
+        e.preventDefault();
+        app.vent.trigger('showview', 'user', {uuid: app.user.get('uuid') });
     },
 
     renderDatacenter: function() {
