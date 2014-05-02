@@ -103,7 +103,7 @@ var View = Backbone.Marionette.Layout.extend({
 
     ui: {
         'form': 'form',
-        'alert': '.alert',
+        'alert': '.validation-errors',
         'ownerInput': '#input-owner',
         'brandControls': '.form-group-brand'
     },
@@ -342,6 +342,10 @@ var View = Backbone.Marionette.Layout.extend({
             valid = true;
         }
 
+        // if (values.alias && values.alias.length != 0) {
+        //     delete values.alias;
+        // }
+
         if (!values.image_uuid && (!values.disks || !values.disks[0] || !values.disks[0].image_uuid)) {
             valid = valid && false;
         } else {
@@ -380,9 +384,12 @@ var View = Backbone.Marionette.Layout.extend({
         var values = {
             image_uuid: formData.image,
             owner_uuid: formData.owner,
-            brand: formData.brand,
-            alias: formData.alias
+            brand: formData.brand
         };
+
+        if (formData.alias && formData.alias.length) {
+            values.alias = formData.alias;
+        }
 
         if (formData.server) {
             values['server_uuid'] = formData.server;
@@ -434,6 +441,7 @@ var View = Backbone.Marionette.Layout.extend({
                 };
             }
         }
+
 
 
         values.networks = _.map(this.selectedNics, function(nic) {
