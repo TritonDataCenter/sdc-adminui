@@ -134,11 +134,16 @@ module.exports = require('./composite').extend({
     },
 
     onSync: function() {
-        if (this.collection.objectCount === this.collection.length) {
+        if (! this.collection.objectCount) {
             this.$('.more').hide();
         } else {
-            this.$('.more').show();
+            if (this.collection.objectCount === this.collection.length) {
+                this.$('.more').hide();
+            } else {
+                this.$('.more').show();
+            }
         }
+
         this.$('caption').css('visibility', 'visible');
         this.$('.record-count').html(this.collection.objectCount);
         this.$('.current-count').html(this.collection.length);
