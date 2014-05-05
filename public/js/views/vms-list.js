@@ -81,7 +81,8 @@ module.exports = require('./composite').extend({
         'click a.more': 'onNext'
     },
     collectionEvents: {
-        'sync': 'onSync'
+        'sync': 'onSync',
+        'request': 'onRequest'
     },
 
     template: require('../tpl/vms-list.hbs'),
@@ -118,6 +119,7 @@ module.exports = require('./composite').extend({
         } else {
             this.$('caption').css('visibility', 'hidden');
         }
+        this.onSync();
     },
 
     next: function() {
