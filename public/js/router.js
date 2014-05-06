@@ -8,6 +8,9 @@ var SigninView = require('./views/signin');
 var AppView = require('./views/app');
 
 var NotFoundView = require('./views/error/not-found');
+var Components = {
+    'alarm': require('./components/alarm')
+};
 
 var Views = {
     'vms': require('./views/vms'),
@@ -59,6 +62,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'nictags/:uuid': 'showNicTag',
         'networking': 'showNetworking',
         'networking/:tab': 'showNetworking',
+        'alarms/:uuid': 'showAlarm',
         '*default': 'defaultAction'
     },
     initialize: function(options) {
@@ -208,6 +212,25 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
+    presentComponent: function(comp, args) {
+
+        args = args || {};
+        var comp = Components[comp];
+
+        if (typeof(comp) === 'undefined') {
+            this.notFound({
+                view: comp,
+                args: args
+            });
+            console.log("Component not found: " + comp);
+        } else {
+            this.initializeAppView();
+            var el = this.app.chrome.currentView.content.el;
+            var container = this.app.chrome.currentView.content.getEl(el).get(0);
+            React.renderComponent(new comp(args), container);
+        }
+    },
+
     notFound: function(args) {
         this.initializeAppView();
         var view = new NotFoundView(args);
@@ -227,6 +250,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             Backbone.history.navigate(view.url());
         } else if (typeof(view.url) === 'string') {
             Backbone.history.navigate(view.url);
+        }
+    },
+
+    showAlarm: function(uuid) {
+        if (this.authenticated()) {
+            this.presentComponent('alarm', {uuid: uuid});
         }
     },
 

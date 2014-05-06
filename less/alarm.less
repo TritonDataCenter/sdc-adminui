@@ -1,0 +1,31 @@
+#page-alarm {
+  .server {
+    .widget-content;
+    .uuid { font-size: 8px; color: @gray-light; }
+    margin-top: 1em;
+  }
+  .machine {
+    .widget-content;
+    .uuid { font-size: 8px; color: @gray-light; }
+  }
+  .lbl { font-size: 10px; color: @gray-light; text-transform: uppercase; }
+  .val { font-size: 21px; }
+  .not-closed { color: @gray-light; }
+
+
+  .state {
+    span {
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 10px;
+      color: #FFF;
+      padding: 4px 6px;
+      background: #222;
+      font-weight: bold;
+    }
+    .opened { background: @brand-warning; }
+    .running { background: @brand-success; }
+    .failed { background: @brand-danger; }
+    .stopped { background: @gray-light; }
+  }
+}
