@@ -61,7 +61,7 @@ var ReprovisionVm = React.createClass({
                     <div className="form-group">
                         <div className="alert alert-danger">
                             <p><strong>WARNING:</strong></p>
-                            <p>This feature will destroy all data on this Virtual Machine, your data&#39;s family and friends, and contribute to global warming.</p>
+                            <p>This feature will destroy all data on this Virtual Machine. This operation cannot be undone.</p>
                         </div>
                     </div>
                     <div className="form-group">
