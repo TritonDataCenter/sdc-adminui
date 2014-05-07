@@ -3,121 +3,14 @@
  */
 var moment = require('moment');
 var React = require('react');
-module.exports = React.createClass({
-    getDefaultProps: function() {
-        var cn = {
-            "sysinfo": {
-                "Live Image": "20140429T175502Z",
-                "System Type": "SunOS",
-                "Boot Time": "1399365265",
-                "Datacenter Name": "lc-coal-1",
-                "SDC Version": "7.0",
-                "Manufacturer": "VMware, Inc.",
-                "Product": "VMware Virtual Platform",
-                "Serial Number": "VMware-56 4d 55 5a 32 8d c8 c4-41 66 fc 96 98 2f a8 9f",
-                "SKU Number": "",
-                "HW Version": "None",
-                "HW Family": "",
-                "Setup": "true",
-                "VM Capable": true,
-                "CPU Type": "Unknown",
-                "CPU Virtualization": "vmx",
-                "CPU Physical Cores": 2,
-                "UUID": "564d555a-328d-c8c4-4166-fc96982fa89f",
-                "Hostname": "headnode",
-                "CPU Total Cores": 2,
-                "MiB of Memory": "4095",
-                "Zpool": "zones",
-                "Zpool Disks": "c1t0d0",
-                "Zpool Profile": "striped",
-                "Zpool Creation": 1398833870,
-                "Zpool Size in GiB": 39,
-                "Disks": {
-                    "c0d0": {
-                        "Size in GB": 4
-                    },
-                    "c1t0d0": {
-                        "Size in GB": 42
-                    }
-                },
-                "Boot Parameters": {
-                    "console": "text",
-                    "text_mode": "115200,8,n,1,-",
-                    "headnode": "true"
-                },
-                "SDC Agents": [],
-                "Network Interfaces": {
-                    "e1000g0": {
-                        "MAC Address": "00:50:56:3d:a7:95",
-                        "ip4addr": "",
-                        "Link Status": "up",
-                        "NIC Names": [ "external" ]
-                    },
-                    "e1000g1": {
-                        "MAC Address": "00:50:56:34:60:4c",
-                        "ip4addr": "10.99.99.7",
-                        "Link Status": "up",
-                        "NIC Names": [ "admin" ]
-                    }
-                },
-                "Virtual Network Interfaces": {
-                    "external0": {
-                        "MAC Address": "02:08:20:6a:7c:b2",
-                        "ip4addr": "10.88.88.200",
-                        "Link Status": "up",
-                        "Host Interface": "e1000g0",
-                        "VLAN": "0"
-                    }
-                },
-                "Link Aggregations": {}
-            },
-            "ram": 4095,
-            "current_platform": "20140429T175502Z",
-            "headnode": true,
-            "boot_platform": "20140429T175502Z",
-            "datacenter": "lc-coal-1",
-            "overprovision_ratio": 1,
-            "reservation_ratio": 0.15,
-            "reservoir": false,
-            "traits": {},
-            "rack_identifier": "",
-            "comments": "",
-            "uuid": "564d555a-328d-c8c4-4166-fc96982fa89f",
-            "hostname": "headnode",
-            "reserved": false,
-            "boot_params": {
-                "rabbitmq": "guest:guest:rabbitmq.lc-coal-1.joyent.us:5672"
-            },
-            "kernel_flags": {},
-            "default_console": "vga",
-            "serial": "ttyb",
-            "setup": true,
-            "setting_up": false,
-            "last_boot": "2014-05-06T08:34:25.000Z",
-            "created": "2014-04-30T04:57:50.000Z",
-            "vms": { },
-            "transitional_status": "",
-            "last_heartbeat": "2014-05-06T10:13:47.579Z",
-            "status": "running",
-            "memory_available_bytes": 2473029632,
-            "memory_arc_bytes": 129557528,
-            "memory_total_bytes": 4285059072,
-            "memory_provisionable_bytes": -44668551168,
-            "disk_kvm_zvol_used_bytes": 0,
-            "disk_kvm_zvol_volsize_bytes": 0,
-            "disk_kvm_quota_bytes": 0,
-            "disk_zone_quota_bytes": 1127428915200,
-            "disk_cores_quota_bytes": 2362232012800,
-            "disk_installed_images_used_bytes": 1194085376,
-            "disk_pool_size_bytes": 42681237504,
-            "overprovision_ratios": {
-                "ram": 1
-            },
-            "unreserved_cpu": 200,
-            "unreserved_ram": -42607,
-            "unreserved_disk": 39565
-        };
+var api = require('../request');
 
+module.exports = React.createClass({
+    propTypes: {
+        'user': React.PropTypes.string.isRequired,
+        'id': React.PropTypes.string.isRequired
+    },
+    getDefaultProps: function() {
         var evt = {
             "v": 1,
             "type": "probe",

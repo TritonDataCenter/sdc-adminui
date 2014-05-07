@@ -62,7 +62,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'nictags/:uuid': 'showNicTag',
         'networking': 'showNetworking',
         'networking/:tab': 'showNetworking',
-        'alarms/:uuid': 'showAlarm',
+        'alarms/:user/:id': 'showAlarm',
         '*default': 'defaultAction'
     },
     initialize: function(options) {
@@ -253,9 +253,9 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
-    showAlarm: function(uuid) {
+    showAlarm: function(user, id) {
         if (this.authenticated()) {
-            this.presentComponent('alarm', {uuid: uuid});
+            this.presentComponent('alarm', {user: user, id: id});
         }
     },
 
