@@ -76,15 +76,15 @@ var VmView = Backbone.Marionette.Layout.extend({
     sidebar: 'vms',
     events: {
         'click .server-hostname': 'clickedServerHostname',
-        'click .start': 'clickedStartVm',
-        'click .stop': 'clickedStopVm',
-        'click .reboot': 'clickedRebootVm',
-        'click .delete': 'clickedDeleteVm',
-        'click .rename': 'clickedRename',
+        'click li:not(.disabled) .start': 'clickedStartVm',
+        'click li:not(.disabled) .stop': 'clickedStopVm',
+        'click li:not(.disabled) .reboot': 'clickedRebootVm',
+        'click li:not(.disabled) .delete': 'clickedDeleteVm',
+        'click .resize': 'clickedResize',
         'click .reprovision': 'clickedReprovision',
+        'click .rename': 'clickedRename',
         'click .package': 'clickedPackage',
         'click .image-name-version': 'clickedImage',
-        'click .resize': 'clickedResize',
         'click .change-owner': 'clickChangeOwner',
         'click .show-fwrules-form': 'clickShowFwrulesForm',
         'click .edit-metadata': 'clickEditMetadata'
@@ -167,9 +167,11 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.listenTo(this.vm, 'change:customer_metadata', this.renderMetadata, this);
         this.listenTo(this.vm, 'change:internal_metadata', this.renderMetadata, this);
         this.listenTo(this.vm, 'change:tags', this.renderTags, this);
+        this.listenTo(this.vm, 'change:state', this.updateDropdown, this);
         this.listenTo(this.vm, 'change:nics', this.renderNics, this);
         this.listenTo(this.vm, 'change:firewall_enabled', this.onFirewallStateChange, this);
         this.listenTo(this.vm, 'sync', this.loadImage);
+        this.listenTo(this.vm, 'sync', this.updateDropdown);
 
         this.customerMetadataListView = new MetadataList({
             vm: this.vm,
@@ -288,12 +290,14 @@ var VmView = Backbone.Marionette.Layout.extend({
 
     clickedRebootVm: function(e) {
         var confirm = window.confirm('Are you sure you want to reboot this VM?');
-        if (confirm) {
-            this.vm.reboot(function(job) {
-                var jobView = new JobProgressView({ model: job });
-                jobView.show();
-            });
+        if (! confirm) {
+            return false;
         }
+
+        this.vm.reboot(function(job) {
+            var jobView = new JobProgressView({ model: job });
+            jobView.show();
+        });
     },
 
     clickedDeleteVm: function(e) {
@@ -454,6 +458,19 @@ var VmView = Backbone.Marionette.Layout.extend({
 
     onFirewallStateChange: function() {
         this.fwToggleButton.setState({value: this.vm.get('firewall_enabled')});
+    },
+
+    updateDropdown: function() {
+        if (this.vm.get('state') === 'running') {
+            this.$('.dropdown-menu .start').parent('li').addClass('disabled');
+            this.$('.dropdown-menu .reboot').parent('li').removeClass('disabled');
+            this.$('.dropdown-menu .stop').parent('li').removeClass('disabled');
+        }
+        if (this.vm.get('state') === 'stopped') {
+            this.$('.dropdown-menu .start').parent('li').removeClass('disabled');
+            this.$('.dropdown-menu .reboot').parent('li').addClass('disabled');
+            this.$('.dropdown-menu .stop').parent('li').addClass('disabled');
+        }
     },
 
     onRender: function() {
