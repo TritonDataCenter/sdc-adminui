@@ -11,78 +11,6 @@ module.exports = React.createClass({
         'id': React.PropTypes.string.isRequired
     },
     getDefaultProps: function() {
-        var evt = {
-            "v": 1,
-            "type": "probe",
-            "user": "a3040770-c93b-6b41-90e9-48d3142263cf",
-            "probeUuid": "13b340ad-1e0f-40e3-86cb-e0429d9a4835",
-            "clear": false,
-            "data": {
-                "message": "Log \"/var/svc/log/smartdc-agent-smartlogin:default.log\" matched /Stopping/.",
-                "value": 1,
-                "details": {
-                    "match": "[ Aug 14 05:02:21 Stopping because service restarting. ]"
-                }
-            },
-            "machine": "44454c4c-3200-1042-804d-c2c04f575231",
-            // Added by relay:
-            "uuid": "f833288e-d68e-478a-bd11-58a4f1358b21",
-            "time": 1344920541118,
-            "agent": "44454c4c-3200-1042-804d-c2c04f575231",
-            "agentAlias": "headnode",
-            "relay": "44454c4c-3200-1042-804d-c2c04f575231"
-        };
-
-        var alarm = {
-            "user": "a3040770-c93b-6b41-90e9-48d3142263cf",
-            "id": "1",
-            "monitor": "logscan",
-            "closed": false,
-            "timeOpened": 1332870155860,
-            "timeClosed": null,
-            "timeLastEvent": 1332870615162,
-            "numNotifications": 0,
-            "v": 1,
-            "faults": [
-
-            ]
-        };
-
-        var vm = {
-            "uuid": "1c364203-4a7c-4875-aff1-c99aec892de5",
-            "alias": "asdf",
-            "autoboot": null,
-            "brand": "joyent",
-            "billing_id": "73a1ca34-1e30-48c7-8681-70314a9c67d3",
-            "cpu_cap": null,
-            "cpu_shares": null,
-            "create_timestamp": null,
-            "customer_metadata": {},
-            "datasets": [],
-            "destroyed": null,
-            "firewall_enabled": false,
-            "internal_metadata": {},
-            "last_modified": null,
-            "limit_priv": null,
-            "max_locked_memory": null,
-            "max_lwps": null,
-            "max_physical_memory": null,
-            "max_swap": null,
-            "nics": [],
-            "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
-            "quota": 25,
-            "ram": null,
-            "resolvers": null,
-            "server_uuid": "564d555a-328d-c8c4-4166-fc96982fa89f",
-            "snapshots": [],
-            "state": "running",
-            "tags": {},
-            "zfs_io_priority": null,
-            "zone_state": null,
-            "zpool": null,
-            "image_uuid": "06b33b72-ce99-11e3-8fac-6bc848ca3215"
-        };
-
         return {};
     },
     componentWillMount: function() {
@@ -90,6 +18,8 @@ module.exports = React.createClass({
     },
     getInitialState: function() {
         return {
+            loading: true,
+            error: null,
             alarm: {},
             probe: {},
             server: null,
@@ -122,8 +52,17 @@ module.exports = React.createClass({
     fetchAlarm: function() {
         var url = '/_/amon/alarms/'+this.props.user+'/' + this.props.id;
         api.get(url).end(function(err, res) {
+            if (! res.ok) {
+                if (res.notFound) {
+                    this.setState({loading: false, notFound: true});
+                } else {
+                    this.setState({ loading: false, error: res.body });
+                }
+                return;
+            }
+
             var alarm = res.body;
-            this.setState({alarm: alarm});
+            this.setState({alarm: alarm, loading: false});
             if (alarm.probe) {
                 this.fetchProbe();
             }
@@ -133,9 +72,79 @@ module.exports = React.createClass({
             }
         }.bind(this));
     },
+    renderLoading: function() {
+        return (
+            <div id="page-alarm">
+            <div className="page-header row">
+                <div className="state col-sm-12">
+                    <span className="brand-info" className="loading">LOADING...</span>
+                </div>
+            </div>
+            </div>
+        );
+    },
 
+    renderError: function() {
+        return <div id="page-alarm" className="error">
+            <div className="page-header row">
+                <div className="state col-sm-12">
+                    <span className="brand-danger" className="error">ERROR</span>
+                </div>
+                <div className="row">
+                    <div className="col-sm-3">
+                        <div className="question-icon">
+                            <i className="fa fa-question-circle fa-5x"></i>
+                        </div>
+                    </div>
+                    <div className="col-sm-8">
+                        <h2>Error Retrieving Alarm</h2>
+                        <p>The Alarm <code>#{this.props.id}</code> for user <code>{this.props.user}</code> could not be loaded because Monitoring System said::</p>
+                        <p>
+                            <pre>{JSON.stringify(this.state.error, null, 2)}</pre>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    },
+
+    renderNotFound: function() {
+        return (
+            <div id="page-alarm" className="not-found">
+                <div className="page-header row">
+                    <div className="state col-sm-12">
+                        <span className="brand-info" className="not-found">ALARM NOT FOUND</span>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-3">
+                        <div className="question-icon">
+                            <i className="fa fa-question-circle fa-5x"></i>
+                        </div>
+                    </div>
+                    <div className="col-sm-8">
+                        <h2>Alarm Not Found</h2>
+                        <p>The alarm <code>#{this.props.id}</code> does not exist for user <code>{this.props.user}</code></p>
+                    </div>
+                </div>
+            </div>
+        )
+    },
     render: function() {
         console.log(this.state);
+
+        if (this.state.error) {
+            return this.renderError();
+        }
+
+        if (this.state.loading) {
+            return this.renderLoading();
+        }
+        if (this.state.notFound) {
+            return this.renderNotFound();
+        }
+
+
         var alarm = this.state.alarm;
         var probe = this.state.probe;
 
