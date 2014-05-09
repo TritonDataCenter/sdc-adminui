@@ -1,0 +1,36 @@
+
+.alarms-menu-container {
+  a { cursor: pointer; }
+  >a.active {
+    background: #fff;
+  }
+}
+.alarms-menu {
+  position: absolute;
+  width: 320px;
+  background: #fff;
+  z-index: 1000;
+  overflow-y: auto;
+  max-height: 400px;
+  left: -269px;
+
+  .alarm-menu-item {
+    .alarm-menu-item-content {
+      padding: 5px;
+      font-size: 12px;
+    }
+    .alarm-menu-item-header {
+      .alarm-menu-item-icon {
+        display: inline-block;
+        width: 20px;
+      }
+      .probe-name { font-weight: bold; display: inline-block; }
+      padding: 6px;
+      background: #f8f8f8;
+    }
+  }
+  .alarm-menu-item.no-alarms {
+    padding: 5px;
+    color: @brand-success;
+  }
+}

@@ -1,6 +1,9 @@
 var Backbone = require('backbone');
 var app = require('adminui');
 var moment = require('moment');
+var React = require('react');
+
+var AlarmsMenu = require('../components/alarms-menu.jsx');
 
 var Mainnav = Backbone.Marionette.ItemView.extend({
     events: {
@@ -24,6 +27,10 @@ var Mainnav = Backbone.Marionette.ItemView.extend({
         this.renderLoginName();
         this.renderTime();
         this.renderVersion();
+
+        React.renderComponent(new AlarmsMenu({
+            user: app.user.get('adminUuid')
+        }), this.$('.nav .alarms').get(0));
         this._timer = setInterval(this.renderTime.bind(this), 1000);
     },
     renderVersion: function() {
