@@ -193,8 +193,7 @@ module.exports = React.createClass({
                                         }
                                     </div>
                                         {
-                                            alarm.closed ? <div className="val">{timeClosed}</div>
-                                            : <button className="btn btn-link">Close Alarm <i className="fa fa-power-off"></i></button>
+                                             <div className="val">{timeClosed}</div>
                                         }
                                 </div>
                             </div>
