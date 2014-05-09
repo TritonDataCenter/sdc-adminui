@@ -9,7 +9,8 @@ var AppView = require('./views/app');
 
 var NotFoundView = require('./views/error/not-found');
 var Components = {
-    'alarm': require('./components/alarm')
+    'alarm': require('./components/pages/alarm'),
+    'alarms': require('./components/pages/alarms')
 };
 
 var Views = {
@@ -63,6 +64,8 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'networking': 'showNetworking',
         'networking/:tab': 'showNetworking',
         'alarms/:user/:id': 'showAlarm',
+        'alarms/:user': 'showAlarms',
+        'alarms': 'showAlarms',
         '*default': 'defaultAction'
     },
     initialize: function(options) {
@@ -122,6 +125,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     start: function() {
         this.listenTo(this.app.vent, 'showview', this.presentView, this);
+        this.listenTo(this.app.vent, 'showcomponent', this.presentComponent, this);
         this.listenTo(this.app.vent, 'signout', this.signout, this);
         this.listenTo(this.app.vent, 'notfound', this.notFound, this);
         this.listenTo(this.app.user, 'authenticated', this.didAuthenticate, this);
@@ -256,6 +260,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     showAlarm: function(user, id) {
         if (this.authenticated()) {
             this.presentComponent('alarm', {user: user, id: id});
+        }
+    },
+
+    showAlarms: function(user) {
+        if (this.authenticated()) {
+            this.presentComponent('alarms', {user: user });
         }
     },
 

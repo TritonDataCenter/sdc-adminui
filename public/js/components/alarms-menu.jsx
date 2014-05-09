@@ -3,7 +3,9 @@
  */
 
 var api = require('../request');
+var adminui = require('../adminui');
 var React = require('react');
+
 module.exports = React.createClass({
     propTypes: {
         'user': React.PropTypes.string.isRequired
@@ -40,6 +42,10 @@ module.exports = React.createClass({
             }
         }.bind(this));
     },
+    gotoAlarm: function(alarm) {
+        console.log('go to alarm', alarm);
+        adminui.vent.trigger('showcomponent', 'alarm', { user: alarm.user, id: alarm.id });
+    },
     renderMenuItem: function(alarm) {
         var probe = this.state.probes[alarm.probe];
         return (<div className="alarm-menu-item">
@@ -48,11 +54,12 @@ module.exports = React.createClass({
                     <i className="fa fa-warning"></i>
                 </div>
                 {
-                    probe ?
-                    <div>
-                        <div className="probe-name">{probe.name}</div>
-                        <div className="probe-type">{probe.type}</div>
-                    <div> : <div className="probe-name">{alarm.probe}</div>
+                    probe && probe.length ?
+                    <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe">
+                        <span className="probe-name">{probe.name}</span>
+                        <span className="probe-type">{probe.type}</span>
+                    </a> :
+                    <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe"><span className="probe-name">{alarm.probe}</span></a>
                 }
             </div>
             <div className="alarm-menu-item-content">
@@ -73,7 +80,7 @@ module.exports = React.createClass({
                     {this.state.alarms.map(this.renderMenuItem.bind(this))}
                 </div>
             } else {
-                return <div className="alarms-menu">
+                return <div id="alarms-menu" className="alarms-menu">
                     <div className="alarm-menu-item no-alarms">
                         <div className="alarm-menu-item-content">
                             <i className="fa fa-check"></i> There are no Alarms at this time.
@@ -87,7 +94,9 @@ module.exports = React.createClass({
     },
     render: function() {
         return <div className="alarms-menu-container">
-            <a onClick={this.toggleMenu} className={ this.state.menu ? 'active' : ''}><i className="fa fa-bell"></i> { this.state.alarms.length }</a>
+            <a onClick={this.toggleMenu} className={
+                ('toggle ' + (this.state.menu ? ' active ' : '' ) + (this.state.alarms.length ? ' has-alarms ' : '' ))
+            }><i className="fa fa-bell"></i> { this.state.alarms.length }</a>
             {this.menu()}
         </div>
     }

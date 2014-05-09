@@ -1,8 +1,15 @@
-
-.alarms-menu-container {
-  a { cursor: pointer; }
+#rootnav {
+ .alarms-menu-container {
+  a.toggle { cursor: pointer; }
   >a.active {
     background: #fff;
+  }
+  a.has-alarms {
+    color: #e08a00;
+  }
+  a.active.has-alarms {
+    color: #fff;
+    background: #e08a00;
   }
 }
 .alarms-menu {
@@ -20,11 +27,16 @@
       font-size: 12px;
     }
     .alarm-menu-item-header {
+      a.probe {
+        padding: 0;
+        display: inline-block;
+        cursor: pointer;
+        text-transform: lowercase;
+      }
       .alarm-menu-item-icon {
         display: inline-block;
         width: 20px;
       }
-      .probe-name { font-weight: bold; display: inline-block; }
       padding: 6px;
       background: #f8f8f8;
     }
@@ -33,4 +45,6 @@
     padding: 5px;
     color: @brand-success;
   }
+}
+
 }

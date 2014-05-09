@@ -3,7 +3,7 @@
  */
 var moment = require('moment');
 var React = require('react');
-var api = require('../request');
+var api = require('../../request');
 
 module.exports = React.createClass({
     propTypes: {
