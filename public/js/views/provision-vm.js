@@ -35,6 +35,7 @@ var PackagePreview = require('./package-preview');
 var UserPreview = require('./user-preview');
 
 var adminui = require('../adminui');
+var JSONEditor = require('./traits-editor');
 
 
 var PackageSelectOption = Backbone.Marionette.ItemView.extend({
@@ -94,7 +95,8 @@ var View = Backbone.Marionette.Layout.extend({
         'submit form': 'provision',
         'click .back': 'backToVirtualMachines',
         'blur input[type=text]': 'checkFields',
-        'blur input#input-owner': 'onBlurOwnerField'
+        'blur input#input-owner': 'onBlurOwnerField',
+        'click .configure-metadata': 'showConfigureMetadata'
     },
 
     modelEvents: {
@@ -118,6 +120,7 @@ var View = Backbone.Marionette.Layout.extend({
 
         this.nicSelects = [];
 
+        this.customer_metadata = {};
         this.settings = require('../models/settings');
         this.selectedPackage = new Package();
         this.packagePreview = new PackagePreview({model: this.selectedPackage});
@@ -156,6 +159,26 @@ var View = Backbone.Marionette.Layout.extend({
                 self.removeAllNics();
             });
         }
+    },
+
+    showConfigureMetadata: function (e) {
+        e.preventDefault();
+        var view = new JSONEditor({
+            title: "Metadata",
+            description: "Metadata to include in the provisioned Virtual Machine, stored into customer_metadata property.",
+            data: this.customer_metadata
+        });
+        view.on('save', function(data) {
+            if (Object.keys(data).length) {
+                this.$('.configure-metadata').addClass("btn-success");
+            } else {
+                this.$('.configure-metadata').removeClass("btn-success");
+            }
+            console.log("Configured metadata", data);
+            this.customer_metadata = data;
+            view.close();
+        }.bind(this));
+        view.show();
     },
 
     removeNic: function(nic) {
@@ -387,6 +410,7 @@ var View = Backbone.Marionette.Layout.extend({
             brand: formData.brand
         };
 
+
         if (formData.alias && formData.alias.length) {
             values.alias = formData.alias;
         }
@@ -442,12 +466,13 @@ var View = Backbone.Marionette.Layout.extend({
             }
         }
 
-
+        values.customer_metadata = values.customer_metadata || {};
+        values.customer_metadata = _.extend(values.customer_metadata, this.customer_metadata);
 
         values.networks = _.map(this.selectedNics, function(nic) {
             var net = _.clone(nic);
             net.uuid = net.network_uuid;
-            delete net.network_uuid
+            delete net.network_uuid;
 
             return net;
         });

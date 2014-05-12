@@ -21,6 +21,9 @@ var View = Backbone.Marionette.ItemView.extend({
         this.$('textarea').text(JSON.stringify(this.data, null, 2));
         this.$('h2').html(this.title);
     },
+    serializeData: function() {
+        return this.options;
+    },
     checkSyntax: function() {
         try {
             var data = JSON.parse(this.$('textarea').val());

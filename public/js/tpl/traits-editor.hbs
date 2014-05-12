@@ -1,13 +1,23 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title">Traits</h2>
+          <h2 class="modal-title">
+        {{#if title}}
+            {{title}}
+        {{else}}
+            Traits
+        {{/if}}
+        </h2>
       </div>
       <div class="modal-body">
+        {{#if description}}
+          <p>{{description}}</p>
+          {{else}}
           <p>Traits are properties utilized by the provisioning algorithms to determine placement of provisions.</p>
+          {{/if}}
           <textarea></textarea>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="margin-top: 0;">
           <div class="error"></div>
           <button class="btn btn-link" data-dismiss="modal">Close</button>
           <button class="btn btn-primary">Save &amp; Close</button>
