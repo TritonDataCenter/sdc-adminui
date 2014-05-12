@@ -116,7 +116,7 @@ var JobDetailsComponent = React.createClass({
             </section>
             <section>
               <h2>Job Parameters</h2>
-              <JSONView className="params" json={this.state.job.attributes} />
+              <JSONView className="params" json={this.state.job.attributes.params} />
             </section>
             <section>
               <h2>Info Output</h2>
