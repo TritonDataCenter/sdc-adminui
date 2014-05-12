@@ -1,5 +1,7 @@
-<span class="login"><i class="icon-user"></i> {{login}}</span>
-<div><strong>Name</strong> <span class="cn">{{cn}}</span></div>
-<div><strong>Email</strong> <span class="email">{{email}}</span></div>
-
-<a target="_tab" href="/users/{{uuid}}"><i class="icon-external-link"></i> See User Details</a>
+<div class="user-icon" style="background-image: url(https://www.gravatar.com/avatar/{{emailhash}}?d=identicon&s=65);"></div>
+<div class="user-info">
+    <span class="login"><i class="icon-user"></i> {{login}}</span>
+    <div><strong>Name</strong> <span class="cn">{{cn}}</span></div>
+    <div><strong>Email</strong> <span class="email">{{email}}</span></div>
+    <a target="_tab" href="/users/{{uuid}}"><i class="icon-external-link"></i> See User Details</a>
+</div>
