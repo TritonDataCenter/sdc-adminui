@@ -6,7 +6,7 @@ var Packages = Collection.extend({
     model: Package,
     url: '/_/packages',
     fetchActive: function() {
-        this.fetch({params:{active: true}});
+        return this.fetch({params:{active: true}});
     }
 });
 

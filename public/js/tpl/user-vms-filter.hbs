@@ -1,0 +1,31 @@
+<form role="form" class="row">
+
+  <div class="form-group col-sm-2">
+    <label class="control-label">State</label>
+    <select class="form-control" name="state" class="col-md-2">
+      <option value="active">active</option>
+      <option value="running">running</option>
+      <option value="stopped">stopped</option>
+      <option value="destroyed">destroyed</option>
+    </select>
+  </div>
+
+  <div class="form-group col-sm-2">
+    <label>Alias</label>
+    <input class="form-control" type="text" name="alias" placeholder="alias">
+  </div>
+
+  <div class="form-group col-sm-3">
+    <label>Package</label>
+    <div class="package-select"></div>
+  </div>
+
+  <div class="form-group col-sm-3">
+    <label>Server</label>
+    <input class="form-control" type="text" name="server_uuid" placeholder="Server UUID">
+  </div>
+
+  <div class="form-group col-sm-2">
+    <button class="btn btn-info" style="margin-top: 25px;"><i class="icon-filter icon-white"></i> Apply Filters</button>
+  </div>
+</form>

@@ -5,8 +5,10 @@ var React = require('react');
 var ProvisioningLimits = require('../components/provisioning-limits/main.jsx');
 
 
-var VmsList = require('./vms-list');
 var Vms = require('../models/vms');
+var VmsList = require('./vms-list');
+var VmsFilter = require('./user-vms-filter');
+
 var SSHKeys = require('../models/sshkeys');
 var UserForm = require('./user-form');
 var AddKeyView = require('./sshkey-create');
@@ -24,22 +26,6 @@ var NetworkPoolsList = require('../views/network-pools-list');
 
 var __CONFIRM_REMOVE_KEY = "Are you sure you want to remove this key from the user's account?";
 
-var VmsFilter = Backbone.Marionette.ItemView.extend({
-    events: {
-        'submit form': 'onSubmit'
-    },
-    onSubmit: function(e) {
-        e.preventDefault();
-
-        var data = Backbone.Syphon.serialize(this);
-        _.each(data, function(v, k) {
-            if (typeof(data[k]) === 'string' && data[k].length === 0) {
-                delete data[k];
-            }
-        });
-        this.trigger('query', data);
-    }
-});
 
 var SSHKeyListItemTemplate = require('../tpl/sshkey-list-item.hbs');
 var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
@@ -103,6 +89,7 @@ var UserView = Backbone.Marionette.Layout.extend({
         'vmsRegion': '.vms-region',
         'networksRegion': '.networks-region',
         'networkPoolsRegion': '.network-pools-region',
+        'vmsFilterRegion': '.vms-filter-region',
         'imagesListRegion': '.images-list-region'
     },
     events: {
@@ -229,8 +216,9 @@ var UserView = Backbone.Marionette.Layout.extend({
         );
 
         this.networksRegion.show(this.networksView);
+        this.vmsFilterRegion.show(this.vmsFilter);
+
         this.sshkeysList.setElement(this.$('.ssh-keys .items')).render();
-        this.vmsFilter.setElement(this.$('.vms-filter'));
         this.imagesListRegion.show(this.imagesListView);
 
         this.listenTo(this.vmsFilter, 'query', this.onVmFilter);
