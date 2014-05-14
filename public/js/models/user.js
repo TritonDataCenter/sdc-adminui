@@ -76,6 +76,7 @@ var User = module.exports = Model.extend({
                 adminUuid: data.adminUuid,
                 dc: data.dc
             });
+
         }).error(function(xhr) {
             var err = JSON.parse(xhr.responseText);
             self.trigger('error', err.message);
@@ -83,9 +84,15 @@ var User = module.exports = Model.extend({
     },
 
     signout: function() {
-        window.localStorage.removeItem('api-token');
-        window.localStorage.removeItem('user-roles');
-        this.trigger('unauthenticated');
+        var self = this;
+        $.ajax({
+            url: '/_/auth',
+            type: 'DELETE'
+        }).done(function() {
+            window.localStorage.removeItem('api-token');
+            window.localStorage.removeItem('user-roles');
+            self.trigger('unauthenticated');
+        });
     }
 });
 
