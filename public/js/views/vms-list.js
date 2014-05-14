@@ -78,7 +78,8 @@ module.exports = require('./composite').extend({
         'class':'vms-list'
     },
     events: {
-        'click a.more': 'onNext'
+        'click a.more': 'onNext',
+        'click a.all': 'onAll',
     },
     collectionEvents: {
         'sync': 'onSync',
@@ -113,6 +114,10 @@ module.exports = require('./composite').extend({
         this.next();
     },
 
+    onAll: function() {
+        this.collection.pagingParams.perPage = null;
+        this.collection.fetch({remove: false});
+    },
     onRender: function() {
         if (this.collection.length) {
             this.$('caption').css('visibility', 'visible');
@@ -136,11 +141,14 @@ module.exports = require('./composite').extend({
     onSync: function() {
         if (! this.collection.objectCount) {
             this.$('.more').hide();
+            this.$('.all').hide();
         } else {
             if (this.collection.objectCount === this.collection.length) {
                 this.$('.more').hide();
+                this.$('.all').hide();
             } else {
                 this.$('.more').show();
+                this.$('.all').show();
             }
         }
 
