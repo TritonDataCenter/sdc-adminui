@@ -183,7 +183,7 @@ var View = Backbone.Marionette.Layout.extend({
 
     removeNic: function(nic) {
         if (this.nicSelects.length === 1) {
-            alert('Cannot Remove last Network Interface');
+            window.alert('Cannot Remove last Network Interface');
             return false;
         }
         var self = this;
@@ -516,7 +516,7 @@ var View = Backbone.Marionette.Layout.extend({
                 var job = new Job({uuid: obj.job_uuid});
                 var jobView = new JobProgressView({model: job});
                 self.listenTo(jobView, 'succeeded', function() {
-                    adminui.vent.trigger('showview', 'vm', {uuid: obj.vm_uuid});
+                    adminui.router.showVm(obj.vm_uuid);
                 });
                 jobView.show();
             }

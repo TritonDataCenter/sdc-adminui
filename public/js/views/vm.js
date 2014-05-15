@@ -50,13 +50,13 @@ var FirewallToggleButton = React.createClass({
         var node;
         if (this.state.value === true) {
             node = [
-                <button key="on" onClick={this.toggleValue} className="btn btn-success">ON</button>,
-                <button key="off" onClick={this.toggleValue} className="btn">OFF</button>
+                <button key="on" onClick={this.toggleValue} className="btn btn-sm btn-success">ON</button>,
+                <button key="off" onClick={this.toggleValue} className="btn btn-sm btn-default">OFF</button>
             ];
         } else {
             node = [
-                <button key="on" onClick={this.toggleValue} className="btn">ON</button>,
-                <button key="off" onClick={this.toggleValue} className="btn btn-danger">OFF</button>
+                <button key="on" onClick={this.toggleValue} className="btn btn-sm btn-default">ON</button>,
+                <button key="off" onClick={this.toggleValue} className="btn btn-sm btn-danger">OFF</button>
             ];
         }
         return <div className="firewall-toggle-button-component">{node}</div>;
@@ -150,6 +150,7 @@ var VmView = Backbone.Marionette.Layout.extend({
         }, this );
 
         this.listenTo(this.vm, 'change:owner_uuid', function(m) {
+            this.renderUserTile();
             this.owner.set({uuid: m.get('owner_uuid')});
             this.owner.fetch();
         }, this);
@@ -472,26 +473,32 @@ var VmView = Backbone.Marionette.Layout.extend({
             this.$('.dropdown-menu .stop').parent('li').addClass('disabled');
         }
     },
+    renderUserTile: function() {
+        if (this.vm.get('owner_uuid')) {
+            React.renderComponent(
+                new UserTileComponent({uuid: this.vm.get('owner_uuid')}),
+                this.$('.user-tile-container').get(0));
+        }
+    },
 
     onRender: function() {
         this.nicsRegion.show(this.nicsList);
         this.fwrulesListRegion.show(this.fwrulesList);
-        this.fwToggleButton = new FirewallToggleButton({
-            initialValue: this.vm.get('firewall_enabled'),
-            onToggle: this.onToggleFirewallEnabled.bind(this)
-        });
+
 
         if (adminui.user.role('operators')) {
+            this.fwToggleButton = React.renderComponent(new FirewallToggleButton({
+                initialValue: this.vm.get('firewall_enabled'),
+                onToggle: this.onToggleFirewallEnabled.bind(this)
+            }), this.$('.firewall-toggle-button').get(0));
+
             React.renderComponent(
                 new NotesComponent({item: this.vm.get('uuid')}),
                 this.$('.notes-component-container').get(0)
             );
         }
 
-        React.renderComponent(
-            new UserTileComponent({uuid: this.vm.get('owner_uuid')}),
-            this.$('.user-tile-container').get(0));
-
+        this.renderUserTile();
 
         this.snapshotsListView = new SnapshotsList({
             vm: this.vm,
