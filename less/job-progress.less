@@ -12,6 +12,7 @@
 
 
   .chain-results {
+    ol { padding-left: 15px; }
     li {
       padding: 5px 10px;
       background: #f3f3f3;
@@ -34,16 +35,20 @@
     .finished-at i {
       padding-right: 5px;
     }
-    .name { font-weight: bold; }
-    .task { width: 300px;}
+    .task {
+       width: 280px;
+       .name { font-weight: bold; }
+       .result { font-size: 10px; }
+   }
     .time { padding-right: 10px; color: @gray-light; font-size: 10px; text-align: right; }
     .duration {
+      font-size: 16px;
       .value {
         display: inline-block;
         width: 40px;
         text-align: right;
         color: @gray;
-        font-size: 10px;
+        font-size: 16px;
       }
     }
   }

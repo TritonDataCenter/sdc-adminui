@@ -7,7 +7,6 @@ var _ = require('underscore');
 var adminui = require('../adminui');
 
 var JobProgressHeader = React.createClass({
-
     render: function() {
         var job = this.props.job;
 
@@ -42,7 +41,7 @@ var JobProgressSummary = React.createClass({
                                 <div className="finished-at"><i className="fa fa-stop"></i> {c.finished_at}</div>
                             </div>
                             <div className="duration">
-                                <i className="fa fa-clock"></i><div className="value">{c.duration}</div>
+                                <i className="fa fa-clock-o"></i><div className="value">{c.duration}</div>
                             </div>
                             {(function() {
                                 if (c.error) {
