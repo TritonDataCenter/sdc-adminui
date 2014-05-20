@@ -19,7 +19,7 @@ var MultipleNicConfigComponent = module.exports = React.createClass({
             expandAntispoofOptions: false,
             networkFilters: {},
             nics: []
-        }
+        };
     },
     getInitialState: function() {
         var state = {};
@@ -45,14 +45,18 @@ var MultipleNicConfigComponent = module.exports = React.createClass({
     addNewNic: function() {
         var nics = this.state.nics;
         nics.push({});
-        this.setState({nics: nics});
+        this.setState({nics: nics}, function() {
+            this.props.onChange(nics);
+        }.bind(this));
     },
     removeNic: function(nic) {
         var nics = _.without(this.state.nics, nic);
         if (nics.length === 1) {
             nics[0].primary = true;
         }
-        this.setState({nics: nics});
+        this.setState({nics: nics}, function() {
+            this.props.onChange(nics);
+        }.bind(this));
     },
     render: function() {
         var nodes = _.map(this.state.nics, function(nic) {

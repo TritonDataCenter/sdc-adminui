@@ -248,7 +248,6 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     onNicConfigChange: function(nics) {
-        this.selectedNics = nics;
         this.checkFields();
     },
 
@@ -260,7 +259,7 @@ var View = Backbone.Marionette.Layout.extend({
             return nic;
         });
 
-        React.renderComponent(
+        this.multiNicConfigComponent = React.renderComponent(
             MultiNicConfigComponent({
                 expandAntispoofOptions: false,
                 networkFilters: {provisionable_by: this.selectedUser.get('uuid')},
@@ -469,13 +468,15 @@ var View = Backbone.Marionette.Layout.extend({
         values.customer_metadata = values.customer_metadata || {};
         values.customer_metadata = _.extend(values.customer_metadata, this.customer_metadata);
 
-        values.networks = _.map(this.selectedNics, function(nic) {
-            var net = _.clone(nic);
-            net.uuid = net.network_uuid;
-            delete net.network_uuid;
+        if (this.multiNicConfigComponent) {
+            values.networks = _.map(this.multiNicConfigComponent.getValue(), function(nic) {
+                var net = _.clone(nic);
+                net.uuid = net.network_uuid;
+                delete net.network_uuid;
 
-            return net;
-        });
+                return net;
+            });
+        }
 
         console.log("Provision Values:", values);
 
