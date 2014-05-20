@@ -494,11 +494,19 @@ var View = Backbone.Marionette.Layout.extend({
             'server_uuid': '[name=server]'
         };
         var err = xhr.responseData;
+        this.ui.alert.find('ul').remove();
         this.ui.alert.find('.message').html(err.message);
-        this.$('.form-group').removeClass('error');
+        this.ui.alert.append('<ul />');
+        var ul = this.ui.alert.find('ul');
+        _.each(err.errors, function(errObj) {
+            var li = $('<li></li>');
+            li.text(_.str.sprintf('[%s] %s', errObj.field, errObj.message));
+            ul.append(li);
+        }, this);
+        this.$('.form-group').removeClass('has-error');
         _.each(err.errors, function(errObj) {
             var field = $(fieldMap[errObj.field]);
-            field.parents('.form-group').addClass('error');
+            field.parents('.form-group').addClass('has-error');
         }, this);
         this.ui.alert.show();
     },
