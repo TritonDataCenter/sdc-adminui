@@ -151,12 +151,17 @@ module.exports = React.createClass({
             handleCancel: function() {}
         };
     },
+    onUserDetails: function(user) {
+        adminui.vent.trigger('showview', 'user', {uuid: user.uuid });
+    },
     render: function() {
         var nodes = [];
         if (this.props.public) {
             nodes.push(<div className="acl-public">This image is available to everyone.</div>);
         } else if (this.props.owner) {
-            nodes.push(<UserTile uuid={this.props.owner} owner></UserTile>);
+            nodes.push(<UserTile
+                onUserDetails={this.onUserDetails}
+                uuid={this.props.owner} owner></UserTile>);
             if (this.props.acl.length) {
                 this.props.acl.map(function(uuid) {
                     nodes.push(<UserTile uuid={uuid} />);

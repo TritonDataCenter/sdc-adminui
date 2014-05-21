@@ -13,19 +13,19 @@
   "dependencies": {
     "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#c50fd77cd049bfa77d570a51e285db5c82e1e53a",
     "libuuid": "0.1.2",
-    "bunyan": "^0.22.0",
+    "bunyan": "0.22.3",
     "assert-plus": "~0.1.0",
     "restify": "2.6.3",
     "filed": "0.1.0",
     "less": "1.6.x",
     "redis": "0.10.1",
     "moray": "git+ssh://git@git.joyent.com:node-moray.git#a191e17573f8136b10c0666adb849930c652689f",
-    "browserify": "^3.46.1",
-    "browserify-shim": "^2.0.10",
+    "browserify": "3.46.1",
+    "browserify-shim": "~2.0.10",
     "underscore": "~1.6",
     "underscore.string": "~2.3.1",
     "through": "2.3.4",
-    "handlebars": "^1.2.1",
+    "handlebars": "~1.2.1",
     "mime": "~1.2.9",
     "clone": "~0.1.6",
     "glob": "^3.1.21",
@@ -35,10 +35,26 @@
     "reactify": "0.10.0",
     "envify": "1.2.0",
     "react": "0.10.0",
-    "superagent": "0.17.0"
+    "superagent": "0.17.0",
+    "backbone": "^1.1.2"
   },
   "devDependencies": {
+    "react-tools": "0.10.0",
     "node-dev": "~2.1.0",
-    "supervisor": "~0.5.6"
+    "supervisor": "~0.5.6",
+    "jest-cli": "0.1.11"
+  },
+  "jest": {
+    "scriptPreprocessor": "../../test/jsx-preprocessor.js",
+    "unmockedModulePathPatterns": [
+      "../../node_modules/react"
+    ],
+    "testPathIgnorePatterns": [
+      "../../node_modules"
+    ],
+    "rootDir": "public/js"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }

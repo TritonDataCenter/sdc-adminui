@@ -63,14 +63,6 @@ var shimConfig = {
     },
     'typeahead': { path: './lib/typeahead.jquery', exports: null },
     'bloodhound': { path: './lib/bloodhound', exports: 'Bloodhound'},
-    'backbone': {
-        path: './lib/backbone',
-        exports: null,
-        depends: {
-            'jquery': '$',
-            'underscore': '_'
-        }
-    },
     'backbone.marionette': {
         path: './lib/backbone.marionette',
         exports: null,
@@ -118,6 +110,7 @@ var b = shim(browserify({
     .require('underscore', { expose: 'underscore' })
     .require('underscore.string', { expose: 'underscore.string' })
     .require('react', { expose: 'React'})
+    .require('backbone', { expose: 'Backbone'})
     .require('superagent', { expose: 'superagent' })
     .require(require.resolve(join(root, './request')), { expose: 'adminui-api' })
     .require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery' })

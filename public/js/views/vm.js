@@ -31,7 +31,7 @@ var JobProgressView = require('./job-progress');
 var VmChangeOwner = require('./vm-change-owner');
 
 var NotesComponent = require('../components/notes');
-var UserTileComponent = require('../components/user-tile.jsx');
+var UserTileComponent = require('../components/user-tile.js');
 var ReprovisionVmComponent = require('../components/reprovision-vm.jsx');
 
 var FirewallToggleButton = React.createClass({
@@ -476,7 +476,12 @@ var VmView = Backbone.Marionette.Layout.extend({
     renderUserTile: function() {
         if (this.vm.get('owner_uuid')) {
             React.renderComponent(
-                new UserTileComponent({uuid: this.vm.get('owner_uuid')}),
+                new UserTileComponent({
+                    uuid: this.vm.get('owner_uuid'),
+                    onUserDetails: function(user) {
+                        adminui.vent.trigger('showview', 'user', {uuid: user.uuid });
+                    }
+                }),
                 this.$('.user-tile-container').get(0));
         }
     },

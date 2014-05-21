@@ -1,14 +1,16 @@
-var adminui = require('../adminui');
+/** @jsx React.DOM */
+
 var User = require('../models/user');
 
 var UserTile = module.exports = React.createClass({
     propTypes: {
-        uuid: React.PropTypes.string.isRequired
+        uuid: React.PropTypes.string.isRequired,
+        onUserDetails: React.PropTypes.func
     },
     getInitialState: function() {
         return {
             loading: true
-        }
+        };
     },
     componentDidMount: function() {
         var user = new User({uuid: this.props.uuid });
@@ -27,7 +29,7 @@ var UserTile = module.exports = React.createClass({
     },
     navigateToUser: function(e) {
         e.preventDefault();
-        adminui.vent.trigger('showview', 'user', {uuid: this.props.uuid });
+        this.props.onUserDetails({uuid: this.props.uuid});
     },
     render: function() {
         var user = this.state;
