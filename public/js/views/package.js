@@ -20,7 +20,7 @@ var PackageTemplate = require('../tpl/package.hbs');
 var React = require('react');
 var NotesComponent = require('../components/notes');
 
-var Handlebars = require('handlebars-runtime');
+var Handlebars = require('handlebars');
 Handlebars.registerHelper('normalize', function(v) {
     v = Number(v);
     if (v % 1024 === 0) {

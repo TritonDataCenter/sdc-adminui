@@ -14,7 +14,7 @@ var UserInput = require('./typeahead-user');
 
 var adminui = require('../adminui');
 
-var Handlebars = require('handlebars-runtime');
+var Handlebars = require('handlebars');
 Handlebars.registerHelper('normalize', function(v) {
     v = Number(v);
     if (v % 1024 === 0) {

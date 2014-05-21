@@ -17,7 +17,7 @@ require('backbone.stickit');
 require('backbone.marionette');
 
 
-var Handlebars = require('handlebars-runtime');
+var Handlebars = require('handlebars');
 Handlebars.registerHelper('role', function(role, options) {
     var args = Array.prototype.slice.call(arguments);
     var opts = args.pop();
