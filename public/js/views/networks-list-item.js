@@ -1,6 +1,8 @@
 var Backbone = require('backbone');
 var adminui = require('adminui');
 var NetworksListItemTemplate = require('../tpl/networks-list-item.hbs');
+var _ = require('underscore');
+
 var NetworksListItem = Backbone.Marionette.ItemView.extend({
     template: NetworksListItemTemplate,
 
@@ -12,11 +14,22 @@ var NetworksListItem = Backbone.Marionette.ItemView.extend({
 
     events: {
         'click .delete-network': 'onClickDeleteNetwork',
+        'mouseover .delete-network': 'onMouseoverDeleteNetwork',
+        'mouseout .delete-network': 'onMouseoutDeleteNetwork',
         'click .name a': 'select'
     },
 
+    onMouseoverDeleteNetwork: function() {
+        this.$el.addClass('hover');
+    },
+    onMouseoutDeleteNetwork: function() {
+        this.$el.removeClass('hover');
+    },
+
     onClickDeleteNetwork: function() {
-        var confirm = window.confirm('Are you sure you want to delete this network?');
+        var confirm = window.confirm(
+            _.str.sprintf('Are you sure you want to delete the network "%s" ?', this.model.get('name'))
+        );
         if (confirm) {
             this.trigger('destroy');
             this.model.destroy();
