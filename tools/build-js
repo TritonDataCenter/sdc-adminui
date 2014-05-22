@@ -26,7 +26,11 @@ var shimConfig = {
         depends: {'jquery': '$'},
         exports: null
     },
-    'jquery.chosen': { path: './lib/chosen.jquery', exports: null },
+    'jquery.chosen': {
+        path: './lib/chosen.jquery',
+        depends: { 'jquery': '$' },
+        exports: null
+    },
     'bootstrap': { path: './lib/bootstrap', exports: null },
     'bootstrap.datetimepicker' : {
         path : './lib/bootstrap-datetimepicker.js',
@@ -107,16 +111,28 @@ var b = shim(browserify({
 }), shimConfig)
     .transform(require.resolve(join(root, './transforms/tpl')))
     .transform(require('reactify'))
-    .require('underscore', { expose: 'underscore' })
-    .require('underscore.string', { expose: 'underscore.string' })
-    .require('react', { expose: 'React'})
-    .require('backbone', { expose: 'Backbone'})
     .require('superagent', { expose: 'superagent' })
+    .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment'})
     .require(require.resolve(join(root, './request')), { expose: 'adminui-api' })
-    .require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery' })
     .require(require.resolve(join(root, './lib/showdown')), { expose: 'showdown' })
-    .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment' })
     .require(require.resolve(join(root, './adminui')), {expose: 'adminui', entry: true});
+
+b.external(require.resolve(join(root, './lib/jquery')) + ':jquery');
+b.external(require.resolve(join(root, './lib/moment.min')) + ':moment');
+b.external('underscore');
+b.external('underscore.string');
+b.external('react');
+b.external('backbone');
+b.external('superagent');
+
+var blibs = browserify();
+blibs.require('react');
+blibs.require('underscore');
+blibs.require('underscore.string');
+blibs.require('backbone');
+blibs.require('superagent');
+blibs.require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery'});
+blibs.require(require.resolve(join(root, './lib/moment.min')), {expose: 'moment'});
 
 ['*.js', 'components/*.jsx', 'views/*.js', 'models/*.js'].forEach(function(p) {
     glob(join(p), {cwd: root}, function(err, files) {
@@ -132,7 +148,10 @@ var t = new Date().getTime();
 var outputPath = path.join(root, '..', 'app.js');
 var tmpPath = format('%s.%s', outputPath, t);
 
-console.log('Generating bundle');
+var libsOutputPath = path.join(root, '..', 'libs.js');
+var libsTmpPath = format('%s.%s', libsOutputPath, t);
+
+console.log('Generating bundle [app.js]');
 b.bundle({debug:true}, function(err, src) {
     if (err) {
         console.error(err);
@@ -149,6 +168,24 @@ b.bundle({debug:true}, function(err, src) {
     fs.renameSync(tmpPath, outputPath);
 
     console.log('Build succeeded: ', outputPath);
+});
 
-    process.exit(0);
+console.log('Generating bundle [libs.js]');
+blibs.bundle({debug: true}, function(err, src) {
+    if (err) {
+        console.error(err);
+        process.exit(1);
+    }
+    var res = src;
+    if (!process.env['SKIP_MINIFY']) {
+        console.log("Minifying output");
+        res = uglify.minify(src, {fromString: true}).code;
+    }
+
+    console.log("Writing bundle file");
+    fs.writeFileSync(libsTmpPath, res);
+    fs.renameSync(libsTmpPath, libsOutputPath);
+
+    console.log('Build succeeded: ', libsOutputPath);
+
 });
