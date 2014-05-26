@@ -1,7 +1,9 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
+var $ = require('jquery');
 var Model = require('./model');
 var Job = require('./job');
+var api = require('../request');
 
 var Vm = Model.extend({
     urlRoot: '/_/vms',
@@ -133,13 +135,17 @@ var Vm = Model.extend({
 
 
     saveAlias: function(cb) {
-        $.put(this.url(), { alias: this.get ('alias')}).done(function(data) {
-            var job = new Job({ uuid: data.job_uuid });
-            cb(null, job);
-        }).fail(function(xhr, status) {
-            var obj = JSON.parse(xhr.responseText);
-            var err = _.findWhere(obj.errors, {'field': 'alias'});
-            cb(err);
+        var req = api.put(this.url()).send({alias: this.get('alias')});
+
+        req.end(function(res) {
+            if (res.ok) {
+                var data = res.body;
+                var job = new Job({ uuid: data.job_uuid });
+                cb(null, job);
+            } else {
+                var err = _.findWhere(res.body.errors, {'field': 'alias'});
+                cb(err);
+            }
         });
     },
 

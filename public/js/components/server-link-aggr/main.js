@@ -1,5 +1,5 @@
 /** @jsx React.DOM **/
-var api = require('adminui-api');
+var api = require('../../request');
 
 var React = require('react');
 var Chosen = require('react-chosen');

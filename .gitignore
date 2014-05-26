@@ -8,6 +8,6 @@ cscope.po.out
 cscope.out
 smf/manifests/*.xml
 .DS_Store
-public/app.js
-public/libs.js
+public/app.js*
+public/libs.js*
 npm-debug.log

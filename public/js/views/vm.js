@@ -407,7 +407,8 @@ var VmView = Backbone.Marionette.Layout.extend({
 
         input.focus();
 
-        function saveAction() {
+        function saveAction(e) {
+            e.preventDefault();
             value.html(input.val());
             vm.set({ alias: input.val() });
             vm.saveAlias(function(err, job) {
