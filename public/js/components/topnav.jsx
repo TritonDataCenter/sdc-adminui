@@ -12,11 +12,13 @@ var Topnav = React.createClass({
     },
     classesFor: function(view) {
         var attrs = {};
-        attrs[view] = true;
+        view.split(" ").forEach(function(v) {
+            attrs[v] = true;
+            if (this.props.active === v) {
+                attrs['active'] = true;
+            }
+        }.bind(this));
 
-        if (this.props.active === view) {
-            attrs['active'] = true;
-        }
         return cx(attrs);
     },
     _clickedMenuItem: function(e) {
@@ -32,12 +34,15 @@ var Topnav = React.createClass({
                     <div className="container-fluid">
                         <div className="col-xs-2">
                             <div className="navbar-brand">
-                                <h1 className="branding"><span className="product">SDC</span></h1>
+                                <h1 className="branding">
+                                <span className="product">SDC</span>
+                                <span className="ops-portal">Operations Portal</span>
+                                </h1>
                             </div>
                         </div>
                         <div className="col-xs-8">
                             <ul className="nav navbar-nav main-nav">
-                                <li onClick={this._clickedMenuItem} data-view="dashboard" className="datacenter"><a className="datacenter-name">{this.props.currentDatacenter}</a></li>
+                                <li  onClick={this._clickedMenuItem} data-view="dashboard" className={this.classesFor('datacenter dashboard')} ><a href="/dashboard" className="datacenter-name">{this.props.currentDatacenter}</a></li>
                                 <li className="fishbulb"><a title="Cloud Analytics" href="/fishbulb" target="fishbulb"><i className="fa fa-bar-chart-o"></i> Analytics</a></li>
                                 <li onClick={this._clickedMenuItem} className={this.classesFor('users')} data-view="users"><a href="/users"><i className="fa fa-users"></i> Users</a></li>
                             {

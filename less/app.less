@@ -304,26 +304,29 @@ h1.branding {
   position: fixed;
   width: 100%;
   margin-bottom: 0;
-  background: #e0e0e0;
+  background: #5D646B;
   border: none;
   border-bottom: 8px solid #434343;
+  .navbar-brand { padding: 8px;}
 
   h1.branding {
-    .product { color: #000; font-weight: 300; display: inline-block; }
+    .product { font-size: 10px; color: #FF9300; font-weight: 300; }
+    .ops-portal { margin-left: 10px; line-height: 12px; text-transform: capitalize; font-size: 14px; display: block; color: #FFF; }
     .datacenter { display: inline-block; font-weight: bold;}
-    text-align: center;
+    text-align: left;
     margin: 0;
   }
 
   .acc-controls {
     font-size: 12px;
-    text-transform: uppercase;
+    padding-top: 5px;
 
-    .current-user { color: #666; }
+    text-transform: uppercase;
+    .current-user { color: #Fff; }
     a.signout {
       cursor: pointer;
       text-transform: uppercase;
-      color: #666;
+      color: #fff;
       i { margin-left: 10px;}
     }
   }
@@ -338,13 +341,15 @@ h1.branding {
     min-height: 0;
 
     li a {
-      padding: 13px 15px;
+      padding: 14px 28px;
+      padding-top: 20px;
+      padding-bottom: 12px;
       text-transform: uppercase;
       text-shadow: none;
       font-size: 12px;
       display: block;
       text-transform: uppercase;
-      color: #888;
+      color: #FFF;
       .box-shadow(none);
     }
     li.active {

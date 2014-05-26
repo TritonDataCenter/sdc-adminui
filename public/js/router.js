@@ -201,11 +201,16 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
         var view = new View(args);
         state['secondarynav.active'] = view.sidebar || viewName;
-        state['rootnav.active'] = view.sidebar || viewName;
         state['chrome.content'] = BBComponent({view: view });
         state['chrome.fullwidth'] = (viewName === 'users' || viewName === 'user' || viewName === 'settings');
-        console.log(viewName, state);
 
+        if (state['chrome.fullwidth'] === false) {
+            state['rootnav.active'] = 'datacenter';
+        } else {
+            state['rootnav.active'] = view.sidebar || viewName;
+        }
+
+        console.log('state change', state);
         this.state.set(state);
 
         if (typeof(view.url) === 'function') {
