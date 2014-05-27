@@ -60,15 +60,24 @@
 @import "nic-config-component.less";
 @import "provisioning-limits.less";
 
-body { height: 100%; }
-html { height: 100%; }
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
 
 label { font-weight: 400; }
 
 #adminui { min-height: 100%; background: #f2f2f2; }
 #adminui .chrome.fullwidth { padding-left: 30px; padding-right: 30px; }
 #content {
-  padding-top: @line-height-computed * 1.5;
+  padding-top: @navbar-height;
   padding-bottom: @line-height-computed;
   a { cursor: pointer;}
   section { margin-bottom: 2em; }
@@ -101,6 +110,7 @@ label { font-weight: 400; }
 }
 
 .page-header {
+  margin-top: 20px;
   overflow: hidden;
   border: none;
 
@@ -230,26 +240,26 @@ h1.branding {
   text-transform: uppercase;
 }
 
-#secondarynav-container {
+#localnav-container {
   padding-left:0;
 }
 
-#secondarynav::-webkit-scrollbar {
+#localnav::-webkit-scrollbar {
   width: 6px;
 }
 
-#secondarynav::-webkit-scrollbar-track {
+#localnav::-webkit-scrollbar-track {
   background: #000;
   border-radius: 4px;
 }
 
-#secondarynav::-webkit-scrollbar-thumb {
+#localnav::-webkit-scrollbar-thumb {
   border-radius: 4px;
   background: #aaa;
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
 
-#secondarynav {
+#localnav {
   overflow-y: auto;
   width: 16.6666666%;
   background: #434343;
@@ -269,9 +279,6 @@ h1.branding {
     border: none;
   }
   ul.nav>li { background: none; }
-  ul.nav>li.active a,
-  ul.nav>li.active a:hover { background: #F1F1F1; color: #434343; }
-  ul.nav>li:hover>a { background: #4a4a4a; color: #d5d5d5; }
   ul.nav>li>a {
     background: #4C4C4C;
     padding-top: 7px;
@@ -280,6 +287,9 @@ h1.branding {
     font-size: 12px;
     color: #D5D5D5;
   }
+  ul.nav>li.active a,
+  ul.nav>li.active a:hover { background: #F1F1F1; color: #434343; }
+  ul.nav>li:hover>a { background: #4a4a4a; color: #d5d5d5; }
 }
 
 #server-time {
@@ -307,27 +317,60 @@ h1.branding {
   background: #5D646B;
   border: none;
   border-bottom: 8px solid #434343;
-  .navbar-brand { padding: 8px;}
+  .navbar-brand { padding: 12px; padding-left: 5px; padding-right: 5px; }
 
   h1.branding {
-    .product { font-size: 10px; color: #FF9300; font-weight: 300; }
-    .ops-portal { margin-left: 10px; line-height: 12px; text-transform: capitalize; font-size: 14px; display: block; color: #FFF; }
+    .product { font-size: 12px; color: #FF9300; font-weight: 300; }
+    .ops-portal { margin-left: 10px; line-height: 18px; text-transform: capitalize; font-size: 18px; display: block; color: #FFF; }
     .datacenter { display: inline-block; font-weight: bold;}
     text-align: left;
     margin: 0;
   }
 
   .acc-controls {
+    margin:0;
+    padding:0;
     font-size: 12px;
-    padding-top: 5px;
 
-    text-transform: uppercase;
-    .current-user { color: #Fff; }
-    a.signout {
+    a {
+      padding-top: 14px;
+      padding-bottom: 14px;
       cursor: pointer;
-      text-transform: uppercase;
+      color: #eee;
+    }
+    a.current-user {
+      display: inline-block;
+      width: auto;
+      vertical-align: middle;
+      padding-left: 25px;
+      padding-right: 25px;
+
+      .name {
+        vertical-align: middle;
+        display: inline-block;
+        .cn, .login-name { display: block;}
+        .login-name { font-size: 10px; }
+      }
+
+      .user-icon {
+        width: 32px;
+        height: 32px;
+        border: 1px solid #fff;
+
+        background-color: #FFF;
+        background-position: middle;
+        background-repeat: no-repeat;
+
+        border-radius: 50%;
+        vertical-align: middle;
+        margin-right: 10px;
+        display: inline-block;
+      }
+    }
+    a.signout { padding-left: 15px; padding-right: 10px; display: inline-block; }
+    .active {
+      background: #434343;
       color: #fff;
-      i { margin-left: 10px;}
     }
   }
 
@@ -341,27 +384,33 @@ h1.branding {
     min-height: 0;
 
     li a {
-      padding: 14px 28px;
+      padding: 14px 20px;
       padding-top: 20px;
       padding-bottom: 12px;
       text-transform: uppercase;
       text-shadow: none;
       font-size: 12px;
+      height: 60px;
       display: block;
       text-transform: uppercase;
-      color: #FFF;
+      color: #eee;
       .box-shadow(none);
+    }
+    li a small {
+      display: block;
+      line-height: 1em;
+      font-size: 10px;
+      color: #aaa;
     }
     li.active {
       padding-bottom: 0;
     }
     li.active a {
-      font-weight: 400;
+      font-weight: 500;
       background: #434343;
       color: #fff;
     }
-    li:hover.active a {
-    }
+    li:hover.active a { }
   }
 
 } // rootnav

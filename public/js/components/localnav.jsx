@@ -4,6 +4,7 @@ var React = require('react')
 var cx = React.addons.classSet;
 
 var SecondaryNav = React.createClass({
+    displayName: 'Localnav',
     propTypes: {
         handleMenuSelect: React.PropTypes.func.isRequired,
         active: React.PropTypes.string
@@ -14,13 +15,12 @@ var SecondaryNav = React.createClass({
         this.props.handleMenuSelect(view);
     },
     _classesFor: function(v) {
-        console.log(this.props.active);
         return cx({
             active: (this.props.active === v)
         });
     },
     render: function() {
-        return (<div id="secondarynav">
+        return (<div id="localnav">
             <ul className="nav">
                 <li className="nav-header">Compute</li>
                 <li className={this._classesFor('dashboard')} onClick={this._clickedMenuItem} data-view="dashboard"><a href="/dashboard"><i className="fa fa-home"></i> Dashboard</a></li>

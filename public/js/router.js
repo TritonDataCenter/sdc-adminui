@@ -6,7 +6,8 @@ var React = require('react');
 var Marionette = require('backbone.marionette');
 var User = require('./models/user');
 var SigninView = require('./views/signin');
-var Chrome = require('./views/chrome');
+
+var Chrome = require('./components/chrome');
 var BBComponent = require('./components/bb.jsx');
 
 var NotFoundView = require('./views/error/not-found');
@@ -73,7 +74,8 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     initialize: function(options) {
         this.app = options.app;
         this.state = options.state;
-        this.app.user = this.app.user || (this.user = User.currentUser());
+        this.app.user = this.app.user || User.currentUser();
+        this.user = this.app.user;
     },
 
     didAuthenticate: function(data) {
@@ -197,20 +199,24 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
 
         var state = {};
-        state['rootnav'] = true;
 
         var view = new View(args);
-        state['secondarynav.active'] = view.sidebar || viewName;
+        state['chrome.rootnav'] = true;
         state['chrome.content'] = BBComponent({view: view });
         state['chrome.fullwidth'] = (viewName === 'users' || viewName === 'user' || viewName === 'settings');
+        state['localnav.active'] = view.sidebar || viewName;
 
         if (state['chrome.fullwidth'] === false) {
             state['rootnav.active'] = 'datacenter';
         } else {
-            state['rootnav.active'] = view.sidebar || viewName;
+            if (viewName === 'user' && args.user && args.user.get('uuid') === this.user.get('uuid')) {
+                state['rootnav.active'] = 'current-user';
+            } else {
+                state['rootnav.active'] = view.sidebar || viewName;
+            }
         }
 
-        console.log('state change', state);
+        console.debug('app state change', state);
         this.state.set(state);
 
         if (typeof(view.url) === 'function') {

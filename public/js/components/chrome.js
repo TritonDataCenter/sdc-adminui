@@ -15,23 +15,44 @@ var React = require('react');
 
 var adminui = require('./adminui');
 
-var Topnav = require('../components/topnav.jsx');
-var SecondaryNav = require('../components/secondarynav.jsx');
+var Topnav = require('../components/rootnav.jsx');
+var Notifications = require('../components/notifications.jsx');
+var Localnav = require('../components/localnav.jsx');
+var ServerTime = require('../components/server-time.jsx');
 
-var Notifier = require('./notifier');
-
-var JobProgressView = require('./job-progress');
+var JobProgressView = require('../views/job-progress');
 
 var Chrome = React.createClass({
+    propTypes: {
+        state: React.PropTypes.object,
+        user: React.PropTypes.object
+    },
     displayName: 'Chrome',
+    componentWillMount: function() {
+        adminui.vent.on('showjob', this.onShowjob, this);
+    },
+    componentWillUnmount: function() {
+        adminui.vent.off('showjob', this.onShowjob);
+    },
+    onShowjob: function(job) {
+        var jobView = new JobProgressView({model: job});
+        jobView.show();
+    },
     getDefaultProps: function() {
         return {};
     },
     _handleSecondnaryMenuSelect: function(view) {
         adminui.vent.trigger('showview', view, {});
     },
+    _handleSignout: function() {
+        adminui.vent.trigger('signout');
+    },
     _handleRootMenuSelect: function(view) {
         adminui.vent.trigger('showview', view, {});
+    },
+    _handleSelectCurrentUser: function(user) {
+        adminui.vent.trigger('showview', 'user', {user: user});
+        return false;
     },
     render: function() {
         if (! this.props.state.get('chrome.content')) {
@@ -44,27 +65,29 @@ var Chrome = React.createClass({
         return (
             <div id="adminui">
                 {
-                    this.props.state.get('rootnav') && <Topnav
+                    this.props.state.get('chrome.rootnav') && <Topnav
                         readonly={!adminui.user.role('operators')}
-                        handleMenuSelect={this._handleRootMenuSelect}
                         currentDatacenter={this.props.state.get('datacenter')}
+                        handleMenuSelect={this._handleRootMenuSelect}
+                        handleSignout={this._handleSignout}
+                        handleSelectCurrentUser={this._handleSelectCurrentUser}
                         active={this.props.state.get('rootnav.active')}
                         user={adminui.user} />
                 }
-                { this.props.notifications && <div id="notifications"></div> }
+
+                <Notifications bus={adminui.vent} />
 
 
                 <div className="container-fluid">
                     <div className="row">
                         {
                             (!this.props.state.get('chrome.fullwidth')) &&
-                                <div id="secondarynav-container" className="col-sm-2">
-                                    <SecondaryNav
-                                        handleMenuSelect={this._handleSecondnaryMenuSelect}
-                                        active={this.props.state.get('secondarynav.active')} />
-                                </div>
+                                (<div id="localnav-container" className="col-sm-2">
+                                    <Localnav handleMenuSelect={this._handleSecondnaryMenuSelect} active={this.props.state.get('localnav.active')} />
+                                    <ServerTime />
+                                </div> )
                         }
-                        <div id="server-time"><i className="fa fa-clock-o"></i> UTC <time></time></div>
+
                         <div id="content" className={contentClass}>{ this.props.state.get('chrome.content') }</div>
                     </div>
                 </div>
@@ -83,7 +106,6 @@ module.exports = Chrome;
 //         this.notifier = new Notifier({ vent: this.vent });
 
 //         this.listenTo(this.vent, 'error', this.onError, this);
-//         this.listenTo(this.vent, 'showjob', this.onShowjob, this);
 //         this.listenTo(this.vent, 'mainnav:highlight', this.highlight, this);
 
 //         this.content.on('show', function(view) {
@@ -92,8 +114,6 @@ module.exports = Chrome;
 //     },
 
 //     renderTime: function() {
-//         var serverTime = moment().utc().format("MMM D h:mm");
-//         return this.$('#server-time time').html(serverTime);
 //     },
 
 //     onClose: function() {
@@ -126,20 +146,9 @@ module.exports = Chrome;
 //         }
 //     },
 
-//     onShowjob: function(job) {
-//         var jobView = new JobProgressView({model: job});
-//         jobView.show();
-//     },
-
-//     onShow: function() {
-//     },
 
 //     onRender: function() {
-//         if (! this._timer) {
-//             this._timer = setInterval(this.renderTime.bind(this), 1000);
-//         }
 //         this.notifier.setElement(this.$("#notifications"));
-//         this.renderTime();
 //     }
 // });
 
