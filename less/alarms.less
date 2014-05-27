@@ -5,6 +5,13 @@
     background: #fff;
     color: #000;
   }
+  a.has-error {
+    background: @brand-danger;
+  }
+  a.active.has-error {
+    color: #fff;
+    background: @brand-danger;
+  }
   a.has-alarms {
     color: #e08a00;
   }
@@ -45,6 +52,9 @@
   .alarm-menu-item.no-alarms {
     padding: 5px;
     color: @brand-success;
+  }
+  .alarm-menu-item.error {
+    color: @brand-danger;
   }
 }
 
