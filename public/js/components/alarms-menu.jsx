@@ -19,6 +19,17 @@ module.exports = React.createClass({
     componentDidMount: function() {
         this.fetchAlarms();
     },
+    fetchProbeGroup: function(id) {
+        var user = this.props.user;
+        this.setState({loading: true});
+        api.get('/_/amon/probegroups/'+this.props.user + '/' + id).end(function(err, res) {
+            var probes = this.state.probes;
+            probes[id] = res.body;
+            if (res.ok) {
+                this.setState({probes: probes});
+            }
+        }.bind(this));
+    },
     fetchProbe: function(id) {
         var user = this.props.user;
         this.setState({loading: true});
@@ -29,7 +40,6 @@ module.exports = React.createClass({
                 this.setState({probes: probes});
             }
         }.bind(this));
-
     },
     fetchAlarms: function() {
         var user = this.props.user;
@@ -38,7 +48,12 @@ module.exports = React.createClass({
                 var alarms = res.body;
                 this.setState({alarms: alarms});
                 alarms.map(function(a) {
-                    this.fetchProbe(a.probe);
+                    if (a.probe) {
+                        this.fetchProbe(a.probe);
+                    }
+                    if (a.probeGroup) {
+                        this.fetchProbeGroup(a.probeGroup);
+                    }
                 }.bind(this));
             } else {
                 console.error('Error fetching alarms', res.text);
@@ -51,7 +66,8 @@ module.exports = React.createClass({
         adminui.vent.trigger('showcomponent', 'alarm', { user: alarm.user, id: alarm.id });
     },
     renderMenuItem: function(alarm) {
-        var probe = this.state.probes[alarm.probe];
+        var probe = this.state.probes[alarm.probe || alarm.probeGroup];
+
         return (<div className="alarm-menu-item">
             <div className="alarm-menu-item-header">
                 <div className="alarm-menu-item-icon">
@@ -63,7 +79,7 @@ module.exports = React.createClass({
                         <span className="probe-name">{probe.name}</span>
                         <span className="probe-type">{probe.type}</span>
                     </a> :
-                    <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe"><span className="probe-name">{alarm.probe}</span></a>
+                    <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe"><span className="probe-name">{probe.name}</span></a>
                 }
             </div>
             <div className="alarm-menu-item-content">
