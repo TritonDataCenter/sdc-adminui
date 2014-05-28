@@ -1,66 +1,11 @@
-<div id="rootnav" class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-rootnav">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-
-            <div class="navbar-brand">
-                <h1 class="branding"><span class="product">SDC</span> <div class="datacenter"></div></h1>
-            </div>
-
-            <div class="acc-controls navbar-text navbar-right">
-                <a class="current-user"><i class="fa fa-user"></i> <span class="login-name"></span></a>
-                <a class="signout"> <i class="fa fa-sign-out"></i> </a>
-            </div>
-        </div>
-
-
-        <div class="collapse navbar-collapse col-md-8" id="navbar-collapse-rootnav">
-            <ul class="nav navbar-nav main-nav">
-                <li data-view="dashboard"><a href="/dashboard"><i class="fa fa-home"></i></a></li>
-                <li class="fishbulb"><a title="Cloud Analytics" href="/fishbulb" target="fishbulb"><i class="fa fa-bar-chart-o"></i></a></li>
-
-                <li data-view="vms"><a href="/vms">Virtual Machines</a></li>
-                <li data-view="servers"><a href="/servers">Servers</a></li>
-                <li data-view="users"><a href="/users">Users</a></li>
-
-                <li data-view="images"><a href="/images">Images</a></li>
-                <li data-view="networking"><a href="/networks">Networking</a></li>
-                <li data-view="packages"><a href="/packages">Packages</a></li>
-
-                <li data-view="jobs"><a href="/jobs">Jobs</a></li>
-                <li data-view="services"><a href="/services">Services</a></li>
-
-
-                <li class="alarms"></li>
-
-                {{#role "operators"}}
-                <li class="settings" data-view="settings">
-                    <a href="/settings">
-                    <div class="visible-xs">
-                        Settings
-                    </div>
-                    <div class="hidden-xs">
-                        <i class="fa fa-gear"></i>
-                    </div>
-                    </a>
-                </li>
-                {{/role}}
-            </ul>
-        </div>
-    </div>
-
-    <div class="server-time">UTC: <time></time></div>
-</div>
-
+<div id="rootnav-container" class="rootnav-container"></div>
 <div id="notifications"></div>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div id="content" class="col-md-12"></div>
+        <div id="secondarynav-container" class="col-sm-2">
+            <div id="server-time"><i class="fa fa-clock-o"></i> UTC <time></time></div>
+        </div>
+        <div id="content" class="col-sm-10"></div>
     </div>
 </div>

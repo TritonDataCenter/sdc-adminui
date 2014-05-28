@@ -1,11 +1,14 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
+var React = require('react');
 
 var Marionette = require('backbone.marionette');
 var User = require('./models/user');
 var SigninView = require('./views/signin');
-var AppView = require('./views/app');
+
+var Chrome = require('./components/chrome');
+var BBComponent = require('./components/bb.jsx');
 
 var NotFoundView = require('./views/error/not-found');
 var Components = {
@@ -70,7 +73,9 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
     initialize: function(options) {
         this.app = options.app;
-        this.app.user = this.app.user || (this.user = User.currentUser());
+        this.state = options.state;
+        this.app.user = this.app.user || User.currentUser();
+        this.user = this.app.user;
     },
 
     didAuthenticate: function(data) {
@@ -84,9 +89,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     setupDatacenter: function() {
-        this.app.state.set({
-            datacenter: this.user.getDatacenter()
-        });
+        this.app.state.set({ datacenter: this.user.getDatacenter() });
     },
 
     setupRequestToken: function() {
@@ -117,10 +120,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     renderTitle: function() {
-        document.title = [
-            this.app.state.get('datacenter'),
-            'Operations Portal'
-        ].join(' | ');
+        document.title = [ this.app.state.get('datacenter'), 'Operations Portal' ].join(' | ');
     },
 
     start: function() {
@@ -129,7 +129,9 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         this.listenTo(this.app.vent, 'signout', this.signout, this);
         this.listenTo(this.app.vent, 'notfound', this.notFound, this);
         this.listenTo(this.app.user, 'authenticated', this.didAuthenticate, this);
+
         this.listenTo(this.app.state, 'change:datacenter', this.renderTitle);
+        this.listenTo(this.app.state, 'change', this.initializeChrome, this);
 
         if (this.user.authenticated()) {
             this.setupRequestToken();
@@ -180,82 +182,72 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
-    initializeAppView: function() {
-        if (false === this.app.chrome.currentView instanceof AppView) {
-            var appView = new AppView({
-                vent: this.app.vent,
-                user: this.user
-            });
-            this.app.chrome.show(appView);
-        }
-    },
-
-    presentPageComponent: function(viewName, args) {
-        var componentClass = Views[viewName];
-        var component = new componentClass(args);
-        React.renderComponent(component, this.app.chrome.currentView.content.$el.get(0))
+    initializeChrome: function() {
+        console.log('render', this.state.toJSON());
+        this.chrome = React.renderComponent(Chrome({
+            content: this.state.get('content'),
+            state: this.state }), document.body );
     },
 
     presentView: function(viewName, args) {
-        this.initializeAppView();
-
         var View = Views[viewName];
 
         if (typeof(View) === 'undefined') {
-            this.notFound({
-                view: viewName,
-                args: args
-            });
+            this.notFound({ view: viewName, args: args });
             console.log("View not found: " + viewName);
-        } else {
-            var view = new View(args);
-
-            this.applySidebar(view);
-            this.applyUrl(view);
-            this.app.chrome.currentView.content.show(view, args);
+            return;
         }
-    },
 
-    presentComponent: function(comp, args) {
+        var state = {};
 
-        args = args || {};
-        var comp = Components[comp];
+        var view = new View(args);
+        state['chrome.rootnav'] = true;
+        state['chrome.content'] = BBComponent({view: view });
+        state['chrome.fullwidth'] = (viewName === 'users' || viewName === 'user' || viewName === 'settings');
+        state['localnav.active'] = view.sidebar || viewName;
 
-        if (typeof(comp) === 'undefined') {
-            this.notFound({
-                view: comp,
-                args: args
-            });
-            console.log("Component not found: " + comp);
+        if (state['chrome.fullwidth'] === false) {
+            state['rootnav.active'] = 'datacenter';
         } else {
-            this.initializeAppView();
-            var el = this.app.chrome.currentView.content.el;
-            var container = this.app.chrome.currentView.content.getEl(el).get(0);
-            React.renderComponent(new comp(args), container);
+            if (viewName === 'user' && args.user && args.user.get('uuid') === this.user.get('uuid')) {
+                state['rootnav.active'] = 'current-user';
+            } else {
+                state['rootnav.active'] = view.sidebar || viewName;
+            }
         }
-    },
 
-    notFound: function(args) {
-        this.initializeAppView();
-        var view = new NotFoundView(args);
-        this.app.chrome.currentView.content.show(view);
-    },
+        console.debug('app state change', state);
+        this.state.set(state);
 
-    applySidebar: function(view) {
-        if (typeof(view.sidebar) === 'string') {
-            this.app.vent.trigger('mainnav:highlight', view.sidebar);
-        } else {
-            this.app.vent.trigger('mainnav:highlight', view.name);
-        }
-    },
-
-    applyUrl: function(view) {
         if (typeof(view.url) === 'function') {
             Backbone.history.navigate(view.url());
         } else if (typeof(view.url) === 'string') {
             Backbone.history.navigate(view.url);
         }
     },
+
+    presentComponent: function(compName, args) {
+        args = args || {};
+        var comp = Components[compName];
+
+        if (typeof(comp) === 'undefined') {
+            this.notFound({ view: comp, args: args });
+            console.log("Component not found: " + compName);
+        } else {
+            this.state.set({
+                'chrome.content': new comp(args)
+            });
+        }
+    },
+
+    notFound: function(args) {
+        var view = new NotFoundView(args);
+        this.state.set({
+            'chrome.rootnav': true,
+            'chrome.content': BBComponent({ view: view })
+        });
+    },
+
 
     showAlarm: function(user, id) {
         if (this.authenticated()) {
@@ -435,7 +427,11 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     showSignin: function() {
         console.log('[route] showSignin');
         var signinView = new SigninView({model: this.user});
-        this.app.chrome.show(signinView);
+        this.state.set({
+            'chrome.content': new BBComponent({view: signinView}),
+            'chrome.rootnav': false,
+            'chrome.fullwidth': true
+        });
     },
 
     signout: function() {

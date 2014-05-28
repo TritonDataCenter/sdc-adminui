@@ -1,17 +1,32 @@
 #rootnav {
- .alarms-menu-container {
-  a.toggle { cursor: pointer; }
+ .navbar .alarms-menu-container {
+  a.toggle {
+    text-decoration: none;
+    cursor: pointer;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
   >a.active {
     background: #fff;
+    color: #000;
+  }
+  a.has-error {
+    background: @brand-danger;
+  }
+  a.active.has-error {
+    color: #fff;
+    background: @brand-danger;
   }
   a.has-alarms {
-    color: #e08a00;
-  }
-  a.active.has-alarms {
     color: #fff;
     background: #e08a00;
   }
+  a.active.has-alarms {
+    color: #000;
+    background: #FFF;
+  }
 }
+
 .alarms-menu {
   position: absolute;
   width: 320px;
@@ -29,9 +44,12 @@
     .alarm-menu-item-header {
       a.probe {
         padding: 0;
-        display: inline-block;
         cursor: pointer;
         text-transform: lowercase;
+        display: inline-block;
+        height: auto;
+        text-transform: lowercase;
+        color: #333;
       }
       .alarm-menu-item-icon {
         display: inline-block;
@@ -44,6 +62,9 @@
   .alarm-menu-item.no-alarms {
     padding: 5px;
     color: @brand-success;
+  }
+  .alarm-menu-item.error {
+    color: @brand-danger;
   }
 }
 

@@ -16,11 +16,23 @@ module.exports = React.createClass({
     toggleMenu: function() {
         this.setState({menu: !this.state.menu});
     },
-    componentWillMount: function() {
+    componentDidMount: function() {
         this.fetchAlarms();
+    },
+    fetchProbeGroup: function(id) {
+        var user = this.props.user;
+        this.setState({loading: true});
+        api.get('/_/amon/probegroups/'+this.props.user + '/' + id).end(function(err, res) {
+            var probes = this.state.probes;
+            probes[id] = res.body;
+            if (res.ok) {
+                this.setState({probes: probes});
+            }
+        }.bind(this));
     },
     fetchProbe: function(id) {
         var user = this.props.user;
+        this.setState({loading: true});
         api.get('/_/amon/probes/'+this.props.user + '/' + id).end(function(err, res) {
             var probes = this.state.probes;
             probes[id] = res.body;
@@ -28,17 +40,24 @@ module.exports = React.createClass({
                 this.setState({probes: probes});
             }
         }.bind(this));
-
     },
     fetchAlarms: function() {
         var user = this.props.user;
-        api.get('/_/amon/alarms').query({user: user}).end(function(err, res) {
+        api.get('/_/amon/alarms').query({user: user}).end(function(res) {
             if (res.ok) {
                 var alarms = res.body;
                 this.setState({alarms: alarms});
                 alarms.map(function(a) {
-                    this.fetchProbe(a.probe);
+                    if (a.probe) {
+                        this.fetchProbe(a.probe);
+                    }
+                    if (a.probeGroup) {
+                        this.fetchProbeGroup(a.probeGroup);
+                    }
                 }.bind(this));
+            } else {
+                console.error('Error fetching alarms', res.text);
+                this.setState({error: res.body});
             }
         }.bind(this));
     },
@@ -47,7 +66,8 @@ module.exports = React.createClass({
         adminui.vent.trigger('showcomponent', 'alarm', { user: alarm.user, id: alarm.id });
     },
     renderMenuItem: function(alarm) {
-        var probe = this.state.probes[alarm.probe];
+        var probe = this.state.probes[alarm.probe || alarm.probeGroup];
+
         return (<div className="alarm-menu-item">
             <div className="alarm-menu-item-header">
                 <div className="alarm-menu-item-icon">
@@ -59,15 +79,13 @@ module.exports = React.createClass({
                         <span className="probe-name">{probe.name}</span>
                         <span className="probe-type">{probe.type}</span>
                     </a> :
-                    <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe"><span className="probe-name">{alarm.probe}</span></a>
+                    <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe"><span className="probe-name">{probe.name}</span></a>
                 }
             </div>
             <div className="alarm-menu-item-content">
                 <div className="faults">
                 {alarm.faults.map(function(f) {
-                    return <div className="fault">
-                    {f.event.data.message}
-                    </div>
+                    return <div className="fault">{f.event.data.message}</div>
                 })}
                 </div>
             </div>
@@ -75,6 +93,22 @@ module.exports = React.createClass({
     },
     menu: function() {
         if (this.state.menu) {
+            if (this.state.error) {
+                return <div className="alarms-menu">
+                    <div className="alarm-menu-item error">
+                        <div className="alarm-menu-item-header">
+                            <div className="alarm-menu-item-icon">
+                                <i className="fa fa-warning"></i>
+                            </div>
+                            Error Retrieving Alarms
+                        </div>
+                        <div className="alarm-menu-item-content">
+                            amon said: {this.state.error.message}
+                        </div>
+                    </div>
+                </div>
+            }
+
             if (this.state.alarms.length) {
                 return <div className="alarms-menu">
                     {this.state.alarms.map(this.renderMenuItem.bind(this))}
@@ -93,10 +127,17 @@ module.exports = React.createClass({
         }
     },
     render: function() {
-        return <div className="alarms-menu-container">
+        var toggleMenu = this.state.error ?
+            <a onClick={this.toggleMenu} className={
+                ('toggle ' + (this.state.menu ? ' active ' : '' ) + (this.state.error ? ' has-error' : '' ))
+            }><i className="fa fa-warning"></i> E</a>
+            :
             <a onClick={this.toggleMenu} className={
                 ('toggle ' + (this.state.menu ? ' active ' : '' ) + (this.state.alarms.length ? ' has-alarms ' : '' ))
             }><i className="fa fa-bell"></i> { this.state.alarms.length }</a>
+
+        return <div className="alarms-menu-container">
+            {toggleMenu}
             {this.menu()}
         </div>
     }

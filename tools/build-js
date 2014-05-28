@@ -32,14 +32,6 @@ var shimConfig = {
         exports: null
     },
     'bootstrap': { path: './lib/bootstrap', exports: null },
-    'bootstrap.datetimepicker' : {
-        path : './lib/bootstrap-datetimepicker.js',
-        depends: {
-            'jquery': 'jQuery',
-            'moment': 'moment'
-        },
-        exports: null
-    },
     'd3': {
         path: './lib/d3.v3',
         exports: 'd3'
@@ -111,26 +103,25 @@ var b = shim(browserify({
 }), shimConfig)
     .transform(require.resolve(join(root, './transforms/tpl')))
     .transform(require('reactify'))
-    .require('superagent', { expose: 'superagent' })
-    .require(require.resolve(join(root, './lib/moment.min')), { expose: 'moment'})
-    .require(require.resolve(join(root, './request')), { expose: 'adminui-api' })
-    .require(require.resolve(join(root, './lib/showdown')), { expose: 'showdown' })
     .require(require.resolve(join(root, './adminui')), {expose: 'adminui', entry: true});
 
 b.external(require.resolve(join(root, './lib/jquery')) + ':jquery');
-b.external(require.resolve(join(root, './lib/moment.min')) + ':moment');
+b.external('moment');
 b.external('underscore');
 b.external('underscore.string');
-b.external('react');
+b.external('react/addons' + ':react');
 b.external('backbone');
 b.external('superagent');
+b.external('bootstrap.datetimepicker');
 
 var blibs = browserify();
 blibs.require('react');
 blibs.require('underscore');
+blibs.require('underscore');
 blibs.require('underscore.string');
 blibs.require('backbone');
 blibs.require('superagent');
+blibs.require(require.resolve(join(root, './lib/bootstrap-datetimepicker')), { expose: 'bootstrap.datetimepicker'});
 blibs.require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery'});
 blibs.require(require.resolve(join(root, './lib/moment.min')), {expose: 'moment'});
 

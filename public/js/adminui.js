@@ -1,18 +1,26 @@
 var _ = require('underscore');
 _.str = require('underscore.string');
 
-var $ = jQuery = require('jquery');
+window.moment = require('moment');
+
+var $ = require('jquery');
+var jQuery = $;
+
+window.jQuery = jQuery;
+
 require('jquery.chosen');
 require('jquery.serializeObject');
 require('jquery.autosize');
+
 require('bootstrap');
 require('bootstrap.datetimepicker');
-
 require('bootstrap.tags');
+
 require('typeahead');
 
 var Backbone = require('backbone');
-Backbone.$ = require('jquery');
+Backbone.$ = $;
+
 require('backbone.stickit');
 require('backbone.marionette');
 
@@ -61,10 +69,9 @@ var adminui = window.$a = module.exports = new Backbone.Marionette.Application()
 adminui.version = require('../../package.json').version;
 adminui.addInitializer(function(options) {
     var Router = require('./router');
-    this.addRegions({chrome:"#chrome"});
     this.pinger = new Pinger();
-    this.router = new Router({app: adminui});
     this.state = new Backbone.Model();
+    this.router = new Router({app: adminui, state: this.state});
 });
 
 adminui.on('start', function() {

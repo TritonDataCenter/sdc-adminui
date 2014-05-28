@@ -29,13 +29,13 @@
   }
 
   .resource-status .failed {
-    background-color: @state-danger-bg;
+    background-color: @brand-danger;
   }
   .resource-status .queued {
-    background-color: @state-warning-bg;
+    background-color: @brand-warning;
   }
   .resource-status .running {
-    background-color: @state-warning-bg;
+    background-color: @brand-warning;
   }
 
   .resource-status .canceled {
@@ -52,6 +52,7 @@
     }
     li.error {
       background: @brand-danger;
+      white-space: pre;
       * {
         white-space: pre;
         color: #fff;

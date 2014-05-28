@@ -5,6 +5,7 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var Model = require('./model');
+var api = require('../request');
 
 
 var User = module.exports = Model.extend({
@@ -61,37 +62,40 @@ var User = module.exports = Model.extend({
             password: pass
         };
 
-        $.post("/_/auth", authData, function(data) {
-            self.set(data.user);
-            window.localStorage.setItem('api-token', data.token);
-            window.localStorage.setItem('dc', data.dc);
-            window.localStorage.setItem('admin-uuid', data.adminUuid);
+        api.post("/_/auth").send(authData).end(function(res) {
+            if (res.ok) {
+                var data = res.body;
+                self.set(data.user);
+                window.localStorage.setItem('api-token', data.token);
+                window.localStorage.setItem('dc', data.dc);
+                window.localStorage.setItem('admin-uuid', data.adminUuid);
 
-            window.localStorage.setItem('user-roles', JSON.stringify(data.roles));
-            window.localStorage.setItem('user-uuid', data.user.uuid);
-            window.localStorage.setItem('user-login', data.user.login);
+                window.localStorage.setItem('user-roles', JSON.stringify(data.roles));
+                window.localStorage.setItem('user-uuid', data.user.uuid);
+                window.localStorage.setItem('user-login', data.user.login);
 
-            self.trigger('authenticated', {
-                user: self,
-                adminUuid: data.adminUuid,
-                dc: data.dc
-            });
-
-        }).error(function(xhr) {
-            var err = JSON.parse(xhr.responseText);
-            self.trigger('error', err.message);
+                self.trigger('authenticated', {
+                    user: self,
+                    adminUuid: data.adminUuid,
+                    dc: data.dc
+                });
+            } else {
+                self.trigger('error', res.body);
+            }
         });
+
     },
 
     signout: function() {
         var self = this;
-        $.ajax({
-            url: '/_/auth',
-            type: 'DELETE'
-        }).done(function() {
-            window.localStorage.removeItem('api-token');
-            window.localStorage.removeItem('user-roles');
-            self.trigger('unauthenticated');
+        api.del('/_/auth').end(function(res) {
+            if (res.ok) {
+                window.localStorage.removeItem('api-token');
+                window.localStorage.removeItem('user-roles');
+                self.trigger('unauthenticated');
+            } else {
+                self.trigger('error', res.body);
+            }
         });
     }
 });
