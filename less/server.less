@@ -45,11 +45,12 @@
     .server-setting-up { background: @state-warning-bg; }
   }
   .rack .none { color: @gray-light;}
+
   .overview {
     .item { .widget-content; }
     .item-label, .item-content { display: inline-block; }
-    .item-label { width: 140px; }
-    .item-content { width: 360px; }
+    .item-label { width: 110px; }
+    .item-content { width: auto; }
   }
 
   table.hardware {
@@ -71,8 +72,8 @@
   .disks {
     .disk {
       .widget-content;
-      .name { display: inline-block; width: 200px; }
-      .size { display: inline-block; width: 200px; }
+      .name { display: inline-block; width: 40%; }
+      .size { display: inline-block; width: 40%; }
     }
   }
 
@@ -168,11 +169,10 @@
   }
 
   .platform {
-    .item { .widget-content; }
-    .item-content { width: 194px; text-align: right;}
+    .item { .widget-content;  overflow: hidden; }
     .item-label, .item-content { display: inline-block;}
-    .item-label { vertical-align: top; width: 100px; }
-    .item-content { width: 240px;}
+    .item-label { vertical-align: top; width: 70px; }
+    .item-content {  float: right; text-align: right; width: 240px;}
   }
   .rack > * { vertical-align: top; font-size: 10p x;}
 

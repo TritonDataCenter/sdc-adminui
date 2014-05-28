@@ -584,7 +584,7 @@ var VmView = Backbone.Marionette.Layout.extend({
                         var ips = _.map(val, function(nic) {
                             return nic.ip;
                         });
-                        return ips.join(',');
+                        return ips.join(' ');
                     }
                 }
             },
