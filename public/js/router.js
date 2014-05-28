@@ -243,7 +243,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     notFound: function(args) {
         var view = new NotFoundView(args);
         this.state.set({
-            'chrome.fullwidth': true,
+            'chrome.rootnav': true,
             'chrome.content': BBComponent({ view: view })
         });
     },
