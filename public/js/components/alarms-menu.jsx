@@ -16,7 +16,7 @@ module.exports = React.createClass({
     toggleMenu: function() {
         this.setState({menu: !this.state.menu});
     },
-    componentDidMount: function() {
+    componentWillMount: function() {
         this.fetchAlarms();
     },
     fetchProbeGroup: function(id) {
@@ -63,12 +63,12 @@ module.exports = React.createClass({
     },
     gotoAlarm: function(alarm) {
         console.log('go to alarm', alarm);
-        adminui.vent.trigger('showcomponent', 'alarm', { user: alarm.user, id: alarm.id });
+        adminui.vent.trigger('showcomponent', 'alarm', { user: alarm.user, id: alarm.id.toString() });
     },
     renderMenuItem: function(alarm) {
         var probe = this.state.probes[alarm.probe || alarm.probeGroup];
 
-        return (<div className="alarm-menu-item">
+        return (<div className="alarm-menu-item" key={alarm.id}>
             <div className="alarm-menu-item-header">
                 <div className="alarm-menu-item-icon">
                     <i className="fa fa-warning"></i>
@@ -111,7 +111,7 @@ module.exports = React.createClass({
 
             if (this.state.alarms.length) {
                 return <div className="alarms-menu">
-                    {this.state.alarms.map(this.renderMenuItem.bind(this))}
+                    {this.state.alarms.map(this.renderMenuItem, this)}
                 </div>
             } else {
                 return <div id="alarms-menu" className="alarms-menu">

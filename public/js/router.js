@@ -110,7 +110,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 url: '/_/auth',
                 async: false,
                 error: function(x, t, m) {
-                    console.log("auth: ", t);
                     self.showSignin();
                     if (t==="timeout") {
                         window.alert("One more the services required for Authentication Timed out.");
@@ -237,10 +236,14 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             this.notFound({ view: ComponentType, args: args });
             console.log("Component not found: " + compName);
         } else {
+
+            var component = new ComponentType(args);
             this.state.set({
-                'chrome.content': ComponentType(args),
-                'chrome.rootnav': true
+                'chrome.content': component,
+                'chrome.rootnav': true,
+                'localnav.active': ComponentType.sidebar
             });
+
             if (typeof(ComponentType.url) === 'function') {
                 Backbone.history.navigate(ComponentType.url(args));
             } else if (typeof(ComponentType.url) === 'string') {

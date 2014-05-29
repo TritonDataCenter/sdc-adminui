@@ -41,8 +41,16 @@ var Chrome = React.createClass({
     getDefaultProps: function() {
         return {};
     },
-    _handleSecondnaryMenuSelect: function(view) {
-        adminui.vent.trigger('showview', view, {});
+    _handleSecondnaryMenuSelect: function(item) {
+        if (item.view)  {
+            adminui.vent.trigger('showview', item.view, {});
+            return;
+        }
+
+        if (item.component) {
+            adminui.vent.trigger('showcomponent', item.component, {});
+            return;
+        }
     },
     _handleSignout: function() {
         adminui.vent.trigger('signout');

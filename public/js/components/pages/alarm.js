@@ -19,7 +19,12 @@ module.exports = React.createClass({
     getDefaultProps: function() {
         return {};
     },
-    componentWillMount: function() {
+    componentDidMount: function() {
+        console.log('fetch alarm');
+        this.fetchAlarm();
+    },
+    componentWillReceiveProps: function(props) {
+        console.log('newProps', props);
         this.fetchAlarm();
     },
     getInitialState: function() {
@@ -65,6 +70,7 @@ module.exports = React.createClass({
         }.bind(this));
     },
     fetchAlarm: function() {
+        this.setState({loading: true});
         var url = '/_/amon/alarms/'+this.props.user+'/' + this.props.id;
         api.get(url).end(function(err, res) {
             if (! res.ok) {
@@ -77,13 +83,17 @@ module.exports = React.createClass({
             }
 
             var alarm = res.body;
+            console.log('got-alarm', alarm);
             this.setState({alarm: alarm, loading: false});
+
             if (alarm.probe) {
                 this.fetchProbe();
             }
+
             if (alarm.probeGroup) {
                 this.fetchProbeGroup();
             }
+
             if (alarm.machine) {
                 this.fetchServer(id);
                 this.fetchVm(id);
@@ -149,7 +159,6 @@ module.exports = React.createClass({
         )
     },
     render: function() {
-        console.log(this.state);
 
         if (this.state.error) {
             return this.renderError();
@@ -158,6 +167,7 @@ module.exports = React.createClass({
         if (this.state.loading) {
             return this.renderLoading();
         }
+
         if (this.state.notFound) {
             return this.renderNotFound();
         }
@@ -188,7 +198,7 @@ module.exports = React.createClass({
                     <i className="fa fa-bell"></i> &nbsp;
                     <span className="probe-name">{this.state.probe.name}</span>
                     &nbsp; <span className="probe-type">{this.state.probe.type}</span>
-                    <small className="uuid"> {this.props.user}-{this.state.alarm.id}</small>
+                    <small className="uuid"> {this.props.user}-{this.props.id}</small>
                     </h1>
                 </div>
 

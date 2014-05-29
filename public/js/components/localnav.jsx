@@ -11,8 +11,16 @@ var SecondaryNav = React.createClass({
     },
     _clickedMenuItem: function(e) {
         e.preventDefault();
-        var view = e.currentTarget.getAttribute('data-view');
-        this.props.handleMenuSelect(view);
+        var page = e.currentTarget.getAttribute('data-view');
+        if (page) {
+            this.props.handleMenuSelect({view: page});
+            return;
+        }
+        var component = e.currentTarget.getAttribute('data-component');
+        if (component) {
+            this.props.handleMenuSelect({component: component});
+            return;
+        }
     },
     _classesFor: function(v) {
         return cx({
