@@ -103,6 +103,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         if (this._checkAuth === true) {
             return true;
         } else {
+            var self = this;
             var xhr = $.ajax({
                 type: 'GET',
                 timeout: 5000,
@@ -110,12 +111,13 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 async: false,
                 error: function(x, t, m) {
                     console.log("auth: ", t);
+                    self.showSignin();
                     if (t==="timeout") {
                         window.alert("One more the services required for Authentication Timed out.");
                     }
                 }
             });
-            return (xhr.status !== 403);
+            return (xhr.status === 200);
         }
     },
 

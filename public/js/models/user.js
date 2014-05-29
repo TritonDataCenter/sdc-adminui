@@ -80,7 +80,7 @@ var User = module.exports = Model.extend({
                     dc: data.dc
                 });
             } else {
-                self.trigger('error', res.body);
+                self.trigger('error', res.body.message);
             }
         });
 

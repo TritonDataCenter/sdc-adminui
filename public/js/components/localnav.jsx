@@ -29,6 +29,9 @@ var SecondaryNav = React.createClass({
                 <li className={this._classesFor('images')} onClick={this._clickedMenuItem} data-view="images"><a href="/images"><i className="fa fa-photo"></i> Images</a></li>
                 <li className={this._classesFor('packages')} onClick={this._clickedMenuItem} data-view="packages"><a href="/packages"><i className="fa fa-codepen"></i> Packages</a></li>
 
+                <li className="nav-header">Storage (Manta)</li>
+                <li className={this._classesFor('agents')} onClick={this._clickedMenuItem} data-component="agents"><a href="/manta/agents">Agents</a></li>
+
                 <li className="nav-header">Infrastructure</li>
                 <li className={this._classesFor('jobs')} onClick={this._clickedMenuItem} data-view="jobs"><a href="/jobs">Jobs</a></li>
                 <li className={this._classesFor('services')} onClick={this._clickedMenuItem} data-view="services"><a href="/services">Services</a></li>
