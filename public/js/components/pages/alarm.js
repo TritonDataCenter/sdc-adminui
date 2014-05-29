@@ -20,12 +20,10 @@ module.exports = React.createClass({
         return {};
     },
     componentDidMount: function() {
-        console.log('fetch alarm');
         this.fetchAlarm();
     },
-    componentWillReceiveProps: function(props) {
-        console.log('newProps', props);
-        this.fetchAlarm();
+    componentWillReceiveProps: function() {
+        setTimeout(this.fetchAlarm);
     },
     getInitialState: function() {
         return {
@@ -52,25 +50,34 @@ module.exports = React.createClass({
         }.bind(this));
     },
     fetchProbe: function() {
-        var url = '/_/amon/probes/'+this.props.user + '/' + this.state.alarm.probe;
-        console.log('fetchProbe', this.state.alarm);
+        var url = '/_/amon/probes/'+this.props.user + '/' + this._alarm.probe;
+        console.log('fetchProbe', this._alarm);
         api.get(url).end(function(err, res) {
             if (res.ok) {
-                this.setState({probe: res.body});
+                this.setState({
+                    loading: false,
+                    alarm: this._alarm,
+                    probe: res.body
+                });
             }
         }.bind(this));
     },
     fetchProbeGroup: function() {
-        var url = '/_/amon/probegroups/'+this.props.user + '/' + this.state.alarm.probeGroup;
-        console.log('fetchProbeGroups', this.state.alarm);
+        var url = '/_/amon/probegroups/'+this.props.user + '/' + this._alarm.probeGroup;
+        console.log('fetchProbeGroups', this._alarm);
         api.get(url).end(function(err, res) {
             if (res.ok) {
-                this.setState({probe: res.body});
+                this.setState({
+                    alarm: this._alarm,
+                    probe: res.body,
+                    loading: false
+                });
             }
         }.bind(this));
     },
     fetchAlarm: function() {
-        this.setState({loading: true});
+        this.setState({loading: true, alarm: {}, probe: {}, server: null, vm: null});
+
         var url = '/_/amon/alarms/'+this.props.user+'/' + this.props.id;
         api.get(url).end(function(err, res) {
             if (! res.ok) {
@@ -84,7 +91,7 @@ module.exports = React.createClass({
 
             var alarm = res.body;
             console.log('got-alarm', alarm);
-            this.setState({alarm: alarm, loading: false});
+            this._alarm = alarm;
 
             if (alarm.probe) {
                 this.fetchProbe();
