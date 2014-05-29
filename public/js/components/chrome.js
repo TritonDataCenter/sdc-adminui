@@ -77,7 +77,6 @@ var Chrome = React.createClass({
 
                 <Notifications bus={adminui.vent} />
 
-
                 <div className="container-fluid">
                     <div className="row">
                         {

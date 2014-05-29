@@ -33,5 +33,5 @@ adminui.listen(function() {
 });
 
 process.on('uncaughtException', function preventOtherError(e) {
-    log.fatal('Uncaught Exception', e);
+    log.fatal(e, 'Uncaught Exception');
 });

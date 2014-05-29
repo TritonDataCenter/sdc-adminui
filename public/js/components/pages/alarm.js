@@ -6,9 +6,15 @@ var React = require('react');
 var api = require('../../request');
 
 module.exports = React.createClass({
+    displayName: 'PageAlarm',
     propTypes: {
         'user': React.PropTypes.string.isRequired,
         'id': React.PropTypes.string.isRequired
+    },
+    statics: {
+        url: function(props) {
+            return _.str.sprintf('/alarms/%s/%s', props.user, props.id);
+        }
     },
     getDefaultProps: function() {
         return {};
@@ -49,12 +55,21 @@ module.exports = React.createClass({
             }
         }.bind(this));
     },
+    fetchProbeGroup: function() {
+        var url = '/_/amon/probegroups/'+this.props.user + '/' + this.state.alarm.probeGroup;
+        console.log('fetchProbeGroups', this.state.alarm);
+        api.get(url).end(function(err, res) {
+            if (res.ok) {
+                this.setState({probe: res.body});
+            }
+        }.bind(this));
+    },
     fetchAlarm: function() {
         var url = '/_/amon/alarms/'+this.props.user+'/' + this.props.id;
         api.get(url).end(function(err, res) {
             if (! res.ok) {
                 if (res.notFound) {
-                    this.setState({loading: false, notFound: true});
+                    this.setState({ loading: false, notFound: true});
                 } else {
                     this.setState({ loading: false, error: res.body });
                 }
@@ -65,6 +80,9 @@ module.exports = React.createClass({
             this.setState({alarm: alarm, loading: false});
             if (alarm.probe) {
                 this.fetchProbe();
+            }
+            if (alarm.probeGroup) {
+                this.fetchProbeGroup();
             }
             if (alarm.machine) {
                 this.fetchServer(id);

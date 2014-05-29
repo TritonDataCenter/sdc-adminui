@@ -186,7 +186,8 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         console.log('render', this.state.toJSON());
         this.chrome = React.renderComponent(Chrome({
             content: this.state.get('content'),
-            state: this.state }), document.body );
+            state: this.state
+        }), document.body );
     },
 
     presentView: function(viewName, args) {
@@ -228,15 +229,21 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     presentComponent: function(compName, args) {
         args = args || {};
-        var comp = Components[compName];
+        var ComponentType = Components[compName];
 
-        if (typeof(comp) === 'undefined') {
-            this.notFound({ view: comp, args: args });
+        if (typeof(ComponentType) === 'undefined') {
+            this.notFound({ view: ComponentType, args: args });
             console.log("Component not found: " + compName);
         } else {
             this.state.set({
-                'chrome.content': new comp(args)
+                'chrome.content': ComponentType(args),
+                'chrome.rootnav': true
             });
+            if (typeof(ComponentType.url) === 'function') {
+                Backbone.history.navigate(ComponentType.url(args));
+            } else if (typeof(ComponentType.url) === 'string') {
+                Backbone.history.navigate(ComponentType.url);
+            }
         }
     },
 
