@@ -2,6 +2,7 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
 var React = require('react');
+var adminui = require('./adminui');
 
 var Marionette = require('backbone.marionette');
 var User = require('./models/user');
@@ -15,6 +16,10 @@ var Components = {
     'alarm': require('./components/pages/alarm'),
     'alarms': require('./components/pages/alarms')
 };
+
+if (adminui.manta) {
+    Components['manta/agents'] = require('./components/pages/manta/agents.jsx');
+}
 
 var Views = {
     'vms': require('./views/vms'),
@@ -67,8 +72,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'networking': 'showNetworking',
         'networking/:tab': 'showNetworking',
         'alarms/:user/:id': 'showAlarm',
-        'alarms/:user': 'showAlarms',
-        'alarms': 'showAlarms',
+        'manta/agents': 'showMantaAgents',
         '*default': 'defaultAction'
     },
     initialize: function(options) {
@@ -271,6 +275,10 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         if (this.authenticated()) {
             this.presentComponent('alarms', {user: user });
         }
+    },
+
+    showMantaAgents: function() {
+        this.presentComponent('manta/agents');
     },
 
     showVms: function() {

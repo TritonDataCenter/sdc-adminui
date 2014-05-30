@@ -1,5 +1,6 @@
 /** @jsx React.DOM */
 
+var adminui = require('../adminui');
 var React = require('react')
 var cx = React.addons.classSet;
 
@@ -27,6 +28,14 @@ var SecondaryNav = React.createClass({
             active: (this.props.active === v)
         });
     },
+    mantaNav: function() {
+        if (adminui.manta) {
+            return [
+                <li className="nav-header">Storage (Manta)</li>,
+                <li className={this._classesFor('manta-agents')} onClick={this._clickedMenuItem} data-component="manta/agents"><a href="/manta/agents">Agents</a></li>
+            ];
+        }
+    },
     render: function() {
         return (<div id="localnav">
             <ul className="nav">
@@ -37,8 +46,7 @@ var SecondaryNav = React.createClass({
                 <li className={this._classesFor('images')} onClick={this._clickedMenuItem} data-view="images"><a href="/images"><i className="fa fa-photo"></i> Images</a></li>
                 <li className={this._classesFor('packages')} onClick={this._clickedMenuItem} data-view="packages"><a href="/packages"><i className="fa fa-codepen"></i> Packages</a></li>
 
-                <li className="nav-header">Storage (Manta)</li>
-                <li className={this._classesFor('agents')} onClick={this._clickedMenuItem} data-component="agents"><a href="/manta/agents">Agents</a></li>
+                { this.mantaNav() }
 
                 <li className="nav-header">Infrastructure</li>
                 <li className={this._classesFor('jobs')} onClick={this._clickedMenuItem} data-view="jobs"><a href="/jobs">Jobs</a></li>
