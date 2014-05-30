@@ -27,6 +27,7 @@ var View = Backbone.Marionette.ItemView.extend({
         this.listenTo(this.model, 'change:package', this.onSelectPackage, this);
     },
     onClickResize: function() {
+        this.$('.alert').hide();
         var self = this;
         var pkg = new ViewModel(this.model.get('package'));
         var values = {};
@@ -45,12 +46,17 @@ var View = Backbone.Marionette.ItemView.extend({
         values.vcpus = pkg.get('vcpus');
         values.zfs_io_priority = pkg.get('zfs_io_priority');
         values.ram = pkg.get('max_physical_memory');
-        this.vm.update(values, function(job) {
-            self.$el.modal('hide');
-            var jobView = new JobProgressView({
-                model: job
-            });
-            jobView.show();
+        this.vm.update(values, function(job, error) {
+            if (job) {
+                self.$el.modal('hide');
+                var jobView = new JobProgressView({
+                    model: job
+                });
+                jobView.show();
+            } else {
+                self.$('.alert').html(error.message);
+                self.$('.alert').show();
+            }
         });
     },
     onSelectPackage: function(p) {
@@ -62,6 +68,7 @@ var View = Backbone.Marionette.ItemView.extend({
         }
     },
     onRender: function() {
+        this.$('.alert').hide();
         this.$('.package-preview-container').html(this.packagePreviewView.render().el);
         var self = this;
         this.stickit(this.model, {

@@ -11,11 +11,14 @@ var Vm = Model.extend({
     idAttribute: 'uuid',
 
     update: function(attrs, cb) {
-        $.post(this.url() + '?action=update', attrs, function(data) {
-            var job = new Job({
-                uuid: data.job_uuid
-            });
-            cb(job);
+        var req = api.post(this.url() + '?action=update').send(attrs);
+        req.end(function(res) {
+            if (res.ok) {
+                var job = new Job({ uuid: req.body.job_uuid });
+                cb(job);
+            } else {
+                cb(null, res.body);
+            }
         });
     },
 
