@@ -14,12 +14,9 @@ var BBComponent = require('./components/bb.jsx');
 var NotFoundView = require('./views/error/not-found');
 var Components = {
     'alarm': require('./components/pages/alarm'),
-    'alarms': require('./components/pages/alarms')
+    'alarms': require('./components/pages/alarms'),
+    'manta/agents': require('./components/pages/manta/agents.jsx')
 };
-
-if (adminui.manta) {
-    Components['manta/agents'] = require('./components/pages/manta/agents.jsx');
-}
 
 var Views = {
     'vms': require('./views/vms'),
@@ -83,23 +80,21 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     didAuthenticate: function(data) {
-        this.setupRequestToken();
-        this.setupDatacenter();
-
+        this.setupAuthenciatedState();
         this._checkAuth = true;
         if (typeof(Backbone.history.fragment) !== 'undefined') {
             Backbone.history.loadUrl(Backbone.history.fragment);
         }
     },
 
-    setupDatacenter: function() {
-        this.app.state.set({ datacenter: this.user.getDatacenter() });
-    },
-
-    setupRequestToken: function() {
+    setupAuthenciatedState: function() {
         $.ajaxSetup({
             timeout: 10000,
-            headers: {'x-adminui-token': this.app.user.getToken()}
+            headers: {'x-adminui-token': this.user.getToken()}
+        });
+        this.state.set({
+            manta: this.user.getManta(),
+            datacenter: this.user.getDatacenter()
         });
     },
 
@@ -139,8 +134,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         this.listenTo(this.app.state, 'change', this.initializeChrome, this);
 
         if (this.user.authenticated()) {
-            this.setupRequestToken();
-            this.setupDatacenter();
+            this.setupAuthenciatedState();
         }
 
         var self = this;

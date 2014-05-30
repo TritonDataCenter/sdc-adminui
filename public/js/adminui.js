@@ -67,7 +67,6 @@ jQuery.extend({
 
 var adminui = window.$a = module.exports = new Backbone.Marionette.Application();
 adminui.version = require('../../package.json').version;
-adminui.manta = require('../../etc/config.json').manta || false;
 
 adminui.addInitializer(function(options) {
     var Router = require('./router');

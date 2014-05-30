@@ -29,7 +29,7 @@ var SecondaryNav = React.createClass({
         });
     },
     mantaNav: function() {
-        if (adminui.manta) {
+        if (adminui.state.get('manta')) {
             return [
                 <li className="nav-header">Storage (Manta)</li>,
                 <li className={this._classesFor('manta-agents')} onClick={this._clickedMenuItem} data-component="manta/agents"><a href="/manta/agents">Agents</a></li>

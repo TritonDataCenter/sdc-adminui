@@ -45,6 +45,10 @@ var User = module.exports = Model.extend({
         return JSON.parse(roles);
     },
 
+    getManta: function() {
+        return window.localStorage.getItem('manta');
+    },
+
     getDatacenter: function() {
         return window.localStorage.getItem('dc');
     },
@@ -62,13 +66,16 @@ var User = module.exports = Model.extend({
             password: pass
         };
 
-        api.post("/_/auth").send(authData).end(function(res) {
+        var req = api.post("/_/auth");
+        req.send(authData);
+        req.end(function(res) {
             if (res.ok) {
                 var data = res.body;
                 self.set(data.user);
                 window.localStorage.setItem('api-token', data.token);
                 window.localStorage.setItem('dc', data.dc);
                 window.localStorage.setItem('admin-uuid', data.adminUuid);
+                window.localStorage.setItem('manta', data.manta);
 
                 window.localStorage.setItem('user-roles', JSON.stringify(data.roles));
                 window.localStorage.setItem('user-uuid', data.user.uuid);
@@ -77,6 +84,7 @@ var User = module.exports = Model.extend({
                 self.trigger('authenticated', {
                     user: self,
                     adminUuid: data.adminUuid,
+                    manta: data.manta,
                     dc: data.dc
                 });
             } else {
@@ -92,6 +100,7 @@ var User = module.exports = Model.extend({
             if (res.ok) {
                 window.localStorage.removeItem('api-token');
                 window.localStorage.removeItem('user-roles');
+                window.localStorage.removeItem('manta');
                 self.trigger('unauthenticated');
             } else {
                 self.trigger('error', res.body);
@@ -112,6 +121,7 @@ User.currentUser = function() {
         'uuid': window.localStorage.getItem('user-uuid') || null,
         'login': window.localStorage.getItem('user-login') || null,
         'adminUuid': window.localStorage.getItem('admin-uuid') || null,
+        'manta': window.localStorage.getItem('manta') || false,
         'roles': roles
     });
 };
