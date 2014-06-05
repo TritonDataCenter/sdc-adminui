@@ -115,7 +115,7 @@ var ServersView = Backbone.Marionette.Layout.extend({
             bootOptionsButton.addClass('disabled');
 
             var bootOptions = new Backbone.Model();
-            bootOptions.url = '/_/boot/default';
+            bootOptions.url = '/api/boot/default';
             var bootOptionsView = new ServerBootOptionsView({ model: bootOptions });
             bootOptionsView.on('saved', saved);
             bootOptionsView.on('cancel', close);

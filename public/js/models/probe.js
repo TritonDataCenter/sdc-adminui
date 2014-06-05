@@ -2,14 +2,14 @@ var Backbone = require('backbone');
 
 
 var Probe = Backbone.Model.extend({
-    urlRoot: '/_/amon/probes',
+    urlRoot: '/api/amon/probes',
     idAttribute: 'uuid',
     
     url: function() {
         if (this.isNew()) {
             return this.urlRoot;
         } else {
-            return _.str.sprintf('/_/amon/probes/%s/%s', this.get('user'), this.get('uuid'));
+            return _.str.sprintf('/api/amon/probes/%s/%s', this.get('user'), this.get('uuid'));
         }
     },
 

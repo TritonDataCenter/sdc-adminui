@@ -8,7 +8,7 @@ var SSHKey = require('./sshkey');
 var SSHKeys = Collection.extend({
     model: SSHKey,
     url: function() {
-        return '/_/users/' + this.uuid + '/keys';
+        return '/api/users/' + this.uuid + '/keys';
     },
     initialize: function(models, options) {
         options = options || {};

@@ -106,7 +106,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             var xhr = $.ajax({
                 type: 'GET',
                 timeout: 5000,
-                url: '/_/auth',
+                url: '/api/auth',
                 async: false,
                 error: function(x, t, m) {
                     self.showSignin();

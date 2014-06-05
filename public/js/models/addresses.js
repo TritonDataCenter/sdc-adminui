@@ -10,7 +10,7 @@ module.exports = Backbone.Collection.extend({
     }),
 
     url: function() {
-        return '/_/networks/' + this.uuid + '/ips';
+        return '/api/networks/' + this.uuid + '/ips';
     },
 
     initialize: function(options) {

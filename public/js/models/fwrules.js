@@ -3,7 +3,7 @@ var FWRule = require('./fwrule');
 var FWRules = Collection.extend({
     model: FWRule,
     url: function() {
-        return '/_/fw/rules';
+        return '/api/fw/rules';
     }
 });
 

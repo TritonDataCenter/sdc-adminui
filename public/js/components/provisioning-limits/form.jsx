@@ -37,7 +37,7 @@ var Form = module.exports = React.createClass({
         }
     },
     loadDatacenters: function() {
-        api.get('/_/datacenters').end(function(res) {
+        api.get('/api/datacenters').end(function(res) {
             var dcs = res.body;
             if (this.state.datacenter) {
                 dcs.push(this.state.datacenter);
@@ -123,9 +123,9 @@ var Form = module.exports = React.createClass({
         var limit = this.toLimit();
         var req;
         if (this.props.initialLimit) {
-            req = api.patch(_.str.sprintf('/_/users/%s/limits/%s', this.props.user, limit.datacenter));
+            req = api.patch(_.str.sprintf('/api/users/%s/limits/%s', this.props.user, limit.datacenter));
         } else {
-            req = api.post(_.str.sprintf('/_/users/%s/limits/%s', this.props.user, limit.datacenter));
+            req = api.post(_.str.sprintf('/api/users/%s/limits/%s', this.props.user, limit.datacenter));
         }
         req.send({
             limit: limit,

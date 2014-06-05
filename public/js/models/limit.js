@@ -4,7 +4,7 @@ var _ = require('underscore');
 var Limit = Model.extend({
     idAttribute: 'datacenter',
     urlRoot: function() {
-        return _.str.sprintf('/_/users/%s/limits', this.user);
+        return _.str.sprintf('/api/users/%s/limits', this.user);
     },
     initialize: function(attrs, options) {
         if (this.collection) {

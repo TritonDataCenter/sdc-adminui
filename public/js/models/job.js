@@ -4,7 +4,7 @@ var Model = require('./model');
 var Job = Model.extend({
     defaults: {},
 
-    urlRoot: "/_/jobs",
+    urlRoot: "/api/jobs",
 
     idAttribute: "uuid",
 

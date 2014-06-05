@@ -65,17 +65,17 @@ var Rootnav = React.createClass({
                                 <li onClick={this._clickedMenuItem} className={this.classesFor('users')} data-view="users">
                                     <a href="/users"><i className="fa fa-users"></i> Users</a>
                                 </li>
-                            {
-                                !this.props.readonly &&
-                                <li onClick={this._clickedMenuItem} className={this.classesFor('settings')}  data-view="settings">
-                                    <a href="/settings"><i className="fa fa-gear"></i> Settings</a>
-                                </li>
-                            }
                             </ul>
                             <ul className="nav navbar-nav main-nav navbar-right">
                                 <li className="alarms">
                                     <AlarmsMenu user={this.props.user.get('adminUuid')} />
                                 </li>
+                                {
+                                    !this.props.readonly &&
+                                    <li onClick={this._clickedMenuItem} className={this.classesFor('settings')}  data-view="settings">
+                                    <a href="/settings"><i className="fa fa-gear"></i></a>
+                                    </li>
+                                }
                             </ul>
                         </div>
                         <div className="acc-controls navbar-text navbar-right">

@@ -4,32 +4,32 @@ var adminui = require('../adminui');
 
 var Service = require('../models/model').extend({
     idAttribute: 'uuid',
-    urlRoot: '/_/services'
+    urlRoot: '/api/services'
 });
 
 var Services = require('../models/collection').extend({
     model: Service,
-    url: '/_/services'
+    url: '/api/services'
 });
 
 var Instance = require('../models/model').extend({
     idAttribute: 'uuid',
-    urlRoot: '/_/instances'
+    urlRoot: '/api/instances'
 });
 
 var Instances = require('../models/collection').extend({
     model: Instance,
-    url: '/_/instances'
+    url: '/api/instances'
 });
 
 var Application = require('../models/model').extend({
     idAttribute: 'uuid',
-    urlRoot: '/_/applications'
+    urlRoot: '/api/applications'
 });
 
 var Applications = require('../models/collection').extend({
     model: Application,
-    url: '/_/applications'
+    url: '/api/applications'
 });
 
 
@@ -46,7 +46,7 @@ var InstanceView = Backbone.Marionette.ItemView.extend({
     },
     onRender: function() {
         var self = this;
-        $.get('/_/vms/'+this.model.get('uuid')).done(function(res) {
+        $.get('/api/vms/'+this.model.get('uuid')).done(function(res) {
             self.$('.state').addClass(res.state).html(res.state);
             self.$('.ram').addClass(res.state).html(res.ram + ' MB');
         });

@@ -1,7 +1,7 @@
 var Model = require('./model');
 
 var LinkAggr = Model.extend({
-    urlRoot: '/_/linkaggrs',
+    urlRoot: '/api/linkaggrs',
     idAttribute: 'id'
 });
 module.exports = LinkAggr;

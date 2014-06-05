@@ -6,7 +6,7 @@ var Collection = require('./collection');
 
 var Users = Collection.extend({
     model: User,
-    url: '/_/users',
+    url: '/api/users',
 
     initialize: function(options) {
         this.options = options || {};
@@ -18,7 +18,7 @@ var Users = Collection.extend({
     },
 
     userCount: function(successCb) {
-        $.get('/_/users/count', function(res) {
+        $.get('/api/users/count', function(res) {
             successCb(res.count);
         });
     },

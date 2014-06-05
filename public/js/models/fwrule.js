@@ -4,9 +4,9 @@ var FWRule = Model.extend({
     idAttribute: 'uuid',
     url: function() {
         if (this.isNew()) {
-            return '/_/fw/rules';
+            return '/api/fw/rules';
         } else {
-            return '/_/fw/rules/' + this.get('uuid');
+            return '/api/fw/rules/' + this.get('uuid');
         }
     },
     tokenizeRule: function() {

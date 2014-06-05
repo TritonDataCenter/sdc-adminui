@@ -23,7 +23,7 @@ module.exports = React.createClass({
         this.fetchAlarm();
     },
     componentWillReceiveProps: function() {
-        setTimeout(this.fetchAlarm);
+        this.fetchAlarm();
     },
     getInitialState: function() {
         return {
@@ -36,21 +36,21 @@ module.exports = React.createClass({
         };
     },
     fetchServer: function() {
-        api.get('/_/servers/'+this.state.alarm.machine).end(function(err, res) {
+        api.get('/api/servers/'+this.state.alarm.machine).end(function(err, res) {
             if (res.ok) {
                 this.setState({server: res.body});
             }
         }.bind(this));
     },
     fetchVm: function(id) {
-        api.get('/_/vms/'+this.state.alarm.machine).end(function(err, res) {
+        api.get('/api/vms/'+this.state.alarm.machine).end(function(err, res) {
             if (res.ok) {
                 this.setState({vm: res.body});
             }
         }.bind(this));
     },
     fetchProbe: function() {
-        var url = '/_/amon/probes/'+this.props.user + '/' + this._alarm.probe;
+        var url = '/api/amon/probes/'+this.props.user + '/' + this._alarm.probe;
         console.log('fetchProbe', this._alarm);
         api.get(url).end(function(err, res) {
             if (res.ok) {
@@ -63,7 +63,7 @@ module.exports = React.createClass({
         }.bind(this));
     },
     fetchProbeGroup: function() {
-        var url = '/_/amon/probegroups/'+this.props.user + '/' + this._alarm.probeGroup;
+        var url = '/api/amon/probegroups/'+this.props.user + '/' + this._alarm.probeGroup;
         console.log('fetchProbeGroups', this._alarm);
         api.get(url).end(function(err, res) {
             if (res.ok) {
@@ -78,7 +78,7 @@ module.exports = React.createClass({
     fetchAlarm: function() {
         this.setState({loading: true, alarm: {}, probe: {}, server: null, vm: null});
 
-        var url = '/_/amon/alarms/'+this.props.user+'/' + this.props.id;
+        var url = '/api/amon/alarms/'+this.props.user+'/' + this.props.id;
         api.get(url).end(function(err, res) {
             if (! res.ok) {
                 if (res.notFound) {

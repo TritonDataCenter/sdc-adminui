@@ -6,7 +6,7 @@ var Job = require('./job');
 var api = require('../request');
 
 var Vm = Model.extend({
-    urlRoot: '/_/vms',
+    urlRoot: '/api/vms',
 
     idAttribute: 'uuid',
 

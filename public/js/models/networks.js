@@ -4,5 +4,5 @@ var Network = require('./network');
 
 module.exports = Collection.extend({
     model: Network,
-    url: "/_/networks"
+    url: "/api/networks"
 });

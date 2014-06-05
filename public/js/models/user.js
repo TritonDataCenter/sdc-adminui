@@ -9,7 +9,7 @@ var api = require('../request');
 
 
 var User = module.exports = Model.extend({
-    urlRoot: '/_/users',
+    urlRoot: '/api/users',
     idAttribute: 'uuid',
     parse: function(resp) {
         var data = Model.prototype.parse.apply(this, arguments);
@@ -66,7 +66,7 @@ var User = module.exports = Model.extend({
             password: pass
         };
 
-        var req = api.post("/_/auth");
+        var req = api.post("/api/auth");
         req.send(authData);
         req.end(function(res) {
             if (res.ok) {
@@ -96,7 +96,7 @@ var User = module.exports = Model.extend({
 
     signout: function() {
         var self = this;
-        api.del('/_/auth').end(function(res) {
+        api.del('/api/auth').end(function(res) {
             if (res.ok) {
                 window.localStorage.removeItem('api-token');
                 window.localStorage.removeItem('user-roles');

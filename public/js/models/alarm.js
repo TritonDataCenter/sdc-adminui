@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 var Alarm = Backbone.Model.extend({
     urlRoot: function() {
-        return '/_/amon/alarms/' + this.get('user');
+        return '/api/amon/alarms/' + this.get('user');
     },
     idAttribute: 'id',
     suppress: function(cb) {

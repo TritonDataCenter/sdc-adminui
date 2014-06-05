@@ -22,7 +22,7 @@ module.exports = React.createClass({
     fetchProbeGroup: function(id) {
         var user = this.props.user;
         this.setState({loading: true});
-        api.get('/_/amon/probegroups/'+this.props.user + '/' + id).end(function(err, res) {
+        api.get('/api/amon/probegroups/'+this.props.user + '/' + id).end(function(err, res) {
             var probes = this.state.probes;
             probes[id] = res.body;
             if (res.ok) {
@@ -33,7 +33,7 @@ module.exports = React.createClass({
     fetchProbe: function(id) {
         var user = this.props.user;
         this.setState({loading: true});
-        api.get('/_/amon/probes/'+this.props.user + '/' + id).end(function(err, res) {
+        api.get('/api/amon/probes/'+this.props.user + '/' + id).end(function(err, res) {
             var probes = this.state.probes;
             probes[id] = res.body;
             if (res.ok) {
@@ -43,7 +43,7 @@ module.exports = React.createClass({
     },
     fetchAlarms: function() {
         var user = this.props.user;
-        api.get('/_/amon/alarms').query({user: user}).end(function(res) {
+        api.get('/api/amon/alarms').query({user: user}).end(function(res) {
             if (res.ok) {
                 var alarms = res.body;
                 this.setState({alarms: alarms});

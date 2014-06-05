@@ -286,7 +286,7 @@
     },
 
     humanize: function(str){
-      return _s.capitalize(this.underscored(str).replace(/_id$/,'').replace(/_/g, ' '));
+      return _s.capitalize(this.underscored(str).replace(/_id$/,'').replace(/api/g, ' '));
     },
 
     trim: function(str, characters){

@@ -5,7 +5,7 @@ var Job = require('./job');
 
 
 var Img = module.exports = Model.extend({
-    urlRoot: '/_/images',
+    urlRoot: '/api/images',
 
     idAttribute: 'uuid',
 
@@ -60,7 +60,7 @@ var Img = module.exports = Model.extend({
         var self = this;
         var source = this.collection.params.repository;
         $.ajax({
-            url: _.str.sprintf('/_/images/%s?action=importRemote', this.get('uuid')),
+            url: _.str.sprintf('/api/images/%s?action=importRemote', this.get('uuid')),
             data: { source: source },
             type: 'POST',
             timeout: 180000 // 3 mins

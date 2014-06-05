@@ -16,6 +16,6 @@ var Collection = require('./collection');
 
 module.exports = Collection.extend({
     model: NetworkPool,
-    url: "/_/network_pools"
+    url: "/api/network_pools"
 });
 

@@ -29,13 +29,13 @@ var LinkAggregationForm = module.exports = React.createClass({
         return obj;
     },
     componentWillMount: function() {
-        api.get('/_/nics')
+        api.get('/api/nics')
             .query({belongs_to_uuid: this.props.server})
             .end(function(err, res) {
                 this.setState({nics: res.body})
             }.bind(this));
 
-        api.get('/_/nic_tags')
+        api.get('/api/nic_tags')
             .end(function(err, res) {
                 this.setState({nictags: res.body });
             }.bind(this))
@@ -82,8 +82,8 @@ var LinkAggregationForm = module.exports = React.createClass({
     },
     handleSubmit: function() {
         var req = this.state.linkAggr.id ?
-            api.put('/_/linkaggrs/'+this.state.linkAggr.id) :
-            api.post('/_/linkaggrs');
+            api.put('/api/linkaggrs/'+this.state.linkAggr.id) :
+            api.post('/api/linkaggrs');
 
         req.send(this.state.linkAggr)
             .end(function(res) {

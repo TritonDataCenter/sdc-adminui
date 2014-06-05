@@ -37,11 +37,11 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
         this.alarmsView.fetch();
 
         var self = this;
-        $.getJSON("/_/stats/vm_count", function(res) {
+        $.getJSON("/api/stats/vm_count", function(res) {
             self.$('.vm-count').html(res.total);
         });
 
-        $.getJSON("/_/stats/server_memory", function(res) {
+        $.getJSON("/api/stats/server_memory", function(res) {
             var total = self._bytesToGb(res.total);
             self.$('.server-total-memory').html(_.str.sprintf('%.2f GB', total));
 
@@ -57,19 +57,19 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
             );
         });
 
-        $.getJSON("/_/stats/server_count", function(res) {
+        $.getJSON("/api/stats/server_count", function(res) {
             self.$('.server-count').html(res.total);
             self.$('.server-reserved').html(res.reserved);
             self.$('.server-unreserved').html(res.unreserved);
         });
 
-        $.getJSON("/_/users?per_page=1", function(res, status, xhr) {
+        $.getJSON("/api/users?per_page=1", function(res, status, xhr) {
             self.$('.user-count').html(xhr.getResponseHeader('x-object-count'));
         });
 
 
         new Rickshaw.Graph.Ajax({
-            dataURL: '/_/metrics/memory_provisionable_bytes',
+            dataURL: '/api/metrics/memory_provisionable_bytes',
             element: this.$('.server-provisionable-memory-graph').get(0),
             width: 420,
             height: 200,

@@ -4,7 +4,7 @@ var Collection = require('./collection');
 
 var Packages = Collection.extend({
     model: Package,
-    url: '/_/packages',
+    url: '/api/packages',
     fetchActive: function() {
         return this.fetch({params:{active: true}});
     }

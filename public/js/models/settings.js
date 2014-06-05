@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 
 var Settings = Backbone.Model.extend({
-    url: '/_/settings'
+    url: '/api/settings'
 });
 
 

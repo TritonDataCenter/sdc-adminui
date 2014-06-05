@@ -230,7 +230,7 @@ var UserView = Backbone.Marionette.Layout.extend({
 
     onToggle2fa: function() {
         var self = this;
-        var url = '/_/users/'+this.model.get('uuid')+'/2fa';
+        var url = '/api/users/'+this.model.get('uuid')+'/2fa';
         $.get(url, function(d) {
             var enabled = !d.enabled;
             $.ajax({
@@ -248,7 +248,7 @@ var UserView = Backbone.Marionette.Layout.extend({
 
         var self = this;
 
-        $.get('/_/users/'+this.model.get('uuid')+'/2fa', function(d) {
+        $.get('/api/users/'+this.model.get('uuid')+'/2fa', function(d) {
             if (d.enabled) {
                 self.$('.portal-2fa').html('enabled');
                 self.$('.toggle-2fa').html('Disable');

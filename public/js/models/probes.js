@@ -3,7 +3,7 @@ var Probe = require('./probe');
 
 	module.exports = Backbone.Collection.extend({
 
-		url: '/_/amon/probes',
+		url: '/api/amon/probes',
 
 		model: Probe,
 

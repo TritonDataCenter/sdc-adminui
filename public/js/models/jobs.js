@@ -5,7 +5,7 @@ var Collection = require('./collection');
 var Job = require('./job');
 var Jobs = Collection.extend({
     model: Job,
-    url: '/_/jobs',
+    url: '/api/jobs',
 
     initialize: function(options) {
         this.options = options || {};

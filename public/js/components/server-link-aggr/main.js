@@ -24,7 +24,7 @@ var Component = React.createClass({
         this.refreshAggregations();
     },
     refreshAggregations: function() {
-        api.get('/_/linkaggrs').query({belongs_to_uuid: this.props.server}).end(function(res) {
+        api.get('/api/linkaggrs').query({belongs_to_uuid: this.props.server}).end(function(res) {
             this.setState({linkAggregations: res.body});
         }.bind(this));
     },
@@ -43,7 +43,7 @@ var Component = React.createClass({
         this.refreshAggregations();
     },
     handleDelete: function(aggr) {
-        api.del('/_/linkaggrs/'+aggr.id).end(function() {
+        api.del('/api/linkaggrs/'+aggr.id).end(function() {
             this.refreshAggregations();
         }.bind(this));
     },

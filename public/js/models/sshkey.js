@@ -4,7 +4,7 @@ var _ = require('underscore');
 
 module.exports = Model.extend({
     urlRoot: function() {
-        return _.str.sprintf('/_/users/%s/keys', this.user);
+        return _.str.sprintf('/api/users/%s/keys', this.user);
     },
 
     idAttribute: 'fingerprint',

@@ -7,7 +7,7 @@ var Collection = require('./collection');
 module.exports = Collection.extend({
     model: Vm,
 
-    url: "/_/vms",
+    url: "/api/vms",
 
     initialize: function(models, options) {
         this.options = options || {};

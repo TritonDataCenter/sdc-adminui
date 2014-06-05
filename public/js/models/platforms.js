@@ -2,7 +2,7 @@
 
 var Backbone = require('backbone');
 var Platforms = Backbone.Collection.extend({
-    url: '/_/platforms',
+    url: '/api/platforms',
     parse: function(res) {
         var arr = [];
         _.each(res, function(n, d) {

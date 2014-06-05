@@ -2,7 +2,7 @@ var Server = require('./server');
 var Collection = require('./collection');
 
 var Servers = Collection.extend({
-    url: "/_/servers",
+    url: "/api/servers",
     model: Server
 });
 

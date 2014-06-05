@@ -4,7 +4,7 @@ var moment = require('moment');
 
 module.exports = Backbone.Collection.extend({
     model: Alarm,
-    url: '/_/amon/alarms',
+    url: '/api/amon/alarms',
 
     parse: function(resp) {
         var data = Backbone.Model.prototype.parse.call(this, resp);

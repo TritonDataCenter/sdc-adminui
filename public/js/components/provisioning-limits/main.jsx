@@ -35,7 +35,7 @@ module.exports = ProvisioningLimits = React.createClass({
         }
     },
     handleDelete: function(limit) {
-        var url = _.str.sprintf('/_/users/%s/limits/%s', this.props.user, limit.datacenter);
+        var url = _.str.sprintf('/api/users/%s/limits/%s', this.props.user, limit.datacenter);
         api.del(url).query(limit).end(function(res) {
             if (res.ok) {
                 adminui.vent.trigger('notification', {

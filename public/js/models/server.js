@@ -2,7 +2,7 @@ var Backbone = require('backbone');
 var Job = require('./job');
 var Model = require('./model');
 var Server = Model.extend({
-    urlRoot: '/_/servers',
+    urlRoot: '/api/servers',
 
     idAttribute: 'uuid',
 

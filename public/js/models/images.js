@@ -4,5 +4,5 @@ var Img = require('./image');
 
 module.exports = Collection.extend({
     model: Img,
-    url: '/_/images'
+    url: '/api/images'
 });

@@ -4,7 +4,7 @@ var NetworkPool = Model.extend({
     defaults: {
         "name": ""
     },
-    urlRoot: "/_/network_pools",
+    urlRoot: "/api/network_pools",
     idAttribute: "uuid"
 });
 module.exports = NetworkPool;

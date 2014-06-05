@@ -5,7 +5,7 @@ var Limit = require('./limit');
 var Limits = Collection.extend({
     model: Limit,
     url: function() {
-        return _.str.sprintf('/_/users/%s/limits', this.user);
+        return _.str.sprintf('/api/users/%s/limits', this.user);
     },
     initialize: function(objects, options) {
         Collection.prototype.initialize.call(this, arguments);

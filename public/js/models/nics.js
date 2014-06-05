@@ -4,7 +4,7 @@ var Collection = require('./collection');
 
 
 var Nics = Collection.extend({
-    url: '/_/nics',
+    url: '/api/nics',
     mergeSysinfo: function(sysinfo) {
         _mergeSysinfo(sysinfo['Network Interfaces'], this, 'nic');
         _mergeSysinfo(sysinfo['Virtual Network Interfaces'], this, 'vnic');
