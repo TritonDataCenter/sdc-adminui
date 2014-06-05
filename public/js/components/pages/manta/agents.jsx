@@ -48,7 +48,7 @@ var MantaAgentsDashboard = React.createClass({
 
             if (!agent) { continue; }
 
-            agent.ntotal++;
+            agent.nzones++;
 
             if (z.state === 'busy') { agent.nbusy++; }
             if (z.state === 'uninit') { agent.ninit++; }
@@ -65,9 +65,11 @@ var MantaAgentsDashboard = React.createClass({
         this._fetchAgentsSnapshot();
     },
     getInitialState: function() {
-        // var TEST_DATA = require('./agents.prod.json');
-        // return this._parseData(TEST_DATA);
         return {};
+    },
+    _loadTestData: function() {
+        var TEST_DATA = require('./agents.prod.json');
+        this.setState(this._parseData(TEST_DATA));
     },
     _fetchAgentsSnapshot: function() {
         api.get('/api/manta/agents').end(function(res) {
@@ -117,13 +119,14 @@ var MantaAgentsDashboard = React.createClass({
     render: function() {
         return <div id="page-manta-agents-dashboard">
             <div className="page-header">
-                <h1>Agemts</h1>
+                <h1>Agents</h1>
             </div>
             <div>
                 <ul className="list-unstyled agents-list">
                 { _.map(this.state.agentData, this._renderAgent, this) }
                 </ul>
             </div>
+            <button onClick={this._loadTestData} className="btn btn-primary">DEV: Load Prod Data</button>
         </div>
     }
 });
