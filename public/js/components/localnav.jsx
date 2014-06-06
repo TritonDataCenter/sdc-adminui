@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var adminui = require('../adminui');
-var React = require('react')
+var React = require('react');
 var cx = React.addons.classSet;
 
 var SecondaryNav = React.createClass({

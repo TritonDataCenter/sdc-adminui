@@ -19,7 +19,7 @@ var Rootnav = React.createClass({
         view.split(" ").forEach(function(v) {
             attrs[v] = true;
             if (this.props.active === v) {
-                attrs['active'] = true;
+                attrs.active = true;
             }
         }.bind(this));
 
@@ -95,7 +95,7 @@ var Rootnav = React.createClass({
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 });
 

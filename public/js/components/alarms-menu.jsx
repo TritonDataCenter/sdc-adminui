@@ -85,7 +85,7 @@ module.exports = React.createClass({
             <div className="alarm-menu-item-content">
                 <div className="faults">
                 {alarm.faults.map(function(f) {
-                    return <div className="fault">{f.event.data.message}</div>
+                    return <div className="fault">{f.event.data.message}</div>;
                 })}
                 </div>
             </div>
@@ -106,13 +106,13 @@ module.exports = React.createClass({
                             amon said: {this.state.error.message}
                         </div>
                     </div>
-                </div>
+                </div>;
             }
 
             if (this.state.alarms.length) {
                 return <div className="alarms-menu">
                     {this.state.alarms.map(this.renderMenuItem, this)}
-                </div>
+                </div>;
             } else {
                 return <div id="alarms-menu" className="alarms-menu">
                     <div className="alarm-menu-item no-alarms">
@@ -120,7 +120,7 @@ module.exports = React.createClass({
                             <i className="fa fa-check"></i> There are no Alarms at this time.
                         </div>
                     </div>
-                </div>
+                </div>;
             }
         } else {
             return '';
@@ -134,11 +134,11 @@ module.exports = React.createClass({
             :
             <a onClick={this.toggleMenu} className={
                 ('toggle ' + (this.state.menu ? ' active ' : '' ) + (this.state.alarms.length ? ' has-alarms ' : '' ))
-            }><i className="fa fa-bell"></i> { this.state.alarms.length }</a>
+            }><i className="fa fa-bell"></i> { this.state.alarms.length }</a>;
 
         return <div className="alarms-menu-container">
             {toggleMenu}
             {this.menu()}
-        </div>
+        </div>;
     }
-})
+});

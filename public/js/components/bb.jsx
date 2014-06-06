@@ -1,9 +1,10 @@
 var React = require('react');
 var Backbone = require('backbone');
+var adminui = require('../adminui');
+
 var Region = Backbone.Marionette.Region.extend({
     el: '.bb'
 });
-var adminui = require('../adminui');
 
 var BBComponent = React.createClass({
     componentDidMount: function() {

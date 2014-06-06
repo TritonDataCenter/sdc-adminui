@@ -8,17 +8,17 @@ var api = require('../../../request');
 var MantaAgentsDashboard = React.createClass({
     displayName: 'MantaAgentsDashboard',
     statics: {
+        'sidebar':'manta-agents',
         'url': function() {
-            return '/manta/agents'
-        },
-        'sidebar':'manta-agents'
+            return '/manta/agents';
+        }
     },
 
     _parseData: function(data) {
-        var _agents = data.cs_objects['agent'];
-        var _service = data.cs_objects['service'];
-        var _zones = data.cs_objects['zone'];
-        var _stats = data.cs_objects['stats'];
+        var _agents = data.cs_objects.agent;
+        var _service = data.cs_objects.service;
+        var _zones = data.cs_objects.zone;
+        var _stats = data.cs_objects.stats;
 
         var hosts = [];
 
@@ -28,7 +28,7 @@ var MantaAgentsDashboard = React.createClass({
         for (var agentUuid in _agents) {
             var a = _agents[agentUuid][0];
 
-            a.started = _stats[a.origin][0]['started'];
+            a.started = _stats[a.origin][0].started;
             a.nzones = 0;
 
             a.nbusy = 0;
@@ -59,9 +59,10 @@ var MantaAgentsDashboard = React.createClass({
         return {
             agentData: agentData,
             zoneData: zoneData
-        }
+        };
     },
     componentDidMount: function() {
+        this._interval = setInterval(this._fetchAgentsSnapshot, 10 * 1000);
         this._fetchAgentsSnapshot();
     },
     getInitialState: function() {
@@ -94,19 +95,19 @@ var MantaAgentsDashboard = React.createClass({
                 </div>
             </div>
             <div className="zones">
-            {
-                _.map(this.state.zoneData[a.origin], function(z) {
-                    return <div key={z.zonename} className={'zone ' + z.state}></div>
-                })
-            }
+                {
+                    _.map(this.state.zoneData[a.origin], function(z) {
+                        return <div key={z.zonename} className={'zone ' + z.state}></div>;
+                    })
+                }
             </div>
             <div className="stats">
                 <div className="stats-slopdisk">
-                    <strong>Disk slop used</strong>
+                    <strong><abbr title="unallocated disk space available for jobs that request additional disk space">Disk slop used</abbr></strong>
                     <span className="value">{a.slopDiskUsed} / {a.slopDiskTotal} GB</span>
                 </div>
                 <div className="stats-slopmem">
-                    <strong>Mem slop used</strong>
+                    <strong><abbr title="unallocated memory available for jobs that request additional memory">Mem slop used</abbr></strong>
                     <span className="value">{a.slopMemUsed} / {a.slopMemTotal} MB</span>
                 </div>
                 <div className="stats-started">
@@ -114,7 +115,10 @@ var MantaAgentsDashboard = React.createClass({
                     <span className="value">{a.started.substr(5, 14)}</span>
                 </div>
             </div>
-        </li>)
+        </li>);
+    },
+    componentWillUnmount: function() {
+        clearInterval(this._interval);
     },
     render: function() {
         return <div id="page-manta-agents-dashboard">
@@ -127,7 +131,7 @@ var MantaAgentsDashboard = React.createClass({
                 </ul>
             </div>
             <button onClick={this._loadTestData} className="btn btn-primary">DEV: Load Prod Data</button>
-        </div>
+        </div>;
     }
 });
 

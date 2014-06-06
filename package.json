@@ -28,6 +28,7 @@
     "mime": "~1.2.9",
     "moray": "git+ssh://git@git.joyent.com:node-moray.git#a191e17573f8136b10c0666adb849930c652689f",
     "node-dev": "^2.3.0",
+    "promise": "^5.0.0",
     "react": "0.10.0",
     "reactify": "0.10.0",
     "redis": "0.10.1",
