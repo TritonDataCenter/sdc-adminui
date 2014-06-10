@@ -2,15 +2,16 @@ var React = require('react');
 var Backbone = require('backbone');
 var adminui = require('../adminui');
 
-var Region = Backbone.Marionette.Region.extend({
-    el: '.bb'
-});
+var Region = Backbone.Marionette.Region;
 
 var BBComponent = React.createClass({
+    propTypes: {
+        view: React.PropTypes.object.isRequired
+    },
     componentDidMount: function() {
         var view = this.props.view;
 
-        this.region = new Region();
+        this.region = new Region({el: this.getDOMNode() });
         this.region.show(view);
 
         if (typeof(view.sidebar) === 'string') {
@@ -28,7 +29,7 @@ var BBComponent = React.createClass({
     },
 
     render: function() {
-        return React.DOM.div({className:'bb'});
+        return React.DOM.div({className:'bb', key:this.props.key});
     }
 });
 

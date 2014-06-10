@@ -202,8 +202,8 @@ var UserView = Backbone.Marionette.Layout.extend({
 
 
         this.sshkeys = new SSHKeys(null, {user: this.model.get('uuid') });
-        this.vmsList = new VmsList({collection: this.vms });
         this.sshkeysList = new SSHKeysList({collection: this.sshkeys });
+        this.vmsList = new VmsList({collection: this.vms });
         this.vmsFilter = new VmsFilter();
     },
 
@@ -261,7 +261,6 @@ var UserView = Backbone.Marionette.Layout.extend({
                 self.$('.portal-2fa').html('disabled');
             }
         });
-
     },
 
     onRender: function() {
@@ -269,6 +268,7 @@ var UserView = Backbone.Marionette.Layout.extend({
             new NotesComponent({item: this.model.get('uuid')}),
             this.$('.notes-component-container').get(0)
         );
+
         this.sshkeys.fetch();
         this.model.fetch();
         this.vms.fetch();

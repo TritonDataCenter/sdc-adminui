@@ -1,4 +1,6 @@
 /** @jsx React.DOM */
+
+var React = require('react');
 var User = require('../models/user');
 var UserLink = module.exports = React.createClass({
     getInitialState: function() {

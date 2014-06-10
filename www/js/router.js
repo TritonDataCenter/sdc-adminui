@@ -12,9 +12,11 @@ var Chrome = require('./components/chrome');
 var BBComponent = require('./components/bb.jsx');
 
 var NotFoundView = require('./views/error/not-found');
+
 var Components = {
     'alarm': require('./components/pages/alarm'),
     'alarms': require('./components/pages/alarms'),
+    'user': require('./components/pages/user'),
     'manta/agents': require('./components/pages/manta/agents.jsx')
 };
 
@@ -59,6 +61,8 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'vms': 'showVms',
         'vms/:uuid': 'showVm',
         'users/:uuid': 'showUser',
+        'users2/:uuid': 'showUser2',
+        'users2/:uuid/:tab': 'showUser2',
         'image-import': 'showImageImport',
         'images/:uuid': 'showImage',
         'jobs/:uuid': 'showJob',
@@ -234,13 +238,17 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             this.notFound({ view: ComponentType, args: args });
             console.log("Component not found: " + compName);
         } else {
-
+            var fullWidth = compName === 'user';
             var component = new ComponentType(args);
-            this.state.set({
+            var state = {
                 'chrome.content': component,
                 'chrome.rootnav': true,
+                'rootnav.active': ComponentType.sidebar,
                 'localnav.active': ComponentType.sidebar
-            });
+            };
+
+            state['chrome.fullwidth'] = (compName === 'users' || compName === 'user' || compName === 'settings');
+            this.state.set(state);
 
             if (typeof(ComponentType.url) === 'function') {
                 Backbone.history.navigate(ComponentType.url(args));
@@ -399,6 +407,17 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                     xhr: xhr
                 });
             });
+        }
+    },
+
+    showUser2: function(uuid, tab) {
+        var props = {};
+        props.uuid = uuid;
+        if (tab) {
+            props.tab = tab;
+        }
+        if (this.authenticated()) {
+            this.presentComponent('user', props);
         }
     },
 

@@ -2,6 +2,7 @@
 
 
 #page-user {
+  .user-menu a { font-size: 12px; }
   .user-icon {
     width: 65px;
     height: 65px;
@@ -19,16 +20,17 @@
   .vms-list { .__vms-list; }
   .vms-filter { .__vms-filter; }
 
-  .user-details {
-    th { width: 160px;}
+  .user-profile {
+    th { width: 180px;}
     .provisioning.approved { color: @state-success-text; }
     .provisioning.disabled { color: @state-danger-text; }
     .registered-developer.yes { color: @state-success-text; }
     .registered-developer.no { color: @state-danger-text; }
-  }
+    .portal-2fa.enabled { color: @state-success-text; }
     .portal-2fa.disabled { color: @state-danger-text; }
 
-  .toggle-2fa { float: right; margin-right: 10px;}
+    .toggle-2fa { float: right; margin-right: 10px;}
+  }
 
   .limits-list {
     ul li {

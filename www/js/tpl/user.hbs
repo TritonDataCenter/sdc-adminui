@@ -1,120 +1,106 @@
 <div class="page-header">
   <h1>
-    <div class="user-icon" style="background-image: url(https://www.gravatar.com/avatar/{{emailhash}}?d=identicon&s=65);">
-    </div>
-
-    <span class="cn"></span>
-    <small class="uuid selectable"></small>
+  <div class="user-icon" style="background-image: url(https://www.gravatar.com/avatar/{{emailhash}}?d=identicon&s=65);">
+  </div>
+  <span class="cn"></span>
+  <small class="uuid selectable"></small>
   </h1>
 </div>
 <div class="actions">
   <div class="notes-component-container"></div>
 </div>
-
-
-<section>
-  <div class="row">
-    <div class="col-md-6">
-      <h3>User Details
-        {{#role "operators"}}
-        <div class="actions">
-          <button class="edit-user btn btn-sm btn-info"><i class="fa fa-pencil"></i> Modify User</button>
-        </div>
-        {{/role}}
-      </h3>
-
-
-      <div class="user-details">
-        <table class="table">
-          <tbody>
-          <tr>
-            <th>Login</th>
-            <td><span class="login"></span></td>
-          </tr>
-          <tr>
-            <th>Email</th>
-            <td><span class="email selectable"></span></td>
-          </tr>
-          <tr>
-            <th>Company</th>
-            <td><span class="company"></span></td>
-          </tr>
-          <tr>
-            <th>Phone</th>
-            <td><span class="phone"></span></td>
-          </tr>
-          <tr>
-            <th>Groups</th>
-            <td><span class="groups"></span></td>
-          </tr>
-          <tr>
-            <th>Provisioning</th>
-            <td><span class="provisioning"></span></td>
-          </tr>
-          <tr>
-            <th>Registered Developer</th>
-            <td><span class="registered-developer"></span></td>
-          </tr>
-          <tr>
-            <th>Two Factor Auth</th>
-            <td><span class="portal-2fa"></span>
-              <a class="toggle-2fa"></a>
-            </td>
-          </tr>
-        </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <h3>SSH Keys
-        <div class="actions">
+<div class="row">
+  <div class="col-sm-12 user-content">
+    <section>
+      <div class="row">
+        <div class="col-md-6">
+          <h3>User Details
           {{#role "operators"}}
-          <button class="btn btn-info btn-sm add-key"><i class="fa fa-plus"></i> Add Key</button>
+          <div class="actions">
+            <button class="edit-user btn btn-sm btn-info"><i class="fa fa-pencil"></i> Modify User</button>
+          </div>
           {{/role}}
+          </h3>
+          <div class="user-details">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th>Login</th>
+                  <td><span class="login"></span></td>
+                </tr>
+                <tr>
+                  <th>Email</th>
+                  <td><span class="email selectable"></span></td>
+                </tr>
+                <tr>
+                  <th>Company</th>
+                  <td><span class="company"></span></td>
+                </tr>
+                <tr>
+                  <th>Phone</th>
+                  <td><span class="phone"></span></td>
+                </tr>
+                <tr>
+                  <th>Groups</th>
+                  <td><span class="groups"></span></td>
+                </tr>
+                <tr>
+                  <th>Provisioning</th>
+                  <td><span class="provisioning"></span></td>
+                </tr>
+                <tr>
+                  <th>Registered Developer</th>
+                  <td><span class="registered-developer"></span></td>
+                </tr>
+                <tr>
+                  <th>Two Factor Auth</th>
+                  <td><span class="portal-2fa"></span>
+                    <a class="toggle-2fa"></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </h3>
-
-      <div class="ssh-keys">
-        <div class="items"></div>
+        <div class="col-md-6">
+          <h3>SSH Keys
+          <div class="actions">
+            {{#role "operators"}}
+            <button class="btn btn-info btn-sm add-key"><i class="fa fa-plus"></i> Add Key</button>
+            {{/role}}
+          </div>
+          </h3>
+          <div class="ssh-keys">
+            <div class="items"></div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+    <section>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="limits-region"></div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Images owned by this user</h3>
+          <div class="images-list-region"></div>
+        </div>
+      </div>
+    </section>
+    <section class="networks">
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Networks &amp; Network Pools</h3>
+          <div class="networks-region"></div>
+          <div class="network-pools-region"></div>
+        </div>
+      </div>
+    </section>
+    <section>
+    </section>
   </div>
-</section>
-
-<section>
-  <div class="row">
-    <div class="col-md-12">
-        <div class="limits-region"></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="row">
-    <div class="col-md-12">
-        <h3>Images owned by this user</h3>
-        <div class="images-list-region"></div>
-    </div>
-  </div>
-</section>
-
-<section class="networks">
-  <div class="row">
-    <div class="col-md-12">
-      <h3>Networks &amp; Network Pools</h3>
-      <div class="networks-region"></div>
-      <div class="network-pools-region"></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="row">
-    <div class="col-md-12">
-      <h3>Virtual Machines</h3>
-      <div class="vms-filter-region"></div>
-      <div class="vms-region"></div>
-    </div>
-  </div>
-</section>
+</div>
