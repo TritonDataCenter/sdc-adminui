@@ -38,7 +38,7 @@ var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
     },
     showKey: function() {
         var modalHeader = $('<div class="modal-header"></div>');
-        modalHeader.html('<h1>'+this.model.get('name')+'</h1>');
+        modalHeader.html('<h2 class="modal-title">'+this.model.get('name')+'</h2>');
         var modalBody = $('<div class="modal-body"></div>');
         var text = $('<textarea readonly>').html(this.model.get('openssh'));
         text.click(function() {
@@ -47,12 +47,15 @@ var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
 
         modalBody.append(text);
 
-        var node = $('<div id="sshkey-view">').addClass('modal');
-        node.append(modalHeader);
-        node.append(modalBody);
-        node.append('<div class="modal-footer"><button class="btn" data-dismiss="modal">Close</button></div>');
-        node.modal();
-
+        var modal = $('<div id="sshkey-view">').addClass('modal');
+        var dialog = $('<div class="modal-dialog"></div>');
+        var content = $('<div class="modal-content"></div>');
+        content.append(modalHeader);
+        content.append(modalBody);
+        content.append('<div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div>');
+        dialog.html(content);
+        modal.html(dialog);
+        modal.modal();
     },
     onClickRemove: function(e) {
         e.preventDefault();

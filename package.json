@@ -33,7 +33,7 @@
     "reactify": "0.10.0",
     "redis": "0.10.1",
     "restify": "2.6.3",
-    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#c50fd77cd049bfa77d570a51e285db5c82e1e53a",
+    "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#4476ed0a562f1c652110b23a9c58c3c23b047a55",
     "superagent": "^0.17.0",
     "through": "2.3.4",
     "uglify-js": "2.3.6",
