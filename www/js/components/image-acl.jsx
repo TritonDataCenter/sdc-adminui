@@ -9,7 +9,7 @@ var UserTile = React.createClass({
     getInitialState: function() {
         return {
             loading: true
-        }
+        };
     },
     componentDidMount: function() {
         var user = new User({uuid: this.props.uuid });
@@ -36,7 +36,7 @@ var UserTile = React.createClass({
         if (this.state.loading) {
             return <div className="user-tile loading" key={this.props.uuid}>
                 Fetching User Information <span className="fa fa-spinner fa-spin"></span>
-            </div>
+            </div>;
         }
 
         if (this.state.loadingFailed) {
@@ -52,7 +52,7 @@ var UserTile = React.createClass({
                         <span className="uuid">{this.props.uuid}</span>
                     </div>
                 </div>
-            </div>
+            </div>;
         }
 
         return (
@@ -73,7 +73,7 @@ var UserTile = React.createClass({
                         { this.props.owner ? <span className="owner">owner</span> :''}
                     </div>
                     <div className="col-sm-5">
-                            {user.cn}
+                            {user.cn ? user.cn : user.login }
                             {
                                 user.company ? <span className="company"> @ {user.company}</span> : ''
                             }

@@ -53,8 +53,8 @@ RELSTAGEDIR          := /tmp/$(STAMP)
 # Repo-specific targets
 #
 
-JS_BUNDLE = ./public/app.js
-JS_BUNDLE_FILES	:= $(shell find public/js -name '*.js' -o -name '*.hbs')
+JS_BUNDLE = ./www/app.js
+JS_BUNDLE_FILES	:= $(shell find www/js -name '*.js' -o -name '*.hbs')
 JS_BUNDLE_FILES	+= ./tools/build-js
 
 
@@ -74,11 +74,8 @@ $(JS_BUNDLE): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
 	@echo "Building js bundle"
 	$(NODE) tools/build-js
 
-$(MOCHA_PHANTOMJS): | $(JS_BUNDLE_FILES) | $(NODE_EXEC)
-	$(NPM) install
-
 .PHONY: dev
-dev: $(JS_BUNDLE) $(MOCHA_PHANTOMJS)
+dev: $(JS_BUNDLE)
 
 
 .PHONY: devrun
@@ -86,8 +83,8 @@ devrun:
 	@./tools/devrun.sh
 
 .PHONY: test
-test: | $(JS_BUNDLE) $(MOCHA_PHANTOMJS)
-	$(MOCHA_PHANTOMJS) ./public/test/index.html
+test: | $(JS_BUNDLE) 
+	$(NPM) test
 
 
 .PHONY: release

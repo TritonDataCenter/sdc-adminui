@@ -11,7 +11,7 @@ var join = path.join;
 var uglify = require('uglify-js');
 
 
-var root = path.resolve(__dirname, '..', 'public', 'js');
+var root = path.resolve(__dirname, '..', 'www', 'js');
 
 
 var shimConfig = {
