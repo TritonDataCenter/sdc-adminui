@@ -1,9 +1,9 @@
 var React = require('react');
 var _ = require('underscore');
-var Limits = require('../../models/limits');
-var adminui = require('../../adminui');
-var api = require('../../request');
-var Modal = require('./../modal.jsx');
+var adminui = require('../../../../adminui');
+var api = require('../../../../request');
+var Limits = require('../../../../models/limits');
+var Modal = require('../../../modal.jsx');
 
 
 
@@ -20,9 +20,9 @@ module.exports = ProvisioningLimits = React.createClass({
     },
     fetchLimits: function() {
         var collection = new Limits(null, {user: this.props.user });
-        var req = collection.fetch()
+        var req = collection.fetch();
         req.done(function(res) {
-            this.setState({limits: res})
+            this.setState({limits: res});
         }.bind(this));
     },
     componentWillMount: function() {
@@ -32,7 +32,7 @@ module.exports = ProvisioningLimits = React.createClass({
         return {
             limits: [],
             form: false
-        }
+        };
     },
     handleDelete: function(limit) {
         var url = _.str.sprintf('/api/users/%s/limits/%s', this.props.user, limit.datacenter);

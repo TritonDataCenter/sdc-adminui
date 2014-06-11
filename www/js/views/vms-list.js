@@ -67,7 +67,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
             return;
         }
         e.preventDefault();
-        adminui.vent.trigger('showview', 'user', { user: this.user });
+        adminui.vent.trigger('showcomponent', 'user', { user: this.user });
     }
 });
 

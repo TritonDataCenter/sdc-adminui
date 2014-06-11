@@ -91,7 +91,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
             patch: true,
             success: function(model, resp) {
                 self.$el.modal('hide').remove();
-                app.vent.trigger('showview', 'user', {user: self.model});
+                app.vent.trigger('showcomponent', 'user', {user: self.model});
                 app.vent.trigger('notification', {
                     level: 'success',
                     message: _.str.sprintf('User <strong>%s</strong> saved successfully.', self.model.get('login'))

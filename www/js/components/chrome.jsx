@@ -59,7 +59,7 @@ var Chrome = React.createClass({
         adminui.vent.trigger('showview', view, {});
     },
     _handleSelectCurrentUser: function(user) {
-        adminui.vent.trigger('showview', 'user', {user: user});
+        adminui.vent.trigger('showcomponent', 'user', {user: user});
         return false;
     },
     render: function() {
@@ -104,58 +104,3 @@ var Chrome = React.createClass({
 });
 
 module.exports = Chrome;
-
-//     initialize: function(options) {
-//         this.options = options || {};
-//         this.user = options.user;
-//         this.vent = options.vent;
-
-//         this.notifier = new Notifier({ vent: this.vent });
-
-//         this.listenTo(this.vent, 'error', this.onError, this);
-//         this.listenTo(this.vent, 'mainnav:highlight', this.highlight, this);
-
-//         this.content.on('show', function(view) {
-//             $(document.body).scrollTop(0);
-//         });
-//     },
-
-//     renderTime: function() {
-//     },
-
-//     onClose: function() {
-//         clearInterval(this._timer);
-//     },
-
-//     goToUser: function(e) {
-//         e.preventDefault();
-//         this.vent.trigger('showview', 'user', {uuid: this.user.get('uuid') });
-//     },
-
-//     onSelect: function(view) {
-//         this.renderTopNav({active: view});
-//         this.vent.trigger("showview", view);
-//     },
-
-//     highlight: function(view) {
-//         this.renderTopNav({active: view});
-//     },
-
-//     onError: function(err) {
-//         err = err || {};
-//         if (err.xhr && err.xhr.status >= 500) {
-//             if (err.xhr.responseText.length) {
-//                 var json = JSON.parse(err.xhr.responseText);
-//                 err.responseBody = JSON.stringify(json, null, 2);
-//             }
-//             var tpl = require('../tpl/error.hbs');
-//             $(tpl(err)).modal();
-//         }
-//     },
-
-
-//     onRender: function() {
-//         this.notifier.setElement(this.$("#notifications"));
-//     }
-// });
-

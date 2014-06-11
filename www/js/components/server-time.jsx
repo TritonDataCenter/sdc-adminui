@@ -12,7 +12,7 @@ var ServerTime = React.createClass({
         this.setState({time: moment().utc().format("MMM D h:mm") });
     },
     render: function() {
-        return <div id="server-time"><i className="fa fa-clock-o"></i> UTC <time>{this.state.time}</time></div>
+        return <div id="server-time"><i className="fa fa-clock-o"></i> UTC <time>{this.state.time}</time></div>;
     },
     componentWillUnmount: function() {
         clearInterval(this._interval);

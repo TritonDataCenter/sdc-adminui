@@ -28,7 +28,6 @@ var Views = {
     'server': require('./views/server'),
 
     'users': require('./views/users'),
-    'user': require('./views/user'),
 
     'packages': require('./views/packages'),
     'packages-form': require('./views/packages-form'),
@@ -61,8 +60,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'vms': 'showVms',
         'vms/:uuid': 'showVm',
         'users/:uuid': 'showUser',
-        'users2/:uuid': 'showUser2',
-        'users2/:uuid/:tab': 'showUser2',
+        'users/:uuid/:tab': 'showUser',
         'image-import': 'showImageImport',
         'images/:uuid': 'showImage',
         'jobs/:uuid': 'showJob',
@@ -224,10 +222,14 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         this.state.set(state);
 
         if (typeof(view.url) === 'function') {
-            Backbone.history.navigate(view.url());
+            this.changeUrl(view.url());
         } else if (typeof(view.url) === 'string') {
-            Backbone.history.navigate(view.url);
+            this.changeUrl(view.url);
         }
+    },
+
+    changeUrl: function(url) {
+        Backbone.history.navigate(url);
     },
 
     presentComponent: function(compName, args) {
@@ -410,32 +412,15 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
-    showUser2: function(uuid, tab) {
+    showUser: function(uuid, tab) {
         var props = {};
         props.uuid = uuid;
         if (tab) {
             props.tab = tab;
         }
         if (this.authenticated()) {
+            console.log(_.str.sprintf('[route] showUser:', props));
             this.presentComponent('user', props);
-        }
-    },
-
-    showUser: function(uuid) {
-        console.log(_.str.sprintf('[route] showUser: %s', uuid));
-        var self = this;
-        if (this.authenticated()) {
-            var User = require('./models/user');
-            var user = new User({uuid: uuid});
-            user.fetch().done(function() {
-                self.presentView('user', { user: user });
-            }).fail(function(xhr) {
-                self.notFound({
-                    view: 'user',
-                    args: {uuid: uuid},
-                    xhr: xhr
-                });
-            });
         }
     },
 

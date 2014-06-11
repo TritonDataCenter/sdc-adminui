@@ -28,7 +28,7 @@ var UserTile = React.createClass({
     },
     navigateToUser: function(e) {
         e.preventDefault();
-        adminui.vent.trigger('showview', 'user', {uuid: this.props.uuid });
+        adminui.vent.trigger('showcomponent', 'user', {uuid: this.props.uuid });
     },
     render: function() {
         var user = this.state;
@@ -152,7 +152,7 @@ module.exports = React.createClass({
         };
     },
     onUserDetails: function(user) {
-        adminui.vent.trigger('showview', 'user', {uuid: user.uuid });
+        adminui.vent.trigger('showcomponent', 'user', {uuid: user.uuid });
     },
     render: function() {
         var nodes = [];

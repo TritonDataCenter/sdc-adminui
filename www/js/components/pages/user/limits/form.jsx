@@ -1,10 +1,9 @@
 var React = require('react');
-var Limits = require('../../models/limits');
 var Chosen = require('react-chosen');
 var Main = require('./main.jsx');
 
-var Images = require('../../models/images');
-var api = require('../../request');
+var Images = require('../../../../models/images');
+var api = require('../../../../request');
 var _ = require('underscore');
 
 var OPERATING_SYSTEMS = require('./constants').OPERATING_SYSTEMS;
@@ -52,13 +51,13 @@ var Form = module.exports = React.createClass({
         this.request = collection.fetch().done(function(images) {
             var imageNames = _.pluck(images, 'name');
             this.setState({images: _.unique(imageNames).sort() });
-        }.bind(this))
+        }.bind(this));
     },
     handleChangeDatacenter: function(e) {
         this.setState({datacenter: e.target.value });
     },
     handleChangeCriteriaType: function(e, c) {
-        this.setState({criteriaType: c.selected })
+        this.setState({criteriaType: c.selected });
     },
     handleChangeCriteriaValue: function(e, c) {
         if (c) {
@@ -79,7 +78,7 @@ var Form = module.exports = React.createClass({
     fromLimit: function(limit) {
         var state = {};
         if (!limit.check || limit[limit.check] === 'any' || typeof(limit[limit.check]) === 'undefined') {
-            state.criteriaType = 'any'
+            state.criteriaType = 'any';
             state.criteriaValue = null;
         } else {
             state.criteriaType = limit.check;
@@ -107,7 +106,7 @@ var Form = module.exports = React.createClass({
         data.datacenter = state.datacenter;
         if (state.criteriaType === 'any') {
             data.check = 'os';
-            data.os = 'any'
+            data.os = 'any';
         } else {
             data.check = state.criteriaType;
             data[state.criteriaType] = state.criteriaValue;
@@ -154,7 +153,7 @@ var Form = module.exports = React.createClass({
                             <option value=""></option>
                             {
                                 this.state.datacenters.map(function(d) {
-                                    return <option value={d}>{d}</option>
+                                    return <option value={d}>{d}</option>;
                                 })
                             }
                             </Chosen>
@@ -194,7 +193,7 @@ var Form = module.exports = React.createClass({
                                 <Chosen onChange={this.handleChangeCriteriaValue} value={this.state.criteriaValue}>
                                 {
                                     OPERATING_SYSTEMS.map(function(o) {
-                                        return <option value={o}>{o}</option>
+                                        return <option value={o}>{o}</option>;
                                     })
                                 }
                                 </Chosen>
@@ -215,6 +214,6 @@ var Form = module.exports = React.createClass({
                 <button className="btn btn-default" onClick={this.handleCancel}>Close</button>
                 <button disabled={ this.isValid() ? '' : 'disabled' } onClick={this.handleSave} className="btn btn-primary" type="submit">Save Limit</button>
             </div>
-        </div>
+        </div>;
     }
 });

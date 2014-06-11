@@ -7,7 +7,6 @@ var adminui = require('../adminui');
 
 var UserForm = require('./user-form');
 var Users = require('../models/users');
-var UserView = require('./user');
 var tplUsers = require('../tpl/users.hbs');
 
 var UsersListItem = Backbone.Marionette.ItemView.extend({
@@ -29,7 +28,7 @@ var UsersListItem = Backbone.Marionette.ItemView.extend({
             return;
         }
         e.preventDefault();
-        adminui.vent.trigger('showview', 'user', {
+        adminui.vent.trigger('showcomponent', 'user', {
             user: this.model
         });
     }

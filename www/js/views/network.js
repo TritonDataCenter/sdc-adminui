@@ -45,7 +45,7 @@ var AddressesTableRow = Backbone.Marionette.ItemView.extend({
         var uuid = this.model.get('belongs_to_uuid');
         var type = this.model.get('belongs_to_type');
         if (type === 'server') {
-            adminui.vent.trigger('showview', 'server', {uuid: uuid });
+            adminui.vent.trigger('showcomponent', 'server', {uuid: uuid });
         }
         if (type === 'zone') {
             adminui.vent.trigger('showview', 'vm', {uuid: uuid });
@@ -116,7 +116,7 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         var uuid = $(e.target).attr('data-owner-uuid');
         this.close();
-        adminui.vent.trigger('showview', 'user', {uuid: uuid });
+        adminui.vent.trigger('showcomponent', 'user', {uuid: uuid });
     },
 
     url: function() {

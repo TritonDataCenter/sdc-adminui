@@ -255,7 +255,7 @@ var VmView = Backbone.Marionette.Layout.extend({
             return;
         }
         e.preventDefault();
-        this.vent.trigger('showview', 'user', {
+        this.vent.trigger('showcomponent', 'user', {
             user: this.owner
         });
     },
@@ -480,7 +480,7 @@ var VmView = Backbone.Marionette.Layout.extend({
                 new UserTileComponent({
                     uuid: this.vm.get('owner_uuid'),
                     onUserDetails: function(user) {
-                        adminui.vent.trigger('showview', 'user', {uuid: user.uuid });
+                        adminui.vent.trigger('showcomponent', 'user', {uuid: user.uuid });
                     }
                 }),
                 this.$('.user-tile-container').get(0));

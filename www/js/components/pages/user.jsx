@@ -10,15 +10,32 @@ var NotesComponent = require('../notes');
 var UserProfile = require('./user/profile');
 var UserVms = require('./user/vms');
 var UserSSHKeys = require('./user/sshkeys');
+var UserImages = require('./user/images');
+var UserLimits = require('./user/limits/main');
+var UserNetworks = require('./user/networks');
 
 var UserForm = require('../../views/user-form');
 
 var PageUser = React.createClass({
+    statics: {
+        sidebar: 'users',
+        url: function(props) {
+            var uuid;
+            if (props.user) {
+                uuid = props.user.get('uuid');
+            } else {
+                uuid = props.uuid;
+            }
+            return _.str.sprintf('/users/%s', uuid);
+        }
+    },
+
     getInitialState: function() {
-        return {
+        var state = {
             tab: this.props.tab || 'profile',
-            userModel: new UserModel({uuid: this.props.uuid })
+            userModel: this.props.user || new UserModel({uuid: this.props.uuid })
         };
+        return state;
     },
 
     componentDidMount: function() {
@@ -55,27 +72,44 @@ var PageUser = React.createClass({
                 break;
 
             case 'vms':
-                view = <UserVms uuid={this.props.uuid} />;
+                view = <UserVms uuid={this.state.userModel.get('uuid')} />;
                 break;
 
             case 'limits':
-                view = <ProvisioningLimits
+                view = <UserLimits
                     readonly={!adminui.user.role('operators')}
-                    user={this.props.uuid} />;
+                    user={this.state.userModel.get('uuid') } />;
                 break;
 
             case 'sshkeys':
                 view = <UserSSHKeys
                     readonly={!adminui.user.role('operators')}
-                    user={this.props.uuid} />;
+                    user={this.state.userModel.get('uuid') } />;
+                break;
+
+            case 'images':
+                view = <UserImages
+                    readonly={!adminui.user.role('operators')}
+                    user={this.state.userModel.get('uuid')} />;
+                break;
+
+            case 'networks':
+                view = <UserNetworks
+                    readonly={!adminui.user.role('operators')}
+                    user={this.state.userModel.get('uuid')} />;
                 break;
         }
+
         return view;
     },
 
     _changeTab: function(t) {
         this.setState({tab: t});
+        adminui.router.changeUrl(_.str.sprintf('/users/%s/%s', this.state.userModel.get('uuid'), t ));
     },
+
+
+
 
     // --- child component handlers
     handleProfileModifyUser: function() {
@@ -131,11 +165,17 @@ var PageUser = React.createClass({
                         <li className={this.state.tab === 'vms' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'vms')}><i className="fa fa-fw fa-cubes"></i> Virtual Machines</a>
                         </li>
-                        <li className={this.state.tab === 'limits' ? 'active' : ''}>
-                            <a onClick={this._changeTab.bind(null, 'limits')}><i className="fa fa-fw fa-hand-o-right"></i> Provision Limits</a>
-                        </li>
                         <li className={this.state.tab === 'sshkeys' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'sshkeys')}><i className="fa fa-key fa-fw" /> SSH Keys</a>
+                        </li>
+                        <li className={this.state.tab === 'images' ? 'active' : ''}>
+                            <a onClick={this._changeTab.bind(null, 'images')}><i className="fa fa-image fa-fw" /> Images</a>
+                        </li>
+                        <li className={this.state.tab === 'limits' ? 'active' : ''}>
+                            <a onClick={this._changeTab.bind(null, 'limits')}><i className="fa fa-fw fa-hand-o-right"></i> Limits</a>
+                        </li>
+                        <li className={this.state.tab === 'networks' ? 'active' : ''}>
+                            <a onClick={this._changeTab.bind(null, 'networks')}><i className="fa fa-fw fa-hand-o-right"></i> Networks</a>
                         </li>
                         {/* <li className={this.state.tab === 'subusers' ? 'active' : ''}>
                         <a onClick={this._changeTab.bind(null, 'subusers')}>Sub Users</a>
@@ -150,53 +190,3 @@ var PageUser = React.createClass({
 });
 
 module.exports = PageUser;
-/*
-                    <div className="col-md-6">
-                      <h3>SSH Keys
-                      <div className="actions">
-                        <button className="btn btn-info btn-sm add-key"><i className="fa fa-plus"></i> Add Key</button>
-                      </div>
-                      </h3>
-                      <div className="ssh-keys">
-                        <div className="items"></div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                <section>
-                  <div className="row">
-                    <div className="col-md-12">
-                      <div className="limits-region"></div>
-                    </div>
-                  </div>
-                </section>
-
-                <section>
-                  <div className="row">
-                    <div className="col-md-12">
-                      <h3>Images owned by this user</h3>
-                      <div className="images-list-region"></div>
-                    </div>
-                  </div>
-                </section>
-
-                <section className="networks">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <h3>Networks &amp; Network Pools</h3>
-                      <div className="networks-region"></div>
-                      <div className="network-pools-region"></div>
-                    </div>
-                  </div>
-                </section>
-
-                <section>
-                  <div className="row">
-                    <div className="col-md-12">
-                      <h3>Virtual Machines</h3>
-                      <div className="vms-filter-region"></div>
-                      <div className="vms-region"></div>
-                    </div>
-                  </div>
-                  */

@@ -99,7 +99,7 @@ Object.keys(shimConfig).forEach(function(k) {
 });
 
 var b = shim(browserify({
-    extensions: ['jsx']
+    extensions: ['.js', '.jsx']
 }), shimConfig)
     .transform(require.resolve(join(root, './transforms/tpl')))
     .transform(require('reactify'))

@@ -122,7 +122,7 @@ var PackageDetail = module.exports = Backbone.Marionette.Layout.extend({
 
     navigateToUser: function(e) {
         e.preventDefault();
-        adminui.vent.trigger('showview', 'user', {uuid: $(e.target).attr('data-uuid')});
+        adminui.vent.trigger('showcomponent', 'user', {uuid: $(e.target).attr('data-uuid')});
     },
 
     onChangeOwner: function() {
