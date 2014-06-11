@@ -59,8 +59,16 @@ var PageUser = React.createClass({
 
     fetchUser: function() {
         var req = this.state.userModel.fetch();
+        req.fail(function(xhr) {
+            this.setState({
+                loading: false,
+                error: xhr.responseText,
+                userModel: this.state.userModel
+            });
+        }.bind(this));
         req.done(function() {
             this.setState({
+                error: null,
                 loading: false,
                 userModel: this.state.userModel
             });
@@ -161,6 +169,16 @@ var PageUser = React.createClass({
                 </div>
             </div>;
         }
+
+        if (this.state.error) {
+            return <div id="page-user">
+                <div className="loading error">
+                    <h1><i className="fa fa-warning" /> User could not be retrieved</h1>
+                    <p><code>{this.state.error}</code></p>
+                </div>
+            </div>;
+        }
+
         var user = this.state.userModel.toJSON();
         var currentView = this.getCurrentView();
         var userIconUrl;
