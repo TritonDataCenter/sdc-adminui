@@ -26,12 +26,7 @@ var PageUser = React.createClass({
             } else {
                 uuid = props.uuid;
             }
-            var tab;
-            if (props.tab) {
-                tab = props.tab;
-            } else {
-                tab = 'profile';
-            }
+            var tab = props.tab || 'profile';
             return _.str.sprintf('/users/%s/%s', uuid, tab);
         }
     },
@@ -41,13 +36,20 @@ var PageUser = React.createClass({
             tab: this.props.tab || 'profile',
             userModel: this.props.user || new UserModel({uuid: this.props.uuid })
         };
+
+        // model already contains data
+        if (state.userModel.get('cn')) {
+            state.loading = false;
+        } else {
+            state.loading = true;
+        }
         return state;
     },
+
     componentWillReceiveProps: function(props) {
         if (props.tab) {
             this.setState({tab: props.tab});
         }
-
     },
 
     componentDidMount: function() {
@@ -59,6 +61,7 @@ var PageUser = React.createClass({
         var req = this.state.userModel.fetch();
         req.done(function() {
             this.setState({
+                loading: false,
                 userModel: this.state.userModel
             });
         }.bind(this));
@@ -110,6 +113,12 @@ var PageUser = React.createClass({
                     readonly={!adminui.user.role('operators')}
                     user={this.state.userModel.get('uuid')} />;
                 break;
+
+            case 'subusers':
+                view = <UserNetworks
+                    readonly={!adminui.user.role('operators')}
+                    user={this.state.userModel.get('uuid')} />;
+                break;
         }
 
         return view;
@@ -145,6 +154,13 @@ var PageUser = React.createClass({
 
 
     render: function() {
+        if (this.state.loading) {
+            return <div id="page-user">
+                <div className="loading">
+                    <i className="fa fa-circle-o-notch fa-spin" /> Fetching User Profile
+                </div>
+            </div>;
+        }
         var user = this.state.userModel.toJSON();
         var currentView = this.getCurrentView();
         var userIconUrl;
