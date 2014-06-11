@@ -26,7 +26,13 @@ var PageUser = React.createClass({
             } else {
                 uuid = props.uuid;
             }
-            return _.str.sprintf('/users/%s', uuid);
+            var tab;
+            if (props.tab) {
+                tab = props.tab;
+            } else {
+                tab = 'profile';
+            }
+            return _.str.sprintf('/users/%s/%s', uuid, tab);
         }
     },
 
@@ -36,6 +42,12 @@ var PageUser = React.createClass({
             userModel: this.props.user || new UserModel({uuid: this.props.uuid })
         };
         return state;
+    },
+    componentWillReceiveProps: function(props) {
+        if (props.tab) {
+            this.setState({tab: props.tab});
+        }
+
     },
 
     componentDidMount: function() {

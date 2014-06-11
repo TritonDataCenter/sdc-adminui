@@ -229,7 +229,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     changeUrl: function(url) {
-        Backbone.history.navigate(url);
+       this.navigate(url);
     },
 
     presentComponent: function(compName, args) {
