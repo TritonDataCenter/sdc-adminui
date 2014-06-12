@@ -46,7 +46,12 @@ var User = module.exports = Model.extend({
     },
 
     getManta: function() {
-        return window.localStorage.getItem('manta');
+        var m = window.localStorage.getItem('manta');
+        if (m === "true") {
+            return true;
+        } else {
+            return false;
+        }
     },
 
     getDatacenter: function() {
