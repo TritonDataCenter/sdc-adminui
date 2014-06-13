@@ -4,15 +4,24 @@
     </div>
     <div class="details col-sm-5">
         <a href="/users/{{uuid}}" class="login-link">
-            <span class="login">{{login}}</span>
-            <div class="name">
-                <span class="cn"> {{#if cn}} {{cn}} {{/if}} </span>
-                {{#if company}} @ <span class="company">{{company}}</span> {{/if}}
-            </div>
+            <span class="login">
+                {{#if alias}}
+                    {{alias}}
+                {{else}}
+                    {{login}}
+                {{/if}}
+            </span>
+            {{#if account}}
+                <span class="subuser">of: <a class="account">{{account}}</a></span>
+            {{/if}}
         </a>
-        <span class="uuid">{{uuid}}</span>
+        <span class="uuid selectable">{{uuid}}</span>
     </div>
     <div class="col-sm-3">
+        <div class="name">
+            <span class="cn"> {{#if cn}} {{cn}} {{/if}} </span>
+            {{#if company}} @ <span class="company">{{company}}</span> {{/if}}
+        </div>
         <div class="email"><strong>email</strong> {{email}}</div>
     </div>
 
