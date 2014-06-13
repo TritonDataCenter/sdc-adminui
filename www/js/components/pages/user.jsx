@@ -12,6 +12,7 @@ var UserVms = require('./user/vms');
 var UserSSHKeys = require('./user/sshkeys');
 var UserImages = require('./user/images');
 var UserLimits = require('./user/limits/main');
+var UserSubusers = require('./user/subusers');
 var UserNetworks = require('./user/networks');
 
 var UserForm = require('../../views/user-form');
@@ -123,9 +124,9 @@ var PageUser = React.createClass({
                 break;
 
             case 'subusers':
-                view = <UserNetworks
+                view = <UserSubusers
                     readonly={!adminui.user.role('operators')}
-                    user={this.state.userModel.get('uuid')} />;
+                    account={this.state.userModel.get('uuid')} />;
                 break;
         }
 
@@ -208,6 +209,12 @@ var PageUser = React.createClass({
                         <li className={this.state.tab === 'profile' ? 'active' : ''}><a onClick={this._changeTab.bind(null, 'profile')}>
                             <i className="fa fa-user fa-fw"></i> Profile</a>
                         </li>
+                        <li className={this.state.tab === 'subusers' ? 'active' : ''}>
+                            <a onClick={this._changeTab.bind(null, 'subusers')}><i className="fa fa-users"></i> Sub Users</a>
+                        </li>
+
+                        <li className="nav-divider"></li>
+
                         <li className={this.state.tab === 'vms' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'vms')}><i className="fa fa-fw fa-cubes"></i> Virtual Machines</a>
                         </li>
@@ -223,9 +230,6 @@ var PageUser = React.createClass({
                         <li className={this.state.tab === 'networks' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'networks')}><i className="fa fa-fw fa-hand-o-right"></i> Networks</a>
                         </li>
-                        {/* <li className={this.state.tab === 'subusers' ? 'active' : ''}>
-                        <a onClick={this._changeTab.bind(null, 'subusers')}>Sub Users</a>
-                        </li> */}
                     </ul>
                 </div>
 
