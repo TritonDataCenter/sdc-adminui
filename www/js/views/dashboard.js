@@ -23,9 +23,6 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
     template: DashboardTemplate,
 
     initialize: function() {
-        this.alarmsView = new AlarmsView({
-            userUuid: adminui.user.getAdminUuid()
-        });
     },
 
     _bytesToGb: function(val) {
@@ -33,8 +30,6 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        this.alarmsView.setElement(this.$('#dashboard-alarms'));
-        this.alarmsView.fetch();
 
         var self = this;
         $.getJSON("/api/stats/vm_count", function(res) {
