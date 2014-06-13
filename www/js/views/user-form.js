@@ -59,9 +59,11 @@ module.exports = Backbone.Marionette.ItemView.extend({
             this.mode = 'edit';
         } else {
             this.model = new User();
+            if (options.account) {
+                this.model.set({'account': options.account});
+            }
             this.mode = 'create';
         }
-        console.log(this.model);
     },
 
     onError: function(model, xhr) {
@@ -91,11 +93,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
             patch: true,
             success: function(model, resp) {
                 self.$el.modal('hide').remove();
-                app.vent.trigger('showcomponent', 'user', {user: self.model});
-                app.vent.trigger('notification', {
-                    level: 'success',
-                    message: _.str.sprintf('User <strong>%s</strong> saved successfully.', self.model.get('login'))
-                });
+                self.trigger('user:saved', self.model);
             }
         });
     },

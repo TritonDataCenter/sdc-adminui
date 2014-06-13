@@ -47,6 +47,9 @@
                         <input type="text" class="form-control" name="phone" placeholder="510-123-4567">
                     </div>
                 </div>
+
+                {{#unless account}}
+
                 <div class="form-group">
                     <label class="control-label col-md-3">Role</label>
                     <div class="controls col-md-7">
@@ -73,6 +76,9 @@
                         </div>
                     </div>
                 </div>
+
+                {{/unless}}
+
             </div>
             <input type="hidden" name="cn">
         </div> {{! .modal-body}}

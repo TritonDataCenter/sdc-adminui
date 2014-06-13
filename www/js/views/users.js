@@ -112,8 +112,15 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     newUser: function() {
-        this.createView = new UserForm();
-        this.createView.render();
+        var createView = new UserForm();
+        createView.render();
+        createView.on('user:saved', function(user) {
+            app.vent.trigger('showcomponent', 'user', {user: user});
+            app.vent.trigger('notification', {
+                level: 'success',
+                message: _.str.sprintf('User <strong>%s</strong> saved successfully.', user.get('login'))
+            });
+        });
     },
 
     onSync: function(c) {
