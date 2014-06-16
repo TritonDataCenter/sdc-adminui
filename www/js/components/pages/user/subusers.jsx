@@ -77,7 +77,7 @@ var UserSubusers = React.createClass({
                     <div className="cn">{u.cn}</div>
                 </div>
                 <div className="subuser-email">
-                    <a href={'mailto:' + u.email}><i className="fa fa-email"></i> {u.email}</a>
+                    <a href={'mailto:' + u.email}><i className="fa fa-envelope"></i> {u.email}</a>
                 </div>
             </div>
         </div>;
