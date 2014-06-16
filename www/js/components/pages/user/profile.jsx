@@ -19,7 +19,7 @@ var UserProfile = React.createClass({
                     <div className="user-profile">
                         <h3>User Profile
                             <div className="actions">
-                                <button onClick={this.props.handleModifyUser} className="edit-user btn btn-sm btn-info"><i className="fa fa-pencil"></i> Modify User</button>
+                                <button onClick={this.props.handleModifyUser} className="edit-user btn btn-sm btn-info"><i className="fa fa-pencil"></i> Edit User Profile</button>
                             </div>
                         </h3>
                         <table className="table">
@@ -30,7 +30,7 @@ var UserProfile = React.createClass({
                             </tr>
                             <tr>
                                 <th>Email</th>
-                                <td><span className="email selectable">{user.email}</span></td>
+                                <td><a href={'mailto:'+user.email}><i class="fa fa-envelope"></i> <span className="email selectable">{user.email}</span></a></td>
                             </tr>
                             <tr>
                                 <th>Company</th>
