@@ -6,14 +6,25 @@ var AddKeyView = require('../../../views/sshkey-create');
 
 module.exports = React.createClass({
     componentWillMount: function() {
-        this.sshkeys = new SSHKeys(null, {user: this.props.user });
+        this.sshkeys = new SSHKeys(null, {
+            account: this.props.account,
+            user: this.props.user
+        });
         this.sshkeysList = new SSHKeysList({collection: this.sshkeys });
 
         this.view = new SSHKeysList({ collection: this.sshkeys });
         this.sshkeys.fetch();
     },
+    componentWillReceiveProps: function(props) {
+        this.sshkeys.user = props.user;
+        this.sshkeys.account = props.account;
+        this.sshkeys.fetch();
+    },
     _showAddKey: function() {
-        var view = new AddKeyView({ user: this.props.user });
+        var view = new AddKeyView({
+            account: this.props.account,
+            user: this.props.user
+        });
         view.render();
         view.on('saved', function(key) {
             this.sshkeys.add(key);
@@ -67,7 +78,7 @@ var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
     },
     onClickRemove: function(e) {
         e.preventDefault();
-        var confirm = window.confirm(__CONFIRM_REMOVE_KEY);
+        var confirm = window.confirm("Are you sure you want to remove this SSH Key?");
         if (confirm) {
             this.model.destroy();
         }

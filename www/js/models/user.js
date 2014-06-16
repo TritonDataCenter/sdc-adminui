@@ -9,6 +9,15 @@ var api = require('../request');
 
 
 var User = module.exports = Model.extend({
+    url: function() {
+        if (this.get('uuid') && this.get('account')) {
+            return _.str.sprintf('/api/users/%s/%s', this.get('account'), this.get('uuid'));
+        }
+        if (this.get('uuid')) {
+            return _.str.sprintf('/api/users/%s', this.get('uuid'));
+        }
+        return _.str.sprintf('/api/users');
+    },
     urlRoot: '/api/users',
     idAttribute: 'uuid',
     parse: function(resp) {

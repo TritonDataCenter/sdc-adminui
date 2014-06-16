@@ -61,6 +61,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'vms/:uuid': 'showVm',
         'users/:uuid': 'showUser',
         'users/:uuid/:tab': 'showUser',
+        'users/:account/:uuid/:tab': 'showUser',
         'image-import': 'showImageImport',
         'images/:uuid': 'showImage',
         'jobs/:uuid': 'showJob',
@@ -412,13 +413,28 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
-    showUser: function(uuid, tab) {
-        var props = {};
-        props.uuid = uuid;
-        if (tab) {
-            props.tab = tab;
-        }
+    showUser: function(account, user, tab) {
         if (this.authenticated()) {
+            if (arguments.length === 1) {
+                user = account;
+                account = null;
+                tab = null;
+            } else if (account && user && !tab) {
+                if (user.length !== '36') {
+                    tab = user;
+                    user = account;
+                    account = null;
+                }
+            }
+            var props = {};
+            props.user = user;
+            if (tab) {
+                props.tab = tab;
+            }
+            if (account) {
+                props.account = account;
+            }
+
             console.log(_.str.sprintf('[route] showUser:', props));
             this.presentComponent('user', props);
         }

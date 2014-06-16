@@ -14,6 +14,13 @@ var UserSubusers = React.createClass({
             users: []
         };
     },
+    gotoUser: function(u) {
+        adminui.vent.trigger('showcomponent', 'user', {
+            user: u.uuid,
+            account: u.account,
+            tab: 'profile'
+        });
+    },
     _fetchUsers: function() {
         var account = this.props.account;
 
@@ -66,12 +73,16 @@ var UserSubusers = React.createClass({
             <div className="panel-body">
                 <div className="subuser-icon" style={userIconStyle}></div>
                 <div className="subuser-details">
-                    <div className="alias">{u.alias}</div>
+                    <a onClick={this.gotoUser.bind(null, u)} className="alias">{u.alias}</a>
                     <div className="cn">{u.cn}</div>
+                </div>
+                <div className="subuser-email">
+                    <a href={'mailto:' + u.email}><i className="fa fa-email"></i> {u.email}</a>
                 </div>
             </div>
         </div>;
     },
+
     showUserForm: function() {
         var createView = new UserForm({account: this.props.account});
         createView.render();

@@ -8,23 +8,31 @@ var SSHKey = require('./sshkey');
 var SSHKeys = Collection.extend({
     model: SSHKey,
     url: function() {
-        return '/api/users/' + this.uuid + '/keys';
+        if (this.account) {
+            return _.str.sprintf('/api/users/%s/%s/keys', this.account, this.user);
+        } else {
+            return '/api/users/' + this.user + '/keys';
+        }
     },
     initialize: function(models, options) {
         options = options || {};
         if (typeof(options.user) === 'object') {
-            this.uuid = options.user.get('uuid');
+            this.user = options.user.get('uuid');
         } else if (typeof(options.user) === 'string') {
-            this.uuid = options.user;
+            this.user = options.user;
         }
 
-        if (typeof(this.uuid) !== 'string') {
+        if (options.account) {
+            this.account = options.account;
+        }
+
+        if (typeof(this.user) !== 'string') {
             throw new TypeError('options.user {string|object} required');
         }
     },
     parse: function(response) {
         return _.map(response, function(item) {
-            item.user = this.uuid;
+            item.user = this.user;
             return item;
         }, this);
     }

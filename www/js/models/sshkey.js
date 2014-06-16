@@ -4,7 +4,11 @@ var _ = require('underscore');
 
 module.exports = Model.extend({
     urlRoot: function() {
-        return _.str.sprintf('/api/users/%s/keys', this.user);
+        if (this.account) {
+            return _.str.sprintf('/api/users/%s/%s/keys', this.account, this.user);
+        } else {
+            return _.str.sprintf('/api/users/%s/keys', this.user);
+        }
     },
 
     idAttribute: 'fingerprint',
@@ -13,7 +17,9 @@ module.exports = Model.extend({
         if (!options.user) {
             throw new TypeError('options.user required');
         }
+        console.log(this.collection);
 
-        this.user = options.user;
+        this.user = options.user || this.collection.user;
+        this.account = options.account || this.collection.account;
     }
 });
