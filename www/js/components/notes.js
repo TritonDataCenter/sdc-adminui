@@ -114,7 +114,7 @@ var NotesPanel = React.createClass({
     }
 });
 
-module.exports = React.createClass({
+var NotesDropdown = React.createClass({
     getInitialState: function() {
         return { notes: [] };
     },
@@ -245,3 +245,5 @@ module.exports = React.createClass({
         );
     }
 });
+
+module.exports = NotesDropdown;
