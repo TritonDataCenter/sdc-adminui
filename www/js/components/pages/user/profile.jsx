@@ -10,6 +10,8 @@ var UserProfile = React.createClass({
     render: function() {
         var user = this.props.userModel.toJSON();
         var twoFactorAuth = this.props.twoFactorAuth;
+        var isTopLevelAccount = !user.account;
+
 
         return (
             <div className="row">
@@ -38,10 +40,14 @@ var UserProfile = React.createClass({
                                 <th>Phone</th>
                                 <td><span className="phone">{user.phone}</span></td>
                             </tr>
-                            <tr>
-                                <th>Groups</th>
-                                <td><span className="groups">{user.groups && user.groups.join(' ')}</span></td>
-                            </tr>
+                            { isTopLevelAccount &&
+                                <tr>
+                                    <th>Groups</th>
+                                    <td><span className="groups">{user.groups && user.groups.join(' ')}</span></td>
+                                </tr>
+                            }
+
+                            { isTopLevelAccount &&
                             <tr>
                                 <th>Provisioning</th>
                                 <td>
@@ -54,6 +60,9 @@ var UserProfile = React.createClass({
                                     </span>
                                 </td>
                             </tr>
+                            }
+
+                            { isTopLevelAccount &&
                             <tr>
                                 <th>Registered Developer</th>
                                 <td>
@@ -65,6 +74,9 @@ var UserProfile = React.createClass({
                                     </span>
                                 </td>
                             </tr>
+                            }
+
+                            { isTopLevelAccount &&
                             <tr>
                                 <th>Two Factor Auth</th>
                                 <td>
@@ -78,6 +90,7 @@ var UserProfile = React.createClass({
                                     <a onClick={this.props.handleToggleTwoFactorAuth} className="toggle-2fa">{ twoFactorAuth ? 'Disable' : 'Enable'}</a>
                                 </td>
                             </tr>
+                            }
                         </tbody>
                         </table>
                     </div>
