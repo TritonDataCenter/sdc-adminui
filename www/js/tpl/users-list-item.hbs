@@ -11,10 +11,7 @@
                     {{login}}
                 {{/if}}
             </span>
-            {{#if account}}
-                <span class="subuser">of: <a class="account">{{account}}</a></span>
-            {{/if}}
-        </a>
+        </a> {{#if account}} <span class="subuser">of: <a class="account account-link">{{account}}</a></span> {{/if}} </a>
         <span class="uuid selectable">{{uuid}}</span>
     </div>
     <div class="col-sm-3">

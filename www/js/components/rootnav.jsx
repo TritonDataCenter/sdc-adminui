@@ -25,6 +25,7 @@ var Rootnav = React.createClass({
 
         return cx(attrs);
     },
+
     _clickedMenuItem: function(e) {
         e.preventDefault();
         var view = e.currentTarget.getAttribute('data-view');
@@ -55,17 +56,18 @@ var Rootnav = React.createClass({
 
                                 <li onClick={this._clickedMenuItem} data-view="dashboard" className={this.classesFor('datacenter dashboard')}>
                                     <a href="/dashboard" className="datacenter-name">
-                                        <small>Datacenter</small>
-                                        {this.props.currentDatacenter}
+                                        <small>Datacenter</small> {this.props.currentDatacenter}
                                     </a>
                                 </li>
 
-                                <li className="fishbulb"><a title="Cloud Analytics" href="/fishbulb" target="fishbulb"><i className="fa fa-bar-chart-o"></i> Analytics</a></li>
+                                <li className="fishbulb"><a title="Cloud Analytics" href="/fishbulb" target="fishbulb">
+                                <i className="fa fa-bar-chart-o fa-fw"></i> Analytics</a></li>
 
                                 <li onClick={this._clickedMenuItem} className={this.classesFor('users')} data-view="users">
-                                    <a href="/users"><i className="fa fa-users"></i> Users</a>
+                                    <a href="/users"><i className="fa fa-users fa-fw"></i> Users</a>
                                 </li>
                             </ul>
+
                             <ul className="nav navbar-nav main-nav navbar-right">
                                 <li className="alarms">
                                     <AlarmsMenu user={this.props.user.get('adminUuid')} />
@@ -73,7 +75,7 @@ var Rootnav = React.createClass({
                                 {
                                     !this.props.readonly &&
                                     <li onClick={this._clickedMenuItem} className={this.classesFor('settings')}  data-view="settings">
-                                    <a href="/settings"><i className="fa fa-gear"></i></a>
+                                    <a href="/settings"><i className="fa fa-gear fa-fw"></i></a>
                                     </li>
                                 }
                             </ul>
@@ -89,8 +91,8 @@ var Rootnav = React.createClass({
                                     <span className="cn">{this.props.user.get('cn')}</span>
                                     <span className="login-name">{this.props.user.get('login')}</span>
                                 </div>
-                                </a>
-                            <a onClick={this.props.handleSignout} className="signout"> <i className="fa fa-sign-out"></i></a>
+                            </a>
+                            <a onClick={this.props.handleSignout} className="signout"> <i className="fa fa-sign-out fa-fw"></i></a>
                         </div>
                     </div>
                 </div>

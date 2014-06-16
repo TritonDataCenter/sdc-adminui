@@ -15,13 +15,23 @@ var UsersListItem = Backbone.Marionette.ItemView.extend({
         'class': 'users-list-item'
     },
     events: {
-        'click a.login-link': 'onClickLoginName'
+        'click a.login-link': 'onClickLoginName',
+        'click a.account-link': 'onClickAccountName',
     },
     serializeData: function() {
         var data = _.clone(this.model.toJSON());
         data.approved_for_provisioning = data.approved_for_provisioning === "true" ?
             true : false;
         return data;
+    },
+    onClickAccountName: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+        e.preventDefault();
+        adminui.vent.trigger('showcomponent', 'user', {
+            user: this.model.get('account')
+        });
     },
     onClickLoginName: function(e) {
         if (e.metaKey || e.ctrlKey) {
