@@ -59,7 +59,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
             this.mode = 'edit';
         } else {
             this.model = new User();
-            if (options.account) {
+            if (options && options.account) {
                 this.model.set({'account': options.account});
             }
             this.mode = 'create';
