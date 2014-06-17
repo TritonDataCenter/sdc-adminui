@@ -12,6 +12,7 @@ var UserVms = require('./user/vms');
 var UserSSHKeys = require('./user/sshkeys');
 var UserImages = require('./user/images');
 var UserLimits = require('./user/limits/main');
+var UserPolicies = require('./user/policies');
 var UserSubusers = require('./user/subusers');
 var UserNetworks = require('./user/networks');
 
@@ -153,6 +154,12 @@ var PageUser = React.createClass({
                     readonly={!adminui.user.role('operators')}
                     account={this.state.userModel.get('uuid')} />;
                 break;
+
+            case 'policies':
+                view = <UserPolicies
+                    readonly={!adminui.user.role('operators')}
+                    account={this.state.userModel.get('uuid')} />;
+                break;
         }
 
         return view;
@@ -255,6 +262,14 @@ var PageUser = React.createClass({
 
                         {isTopLevelAccount && <li className={this.state.tab === 'subusers' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'subusers')}><i className="fa fa-users fa-fw"></i> Sub Users</a>
+                        </li> }
+
+                        {isTopLevelAccount && <li className={this.state.tab === 'groups' ? 'active' : ''}>
+                            <a onClick={this._changeTab.bind(null, 'groups')}><i className="fa fa-users fa-fw"></i> Groups</a>
+                        </li> }
+
+                        {isTopLevelAccount && <li className={this.state.tab === 'policies' ? 'active' : ''}>
+                            <a onClick={this._changeTab.bind(null, 'policies')}><i className="fa fa-users fa-fw"></i> Policies</a>
                         </li> }
 
                         <li className="nav-divider"></li>

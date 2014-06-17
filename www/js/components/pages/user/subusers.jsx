@@ -9,26 +9,11 @@ var UserSubusers = React.createClass({
     propTypes: {
         'account': PropTypes.string.isRequired
     },
+
     getInitialState: function() {
         return {
             users: []
         };
-    },
-    gotoUser: function(u) {
-        adminui.vent.trigger('showcomponent', 'user', {
-            user: u.uuid,
-            account: u.account,
-            tab: 'profile'
-        });
-    },
-    _fetchUsers: function() {
-        var account = this.props.account;
-
-        api.get('/api/users').query({account: account}).end(function(res) {
-            if (res.ok) {
-                this.setState({users: res.body});
-            }
-        }.bind(this));
     },
     componentWillMount: function() {
         this._fetchUsers();
@@ -73,7 +58,7 @@ var UserSubusers = React.createClass({
             <div className="panel-body">
                 <div className="subuser-icon" style={userIconStyle}></div>
                 <div className="subuser-details">
-                    <a onClick={this.gotoUser.bind(null, u)} className="alias">{u.alias}</a>
+                    <a onClick={this._handleNavigateToUser.bind(null, u)} className="alias">{u.alias}</a>
                     <div className="cn">{u.cn}</div>
                 </div>
                 <div className="subuser-email">
@@ -107,6 +92,24 @@ var UserSubusers = React.createClass({
             { this.state.users.map(this.renderUserRow, this)}
             </div>
         </div>);
+    },
+
+
+    _handleNavigateToUser: function(u) {
+        adminui.vent.trigger('showcomponent', 'user', {
+            user: u.uuid,
+            account: u.account,
+            tab: 'profile'
+        });
+    },
+    _fetchUsers: function() {
+        var account = this.props.account;
+
+        api.get('/api/users').query({account: account}).end(function(res) {
+            if (res.ok) {
+                this.setState({users: res.body});
+            }
+        }.bind(this));
     }
 });
 

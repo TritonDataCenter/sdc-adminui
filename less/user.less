@@ -1,6 +1,5 @@
 @import "__vms-list";
 
-
 #page-user {
   h3 { margin-top: 10px; margin-bottom: 20px; }
   .loading {
@@ -105,6 +104,44 @@
   .network-pools-list {
     #page-networks > .network-pools-list;
   }
+
+  .user-subusers {
+    .subuser-icon {
+      width: 48px;
+      height: 48px;
+      background-color: #FFF;
+      background-position: middle;
+      background-repeat: no-repeat;
+
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 20px;
+      float: left;
+    }
+    .subuser-email {
+      margin-left: 400px;
+    }
+    .subuser-details {
+      float: left;
+      .alias {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .user-policies {
+    .policy {
+      .name { font-weight: bold; }
+      .description { }
+      .rule {
+        .r {
+          font-size: 11px; font-family: @font-family-monospace;
+          background: #eee;
+        }
+      }
+    }
+  }
+
 }
 
 
@@ -112,28 +149,3 @@
   .modal-footer { margin-top: 0; }
 }
 
-
-.user-subusers {
-  .subuser-icon {
-    width: 48px;
-    height: 48px;
-    background-color: #FFF;
-    background-position: middle;
-    background-repeat: no-repeat;
-
-    border-radius: 50%;
-    vertical-align: middle;
-    margin-right: 20px;
-    float: left;
-  }
-  .subuser-email {
-    margin-left: 400px;
-  }
-  .subuser-details {
-    float: left;
-    .alias {
-      font-weight: bold;
-    }
-  }
-
-}
