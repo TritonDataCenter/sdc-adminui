@@ -9,6 +9,7 @@ var adminui = require('../../../adminui');
 
 var UserPolicies = React.createClass({
     propTypes: {
+        readonly: PropTypes.bool,
         account: PropTypes.string.isRequired
     },
     getInitialState: function() {
@@ -89,10 +90,10 @@ var UserPolicies = React.createClass({
                             })
                         }
                     </div>
-                    <div className="col-xs-1">
+                    { !this.props.readonly && <div className="col-xs-1">
                         <button type="button" onClick={this._handleEditPolicy.bind(null, p)} className="btn btn-link edit-policy"><i className="fa fa-pencil"></i></button>
                         <button type="button" onClick={this._handleRemovePolicy.bind(null, p)} className="btn btn-link remove-policy"><i className="fa fa-trash-o"></i></button>
-                    </div>
+                    </div> }
                 </div>
             </div>
         </div>;
@@ -108,12 +109,16 @@ var UserPolicies = React.createClass({
         return (
         <div className="user-policies">
             <h3>Policies
+            {
+                !this.props.readonly &&
                 <div className="actions">
                     {
                         !this.state.policyForm &&
                         <button onClick={this._handleNewPolicy} className="btn btn-info"><i className="fa fa-plus"/> New Policy</button>
                     }
                 </div>
+
+            }
             </h3>
             { this.state.policyForm && <UserPolicyForm
                 error={this.state.policyFormError}
@@ -134,7 +139,7 @@ var UserPolicies = React.createClass({
         </div>);
     },
     _handleRemovePolicy: function(p) {
-        var msg = _.str.sprintf("Removing %s will remove this policy from roles it's associated with. Are you sure you want to proceed?");
+        var msg = _.str.sprintf("Removing %s will remove this policy from roles it's associated with. Are you sure you want to proceed?", p.name);
         var c = window.confirm(msg);
         if (c) {
             var url = _.str.sprintf('%s/%s', this._policiesApiUrl(), p.uuid);

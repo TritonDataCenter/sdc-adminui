@@ -41,20 +41,21 @@
     "underscore.string": "~2.3.1"
   },
   "devDependencies": {
-    "react-tools": "0.10.0",
+    "jest-cli": "^0.1.15",
     "node-dev": "~2.1.0",
-    "supervisor": "~0.5.6",
-    "jest-cli": "0.1.11"
+    "react-tools": "0.10.0",
+    "supervisor": "~0.5.6"
   },
   "jest": {
-    "scriptPreprocessor": "../../test/jsx-preprocessor.js",
+    "scriptPreprocessor": "<rootDir>/test/jsx-preprocessor.js",
     "unmockedModulePathPatterns": [
-      "../../node_modules/react"
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/backbone",
+      "<rootDir>/node_modules/superagent"
     ],
     "testPathIgnorePatterns": [
-      "../../node_modules"
-    ],
-    "rootDir": "public/js"
+      "<rootDir>/node_modules"
+    ]
   },
   "scripts": {
     "test": "jest"
