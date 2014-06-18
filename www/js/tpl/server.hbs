@@ -66,14 +66,14 @@
         <div class="item-label">Provisioning</div>
         <div class="item-content">
           {{#if reserved}}
-          <span class="disabled"><i class="icon-ban-circle"></i> Disabled</span>
-          {{#role "operators"}}
-          <a class="change-reserve">Enable Provisioning <i class="icon-off"></i></a>
+              <span class="disabled"><i class="fa fa-times"></i> Disabled</span>
+              {{#role "operators"}}
+              <a class="change-reserve">Enable Provisioning <i class="fa fa-check"></i></a>
           {{/role}}
           {{else}}
-          <span class="enabled"><i class="icon-ok-circle"></i> Enabled</span>
-          {{#role "operators"}}
-          <a class="change-reserve">Disable Provisioning <i class="icon-off"></i></a>
+              <span class="enabled"><i class="fa fa-check"></i> Enabled</span>
+              {{#role "operators"}}
+              <a class="change-reserve">Disable <i class="fa fa-times"></i></a>
           {{/role}}
           {{/if}}
         </div>
