@@ -163,20 +163,22 @@ var UserPolicies = React.createClass({
         }.bind(this));
     },
     renderPolicy: function(p) {
-        return <div key={p.uuid} className="policy">
-            <div className="row">
-                <div className="col-sm-2">
-                    <div className="name">{p.name}</div>
-                </div>
-                <div className="col-sm-4">
-                    <div className="description">{p.description}</div>
-                </div>
-                <div className="col-sm-6">
-                    {
-                        p.rules.map(function(r) {
-                            return <div key={r} className="rule"><span className="r">{r}</span></div>;
-                        })
-                    }
+        return <div key={p.uuid} className="panel policy">
+            <div className="panel-body">
+                <div className="row">
+                    <div className="col-sm-2">
+                        <div className="name">{p.name}</div>
+                    </div>
+                    <div className="col-sm-4">
+                        <div className="description">{p.description}</div>
+                    </div>
+                    <div className="col-sm-6">
+                        {
+                            p.rules.map(function(r) {
+                                return <div key={r} className="rule"><span className="r">{r}</span></div>;
+                            })
+                        }
+                    </div>
                 </div>
             </div>
         </div>;
@@ -185,7 +187,7 @@ var UserPolicies = React.createClass({
          if (this.state.policies.length) {
             return this.state.policies.map(this.renderPolicy, this);
         } else {
-            return <div className="no-policies">No Account Policies Found</div>;
+            return <div className="no-policies panel"><div className="panel-body">No Account Policies Found</div></div>;
         }
     },
     render: function() {
@@ -203,14 +205,16 @@ var UserPolicies = React.createClass({
                 error={this.state.policyFormError}
                 handleCancel={this._handleCancelNewPolicy}
                 handleSavePolicy={this._handleSavePolicy} /> }
-            <div className="policies panel">
-                <div className="panel-body">
+            <div className="policies">
                 {
                     this.state.loading ?
-                        <div className="loading-policies">Fetching Account Policies</div> :
+                        (<div className="panel">
+                            <div className="panel-body">
+                                <div className="loading-policies">Fetching Account Policies</div>
+                            </div>
+                        </div>) :
                         this.renderPolicies()
                 }
-                </div>
             </div>
         </div>);
     },
