@@ -1,12 +1,12 @@
 var Backbone = require('backbone');
 
 var adminui = require('adminui');
-var SSHKey = require('../models/sshkey');
+var SSHKey = require('../../../models/sshkey');
 
 module.exports = Backbone.Marionette.ItemView.extend({
     id: 'sshkey-create',
     className: 'modal',
-    template: require('../tpl/sshkey-create.hbs'),
+    template: require('./sshkey-create.hbs'),
     events: {
         'click button.save': 'onClickSave',
         'submit form': 'onClickSave'

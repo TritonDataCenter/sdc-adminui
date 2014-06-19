@@ -89,7 +89,9 @@ var UserSubusers = React.createClass({
             </h3>
 
             <div class="subusers-list">
-            { this.state.users.map(this.renderUserRow, this)}
+            {
+                (this.state.users.length) ? this.state.users.map(this.renderUserRow, this)
+                 : <div className="panel"><div className="panel-body">There are no users under this account.</div></div> }
             </div>
         </div>);
     },

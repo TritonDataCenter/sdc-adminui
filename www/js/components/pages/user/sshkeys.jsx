@@ -2,7 +2,7 @@
 
 var BB = require('../../bb.jsx');
 var React = require('react');
-var AddKeyView = require('../../../views/sshkey-create');
+var AddKeyView = require('./sshkey-create');
 
 module.exports = React.createClass({
     componentWillMount: function() {
