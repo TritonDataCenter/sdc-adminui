@@ -149,9 +149,34 @@
   }
 
   .user-roles {
+    .roles-list {
+      .role { margin-bottom: 10px; }
+      .role-name { font-weight: bold; }
+      .role-uuid { font-family: @font-family-monospace; font-size: 10px; color: @gray-light; }
+      .role-policies {
+        h6 { margin:0; text-transform: uppercase; font-size: 10px; }
+        .no-policies { color: @gray-light; }
+        .policy-name {
+          background: @state-info-bg;
+          border-bottom: 1px solid darken(@state-info-bg, 5%);
+          display: inline-block;
+          font-size: 11px;
+          padding: 0 5px;
+        }
+      }
+    }
+
     .user-roles-form {
+      .form { margin-top: 20px; }
       .role-policies,
       .role-members {
+      }
+      .policy-name {
+        font-weight: bold;
+      }
+      .policy-rules {
+        font-family: @font-family-monospace;
+        color: @gray;
       }
       .policy {
         padding: 10px;

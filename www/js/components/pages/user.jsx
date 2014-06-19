@@ -15,7 +15,7 @@ var UserLimits = require('./user/limits/main');
 var UserPolicies = require('./user/policies');
 var UserSubusers = require('./user/subusers');
 var UserNetworks = require('./user/networks');
-// var UserRoles = require('./user/roles');
+var UserRoles = require('./user/roles');
 
 var UserForm = require('../../views/user-form');
 
@@ -162,7 +162,7 @@ var PageUser = React.createClass({
                     account={this.state.userModel.get('uuid')} />;
                 break;
 
-            case 'groups':
+            case 'roles':
                 view = <UserRoles
                     readonly={!adminui.user.role('operators')}
                     account={this.state.userModel.get('uuid')} />;
@@ -271,7 +271,7 @@ var PageUser = React.createClass({
                             <a onClick={this._changeTab.bind(null, 'subusers')}><i className="fa fa-users fa-fw"></i> Sub Users</a>
                         </li> }
 
-                        { /* isTopLevelAccount && <li className={this.state.tab === 'groups' ? 'active' : ''}>
+                        { /* isTopLevelAccount && <li className={this.state.tab === 'roles' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'groups')}><i className="fa fa-users fa-fw"></i> Roles</a>
                         </li> */ }
 

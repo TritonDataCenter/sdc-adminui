@@ -27,8 +27,6 @@ var UserPolicies = React.createClass({
     _handleSavePolicy: function(policy) {
         var p = _.clone(policy);
         var req;
-        p.rule = p.rules;
-        delete p.rules;
         if (p.uuid) {
             req = api.put(_.str.sprintf('%s/%s', this._policiesApiUrl(), p.uuid));
         } else {
@@ -57,14 +55,7 @@ var UserPolicies = React.createClass({
         this.setState({loading: true});
         api.get(this._policiesApiUrl()).end(function(res) {
             if (res.ok) {
-                var policies = res.body.map(function(p) {
-                    if (typeof(p.rule) === 'string') {
-                        p.rules = [p.rule];
-                    } else {
-                        p.rules = p.rule;
-                    }
-                    return p;
-                });
+                var policies = res.body;
 
                 this.setState({
                     loading: false,
