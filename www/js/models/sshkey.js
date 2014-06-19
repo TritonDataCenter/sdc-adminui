@@ -17,9 +17,14 @@ module.exports = Model.extend({
         if (!options.user) {
             throw new TypeError('options.user required');
         }
-        console.log(this.collection);
 
-        this.user = options.user || this.collection.user;
-        this.account = options.account || this.collection.account;
+        options = options || {};
+        if (this.collection) {
+            this.user = this.collection.user;
+            this.account = this.collection.account;
+        } else {
+            this.user = options.user;
+            this.account = options.account;
+        }
     }
 });
