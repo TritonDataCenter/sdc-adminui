@@ -267,21 +267,21 @@ var PageUser = React.createClass({
                             <i className="fa fa-user fa-fw"></i> Profile</a>
                         </li>
 
-                        {isTopLevelAccount && <li className={this.state.tab === 'subusers' ? 'active' : ''}>
+                        { isTopLevelAccount && <li className={this.state.tab === 'subusers' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'subusers')}><i className="fa fa-users fa-fw"></i> Sub Users</a>
                         </li> }
 
-                        { /* isTopLevelAccount && <li className={this.state.tab === 'roles' ? 'active' : ''}>
-                            <a onClick={this._changeTab.bind(null, 'groups')}><i className="fa fa-users fa-fw"></i> Roles</a>
-                        </li> */ }
+                        { isTopLevelAccount && <li className={this.state.tab === 'roles' ? 'active' : ''}>
+                            <a onClick={this._changeTab.bind(null, 'roles')}><i className="fa fa-users fa-fw"></i> Roles</a>
+                        </li> }
 
-                        { /* isTopLevelAccount && <li className={this.state.tab === 'policies' ? 'active' : ''}>
+                        { isTopLevelAccount && <li className={this.state.tab === 'policies' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'policies')}><i className="fa fa-users fa-fw"></i> Policies</a>
-                        </li> */ }
+                        </li> }
 
                         <li className="nav-divider"></li>
 
-                        {isTopLevelAccount && <li className={this.state.tab === 'vms' ? 'active' : ''}>
+                        { isTopLevelAccount && <li className={this.state.tab === 'vms' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'vms')}><i className="fa fa-fw fa-cubes"></i> Virtual Machines</a>
                         </li> }
 
@@ -289,15 +289,15 @@ var PageUser = React.createClass({
                             <a onClick={this._changeTab.bind(null, 'sshkeys')}><i className="fa fa-key fa-fw" /> SSH Keys</a>
                         </li>
 
-                        {isTopLevelAccount && <li className={this.state.tab === 'images' ? 'active' : ''}>
+                        { isTopLevelAccount && <li className={this.state.tab === 'images' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'images')}><i className="fa fa-image fa-fw" /> Images</a>
                         </li> }
 
-                        {isTopLevelAccount && <li className={this.state.tab === 'limits' ? 'active' : ''}>
+                        { isTopLevelAccount && <li className={this.state.tab === 'limits' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'limits')}><i className="fa fa-fw fa-hand-o-right"></i> Limits</a>
                         </li> }
 
-                        {isTopLevelAccount && <li className={this.state.tab === 'networks' ? 'active' : ''}>
+                        { isTopLevelAccount && <li className={this.state.tab === 'networks' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'networks')}><i className="fa fa-fw fa-hand-o-right"></i> Networks</a>
                         </li> }
                     </ul>

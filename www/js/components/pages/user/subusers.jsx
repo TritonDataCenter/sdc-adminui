@@ -54,7 +54,7 @@ var UserSubusers = React.createClass({
         var userIconStyle = { 'background-image': userIconUrl };
 
 
-        return <div className="subuser panel">
+        return <div key={u.uuid} className="subuser panel">
             <div className="panel-body">
                 <div className="subuser-icon" style={userIconStyle}></div>
                 <div className="subuser-details">
@@ -88,7 +88,7 @@ var UserSubusers = React.createClass({
                 </div>
             </h3>
 
-            <div class="subusers-list">
+            <div className="subusers-list">
             {
                 (this.state.users.length) ? this.state.users.map(this.renderUserRow, this)
                  : <div className="panel"><div className="panel-body">There are no users under this account.</div></div> }

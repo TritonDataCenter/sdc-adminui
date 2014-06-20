@@ -18,6 +18,9 @@ var UserPolicies = React.createClass({
             policyForm: false
         };
     },
+    componentWillReceiveProps: function() {
+        this._fetchPolicies();
+    },
     componentWillMount: function() {
         this._fetchPolicies();
     },
