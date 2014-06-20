@@ -37,11 +37,15 @@ var Form = module.exports = React.createClass({
     },
     loadDatacenters: function() {
         api.get('/api/datacenters').end(function(res) {
-            var dcs = res.body;
-            if (this.state.datacenter) {
-                dcs.push(this.state.datacenter);
+            if (res.ok) {
+                var dcs = res.body.map(function(dc) {
+                    return dc.datacenter;
+                });
+                if (this.state.datacenter) {
+                    dcs.push(this.state.datacenter);
+                }
+                this.setState({ datacenters: _.unique(dcs) });
             }
-            this.setState({ datacenters: _.unique(dcs) });
         }.bind(this));
     },
     loadImages: function() {
