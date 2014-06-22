@@ -72,7 +72,7 @@ js: $(JS_BUNDLE)
 
 $(JS_BUNDLE): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
 	@echo "Building js bundle"
-	$(NODE) tools/build-js | bunyan
+	MINIFY=true $(NODE) tools/build-js | bunyan
 
 .PHONY: dev
 dev: $(JS_BUNDLE)
@@ -83,7 +83,7 @@ devrun:
 	@./tools/devrun.sh
 
 .PHONY: test
-test: | $(JS_BUNDLE) 
+test: | $(JS_BUNDLE)
 	$(NPM) test
 
 

@@ -7,7 +7,7 @@ var LOG = require('bunyan').createLogger({name:'bundler'});
 var async = require('async');
 var fs = require('fs');
 var path = require('path');
-var browserify = require('browserify');
+var browserify = require('watchify/node_modules/browserify');
 var watchify = require('watchify');
 
 var shim = require('browserify-shim');
@@ -105,8 +105,7 @@ Object.keys(shimConfig).forEach(function(k) {
 });
 
 var prepAppBundle = function() {
-    // var bundler = process.env.WATCH ? watchify : browserify;
-    var bundler = watchify;
+    var bundler = process.env.WATCH ? watchify : browserify;
     var bundle = shim(bundler({ extensions: ['.js', '.jsx'] }), shimConfig);
     bundle
         .transform(require.resolve(join(root, './transforms/tpl')))
@@ -155,14 +154,10 @@ var _bundled = [];
         bundle.bind(null, ba, 'app.js'),
         bundle.bind(null, bl, 'libs.js')
     ], function(err, res) {
-        if (! process.env.WATCH) {
-            if (err) {
-                LOG.fatal(err, 'Error building app bundle');
-                process.exit(1);
-            } else {
-                LOG.info('ALL DONE.');
-                process.exit(0);
-            }
+        if (err) {
+            LOG.fatal('ERROR BUILDING');
+        } else {
+            LOG.info('ALL DONE.');
         }
     });
 })();
@@ -192,26 +187,24 @@ function bundle(bundler, out, cb) {
             LOG.info('[%s] OK', out);
         }
         fs.rename(tmpPath, outPath, function() {
-            if (process.env.WATCH) {
+            if (process.env.MINIFY) {
+                var min;
+                try {
+                    min = uglify.minify(outPath);
+                    fs.writeFileSync(outPath + '.min.js', min.code, 'utf8');
+                    LOG.info('[%s.min.js]', out);
+                    fs.rename(outPath+'.min.js', outPath, function() {
+                        LOG.info('[%s.min.js] -> [%s]', out, out);
+                        cb(null, out);
+                    });
+                } catch (e) {
+                    LOG.fatal(e, 'Error minifying output');
+                    cb(e);
+                }
+            } else {
                 cb(null, out);
-                return;
-            }
-
-            var min;
-            try {
-                min = uglify.minify(outPath);
-                fs.writeFileSync(outPath + '.min.js', min.code, 'utf8');
-                LOG.info('[%s.min.js]', out);
-                fs.rename(outPath+'.min.js', outPath, function() {
-                    LOG.info('[%s.min.js] -> [%s]', out, out);
-                    cb(null, out);
-                });
-            } catch (e) {
-                LOG.fatal(e, 'Error minifying output');
-                cb(e);
             }
         });
-
     });
 
     bs.pipe(fs.createWriteStream(tmpPath));
