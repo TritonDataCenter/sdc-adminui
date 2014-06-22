@@ -1,6 +1,9 @@
+"use strict";
+
 /**
  * ./vms.js
  */
+var $ = require('jquery');
 var app = require('../adminui');
 var _ = require('underscore');
 var Backbone = require('backbone');
@@ -43,10 +46,10 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
             $('#datetimepicker-to').datetimepicker();
             $('#datetimepicker-from').on('dp.change', function(e) {
                 $('#datetimepicker-to').data("DateTimePicker").setMinDate(e.date);
-            })
+            });
             $('#datetimepicker-to').on('dp.change', function(e) {
                 $('#datetimepicker-from').data("DateTimePicker").setMaxDate(e.date);
-            })
+            });
         });
     },
     onShow: function() {
@@ -102,6 +105,7 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
     },
 
     toggleFiltersPanel: function(e) {
+        e.preventDefault();
         var filterPanel = this.$('.more');
         var filterPanelVisible = (filterPanel.is(':visible'));
         this.$('form.quick .btn-info').prop('disabled', !filterPanelVisible);
@@ -109,9 +113,9 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
         this.$('form.quick input').prop('disabled', !filterPanelVisible);
         if (filterPanelVisible) {
             filterPanel.hide();
-            this.$('.toggle-filter').html('Show More Filter Options')
+            this.$('.toggle-filter').html('Show More Filter Options');
         } else {
-            this.$('.toggle-filter').html('Show Less Filter Options')
+            this.$('.toggle-filter').html('Show Less Filter Options');
             filterPanel.show();
         }
     }

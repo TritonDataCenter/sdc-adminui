@@ -3,9 +3,9 @@ var _ = require('underscore');
 
 var adminui = require('../adminui');
 var Networks = require('../models/networks');
-var NetworksList = require('./views/networks-list');
+var NetworksList = require('./networks-list');
 
-var NetworkPoolsForm = require('./views/network-pools-form');
+var NetworkPoolsForm = require('./network-pools-form');
 
 var ItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'li',

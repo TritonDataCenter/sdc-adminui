@@ -1,5 +1,7 @@
 /** @jsx React.DOM */
 
+"use strict";
+
 var Backbone = require('backbone');
 var moment = require('moment');
 var React = require('react');
@@ -49,10 +51,10 @@ var JobProgressSummary = React.createClass({
                                         <div className="error">
                                         {(c.error && c.error.message) ? c.error.message : c.error }
                                         </div>
-                                    )
+                                    );
                                 }
                             })()}
-                        </li>)
+                        </li>);
                     })}
                     </ol>
                 </div>
@@ -108,7 +110,7 @@ var JobProgressComponent = React.createClass({
                     <JobProgressFooter onCancel={this.props.onCancel} job={job} />
                     </div>
                 </div>
-            </div>
+            </div>;
     }
 });
 
@@ -177,8 +179,7 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
         var job = this.serializeData();
 
         this.component = React.renderComponent(
-            <JobProgressComponent job={job} onCancel={this.onCancel.bind(this)} />
-        , this.$el.get(0));
+            <JobProgressComponent job={job} onCancel={this.onCancel.bind(this)} />, this.$el.get(0));
     },
 
     onClose: function() {

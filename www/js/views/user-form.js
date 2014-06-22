@@ -1,11 +1,10 @@
+"use strict";
+
 var Backbone = require('backbone');
 var _ = require('underscore');
 
-
-
 var User = require('../models/user');
 var Template = require('../tpl/user-form.hbs');
-var app = require('../adminui');
 
 module.exports = Backbone.Marionette.ItemView.extend({
 

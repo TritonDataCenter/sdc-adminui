@@ -1,5 +1,7 @@
 /** @jsx React.DOM */
 
+"use strict";
+
 var React = require('react');
 var Backbone = require('backbone');
 
@@ -42,7 +44,7 @@ var ServerNic = React.createClass({
                     <span className="nic-tags-provided value">{ nic.nic_tags_provided.join(' ') }</span>
                 </div> : '' }
             </li>
-        )
+        );
     }
 });
 

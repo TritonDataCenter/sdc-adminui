@@ -1,5 +1,7 @@
 /** @jsx React.DOM **/
 
+"use strict";
+
 var Backbone = require('backbone');
 var _ = require('underscore');
 var moment = require('moment');
@@ -57,6 +59,7 @@ var JobDetailsComponent = React.createClass({
                         <div className="started-at"><i className="fa fa-play"></i> {task.started_at}</div>
                         <div className="finished-at"><i className="fa fa-stop"></i> {task.finished_at}</div>
                     </div>
+
                     <div className="duration"><i className="fa fa-clock-o"></i><div className="value">{task.duration}</div></div>
                 </li>
             )

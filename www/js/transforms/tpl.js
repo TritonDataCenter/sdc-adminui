@@ -1,10 +1,15 @@
+"use strict";
 var through = require('through');
 var Handlebars = require("handlebars");
 var underscore = require("underscore");
 
 module.exports = function(file) {
-    if (/\.hbs/.test(file)) return _hbs(file);
-    if (/\.html/.test(file)) return _underscore(file);
+    if (/\.hbs/.test(file)) {
+        return _hbs(file);
+    }
+    if (/\.html/.test(file)) {
+        return _underscore(file);
+    }
 
     return through();
 };

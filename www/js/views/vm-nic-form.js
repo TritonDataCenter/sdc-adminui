@@ -1,10 +1,10 @@
 /** @jsx React.DOM */
+"use strict";
 
 var Backbone = require('backbone');
 var _ = require('underscore');
 
 var React = require('react');
-var Networks = require('../models/networks');
 
 var NicConfigComponent = require('../components/nic-config');
 

@@ -1,4 +1,4 @@
-/** @jsx React.DOM */
+"use strict";
 
 /**
  * Chrome
@@ -7,18 +7,14 @@
  * the application
  */
 
-var Backbone = require('backbone');
-var $ = require('jquery');
-var _ = require('underscore');
-var moment = require('moment');
 var React = require('react');
 
-var adminui = require('./adminui');
+var adminui = require('../adminui');
 
-var Topnav = require('../components/rootnav.jsx');
-var Notifications = require('../components/notifications.jsx');
-var Localnav = require('../components/localnav.jsx');
-var ServerTime = require('../components/server-time.jsx');
+var Topnav = require('./rootnav.jsx');
+var Notifications = require('./notifications.jsx');
+var Localnav = require('./localnav.jsx');
+var ServerTime = require('./server-time.jsx');
 
 var JobProgressView = require('../views/job-progress');
 

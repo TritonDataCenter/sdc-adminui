@@ -1,8 +1,10 @@
 /** @jsx React.DOM **/
 
+"use strict";
+
 var Backbone = require('backbone');
+var $ = require('jquery');
 var _ = require('underscore');
-var Bloodhound = require('bloodhound');
 
 
 /**
@@ -12,17 +14,11 @@ var Bloodhound = require('bloodhound');
  */
 
 var React = require('react');
-var NicConfigComponent = require('../components/nic-config');
 var MultiNicConfigComponent = require('../components/multi-nic-config');
 
-var Images = require('../models/images');
-var Users = require('../models/users');
 var Package = require('../models/package');
 var Packages = require('../models/packages');
 var SSHKeys = require('../models/sshkeys');
-var Servers = require('../models/servers');
-var Networks = require('../models/networks');
-var NetworkPools = require('../models/network-pools');
 var User = require('../models/user');
 var Vm = require('../models/vm');
 var Job = require('../models/job');
@@ -221,8 +217,6 @@ var View = Backbone.Marionette.Layout.extend({
             }
 
             self.renderMultiNicSelect(networkPresets);
-
-            var values = self.extractFormValues();
             self.checkFields();
         });
 

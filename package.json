@@ -3,19 +3,21 @@
   "name": "adminui",
   "description": "SmartDataCenter Operations Portal",
   "version": "1.0.6",
+  "private": true,
   "repository": {
     "git": "git@git.joyent.com:adminui.git"
   },
   "engines": {
     "node": "0.8.x"
   },
-  "private": true,
+  "browser": "./www/adminui.js",
+  "main": "./server.js",
   "dependencies": {
     "assert-plus": "~0.1.0",
     "async": "~0.2.7",
     "backbone": "^1.1.2",
-    "browserify": "3.46.1",
-    "browserify-shim": "~2.0.10",
+    "browserify": "^3.46.1",
+    "browserify-shim": "^2.0.10",
     "bunyan": "0.22.3",
     "clone": "~0.1.6",
     "envify": "1.2.0",
@@ -27,7 +29,6 @@
     "libuuid": "0.1.2",
     "mime": "~1.2.9",
     "moray": "git+ssh://git@git.joyent.com:node-moray.git#a191e17573f8136b10c0666adb849930c652689f",
-    "node-dev": "^2.3.0",
     "promise": "^5.0.0",
     "react": "0.10.0",
     "reactify": "0.10.0",
@@ -36,15 +37,15 @@
     "sdc-clients": "git+ssh://git@git.joyent.com:node-sdc-clients.git#4476ed0a562f1c652110b23a9c58c3c23b047a55",
     "superagent": "^0.17.0",
     "through": "2.3.4",
-    "uglify-js": "2.3.6",
+    "uglify-js": "2.4.14",
     "underscore": "~1.6",
-    "underscore.string": "~2.3.1"
+    "underscore.string": "~2.3.1",
+    "watchify": "^0.10.2"
   },
   "devDependencies": {
+    "node-dev": "^2.3.0",
     "jest-cli": "^0.1.15",
-    "node-dev": "~2.1.0",
-    "react-tools": "0.10.0",
-    "supervisor": "~0.5.6"
+    "react-tools": "0.10.0"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/test/jsx-preprocessor.js",
@@ -58,6 +59,7 @@
     ]
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node server.js | bunyan"
   }
 }

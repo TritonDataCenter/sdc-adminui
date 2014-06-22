@@ -1,5 +1,8 @@
+"use strict";
+
 // UsersView
 
+var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
 
@@ -125,8 +128,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
         var createView = new UserForm();
         createView.render();
         createView.on('user:saved', function(user) {
-            app.vent.trigger('showcomponent', 'user', {user: user});
-            app.vent.trigger('notification', {
+            adminui.vent.trigger('showcomponent', 'user', {user: user});
+            adminui.vent.trigger('notification', {
                 level: 'success',
                 message: _.str.sprintf('User <strong>%s</strong> saved successfully.', user.get('login'))
             });

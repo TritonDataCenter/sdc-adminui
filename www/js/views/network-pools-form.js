@@ -5,7 +5,7 @@ var Networks = require('../models/networks');
 var NetworkPool = require('../models/network-pool');
 var Template = require('../tpl/network-pools-form.hbs');
 
-var TypeaheadUser = require('../views/typeahead-user');
+var TypeaheadUser = require('./typeahead-user');
 
 module.exports = Backbone.Marionette.ItemView.extend({
     template: Template,

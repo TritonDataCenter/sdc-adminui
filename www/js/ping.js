@@ -1,7 +1,9 @@
-var $ = require('jquery');
+"use strict";
+
 var _ = require('underscore');
 var api = require('./request');
-var adminui = require('./adminui');
+var Backbone = require('backbone');
+var app = require('adminui');
 
 var Pinger = function(options) {
     this.options = options || {};

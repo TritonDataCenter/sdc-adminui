@@ -1,3 +1,5 @@
+"use strict";
+
 var React = require('react');
 var Backbone = require('backbone');
 var adminui = require('../adminui');

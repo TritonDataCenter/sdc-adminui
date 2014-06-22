@@ -1,11 +1,11 @@
+"use strict";
+
 var Backbone = require('backbone');
 var Bloodhound = require('bloodhound');
 
 var User = require('../models/user');
 
 var UserTypeaheadTpl = require('../tpl/typeahead-user-select.hbs');
-var UserTypeaheadSelectedTpl= require('../tpl/typeahead-user-selected.hbs');
-var UserTypeaheadTplEmpty = require('../tpl/typeahead-user-empty.hbs');
 
 var UserTypeaheadView = Backbone.Marionette.View.extend({
     events: {

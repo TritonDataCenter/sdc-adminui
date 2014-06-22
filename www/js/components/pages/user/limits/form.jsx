@@ -1,6 +1,7 @@
+"use strict";
+
 var React = require('react');
 var Chosen = require('react-chosen');
-var Main = require('./main.jsx');
 
 var Images = require('../../../../models/images');
 var api = require('../../../../request');
@@ -8,7 +9,7 @@ var _ = require('underscore');
 
 var OPERATING_SYSTEMS = require('./constants').OPERATING_SYSTEMS;
 
-var Form = module.exports = React.createClass({
+var Form = React.createClass({
     propTypes: {
         user: React.PropTypes.string.isRequired,
         initialLimit: React.PropTypes.object
@@ -221,3 +222,6 @@ var Form = module.exports = React.createClass({
         </div>;
     }
 });
+
+
+module.exports = Form;

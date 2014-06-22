@@ -1,9 +1,11 @@
 /** @jsx React.DOM */
+
+"use strict";
 var Backbone = require('backbone');
 var _ = require('underscore');
 var moment = require('moment');
+var $ = require('jquery');
 
-var adminui = require('../adminui');
 var React = require('react');
 var Chosen = require('react-chosen');
 var Jobs = require('../models/jobs');
@@ -49,12 +51,12 @@ var DatePicker = React.createClass({
     render: function() {
         return (
             <div className="form-group">
-            <div ref="datepicker" className="input-group date-picker" data-date-format="YYYY-MM-DD HH:mm:ss">
-                <input ref="input" className="form-control" value={this.props.value}  type="text"></input>
-                <span className="input-group-addon"><span className="fa fa-calendar"></span></span>
+                <div ref="datepicker" className="input-group date-picker" data-date-format="YYYY-MM-DD HH:mm:ss">
+                    <input ref="input" className="form-control" value={this.props.value}  type="text"></input>
+                    <span className="input-group-addon"><span className="fa fa-calendar"></span></span>
+                </div>
             </div>
-            </div>
-        )
+        );
     }
 });
 
@@ -73,7 +75,8 @@ var JobExecutionCriteria = React.createClass({
             <option value="running">running</option>
             <option value="queued">queued</option>
             <option value="canceled">canceled</option>
-        </Chosen>)
+        </Chosen>);
+
         return <div className="form-group criteria criteria-execution">{node}</div>;
     }
 });
@@ -92,11 +95,11 @@ var JobDateCriteria = React.createClass({
             } else {
                 value = moment(this.props.value);
             }
-            value = value.utc().format("YYYY-MM-DD HH:mm:ss")
+            value = value.utc().format("YYYY-MM-DD HH:mm:ss");
         } else {
             value = "";
         }
-        var node = (<DatePicker onChange={this.onChange} value={value} />)
+        var node = (<DatePicker onChange={this.onChange} value={value} />);
         return <div className="criteria criteria-date">{node}</div>;
     }
 });
@@ -166,9 +169,9 @@ var JobFiltersList = React.createClass({
                 var counters = _.clone(self.state.counters);
                 counters[f.name] = c;
                 self.setState({counters: counters});
-            })
+            });
         });
-        return { counters: counters }
+        return { counters: counters };
     },
     onFilter: function(f) {
         var params = (typeof(f.params) === 'function') ? f.params() : f.params;
@@ -215,7 +218,6 @@ var JobsView = Backbone.Marionette.Layout.extend({
     onFilterChange: function(f) {
         this.jobCriteras.replaceState(f.params);
         this.jobFilters.setProps({filter: f});
-        var params = _.clone(f.params);
         for (var k in f.params) {
             if (f.params[k] === "") {
                 delete f.params[k];

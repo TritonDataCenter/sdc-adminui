@@ -1,4 +1,3 @@
-var Backbone = require('backbone');
 var Collection = require('./collection');
 var Img = require('./image');
 

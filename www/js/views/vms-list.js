@@ -1,3 +1,5 @@
+"use strict";
+
 var Backbone = require('backbone');
 var ItemTemplate = require('../tpl/vms-list-item.hbs');
 var adminui = require('../adminui');

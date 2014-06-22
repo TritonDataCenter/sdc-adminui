@@ -1,8 +1,8 @@
+"use strict";
 /**
  * models/user
  */
 
-var Backbone = require('backbone');
 var _ = require('underscore');
 var Model = require('./model');
 var api = require('../request');

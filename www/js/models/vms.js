@@ -1,4 +1,4 @@
-var Backbone = require('backbone');
+"use strict";
 var _ = require('underscore');
 
 var Vm = require('./vm');

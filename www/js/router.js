@@ -1,10 +1,10 @@
+"use strict";
+
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
 var React = require('react');
-var adminui = require('./adminui');
 
-var Marionette = require('backbone.marionette');
 var User = require('./models/user');
 var SigninView = require('./views/signin');
 
@@ -75,6 +75,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'manta/agents': 'showMantaAgents',
         '*default': 'defaultAction'
     },
+
     initialize: function(options) {
         this.app = options.app;
         this.state = options.state;
@@ -241,7 +242,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             this.notFound({ view: ComponentType, args: args });
             console.log("Component not found: " + compName);
         } else {
-            var fullWidth = compName === 'user';
             var component = new ComponentType(args);
             var state = {
                 'chrome.content': component,
@@ -347,12 +347,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                     xhr: xhr
                 });
             });
-        }
-    },
-
-    showMonitoring: function() {
-        if (this.authenticated()) {
-            this.presentView('monitoring');
         }
     },
 

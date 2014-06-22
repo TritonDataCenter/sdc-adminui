@@ -1,7 +1,9 @@
+"use strict";
+
 var superagent = require('superagent');
 
 function attachAuthHeader(req) {
-    var app = require('./adminui');
+    var app = require('adminui');
     if (app.user && app.user.getToken()) {
         return req.set({'x-adminui-token': app.user.getToken()});
     } else {
@@ -28,4 +30,4 @@ module.exports = {
     del: function(path) {
         return attachAuthHeader(superagent.del(path));
     }
-}
+};

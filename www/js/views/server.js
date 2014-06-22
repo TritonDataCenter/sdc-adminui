@@ -1,3 +1,6 @@
+"use strict";
+
+var $ = require('jquery');
 var Backbone = require('backbone');
 var _ = require('underscore');
 
@@ -12,7 +15,6 @@ var NotesComponent = require('../components/notes');
 
 var VmsList = require('./vms-list');
 var JSONEditor = require('./traits-editor');
-var JobProgressView = require('./job-progress');
 var ChangeRackForm = require('./server-change-rack');
 var ChangePlatformForm = require('./server-change-platform');
 var ServerNicsView = require('./server-nics');
@@ -256,7 +258,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     showChangePlatformField: function() {
-        var self = this;
         var $link = this.$('.platform a');
         var $value = this.$('.platform .value');
         var view = new ChangePlatformForm({ model: this.model });
@@ -320,7 +321,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
             title: _.str.sprintf('Traits for server: %s', this.model.get('hostname'))
         });
         modal.show();
-        var server = this.model;
         modal.on('save', function(data) {
             this.model.save(
                 {traits: data},

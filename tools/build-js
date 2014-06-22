@@ -1,10 +1,16 @@
 #!/usr/bin/env node
 
+"use strict";
+
+var LOG = require('bunyan').createLogger({name:'bundler'});
+
+var async = require('async');
 var fs = require('fs');
 var path = require('path');
 var browserify = require('browserify');
+var watchify = require('watchify');
+
 var shim = require('browserify-shim');
-var glob = require('glob');
 var format = require('util').format;
 var join = path.join;
 
@@ -98,85 +104,115 @@ Object.keys(shimConfig).forEach(function(k) {
     }
 });
 
-var b = shim(browserify({
-    extensions: ['.js', '.jsx']
-}), shimConfig)
-    .transform(require.resolve(join(root, './transforms/tpl')))
-    .transform(require('reactify'))
-    .require(require.resolve(join(root, './adminui')), {expose: 'adminui', entry: true});
+var prepAppBundle = function() {
+    // var bundler = process.env.WATCH ? watchify : browserify;
+    var bundler = watchify;
+    var bundle = shim(bundler({ extensions: ['.js', '.jsx'] }), shimConfig);
+    bundle
+        .transform(require.resolve(join(root, './transforms/tpl')))
+        .transform(require('reactify'))
+        .require(require.resolve(join(root, './adminui')), {expose: 'adminui', entry: true});
 
-b.external(require.resolve(join(root, './lib/jquery')) + ':jquery');
-b.external('moment');
-b.external('underscore');
-b.external('underscore.string');
-b.external('react/addons' + ':react');
-b.external('backbone');
-b.external('superagent');
-b.external('bootstrap.datetimepicker');
+    bundle.external(require.resolve(join(root, './lib/jquery')) + ':jquery');
+    bundle.external('moment');
+    bundle.external('underscore');
+    bundle.external('underscore.string');
+    bundle.external('react/addons' + ':react');
+    bundle.external('backbone');
+    bundle.external('superagent');
+    bundle.external('bootstrap.datetimepicker');
 
-var blibs = browserify();
-blibs.require('react');
-blibs.require('underscore');
-blibs.require('underscore');
-blibs.require('underscore.string');
-blibs.require('backbone');
-blibs.require('superagent');
-blibs.require(require.resolve(join(root, './lib/bootstrap-datetimepicker')), { expose: 'bootstrap.datetimepicker'});
-blibs.require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery'});
-blibs.require(require.resolve(join(root, './lib/moment.min')), {expose: 'moment'});
+    return bundle;
+};
 
-['*.js', 'components/*.jsx', 'views/*.js', 'models/*.js'].forEach(function(p) {
-    glob(join(p), {cwd: root}, function(err, files) {
-        files.forEach(function(f) {
-            var exposeAs = './' + f.substr(0, f.lastIndexOf('.'));
-            b.require(require.resolve(join(root, f)), {expose: exposeAs});
-        });
+function prepLibsBundle() {
+    var blibs = process.env.WATCH ? watchify() : browserify();
+    blibs.require('react');
+    blibs.require('underscore');
+    blibs.require('underscore.string');
+    blibs.require('backbone');
+    blibs.require('superagent');
+    blibs.require(require.resolve(join(root, './lib/bootstrap-datetimepicker')), { expose: 'bootstrap.datetimepicker'});
+    blibs.require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery'});
+    blibs.require(require.resolve(join(root, './lib/moment.min')), {expose: 'moment'});
+    return blibs;
+}
+
+
+var _bundled = [];
+(function rebundle() {
+    _bundled = [];
+    var ba = prepAppBundle();
+    ba.on('update', function() {
+        bundle(ba, 'app.js');
     });
-});
+    var bl = prepLibsBundle();
+    bl.on('update', function() {
+        bundle(bl, 'libs.js');
+    });
 
+    async.parallel([
+        bundle.bind(null, ba, 'app.js'),
+        bundle.bind(null, bl, 'libs.js')
+    ], function(err, res) {
+        if (! process.env.WATCH) {
+            if (err) {
+                LOG.fatal(err, 'Error building app bundle');
+                process.exit(1);
+            } else {
+                LOG.info('ALL DONE.');
+                process.exit(0);
+            }
+        }
+    });
+})();
 
-var t = new Date().getTime();
-var outputPath = path.join(root, '..', 'app.js');
-var tmpPath = format('%s.%s', outputPath, t);
+function bundle(bundler, out, cb) {
+    var t = new Date().getTime();
 
-var libsOutputPath = path.join(root, '..', 'libs.js');
-var libsTmpPath = format('%s.%s', libsOutputPath, t);
+    var outPath = path.join(root, '..', out);
+    var tmpPath = format('%s.%s', outPath, t);
 
-console.log('Generating bundle [app.js]');
-b.bundle({debug:true}, function(err, src) {
-    if (err) {
-        console.error(err);
-        process.exit(1);
-    }
-    var res = src;
-    if (!process.env['SKIP_MINIFY']) {
-        console.log("Minifying output");
-        res = uglify.minify(src, {fromString: true}).code;
-    }
+    LOG.info('[%s] building', out);
 
-    console.log("Writing bundle file");
-    fs.writeFileSync(tmpPath, res);
-    fs.renameSync(tmpPath, outputPath);
+    var bs = bundler.bundle({debug:true});
 
-    console.log('Build succeeded: ', outputPath);
-});
+    var bytes, time;
+    bundler.on('bytes', function(b) { bytes = b; });
+    bundler.on('time', function(t) { time = t; });
 
-console.log('Generating bundle [libs.js]');
-blibs.bundle({debug: true}, function(err, src) {
-    if (err) {
-        console.error(err);
-        process.exit(1);
-    }
-    var res = src;
-    if (!process.env['SKIP_MINIFY']) {
-        console.log("Minifying output");
-        res = uglify.minify(src, {fromString: true}).code;
-    }
+    bs.on('error', function(err) {
+        LOG.fatal(err, '[%s] BUILD ERROR', out);
+    });
 
-    console.log("Writing bundle file");
-    fs.writeFileSync(libsTmpPath, res);
-    fs.renameSync(libsTmpPath, libsOutputPath);
+    bs.on('end', function() {
+        if (bytes && time) {
+            LOG.info('[%s] %s bytes (%s seconds)', out, bytes, (time / 1000).toFixed(2) );
+        } else {
+            LOG.info('[%s] OK', out);
+        }
+        fs.rename(tmpPath, outPath, function() {
+            if (process.env.WATCH) {
+                cb(null, out);
+                return;
+            }
 
-    console.log('Build succeeded: ', libsOutputPath);
+            var min;
+            try {
+                min = uglify.minify(outPath);
+                fs.writeFileSync(outPath + '.min.js', min.code, 'utf8');
+                LOG.info('[%s.min.js]', out);
+                fs.rename(outPath+'.min.js', outPath, function() {
+                    LOG.info('[%s.min.js] -> [%s]', out, out);
+                    cb(null, out);
+                });
+            } catch (e) {
+                LOG.fatal(e, 'Error minifying output');
+                cb(e);
+            }
+        });
 
-});
+    });
+
+    bs.pipe(fs.createWriteStream(tmpPath));
+}

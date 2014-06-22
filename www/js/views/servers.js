@@ -1,3 +1,5 @@
+"use strict";
+
 var Backbone = require('backbone');
 var app = require('adminui');
 var ServerBootOptionsView = require('./server-boot-options');
@@ -20,11 +22,7 @@ var SlidingPanelRegionType = Backbone.Marionette.Region.extend({
     }
 });
 
-var adminui = require('../adminui');
-var Servers = require('../models/servers');
-
 var ServersList = require('./servers-list');
-
 
 var FilterForm = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/servers-filter.hbs'),

@@ -72,7 +72,7 @@ js: $(JS_BUNDLE)
 
 $(JS_BUNDLE): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
 	@echo "Building js bundle"
-	$(NODE) tools/build-js
+	$(NODE) tools/build-js | bunyan
 
 .PHONY: dev
 dev: $(JS_BUNDLE)

@@ -1,4 +1,5 @@
-var Backbone = require('backbone');
+"use strict";
+
 var _ = require('underscore');
 var $ = require('jquery');
 var Model = require('./model');
@@ -14,7 +15,7 @@ var Vm = Model.extend({
         var req = api.post(this.url() + '?action=update').send(attrs);
         req.end(function(res) {
             if (res.ok) {
-                var job = new Job({ uuid: req.body.job_uuid });
+                var job = new Job({ uuid: res.body.job_uuid });
                 cb(job);
             } else {
                 cb(null, res.body);

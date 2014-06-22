@@ -1,10 +1,12 @@
+"use strict";
+
 var Backbone = require('backbone');
 var _ = require('underscore');
 var adminui = require('adminui');
+var $ = require('jquery');
 
 var Packages = require('../models/packages');
 var Networks = require('../models/networks');
-var Network = require('../models/network');
 
 var User = require('../models/user');
 
@@ -70,7 +72,7 @@ var PackageVersions = Backbone.Marionette.CompositeView.extend({
 });
 
 
-var PackageDetail = module.exports = Backbone.Marionette.Layout.extend({
+var PackageDetail = Backbone.Marionette.Layout.extend({
     template: PackageTemplate,
 
     attributes: {
@@ -186,12 +188,13 @@ var PackageDetail = module.exports = Backbone.Marionette.Layout.extend({
         networks.fetch().done(done.bind(this));
 
         function done() {
-            this.networkPools = new NetworkPools(this.nets);
+            var self = this;
 
-            var networkPools = this.networkPools;
+            self.networkPools = new NetworkPools(self.nets);
+
+            var networkPools = self.networkPools;
             var size = networkPools.length;
             var n = 0;
-            var self = this;
 
             networkPools.each(function(n) {
                 n.fetch().done(function() {
@@ -229,7 +232,7 @@ var PackageDetail = module.exports = Backbone.Marionette.Layout.extend({
         if (adminui.user.role('operators')) {
             React.renderComponent(
                 new NotesComponent({item: this.model.get('billing_id')}),
-                this.$('.notes-component-container').get(0))
+                this.$('.notes-component-container').get(0));
         }
 
         this.renderNetworks();
@@ -245,3 +248,6 @@ var PackageDetail = module.exports = Backbone.Marionette.Layout.extend({
     }
 
 });
+
+
+module.exports = PackageDetail;

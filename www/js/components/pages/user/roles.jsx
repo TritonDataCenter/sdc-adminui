@@ -1,3 +1,6 @@
+"use strict";
+
+var $ = require('jquery');
 var React = require('react');
 var PropTypes = React.PropTypes;
 var _ = require('underscore');

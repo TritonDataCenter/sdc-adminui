@@ -1,7 +1,8 @@
-/**
- * @jsx React.DOM
- */
+ /** @jsx React.DOM */
 
+"use strict";
+
+var $ = require('jquery');
 var Backbone = require('backbone');
 var _ = require('underscore');
 var moment = require('moment');
@@ -14,7 +15,6 @@ var Img = require('../models/image');
 var Server = require('../models/server');
 var User = require('../models/user');
 var Package = require('../models/package');
-var Probes = require('../models/probes');
 
 var VMDeleteModal = require('./vm-delete-modal');
 var TagsList = require('./tags-list');
@@ -23,6 +23,7 @@ var MetadataList = require('./metadata');
 var SnapshotsList = require('./snapshots');
 var FWRulesList = require('./fwrules-list');
 var FWRulesForm = require('./fwrules-form');
+
 
 var ResizeVmView = require('./resize-vm');
 var JobsList = require('./jobs-list');
@@ -36,7 +37,7 @@ var ReprovisionVmComponent = require('../components/reprovision-vm.jsx');
 
 var FirewallToggleButton = React.createClass({
     getInitialState: function() {
-        value = this.props.initialValue || false;
+        var value = this.props.initialValue || false;
         return {value: value};
     },
     toggleValue: function() {
@@ -366,8 +367,6 @@ var VmView = Backbone.Marionette.Layout.extend({
     },
 
     clickShowFwrulesForm: function() {
-        var self = this;
-
         this.fwrulesForm = new FWRulesForm({vm: this.vm });
         this.fwrulesFormRegion.show(this.fwrulesForm);
 
