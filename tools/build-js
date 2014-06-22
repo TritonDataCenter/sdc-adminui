@@ -138,9 +138,7 @@ function prepLibsBundle() {
 }
 
 
-var _bundled = [];
 (function rebundle() {
-    _bundled = [];
     var ba = prepAppBundle();
     ba.on('update', function() {
         bundle(ba, 'app.js');
