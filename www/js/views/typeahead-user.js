@@ -52,6 +52,7 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
                             'uuid': u.uuid,
                             'name': u.cn,
                             'login': u.login,
+                            'alias': u.alias,
                             'email': u.email
                         };
                     });

@@ -42,8 +42,26 @@
 }
 
 .tt-dataset-users {
-  width: 280px;
-  .login { font-weight: bold; }
+  width: 300px;
+  .login {
+    .account, .subuser {
+      margin-left: 5px;
+      font-size: 9px;
+      padding: 3px 5px;
+      font-weight: normal;
+      text-transform: uppercase;
+    }
+    .account {
+      background: @state-success-bg;
+      color: @state-success-text;
+    }
+    .subuser {
+      background: @state-info-bg;
+      color: @state-info-text;
+    }
+    font-weight: bold;
+  }
+
   .cn { font-size: 12px; }
   .uuid { font-size: 10px; color: @gray;}
   .email { font-size: 12px; }

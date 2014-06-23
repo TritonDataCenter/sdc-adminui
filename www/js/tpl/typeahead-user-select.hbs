@@ -1,3 +1,9 @@
-<div class="login">{{login}}</div>
+<div class="login">
+    {{#if alias}}
+        {{alias}} <span class="subuser">user</span>
+    {{else}}
+        {{login}} <span class="account">account</span>
+    {{/if}}
+</div>
 <div class="cn">{{name}}</div>
 <div class="email">{{email}}</div>
