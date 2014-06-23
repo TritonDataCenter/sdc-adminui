@@ -1,18 +1,27 @@
-var ErrorAlert = module.exports = React.createClass({
+"use strict";
+var React = require('react');
+var ErrorAlert =  React.createClass({
     propTypes: {
         error: React.PropTypes.object
     },
     render: function() {
-        if ((!this.props.error) || this.props.error.length === 0) {
-            return <div className="alert alert-error" style={ {display: 'none'} }></div>;
+        var error = this.props.error;
+
+        if (!error || !error.code) {
+            return <div className="error-alert alert alert-danger" style={ {display: 'none'} }></div>;
         }
 
-        return (<div className="alert alert-error">
+        return (<div className="error-alert alert alert-danger">
             {
-                this.props.error.errors.map(function(err) {
-                    return <div><strong>{err.field}</strong> - {err.message}</div>
-                })
+                error.message ? <div><strong>{error.message}</strong></div>: ''
             }
-        </div>)
+            {
+                error.errors && error.errors.length ? error.errors.map(function(err) {
+                    return <div><strong>{err.field}</strong> - {err.message}</div>;
+                }) : ''
+            }
+        </div>);
     }
 });
+
+module.exports = ErrorAlert;

@@ -1,9 +1,12 @@
+"use strict";
+
 var React = require('react');
 var PropTypes = React.PropTypes;
 var api = require('../../../request');
 var _ = require('underscore');
 var Chosen = require('react-chosen');
 var Promise = require('promise');
+var ErrorAlert = require('../../error-alert');
 
 var UserRolesForm = React.createClass({
     propTypes: {
@@ -42,7 +45,6 @@ var UserRolesForm = React.createClass({
                 state.selectedPolicies = role.policies.map(function(p) {
                     var matches = p.match(/policy-uuid=([a-z0-9-]+), uuid=([a-z0-9-]+)/);
                     var policyUuid = matches[1];
-                    var account = matches[2];
                     var policy = _.findWhere(state.policies, {uuid: policyUuid});
                     return policy;
                 });
@@ -128,9 +130,12 @@ var UserRolesForm = React.createClass({
             url = _.str.sprintf('/api/users/%s/roles', this.props.account);
             req = api.post(url);
         }
+
         req.send(payload).end(function(res) {
             if (res.ok) {
                 this.props.handleSaved(res.body);
+            } else {
+                this.setState({error: res.body});
             }
         }.bind(this));
     },
@@ -205,6 +210,7 @@ var UserRolesForm = React.createClass({
         var policySelect = this.state.selectPolicy ? this._renderPolicySelect() : <button type="button" onClick={this._enterSelectPolicyMode} className="btn btn-link btn-sm"><i className="fa fa-plus" /> Add Existing Policy</button>;
 
         return <div className="panel user-roles-form">
+            { this.state.error ? <ErrorAlert error={this.state.error} /> : ''}
             <div className="panel-body">
                 { formTitle }
                 <form onSubmit={this._handleSaveRole} className="form form-horizontal">
@@ -226,7 +232,7 @@ var UserRolesForm = React.createClass({
                     </div>
 
                     <div className="form-group">
-                        <div className="col-xs-offset-1 col-xs-5">
+                        <div className="col-xs-offset-2 col-xs-5">
                             <button disabled={! (this.state.selectedPolicies.length && this.state.name.length) } type="submit" className="btn btn-info">Save Role</button>
                             <button type="button" onClick={this.props.handleClose} className="btn btn-default">Cancel</button>
                         </div>
