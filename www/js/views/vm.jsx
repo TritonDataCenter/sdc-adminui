@@ -262,6 +262,14 @@ var VmView = Backbone.Marionette.Layout.extend({
     },
 
     clickedPackage: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+
+        e.preventDefault();
+        this.vent.trigger('showview', 'package', {
+            model: this.pkg
+        });
     },
 
     clickedImage: function(e) {

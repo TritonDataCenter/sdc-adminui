@@ -81,8 +81,17 @@ var User = module.exports = Model.extend({
         };
 
         var req = api.post("/api/auth");
+        req.timeout(3000);
         req.send(authData);
-        req.end(function(res) {
+        req.end(function(err, res) {
+            if (err) {
+                console.log('auth error', err);
+                if (err.timeout) {
+                    self.trigger('error', 'Server Error (request timeout)');
+                }
+                return;
+            }
+
             if (res.ok) {
                 var data = res.body;
                 self.set(data.user);
@@ -105,7 +114,6 @@ var User = module.exports = Model.extend({
                 self.trigger('error', res.body.message);
             }
         });
-
     },
 
     signout: function() {

@@ -141,23 +141,29 @@ function prepLibsBundle() {
 (function rebundle() {
     var ba = prepAppBundle();
     ba.on('update', function() {
-        bundle(ba, 'app.js');
+        bundle(ba, 'app.js', done);
     });
     var bl = prepLibsBundle();
     bl.on('update', function() {
-        bundle(bl, 'libs.js');
+        bundle(bl, 'libs.js', done);
     });
 
     async.parallel([
-        bundle.bind(null, ba, 'app.js'),
-        bundle.bind(null, bl, 'libs.js')
-    ], function(err, res) {
+        function(cb) {
+            bundle(ba, 'app.js', cb);
+        },
+        function(cb) {
+           bundle(bl, 'libs.js', cb);
+        }
+    ], done);
+
+    function done(err, res) {
         if (err) {
             LOG.fatal('ERROR BUILDING');
         } else {
             LOG.info('ALL DONE.');
         }
-    });
+    }
 })();
 
 function bundle(bundler, out, cb) {
