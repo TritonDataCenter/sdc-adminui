@@ -376,7 +376,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 self.presentView('job', { model: job });
             }).fail(function(xhr) {
                 self.notFound({
-                    view: 'image',
+                    view: 'job',
                     args: {uuid: uuid},
                     xhr: xhr
                 });

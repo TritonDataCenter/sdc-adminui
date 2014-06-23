@@ -12,12 +12,19 @@ var UserTile = module.exports = React.createClass({
             loading: true
         };
     },
-    componentDidMount: function() {
-        var user = new User({uuid: this.props.uuid });
+    componentWillReceiveProps: function(props) {
+        this._load(props.uuid);
+    },
+    _load: function(uuid) {
+        console.info('[UserTile] Loading user info ', uuid);
+        var user = new User({uuid: uuid });
+
+        this.setState({loading: true});
+
         var req = user.fetch();
-        req.done(function(res, x, y) {
-            this.setState({loading: false});
-            this.setState(res);
+        req.done(function(data, x, y) {
+            data.loading = false;
+            this.setState(data);
         }.bind(this));
 
         req.error(function() {
@@ -26,6 +33,9 @@ var UserTile = module.exports = React.createClass({
                 loadingFailed: true
             });
         }.bind(this));
+    },
+    componentDidMount: function() {
+        this._load(this.props.uuid);
     },
     navigateToUser: function(e) {
         e.preventDefault();

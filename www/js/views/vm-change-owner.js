@@ -47,15 +47,15 @@ var View = Backbone.Marionette.ItemView.extend({
     onSubmit: function(e) {
         e.preventDefault();
         var self = this;
+        var vm = this.vm;
         var owner = this.$('[name=owner_uuid]').val();
         this.vm.update({
             'new_owner_uuid': owner
         }, function(job) {
             app.vent.trigger('showjob', job);
-            self.listenTo(job, 'execution', function(status) {
-                if (status === 'succeeded') {
-                    self.vm.fetch();
-                }
+            job.on('execution:succeeded', function() {
+                console.log('[VMChangeOwner] success');
+                vm.set({owner_uuid: owner});
             });
             self.$el.modal('hide').remove();
         });
