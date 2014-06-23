@@ -16,9 +16,9 @@ var ErrorAlert =  React.createClass({
                 error.message ? <div><strong>{error.message}</strong></div>: ''
             }
             {
-                error.errors && error.errors.length ? error.errors.map(function(err) {
-                    return <div><strong>{err.field}</strong> - {err.message}</div>;
-                }) : ''
+                error.errors && error.errors.length ? <ul>{error.errors.map(function(err) {
+                    return <li><strong>{err.field}</strong> - {err.message}</li>;
+                }) }</ul> : ''
             }
         </div>);
     }
