@@ -2,6 +2,7 @@
 
 var adminui = require('adminui');
 
+var _ = require('underscore');
 var React = require('react');
 var UserModel = require('../../models/user');
 var api = require('../../request');
@@ -233,7 +234,6 @@ var PageUser = React.createClass({
 
         var user = this.state.userModel.toJSON();
         var currentView = this.getCurrentView();
-        var objectClasses = _.isArray(user.objectclass) ? user.objectclass : [user.objectclass];
         var isTopLevelAccount = !user.account;
 
         var userIconUrl;
@@ -249,7 +249,15 @@ var PageUser = React.createClass({
             <div className="page-header">
                 <h1>
                     <div className="user-icon" style={userIconStyle}></div>
-                    <span className="cn">{user.cn}</span> <small className="uuid selectable">{user.uuid}</small>
+                    <div className="user-info">
+                        <div className="cn">{user.cn}</div>
+                        <div className="user-groups">
+                        { user.groups.map(function(g) {
+                            return <div className={"group "+g}>{g}</div>;
+                        })}
+                        </div>
+                        <div className="uuid selectable">{user.uuid}</div>
+                    </div>
                 </h1>
             </div>
 

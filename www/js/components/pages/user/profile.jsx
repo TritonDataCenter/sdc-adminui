@@ -40,12 +40,6 @@ var UserProfile = React.createClass({
                                 <th>Phone</th>
                                 <td><span className="phone">{user.phone}</span></td>
                             </tr>
-                            { isTopLevelAccount &&
-                                <tr>
-                                    <th>Groups</th>
-                                    <td><span className="groups">{user.groups && user.groups.join(' ')}</span></td>
-                                </tr>
-                            }
 
                             { isTopLevelAccount &&
                             <tr>
