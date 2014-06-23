@@ -2,9 +2,12 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 var adminui = require('../adminui');
+var $ = require('jquery');
 var FormTemplate = require('../tpl/packages-form.hbs');
 var Package = require('../models/package');
 var UserInput = require('../views/typeahead-user');
+var React = require('react');
+var ErrorAlert = require('../components/error-alert');
 
 var PackageForm = Backbone.Marionette.ItemView.extend({
     template: FormTemplate,
@@ -61,20 +64,11 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
     },
 
     onError: function(model, xhr) {
-        var ul = $("<ul />");
-        this.$('.control-group').removeClass('error');
-        _(xhr.responseData.message.split("\n")).each(function(e) {
-            ul.append('<li>'+e+'</li>');
-        });
-
-        this.$(".alert")
-            .empty()
-            .append('<h4 class="alert-heading">Please fix the following errors</h4>')
-            .append(ul)
-            .show();
+        var error = xhr.responseData;
+        this.renderError(error);
 
         $('body').animate({
-            scrollTop: this.$('.alert').offset().top
+            scrollTop: 0
         }, 200);
     },
 
@@ -106,7 +100,6 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         });
         console.log('package values', values);
 
-        var self = this;
         this.model.save(values, {
             patch: true,
             success: function(model, resp) {
@@ -129,6 +122,10 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         data.changeOwnerMode = this.options.mode === 'change-owner';
 
         return data;
+    },
+    renderError: function(error) {
+        var c = this.$('.error-alert-container').get(0);
+        React.renderComponent(new ErrorAlert({error: error}), c);
     },
 
     onRender: function() {
