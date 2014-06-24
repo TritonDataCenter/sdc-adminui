@@ -9,6 +9,7 @@ var JobProgressView = require('./job-progress');
 var JobDetailsView = require('./job');
 
 var JobsItemViewTemplate = require('../tpl/jobs-item.hbs');
+var $ = require('jquery');
 
 var JobsItemView = Backbone.Marionette.ItemView.extend({
     template: JobsItemViewTemplate,

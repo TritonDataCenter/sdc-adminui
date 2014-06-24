@@ -9,12 +9,8 @@
 var Backbone = require('backbone');
 var Rickshaw  = require('rickshaw');
 var _ = require('underscore');
-var moment = require('moment');
+var $ = require('jquery');
 
-var adminui = require('../adminui');
-
-
-var AlarmsView = require('./alarms');
 var DashboardTemplate = require('../tpl/dashboard.hbs');
 var Dashboard = Backbone.Marionette.ItemView.extend({
     id: 'page-dashboard',
@@ -117,7 +113,7 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
 
                 yAxis.render();
 
-                var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+                new Rickshaw.Graph.HoverDetail( {
                     graph: graph,
                     yFormatter: function(b) {
                         var gb = b/1024/1024/1024;
