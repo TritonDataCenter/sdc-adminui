@@ -5,6 +5,10 @@
     cursor: pointer;
     padding-left: 15px;
     padding-right: 15px;
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
   }
   >a.active {
     background: #fff;
@@ -46,6 +50,11 @@
       padding: 6px;
       background: #f8f8f8;
       background: @state-warning-bg;
+      .alarm-lastevent {
+        font-size: 12px;
+        float: right;
+        padding: 2px;
+      }
       a.probe {
         padding: 0;
         cursor: pointer;

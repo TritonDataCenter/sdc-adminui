@@ -5,6 +5,7 @@
 var api = require('../request');
 var adminui = require('../adminui');
 var React = require('react');
+var moment = require('moment');
 
 module.exports = React.createClass({
     propTypes: {
@@ -18,9 +19,14 @@ module.exports = React.createClass({
     },
     componentWillMount: function() {
         this.fetchAlarms();
+        adminui.vent.on('alarms:changed', this.fetchAlarms);
+        this._interval = setInterval(this.fetchAlarms, 10000);
+    },
+    componentWillUnmount: function() {
+        adminui.vent.off('alarms:changed', this.fetchAlarms);
+        clearInterval(this._interval);
     },
     fetchProbeGroup: function(id) {
-        var user = this.props.user;
         this.setState({loading: true});
         api.get('/api/amon/probegroups/'+this.props.user + '/' + id).end(function(err, res) {
             var probes = this.state.probes;
@@ -31,7 +37,6 @@ module.exports = React.createClass({
         }.bind(this));
     },
     fetchProbe: function(id) {
-        var user = this.props.user;
         this.setState({loading: true});
         api.get('/api/amon/probes/'+this.props.user + '/' + id).end(function(err, res) {
             var probes = this.state.probes;
@@ -43,7 +48,7 @@ module.exports = React.createClass({
     },
     fetchAlarms: function() {
         var user = this.props.user;
-        api.get('/api/amon/alarms').query({user: user}).end(function(res) {
+        api.get('/api/amon/alarms').query({user: user, state:'open'}).end(function(res) {
             if (res.ok) {
                 var alarms = res.body;
                 this.setState({alarms: alarms});
@@ -81,6 +86,9 @@ module.exports = React.createClass({
                     </a> :
                     <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe"><span className="probe-name">{probe.name}</span></a>
                 }
+                <div className="alarm-lastevent">
+                <i className="fa fa-clock-o"></i> { moment(1403280834534).fromNow(true) }
+                </div>
             </div>
             <div className="alarm-menu-item-content">
                 <div className="faults">
@@ -117,7 +125,7 @@ module.exports = React.createClass({
                 return <div id="alarms-menu" className="alarms-menu">
                     <div className="alarm-menu-item no-alarms">
                         <div className="alarm-menu-item-content">
-                            <i className="fa fa-check"></i> There are no Alarms at this time.
+                            <i className="fa fa-check"></i> There are no open alarms at this time.
                         </div>
                     </div>
                 </div>;

@@ -2,8 +2,10 @@
  * @jsx React.DOM
  */
 var moment = require('moment');
+var _ = require('underscore');
 var React = require('react');
 var api = require('../../request');
+var adminui = require('adminui');
 
 module.exports = React.createClass({
     displayName: 'PageAlarm',
@@ -76,7 +78,15 @@ module.exports = React.createClass({
         }.bind(this));
     },
     fetchAlarm: function() {
-        this.setState({loading: true, alarm: {}, probe: {}, server: null, vm: null});
+        var id = this.props.id;
+
+        this.setState({
+            loading: true,
+            alarm: {},
+            probe: {},
+            server: null,
+            vm: null
+        });
 
         var url = '/api/amon/alarms/'+this.props.user+'/' + this.props.id;
         api.get(url).end(function(err, res) {
@@ -112,7 +122,7 @@ module.exports = React.createClass({
             <div id="page-alarm">
             <div className="page-header row">
                 <div className="state col-sm-12">
-                    <span className="brand-info" className="loading">LOADING...</span>
+                    <span className="loading">LOADING...</span>
                 </div>
             </div>
             </div>
@@ -123,7 +133,7 @@ module.exports = React.createClass({
         return <div id="page-alarm" className="error">
             <div className="page-header row">
                 <div className="state col-sm-12">
-                    <span className="brand-danger" className="error">ERROR</span>
+                    <span className="error">ERROR</span>
                 </div>
                 <div className="row">
                     <div className="col-sm-3">
@@ -140,7 +150,7 @@ module.exports = React.createClass({
                     </div>
                 </div>
             </div>
-        </div>
+        </div>;
     },
 
     renderNotFound: function() {
@@ -148,7 +158,7 @@ module.exports = React.createClass({
             <div id="page-alarm" className="not-found">
                 <div className="page-header row">
                     <div className="state col-sm-12">
-                        <span className="brand-info" className="not-found">ALARM NOT FOUND</span>
+                        <span className="not-found">ALARM NOT FOUND</span>
                     </div>
                 </div>
                 <div className="row">
@@ -163,7 +173,20 @@ module.exports = React.createClass({
                     </div>
                 </div>
             </div>
-        )
+        );
+    },
+    _handleCloseAlarm: function() {
+        var url = '/api/amon/alarms/'+this.props.user+'/' + this.props.id;
+        api.post(url).query({action: 'close'}).end(function(err, res) {
+            if (res.ok) {
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: 'Alarm has been closed'
+                });
+                adminui.vent.trigger('alarms:changed');
+                this.fetchAlarm();
+            }
+        }.bind(this));
     },
     render: function() {
 
@@ -179,9 +202,10 @@ module.exports = React.createClass({
             return this.renderNotFound();
         }
 
-
+        var vm = this.state.vm;
+        var server = this.state.vm;
         var alarm = this.state.alarm;
-        var probe = this.state.probe;
+        // var probe = this.state.probe;
 
         var dfmt = "D MMM, HH:mm:ss";
         var timeClosed =
@@ -193,19 +217,25 @@ module.exports = React.createClass({
         return (
             <div id="page-alarm">
                 <div className="page-header row">
-                <div className="state col-sm-12">
-                    {
-                        alarm.closed ?
-                        <span className="brand-info" className="closed">CLOSED</span>
-                        :
-                        <span className="brand-info" className="opened">OPENED</span>
-                    }
-                </div>
-                <h1 className="col-sm-12">
-                    <i className="fa fa-bell"></i> &nbsp;
-                    <span className="probe-name">{this.state.probe.name}</span>
-                    &nbsp; <span className="probe-type">{this.state.probe.type}</span>
-                    <small className="uuid"> {this.props.user}-{this.props.id}</small>
+                    <div className="state col-sm-12">
+                        {
+                            alarm.closed ?
+                            <span className="closed">CLOSED</span>
+                            :
+                            <span className="opened">OPENED</span>
+                        }
+                    </div>
+                    <h1 className="col-sm-12">
+                        <i className="fa fa-bell"></i> &nbsp;
+                        <span className="probe-name">{this.state.probe.name}</span>
+                        &nbsp; <span className="probe-type">{this.state.probe.type}</span>
+                        <small className="uuid"> {this.props.user}-{this.props.id}</small>
+                        <div className="actions">
+                        { !alarm.closed &&
+                            <button type="button" onClick={this._handleCloseAlarm} className="btn btn-primary">
+                                <i className="fa fa-times"></i> Close Alarm
+                            </button> }
+                        </div>
                     </h1>
                 </div>
 
@@ -251,7 +281,7 @@ module.exports = React.createClass({
 
                     <div className="col-sm-3">
                         {
-                            this.state.vm ?
+                            vm ?
                             <div className="machine">
                                 <h6>Machine <span className="alias">{vm.alias}</span></h6>
                                 <div className="state pull-right">
@@ -262,11 +292,11 @@ module.exports = React.createClass({
                         }
 
                         {
-                            this.state.server ?
+                            server ?
                             <div className="machine">
                                 <h6>Machine <span className="alias">{server.hostname}</span></h6>
                                 <div className="state pull-right">
-                                    <span className={vm.state}>{server.status}</span>
+                                    <span className={server.status}>{server.status}</span>
                                 </div>
                                 <div className="uuid">{server.uuid}</div>
                             </div> : ''
@@ -280,26 +310,26 @@ module.exports = React.createClass({
     },
     renderFault: function(f) {
         return <div className="fault">
-        <div className="event">
-        {JSON.stringify(f.event.data, null, 2)}
-        </div>
-        </div>
+            <div className="event">
+                {JSON.stringify(f.event.data, null, 2)}
+            </div>
+        </div>;
     },
     renderProbe: function() {
         var probe = this.state.probe;
         var contacts = [];
         if (probe.contacts) {
             contacts = probe.contacts.map(function(c) {
-                return <span className={c}>{c}</span>
+                return <span className={c}>{c}</span>;
             });
         }
         return <div className="probe">
             <h6>Probe <span className="alias">{probe.name}</span></h6>
-            <div className="type">type: {probe.type}</div>
+            { probe.type && <div className="type">type: {probe.type}</div> }
             <div className="uuid">{probe.uuid}</div>
             <div className="state">
                 {contacts}
             </div>
-        </div>
+        </div>;
     }
 });
