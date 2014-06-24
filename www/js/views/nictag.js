@@ -28,10 +28,10 @@ module.exports = Backbone.Marionette.Layout.extend({
 
         this.listenTo(this.networksView, 'itemview:select', this.showNetwork, this);
 
-        this.servers = new Servers(null, {
+        var NetworkedServers = Servers.extend({
             url: '/api/nic_tags/'+this.model.get('name') + '/servers'
         });
-
+        this.servers = new NetworkedServers();
         this.serversView = new ServersListView({collection: this.servers });
     },
     showNetwork: function(network) {
