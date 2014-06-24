@@ -63,7 +63,7 @@ var Chrome = React.createClass({
             return <noscript/>;
         }
 
-        var contentClass = 'chrome ' + (this.props.state.get('chrome.fullwidth') ? 'col-sm-12 fullwidth': 'col-sm-10');
+        var contentClass = 'chrome ' + (this.props.state.get('chrome.fullwidth') ? 'no-sidebar': 'with-sidebar');
 
 
         return (
@@ -79,19 +79,20 @@ var Chrome = React.createClass({
                         user={adminui.user} />
                 }
 
-                <Notifications bus={adminui.vent} />
 
-                <div className="container-fluid">
-                    <div className="row">
-                        {
-                            (!this.props.state.get('chrome.fullwidth')) &&
-                                (<div id="localnav-container" className="col-sm-2">
-                                    <Localnav handleMenuSelect={this._handleSecondnaryMenuSelect} active={this.props.state.get('localnav.active')} />
-                                    <ServerTime />
-                                </div> )
-                        }
-
-                        <div id="content" className={contentClass}>{ this.props.state.get('chrome.content') }</div>
+                <div id="wrapper" className={this.props.state.get('chrome.fullwidth') ? 'no-sidebar': 'with-sidebar'}>
+                    {
+                        (!this.props.state.get('chrome.fullwidth')) &&
+                        (<div id="localnav-container">
+                            <Localnav handleMenuSelect={this._handleSecondnaryMenuSelect} active={this.props.state.get('localnav.active')} />
+                            <ServerTime />
+                            </div> )
+                    }
+                    <div id="content-container" className={contentClass}>
+                        <Notifications bus={adminui.vent} />
+                        <div className="row">
+                            <div id="content" className="col-sm-12">{ this.props.state.get('chrome.content') }</div>
+                        </div>
                     </div>
                 </div>
             </div>
