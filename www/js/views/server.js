@@ -229,7 +229,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
             $input.focus();
             $changeReservationRatio.hide();
             $reservationRatio.hide();
-            showTooltip('Press ENTER to <i class="icon-ok"></i> Save<br/>Press ESC to <i class="icon-undo"></i> Cancel');
+            showTooltip('Press ENTER to <i class="fa fa-check"></i> Save<br/>Press ESC to <i class="fa fa-undo"></i> Cancel');
         }
 
         function showTooltip(t) {
