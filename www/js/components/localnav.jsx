@@ -49,9 +49,9 @@ var SecondaryNav = React.createClass({
                 { this.mantaNav() }
 
                 <li className="nav-header">Infrastructure</li>
-                <li className={this._classesFor('jobs')} onClick={this._clickedMenuItem} data-view="jobs"><a href="/jobs">Jobs</a></li>
-                <li className={this._classesFor('services')} onClick={this._clickedMenuItem} data-view="services"><a href="/services">Services</a></li>
                 <li className={this._classesFor('networking')} onClick={this._clickedMenuItem} data-view="networking"><a href="/networks">Networking</a></li>
+                <li className={this._classesFor('jobs')} onClick={this._clickedMenuItem} data-view="jobs"><a href="/jobs">Workflow</a></li>
+                <li className={this._classesFor('services')} onClick={this._clickedMenuItem} data-view="services"><a href="/services">Services</a></li>
             </ul>
         </div>);
     }
