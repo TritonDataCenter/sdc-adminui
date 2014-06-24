@@ -3,7 +3,7 @@
 <div class="name">
   <a href="/servers/{{uuid}}">{{hostname}}</a>
   {{#if reserved}}
-  <span class="reserved"><i class="icon-lock"></i></span>
+  <span class="reserved"><i class="fa fa-lock"></i></span>
   {{/if}}
   <span class="uuid"><span class="selectable">{{uuid}}</span></span>
   <div class="traits">
@@ -60,14 +60,14 @@
 
 <div class="last-status">
   <div class="last-platform">
-    <strong><i class="icon-location-arrow"></i></strong>
+    <strong><i class="fa fa-location-arrow"></i></strong>
     <span>{{sdc_version}}.{{current_platform}}</span>
   </div>
 
   <div class="last-boot">
-    <strong><i class="icon-power-off"></i></strong><span>{{last_boot}}</span>
+    <strong><i class="fa fa-power-off"></i></strong> <span>{{last_boot}}</span>
   </div>
   <div class="last-heartbeat">
-    <strong><i class="icon-heart"></i></strong><span>{{last_heartbeat}}</span></div>
+    <strong><i class="fa fa-heart"></i></strong> <span>{{last_heartbeat}}</span></div>
   </div>
 </div>
