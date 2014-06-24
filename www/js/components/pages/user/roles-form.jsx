@@ -16,10 +16,16 @@ var UserRolesForm = React.createClass({
         handleClose: PropTypes.func
     },
     componentWillMount: function() {
-        this._fetchAccountPolicies().done(this._onFetchAccountPolicies);
+        Promise.all([
+            this._fetchAccountPolicies(),
+            this._fetchAccountMembers()
+        ]).then(this._onFetch);
     },
     componentWillReceiveProps: function() {
-        this._fetchAccountPolicies().done(this._onFetchAccountPolicies);
+        Promise.all(
+            this._fetchAccountPolicies,
+            this._fetchAccountMembers
+        ).then(this._onFetch);
     },
 
     getInitialState: function() {
@@ -30,11 +36,16 @@ var UserRolesForm = React.createClass({
         state.selectedPolicies = [];
         state.selectPolicy = false;
         state.selectPolicyCurrent = {};
+        state.members = [];
+        state.selectedMembers = [];
+        state.selectMember = false;
+        state.selectMemberCurrent = {};
 
         return state;
     },
 
-    _onFetchAccountPolicies: function() {
+    _onFetch: function() {
+        console.debug('onFetch');
         var role = this.props.initialRole;
         var state = this.state;
 
@@ -49,10 +60,20 @@ var UserRolesForm = React.createClass({
                     return policy;
                 });
             }
+            if (role.members && _.isArray(role.members)) {
+                state.selectedMembers = role.members.map(function(p) {
+                    var matches = p.match(/uuid=([a-z0-9-]+), uuid=([a-z0-9-]+)/);
+                    console.log(matches);
+                    var userUuid = matches[1];
+                    var user = _.findWhere(state.members, {uuid: userUuid});
+                    return user;
+                });
+            }
         }
 
-        if (!state.selectedPolicies) { state.selectedPolicies = []; }
         if (!state.name) { state.name = ''; }
+        if (!state.selectedPolicies) { state.selectedPolicies = []; }
+        if (!state.selectedMembers) { state.selectedMembers = []; }
         state.loading = false;
         this.setState(state);
     },
@@ -73,6 +94,21 @@ var UserRolesForm = React.createClass({
         });
     },
 
+    _fetchAccountMembers: function() {
+        var that = this;
+        return new Promise(function(resolve, reject)  {
+            console.debug('fetching users');
+            api.get('/api/users').query({account: that.props.account}).end(function(res) {
+                console.debug('fetched users');
+                if (res.ok) {
+                    that.setState({members: res.body});
+                    resolve(res.body);
+                } else {
+                    reject('error fetching members');
+                }
+            });
+        });
+    },
 
     _enterSelectPolicyMode: function() {
         this.setState({selectPolicy: true});
@@ -80,6 +116,14 @@ var UserRolesForm = React.createClass({
 
     _exitSelectPolicyMode: function() {
         this.setState({selectPolicy: false});
+    },
+
+    _enterSelectMemberMode: function() {
+        this.setState({selectMember: true});
+    },
+
+    _exitSelectMemberMode: function() {
+        this.setState({selectMember: false});
     },
 
     _onAddPolicy: function() {
@@ -91,12 +135,28 @@ var UserRolesForm = React.createClass({
             selectPolicy: false
         });
     },
+   _onAddMember: function() {
+        var selectedMembers = _.clone(this.state.selectedMembers);
+        selectedMembers.push(this.state.selectMemberCurrent);
+        this.setState({
+            selectedMembers: selectedMembers,
+            selectMemberCurrent: {},
+            selectMember: false
+        });
+    },
 
     _onChangeSelectedPolicy: function(e) {
         var v = e.target.value;
         var p = _.findWhere(this.state.policies, {uuid: v});
         console.log('selected policy', p);
         this.setState({selectPolicyCurrent: p});
+    },
+
+    _onChangeSelectedMember: function(e) {
+        var v = e.target.value;
+        var m = _.findWhere(this.state.members, {uuid: v});
+        console.log('selected member', m);
+        this.setState({selectMemberCurrent: m});
     },
 
     _onNameChange: function(e) {
@@ -119,6 +179,9 @@ var UserRolesForm = React.createClass({
         payload.policies = this.state.selectedPolicies.map(function(p) {
             return p.uuid;
         });
+        payload.members = this.state.selectedMembers.map(function(m) {
+            return m.uuid;
+        });
 
         var req;
         var url;
@@ -140,12 +203,44 @@ var UserRolesForm = React.createClass({
         }.bind(this));
     },
 
+    _renderMemberSelect: function() {
+        var membersAvailableForSelect;
+
+        if (this.state.selectedMembers.length) {
+            membersAvailableForSelect = _.reject(this.state.members, function(p) {
+                var w = _.findWhere(this.state.selectedMembers, {uuid: p.uuid});
+                return w !== undefined;
+            }, this);
+        } else {
+            membersAvailableForSelect = this.state.members;
+        }
+        return (
+            <div className="role-policy-select">
+                <div className="input-group">
+                    <Chosen
+                        noResultsText='No members available for selection'
+                        data-placeholder="Select a Member" onChange={this._onChangeSelectedMember}>
+                        <option></option>
+                    {
+                        membersAvailableForSelect.map(function(p) {
+                            return <option key={p.uuid} value={p.uuid}>{p.alias} - {p.cn}</option>;
+                        })
+                    }
+                    </Chosen>
+                    <span className="input-group-btn">
+                        <button onClick={this._onAddMember} disabled={_.isEmpty(this.state.selectMemberCurrent)} type="button" className="btn btn-info"><i className="fa fa-plus"></i></button>
+                        <button onClick={this._exitSelectMemberMode} type="button" className="btn btn-default"><i className="fa fa-times"></i></button>
+                    </span>
+                </div>
+            </div>
+        );
+    },
+
     _renderPolicySelect: function() {
         var policiesAvailableForSelect;
         if (this.state.selectedPolicies.length) {
             policiesAvailableForSelect = _.reject(this.state.policies, function(p) {
                 var w = _.findWhere(this.state.selectedPolicies, {uuid: p.uuid});
-                console.log(w);
                 return w !== undefined;
             }, this);
         } else {
@@ -153,22 +248,22 @@ var UserRolesForm = React.createClass({
         }
         return (
             <div className="role-policy-select">
-            <div className="input-group">
-                <Chosen
-                    noResultsText='No policies available for selection'
-                    data-placeholder="Select a Policy" onChange={this._onChangeSelectedPolicy}>
-                    <option></option>
-                {
-                    policiesAvailableForSelect.map(function(p) {
-                        return <option key={p.uuid} value={p.uuid}>{p.name} - {p.description}</option>;
-                    })
-                }
-                </Chosen>
-                <span className="input-group-btn">
-                    <button onClick={this._onAddPolicy} disabled={_.isEmpty(this.state.selectPolicyCurrent)} type="button" className="btn btn-info"><i className="fa fa-plus"></i></button>
-                    <button onClick={this._exitSelectPolicyMode} type="button" className="btn btn-default"><i className="fa fa-times"></i></button>
-                </span>
-            </div>
+                <div className="input-group">
+                    <Chosen
+                        noResultsText='No policies available for selection'
+                        data-placeholder="Select a Policy" onChange={this._onChangeSelectedPolicy}>
+                        <option></option>
+                    {
+                        policiesAvailableForSelect.map(function(p) {
+                            return <option key={p.uuid} value={p.uuid}>{p.name} - {p.description}</option>;
+                        })
+                    }
+                    </Chosen>
+                    <span className="input-group-btn">
+                        <button onClick={this._onAddPolicy} disabled={_.isEmpty(this.state.selectPolicyCurrent)} type="button" className="btn btn-info"><i className="fa fa-plus"></i></button>
+                        <button onClick={this._exitSelectPolicyMode} type="button" className="btn btn-default"><i className="fa fa-times"></i></button>
+                    </span>
+                </div>
             </div>
         );
     },
@@ -185,6 +280,17 @@ var UserRolesForm = React.createClass({
                     <div className="loading-role">Retrieving Role Information.</div>
                 </div>
             </div>;
+        }
+
+        var members;
+        if (!this.state.members.length && !this.state.selectMember) {
+            members = <div className="member empty">No Member Selected</div>;
+        } else {
+            members = this.state.selectedMembers.map(function(m, i) {
+                return <div key={i} className="member" data-index={i}>
+                    {m.alias} - {m.cn}
+                </div>;
+            });
         }
 
         var policies;
@@ -207,7 +313,9 @@ var UserRolesForm = React.createClass({
                 </div>;
             }, this);
         }
-        var policySelect = this.state.selectPolicy ? this._renderPolicySelect() : <button type="button" onClick={this._enterSelectPolicyMode} className="btn btn-link btn-sm"><i className="fa fa-plus" /> Add Existing Policy</button>;
+
+        var policySelect = this.state.selectPolicy ? this._renderPolicySelect() : <button type="button" onClick={this._enterSelectPolicyMode} className="btn btn-link btn-sm"><i className="fa fa-plus" /> Add Policy</button>;
+        var memberSelect = this.state.selectMember ? this._renderMemberSelect() : <button type="button" onClick={this._enterSelectMemberMode} className="btn btn-link btn-sm"><i className="fa fa-plus" /> Add Member</button>;
 
         return <div className="panel user-roles-form">
             { this.state.error ? <ErrorAlert error={this.state.error} /> : ''}
@@ -227,6 +335,16 @@ var UserRolesForm = React.createClass({
                             <div className="role-policies">
                                 { policies }
                                 { policySelect }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label className="col-xs-2 control-label">Role Members</label>
+                        <div className="col-xs-9 role-policies-control">
+                            <div className="role-policies">
+                                { members }
+                                { memberSelect }
                             </div>
                         </div>
                     </div>

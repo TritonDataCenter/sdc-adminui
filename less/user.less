@@ -285,22 +285,24 @@
 
       .policy {
         .make-row(0);
-        font-family: @font-family-monospace;
-        font-size: 10px;
         padding: 10px;
+        font-family: @font-family-monospace;
         font-size: 12px;
         background: @state-info-bg;
         border-bottom: 1px solid darken(@state-info-bg, 5%);
         font-size: 11px;
 
         .policy-name { background: @state-info-bg; .make-xs-column(4, 0); }
-
         .policy-rules { }
       }
+
       .member {
         padding: 10px;
         font-size: 12px;
-        background: #f8f8f8;
+        font-family: @font-family-monospace;
+        font-size: 12px;
+        background: @state-info-bg;
+        border-bottom: 1px solid darken(@state-info-bg, 5%);
       }
 
     }
