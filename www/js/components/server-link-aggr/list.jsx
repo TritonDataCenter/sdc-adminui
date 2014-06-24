@@ -1,4 +1,6 @@
-var LinkAggregationsList = module.exports = React.createClass({
+var React = require('react');
+
+var LinkAggregationsList =  React.createClass({
     propTypes: {
         linkAggregations: React.PropTypes.array.isRequired,
         onEdit: React.PropTypes.func,
@@ -19,18 +21,20 @@ var LinkAggregationsList = module.exports = React.createClass({
                             link.macs.map(function(mac) {
                                 return <div key={mac} className="link-aggr-interface">
                                     {mac}
-                                </div>
+                                </div>;
                             }, this)
                         }
                         </div>
                         <div className="actions pull-right">
-                            <button onClick={this.props.onEdit.bind(null, link)} className="btn btn-link btn-edit"><i className="icon-pencil"></i> Edit</button>
-                            <button onClick={this.props.onDelete.bind(null, link)} className="btn btn-link btn-delete"><i className="icon-trash"></i> Delete</button>
+                            <button onClick={this.props.onEdit.bind(null, link)} className="btn btn-link btn-edit"><i className="fa fa-pencil"></i> Edit</button>
+                            <button onClick={this.props.onDelete.bind(null, link)} className="btn btn-link btn-delete"><i className="fa fa-trash-o"></i> Delete</button>
                         </div>
-                    </div>
+                    </div>;
                 }, this)
             )
         }
         </div>);
     }
 });
+
+module.exports = LinkAggregationsList;
