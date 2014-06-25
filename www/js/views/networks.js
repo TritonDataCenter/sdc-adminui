@@ -2,13 +2,9 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 var adminui = require('../adminui');
-var NicTags = require('../models/nictags');
-
-var React = require('react');
 
 var Networks = require('../models/networks');
 var NetworkPools = require('../models/network-pools');
-
 
 var NetworksListView = require('./networks-list');
 var NetworkPoolsListView = require('./network-pools-list');
@@ -109,8 +105,12 @@ var NetworksView = Backbone.Marionette.Layout.extend({
         this.listenTo(this.networksList, 'itemview:destroy', this.refreshList, this);
         this.listenTo(this.networkPoolsList, 'itemview:select', this.showNetwork, this);
     },
+
     refreshList: function() {
-        this.networks.fetch({reset: true});
+        console.log('networks - refreshList');
+        this.networks.fetch({reset: true}).done(function() {
+            console.log('networks refreshList - done');
+        });
     },
 
     onShow: function() {

@@ -31,9 +31,13 @@ var NetworksListItem = Backbone.Marionette.ItemView.extend({
             _.str.sprintf('Are you sure you want to delete the network "%s" ?', this.model.get('name'))
         );
         if (confirm) {
-            this.trigger('destroy');
-            this.model.destroy();
-            adminui.vent.trigger('notification', {message: 'Network deleted.'});
+            this.model.destroy().done(function() {
+                this.trigger('destroy');
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: _.str.sprintf('Network %s deleted successfully.', this.model.get('name'))
+                });
+            }.bind(this));
         }
     },
 
