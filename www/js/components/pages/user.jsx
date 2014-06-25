@@ -307,7 +307,7 @@ var PageUser = React.createClass({
                         </li> }
 
                         { isTopLevelAccount && <li className={this.state.tab === 'networks' ? 'active' : ''}>
-                            <a onClick={this._changeTab.bind(null, 'networks')}><i className="fa fa-fw fa-hand-o-right"></i> Networks</a>
+                            <a onClick={this._changeTab.bind(null, 'networks')}><i className="fa fa-fw fa-globe"></i> Networks</a>
                         </li> }
                     </ul>
                 </div>
