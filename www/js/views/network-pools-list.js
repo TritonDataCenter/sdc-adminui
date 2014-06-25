@@ -32,7 +32,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         this.trigger('edit', this.model);
     },
 
-    deleteNetworkPool: function() {
+    deleteNetworkPool: function(e) {
         e.preventDefault();
         e.stopPropagation();
 
