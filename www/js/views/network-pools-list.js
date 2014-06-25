@@ -25,11 +25,17 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         }
     },
 
-    editNetworkPool: function() {
+    editNetworkPool: function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
         this.trigger('edit', this.model);
     },
 
     deleteNetworkPool: function() {
+        e.preventDefault();
+        e.stopPropagation();
+
         var model = this.model;
         this.model.destroy().done(function() {
             var notifyMsg = _.str.sprintf('Network <strong>%s</strong> deleted successfully.', model.get('name'));
@@ -41,7 +47,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     },
 
     toggleDetails: function() {
-        this.$('.networks-list-container').toggle('slide', null, 50);
+        this.$('.networks-list-container').slideToggle(50);
     },
 
     onRender: function() {
