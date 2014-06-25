@@ -33,8 +33,10 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     },
 
     deleteNetworkPool: function(e) {
-        e.preventDefault();
-        e.stopPropagation();
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
 
         var model = this.model;
         this.model.destroy().done(function() {
