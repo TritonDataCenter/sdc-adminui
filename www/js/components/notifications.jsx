@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var React = require('react');
 var Notifications = React.createClass({
     propTypes: {
@@ -28,7 +29,7 @@ var Notifications = React.createClass({
             {
                 this.state.notifications.map(function(n) {
                     return (
-                        <div className={'notification ' + (n.level || 'info')}>
+                        <div key={n.message} className={'notification ' + (n.level || 'info')}>
                             <span dangerouslySetInnerHTML={{__html: n.message}}></span>
                             <a onClick={this._handleDismissNotification.bind(null, n)}><i className="fa fa-times"></i></a>
                         </div>);
