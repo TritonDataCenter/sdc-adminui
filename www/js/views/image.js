@@ -1,7 +1,6 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
-var moment = require('moment');
-
+var $ = require('jquery');
 var adminui = require('../adminui');
 
 var React = require('react');
@@ -92,7 +91,6 @@ var ImageView = Backbone.Marionette.ItemView.extend({
     },
 
     onClickManageTags: function() {
-
         var server = this.model;
         var modal = new JSONEditor({
             title: _.str.sprintf('Tags for image: %s', this.model.get('name')),
@@ -144,7 +142,6 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         } else {
             message += '<strong>private</strong>';
         }
-        var self = this;
         this.model.save(
             {'public': newVal},
             {patch: true}
@@ -163,7 +160,15 @@ var ImageView = Backbone.Marionette.ItemView.extend({
             this.$('li.progress').fadeOut();
         }
     },
-
+    serializeData: function() {
+        var data = _.clone(Backbone.Marionette.ItemView.prototype.serializeData.call(this));
+        if (data.traits && Object.keys(data.traits).length)  {
+            data.traits = JSON.stringify(data.traits, null, 2);
+        } else {
+            data.traits = null;
+        }
+        return data;
+    },
     onImageReady: function() {
         var self = this;
         if (this.model.get('origin')) {
@@ -208,13 +213,11 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         this.tagsList.setElement(this.$('.tags-container'));
         this.tagsList.render();
 
-
         if (adminui.user.role('operators')) {
             this.notesComponent = React.renderComponent(
                 new NotesComponent({item: this.model.get('uuid')}),
                 this.$('.notes-component-container').get(0));
         }
-
 
         var model = this.model;
         var self = this;

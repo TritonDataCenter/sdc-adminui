@@ -43,12 +43,6 @@
     {{/if}}
 
     <p class="description">{{description}}</p>
-
-    {{#role "operators"}}
-    <div class="actions">
-      <button type="button" class="btn btn-info manage-traits">Modify Traits</button>
-    </div>
-    {{/role}}
   </div>
 
 
@@ -121,6 +115,23 @@
         {{/role}}
     </h3>
       <div class="acl-container"></div>
+    </section>
+
+    <section>
+        <h3>Traits
+            {{#role "operators"}}
+            <div class="actions">
+              <button type="button" class="btn btn-info btn-sm manage-traits"><i class="fa fa-pencil"></i> Modify Traits</button>
+            </div>
+            {{/role}}
+        </h3>
+        {{#if traits}}
+            <div class="traits">
+                {{traits}}
+            </div>
+        {{else}}
+            <div class="zero-state">No traits defined for this image.</div>
+        {{/if}}
     </section>
 
     <section>
