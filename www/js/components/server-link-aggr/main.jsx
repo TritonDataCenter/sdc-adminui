@@ -1,9 +1,8 @@
 /** @jsx React.DOM **/
+
 var api = require('../../request');
 
 var React = require('react');
-var Chosen = require('react-chosen');
-var _ = require('underscore');
 
 var LinkAggregationForm = require('./form.jsx');
 var LinkAggregationsList = require('./list.jsx');
@@ -43,9 +42,12 @@ var Component = React.createClass({
         this.refreshAggregations();
     },
     handleDelete: function(aggr) {
-        api.del('/api/linkaggrs/'+aggr.id).end(function() {
-            this.refreshAggregations();
-        }.bind(this));
+        var c = window.confirm("Confirm Deleting Aggregation ");
+        if (c) {
+            api.del('/api/linkaggrs/'+aggr.id).end(function() {
+                this.refreshAggregations();
+            }.bind(this));
+        }
     },
     handleEdit: function(aggr) {
         this.setState({
