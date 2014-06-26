@@ -1,5 +1,7 @@
 var React = require('react');
 var PropTypes = React.PropTypes;
+var Promise = require('promise');
+var _ = require('underscore');
 var api = require('../../../request');
 var adminui = require('../../../adminui');
 
@@ -12,14 +14,21 @@ var UserSubusers = React.createClass({
 
     getInitialState: function() {
         return {
-            users: []
+            users: [],
+            loading: true
         };
     },
+    _load: function() {
+        var self = this;
+        this._fetchUsers().then(this._fetchUsersRoles).then(function(res) {
+            self.setState({loading: false});
+        });
+    },
     componentWillMount: function() {
-        this._fetchUsers();
+        this._load();
     },
     componentDidReceiveProps: function(props) {
-        this._fetchUsers();
+        this._load();
     },
     renderUserRow: function(u) {
         /*
@@ -56,13 +65,28 @@ var UserSubusers = React.createClass({
 
         return <div key={u.uuid} className="subuser panel">
             <div className="panel-body">
-                <div className="subuser-icon" style={userIconStyle}></div>
+                <div className="subuser-icon-container">
+                    <div className="subuser-icon" style={userIconStyle}></div>
+                </div>
                 <div className="subuser-details">
                     <a onClick={this._handleNavigateToUser.bind(null, u)} className="alias">{u.alias}</a>
                     <div className="cn">{u.cn}</div>
                 </div>
                 <div className="subuser-email">
                     <a href={'mailto:' + u.email}><i className="fa fa-envelope"></i> {u.email}</a>
+                </div>
+                <div className="subuser-roles">
+                    {
+                        u.roles && u.roles.length ?
+                        <div className="roles-list">
+                            <div className="roles-header">Roles</div>
+                            { u.roles && u.roles.map(function(r) {
+                                return <div className="role">{r.name}</div>;
+                            }) }
+                        </div>
+                        :
+                        <div className="roles-header">No Roles</div>
+                    }
                 </div>
             </div>
         </div>;
@@ -88,11 +112,17 @@ var UserSubusers = React.createClass({
                 </div>
             </h3>
 
-            <div className="subusers-list">
             {
-                (this.state.users.length) ? this.state.users.map(this.renderUserRow, this)
-                 : <div className="panel"><div className="panel-body">There are no users under this account.</div></div> }
-            </div>
+                this.state.loading ?
+                <div className="panel"><div className="panel-body">Retrieving Sub users under this account.</div></div>
+                :
+                <div className="subusers-list">
+                {
+                    (this.state.users.length) ? this.state.users.map(this.renderUserRow, this)
+                     : <div className="panel"><div className="panel-body">There are no users under this account.</div></div> }
+                </div>
+            }
+
         </div>);
     },
 
@@ -106,12 +136,42 @@ var UserSubusers = React.createClass({
     },
     _fetchUsers: function() {
         var account = this.props.account;
+        var that = this;
+        return new Promise(function(resolve, reject) {
+            console.log('fetchUsers');
+            api.get('/api/users').query({account: account}).end(function(res) {
+                if (res.ok) {
+                    that.setState({users: res.body});
+                    resolve(res.body);
+                } else {
+                    reject(res.error);
+                }
+            }.bind(that));
+        });
+    },
 
-        api.get('/api/users').query({account: account}).end(function(res) {
-            if (res.ok) {
-                this.setState({users: res.body});
-            }
-        }.bind(this));
+    _fetchUsersRoles: function() {
+        var that = this;
+        var users = this.state.users;
+
+        return Promise.all(users.map(function(user, index) {
+            return fetchUserRole(user, index);
+        }));
+
+        function fetchUserRole(user, index) {
+            return new Promise(function(resolve, reject) {
+                var url = _.str.sprintf('/api/users/%s/%s/roles', user.account, user.uuid);
+                api.get(url).end(function(res) {
+                    if (res.ok) {
+                        that.state.users[index].roles = res.body;
+                        that.setState({users: that.state.users});
+                        resolve(true);
+                    } else {
+                        reject(res.error);
+                    }
+                }.bind(that));
+            });
+        }
     }
 });
 

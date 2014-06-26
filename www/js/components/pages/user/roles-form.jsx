@@ -15,7 +15,7 @@ var UserRolesForm = React.createClass({
         handleSaved: PropTypes.func,
         handleClose: PropTypes.func
     },
-    componentWillMount: function() {
+    componentDidMount: function() {
         Promise.all([
             this._fetchAccountPolicies(),
             this._fetchAccountMembers()
@@ -23,8 +23,8 @@ var UserRolesForm = React.createClass({
     },
     componentWillReceiveProps: function() {
         Promise.all(
-            this._fetchAccountPolicies,
-            this._fetchAccountMembers
+            this._fetchAccountPolicies(),
+            this._fetchAccountMembers()
         ).then(this._onFetch);
     },
 
@@ -50,9 +50,11 @@ var UserRolesForm = React.createClass({
         var state = this.state;
 
         if (role) {
+            console.log('role', role);
             state.name = role.name;
             state.uuid = role.uuid;
             if (role.policies && _.isArray(role.policies)) {
+                console.log('role.policies', role.policies);
                 state.selectedPolicies = role.policies.map(function(p) {
                     var matches = p.match(/policy-uuid=([a-z0-9-]+), uuid=([a-z0-9-]+)/);
                     var policyUuid = matches[1];
@@ -61,9 +63,9 @@ var UserRolesForm = React.createClass({
                 });
             }
             if (role.members && _.isArray(role.members)) {
+                console.log('role.members', role.members);
                 state.selectedMembers = role.members.map(function(p) {
                     var matches = p.match(/uuid=([a-z0-9-]+), uuid=([a-z0-9-]+)/);
-                    console.log(matches);
                     var userUuid = matches[1];
                     var user = _.findWhere(state.members, {uuid: userUuid});
                     return user;
@@ -75,7 +77,10 @@ var UserRolesForm = React.createClass({
         if (!state.selectedPolicies) { state.selectedPolicies = []; }
         if (!state.selectedMembers) { state.selectedMembers = []; }
         state.loading = false;
-        this.setState(state);
+        console.log('state after fetch', state);
+        setTimeout(function() {
+            this.setState(state);
+        }.bind(this));
     },
 
 
@@ -86,8 +91,10 @@ var UserRolesForm = React.createClass({
             api.get(url).end(function(res) {
                 if (res.ok) {
                     self.setState({policies: res.body});
+                    console.debug('fetched policies', res.body);
                     resolve(res.body);
                 } else {
+                    console.fatal("error fetching policies", res.error);
                     reject('error fetching policies');
                 }
             });
@@ -99,8 +106,8 @@ var UserRolesForm = React.createClass({
         return new Promise(function(resolve, reject)  {
             console.debug('fetching users');
             api.get('/api/users').query({account: that.props.account}).end(function(res) {
-                console.debug('fetched users');
                 if (res.ok) {
+                    console.debug('fetched users', res.body);
                     that.setState({members: res.body});
                     resolve(res.body);
                 } else {
@@ -169,6 +176,14 @@ var UserRolesForm = React.createClass({
         });
         this.setState({selectedPolicies: policies});
     },
+
+    _removeSelectedMember: function(p) {
+        var members = _.reject(this.state.selectedMembers, function(sp) {
+            return sp.uuid === p.uuid;
+        });
+        this.setState({selectedMembers: members});
+    },
+
 
     _handleSaveRole: function(e) {
         e.preventDefault();
@@ -273,14 +288,15 @@ var UserRolesForm = React.createClass({
             { this.props.initialRole ? <div>Modify Role <strong>{this.props.initialRole.name}</strong></div> : 'Create New Role' }
         </div>;
 
-        if (this.state.loading) {
-            return <div className="panel user-roles-form">
+        console.log('loading', this.state.loading);
+        console.log('loading', this.state.name);
+        var loading =
+            <div className="panel user-roles-form">
                 <div className="panel-body">
                     { formTitle }
                     <div className="loading-role">Retrieving Role Information.</div>
                 </div>
             </div>;
-        }
 
         var members;
         if (!this.state.members.length && !this.state.selectMember) {
@@ -288,9 +304,16 @@ var UserRolesForm = React.createClass({
         } else {
             members = this.state.selectedMembers.map(function(m, i) {
                 return <div key={i} className="member" data-index={i}>
-                    {m.alias} - {m.cn}
+                    <div className="member-name">
+                        {m.alias} - {m.cn}
+                    </div>
+                    <div className="member-actions">
+                        <button onClick={this._removeSelectedMember.bind(null, m)} className="btn btn-link" type="button">
+                            <i className="fa fa-minus"></i>
+                        </button>
+                    </div>
                 </div>;
-            });
+            }, this);
         }
 
         var policies;
@@ -300,12 +323,12 @@ var UserRolesForm = React.createClass({
             policies = this.state.selectedPolicies.map(function(p, i) {
                 return <div key={i} className="policy" data-index={i}>
                 <div className="policy-name">{p.name}</div>
-                <div className="policy-rules col-xs-7">
+                <div className="policy-rules">
                     {p.rules.map(function(r, i) {
                         return <div key={i} className="policy-rule">{r}</div>;
                     })}
                 </div>
-                <div className="policy-actions col-xs-1">
+                <div className="policy-actions">
                 <button onClick={this._removeSelectedPolicy.bind(null, p)} className="btn btn-link" type="button">
                     <i className="fa fa-minus"></i>
                 </button>
@@ -317,10 +340,12 @@ var UserRolesForm = React.createClass({
         var policySelect = this.state.selectPolicy ? this._renderPolicySelect() : <button type="button" onClick={this._enterSelectPolicyMode} className="btn btn-link btn-sm"><i className="fa fa-plus" /> Add Policy</button>;
         var memberSelect = this.state.selectMember ? this._renderMemberSelect() : <button type="button" onClick={this._enterSelectMemberMode} className="btn btn-link btn-sm"><i className="fa fa-plus" /> Add Member</button>;
 
+        console.log(this.state.name);
         return <div className="panel user-roles-form">
             { this.state.error ? <ErrorAlert error={this.state.error} /> : ''}
             <div className="panel-body">
                 { formTitle }
+
                 <form onSubmit={this._handleSaveRole} className="form form-horizontal">
                     <div className="form-group">
                         <label className="col-xs-2 control-label">Role Name</label>
@@ -341,8 +366,8 @@ var UserRolesForm = React.createClass({
 
                     <div className="form-group">
                         <label className="col-xs-2 control-label">Role Members</label>
-                        <div className="col-xs-9 role-policies-control">
-                            <div className="role-policies">
+                        <div className="col-xs-9 role-members-control">
+                            <div className="role-members">
                                 { members }
                                 { memberSelect }
                             </div>
@@ -355,7 +380,6 @@ var UserRolesForm = React.createClass({
                             <button type="button" onClick={this.props.handleClose} className="btn btn-default">Cancel</button>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>;

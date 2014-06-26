@@ -181,25 +181,44 @@
 
   .user-subusers {
     .subuser {
+      .make-row();
       margin-bottom: 10px;
     }
-    .subuser-icon {
-      width: 48px;
-      height: 48px;
-      background-color: #FFF;
-      background-position: middle;
-      background-repeat: no-repeat;
+    .subuser-icon-container {
+      .make-xs-column(1);
+      .subuser-icon {
+        width: 48px;
+        height: 48px;
+        background-color: #FFF;
+        background-position: middle;
+        background-repeat: no-repeat;
 
-      border-radius: 50%;
-      vertical-align: middle;
-      margin-right: 20px;
-      float: left;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin-right: 20px;
+      }
     }
     .subuser-email {
-      margin-left: 400px;
+      .make-xs-column(3);
+    }
+    .subuser-roles {
+      .make-xs-column(3);
+      .roles-header {
+        font-size: 10px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+        color: @gray-light;
+      }
+      .role {
+        padding: 4px 6px;
+        background: @state-info-bg;
+        border: 1px solid @state-info-border;
+        font-size: 10px;
+        display: inline-block;
+      }
     }
     .subuser-details {
-      float: left;
+      .make-xs-column(4);
       .alias {
         font-weight: bold;
       }
@@ -292,11 +311,27 @@
         border-bottom: 1px solid darken(@state-info-bg, 5%);
         font-size: 11px;
 
-        .policy-name { background: @state-info-bg; .make-xs-column(4, 0); }
-        .policy-rules { }
+        .policy-actions {
+         .make-xs-column(1, 0);
+        }
+        .policy-name {
+          font-weight: bold;
+           .make-xs-column(4, 0);
+        }
+        .policy-rules {
+           .make-xs-column(7, 0);
+        }
       }
 
       .member {
+        .make-row(0);
+        .member-name {
+          font-weight: bold;
+           .make-xs-column(11, 0);
+        }
+        .member-actions {
+          .make-xs-column(1, 0);
+        }
         padding: 10px;
         font-size: 12px;
         font-family: @font-family-monospace;
