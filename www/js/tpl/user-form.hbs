@@ -2,7 +2,13 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" aria-hidden="true">&times;</button>
-            <h3 class="modal-title"><span class="action"></span> User</h3>
+            <h3 class="modal-title"><span class="action"></span>
+                {{#if account}}
+                    Account Sub-user
+                {{else}}
+                    User
+                {{/if}}
+            </h3>
         </div>
 
         <div class="modal-body">
@@ -85,7 +91,13 @@
 
         <div class="modal-footer">
             <button data-dismiss="modal" type="button" class="btn btn-default">Close</button>
-            <button type="submit" class="save btn btn-primary">Save User</button>
+            <button type="submit" class="save btn btn-primary">Save
+                {{#if account}}
+                    Sub-user
+                {{else}}
+                    User
+                {{/if}}
+             </button>
         </div>
     </form>
 </div>

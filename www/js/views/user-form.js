@@ -2,6 +2,7 @@
 
 var Backbone = require('backbone');
 var _ = require('underscore');
+var $ = require('jquery');
 
 var User = require('../models/user');
 var Template = require('../tpl/user-form.hbs');
