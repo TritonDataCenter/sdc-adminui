@@ -28,8 +28,9 @@ var Notifications = React.createClass({
         return <div id="notifications">
             {
                 this.state.notifications.map(function(n) {
+                    var t = (new Date()).getTime();
                     return (
-                        <div key={n.message} className={'notification ' + (n.level || 'info')}>
+                        <div key={n.message + t} className={'notification ' + (n.level || 'info')}>
                             <span dangerouslySetInnerHTML={{__html: n.message}}></span>
                             <a onClick={this._handleDismissNotification.bind(null, n)}><i className="fa fa-times"></i></a>
                         </div>);
