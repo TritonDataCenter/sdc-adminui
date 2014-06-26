@@ -84,9 +84,14 @@ var Rootnav = React.createClass({
                             <a className={this.classesFor('current-user')}
                                 onClick={this.props.handleSelectCurrentUser.bind(null, this.props.user)}
                                 href={'/users/'+this.props.user.get('uuid')}>
-                                <div className="user-icon" style={{
-                                    background: 'url(https://www.gravatar.com/avatar/'+this.props.user.get('emailhash') + '?d=identicon&s=32)'
-                                }} />
+                                {
+                                 this.props.user.get('emailhash') ?
+                                    <div className="user-icon" style={{
+                                        background: 'url(https://www.gravatar.com/avatar/'+this.props.user.get('emailhash') + '?d=identicon&s=32)'
+                                    }} />
+                                    :
+                                    <div className="user-icon"></div>
+                                }
                                 <div className="name">
                                     <span className="cn">{this.props.user.get('cn')}</span>
                                     <span className="login-name">{this.props.user.get('login')}</span>
