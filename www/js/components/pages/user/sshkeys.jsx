@@ -3,6 +3,8 @@
 var BB = require('../../bb.jsx');
 var React = require('react');
 var AddKeyView = require('./sshkey-create');
+var Backbone = require('backbone');
+var $ = require('adminui');
 
 module.exports = React.createClass({
     componentWillMount: function() {
