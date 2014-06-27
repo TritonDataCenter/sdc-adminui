@@ -250,7 +250,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 'localnav.active': ComponentType.sidebar
             };
 
-            state['chrome.fullwidth'] = (compName === 'users' || compName === 'user' || compName === 'settings');
+            state['chrome.fullwidth'] = (compName === 'users' || compName === 'alarm' || compName === 'user' || compName === 'settings');
             this.state.set(state);
 
             if (typeof(ComponentType.url) === 'function') {
