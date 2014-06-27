@@ -316,6 +316,10 @@ var View = Backbone.Marionette.Layout.extend({
                 this.setBrand('kvm');
                 this.disableBrands('joyent');
                 this.ui.brandControls.hide();
+            } else if (image.get('type') === 'lx-dataset') {
+                this.setBrand('lx');
+                this.disableBrands('joyent', 'kvm');
+                this.ui.brandControls.hide();
             } else if (image.get('type') === 'zone-dataset') {
                 this.setBrand('joyent');
                 this.disableBrands('kvm');
@@ -421,6 +425,9 @@ var View = Backbone.Marionette.Layout.extend({
                 if (imageReqs['brand'] === 'kvm') {
                     values['brand'] = 'kvm';
                 }
+                if (imageReqs['brand'] === 'lx') {
+                    values['brand'] = 'lx';
+                }
                 if (image.get('type') === 'zvol') {
                     values['brand'] = 'kvm';
                 }
@@ -452,7 +459,7 @@ var View = Backbone.Marionette.Layout.extend({
                 delete values['quota'];
             }
 
-            if (values['brand'] === 'kvm' && this.userKeys) {
+            if ((values['brand'] === 'kvm' || values['brand'] === 'lx') && this.userKeys) {
                 values.customer_metadata = {
                     root_authorized_keys: this.userKeys.join("\n")
                 };
