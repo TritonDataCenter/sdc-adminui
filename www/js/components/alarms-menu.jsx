@@ -7,6 +7,8 @@ var adminui = require('../adminui');
 var React = require('react');
 var moment = require('moment');
 
+var AMON_POLL_INTERVAL = 60000;
+
 module.exports = React.createClass({
     propTypes: {
         'user': React.PropTypes.string.isRequired
@@ -20,7 +22,7 @@ module.exports = React.createClass({
     componentWillMount: function() {
         this.fetchAlarms();
         adminui.vent.on('alarms:changed', this.fetchAlarms);
-        this._interval = setInterval(this.fetchAlarms, 10000);
+        this._interval = setInterval(this.fetchAlarms, AMON_POLL_INTERVAL);
     },
     componentWillUnmount: function() {
         adminui.vent.off('alarms:changed', this.fetchAlarms);
