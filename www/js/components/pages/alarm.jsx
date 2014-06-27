@@ -22,10 +22,10 @@ module.exports = React.createClass({
         return {};
     },
     componentDidMount: function() {
-        this.fetchAlarm();
+        this.fetchAlarm(this.props.user, this.props.id);
     },
-    componentWillReceiveProps: function() {
-        this.fetchAlarm();
+    componentWillReceiveProps: function(props) {
+        this.fetchAlarm(props.user, props.id);
     },
     getInitialState: function() {
         return {
@@ -64,6 +64,7 @@ module.exports = React.createClass({
             }
         }.bind(this));
     },
+
     fetchProbeGroup: function() {
         var url = '/api/amon/probegroups/'+this.props.user + '/' + this._alarm.probeGroup;
         console.log('fetchProbeGroups', this._alarm);
@@ -77,9 +78,8 @@ module.exports = React.createClass({
             }
         }.bind(this));
     },
-    fetchAlarm: function() {
-        var id = this.props.id;
 
+    fetchAlarm: function(user, id) {
         this.setState({
             loading: true,
             alarm: {},
@@ -88,7 +88,7 @@ module.exports = React.createClass({
             vm: null
         });
 
-        var url = '/api/amon/alarms/'+this.props.user+'/' + this.props.id;
+        var url = '/api/amon/alarms/'+user+'/' + id;
         api.get(url).end(function(err, res) {
             if (! res.ok) {
                 if (res.notFound) {

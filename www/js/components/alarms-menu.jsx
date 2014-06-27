@@ -89,13 +89,13 @@ module.exports = React.createClass({
                     <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe"><span className="probe-name">{probe.name}</span></a>
                 }
                 <div className="alarm-lastevent">
-                <i className="fa fa-clock-o"></i> { moment(1403280834534).fromNow(true) }
+                <i className="fa fa-clock-o"></i> { moment(alarm.timeLastEvent).fromNow() }
                 </div>
             </div>
             <div className="alarm-menu-item-content">
                 <div className="faults">
                 {alarm.faults.map(function(f) {
-                    return <div className="fault">{f.event.data.message}</div>;
+                    return <div key={f.event.uuid} className="fault">{f.event.data.message}</div>;
                 })}
                 </div>
             </div>
