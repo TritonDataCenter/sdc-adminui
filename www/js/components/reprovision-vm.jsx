@@ -12,7 +12,7 @@ var ReprovisionVm = React.createClass({
     getInitialState: function() {
         return {
             images: []
-        }
+        };
     },
 
     componentWillMount: function() {
@@ -25,7 +25,7 @@ var ReprovisionVm = React.createClass({
 
     onSelectImage: function(e, c) {
         var image = e.target.value;
-        this.setState({selectedImage: image })
+        this.setState({selectedImage: image });
     },
 
     onSubmit: function() {
@@ -70,7 +70,7 @@ var ReprovisionVm = React.createClass({
                             <option value=""></option>
                         {
                             this.state.images.map(function(i) {
-                                return <option value={i.uuid}>{i.name} - {i.version}</option>
+                                return <option value={i.uuid}>{i.name} - {i.version}</option>;
                             })
                         }
                         </Chosen>
@@ -86,7 +86,7 @@ var ReprovisionVm = React.createClass({
                 <button type="button" data-dismiss="modal" className="btn btn-link">Close</button>
                 <button type="submit" disabled={ this.isValid() ? '': 'disabled' } onClick={this.onSubmit} className="btn btn-primary">Reprovision</button>
             </div>
-        </Modal>
+        </Modal>;
 
         return node;
     }
