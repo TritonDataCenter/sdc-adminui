@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-8 col-md-offset-1">
         <div class="page-header">
             {{#if uuid}}
             {{#if changeOwnerMode}}
@@ -18,7 +18,7 @@
 
 
 <div class="row">
-  <div class="col-md-8 col-md-offset-2">
+  <div class="col-md-9 col-md-offset-1">
     <form class="form-horizontal" role="form">
       <div class="error-alert-container"></div>
 
@@ -30,7 +30,7 @@
       </div>
 
       <div class="form-group">
-        <label class="control-label col-sm-3" for="package-name">Name</label>
+        <label class="control-label col-sm-4" for="package-name">Name</label>
         <div class="controls col-sm-8">
           <input type="text"
               value="{{name}}"
@@ -46,7 +46,7 @@
       {{/unless}}
 
       <div class="form-group">
-        <label class="control-label col-sm-3" for="package-name">Description</label>
+        <label class="control-label col-sm-4" for="package-name">Description</label>
         <div class="controls col-sm-8">
           <textarea class="form-control" rows="3" class="span4" name="description">{{description}}</textarea>
         </div>
@@ -54,7 +54,7 @@
 
       {{#unless changeOwnerMode}}
       <div class="form-group">
-        <label class="control-label col-sm-3" for="package-version">Version</label>
+        <label class="control-label col-sm-4" for="package-version">Version</label>
 
         <div class="controls col-sm-3">
           {{#if newVersionMode}}
@@ -75,13 +75,13 @@
       {{/unless}}
 
     <div class="form-group package-owners">
-        <label class="control-label col-sm-3" for="package-owner">Owners</label>
+        <label class="control-label col-sm-4" for="package-owner">Owners</label>
 
         <div class="col-sm-5">
             {{#unless owner_uuids.length}}
               <input type="text"
-              class="form-control -xlarge package-owner"
-              name="owner_uuid[]"
+              class="form-control input-xl package-owner"
+              name="owner_uuids[]"
               placeholder="Search by login or uuid">
             {{else}}
 
@@ -95,8 +95,8 @@
             {{/unless}}
         </div>
         <div class="clearfix"></div>
-        <div class="col-sm-4 col-sm-offset-3">
-            <a class="add-owner-entry">Add Another Owner</a>
+        <div class="col-sm-4 col-sm-offset-4">
+            <a class="add-owner-entry"><i class="fa fa-plus"></i> Add Another Owner</a>
         </div>
     </div>
 
@@ -178,6 +178,7 @@
                     placeholder="disk quota">
                     <span class="input-group-addon">MB</span>
                 </div>
+                <p class="help-block">must be a multiple of 1024</p>
             </div>
         </div>
 

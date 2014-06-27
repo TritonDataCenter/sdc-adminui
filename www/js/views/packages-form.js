@@ -45,7 +45,7 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         });
 
         userInput.render();
-        userInput.el.focus();
+        userInput.$el.focus();
     },
 
     onChangeInput: function() {
@@ -86,7 +86,7 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
 
         var values = Backbone.Syphon.serialize(this);
-        values.owner_uuid = _.compact(values.owner_uuid);
+        values.owner_uuids = _.compact(values.owner_uuids);
 
         if (this.options.mode === 'new-version') {
             this.model.unset('uuid');
