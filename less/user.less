@@ -257,9 +257,23 @@
         text-align: right;
         .make-xs-column(2);
       }
-      .role-policies {
-        .make-xs-column(6);
+      .role-members, .role-policies {
+        .make-xs-column(3);
         h6 { margin:0; text-transform: uppercase; font-size: 10px; }
+      }
+      .role-members {
+        .member {
+          cursor: pointer;
+          display: inline-block;
+          margin-right: 5px;
+          background: @state-info-bg;
+          border-bottom: 1px solid darken(@state-info-bg, 5%);
+          font-size: 11px;
+          padding: 2px 5px;
+          margin-top: 3px;
+        }
+      }
+      .role-policies {
         .no-policies { color: @gray-light; }
         .policy {
           display: inline-block;

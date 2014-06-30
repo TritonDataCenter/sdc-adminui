@@ -288,8 +288,6 @@ var UserRolesForm = React.createClass({
             { this.props.initialRole ? <div>Modify Role <strong>{this.props.initialRole.name}</strong></div> : 'Create New Role' }
         </div>;
 
-        console.log('loading', this.state.loading);
-        console.log('loading', this.state.name);
         var loading =
             <div className="panel user-roles-form">
                 <div className="panel-body">
@@ -299,7 +297,7 @@ var UserRolesForm = React.createClass({
             </div>;
 
         var members;
-        if (!this.state.members.length && !this.state.selectMember) {
+        if (!this.state.selectedMembers.length && !this.state.selectMember) {
             members = <div className="member empty">No Member Selected</div>;
         } else {
             members = this.state.selectedMembers.map(function(m, i) {
@@ -317,7 +315,7 @@ var UserRolesForm = React.createClass({
         }
 
         var policies;
-        if (!this.state.policies.length && !this.state.selectPolicy) {
+        if (!this.state.selectedMembers.length && !this.state.selectPolicy) {
             policies = <div className="policy empty">No Policies Selected</div>;
         } else {
             policies = this.state.selectedPolicies.map(function(p, i) {

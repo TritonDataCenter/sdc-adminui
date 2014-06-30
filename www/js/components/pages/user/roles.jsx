@@ -10,6 +10,50 @@ var api = require('../../../request');
 var UserRolesForm = require('./roles-form');
 
 
+var RoleMemberInfo = React.createClass({
+    propTypes: {
+        dn: PropTypes.string.isRequired,
+        memberLoaded: PropTypes.func
+    },
+    getInitialState: function() {
+        return {
+            member: { },
+            loading: true
+        };
+    },
+    componentWillMount: function() {
+        this._fetchMember();
+    },
+    _fetchMember: function() {
+        // policy-uuid=4de91c34-6784-45ac-aac7-9aa6c3d17013, uuid=930896af-bf8c-48d4-885c-6573a94b1853, ou=users, o=smartdc
+        var matches = this.props.dn.match(/uuid=([a-z0-9-]+), uuid=([a-z0-9-]+)/);
+        var user = matches[1];
+        var account = matches[2];
+        if (user && account) {
+            var url = _.str.sprintf('/api/users/%s/%s', account, user);
+            api.get(url).end(function(res) {
+                if (res.ok) {
+                    this.setState({member: res.body});
+                }
+                this.setState({loading: false});
+            }.bind(this));
+        }
+    },
+    render: function() {
+        if (this.state.loading) {
+            return <div className="member loading">
+                Loading Member...
+            </div>;
+        }
+        return <div className="member">
+            <a onClick={this._handleClickedMember.bind(null, this.state.member)} className="member-name">{this.state.member.login}</a>
+        </div>;
+    },
+    _handleClickedMember: function(u) {
+        adminui.vent.trigger('showcomponent', 'user', {user: u.uuid, account: u.account, tab: 'profile'});
+    }
+});
+
 var RolePolicyInfo = React.createClass({
     propTypes: {
         dn: PropTypes.string.isRequired,
@@ -79,6 +123,26 @@ var RolePolicyInfo = React.createClass({
                     }
                 </div>
             }
+        </div>;
+    }
+});
+
+var RoleMembersInfo = React.createClass({
+    propTypes: {
+        role: PropTypes.object.isRequired
+    },
+    render: function() {
+        var role = this.props.role;
+        var nodes;
+        if (role.members.length) {
+            nodes = role.members.map(function(p) {
+                return <RoleMemberInfo key={p} dn={p} />;
+            });
+        }
+
+        return <div className="role-members">
+            <h6>{role.members.length} { role.members.length === 1 ? 'member' : 'members'}</h6>
+            {nodes}
         </div>;
     }
 });
@@ -173,9 +237,8 @@ var UserRoles = React.createClass({
                         <div className="role-name">{r.name}</div>
                         <div className="role-uuid selectable">{r.uuid}</div>
                     </div>
-                    <div className="role-policies">
-                        <RolePoliciesInfo role={r} />
-                    </div>
+                    <RolePoliciesInfo role={r} />
+                    <RoleMembersInfo role={r} />
                     <div className="role-actions">
                         <button onClick={this._showEditForm.bind(null, r)} type="button" className="btn btn-link">
                             <i className="fa fa-pencil"></i>
