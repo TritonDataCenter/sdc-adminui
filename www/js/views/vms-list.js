@@ -31,8 +31,11 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         this.user.fetch().done(function() {
             self.$('.owner-name').html(user.get('login'));
             self.$('.owner-name').attr("href", "/users/" + user.get('uuid'));
-            if (user.get('company')) {
+            if (user.get('company') && user.get('company').length) {
                 self.$('.owner-company').html(user.get('company'));
+                self.$('.owner-company-container').show();
+            } else {
+                self.$('.owner-company-container').hide();
             }
         });
 
@@ -42,6 +45,9 @@ var ItemView = Backbone.Marionette.ItemView.extend({
                 self.$('.package-version').html(pkg.get('version'));
             });
         }
+    },
+    onRender: function() {
+        this.$('.owner-company-container').hide();
     },
 
 
