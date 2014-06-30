@@ -87,7 +87,7 @@ var Rootnav = React.createClass({
                                 {
                                  this.props.user.get('emailhash') ?
                                     <div className="user-icon" style={{
-                                        background: 'url(https://www.gravatar.com/avatar/'+this.props.user.get('emailhash') + '?d=identicon&s=32)'
+                                        'background-image': 'url(https://www.gravatar.com/avatar/'+this.props.user.get('emailhash') + '?d=identicon&s=32)'
                                     }} />
                                     :
                                     <div className="user-icon"></div>
