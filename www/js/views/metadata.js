@@ -1,9 +1,7 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
-
+var $ = require('jquery');
 var adminui = require('adminui');
-
-var JobProgressView = require('./job-progress');
 
 var MetadataList = Backbone.Marionette.ItemView.extend({
     attributes: {
@@ -32,16 +30,23 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
     },
 
     onClickSave: function()  {
-        var metadata = this.serializeForm();
         var view = this;
         var data = {};
         data[this.property] = this.serializeForm();
-        this.vm.update(data, function(job) {
-            adminui.vent.trigger('showjob', job);
-            job.on('execution:succeeded', function() {
-                view.exitEditingMode();
-                view.vm.fetch();
-            });
+        this.vm.update(data, function(job, err) {
+            if (err) {
+                var msg = 'Error updating metadata: '+ err.message;
+                adminui.vent.trigger('notification', {
+                    message: msg,
+                    level: 'error'
+                });
+            } else {
+                adminui.vent.trigger('showjob', job);
+                job.on('execution:succeeded', function() {
+                    view.exitEditingMode();
+                    view.vm.fetch();
+                });
+            }
         });
     },
 
@@ -87,36 +92,20 @@ var MetadataList = Backbone.Marionette.ItemView.extend({
     },
 
     addNewEmptyRow: function() {
-        var node = $('<tr><td class="key"><input type="text" name="key" /></td><td class="value"><textarea name="value" class="value"></textarea></td></tr>')
+        var node = $('<tr><td class="key"><input type="text" name="key" /></td><td class="value"><textarea name="value" class="value"></textarea></td></tr>');
         this.$('tbody').append(node);
     },
 
     serializeData: function() {
         var metadata = this.vm.get(this.property);
 
-        data = {};
+        var data = {};
         data.metadata = [];
         data.editing = this.editing;
         _(metadata).each(function(v, k) {
             data.metadata.push({key: k, value: v});
         });
         return data;
-    },
-
-    showContent: function(m) {
-        var view = $(metadataViewModalTemplate()).modal();
-        view.modal('show');
-    },
-
-    showAddPane: function() {
-        var self = this;
-
-        var view = $(metadataEditModalTemplate()).modal({
-            show: false,
-            backdrop: 'static'
-        });
-
-        var viewModel = new MetadataViewModel();
     },
 
     save: function(cb) {
