@@ -523,8 +523,8 @@
     &:focus,
     &:active,
     &.active {
-      background-color: @background;
-          border-color: @border;
+      background-color: desaturate(@background, 50%);
+          border-color: desaturate(@border, 50%);
     }
   }
 

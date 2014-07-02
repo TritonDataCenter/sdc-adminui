@@ -31,6 +31,7 @@ var UserRolesForm = React.createClass({
     getInitialState: function() {
         var role = this.props.initialRole;
         var state = {};
+        state.name = '';
         state.loading = role ? true : false;
         state.policies = [];
         state.selectedPolicies = [];
@@ -243,8 +244,8 @@ var UserRolesForm = React.createClass({
                     }
                     </Chosen>
                     <span className="input-group-btn">
-                        <button onClick={this._onAddMember} disabled={_.isEmpty(this.state.selectMemberCurrent)} type="button" className="btn btn-info"><i className="fa fa-plus"></i></button>
-                        <button onClick={this._exitSelectMemberMode} type="button" className="btn btn-default"><i className="fa fa-times"></i></button>
+                        <button onClick={this._onAddMember} disabled={_.isEmpty(this.state.selectMemberCurrent)} type="button" className="btn btn-info"><i className="fa fa-plus"></i> Add Member</button>
+                        <button onClick={this._exitSelectMemberMode} type="button" className="btn btn-default"><i className="fa fa-times"></i> Cancel</button>
                     </span>
                 </div>
             </div>
@@ -275,8 +276,8 @@ var UserRolesForm = React.createClass({
                     }
                     </Chosen>
                     <span className="input-group-btn">
-                        <button onClick={this._onAddPolicy} disabled={_.isEmpty(this.state.selectPolicyCurrent)} type="button" className="btn btn-info"><i className="fa fa-plus"></i></button>
-                        <button onClick={this._exitSelectPolicyMode} type="button" className="btn btn-default"><i className="fa fa-times"></i></button>
+                        <button onClick={this._onAddPolicy} disabled={_.isEmpty(this.state.selectPolicyCurrent)} type="button" className="btn btn-info"><i className="fa fa-plus"></i> Add Policy</button>
+                        <button onClick={this._exitSelectPolicyMode} type="button" className="btn btn-default"><i className="fa fa-times"></i> Cancel</button>
                     </span>
                 </div>
             </div>
@@ -307,7 +308,7 @@ var UserRolesForm = React.createClass({
                     </div>
                     <div className="member-actions">
                         <button onClick={this._removeSelectedMember.bind(null, m)} className="btn btn-link" type="button">
-                            <i className="fa fa-minus"></i>
+                            <i className="fa fa-times"></i> Remove
                         </button>
                     </div>
                 </div>;
@@ -315,7 +316,7 @@ var UserRolesForm = React.createClass({
         }
 
         var policies;
-        if (!this.state.selectedMembers.length && !this.state.selectPolicy) {
+        if (this.state.selectedPolicies.length === 0 && !this.state.selectPolicy) {
             policies = <div className="policy empty">No Policies Selected</div>;
         } else {
             policies = this.state.selectedPolicies.map(function(p, i) {
@@ -328,7 +329,7 @@ var UserRolesForm = React.createClass({
                 </div>
                 <div className="policy-actions">
                 <button onClick={this._removeSelectedPolicy.bind(null, p)} className="btn btn-link" type="button">
-                    <i className="fa fa-minus"></i>
+                    <i className="fa fa-times"></i> Remove
                 </button>
                 </div>
                 </div>;
@@ -338,7 +339,6 @@ var UserRolesForm = React.createClass({
         var policySelect = this.state.selectPolicy ? this._renderPolicySelect() : <button type="button" onClick={this._enterSelectPolicyMode} className="btn btn-link btn-sm"><i className="fa fa-plus" /> Add Policy</button>;
         var memberSelect = this.state.selectMember ? this._renderMemberSelect() : <button type="button" onClick={this._enterSelectMemberMode} className="btn btn-link btn-sm"><i className="fa fa-plus" /> Add Member</button>;
 
-        console.log(this.state.name);
         return <div className="panel user-roles-form">
             { this.state.error ? <ErrorAlert error={this.state.error} /> : ''}
             <div className="panel-body">
@@ -374,7 +374,7 @@ var UserRolesForm = React.createClass({
 
                     <div className="form-group">
                         <div className="col-xs-offset-2 col-xs-5">
-                            <button disabled={! (this.state.selectedPolicies.length && this.state.name.length) } type="submit" className="btn btn-info">Save Role</button>
+                            <button disabled={! (!this.state.selectMember && !this.state.selectPolicy && this.state.name.length) } type="submit" className="btn btn-primary">Save Role</button>
                             <button type="button" onClick={this.props.handleClose} className="btn btn-default">Cancel</button>
                         </div>
                     </div>
