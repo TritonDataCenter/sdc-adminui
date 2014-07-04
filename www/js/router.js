@@ -96,6 +96,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             timeout: 10000,
             headers: {'x-adminui-token': this.user.getToken()}
         });
+
         this.state.set({
             manta: this.user.getManta(),
             datacenter: this.user.getDatacenter()
@@ -119,6 +120,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                     }
                 }
             });
+
             return (xhr.status === 200);
         }
     },
@@ -202,9 +204,9 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             return;
         }
 
+        var view = new View(args);
         var state = {};
 
-        var view = new View(args);
         state['chrome.rootnav'] = true;
         state['chrome.content'] = BBComponent({view: view });
         state['chrome.fullwidth'] = (viewName === 'users' || viewName === 'user' || viewName === 'settings');

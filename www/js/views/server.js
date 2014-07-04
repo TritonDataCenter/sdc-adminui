@@ -12,12 +12,12 @@ var Vms = require('../models/vms');
 
 var React = require('react');
 var NotesComponent = require('../components/notes');
+var ServerNicsList = require('../components/server-nics');
 
 var VmsList = require('./vms-list');
 var JSONEditor = require('./traits-editor');
 var ChangeRackForm = require('./server-change-rack');
 var ChangePlatformForm = require('./server-change-platform');
-var ServerNicsView = require('./server-nics');
 var ServerSetup = require('./server-setup');
 
 var JobsList = require('./jobs-list');
@@ -67,8 +67,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
             }
         });
 
-        this.listenTo(this.nics, 'sync', this.mergeSysinfo);
-
         this.vms = new Vms(null, {
             params: {
                 server_uuid: this.model.get('uuid'),
@@ -76,11 +74,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
             },
             perPage: 20
         });
-    },
-
-    mergeSysinfo: function(nics) {
-        var sysinfo = this.model.get('sysinfo');
-        this.nics.mergeSysinfo(sysinfo);
     },
 
     templateHelpers: {
@@ -383,6 +376,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
 
     onRender: function() {
+        console.log('hello', this.$('.server-nics').length);
         console.log('Server', this.model);
 
         if (app.user.role('operators')) {
@@ -391,10 +385,10 @@ var ServerView = Backbone.Marionette.Layout.extend({
                 this.$('.notes-component-container').get(0));
         }
 
-        this.nicsView = new ServerNicsView({
-            nics: this.nics,
-            el: this.$('.nics')
-        });
+        React.renderComponent(new ServerNicsList({
+            sysinfo: this.model.get('sysinfo'),
+            nics: this.nics
+        }), this.$('.server-nics').get(0));
 
         this.jobsListView = new JobsList({
             perPage: 100,
@@ -403,7 +397,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
         this.jobsRegion.show(this.jobsListView);
 
-        this.nicsView.render();
         this.$("[data-toggle=tooltip]").tooltip();
 
         this.vmsListView = new VmsList({collection: this.vms });

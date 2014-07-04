@@ -11,16 +11,17 @@ var Nics = Collection.extend({
         return this;
 
         function _mergeSysinfo(snics, nics, kind) {
+            console.log('napi nics', nics);
             _.each(snics, function(n, nicName) {
                 var mac = n['MAC Address'];
-                var nic = nics.findWhere({'mac': mac});
                 var linkStatus = n['Link Status'];
                 var params = {
                     name: nicName,
                     link_status: linkStatus
                 };
-                if (nic['Host Interface']) {
-                    params.host_interface = nic['Host Interface'];
+                var nic = nics.findWhere({'mac': mac});
+                if (n['Host Interface']) {
+                    params.host_interface = n['Host Interface'];
                 }
                 params.kind = kind;
 

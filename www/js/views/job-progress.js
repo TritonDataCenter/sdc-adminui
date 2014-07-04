@@ -134,7 +134,7 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
 
     navigateToJob: function() {
         adminui.vent.trigger('showview', 'job', {model: this.model});
-        this.close();
+        this.onClose();
     },
 
     serializeData: function() {
