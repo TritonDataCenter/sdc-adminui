@@ -104,30 +104,36 @@ module.exports = React.createClass({
     menu: function() {
         if (this.state.menu) {
             if (this.state.error) {
-                return <div className="alarms-menu">
-                    <div className="alarm-menu-item error">
-                        <div className="alarm-menu-item-header">
-                            <div className="alarm-menu-item-icon">
-                                <i className="fa fa-warning"></i>
+                return <div className="alarms-menu-wrapper open">
+                    <div className="alarms-menu dropdown-menu">
+                        <div className="alarm-menu-item error">
+                            <div className="alarm-menu-item-header">
+                                <div className="alarm-menu-item-icon">
+                                    <i className="fa fa-warning"></i>
+                                </div>
+                                Error Retrieving Alarms
                             </div>
-                            Error Retrieving Alarms
-                        </div>
-                        <div className="alarm-menu-item-content">
-                            amon said: {this.state.error.message}
+                            <div className="alarm-menu-item-content">
+                                amon said: {this.state.error.message}
+                            </div>
                         </div>
                     </div>
                 </div>;
             }
 
             if (this.state.alarms.length) {
-                return <div className="alarms-menu">
-                    {this.state.alarms.map(this.renderMenuItem, this)}
+                return <div className="alarms-menu-wrapper open">
+                    <div className="alarms-menu dropdown-menu">
+                        {this.state.alarms.map(this.renderMenuItem, this)}
+                    </div>
                 </div>;
             } else {
-                return <div id="alarms-menu" className="alarms-menu">
-                    <div className="alarm-menu-item no-alarms">
-                        <div className="alarm-menu-item-content">
-                            <i className="fa fa-check"></i> There are no open alarms at this time.
+                return <div className="alarms-menu-wrapper open">
+                    <div id="alarms-menu" className="alarms-menu dropdown-menu">
+                        <div className="alarm-menu-item no-alarms">
+                            <div className="alarm-menu-item-content">
+                                <i className="fa fa-check"></i> There are no open alarms at this time.
+                            </div>
                         </div>
                     </div>
                 </div>;
