@@ -1,21 +1,26 @@
-<form class="form-horizontal">
-    <div class="form-group">
-        <label class="control-label col-md-3">Default Platform</label>
-        <div class="col-md-4">
-            <select class="form-control" name="platform"></select>
+<div class="panel panel-default">
+    <div class="panel-heading">Default Server Boot Options</div>
+    <div class="panel-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-md-3">Default Platform</label>
+            <div class="col-md-4">
+                <select class="form-control" name="platform"></select>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-md-3">Kernel Arguments</label>
-        <div class="col-md-8">
-            <textarea class="form-control">{{kernel_args}}</textarea>
-            <span class="error"></span>
+        <div class="form-group">
+            <label class="control-label col-md-3">Kernel Arguments</label>
+            <div class="col-md-8">
+                <textarea class="form-control">{{kernel_args}}</textarea>
+                <span class="error"></span>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-3 col-md-4">
-            <button type="button" class="btn btn-primary save">Save</button>
-            <button type="button" class="btn btn-link cancel">Cancel</button>
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-4">
+                <button type="button" class="btn btn-primary save">Save</button>
+                <button type="button" class="btn btn-link cancel">Cancel</button>
+            </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
+</div>
