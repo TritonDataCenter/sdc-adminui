@@ -8,6 +8,33 @@ var _ = require('underscore');
 var ReactBackboneMixin = require('../components/_backbone-mixin');
 
 
+var ServerNicAggr = React.createClass({
+    render: function() {
+        var aggr = this.props.aggr;
+        return <li key={this.key}>
+            <div className="aggr-name-container">
+                {this.props.key}
+            </div>
+            <div className="lacp-container">
+                LACP Mode
+                <div className="lacp">
+                    <span className={aggr["LACP Mode"]}> {aggr['LACP Mode']} </span>
+                </div>
+            </div>
+            <div className="interfaces-container">
+                Interfaces
+                <div className="interfaces">
+                {
+                    aggr['Interfaces'].map(function(i) {
+                        return <span key={i} className="interface">{i}</span>;
+                    })
+                }
+                </div>
+            </div>
+        </li>;
+    }
+});
+
 var ServerNic = React.createClass({
     render: function() {
         var nic = this.props.nic;
@@ -104,9 +131,25 @@ var ServerNicsList = React.createClass({
             return n.kind === 'aggr';
         });
 
-        var aggrsNodes = aggrs.length ? aggrs.map(function(nic) {
-            return <ServerNic key={nic.mac} nic={nic} />;
+        var aggrsNodes = aggrs.length ? aggrs.map(function(aggr, ifname) {
+            return <ServerNicAggr key={ifname} aggr={aggr} />;
         }) : <li className="empty">No Link Aggregations Found</li>;
+
+        // aggrsNodes = [
+        // <ServerNicAggr key="aggr0" aggr={
+        //     {
+        //         "LACP Mode": 'passive',
+        //         "Interfaces": ["e1000g0", "e1000g2"]
+        //     }
+        // }/>,
+        // <ServerNicAggr key="aggr1" aggr={
+        //     {
+        //         "LACP Mode": 'active',
+        //         "Interfaces": ["e1000g0", "e1000g2"]
+        //     }
+        // }/>
+        // ];
+
 
         return <div className="server-nics-list">
             <div className="title">Physical</div>

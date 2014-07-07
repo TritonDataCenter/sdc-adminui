@@ -136,6 +136,42 @@
         vertical-align: top;
       }
 
+      .aggr-name-container {
+        width: 120px;
+        font-weight: bold;
+        margin-left: 10px;
+      }
+      .lacp-container {
+        width: 200px;
+        color: @gray;
+        .lacp {
+          margin-left: 15px;
+          display: inline-block;
+          margin-left: 5px;
+          .active, .passive {
+            background: #fff;
+            padding: 4px 6px;
+            font-size: 10px;
+            text-transform: uppercase;
+          }
+         .passive { color: #888; }
+         .active { color: @brand-success; }
+       }
+
+      }
+      .interfaces-container {
+        color: @gray;
+        width: auto;
+        .interfaces { margin-left: 15px; display: inline-block; }
+        .interface {
+          padding: 4px 6px;
+          background: @state-info-bg;
+          color: @state-info-text;
+          font-size: 10px;
+          margin-left: 5px;
+        }
+      }
+
       padding: 8px;
 
       .name-container { width: 160px; }
