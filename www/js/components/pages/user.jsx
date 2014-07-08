@@ -105,7 +105,7 @@ var PageUser = React.createClass({
     },
 
     fetch2fa: function() {
-        var url = _.str.sprintf('/api/users/%s/2fa', this.props.uuid);
+        var url = _.str.sprintf('/api/users/%s/2fa', this.state.userModel.get('uuid'));
         api.get(url).end(function(res) {
             if (res.ok) {
                 this.setState({'2fa': res.body.enabled});
@@ -198,6 +198,7 @@ var PageUser = React.createClass({
     handleNavigateToAccount: function() {
         adminui.vent.trigger('showcomponent', 'user', {user: this.state.userModel.get('account')});
     },
+
     handleProfileToggleTwoFactorAuth: function() {
         var self = this;
         var url = '/api/users/'+this.state.userModel.get('uuid') + '/2fa';
@@ -207,6 +208,10 @@ var PageUser = React.createClass({
 
             if (res.ok) {
                 api.patch(url).send({enabled: enabled}).end(function() {
+                    adminui.vent.trigger('notification', {
+                        message: _.str.sprintf('Two factor %s for user', (enabled ? 'enabled': 'disabled')),
+                        level: 'success'
+                    });
                     self.fetch2fa();
                 });
             }
