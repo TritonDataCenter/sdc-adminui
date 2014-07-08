@@ -27,11 +27,6 @@
 			"expiry": 300
 		}
 	},
-	"redis": {
-		"host": "{{{REDIS_SERVICE}}}",
-		"port": "6379",
-		"db": 3
-	},
 	"datacenters": {
 		"{{datacenter_name}}": {
 			"moray": {
