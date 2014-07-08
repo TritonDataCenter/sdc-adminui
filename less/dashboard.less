@@ -1,180 +1,69 @@
 #page-dashboard {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-
-  .alarms-container {
-    .alarms {
-      .alarms-list { margin: 0;}
-      .alarms-list>li {
-        display: block;
-        overflow: hidden;
-        border-radius: 2px;
-        text-align: left;
-
-        .probe-name { font-weight: bold; font-size: 14px;}
-        .time-last-event { font-weight: normal; font-size: 10px; text-transform: uppercase;}
-
-        .summary {
-          cursor: pointer;
-          background: @brand-danger;
-          padding: 18px;
-          border-bottom: 1px solid #fff;
-        }
-
-        .details {
-          .widget-content;
-          background: #fafafa;
-          color: #333;
-          padding: 14px;
-          overflow: hidden;
-        }
-
-
-        .actions {
-          float: right;
-          a { color: #fff; font-size: 12px;}
-          margin-top: -50px;
-        }
-
-        .fault-count {
-          position: relative;
-          background: #fff;
-          border-radius: 10px;
-          color: #000;
-          padding: 0 8px;
-          float: right;
-          top: 24px;
-          font-size: 11px;
-          font-weight: bold;
-        }
-
-        .faults>li {
-          .fault-time { font-size: 11px; color: #000; font-weight: normal; float: right;}
-
-          .fault-name { font-weight: bold; font-size: 12px; float: left; }
-
-          .fault-details {
-            font-family: @font-family-monospace;
-            font-size: 10px;
-            white-space: pre;
-            line-height: 10px;
-            font-weight: normal;
-            padding: 10px;
-            background: #FFF;
-            border-top: 1px solid #eee;
-          }
-
-          .fault-message {
-            clear: both;
-            font-weight: normal;
-            font-size: 11px;
-            background: #fff;
-
-            padding: 4px 8px;
-            border-radius: 2px;
-          }
-        }
-
-        .faults>li+li { margin-top: .5em;}
-      }
-    }
-    font-size: 24px;
-    text-align: center;
-    font-weight: bold;
-    color: #FFF;
-    .has-alarms {
-      overflow: hidden;
-    }
-    .no-alarms {
-      background: #fff;
-      font-size: 14px;
-      font-weight: 200;
-      color: #aaa;
-      padding: 20px 48px;
-      strong {
-        font-weight: 300;
-        display: block;
-        color: #62C2B4;
-        font-size: 38px;
-        padding: 10px 0;
-      }
-    }
-  }
   .row {
-    margin-top: 2px;
+    margin-bottom: 3px;
+  }
+  .first-row {
+    .make-row(30px);
+    margin-bottom: 2px;
   }
   .counter {
-    small { font-size: 10px; color: #ccc;}
+    .make-xs-column(6, 2);
     text-align: center;
     font-size: 14px;
-    padding: 1em 0;
 
     .name {
-      display: block;
+      font-size: 12px;
+      color: @gray;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      color: #FFF;
-      padding: 6px 0;
+      font-weight: 100;
     }
 
     .value {
-      font-weight: 300;
       font-size: 38px;
       padding: 0;
-      display: block;
     }
   }
 
-  .counter.users {
-    background: #87a4c2;
-    color: #FFF;
+  .counter .users {
+    background: #fff;
+    color: @brand-success;
+    margin-left: 1px;
+    padding: 15px;
   }
-  .counter.vms {
-    background: #87c299;
-    color: #FFF;
+  .counter .vms {
+    padding: 15px;
+    color: @brand-success;
+    background: #fff;
+    margin-right: 1px;
   }
 
 
   .servers {
     overflow: hidden;
-    padding: 20px;
-
-    .graph-container {
-      float: left;
-      posiiton: relative;
-      width: 440px;
-      h6 { color: #FFF; text-transform: uppercase; }
-      .y_axis {
-        .y_ticks text {
-         fill: #FFFfff;
-         stroke-width: .1;
-         stroke: #ffffff;
-       }
-       .y_ticks line {
-          stroke: rgba(255,255,255,0.5);
-       }
-       width: 40px; position: absolute;
-      }
-    }
+    padding: 15px;
+    background: #fff;
 
     .data {
-      float: right;
-      width: 380px;
+      .make-row(0);
     }
 
     .stat {
+      .make-md-column(3, 0);
       padding: 8px;
     }
     .name {
       font-size: 12px;
-      color: #FFF;
+      color: @gray;
       letter-spacing: 1px;
       text-transform: uppercase;
       font-weight: 100;
     }
     .value {
       font-size: 24px;
-      color: #FFF;
+      color: @brand-info;
     }
-    background: #69646d;
 
     .server-provisionable-memory-graph {
       color: #fff;

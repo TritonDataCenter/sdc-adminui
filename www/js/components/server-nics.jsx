@@ -64,7 +64,7 @@ var ServerNic = React.createClass({
             {
                 nic.nic_tags_provided ?
                 <div className="nic-tags-provided-container">
-                    <span className="lbl">NICTAGS-PROV</span>
+                    <span className="lbl">NICTAGS PROVIDED</span>
                     <span className="nic-tags-provided value">{ nic.nic_tags_provided.join(' ') }</span>
                 </div> : '' }
             </li>
