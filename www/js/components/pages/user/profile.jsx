@@ -45,9 +45,9 @@ var UserProfile = React.createClass({
                             <tr>
                                 <th>Provisioning</th>
                                 <td>
-                                    <span className={'provisioning ' + (user.approved_for_provisioning ? 'approved': 'disabled') }>
+                                    <span className={'provisioning ' + (user.approved_for_provisioning === "true" ? 'approved': 'disabled') }>
                                     {
-                                        user.approved_for_provisioning ?
+                                        user.approved_for_provisioning === "true" ?
                                         <span><i className="fa fa-check"></i> yes</span> :
                                         <span><i className="fa fa-times"></i> no</span>
                                     }
@@ -60,7 +60,7 @@ var UserProfile = React.createClass({
                             <tr>
                                 <th>Registered Developer</th>
                                 <td>
-                                    <span className={'registered-developer ' + (user.registered_developer ? 'yes' : 'no')}>
+                                    <span className={'registered-developer ' + (user.registered_developer === "true" ? 'yes' : 'no')}>
                                         {
                                             user.registered_developer === 'true' ?
                                             <span><i className="fa fa-check"></i> yes</span> : <span><i className="fa fa-times"></i> no</span>
