@@ -6,7 +6,7 @@ var ServerTime = React.createClass({
         this._getTime();
     },
     componentDidMount: function() {
-        this._interval = setInterval(this._getTime.bind(this), 1000);
+        this._interval = setInterval(this._getTime, 1000);
     },
     _getTime: function() {
         this.setState({time: moment().utc().format("MMM D h:mm") });
