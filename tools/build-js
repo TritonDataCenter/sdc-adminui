@@ -46,11 +46,6 @@ var shimConfig = {
         path: './lib/showdown',
         exports: 'Showdown'
     },
-    'rickshaw': {
-        path: './lib/rickshaw',
-        depends: {'d3': 'd3'},
-        exports: null
-    },
     'react-chosen': {
         path: './lib/react-chosen',
         depends: {

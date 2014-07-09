@@ -1,5 +1,4 @@
 var moment = require('moment');
-// var Raphael = require('raphael');
 var _ = require('underscore');
 var BackboneMixin = require('./_backbone-mixin');
 var adminui = require('../adminui');

@@ -61,7 +61,6 @@ var ServersView = Backbone.Marionette.Layout.extend({
             selector: '.default-boot-options-region',
             regionType: SlidingPanelRegionType
         },
-        'listRegion': '.servers-list-region',
         'filterRegion': '.servers-filter-region'
     },
 
@@ -70,23 +69,29 @@ var ServersView = Backbone.Marionette.Layout.extend({
     },
 
     onSync: function() {
-        if (this.serversList.collection.length) {
-            this.$('.record-count').html(this.serversList.collection.length);
+        if (this.collection.length) {
+            this.$('.record-count').html(this.collection.length);
             this.$('.record-summary').show();
         } else {
             this.$('.record-summary').hide();
         }
     },
+
     initialize: function() {
         this.collection = new Servers(null, {sort: 'hostname'});
         this.filterForm = new FilterForm();
+
+        this.listenTo(this.collection, 'request', this.onRequest);
+        this.listenTo(this.collection, 'sync', this.onSync);
     },
+
     query: function(params) {
         if (params) {
             this.collection.params = params;
         }
         this.collection.fetch();
     },
+
     onShow: function() {
         this.serversList = ServersList({ collection: this.collection, });
         this.listenTo(this.filterForm, 'query', this.query);
