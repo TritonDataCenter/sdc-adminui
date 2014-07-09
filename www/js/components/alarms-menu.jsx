@@ -19,11 +19,13 @@ module.exports = React.createClass({
     toggleMenu: function() {
         this.setState({menu: !this.state.menu});
     },
+
     componentWillMount: function() {
         this.fetchAlarms();
         adminui.vent.on('alarms:changed', this.fetchAlarms);
         this._interval = setInterval(this.fetchAlarms, AMON_POLL_INTERVAL);
     },
+
     componentWillUnmount: function() {
         adminui.vent.off('alarms:changed', this.fetchAlarms);
         clearInterval(this._interval);

@@ -183,6 +183,7 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
     },
 
     onClose: function() {
+        React.unmountComponentAtNode(this.$el.get(0));
         this.$el.modal('hide');
         clearInterval(this._timer);
     },

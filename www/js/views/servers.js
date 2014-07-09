@@ -78,7 +78,7 @@ var ServersView = Backbone.Marionette.Layout.extend({
     },
 
     initialize: function() {
-        this.collection = new Servers(null, {sort: 'hostname'});
+        this.collection = new Servers(null, {params: {sort: 'hostname'} });
         this.filterForm = new FilterForm();
 
         this.listenTo(this.collection, 'request', this.onRequest);
@@ -98,6 +98,10 @@ var ServersView = Backbone.Marionette.Layout.extend({
 
         React.renderComponent(this.serversList, this.$('.servers-list-region').get(0));
         this.filterRegion.show(this.filterForm);
+    },
+
+    onClose: function() {
+        React.unmountComponentAtNode(this.$('.servers-list-region').get(0));
     },
 
     toggleBootOptions: function() {

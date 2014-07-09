@@ -178,6 +178,7 @@ var ServersListItem = React.createClass({
     }
 });
 
+
 var ServersListComponent = React.createClass({
     mixins: [BackboneMixin],
     getBackboneModels: function() {
@@ -191,7 +192,16 @@ var ServersListComponent = React.createClass({
     },
 
     componentDidMount: function() {
+        var self = this;
         this.collection.fetch();
+        this._timer = setInterval(function() {
+            self.collection.fetch();
+        }, 10000);
+    },
+
+    componentWillUnmount: function() {
+        console.log('componentWillUnmount');
+        clearInterval(this._timer);
     },
 
     render: function() {

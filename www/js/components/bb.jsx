@@ -12,7 +12,6 @@ var BBComponent = React.createClass({
     },
     componentDidMount: function() {
         var view = this.props.view;
-        console.log(view);
         this.region = new Region({el: this.getDOMNode() });
         this.region.show(view);
 
