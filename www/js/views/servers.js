@@ -1,8 +1,13 @@
 "use strict";
-
 var Backbone = require('backbone');
+var React = require('react');
 var app = require('adminui');
+var Servers = require('../models/servers');
 var ServerBootOptionsView = require('./server-boot-options');
+
+require('jquery');
+require('d3');
+require('epoch');
 
 var SlidingPanelRegionType = Backbone.Marionette.Region.extend({
     open: function(view) {
@@ -22,7 +27,7 @@ var SlidingPanelRegionType = Backbone.Marionette.Region.extend({
     }
 });
 
-var ServersList = require('./servers-list');
+var ServersList = require('../components/servers-list');
 
 var FilterForm = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/servers-filter.hbs'),
@@ -60,18 +65,6 @@ var ServersView = Backbone.Marionette.Layout.extend({
         'filterRegion': '.servers-filter-region'
     },
 
-    initialize: function() {
-        this.serversList = new ServersList();
-        this.serversList.collection.params = {sort: 'hostname'};
-        this.listenTo(this.serversList.collection, 'error', this.onError, this);
-        this.listenTo(this.serversList.collection, 'request', this.onRequest, this);
-        this.listenTo(this.serversList.collection, 'sync', this.onSync, this);
-
-        this.filterForm = new FilterForm();
-        this.listenTo(this.filterForm, 'query', this.serversList.query);
-
-    },
-
     onRequest: function() {
         this.$('.record-summary').hide();
     },
@@ -84,9 +77,21 @@ var ServersView = Backbone.Marionette.Layout.extend({
             this.$('.record-summary').hide();
         }
     },
-
+    initialize: function() {
+        this.collection = new Servers(null, {sort: 'hostname'});
+        this.filterForm = new FilterForm();
+    },
+    query: function(params) {
+        if (params) {
+            this.collection.params = params;
+        }
+        this.collection.fetch();
+    },
     onShow: function() {
-        this.listRegion.show(this.serversList);
+        this.serversList = ServersList({ collection: this.collection, });
+        this.listenTo(this.filterForm, 'query', this.query);
+
+        React.renderComponent(this.serversList, this.$('.servers-list-region').get(0));
         this.filterRegion.show(this.filterForm);
     },
 

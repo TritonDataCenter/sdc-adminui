@@ -80,10 +80,7 @@
 
 
     .memory-usage {
-      padding: 12px 10px;
-      padding-top: 18px;
-      padding-bottom: 0;
-      width: 300px;
+      width: 340px;
       float: left;
 
       .memory-usage-total {
@@ -94,7 +91,7 @@
         padding: 5px 0;
         strong {
           font-weight: 200;
-          color: @gray-light;
+          color: @gray;
           font-weight: 100;
           letter-spacing: 1px;
           text-transform: uppercase;
@@ -104,30 +101,52 @@
           font-weight: 400;
         }
       }
+
       .memory-usage-avail {
         font-size: 12px;
         text-align: right;
+
         strong {
-          color: @gray-light;
+          color: @gray;
           font-weight: 100;
           letter-spacing: 1px;
           text-transform: uppercase;
           padding: 0 5px;
         }
-        .avail {
-          font-size: 18px;
-          color: #00d295;}
-          font-weight: 400;
+
+        .avail { color: #00d295; }
+        font-weight: 400;
       }
-      .memory-usage-graph {
+
+      .memory-usage-data {
+        float: right;
+        margin-right: 15px;
+        margin-top: 21px;
+      }
+      .memory-usage-graph-container {
+        float: right;
         line-height: 0;
-        height: 3px;
-        width: 100%;
+        .memory-usage-percent {
+          strong { color: @gray-light; font-size: 6px; font-weight: 200; display: block; line-height: 18px; }
+          width: 80px;
+          font-size: 13px;
+          margin-top: -54px;
+          text-align: center;
+          vertical-align: middle;
+        }
+        .memory-usage-graph {
+          height: 80px;
+          width: 80px;
+          .layer.provisionable text,
+          .layer.used text { display: none; }
+          .layer.used path { fill: #ec7676; }
+          .layer.provisionable path { fill: #76c9ec; }
+        }
       }
     }
 
     .last-status {
-      padding: 10px;
+      padding: 15px;
       font-size: 12px;
       width: 220px;
       float: right;

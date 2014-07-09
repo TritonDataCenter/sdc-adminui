@@ -112,10 +112,11 @@ var prepAppBundle = function() {
         .transform(require('reactify'))
         .require(require.resolve(join(root, './adminui')), {expose: 'adminui', entry: true});
 
-    bundle.external(require.resolve(join(root, './lib/jquery')) + ':jquery');
+    bundle.external('jquery');
     bundle.external('moment');
     bundle.external('underscore');
     bundle.external('underscore.string');
+    bundle.external('epoch');
     bundle.external('react/addons' + ':react');
     bundle.external('backbone');
     bundle.external('superagent');
@@ -125,7 +126,8 @@ var prepAppBundle = function() {
 };
 
 function prepLibsBundle() {
-    var blibs = process.env.WATCH ? watchify() : browserify();
+    var opts = {noParse: [ require.resolve(join(root, './lib/epoch.0.5.2.min')) ]};
+    var blibs = process.env.WATCH ? watchify(opts) : browserify(opts);
     blibs.require('react');
     blibs.require('underscore');
     blibs.require('underscore.string');
@@ -134,6 +136,8 @@ function prepLibsBundle() {
     blibs.require(require.resolve(join(root, './lib/bootstrap-datetimepicker')), { expose: 'bootstrap.datetimepicker'});
     blibs.require(require.resolve(join(root, './lib/jquery')), { expose: 'jquery'});
     blibs.require(require.resolve(join(root, './lib/moment.min')), {expose: 'moment'});
+    blibs.require(require.resolve(join(root, './lib/epoch.0.5.2.min')), { expose: 'epoch'});
+
     return blibs;
 }
 

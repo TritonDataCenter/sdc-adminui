@@ -3,7 +3,7 @@ var Backbone = require('backbone');
 var Networks = require('../models/networks');
 var NetworksListView = require('./networks-list');
 var Servers = require('../models/servers');
-var ServersListView = require('./servers-list');
+var ServersListComponent = require('../components/servers-list');
 
 var React = require('react');
 var NotesComponent = require('../components/notes');
@@ -18,8 +18,7 @@ module.exports = Backbone.Marionette.Layout.extend({
         return '/nictags/' + this.model.get('name')     ;
     },
     regions: {
-        "networksRegion": '.networks-region',
-        "serversRegion": '.servers-region'
+        "networksRegion": '.networks-region'
     },
     initialize: function() {
         this.networks = new Networks();
@@ -32,7 +31,7 @@ module.exports = Backbone.Marionette.Layout.extend({
             url: '/api/nic_tags/'+this.model.get('name') + '/servers'
         });
         this.servers = new NetworkedServers();
-        this.serversView = new ServersListView({collection: this.servers });
+        this.serversView = new ServersListComponent({collection: this.servers });
     },
     showNetwork: function(network) {
         var net = network.model;
@@ -44,9 +43,7 @@ module.exports = Backbone.Marionette.Layout.extend({
             this.networksRegion.show(this.networksView);
         }.bind(this));
 
-        this.serversRegion.show(this.serversView);
-        // this.servers.fetch().done(function() {
-        // }.bind(this));
+        React.renderComponent(ServersListComponent({collection: this.servers}), this.$('.servers-region').get(0));
     },
 
     onRender: function() {
