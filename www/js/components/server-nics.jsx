@@ -109,7 +109,7 @@ var ServerNicsList = React.createClass({
 
     render: function() {
         var allnics = this.props.nics.toJSON();
-        var sysinfo = this.props.sysinfo;
+        var sysinfo = this.props.server.get('sysinfo');
 
         var res = mergeSysinfo(sysinfo, allnics);
 
@@ -156,8 +156,8 @@ var ServerNicsList = React.createClass({
             <ul className="list-unstyled">{nicsNodes}</ul>
             <div className="title">Virtual</div>
             <ul className="list-unstyled">{vnicsNodes}</ul>
-            <div className="title">Aggregates</div>
-            <ul className="list-unstyled">{aggrsNodes}</ul>
+            {! this.props.server.get('headnode') && <div className="title">Aggregates</div> }
+            {! this.props.server.get('headnode') && <ul className="list-unstyled">{aggrsNodes}</ul> }
         </div>;
     }
 });

@@ -386,7 +386,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         }
 
         React.renderComponent(new ServerNicsList({
-            sysinfo: this.model.get('sysinfo'),
+            server: this.model,
             nics: this.nics
         }), this.$('.server-nics').get(0));
 
