@@ -27,19 +27,18 @@ var ServersListItem = React.createClass({
         var model = this.props.server;
         var $node = $(this.getDOMNode()).find('.memory-usage-graph');
 
-        var avail = model.get('memory_provisionable_bytes');
-        if (avail < 0) {
-            avail = 0;
-        }
         var total = model.get('memory_total_bytes');
-        var used = total - avail;
-        if (used < 0) {
-            used = 0;
-        }
+        var avail = model.get('memory_provisionable_bytes');
+        var overhead = model.get('memory_total_bytes') * model.get('reservation_ratio');
+        var used = total - overhead - avail;
+
+        if (avail < 0) { avail = 0; }
+        if (used < 0) { used = 0; }
 
         var pieData = [
-            {label: 'Used', value: (used/total)*100 },
-            {label: 'Provisionable', value: (avail/total)*100 },
+            {label: 'overhead', value: overhead },
+            {label: 'Used', value: used },
+            {label: 'Provisionable', value: avail },
         ];
 
         $node.epoch({
@@ -47,26 +46,14 @@ var ServersListItem = React.createClass({
             data: pieData,
             inner: 23,
         });
-
-        // var w = $node.width();
-        // var h = 4;
-        // var paper = new Raphael($node.get(0), w, h);
-
-        // var uw = w * (used/total);
-        // var ug = paper.rect(0, 0, 0, h);
-        // ug.attr({ 'fill': "#ccc", 'stroke-width': 0 });
-
-        // var fw = w * (avail/total);
-        // var fg = paper.rect(uw, 0, 0, h);
-        // fg.attr({ 'fill': "#00d295", 'stroke-width': 0 });
-        // var uga = Raphael.animation({width: uw}, 300, 'linear');
-        // var fga = Raphael.animation({width: fw}, 300, '>');
-
-        // ug.animate(uga.delay(100));
-        // fg.animate(fga.delay(400));
     },
-
+    componenWillReceiveProps: function() {
+        this.postRender();
+    },
     componentDidMount: function() {
+        this.postRender();
+    },
+    postRender: function() {
         var model = this.props.server;
         var $node = $(this.getDOMNode());
         $node.find(".last-platform").tooltip({
@@ -112,7 +99,13 @@ var ServersListItem = React.createClass({
             server.memory_provisionable_mb = "0";
             server.memory_provisionable_gb = "0";
         }
-        server.memory_provisionable_percent = Math.round(Number(server.memory_provisionable_mb) / Number(server.memory_total_mb) * 100);
+        server.memory_total_provisionable_bytes = (server.memory_total_bytes * (1-server.reservation_ratio));
+        server.memory_used_provisionable_bytes = (server.memory_total_provisionable_bytes - server.memory_provisionable_bytes);
+        server.memory_utilization_percent = Math.round(server.memory_used_provisionable_bytes / server.memory_total_provisionable_bytes * 100);
+        if (server.memory_utilization_percent < 0) {
+            server.memory_utilization_percent = 0;
+        }
+
 
         return <div className="servers-list-item">
             <div className={"status " + server.status}></div>
@@ -134,7 +127,7 @@ var ServersListItem = React.createClass({
                     <div className="memory-usage-graph epoch"></div>
                     <div className="memory-usage-percent">
                         <strong>UTILIZATION</strong>
-                        {100-server.memory_provisionable_percent}%
+                        {server.memory_utilization_percent}%
                     </div>
                 </div>
                 <div className="memory-usage-data">
