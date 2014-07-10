@@ -184,7 +184,7 @@ module.exports = React.createClass({
                     message: 'Alarm has been closed'
                 });
                 adminui.vent.trigger('alarms:changed');
-                this.fetchAlarm();
+                this.fetchAlarm(this.props.user, this.props.id);
             }
         }.bind(this));
     },
