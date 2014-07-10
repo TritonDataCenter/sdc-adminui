@@ -29,8 +29,8 @@ var Collection = Backbone.Collection.extend({
         this.fetched = false;
 
         xhr.done(function() {
-            self.trigger('fetch:done');
             self.fetched = true;
+            self.trigger('fetch:done');
         });
         return xhr;
     }

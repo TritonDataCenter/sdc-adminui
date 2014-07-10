@@ -181,6 +181,9 @@ var ServersListItem = React.createClass({
 
 var ServersListComponent = React.createClass({
     mixins: [BackboneMixin],
+    getInitialState: function() {
+        return { state: 'loading' };
+    },
     getBackboneModels: function() {
         return [this.collection];
     },
@@ -189,6 +192,13 @@ var ServersListComponent = React.createClass({
         if (this.props.params) {
             this.collection.params = this.props.params;
         }
+        this.collection.on('sync', function() {
+            this.setState({'state': 'done'});
+        }, this);
+
+        this.collection.on('error', function() {
+           this.setState({'state': 'error'});
+       }, this);
     },
 
     componentDidMount: function() {
@@ -200,18 +210,27 @@ var ServersListComponent = React.createClass({
     },
 
     componentWillUnmount: function() {
-        console.log('componentWillUnmount');
         clearInterval(this._timer);
+        this.collection.off('sync');
+        this.collection.off('error');
     },
 
     render: function() {
-        return <div className="servers-list">
-        {
-            this.collection.map(function(server) {
-                return <ServersListItem key={server.get('uuid')} server={server} />;
-            })
+        var nodes = [];
+        switch (this.state.state) {
+            case 'done':
+                nodes = this.collection.map(function(server) {
+                    return <ServersListItem key={server.get('uuid')} server={server} />;
+                });
+                break;
+            case 'loading':
+                nodes = <div className="zero-state">Retrieving Servers</div>;
+                break;
+            case 'error':
+                nodes = <div className="zero-state">Error Retrieving Servers List</div>;
+                break;
         }
-        </div>;
+        return <div className="servers-list">{ nodes }</div>;
     }
 });
 module.exports = ServersListComponent;
