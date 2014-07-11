@@ -405,10 +405,11 @@ var ServerView = Backbone.Marionette.Layout.extend({
         if (app.user.role('operators')) {
             React.renderComponent( new NotesComponent({item: this.model.get('uuid')}), this.$('.notes-component-container').get(0));
         }
-        if (this.model.setup) {
+        React.renderComponent(ServerPageHeader({server: this.model }), this.$('.server-page-header').get(0));
+
+        if (this.model.get('setup')) {
             React.renderComponent(ServerMemoryOverview({ server: this.model }), this.$('.memory-overview-container').get(0));
         }
-        React.renderComponent(ServerPageHeader({server: this.model }), this.$('.server-page-header').get(0));
 
         React.renderComponent(new ServerNicsList({
             server: this.model,
