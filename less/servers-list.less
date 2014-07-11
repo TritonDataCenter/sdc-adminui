@@ -10,7 +10,8 @@
 
 
   .servers-list-item {
-    .widget-content;
+    .make-row(0);
+    background: #fff;
     padding: 0;
 
     .traits {
@@ -43,26 +44,28 @@
     .status {
       float: left;
       width: 15px;
-      margin-right: 10px;
       height: 80px;
       &.running { background: @brand-success; }
       &.rebooting { background: @brand-warning; }
       &.unavailable { background: @brand-danger;}
       &.unknown { background: @brand-danger;}
     }
+    .data {
+      .make-row(0);
+      margin-left: 20px;
+    }
     .setup-status {
       width: 300px;
       margin-top: 20px;
       font-size: 14px;
-      .setup {
-      }
+      .setup { }
       float: left;
       padding: 5px;
       text-align: right;
     }
 
     .name {
-      float: left;
+      .make-md-column(5);
       padding: 10px;
 
       .uuid {
@@ -80,8 +83,8 @@
 
 
     .memory-usage {
-      width: 340px;
-      float: left;
+      .make-md-column(4);
+      min-width: 305px;
 
       .memory-usage-total {
         color: @gray-light;
@@ -124,36 +127,19 @@
         margin-top: 21px;
       }
       .memory-usage-graph-container {
+        width: 80px;
+        height: 80px;
         float: right;
-        line-height: 0;
-        .memory-usage-percent {
-          strong { color: @gray-light; font-size: 6px; font-weight: 200; display: block; line-height: 18px; }
-          width: 80px;
-          font-size: 13px;
-          margin-top: -54px;
-          text-align: center;
-          vertical-align: middle;
-        }
-        .memory-usage-graph {
-          height: 80px;
-          width: 80px;
-          .layer.provisionable text,
-          .layer.overhead text,
-          .layer.used text { display: none; }
-
-          .layer.provisionable path { fill: #00d295; }
-          .layer.used path { fill: #ec7676; }
-          .layer.overhead path { fill: #888; }
-        }
+        margin-right: 15px;
       }
     }
 
     .last-status {
+      .make-md-column(3);
+      min-width: 233px;
       padding: 15px;
       font-size: 12px;
-      width: 220px;
-      float: right;
-      i { padding: 0 4px; width: 8px;}
+      i { padding: 0 4px; }
       strong { font-weight: normal; text-transform: uppercase; padding-right: 8px; color: @gray-light;}
     }
 

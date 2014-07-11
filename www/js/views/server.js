@@ -16,6 +16,7 @@ var React = require('react');
 var ServerPageHeader = require('../components/pages/server/header.jsx');
 
 var NotesComponent = require('../components/notes');
+var ServerMemoryOverview = require('../components/pages/server/memory-overview');
 var ServerNicsList = require('../components/server-nics');
 
 var VmsList = require('./vms-list');
@@ -90,6 +91,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
     onUpdate: function(model) {
         var changed = model.changed;
+        this.postRender();
         console.log(changed);
         // don't update if it's just sysinfo change;
         if (changed.traits ||
@@ -128,6 +130,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         _.each(data.sysinfo['Disks'], function(v, k) {
             data.total_quota += v['Size in GB'];
         });
+
 
         data.disks = _.map(data.sysinfo['Disks'], function(v, k) {
             return {
@@ -398,22 +401,22 @@ var ServerView = Backbone.Marionette.Layout.extend({
         this.vms.fetch();
     },
 
-
-    onRender: function() {
+    postRender: function() {
         if (app.user.role('operators')) {
-            React.renderComponent(
-                new NotesComponent({item: this.model.get('uuid')}),
-                this.$('.notes-component-container').get(0));
+            React.renderComponent( new NotesComponent({item: this.model.get('uuid')}), this.$('.notes-component-container').get(0));
         }
-
-        React.renderComponent(ServerPageHeader({server: this.model }),
-            this.$('.server-page-header').get(0));
+        if (this.model.setup) {
+            React.renderComponent(ServerMemoryOverview({ server: this.model }), this.$('.memory-overview-container').get(0));
+        }
+        React.renderComponent(ServerPageHeader({server: this.model }), this.$('.server-page-header').get(0));
 
         React.renderComponent(new ServerNicsList({
             server: this.model,
             nics: this.nics
         }), this.$('.server-nics').get(0));
+    },
 
+    onRender: function() {
         this.jobsListView = new JobsList({
             perPage: 100,
             params: {server_uuid: this.model.get('uuid')}
@@ -425,6 +428,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
         this.vmsListView = new VmsList({collection: this.vms });
         this.vmsRegion.show(this.vmsListView);
+        this.postRender();
     }
 });
 

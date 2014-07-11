@@ -4,7 +4,7 @@ var BackboneMixin = require('../../_backbone-mixin');
 var ServerPageHeader = React.createClass({
     mixins: [BackboneMixin],
     getBackboneModels: function() {
-        return [this.props.server]
+        return [this.props.server];
     },
     render: function() {
         var server = this.props.server;

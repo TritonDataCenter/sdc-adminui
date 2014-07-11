@@ -3,6 +3,37 @@
 
 
 #page-server {
+  .server-memory-utilization-container {
+    .make-sm-column(2, 0);
+    .server-memory-utilization-circle {
+      margin: 0 auto;
+    }
+  }
+  .provisionable-memory,
+  .provisioned-memory,
+  .total-memory,
+  .unreserved-memory,
+  .reserved-memory {
+    .make-sm-column(2, 0);
+
+    margin-top: 20px;
+    text-align: center;
+    .value { font-size: 28px; font-weight: 200; }
+    .title { text-transform: uppercase; color: @gray-light; font-size: 12px; }
+  }
+
+  .unreserved-memory, .total-memory { opacity: 0.5; }
+  .provisionable-memory .value { font-weight: 400; color: @brand-success; }
+  .provisioned-memory .value { color: #ec7676; font-weight: 400; }
+  .reserved-memory .value { color: #888; font-weight: 400; }
+
+  .unreserved-memory .value {  color: @brand-primary;  }
+  .total-memory .value { color: #111; }
+  .unreserved-memory {
+    border-left: 1px solid #aaa;
+  }
+
+
   .server-page-header+.actions {
     .pull-right;
     margin-top: -94px;

@@ -7,6 +7,7 @@ var React = require('react');
 
 var Servers = require('../models/servers');
 var ServerSetup = require('../views/server-setup');
+var ServerMemoryUtilizationCircle = require('./pages/server/utilization-circle');
 
 var ServersListItem = React.createClass({
 
@@ -21,31 +22,6 @@ var ServersListItem = React.createClass({
         }
         e.preventDefault();
         adminui.vent.trigger('showview', 'server', { server: this.props.server });
-    },
-
-    drawMemoryGraph: function() {
-        var model = this.props.server;
-        var $node = $(this.getDOMNode()).find('.memory-usage-graph');
-
-        var total = model.get('memory_total_bytes');
-        var avail = model.get('memory_provisionable_bytes');
-        var overhead = model.get('memory_total_bytes') * model.get('reservation_ratio');
-        var used = total - overhead - avail;
-
-        if (avail < 0) { avail = 0; }
-        if (used < 0) { used = 0; }
-
-        var pieData = [
-            {label: 'overhead', value: overhead },
-            {label: 'Used', value: used },
-            {label: 'Provisionable', value: avail },
-        ];
-
-        $node.epoch({
-            type: 'pie',
-            data: pieData,
-            inner: 23,
-        });
     },
     componenWillReceiveProps: function() {
         this.postRender();
@@ -75,10 +51,6 @@ var ServersListItem = React.createClass({
             placement: 'bottom',
             container: 'body'
         });
-
-        if (model.get('setup')) {
-            process.nextTick(this.drawMemoryGraph);
-        }
     },
     render: function() {
         var server = this.props.server.toJSON();
@@ -109,26 +81,24 @@ var ServersListItem = React.createClass({
 
         return <div className="servers-list-item">
             <div className={"status " + server.status}></div>
+            <div className="data">
             <div className="name">
                 <a onClick={this.navigateToServerDetails} href={'/servers/' + server.uuid}>{server.hostname}</a>
                 { server.reserved && <span className="reserved"><i className="fa fa-lock"></i></span> }
                 <span className="uuid"><span className="selectable">{server.uuid}</span></span>
                 <div className="traits">
-                { server.headnode && <span className="headnode">HEADNODE</span> }
-                { server.traits.ssd && <span className="ssd">SSD</span> }
-                { server.traits.manta && <span className="manta">MANTA</span> }
-                { server.traits.customer && <span className="customer">CUSTOMER</span> }
+                    { server.headnode && <span className="headnode">HEADNODE</span> }
+                    { server.traits.ssd && <span className="ssd">SSD</span> }
+                    { server.traits.manta && <span className="manta">MANTA</span> }
+                    { server.traits.customer && <span className="customer">CUSTOMER</span> }
                 </div>
             </div>
 
             { server.setup ?
             <div className="memory-usage">
                 <div className="memory-usage-graph-container">
-                    <div className="memory-usage-graph epoch"></div>
-                    <div className="memory-usage-percent">
-                        <strong>UTILIZATION</strong>
-                        {server.memory_utilization_percent}%
-                    </div>
+                    <ServerMemoryUtilizationCircle diameter="80px" inner="23"
+                    server={this.props.server} />
                 </div>
                 <div className="memory-usage-data">
                     <div className="memory-usage-avail">
@@ -164,10 +134,11 @@ var ServersListItem = React.createClass({
                 <strong><i className="fa fa-fw fa-power-off"></i></strong> <span>{server.last_boot}</span>
             </div>
             <div className="last-heartbeat">
-                <strong><i className="fa fa-fw fa-heart"></i></strong> <span>{server.last_heartbeat}</span></div>
+                <strong><i className="fa fa-fw fa-heart"></i></strong> <span>{server.last_heartbeat}</span>
             </div>
-        </div>;
-
+        </div>
+    </div>
+    </div>;
     }
 });
 
