@@ -10,7 +10,11 @@ var Server = require('../models/server');
 var Nics = require('../models/nics');
 var Vms = require('../models/vms');
 
+
 var React = require('react');
+
+var ServerPageHeader = require('../components/pages/server/header.jsx');
+
 var NotesComponent = require('../components/notes');
 var ServerNicsList = require('../components/server-nics');
 
@@ -53,12 +57,20 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     modelEvents: {
-        'change': 'render',
+        'change': 'onUpdate',
         'error': 'onError'
+    },
+
+    onClose: function() {
+        clearInterval(this._timer);
     },
 
     initialize: function(options) {
         this.model = options.server || new Server({uuid: options.uuid});
+        window.server = this.model;
+        this._timer = setInterval(function() {
+            this.model.fetch();
+        }.bind(this), 5000);
 
         this.nics = new Nics(null, {
             params: {
@@ -74,6 +86,18 @@ var ServerView = Backbone.Marionette.Layout.extend({
             },
             perPage: 20
         });
+    },
+
+    onUpdate: function(model) {
+        var changed = model.changed;
+        console.log(changed);
+        // don't update if it's just sysinfo change;
+        if (changed.traits ||
+            changed.rack_identifier ||
+            changed.boot_platform ||
+            typeof(changed.reserved) !== "undefined" || changed.reservation_ratio) {
+            this.render();
+        }
     },
 
     templateHelpers: {
@@ -158,7 +182,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
         var btn = $("<button>").addClass('btn btn-primary pull-right').html('Save');
         this.$('.serial-console .change').append(btn);
-        var cancel = $("<button>").addClass('btn pull-right').html('Cancel');
+        var cancel = $("<button>").addClass('btn btn-link pull-right').html('Cancel');
         this.$('.serial-console .change').append(cancel);
 
         var self = this;
@@ -255,12 +279,12 @@ var ServerView = Backbone.Marionette.Layout.extend({
         var $value = this.$('.platform .value');
         var view = new ChangePlatformForm({ model: this.model });
 
-        this.listenTo(view, 'cancel', function() {
+        view.on('cancel', function() {
             $value.show();
             $link.show();
         });
 
-        this.listenTo(view, 'save', function(platform) {
+        view.on('save', function(platform) {
             var message = _.str.sprintf('Server has been configured to use platform: <strong>%s</strong> on next boot.', platform);
             app.vent.trigger('notification', {
                 level: 'success',
@@ -376,14 +400,14 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
 
     onRender: function() {
-        console.log('hello', this.$('.server-nics').length);
-        console.log('Server', this.model);
-
         if (app.user.role('operators')) {
             React.renderComponent(
                 new NotesComponent({item: this.model.get('uuid')}),
                 this.$('.notes-component-container').get(0));
         }
+
+        React.renderComponent(ServerPageHeader({server: this.model }),
+            this.$('.server-page-header').get(0));
 
         React.renderComponent(new ServerNicsList({
             server: this.model,

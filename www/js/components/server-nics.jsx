@@ -135,22 +135,6 @@ var ServerNicsList = React.createClass({
             return <ServerNicAggr key={ifname} aggr={aggr} />;
         }) : <li className="empty">No Link Aggregations Found</li>;
 
-        // aggrsNodes = [
-        // <ServerNicAggr key="aggr0" aggr={
-        //     {
-        //         "LACP Mode": 'passive',
-        //         "Interfaces": ["e1000g0", "e1000g2"]
-        //     }
-        // }/>,
-        // <ServerNicAggr key="aggr1" aggr={
-        //     {
-        //         "LACP Mode": 'active',
-        //         "Interfaces": ["e1000g0", "e1000g2"]
-        //     }
-        // }/>
-        // ];
-
-
         return <div className="server-nics-list">
             <div className="title">Physical</div>
             <ul className="list-unstyled">{nicsNodes}</ul>

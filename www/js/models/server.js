@@ -1,6 +1,6 @@
-var Backbone = require('backbone');
 var Job = require('./job');
 var Model = require('./model');
+var $ = require('jquery');
 var Server = Model.extend({
     urlRoot: '/api/servers',
 

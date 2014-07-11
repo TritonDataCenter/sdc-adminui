@@ -1,16 +1,4 @@
-<div class="page-header">
-  <div class="resource-status">
-    {{#if setting_up}}
-    <span class="server-setting-up">Setting Up</span>
-    {{else}}
-    <span class="server-state {{status}}">{{status}}</span>
-    {{/if}}
-  </div>
-  <h1>
-    {{hostname}}
-    <small class="uuid selectable">{{uuid}}</small>
-  </h1>
-</div>
+<div class="server-page-header"></div>
 
 <div class="actions">
   {{#role "operators"}}
