@@ -23,7 +23,7 @@ var ServerMemoryOverview = React.createClass({
         return <div className="memory-overview">
             <div className="row">
                 <div className="server-memory-utilization-container">
-                    <ServerMemoryUtilizationCircle diameter="100px" inner="30" server={this.props.server} />
+                    <ServerMemoryUtilizationCircle diameter="120px" inner="38" server={this.props.server} />
                 </div>
                 <div className="provisionable-memory">
                     <div className="value">{server.memory_provisionable_gb} GB</div>
