@@ -1,13 +1,16 @@
 var React = require('react');
 
 var Modal =  React.createClass({
+    propTypes: {
+        onRequestHide: React.PropTypes.func.isRequired
+    },
     getDefaultProps: function() {
         return {
-            backdrop: true,
-            onRequestHide: function() {}
+            backdrop: true
         };
     },
     handleBackdropClick: function (e) {
+        console.log('handleBackdropClick');
         if (e.target !== e.currentTarget) {
             return;
         }
@@ -18,7 +21,9 @@ var Modal =  React.createClass({
         return React.isValidComponent(this.props.title) ? this.props.title : <h4 className="modal-title">{this.props.title}</h4>;
     },
     render: function() {
-        var modal = this.transferPropsTo(<div ref="modal" className="modal in" style={{display: 'block'}}>
+        var modal = this.transferPropsTo(<div ref="modal"
+            onClick={this.props.backdrop ? this.handleBackdropClick : null}
+            className="modal in" style={{display: 'block'}}>
             <div className="modal-dialog">
                 <div className="modal-content">
                 { this.props.title ?
