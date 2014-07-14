@@ -327,11 +327,13 @@ var VmView = Backbone.Marionette.Layout.extend({
 
     clickedReprovision: function() {
         var self = this;
-        console.log('reprovision');
         var $container = $('<div class="reprovision-vm-component-container"></div>');
         $(document.body).append($container);
         React.renderComponent(new ReprovisionVmComponent({
             uuid: this.vm.get('uuid'),
+            onRequestHide: function() {
+                React.unmountComponentAtNode($container.get(0));
+            },
             handleJobCreated: function(job) {
                 var jobView = new JobProgressView({ model: job });
                 jobView.show();

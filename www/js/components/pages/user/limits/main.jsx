@@ -10,8 +10,6 @@ var Modal = require('../../../modal.jsx');
 var ProvisioningLimitsList = require('./list.jsx');
 var ProvisioningLimitsForm = require('./form.jsx');
 
-var OS_VALUES = require('./constants').OPERATING_SYSTEMS;
-
 
 module.exports = ProvisioningLimits = React.createClass({
     propTypes: {
@@ -80,7 +78,7 @@ module.exports = ProvisioningLimits = React.createClass({
         return (
             <div className="provisioning-limits-component">
                 { this.state.form ?
-                    <Modal handleHidden={this.handleClose} ref="modal">
+                    <Modal onRequestHide={this.handleClose} ref="modal">
                         <ProvisioningLimitsForm
                             onSaved={this.handleSaved}
                             handleCancel={this.handleClose}

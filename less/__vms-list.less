@@ -1,4 +1,19 @@
 .__vms-list {
+  .vms-list-header {
+    .make-row(0);
+    background: @state-info-bg;
+    .title {
+      .make-xs-column(6, 0);
+      padding: 10px;
+    }
+    .actions {
+      color: #aaa;
+      .make-xs-column(6, 0);
+      padding: 10px;
+      text-align: right;
+    }
+  }
+
   caption { padding: 0;}
 
   .owned-by {

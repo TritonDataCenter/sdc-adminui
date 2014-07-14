@@ -52,10 +52,7 @@ var ReprovisionVm = React.createClass({
     },
 
     render: function() {
-        var node = <Modal ref="modal">
-            <div className="modal-header">
-                <h2 className="modal-title">Reprovision Virtual Machine</h2>
-            </div>
+        var node = this.transferPropsTo(<Modal title="Reprovision Virtual Machine" ref="modal">
             <div className="modal-body">
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
@@ -83,10 +80,10 @@ var ReprovisionVm = React.createClass({
                 </form>
             </div>
             <div className="modal-footer">
-                <button type="button" data-dismiss="modal" className="btn btn-link">Close</button>
+                <button type="button" onCLick={this.props.onRequestHide} className="btn btn-link">Close</button>
                 <button type="submit" disabled={ this.isValid() ? '': 'disabled' } onClick={this.onSubmit} className="btn btn-primary">Reprovision</button>
             </div>
-        </Modal>;
+        </Modal>);
 
         return node;
     }

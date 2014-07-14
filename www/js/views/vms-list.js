@@ -3,10 +3,13 @@
 var Backbone = require('backbone');
 var ItemTemplate = require('../tpl/vms-list-item.hbs');
 var adminui = require('../adminui');
+var Vms = require('../models/vms');
+var React = require('react');
 
 var Images = require('../models/images');
 var User = require('../models/user');
 var Package = require('../models/package');
+var JSONExport = require('../components/json-export.jsx');
 
 var ItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
@@ -85,10 +88,13 @@ module.exports = require('./composite').extend({
     attributes: {
         'class':'vms-list'
     },
+
     events: {
         'click a.more': 'onNext',
         'click a.all': 'onAll',
+        'click a.export': 'onExport'
     },
+
     collectionEvents: {
         'sync': 'onSync',
         'request': 'onRequest'
@@ -118,6 +124,21 @@ module.exports = require('./composite').extend({
         iv.usersCache = new Backbone.Collection();
     },
 
+    onExport: function(e) {
+        e.preventDefault();
+        var vms = new Vms({params: this.collection.params});
+        var node = this.$('.export-container').get(0);
+        vms.exportGroupedByCustomer().done(function(exported) {
+            React.renderComponent(new JSONExport({
+                description: "Virtual Machines grouped by owner",
+                data: exported,
+                onRequestHide: function() {
+                    React.unmountComponentAtNode(node);
+                }
+            }), node);
+        }.bind(this));
+    },
+
     onNext: function() {
         this.next();
     },
@@ -126,6 +147,7 @@ module.exports = require('./composite').extend({
         this.collection.pagingParams.perPage = null;
         this.collection.fetch({remove: false});
     },
+
     onRender: function() {
         if (this.collection.length) {
             this.$('caption').css('visibility', 'visible');

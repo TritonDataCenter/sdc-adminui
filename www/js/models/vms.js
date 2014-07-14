@@ -1,8 +1,10 @@
 "use strict";
+
 var _ = require('underscore');
 
 var Vm = require('./vm');
 var Collection = require('./collection');
+var Promise = require('promise');
 
 module.exports = Collection.extend({
     model: Vm,
@@ -51,6 +53,15 @@ module.exports = Collection.extend({
         if (this.hasPrev()) {
             this.pagingParams.page = this.pagingParams.page - 1;
         }
+    },
+    exportGroupedByCustomer: function() {
+        var collection = this;
+        this.pagingParams = {perPage: null};
+        return new Promise(function(resolve, reject) {
+            collection.fetch({url: '/api/vms/groupedByCustomer'}).done(function(res) {
+                resolve(res);
+            });
+        });
     },
 
     fetch: function(opts) {
