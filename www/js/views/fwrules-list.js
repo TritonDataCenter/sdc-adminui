@@ -1,5 +1,5 @@
 var Backbone = require('backbone');
-var Job = require('../models/job');
+var $ = require('jquery');
 var FWRules = require('../models/fwrules');
 var adminui = require('../adminui');
 var _ = require('underscore');
@@ -72,13 +72,25 @@ var FWRulesList = require('./collection').extend({
         }
 
         this.on('itemview:disable:rule', function(iv) {
-            iv.model.on('sync', this.onModelSync, this);
+            iv.model.on('sync', function() {
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: "Firewall rule disabled successfully."
+                });
+                this.collection.fetch({reset: true});
+            }, this);
             iv.model.set({enabled: false});
             iv.model.save();
         }, this);
 
         this.on('itemview:enable:rule', function(iv) {
-            iv.model.on('sync', this.onModelSync, this);
+            iv.model.on('sync', function() {
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: "Firewall rule enabled successfully."
+                });
+                this.collection.fetch({reset: true});
+            }, this);
             iv.model.set({enabled: true});
             iv.model.save();
         }, this);
@@ -86,19 +98,15 @@ var FWRulesList = require('./collection').extend({
         var self = this;
         this.on('itemview:delete:rule', function(iv) {
             $.delete_(iv.model.url(), function(data) {
-                self.onModelSync(iv.model, data);
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: "Firewall rule deleted successfully."
+                });
+                self.collection.fetch({reset: true});
             });
         }, this);
     },
 
-    onModelSync: function(model, resp) {
-        adminui.vent.trigger('notification', {
-            level: 'success',
-            message: "Firewall rule deleted successfully."
-        });
-
-        this.collection.fetch();
-    },
 
     onShow: function() {
         this.collection.fetch();
