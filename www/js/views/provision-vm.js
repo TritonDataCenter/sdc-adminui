@@ -235,6 +235,8 @@ var View = Backbone.Marionette.Layout.extend({
         this.userKeys = this.sshKeys.map(function(k) {
             return k.get('openssh');
         });
+
+        console.log('onFetchKeys', this.userKeys);
     },
 
     showNoSshkeysWarning: function() {
@@ -267,14 +269,14 @@ var View = Backbone.Marionette.Layout.extend({
 
     onRender: function() {
         this.userInput = new TypeaheadUser({el: this.$('[name=owner]') });
-        this.listenTo(this.userInput, 'selected', this.onSelectUser);
+        this.listenTo(this.userInput, 'selected', this.onSelectUser, this);
         this.userInput.render();
 
         this.serverInput = new TypeaheadServerView({el: this.$('input[name=server]')});
         this.serverInput.render();
 
         this.imageInput = new TypeaheadImageView({el: this.$('input[name=image]')});
-        this.listenTo(this.imageInput, 'selected', this.onSelectImage);
+        this.listenTo(this.imageInput, 'selected', this.onSelectImage, this);
         this.imageInput.render();
 
 
@@ -294,12 +296,7 @@ var View = Backbone.Marionette.Layout.extend({
         this.$("input:not([disabled]):first").focus();
     },
 
-    onSelectImage: function(e, datum) {
-        var image = null;
-        if (datum && datum.uuid) {
-            image = this.imageInput.imagesCollection.get(datum.uuid);
-        }
-
+    onSelectImage: function(image) {
         if (! image) {
             this.ui.brandControls.hide();
             return;
@@ -459,11 +456,12 @@ var View = Backbone.Marionette.Layout.extend({
                 delete values['quota'];
             }
 
-            if ((values['brand'] === 'kvm' || values['brand'] === 'lx') && this.userKeys) {
-                values.customer_metadata = {
-                    root_authorized_keys: this.userKeys.join("\n")
-                };
-            }
+        }
+
+        if ((values['brand'] === 'kvm' || values['brand'] === 'lx') && this.userKeys) {
+            values.customer_metadata = {
+                root_authorized_keys: this.userKeys.join("\n")
+            };
         }
 
         values.customer_metadata = values.customer_metadata || {};
