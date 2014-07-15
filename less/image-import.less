@@ -1,12 +1,6 @@
 #page-image-import {
   .source-select {
     margin-bottom: 40px;
-    select.form-control {
-      font-size: 14px;
-      height: 40px;
-      line-height: 40px;
-      padding: 10px;
-    }
   }
 }
 
@@ -18,9 +12,9 @@
 }
 .image-import-selector {
   thead { display: none; }
-  tbody td { cursor: pointer; vertical-align: middle; }
-  tbody tr:hover td { background: lighten(@state-info-bg, 48%) };
-  tbody td small { color: @gray-light; display: block;}
-
+  tbody td { vertical-align: middle; }
+  tbody tr:hover td { background: #fff; };
+  tbody td small { margin-right: 5px; color: @gray-light; text-transform: uppercase; }
+  .uuid { font-size: 10px; }
   .version { color: @gray; margin-left: 10px; font-size: 11px; }
 }

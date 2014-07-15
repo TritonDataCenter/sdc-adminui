@@ -1,10 +1,10 @@
-var Backbone = require('backbone');
 var _ = require('underscore');
 var Model = require('./model');
 var Job = require('./job');
+var $ = require('jquery');
 
 
-var Img = module.exports = Model.extend({
+var Img = Model.extend({
     urlRoot: '/api/images',
 
     idAttribute: 'uuid',
@@ -57,7 +57,6 @@ var Img = module.exports = Model.extend({
     },
 
     adminImportRemote: function(callback) {
-        var self = this;
         var source = this.collection.params.repository;
         $.ajax({
             url: _.str.sprintf('/api/images/%s?action=importRemote', this.get('uuid')),
@@ -89,3 +88,6 @@ function _sizeToMB(size) {
     return _.str.sprintf('%0.1f', size / 1024 / 1024);
 }
 
+
+
+module.exports = Img;

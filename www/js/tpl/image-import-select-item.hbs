@@ -1,11 +1,15 @@
 <td class="name">
-  <a class="image-name" href="/images/{{uuid}}">{{name}} <span class="version">{{version}}</span></a><br>
+  {{name}} <span class="version">{{version}}</span>
+</td>
+<td style="width:250px;">
   <span class="uuid">{{uuid}}</span>
+</td>
+<td class="os">
+  <small>OS</small> {{os}}
 </td>
 <td class="published">
   <small>Published</small> {{publish_date}}
 </td>
-<td class="os">
-  <small>OS</small>
-  {{os}}
+<td class="import" style="width:120px;">
+    <a class="btn btn-sm btn-block btn-primary"><i class="fa fa-arrow-down"></i> Import</a>
 </td>

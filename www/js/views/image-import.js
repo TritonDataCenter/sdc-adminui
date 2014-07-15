@@ -1,8 +1,5 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
-var moment = require('moment');
-
-
 var app = require('../adminui');
 var Images = require('../models/images');
 var ImagesList = require('./images-list');
@@ -10,7 +7,7 @@ var ImagesList = require('./images-list');
 var ImportImageSelectorItem = ImagesList.prototype.itemView.extend({
     template: require('../tpl/image-import-select-item.hbs'),
     events: {
-        'click td': 'startImport'
+        'click .import a': 'startImport'
     },
     startImport: function(e) {
         e.preventDefault();
@@ -19,9 +16,6 @@ var ImportImageSelectorItem = ImagesList.prototype.itemView.extend({
             return;
         }
         var self = this;
-        var source = this.model.collection.params.repository;
-        var uuid = this.model.get('uuid');
-
         this.model.adminImportRemote(function(err, job) {
             if (err) {
                 app.vent.trigger('notification', {
@@ -57,7 +51,8 @@ var ImageImportView = Backbone.Marionette.Layout.extend({
         return { imagesList: '.images-list-region' };
     },
     events: {
-        'change select': 'onChangeSource',
+        'form submit': 'onQuery',
+        'click .search': 'onQuery',
         'click button.import': 'importImage'
     },
 
@@ -68,11 +63,15 @@ var ImageImportView = Backbone.Marionette.Layout.extend({
         });
     },
 
-    onChangeSource: function() {
+    onQuery: function(e) {
+        e.preventDefault();
+
         var repo = this.$('.image-source').val();
-        var collection = new Images([], {
-            params: { repository: repo }
-        });
+        var name = this.$('input[name=name]').val();
+        var collection = new Images([], { params: {
+            name: _.str.sprintf('~%s', name),
+            repository: repo
+        } });
         var imagesListView = new ImportImageSelector({collection: collection });
         this.imagesList.show(imagesListView);
         this.$('h3').html('Showing images on: ' + repo).show();
@@ -80,7 +79,7 @@ var ImageImportView = Backbone.Marionette.Layout.extend({
 
     onShow: function() {
         this.$('h3').hide();
-        this.onChangeSource();
+        this.$('[name=name]').focus();
     }
 
 });
