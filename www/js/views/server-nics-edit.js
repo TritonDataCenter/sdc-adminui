@@ -1,13 +1,41 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var adminui = require('../adminui');
+var $ = require('jquery');
+var Nics = require('../models/nics');
 var NicTags = require('../models/nictags');
-var assert = require('assert-plus');
+
+function mergeSysinfo(sysinfo, napinics) {
+    var nics = [];
+    _.each(sysinfo['Network Interfaces'], function(el, i) {
+        el.kind = "nic";
+        var n = _.findWhere(napinics, {mac: el['MAC Address']});
+        var nic = _.extend(el, n);
+        nic.ifname = i;
+        nics.push(nic);
+    });
+    _.each(sysinfo['Virtual Network Interfaces'], function(el, i) {
+        el.kind = "vnic";
+        var n = _.findWhere(napinics, {mac: el['MAC Address']});
+        var nic = _.extend(el, n);
+        nic.ifname = i;
+        nics.push(nic);
+    });
+    _.each(sysinfo['Link Aggregations'], function(el, i) {
+        el.kind = "aggr";
+        var n = _.findWhere(napinics, {mac: el['MAC Address']});
+        var nic = _.extend(el, n);
+        nic.ifname = i;
+        nics.push(nic);
+    });
+
+    return nics;
+}
 
 
 var NicTagSelect = Backbone.Marionette.ItemView.extend({
     attributes: {
-        'class': 'control-group'
+        'class': 'form-group'
     },
     events: {
         'change select': 'onChange'
@@ -21,7 +49,7 @@ var NicTagSelect = Backbone.Marionette.ItemView.extend({
     updateChosen: function(model) {
         process.nextTick(function() {
             var currentTags = this.model.get('nic_tags_provided');
-            var tag = model.get('name');
+            var tag = model.get('ifname');
             if (_.indexOf(currentTags, tag) === -1) {
                 if (model.get('selected') === true) {
                     var sel = _.str.sprintf('option[value=%s]:not(:selected)', tag);
@@ -38,8 +66,8 @@ var NicTagSelect = Backbone.Marionette.ItemView.extend({
     },
     template: function() {
         return [
-            '<label class="control-label">{{this.name}}</label>',
-            '<div class="controls">',
+            '<label class="control-label col-sm-4">{{this.ifname}}</label>',
+            '<div class="col-sm-8">',
             '<div class="chosen">',
             '<select data-placeholder="Choose a NIC Tag..." class="form-control" multiple></select>',
             '</div>',
@@ -53,10 +81,9 @@ var NicTagSelect = Backbone.Marionette.ItemView.extend({
         this.nic_tags.findWhere({'name': tag}).set('selected', selected);
     },
     onRender: function() {
-        var self = this;
         this.stickit(this.model, {
             '.mac': 'mac',
-            '.control-label': 'name',
+            '.control-label': 'ifname',
             'select': {
                 attributes: [{
                     observe: 'mac',
@@ -70,7 +97,7 @@ var NicTagSelect = Backbone.Marionette.ItemView.extend({
                 },
                 initialize: function($el, model, options) {
                     process.nextTick(function() {
-                        var chosen = $el.chosen({no_results_text: 'No NIC Tags available.'});
+                        $el.chosen({no_results_text: 'No NIC Tags available.'});
                     });
                 }
             }
@@ -94,7 +121,6 @@ var ServerNicsEditView = Backbone.Marionette.ItemView.extend({
     },
     initialize: function(options) {
         this.server = options.server;
-
         this.nics = options.nics;
         this.nic_tags = options.nic_tags || new NicTags();
         this.listenTo(this.nic_tags, 'sync', this.renderSelects, this);
@@ -107,22 +133,24 @@ var ServerNicsEditView = Backbone.Marionette.ItemView.extend({
     },
 
     renderSelects: function() {
-        this.nics.where({kind: 'nic'}).forEach(function(nic) {
+        var nics = mergeSysinfo(this.server.get('sysinfo'), this.nics.toJSON());
+        var nicModels = new Nics(nics);
+        nicModels.where({kind: 'nic'}).forEach(function(nic) {
             var select = new NicTagSelect({model: nic, nic_tags: this.nic_tags});
             this.ui.form.append(select.render().el);
         }, this);
 
         var nic_tags = this.nic_tags;
-        this.nics.where({kind: 'nic'}).forEach(function(nic) {
+        nicModels.where({kind: 'nic'}).forEach(function(nic) {
             _.each(nic.get('nic_tags_provided'), function(tag) {
                 nic_tags.findWhere({'name': tag}).set({selected: true});
             });
         });
+        this.nicModels = nicModels;
     },
 
     save: function() {
-        var self = this;
-        var data = this.nics.where({kind:'nic'}).map(function(n) {
+        var data = this.nicModels.where({kind:'nic'}).map(function(n) {
             return {
                 mac: n.get('mac'),
                 nic_tags_provided: n.get('nic_tags_provided')

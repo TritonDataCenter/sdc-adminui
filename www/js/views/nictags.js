@@ -14,7 +14,7 @@ var NicTagsPage = React.createClass({
         return {
             form: (this.props.form || false),
             formData: {}
-        }
+        };
     },
     _showForm: function() {
         this.setState({form: true});
