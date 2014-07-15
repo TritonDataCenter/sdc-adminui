@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var User = require('../models/user');
+var React = require('react');
 
 var UserTile = module.exports = React.createClass({
     propTypes: {

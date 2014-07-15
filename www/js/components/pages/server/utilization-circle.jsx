@@ -1,4 +1,5 @@
 var $ = require('jquery');
+require('epoch');
 var React = require('react');
 var BackboneMixin = require('../../_backbone-mixin');
 

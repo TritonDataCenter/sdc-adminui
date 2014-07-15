@@ -10,7 +10,6 @@ var Modal =  React.createClass({
         };
     },
     handleBackdropClick: function (e) {
-        console.log('handleBackdropClick');
         if (e.target !== e.currentTarget) {
             return;
         }

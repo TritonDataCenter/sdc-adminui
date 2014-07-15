@@ -32,8 +32,8 @@ var JobProgressView = require('./job-progress');
 var VmChangeOwner = require('./vm-change-owner');
 
 var NotesComponent = require('../components/notes');
-var UserTileComponent = require('../components/user-tile.js');
-var ReprovisionVmComponent = require('../components/reprovision-vm.jsx');
+var UserTileComponent = require('../components/user-tile');
+var ReprovisionVmComponent = require('../components/reprovision-vm');
 
 var FirewallToggleButton = React.createClass({
     getInitialState: function() {

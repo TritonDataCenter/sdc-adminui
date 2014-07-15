@@ -20,7 +20,6 @@ Pinger.prototype.start = function() {
 Pinger.prototype.ping = function() {
     api.get('/api/ping').end(function(res) {
         if (res.ok) {
-            console.log('.');
             return;
         }
         if (res.forbidden) {

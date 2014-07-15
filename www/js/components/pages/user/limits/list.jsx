@@ -5,7 +5,7 @@ var UNIT_LABELS = {
     "ram": "MB RAM",
     "quota": "GB DISK",
     "machines": "Machines"
-}
+};
 
 /**
  * Properties
@@ -14,7 +14,7 @@ var UNIT_LABELS = {
  * handleEdit       fn(limit) clicked Edit Button
  * handleDelete     fn(limit) clicked Delete Button
  */
-var ProvisioningLimitsList = module.exports = React.createClass({
+var ProvisioningLimitsList = React.createClass({
     propTypes: {
         handleEdit: React.PropTypes.func,
         handleDelete: React.PropTypes.func
@@ -25,7 +25,7 @@ var ProvisioningLimitsList = module.exports = React.createClass({
             handleEdit: function() {},
             handleDelete: function() {},
             readonly: false
-        }
+        };
     },
 
     handleEdit: function(limit) {
@@ -37,7 +37,6 @@ var ProvisioningLimitsList = module.exports = React.createClass({
     },
 
     renderLimit: function(dclimit) {
-        var dc = dclimit.datacenter;
         var limitsNodes;
 
         if (dclimit.limit.length === 0) {
@@ -69,7 +68,7 @@ var ProvisioningLimitsList = module.exports = React.createClass({
                             }
 
                     </div>
-                )
+                );
             }, this);
         }
 
@@ -88,17 +87,18 @@ var ProvisioningLimitsList = module.exports = React.createClass({
         </div>);
     },
     renderZeroState: function() {
-        return <div className="zero-state">This user does not have any provisioning limits.</div>
+        return <div className="zero-state">This user does not have any provisioning limits.</div>;
     },
     render: function() {
         return (
             <div className="provisioning-limits-list">
             {
-                this.props.limits.length
-                    ? this.props.limits.map(this.renderLimit, this)
-                    : this.renderZeroState()
+                this.props.limits.length ? this.props.limits.map(this.renderLimit, this) : this.renderZeroState()
             }
             </div>
-        )
+        );
     }
 });
+
+
+module.exports = ProvisioningLimitsList;
