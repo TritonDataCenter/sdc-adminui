@@ -11,7 +11,8 @@ var ReprovisionVm = React.createClass({
     },
     getInitialState: function() {
         return {
-            images: []
+            images: [],
+            show: true
         };
     },
 
@@ -33,7 +34,7 @@ var ReprovisionVm = React.createClass({
         var self = this;
         vm.reprovision(this.state.selectedImage, function(err, job) {
             if (job) {
-                self.refs.modal.close();
+                self.setState({show: false});
             }
             self.props.handleJobCreated(job);
         });
@@ -52,6 +53,9 @@ var ReprovisionVm = React.createClass({
     },
 
     render: function() {
+        if (this.state.show === false) {
+            return null;
+        }
         var node = this.transferPropsTo(<Modal title="Reprovision Virtual Machine" ref="modal">
             <div className="modal-body">
                 <form onSubmit={this.onSubmit}>
