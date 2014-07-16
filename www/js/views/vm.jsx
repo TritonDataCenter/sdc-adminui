@@ -88,7 +88,8 @@ var VmView = Backbone.Marionette.Layout.extend({
         'click .image-name-version': 'clickedImage',
         'click .change-owner': 'clickChangeOwner',
         'click .show-fwrules-form': 'clickShowFwrulesForm',
-        'click .edit-metadata': 'clickEditMetadata'
+        'click .edit-customer-metadata': 'clickedEditCustomerMetadata',
+        'click .edit-internal-metadata': 'clickedEditInternalMetadata'
     },
     regions: {
         'nicsRegion': '.nics-region',
@@ -182,8 +183,7 @@ var VmView = Backbone.Marionette.Layout.extend({
 
         this.internalMetadataListView = new MetadataList({
             vm: this.vm,
-            property: 'internal_metadata',
-            readonly: true
+            property: 'internal_metadata'
         });
 
         this.tagsListView = new TagsList({model: this.vm});
@@ -354,26 +354,35 @@ var VmView = Backbone.Marionette.Layout.extend({
         });
     },
 
-    clickEditMetadata: function(e) {
-        this.listenTo(
-            this.customerMetadataListView,
-            'editing:begin',
+    clickedEditCustomerMetadata: function(e) {
+        this.listenTo(this.customerMetadataListView, 'editing:begin',
             function() {
-                this.$('.edit-metadata').hide();
+                this.$('.edit-customer-metadata').hide();
                 var top = this.$('section.customer-metadata').offset().top;
                 $("html, body").animate({ scrollTop: top + "px" });
-            },
-        this);
+            }, this);
 
-        this.listenTo(
-            this.customerMetadataListView,
-            'editing:end',
-            function() {
-                this.$('.edit-metadata').show();
-            },
-        this);
+        this.listenTo(this.customerMetadataListView,
+            'editing:end',function() {
+                this.$('.edit-customer-metadata').show();
+            }, this);
 
         this.customerMetadataListView.editingMode();
+    },
+
+    clickedEditInternalMetadata: function(e) {
+        this.listenTo(this.internalMetadataListView, 'editing:begin',
+            function() {
+                this.$('.edit-internal-metadata').hide();
+                var top = this.$('section.internal-metadata-and-tags').offset().top;
+                $("html, body").animate({ scrollTop: top + "px" });
+            }, this);
+
+        this.listenTo(this.internalMetadataListView, 'editing:end',function() {
+            this.$('.edit-internal-metadata').show();
+        }, this);
+
+        this.internalMetadataListView.editingMode();
     },
 
     clickShowFwrulesForm: function() {
