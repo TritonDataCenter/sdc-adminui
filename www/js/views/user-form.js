@@ -73,7 +73,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         _(xhr.responseData.errors).each(function(e) {
             this.$('[name='+e.field+']').parents('.form-group').addClass('has-error');
             ul.append('<li>'+e.message+' (' + e.field + ')</li>');
-        });
+        }, this);
 
         this.$(".alert")
             .empty()
