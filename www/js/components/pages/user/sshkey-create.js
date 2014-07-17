@@ -1,5 +1,5 @@
 var Backbone = require('backbone');
-
+var _ = require('underscore');
 var adminui = require('adminui');
 var SSHKey = require('../../../models/sshkey');
 
@@ -43,10 +43,9 @@ module.exports = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         var name = this.$('input[name=name]').val();
         var key = this.$('textarea[name=key]').val();
-        this.model.save({
-            name: name,
-            key: key
-        });
+
+        name = _.str.trim(name);
+        key = _.str.trim(key); this.model.save({ name: name, key: key });
     },
 
     onRender: function() {
