@@ -1,22 +1,33 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-
+var BackboneMixin = require('../../_backbone-mixin');
+var moment = require('moment');
 var UserProfile = React.createClass({
+    mixins: [ BackboneMixin ],
     propTypes: {
         handleModifyUser: React.PropTypes.func.isRequired,
+        handleUnlockUser: React.PropTypes.func.isRequired,
         handleToggleTwoFactorAuth: React.PropTypes.func.isRequired
+    },
+    getBackboneModels: function() {
+        return [this.props.userModel];
     },
     render: function() {
         var user = this.props.userModel.toJSON();
         var twoFactorAuth = this.props.twoFactorAuth;
         var isTopLevelAccount = !user.account;
 
-
         return (
             <div className="row">
                 <div className="col-sm-12">
                     <div className="user-profile">
+                        {user.pwdaccountlockedtime &&
+                            <div className="alert alert-warning">
+                                <i className="fa fa-warning"></i> User account locked until <strong>{moment(Date(user.pwdaccountlockedtime)).utc().format('D MMMM, YYYY HH:mm:ss z')}</strong> due to too many failed password attempts.
+                                <a onClick={this.props.handleUnlockUser} style={{'margin-left': '10px;'}} className="alert-link pull-right"><i className="fa fa-unlock"></i> Unlock User Now</a>
+                            </div>
+                        }
                         <h3>User Profile
                             <div className="actions">
                                 <button onClick={this.props.handleModifyUser} className="edit-user btn btn-sm btn-info"><i className="fa fa-pencil"></i> Edit User Profile</button>

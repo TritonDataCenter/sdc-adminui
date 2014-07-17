@@ -119,6 +119,7 @@ var PageUser = React.createClass({
             case 'profile':
                 view = <UserProfile
                     handleModifyUser={this.handleProfileModifyUser}
+                    handleUnlockUser={this.handleUnlockUser}
                     handleToggleTwoFactorAuth={this.handleProfileToggleTwoFactorAuth}
                     twoFactorAuth={this.state['2fa']} userModel={this.state.userModel} />;
                 break;
@@ -197,6 +198,21 @@ var PageUser = React.createClass({
     },
     handleNavigateToAccount: function() {
         adminui.vent.trigger('showcomponent', 'user', {user: this.state.userModel.get('account')});
+    },
+
+    handleUnlockUser: function(e) {
+        e.preventDefault();
+
+        var url = '/api/users/'+this.state.userModel.get('uuid') + '/unlock';
+        api.post(url).send({}).end(function(res) {
+            if (res.ok) {
+                adminui.vent.trigger('notification', {
+                    message: _.str.sprintf('User unlocked successfully'),
+                    level: 'success'
+                });
+                this.state.userModel.unset('pwdaccountlockedtime');
+            }
+        }.bind(this));
     },
 
     handleProfileToggleTwoFactorAuth: function() {
