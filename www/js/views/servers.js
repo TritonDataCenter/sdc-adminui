@@ -1,4 +1,5 @@
 "use strict";
+var _ = require('underscore');
 var Backbone = require('backbone');
 var React = require('react');
 var app = require('adminui');
@@ -39,11 +40,11 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
     getQuery: function() {
         return Backbone.Syphon.serialize(this);
     },
-    onSubmit: function(e) {
+    onSubmit: _.debounce(function(e) {
         e.preventDefault();
         var params = Backbone.Syphon.serialize(this);
         this.trigger('query', params);
-    }
+    }, 300)
 });
 
 var ServersView = Backbone.Marionette.Layout.extend({

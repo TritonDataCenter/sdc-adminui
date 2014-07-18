@@ -396,7 +396,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     onShow: function() {
-        this.model.fetch();
+        this.model.fetch().done(this.render);
         this.nics.fetch();
         this.vms.fetch();
     },

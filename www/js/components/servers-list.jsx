@@ -10,7 +10,6 @@ var ServerSetup = require('../views/server-setup');
 var ServerMemoryUtilizationCircle = require('./pages/server/utilization-circle');
 
 var ServersListItem = React.createClass({
-
     setup: function() {
         var view = new ServerSetup({ model: this.props.server });
         view.render();
@@ -23,12 +22,25 @@ var ServersListItem = React.createClass({
         e.preventDefault();
         adminui.vent.trigger('showview', 'server', { server: this.props.server });
     },
-    componenWillReceiveProps: function() {
+
+    shouldComponentUpdate: function(nextProps, nextState) {
+        var toCheck = ['status', 'setup', 'reservation_ratio'];
+        for (var i = 0; i < toCheck.length; i++) {
+            if (nextProps.server.get(toCheck[i]) !== this.props.server.get(toCheck[i])) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    componentDidUpdate: function() {
         this.postRender();
     },
+
     componentDidMount: function() {
         this.postRender();
     },
+
     postRender: function() {
         var model = this.props.server;
         var $node = $(this.getDOMNode());
@@ -54,18 +66,13 @@ var ServersListItem = React.createClass({
     },
     render: function() {
         var server = this.props.server.toJSON();
-        _.extend(server, {
-            running: server.status === 'running',
-            not_setup: server.setup === false,
-            last_boot: moment(server.last_boot).fromNow(),
-            last_heartbeat: moment(server.last_heartbeat).fromNow(),
-            memory_provisionable_mb: _.str.sprintf("%0.2f", server.memory_provisionable_bytes/1024/1024),
-            memory_total_mb: _.str.sprintf("%0.2f", server.memory_total_bytes/1024/1024),
-
-            memory_available_gb: _.str.sprintf("%0.2f", server.memory_available_bytes/1024/1024/1024),
-            memory_provisionable_gb: _.str.sprintf("%0.2f", server.memory_provisionable_bytes/1024/1024/1024),
-            memory_total_gb: _.str.sprintf("%0.2f", server.memory_total_bytes/1024/1024/1024),
-        });
+        server.last_boot = moment(server.last_boot).fromNow();
+        server.last_heartbeat = moment(server.last_heartbeat).fromNow();
+        server.memory_provisionable_mb = _.str.sprintf("%0.2f", server.memory_provisionable_bytes/1048576);
+        server.memory_total_mb = _.str.sprintf("%0.2f", server.memory_total_bytes/1048576);
+        server.memory_available_gb = _.str.sprintf("%0.2f", server.memory_available_bytes/1073741824);
+        server.memory_provisionable_gb = _.str.sprintf("%0.2f", server.memory_provisionable_bytes/1073741824);
+        server.memory_total_gb = _.str.sprintf("%0.2f", server.memory_total_bytes/1073741824);
 
         if (Number(server.memory_provisionable_mb) < 0) {
             server.memory_provisionable_mb = "0";
@@ -97,8 +104,10 @@ var ServersListItem = React.createClass({
             { server.setup ?
             <div className="memory-usage">
                 <div className="memory-usage-graph-container">
-                    <ServerMemoryUtilizationCircle diameter="80px" inner="23"
-                    server={this.props.server} />
+                    {this.props.server.get('memory_provisionable_bytes') &&
+                        <ServerMemoryUtilizationCircle diameter="80px" inner="23"
+                        server={this.props.server} />
+                    }
                 </div>
                 <div className="memory-usage-data">
                     <div className="memory-usage-avail">
@@ -127,7 +136,7 @@ var ServersListItem = React.createClass({
         <div className="last-status">
             <div className="last-platform">
                 <strong><i className="fa fa-fw fa-location-arrow"></i></strong>
-                <span>{server.sdc_version}.{server.current_platform}</span>
+                <span>{server.current_platform}</span>
             </div>
 
             <div className="last-boot">
