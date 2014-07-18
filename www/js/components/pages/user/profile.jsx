@@ -17,6 +17,15 @@ var UserProfile = React.createClass({
         var user = this.props.userModel.toJSON();
         var twoFactorAuth = this.props.twoFactorAuth;
         var isTopLevelAccount = !user.account;
+        var pwdfailuretimes = Array.isArray(user.pwdfailuretime) ? user.pwdfailuretime : [user.pwdfailuretime];
+
+        pwdfailuretimes = pwdfailuretimes.map(function(m) {
+            var date = moment(new Date(Number(m)));
+            return {
+                absolute: date.utc().format('D MMMM, YYYY HH:mm:ss z'),
+                relative: date.fromNow()
+            };
+        });
 
         return (
             <div className="row">
@@ -24,8 +33,23 @@ var UserProfile = React.createClass({
                     <div className="user-profile">
                         {user.pwdaccountlockedtime &&
                             <div className="alert alert-warning">
-                                <i className="fa fa-warning"></i> User account locked until <strong>{moment(Date(user.pwdaccountlockedtime)).utc().format('D MMMM, YYYY HH:mm:ss z')}</strong> due to too many failed password attempts.
-                                <a onClick={this.props.handleUnlockUser} style={{'margin-left': '10px;'}} className="alert-link pull-right"><i className="fa fa-unlock"></i> Unlock User Now</a>
+                                <h5><strong>User Account Temporarily Locked</strong></h5>
+                                <p>
+                                    This account is locked until <strong>{moment(new Date(Number(user.pwdaccountlockedtime))).utc().format('D MMMM, YYYY HH:mm:ss z')}</strong> due to too many failed password attempts.
+                                </p>
+                                <p>
+                                    <h5>Attempts:</h5>
+                                    <ul className="list">
+                                    {
+                                        pwdfailuretimes.map(function(m) {
+                                            return <li className="attempt">{m.absolute} ({m.relative})</li>;
+                                        })
+                                    }
+                                    </ul>
+                                </p>
+                                <p>
+                                <a onClick={this.props.handleUnlockUser} className="btn btn-default"><i className="fa fa-unlock"></i> Unlock User Now</a>
+                                </p>
                             </div>
                         }
                         <h3>User Profile
