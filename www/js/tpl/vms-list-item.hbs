@@ -22,14 +22,17 @@
   {{/each}}
 </td>
 <td class="package-image">
-    {{#if package_name}}
-      <div class="package">
-        <i class="fa fa-codepen fa-fw"></i>
-        <span class="package-name">{{ package_name }}</span>
-        <span class="package-version">{{ package_version }}</span>
-      </div>
-      {{/if}}
-  <div class="image">
+  <div class="server">
+      <i class="fa fa-list"></i> <span>Server</span>
+  </div>
+  {{#if package_name}}
+  <div class="package">
+    <i class="fa fa-codepen fa-fw"></i>
+    <span class="package-name">{{ package_name }}</span>
+    <span class="package-version">{{ package_version }}</span>
+    </div>
+{{/if}}
+<div class="image">
     <i class="fa fa-picture-o fa-fw"></i> <span>{{image.name}}</span>
   </div>
 </td>

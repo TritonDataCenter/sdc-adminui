@@ -1,15 +1,62 @@
+/** @jsx React.DOM */
 "use strict";
 
+var _ = require('underscore');
 var Backbone = require('backbone');
 var ItemTemplate = require('../tpl/vms-list-item.hbs');
 var adminui = require('../adminui');
 var Vms = require('../models/vms');
 var React = require('react');
+var request = require('../request');
 
 var Images = require('../models/images');
 var User = require('../models/user');
 var Package = require('../models/package');
 var JSONExport = require('../components/json-export.jsx');
+
+
+var _getServerPromises = {};
+function getServer(serverUuid) {
+    var url = _.str.sprintf('/api/servers/%s', serverUuid);
+    if (_getServerPromises[serverUuid]) {
+        return _getServerPromises[serverUuid];
+    } else {
+        _getServerPromises[serverUuid] = new Promise(function(resolve, reject) {
+            request.get(url).end(function(res) {
+                if (res.ok) {
+                    resolve(res.body);
+                } else {
+                    reject(res.body);
+                }
+            });
+        });
+        return _getServerPromises[serverUuid];
+    }
+}
+
+var ServerName = React.createClass({
+    propTypes: {
+        serverUuid: React.PropTypes.string
+    },
+    componentWillMount: function() {
+        getServer(this.props.serverUuid).then(function(server) {
+            this.setState({server: server});
+        }.bind(this));
+    },
+    render: function() {
+        if (!this.state || !this.state.server) {
+            return null;
+        }
+        return <div className="server-name"><i className="fa fa-list"></i> <a href={'/servers/'+this.props.serverUuid} onClick={this.goToServer}>{this.state.server.hostname} </a></div>
+    },
+    goToServer: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+        e.preventDefault();
+        adminui.vent.trigger('showview', 'server', { uuid: this.props.serverUuid });
+    },
+});
 
 var ItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
@@ -51,6 +98,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     },
     onRender: function() {
         this.$('.owner-company-container').hide();
+        React.renderComponent( ServerName({serverUuid: this.model.get('server_uuid')}), this.$('.server').get(0));
     },
 
 
@@ -73,6 +121,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         adminui.vent.trigger('showview', 'vm', { vm: this.model });
     },
+
     navigateToOwnerDetails: function(e) {
         if (e.metaKey || e.ctrlKey) {
             return;
@@ -185,6 +234,10 @@ module.exports = require('./composite').extend({
         this.$('caption').css('visibility', 'visible');
         this.$('.record-count').html(this.collection.objectCount);
         this.$('.current-count').html(this.collection.length);
+    },
+    onClose: function() {
+        process.nextTick(function() {
+            _getServerPromises = {};
+        });
     }
-
 });
