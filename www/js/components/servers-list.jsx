@@ -179,7 +179,7 @@ var ServersListComponent = React.createClass({
         this.collection.fetch();
         this._timer = setInterval(function() {
             self.collection.fetch();
-        }, 10000);
+        }, 25000);
     },
 
     componentWillUnmount: function() {
