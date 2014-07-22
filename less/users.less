@@ -2,6 +2,33 @@
   .users-search {
     .widget-content;
   }
+  .groups-container {
+    display: inline-block;
+  }
+  .groups {
+    display: inline-block;
+    vertical-align: bottom;
+    margin-left: 10px;
+    .group {
+      font-size: 8px;
+      padding: 2px 5px;
+      padding-top: 3px;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      font-weight: 400;
+      letter-spacing: 1px;
+      background: #333;
+      color: #fff;
+    }
+    .group.readers {
+      background: #888;
+    }
+    .group.operators {
+      background: @brand-danger;
+    }
+  }
+
+
 
   .user-icon {
     width: 48px;

@@ -5,12 +5,14 @@
 var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
-
 var adminui = require('../adminui');
-
 var UserForm = require('./user-form');
 var Users = require('../models/users');
 var tplUsers = require('../tpl/users.hbs');
+var $ = require('jquery');
+var React = require('react');
+var GroupLabels = require('../components/pages/user/group-labels');
+
 
 var UsersListItem = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/users-list-item.hbs'),
@@ -20,6 +22,13 @@ var UsersListItem = Backbone.Marionette.ItemView.extend({
     events: {
         'click a.login-link': 'onClickLoginName',
         'click a.account-link': 'onClickAccountName',
+    },
+    onRender: function() {
+        var container = this.$('.groups-container').get(0);
+        React.renderComponent(GroupLabels({userUuid : this.model.get('uuid')}), container);
+    },
+    onClose: function() {
+        React.unmountComponentAtNode(this.$('.groups-container').get(0));
     },
     serializeData: function() {
         var data = _.clone(this.model.toJSON());
