@@ -81,7 +81,7 @@ var User = module.exports = Model.extend({
         };
 
         var req = api.post("/api/auth");
-        req.timeout(3000);
+        req.timeout(10000);
         req.send(authData);
         req.end(function(err, res) {
             if (err) {
