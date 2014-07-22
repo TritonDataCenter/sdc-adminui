@@ -9,13 +9,13 @@ var React = require('react');
     archived: { type: "string", unique: false }
 */
 
+var $ = require('jquery');
 var moment = require('moment');
 var _ = require('underscore');
 var Showdown = require('showdown');
 
 var Notes = require('../models/notes');
 var Note = require('../models/note');
-var User = require('../models/user');
 var UserLink = require('../components/user-link');
 
 
@@ -100,7 +100,7 @@ var NotesPanel = React.createClass({
                     key={note.uuid}
                     onArchive={this.handleArchive}
                     onUnarchive={this.handleUnarchive}
-                    note={note} />
+                    note={note} />;
             }, this);
         }
 
@@ -110,7 +110,7 @@ var NotesPanel = React.createClass({
                 <textarea onChange={this.onInput} placeholder="Write a note here... (Markdown Formatting Supported)" ref="input" type="text"></textarea>
                 <button type="submit" disabled={this.state.disableButton} className="btn">SAVE</button>
             </form>
-        </div>
+        </div>;
     }
 });
 
@@ -170,11 +170,10 @@ var NotesDropdown = React.createClass({
         $("body").off('click.notes-component');
     },
     componentDidUpdate: function() {
-        var body = $("body");
         if (this.state.dropdown) {
-            this.repositionDropdown()
+            this.repositionDropdown();
             this.refs.panel.focus();
-        };
+        }
     },
     repositionDropdown: function() {
         var $counts = $(this.refs.counts.getDOMNode());
@@ -196,13 +195,13 @@ var NotesDropdown = React.createClass({
     },
 
     fetchNotes: function() {
-        console.info('NotesComponent: fetching notes', this.props.item);
+        console.info('NotesComponent: fetch notes', this.props.item);
         var self = this;
         var collection = new Notes();
         collection.item_uuid = this.props.item;
         var req = collection.fetch();
         req.done(function(notes) {
-            console.info('NotesComponent: fetching notes done', notes);
+            console.info('NotesComponent: fetched', notes.length);
             self.setState({notes: notes});
         });
     },
