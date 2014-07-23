@@ -8,6 +8,7 @@ var adminui = require('../adminui');
 var Vms = require('../models/vms');
 var React = require('react');
 var request = require('../request');
+var Promise = require('promise');
 
 var Images = require('../models/images');
 var User = require('../models/user');
