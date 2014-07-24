@@ -52,7 +52,7 @@ var DatePicker = React.createClass({
         return (
             <div className="form-group">
                 <div ref="datepicker" className="input-group date-picker" data-date-format="YYYY-MM-DD HH:mm:ss">
-                    <input ref="input" className="form-control" value={this.props.value}  type="text"></input>
+                    <input ref="input" className="form-control" defaultValue={this.props.value}  type="text"></input>
                     <span className="input-group-addon"><span className="fa fa-calendar"></span></span>
                 </div>
             </div>
@@ -234,20 +234,20 @@ var JobsView = Backbone.Marionette.Layout.extend({
     onShow: function() {
         var initialFilter = PRESET_FILTERS[0];
 
-        this.jobFilters = new JobFiltersList({
-            filters: PRESET_FILTERS,
-            filter: initialFilter,
-            onFilter: this.onFilterChange.bind(this)
-        });
 
-        React.renderComponent(this.jobFilters, this.$('.job-filters-list').get(0));
+        this.jobFilters = React.renderComponent(
+            JobFiltersList({
+                filters: PRESET_FILTERS,
+                filter: initialFilter,
+                onFilter: this.onFilterChange.bind(this)
+            }), this.$('.job-filters-list').get(0));
 
-        this.jobCriteras = new JobCriterias({
-            onChange: this.onFilterChange.bind(this),
-            initialCriteria: initialFilter
-        });
 
-        React.renderComponent(this.jobCriteras, this.$('.jobs-criteria-container').get(0));
+        this.jobCriteras = React.renderComponent(
+            JobCriterias({
+                onChange: this.onFilterChange.bind(this),
+                initialCriteria: initialFilter
+            }), this.$('.jobs-criteria-container').get(0));
 
         this.jobsList = new JobsList({params: initialFilter.params() });
         this.jobsListRegion.show(this.jobsList);

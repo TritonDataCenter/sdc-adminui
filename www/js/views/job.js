@@ -8,18 +8,14 @@ var moment = require('moment');
 
 var adminui = require('../adminui');
 var React = require('react');
-
+var BackboneMixin = require('../components/_backbone-mixin');
 var Job = require('../models/job');
 
 var JobDetailsComponent = React.createClass({
-    componentWillMount: function() {
-        this.state.job.on('change', this.forceUpdate);
+    mixins: [BackboneMixin],
+    getBackboneModels: function() {
+        return [this.state.job];
     },
-
-    componentWillUnmount: function() {
-        this.state.job.off('change');
-    },
-
     getInitialState: function() {
         return {job: this.props.job };
     },
@@ -202,23 +198,21 @@ var JobView = Backbone.Marionette.ItemView.extend({
         if (this.model.finished()) {
             this.model.stopWatching();
         }
-        this.jobComponent.forceUpdate();
+    },
+
+    renderJobDetails: function() {
+        var jobComponent = JobDetailsComponent({ job: this.model });
+        React.renderComponent(jobComponent, this.$el.get(0));
     },
 
     onRender: function() {
-        this.jobComponent = new JobDetailsComponent({ job: this.model });
-        React.renderComponent(this.jobComponent, this.$el.get(0));
-
-        this.infoComponent = new JSONView({ json: {} });
-
-        React.renderComponent(this.infoComponent, this.$('.info').get(0));
-
+        this.renderJobDetails();
         this.model.getJobInfo(this.renderInfo.bind(this));
     },
 
     renderInfo: function(info) {
-        console.log('info', info);
-        this.infoComponent.setState({json: info});
+        var infoComponent = JSONView({ json: info });
+        React.renderComponent(infoComponent, this.$('.info').get(0));
     },
 
     onShow: function() {
