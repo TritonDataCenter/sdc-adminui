@@ -33,7 +33,7 @@ var JobProgressSummary = React.createClass({
                     <ol>
                     {_.map(job.chain_results, function(c, i) {
                         return (
-                            <li key={c.name} className={c.error}>
+                            <li key={c.name} className={ (c.error ? 'error' : '') }>
                             <div className="task">
                                 <div className="name">{c.name}</div>
                                 <div className="result">{c.result}</div>
