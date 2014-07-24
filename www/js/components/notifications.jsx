@@ -21,6 +21,7 @@ var Notifications = React.createClass({
     render: function() {
         var n = this.state.notification;
 
+        if (!n) { return null; }
         return <div id="notifications">
             <div className={'notification ' + (n.level || 'info')}>
                 <span dangerouslySetInnerHTML={{__html: n.message}}></span>
