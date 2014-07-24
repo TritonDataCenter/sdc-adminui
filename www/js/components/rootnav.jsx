@@ -69,9 +69,13 @@ var Rootnav = React.createClass({
                             </ul>
 
                             <ul className="nav navbar-nav main-nav navbar-right">
-                                <li className="alarms">
-                                    <AlarmsMenu user={this.props.user.get('adminUuid')} />
-                                </li>
+                                {
+                                    this.props.user.get('adminUuid') &&
+                                    <li className="alarms">
+                                        <AlarmsMenu user={this.props.user.get('adminUuid')} />
+                                    </li>
+                                }
+
                                 {
                                     !this.props.readonly &&
                                     <li onClick={this._clickedMenuItem} className={this.classesFor('settings')}  data-view="settings">

@@ -30,6 +30,7 @@ module.exports = React.createClass({
         adminui.vent.off('alarms:changed', this.fetchAlarms);
         clearInterval(this._interval);
     },
+
     fetchProbeGroup: function(id) {
         this.setState({loading: true});
         api.get('/api/amon/probegroups/'+this.props.user + '/' + id).end(function(err, res) {
