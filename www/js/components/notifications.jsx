@@ -1,4 +1,3 @@
-var _ = require('underscore');
 var React = require('react');
 var Notifications = React.createClass({
     propTypes: {
@@ -14,27 +13,19 @@ var Notifications = React.createClass({
         this.props.bus.off('notification', this.notify);
     },
     notify: function(n) {
-        console.log("notify", n);
-        var notifications = this.state.notifications;
-        notifications.push(n);
-        this.setState({notifications: notifications});
+        this.setState({notification: n});
     },
     _handleDismissNotification: function(n) {
-        var notifications = this.state.notifications;
-        var newNotifications = _.without(notifications, n);
-        this.setState({notifications: newNotifications});
+        this.setState({notification: null});
     },
     render: function() {
+        var n = this.state.notification;
+
         return <div id="notifications">
-            {
-                this.state.notifications.map(function(n, i) {
-                    return (
-                        <div key={i} className={'notification ' + (n.level || 'info')}>
-                            <span dangerouslySetInnerHTML={{__html: n.message}}></span>
-                            <a onClick={this._handleDismissNotification.bind(null, n)}><i className="fa fa-times"></i></a>
-                        </div>);
-                }, this)
-            }
+            <div className={'notification ' + (n.level || 'info')}>
+                <span dangerouslySetInnerHTML={{__html: n.message}}></span>
+                <a onClick={this._handleDismissNotification}><i className="fa fa-times"></i></a>
+            </div>
         </div>;
     }
 });
