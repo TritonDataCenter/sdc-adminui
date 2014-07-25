@@ -45,7 +45,9 @@ module.exports = Backbone.Marionette.ItemView.extend({
         var key = this.$('textarea[name=key]').val();
 
         name = _.str.trim(name);
-        key = _.str.trim(key); this.model.save({ name: name, key: key });
+        key = _.str.trim(key).replace(/(\r\n|\n|\r)/gm, "");
+
+        this.model.save({ name: name, key: key });
     },
 
     onRender: function() {

@@ -16,6 +16,8 @@ var _ = require('underscore');
 var React = require('react');
 var MultiNicConfigComponent = require('../components/multi-nic-config');
 
+var _ = require('underscore');
+
 var Package = require('../models/package');
 var Packages = require('../models/packages');
 var SSHKeys = require('../models/sshkeys');
