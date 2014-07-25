@@ -460,7 +460,9 @@ var View = Backbone.Marionette.Layout.extend({
 
         if ((values['brand'] === 'kvm' || values['brand'] === 'lx') && this.userKeys) {
             values.customer_metadata = {
-                root_authorized_keys: this.userKeys.join("\n")
+                root_authorized_keys: this.userKeys.map(function(k) {
+                    return  _.str.trim(k).replace(/(\r\n|\n|\r)/gm, "");
+                }).join("\n")
             };
         }
 
