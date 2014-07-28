@@ -17,8 +17,9 @@ var UserProfile = React.createClass({
         var user = this.props.userModel.toJSON();
         var twoFactorAuth = this.props.twoFactorAuth;
         var isTopLevelAccount = !user.account;
-        var pwdfailuretimes = Array.isArray(user.pwdfailuretime) ? user.pwdfailuretime : [user.pwdfailuretime];
 
+        var locked = user.pwdaccountlockedtime && (new Date()).getTime() < user.pwdaccountlockedtime;
+        var pwdfailuretimes = Array.isArray(user.pwdfailuretime) ? user.pwdfailuretime : [user.pwdfailuretime];
         pwdfailuretimes = pwdfailuretimes.map(function(m) {
             var date = moment(new Date(Number(m)));
             return {
@@ -31,7 +32,7 @@ var UserProfile = React.createClass({
             <div className="row">
                 <div className="col-sm-12">
                     <div className="user-profile">
-                        {user.pwdaccountlockedtime &&
+                        {locked &&
                             <div className="alert alert-warning">
                                 <h5><strong>User Account Temporarily Locked</strong></h5>
                                 <p>
