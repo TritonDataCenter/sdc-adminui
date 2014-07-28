@@ -39,16 +39,6 @@ var UserProfile = React.createClass({
                                     This account is locked until <strong>{moment(new Date(Number(user.pwdaccountlockedtime))).utc().format('D MMMM, YYYY HH:mm:ss z')}</strong> due to too many failed password attempts.
                                 </p>
                                 <p>
-                                    <h5>Attempts:</h5>
-                                    <ul className="list">
-                                    {
-                                        pwdfailuretimes.map(function(m) {
-                                            return <li className="attempt">{m.absolute} ({m.relative})</li>;
-                                        })
-                                    }
-                                    </ul>
-                                </p>
-                                <p>
                                 <a onClick={this.props.handleUnlockUser} className="btn btn-default"><i className="fa fa-unlock"></i> Unlock User Now</a>
                                 </p>
                             </div>
