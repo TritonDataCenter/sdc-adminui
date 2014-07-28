@@ -121,6 +121,22 @@ var UserProfile = React.createClass({
                                 </td>
                             </tr>
                             }
+
+                            { pwdfailuretimes.length &&
+                            <tr>
+                                <th>Past Failed Authentication Attempts</th>
+                                <td>
+                                    <ul className="list list-unstyled">
+                                    {
+                                        pwdfailuretimes.map(function(m) {
+                                            return <li className="attempt">{m.absolute} ({m.relative})</li>;
+                                        })
+                                    }
+                                    </ul>
+                                </td>
+                            </tr>
+                            }
+
                         </tbody>
                         </table>
                     </div>
