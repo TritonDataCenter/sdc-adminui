@@ -353,6 +353,11 @@ var VmView = Backbone.Marionette.Layout.extend({
             server: this.server
         });
     },
+    serializeData: function() {
+        var data = _.clone(this.vm.toJSON());
+        data.kvm = data.brand === 'kvm';
+        return data;
+    },
 
     clickedEditCustomerMetadata: function(e) {
         this.listenTo(this.customerMetadataListView, 'editing:begin',

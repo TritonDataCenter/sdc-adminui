@@ -18,9 +18,13 @@
       <li><a class="start">Start</a></li>
       <li><a class="stop">Stop</a></li>
       <li><a class="reboot">Reboot</a></li>
+
+    {{#unless kvm}}
       <li class="divider"></li>
       <li><a class="reprovision">Reprovision</a></li>
       <li><a class="resize">Resize</a></li>
+    {{/unless}}
+
       <li class="divider"></li>
       <li><a class="delete">Delete</a></li>
     </ul>

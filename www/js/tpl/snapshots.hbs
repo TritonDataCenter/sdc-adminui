@@ -1,21 +1,31 @@
 <h3>Snapshots</h3>
 <table class="table">
-  {{#if hasSnapshots}}
-  <thead>
-    <th>Name</th>
-    <th>Snapshot Date</th>
-    <th></th>
-  </thead>
+  {{#if kvm}}
+  <tbody>
+    <tr>
+        <td class="empty">Snapshots are not supported for KVM based Virtual Machines</td>
+    </tr>
+  </tbody>
+  {{else}}
+
+      {{#if hasSnapshots}}
+      <thead>
+        <th>Name</th>
+        <th>Snapshot Date</th>
+        <th></th>
+      </thead>
+      {{/if}}
+
+      <tbody>
+        {{#unless hasSnapshots}}
+        <tr><td class="empty">This VM does not have any snapshots.</td></tr>
+        {{/unless}}
+      </tbody>
+      {{#role "operators"}}
+          <tfoot>
+            <td><button class="btn btn-info btn-sm"><i class="fa fa-camera-retro fa-lg"></i> Create Snapshot</button> </h3></td>
+          </tfoot>
+      {{/role}}
   {{/if}}
 
-  <tbody>
-    {{#unless hasSnapshots}}
-    <tr><td class="empty">This VM does not have any snapshots.</td></tr>
-    {{/unless}}
-  </tbody>
-  {{#role "operators"}}
-  <tfoot>
-    <td><button class="btn btn-info btn-sm"><i class="fa fa-camera-retro fa-lg"></i> Create Snapshot</button> </h3></td>
-  </tfoot>
-  {{/role}}
 </table>

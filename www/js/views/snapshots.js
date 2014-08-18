@@ -4,7 +4,6 @@ var Backbone = require('backbone');
 /**
  * Snapshots Table/List
  */
-var Snapshot = Backbone.Model.extend({});
 var Snapshots = Backbone.Collection.extend({});
 var JobProgressView = require('./job-progress');
 
@@ -57,6 +56,9 @@ var View = Backbone.Marionette.CompositeView.extend({
         var self = this;
         return {
             snapshots: this.collection,
+            kvm: function() {
+                return self.vm.get('brand') === 'kvm';
+            },
             hasSnapshots: function(data) {
                 return self.collection.length > 0;
             }
