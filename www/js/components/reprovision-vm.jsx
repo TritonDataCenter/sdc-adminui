@@ -71,7 +71,7 @@ var ReprovisionVm = React.createClass({
                             <option value=""></option>
                         {
                             this.state.images.map(function(i) {
-                                return <option value={i.uuid}>{i.name} - {i.version}</option>;
+                                return <option key={i.uuid} value={i.uuid}>{i.name} - {i.version}</option>;
                             })
                         }
                         </Chosen>
@@ -84,7 +84,7 @@ var ReprovisionVm = React.createClass({
                 </form>
             </div>
             <div className="modal-footer">
-                <button type="button" onCLick={this.props.onRequestHide} className="btn btn-link">Close</button>
+                <button type="button" onClick={this.props.onRequestHide} className="btn btn-link">Close</button>
                 <button type="submit" disabled={ this.isValid() ? '': 'disabled' } onClick={this.onSubmit} className="btn btn-primary">Reprovision</button>
             </div>
         </Modal>);
