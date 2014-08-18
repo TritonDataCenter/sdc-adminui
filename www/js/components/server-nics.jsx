@@ -11,14 +11,20 @@ var ReactBackboneMixin = require('../components/_backbone-mixin');
 var ServerNicAggr = React.createClass({
     render: function() {
         var aggr = this.props.aggr;
-        return <li key={this.key}>
+        return <li key={aggr.ifname}>
             <div className="aggr-name-container">
-                {this.props.key}
+                {aggr.ifname}
+            </div>
+            <div className="aggr-ips-container">
+                IP
+                <div className="ip">
+                    {aggr['ip4addr']}
+                </div>
             </div>
             <div className="lacp-container">
                 LACP Mode
                 <div className="lacp">
-                    <span className={aggr["LACP Mode"]}> {aggr['LACP Mode']} </span>
+                    <span className={aggr["LACP mode"]}> {aggr['LACP mode']} </span>
                 </div>
             </div>
             <div className="interfaces-container">
@@ -138,8 +144,10 @@ var ServerNicsList = React.createClass({
         return <div className="server-nics-list">
             <div className="title">Physical</div>
             <ul className="list-unstyled">{nicsNodes}</ul>
+
             <div className="title">Virtual</div>
             <ul className="list-unstyled">{vnicsNodes}</ul>
+
             {! this.props.server.get('headnode') && <div className="title">Aggregates</div> }
             {! this.props.server.get('headnode') && <ul className="list-unstyled">{aggrsNodes}</ul> }
         </div>;

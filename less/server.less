@@ -167,25 +167,39 @@
     }
     li {
       .widget-content;
-
       & > div {
         display: inline-block;
         vertical-align: top;
       }
 
       .aggr-name-container {
+        font-size: 10px;
         width: 120px;
         font-weight: bold;
         margin-left: 10px;
       }
+      .aggr-ips-container {
+        font-family: @font-family-monospace;
+        font-size: 10px;
+        width: 200px;
+        color: @gray;
+        .ip {
+          display: inline-block;
+          margin-left: 5px;
+          background: #fff;
+          padding: 4px 6px;
+        }
+      }
       .lacp-container {
+        font-family: @font-family-monospace;
+        font-size: 10px;
         width: 200px;
         color: @gray;
         .lacp {
-          margin-left: 15px;
           display: inline-block;
+          padding: 4px 6px;
           margin-left: 5px;
-          .active, .passive {
+          .off, .active, .passive {
             background: #fff;
             padding: 4px 6px;
             font-size: 10px;
@@ -197,9 +211,14 @@
 
       }
       .interfaces-container {
+        font-size: 10px;
+        font-family: @font-family-monospace;
         color: @gray;
         width: auto;
-        .interfaces { margin-left: 15px; display: inline-block; }
+        .interfaces { margin-left: 15px; display: inline-block;
+
+          padding: 4px 6px;
+        }
         .interface {
           padding: 4px 6px;
           background: @state-info-bg;
