@@ -11,6 +11,10 @@ var SecondaryNav = React.createClass({
         active: React.PropTypes.string
     },
     _clickedMenuItem: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+
         e.preventDefault();
         var page = e.currentTarget.getAttribute('data-view');
         if (page) {
