@@ -28,9 +28,9 @@ var PageUser = React.createClass({
             var uuid;
             var account;
 
-            if (typeof(props.user) === 'object') {
+            if (props.user && typeof(props.user) === 'object') {
                 uuid = props.user.get('uuid');
-                account = props.user.get('account');
+                account = props.user.get('account') || null;
             } else {
                 uuid = props.user || props.uuid;
                 account = props.account;
@@ -46,14 +46,21 @@ var PageUser = React.createClass({
     },
 
     getInitialState: function() {
+        var user;
         var state = {
             tab: this.props.tab || 'profile'
         };
-        var user = typeof(this.props.user) === 'object' ? this.props.user :
-            new UserModel({
-                uuid: this.props.user || this.props.uuid,
-                account: this.props.account
+        if (this.props.user && typeof(this.props.user) === 'object') {
+            user = this.props.user;
+        } else {
+            user = new UserModel({
+                uuid: this.props.user || this.props.uuid
             });
+            if (this.props.account) {
+                user.set({account: this.props.account });
+            }
+        }
+
 
         state.userModel = user;
         // model already contains data
@@ -273,7 +280,7 @@ var PageUser = React.createClass({
                     <div className="user-info">
                         <div className="cn">{user.cn}</div>
                         <div className="user-groups">
-                        { user.groups.map(function(g) {
+                        { user.groups && user.groups.map(function(g) {
                             return <div className={"group "+g}>{g}</div>;
                         })}
                         </div>
