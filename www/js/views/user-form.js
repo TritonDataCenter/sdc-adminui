@@ -67,9 +67,10 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onError: function(model, xhr) {
-        console.log(model, xhr);
+        console.log({model: model, xhr: xhr});
         var ul = $("<ul />");
         this.$('.form-group').removeClass('has-error');
+        console.log(xhr.responseData);
         _(xhr.responseData.errors).each(function(e) {
             this.$('[name='+e.field+']').parents('.form-group').addClass('has-error');
             ul.append('<li>'+e.message+' (' + e.field + ')</li>');

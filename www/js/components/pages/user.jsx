@@ -202,6 +202,13 @@ var PageUser = React.createClass({
     handleProfileModifyUser: function() {
         var form = new UserForm({user: this.state.userModel});
         form.render();
+        form.on('user:saved', function(user) {
+            adminui.vent.trigger('notification', {
+                level: 'success',
+                message: _.str.sprintf('User <strong>%s</strong> saved', user.get('login'))
+            });
+        }, this);
+
     },
     handleNavigateToAccount: function() {
         adminui.vent.trigger('showcomponent', 'user', {user: this.state.userModel.get('account')});

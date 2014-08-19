@@ -4,6 +4,7 @@ var Promise = require('promise');
 var _ = require('underscore');
 var api = require('../../../request');
 var adminui = require('../../../adminui');
+var User = require('../../../models/user');
 
 var UserForm = require('../../../views/user-form');
 
@@ -88,8 +89,41 @@ var UserSubusers = React.createClass({
                         <div className="roles-header">No Roles</div>
                     }
                 </div>
+                <div className="subuser-actions">
+                    <button onClick={this.deleteUser.bind(null, u)} className="btn-link btn-danger"><i className="fa fa-trash-o"></i></button>
+                    <button onClick={this.showEditUser.bind(null, u)} className="btn-link"><i className="fa fa-pencil"></i></button>
+                </div>
             </div>
         </div>;
+    },
+
+    deleteUser: function(u) {
+        var user = new User(u);
+        var confirm = window.confirm('Are you sure you want to delete user '+ u.login + ' ?');
+        var self = this;
+        if (confirm) {
+            user.destroy().done(function() {
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: _.str.sprintf('User <strong>%s</strong> deleted successfully', user.get('login'))
+                });
+                self._load();
+            });
+        }
+    },
+
+    showEditUser: function(u) {
+        var editView = new UserForm({
+            user: new User(u),
+            account: this.props.account
+        });
+        editView.render();
+        editView.on('user:saved', function(user) {
+            adminui.vent.trigger('notification', {
+                level: 'success',
+                message: _.str.sprintf('User <strong>%s</strong> saved', user.get('login'))
+            });
+        }, this);
     },
 
     showUserForm: function() {
