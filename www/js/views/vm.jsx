@@ -515,7 +515,7 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.fwrulesListRegion.show(this.fwrulesList);
 
 
-        if (adminui.user.role('operators')) {
+        if (this.vm.get('brand') === 'kvm' && adminui.user.role('operators')) {
             this.fwToggleButton = React.renderComponent(new FirewallToggleButton({
                 initialValue: this.vm.get('firewall_enabled'),
                 onToggle: this.onToggleFirewallEnabled.bind(this)

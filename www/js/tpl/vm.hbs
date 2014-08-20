@@ -180,21 +180,23 @@
 </section>
 
 <section class="fwrules">
-  <div class="row">
-    <div class="col-md-12">
-      <h3>
-        Firewall
-        {{#role "operators"}}
-        <div class="actions">
-          <div class="firewall-toggle-button"></div>
-          <a class="btn btn-info btn-sm show-fwrules-form"><i class="fa fa-plus"></i> Create Firewall Rule</a>
+    <div class="row">
+        {{#unless kvm}}
+        <div class="col-md-12">
+            <h3>
+                Firewall
+                {{#role "operators"}}
+                <div class="actions">
+                    <div class="firewall-toggle-button"></div>
+                    <a class="btn btn-info btn-sm show-fwrules-form"><i class="fa fa-plus"></i> Create Firewall Rule</a>
+                </div>
+                {{/role}}
+            </h3>
+            <div class="fwrules-form-region"></div>
+            <div class="fwrules-list-region"></div>
         </div>
-        {{/role}}
-      </h3>
-      <div class="fwrules-form-region"></div>
-      <div class="fwrules-list-region"></div>
+        {{/unless}}
     </div>
-  </div>
 </section>
 
 <section>
