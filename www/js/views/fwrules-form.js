@@ -17,7 +17,8 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
     },
 
     modelEvents: {
-        'sync': 'onSync'
+        'sync': 'onSync',
+        'error': 'onError'
     },
 
     template: require('../tpl/fwrules-form.hbs'),
@@ -38,6 +39,17 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
         var data = this.model.toJSON();
         _.extend(data, this.model.tokenizeRule());
         Backbone.Syphon.deserialize(this, data);
+        var node = this.$('.form-group-global');
+        if (data.uuid) {
+            node.hide();
+        }
+    },
+    onError: function(model, xhr) {
+        var errors = xhr.responseData.errors;
+        if (xhr.responseData.errors) {
+            var messages = _.pluck(errors, 'message');
+            window.alert("Error Saving Firewall Rule \n" + messages.join("\n"));
+        }
     },
 
     onShow: function() {
@@ -80,6 +92,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
             data.actionPredicate
         );
         this.model.set({
+            global: data.global,
             enabled: data.enabled,
             rule: rule,
             owner_uuid: data.owner_uuid
