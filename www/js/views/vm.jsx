@@ -175,6 +175,7 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.listenTo(this.vm, 'change:firewall_enabled', this.onFirewallStateChange, this);
         this.listenTo(this.vm, 'sync', this.loadImage);
         this.listenTo(this.vm, 'sync', this.updateDropdown);
+        this.listenTo(this.server, 'sync', this.renderFirewall, this);
 
         this.customerMetadataListView = new MetadataList({
             vm: this.vm,
@@ -510,23 +511,28 @@ var VmView = Backbone.Marionette.Layout.extend({
         }
     },
 
-    onRender: function() {
-        this.nicsRegion.show(this.nicsList);
-        this.fwrulesListRegion.show(this.fwrulesList);
-
-
-        if (this.vm.get('brand') === 'kvm' && adminui.user.role('operators')) {
-            this.fwToggleButton = React.renderComponent(new FirewallToggleButton({
-                initialValue: this.vm.get('firewall_enabled'),
-                onToggle: this.onToggleFirewallEnabled.bind(this)
-            }), this.$('.firewall-toggle-button').get(0));
-
-            React.renderComponent(
-                new NotesComponent({item: this.vm.get('uuid')}),
-                this.$('.notes-component-container').get(0)
-            );
+    renderFirewall: function() {
+        if (! this.server.get('current_platform')) {
+            this.$('.fwrules').hide();
+            return;
+        }
+        var pl = (this.server.get('current_platform').slice(0, 8));
+        if (!adminui.user.role('operators') || (this.vm.get('brand') === 'kvm' && Number(pl) <= 20140314)) {
+            this.$('.fwrules').hide();
+            return;
         }
 
+
+        this.fwrulesListRegion.show(this.fwrulesList);
+        this.fwToggleButton = React.renderComponent(new FirewallToggleButton({
+            initialValue: this.vm.get('firewall_enabled'),
+            onToggle: this.onToggleFirewallEnabled.bind(this)
+        }), this.$('.firewall-toggle-button').get(0));
+        this.$('.fwrules').show();
+    },
+
+    onRender: function() {
+        this.nicsRegion.show(this.nicsList);
         this.renderUserTile();
 
         this.snapshotsListView = new SnapshotsList({
@@ -534,9 +540,15 @@ var VmView = Backbone.Marionette.Layout.extend({
             el: this.$('.snapshots')
         });
 
+        this.renderFirewall();
         this.renderTags();
         this.renderMetadata();
         this.renderSnapshots();
+
+        React.renderComponent(
+            new NotesComponent({item: this.vm.get('uuid')}),
+            this.$('.notes-component-container').get(0)
+        );
 
         this.stickit(this.image, {
             '.image-uuid': 'uuid',
