@@ -1,10 +1,10 @@
 # Admin UI
 
-Repository: <git@git.joyent.com:adminui.git> 
+Repository: <git@git.joyent.com:adminui.git>
 
 Browsing: <https://mo.joyent.com/adminui>
 
-Docs: <https://mo.joyent.com/docs/adminui>
+End User Documentation: <https://docs.joyent.com/sdc7/operations-portal-walkthrough>
 
 Who: Kevin Chan
 
