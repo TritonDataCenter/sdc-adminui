@@ -17,6 +17,7 @@ var Components = {
     'alarm': require('./components/pages/alarm'),
     'alarms': require('./components/pages/alarms'),
     'user': require('./components/pages/user'),
+    'images': require('./components/pages/images'),
     'manta/agents': require('./components/pages/manta/agents.jsx')
 };
 
@@ -36,10 +37,7 @@ var Views = {
     'dashboard': require('./views/dashboard'),
 
     'settings': require('./views/settings'),
-
-    'images': require('./views/images'),
     'image': require('./views/image'),
-
     'image-import': require('./views/image-import'),
 
     'jobs': require('./views/jobs'),
@@ -63,6 +61,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'users/:uuid/:tab': 'showUser',
         'users/:account/:uuid/:tab': 'showUser',
         'image-import': 'showImageImport',
+        'images': 'showImages',
         'images/:uuid': 'showImage',
         'jobs/:uuid': 'showJob',
         'networks/:uuid': 'showNetwork',
@@ -196,6 +195,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     presentView: function(viewName, args) {
+        console.log('showing view', viewName, args);
         var View = Views[viewName];
 
         if (typeof(View) === 'undefined') {
@@ -251,6 +251,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 'rootnav.active': ComponentType.sidebar,
                 'localnav.active': ComponentType.sidebar
             };
+            console.log(ComponentType.sidebar);
 
             state['chrome.fullwidth'] = (compName === 'users' || compName === 'alarm' || compName === 'user' || compName === 'settings');
             this.state.set(state);
@@ -281,6 +282,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     showAlarms: function(user) {
         if (this.authenticated()) {
             this.presentComponent('alarms', {user: user });
+        }
+    },
+
+    showImages: function() {
+        if (this.authenticated()) {
+            this.presentComponent('images', {});
         }
     },
 
