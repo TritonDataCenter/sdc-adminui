@@ -60,5 +60,6 @@
   "scripts": {
     "test": "jest",
     "start": "node server.js | bunyan"
-  }
+  },
+  "license": "MPL-2.0"
 }
