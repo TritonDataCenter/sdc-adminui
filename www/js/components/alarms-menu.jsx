@@ -16,6 +16,7 @@ var api = require('../request');
 var adminui = require('../adminui');
 var React = require('react');
 var moment = require('moment');
+var Promise = require('promise');
 
 var AMON_POLL_INTERVAL = 60000;
 
@@ -34,6 +35,8 @@ module.exports = React.createClass({
         this.fetchAlarms();
         adminui.vent.on('alarms:changed', this.fetchAlarms);
         this._interval = setInterval(this.fetchAlarms, AMON_POLL_INTERVAL);
+        this._probeFetches = {};
+        this._probeGroupFetches = {};
     },
 
     componentWillUnmount: function() {
@@ -42,23 +45,56 @@ module.exports = React.createClass({
     },
 
     fetchProbeGroup: function(id) {
+        if (this._probeGroupFetches[id]) {
+            return;
+        }
         this.setState({loading: true});
-        api.get('/api/amon/probegroups/'+this.props.user + '/' + id).end(function(err, res) {
+        var p = new Promise(function(resolve, reject) {
+            api.get('/api/amon/probegroups/'+this.props.user + '/' + id).end(function(err, res) {
+                if (res.ok) {
+                    resolve(res.body);
+                } else {
+                    reject(err);
+                }
+            }.bind(this));
+        }.bind(this));
+
+        console.debug('fetching', id);
+        this._probeGroupFetches[id] = p;
+
+        p.then(function(res) {
             var probes = this.state.probes;
-            probes[id] = res.body;
-            if (res.ok) {
-                this.setState({probes: probes});
-            }
+            probes[id] = res;
+            this.setState({probes: probes});
+            console.debug('fetch', id, 'done');
         }.bind(this));
     },
+
     fetchProbe: function(id) {
+        if (this._probeFetches[id]) {
+            return;
+        }
+
         this.setState({loading: true});
-        api.get('/api/amon/probes/'+this.props.user + '/' + id).end(function(err, res) {
+
+        var p = new Promise(function(resolve, reject) {
+            api.get('/api/amon/probes/'+this.props.user + '/' + id).end(function(err, res) {
+                if (res.ok) {
+                    resolve(res.body);
+                } else {
+                    reject(err);
+                }
+            }.bind(this));
+        }.bind(this));
+
+        console.debug('fetching', id);
+        this._probeFetches[id] = p;
+
+        p.then(function(res) {
             var probes = this.state.probes;
-            probes[id] = res.body;
-            if (res.ok) {
-                this.setState({probes: probes});
-            }
+            probes[id] = res;
+            this.setState({probes: probes});
+            console.debug('fetch', id, 'done');
         }.bind(this));
     },
     fetchAlarms: function() {
@@ -87,6 +123,7 @@ module.exports = React.createClass({
     },
     renderMenuItem: function(alarm) {
         var probe = this.state.probes[alarm.probe || alarm.probeGroup];
+        console.log('probe', probe);
 
         return (<div className="alarm-menu-item" key={alarm.id}>
             <div className="alarm-menu-item-header">
@@ -94,12 +131,12 @@ module.exports = React.createClass({
                     <i className="fa fa-warning"></i>
                 </div>
                 {
-                    probe && probe.length ?
+                    probe && probe.name ?
                     <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe">
                         <span className="probe-name">{probe.name}</span>
                         <span className="probe-type">{probe.type}</span>
                     </a> :
-                    <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe"><span className="probe-name">{probe.name}</span></a>
+                    <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe"><span className="probe-name">??</span></a>
                 }
                 <div className="alarm-lastevent">
                 <i className="fa fa-clock-o"></i> { moment(alarm.timeLastEvent).fromNow() }
