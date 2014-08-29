@@ -112,12 +112,10 @@ function mergeSysinfo(sysinfo, napinics) {
         console.log('sysinfoAggrUnderNics', sysinfoAggrUnderNics);
 
         var nic = _.extend(el, napiAggr, sysinfoAggrUnderNics);
-        console.log('nic', nic);
         nic.kind = "aggr";
         nic.ifname = i;
         nics.push(nic);
     });
-  console.log('nics', nics);
 
     return nics;
 }
