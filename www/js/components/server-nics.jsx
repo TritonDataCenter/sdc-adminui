@@ -21,7 +21,9 @@ var ReactBackboneMixin = require('../components/_backbone-mixin');
 var ServerNicAggr = React.createClass({
     render: function() {
         var aggr = this.props.aggr;
+        var linkStatusClass = ("aggr-link-status link-status " + aggr['Link Status']);
         return <li key={aggr.ifname}>
+            <div className={linkStatusClass}></div>
             <div className="aggr-name-container">
                 {aggr.ifname}
             </div>
@@ -88,7 +90,6 @@ var ServerNic = React.createClass({
     }
 });
 
-
 function mergeSysinfo(sysinfo, napinics) {
     var nics = [];
     _.each(sysinfo['Network Interfaces'], function(el, i) {
@@ -106,15 +107,21 @@ function mergeSysinfo(sysinfo, napinics) {
         nics.push(nic);
     });
     _.each(sysinfo['Link Aggregations'], function(el, i) {
-        el.kind = "aggr";
-        var n = _.findWhere(napinics, {mac: el['MAC Address']});
-        var nic = _.extend(el, n);
+        var napiAggr = _.findWhere(napinics, {mac: el['MAC Address']});
+        var sysinfoAggrUnderNics = sysinfo['Network Interfaces'][i];
+        console.log('sysinfoAggrUnderNics', sysinfoAggrUnderNics);
+
+        var nic = _.extend(el, napiAggr, sysinfoAggrUnderNics);
+        console.log('nic', nic);
+        nic.kind = "aggr";
         nic.ifname = i;
         nics.push(nic);
     });
+  console.log('nics', nics);
 
     return nics;
 }
+
 
 var ServerNicsList = React.createClass({
     mixins: [ReactBackboneMixin],
