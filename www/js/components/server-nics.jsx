@@ -33,7 +33,7 @@ var ServerNicAggr = React.createClass({
                     {aggr['ip4addr']}
                 </div>
             </div>
-            <div className="aggr-nictags">
+            <div className="aggr-nictags-container">
                 NICTAGS
                 <div className="nictags">
                 {
