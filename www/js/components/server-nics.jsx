@@ -33,6 +33,16 @@ var ServerNicAggr = React.createClass({
                     {aggr['ip4addr']}
                 </div>
             </div>
+            <div className="aggr-nictags">
+                NICTAGS
+                <div className="nictags">
+                {
+                    aggr['NIC Names'] ? aggr['NIC Names'].map(function(i) {
+                        return <span key={i} className="nictag">{i}</span>;
+                    }) : ''
+                }
+                </div>
+            </div>
             <div className="lacp-container">
                 LACP Mode
                 <div className="lacp">

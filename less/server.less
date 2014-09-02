@@ -202,6 +202,24 @@
           background: #fff;
         }
       }
+      .aggr-nictags-container {
+        font-family: @font-family-monospace;
+        font-size: 10px;
+        width: 200px;
+        color: @gray;
+        .nictags {
+          margin-left: 15px;
+          display: inline-block;
+          padding: 4px 6px;
+          .nictag {
+            padding: 4px 6px;
+            background: @state-info-bg;
+            color: @state-info-text;
+            font-size: 10px;
+            margin-left: 5px;
+          }
+        }
+      }
       .lacp-container {
         font-family: @font-family-monospace;
         font-size: 10px;
@@ -227,8 +245,9 @@
         font-family: @font-family-monospace;
         color: @gray;
         width: auto;
-        .interfaces { margin-left: 15px; display: inline-block;
-
+        .interfaces {
+          margin-left: 15px;
+          display: inline-block;
           padding: 4px 6px;
         }
         .interface {
