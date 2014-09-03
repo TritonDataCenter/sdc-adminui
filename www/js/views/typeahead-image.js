@@ -10,7 +10,6 @@
 
 var Backbone = require('backbone');
 var Bloodhound = require('bloodhound');
-var _ = require('underscore');
 
 var Images = require('../models/images');
 
@@ -32,6 +31,13 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         this.listenTo(this.imagesCollection, 'sync', this.initializeEngine);
     },
 
+    clearField: function() {
+        process.nextTick(function() {
+            this.trigger('selected', null);
+            this.$el.val('');
+        }.bind(this));
+    },
+
     onTypeaheadSelect: function(e, datum) {
         console.debug('typeahead selected', e, datum);
         this.selectedImage = datum.model;
@@ -39,10 +45,19 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
     },
 
     onTypeaheadClosed: function(e, suggestion, dataset) {
+        console.debug('typeahead closed');
+        var $field = this.$el;
+        console.log(this.selectedImage);
+
+        if (this.selectedImage && $field.val() === this.selectedImage.get('uuid')) {
+            return;
+        }
+        if ($field.val().length !== 36) {
+            this.clearField();
+        }
     },
 
     initializeEngine: function() {
-        var self = this;
         var source = this.imagesCollection.map(function(i) {
             return {
                 'model': i,

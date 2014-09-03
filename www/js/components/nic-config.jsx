@@ -107,10 +107,10 @@ var NicConfig = module.exports = React.createClass({
                     <Chosen onChange={this.onChange}
                             className="form-control"
                             name="network_uuid"
-                            placeholder="Select a Network"
+                            data-placeholder="Select a Network"
                             value={this.state.nic.network_uuid}>
+                        <option value=""></option>
                         <optgroup label="Networks">
-                            <option value="">Select a Network</option>
                             {
                                 this.state.networks.map(function(n) {
                                     return (<option key={n.uuid} value={n.uuid}> {n.name} - {n.subnet} </option>)

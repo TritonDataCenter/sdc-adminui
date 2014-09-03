@@ -19,6 +19,7 @@ var UserTypeaheadTpl = require('../tpl/typeahead-user-select.hbs');
 
 var UserTypeaheadView = Backbone.Marionette.View.extend({
     events: {
+        'blur :el': 'onBlur',
         'typeahead:selected': 'onTypeaheadSelect',
         'typeahead:opened': 'onOpened',
         'typeahead:closed': 'onTypeaheadClosed',
@@ -39,8 +40,23 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
         this.trigger('selected', datum.model);
     },
 
+    clearField: function() {
+        process.nextTick(function() {
+            this.$el.val('');
+        }.bind(this));
+    },
+
     onTypeaheadClosed: function(e, suggestion, dataset) {
         console.debug('typeahead closed');
+        var $field = this.$el;
+        console.log(this.selectedUser);
+
+        if (this.selectedUser && $field.val() === this.selectedUser.get('uuid')) {
+            return;
+        }
+        if ($field.val().length !== 36) {
+            this.clearField();
+        }
     },
 
     initializeEngine: function() {

@@ -16,6 +16,9 @@
 .tt-suggestion.tt-cursor {
   background: @link-color;
   color: #fff;
+  * {
+    color: #fff;
+  }
 }
 .twitter-typeahead+.help-inline {
   margin-bottom: -5px;
@@ -89,7 +92,7 @@
   .name { display: block; font-weight: bold; }
   .version { color: @gray; font-size: 11px; }
   .version b { font-weight: 300;}
-  .tt-is-under-cursor {
+  .tt-cursor {
     .version { color: #fff; }
   }
 }

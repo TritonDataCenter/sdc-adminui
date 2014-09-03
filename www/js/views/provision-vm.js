@@ -151,9 +151,7 @@ var View = Backbone.Marionette.Layout.extend({
     onBlurOwnerField: function(e) {
         var $field = this.ui.ownerInput;
         var self = this;
-        if (this.selectedUser && $field.val() === this.selectedUser.get('uuid')) {
-            return;
-        }
+
         if ($field.val().length === 36) {
             var u = new User({uuid: $field.val()});
             u.fetch().done(function() {
@@ -161,7 +159,6 @@ var View = Backbone.Marionette.Layout.extend({
             }.bind(this));
         } else {
             process.nextTick(function() {
-                $field.val('');
                 self.$('.form-group-networks').hide();
                 self.userPreview.close();
                 self.removeAllNics();
@@ -297,7 +294,6 @@ var View = Backbone.Marionette.Layout.extend({
         this.$('.package-preview-container').append(this.packagePreview.render().el);
 
         this.hideError();
-        this.ui.brandControls.hide();
         this.$('.no-sshkeys-warning').hide();
         this.checkFields();
 
@@ -309,8 +305,9 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     onSelectImage: function(image) {
-        if (! image) {
-            this.ui.brandControls.hide();
+        if (!image) {
+            this.ui.brandControls.show();
+            this.disableBrands(false);
             return;
         }
 
@@ -369,6 +366,10 @@ var View = Backbone.Marionette.Layout.extend({
             valid = false;
         } else {
             valid = true;
+        }
+
+        if (! values.billing_id) {
+            valid = false;
         }
 
         // if (values.alias && values.alias.length != 0) {
