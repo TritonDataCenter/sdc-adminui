@@ -208,6 +208,13 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     onSelectUser: function(u) {
+        if (!u) {
+            this.userPreview.close();
+            this.removeAllNics();
+            self.checkFields();
+            return;
+        }
+
         this.selectedUser = u;
         this.userPreview.show(new UserPreview({model: u}));
         this.removeAllNics();
@@ -308,6 +315,7 @@ var View = Backbone.Marionette.Layout.extend({
         if (!image) {
             this.ui.brandControls.show();
             this.disableBrands(false);
+            this.checkFields();
             return;
         }
 

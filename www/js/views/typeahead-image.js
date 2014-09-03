@@ -38,9 +38,15 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         }.bind(this));
     },
 
+    onOpened: function() {
+        this.selectedImage = null;
+        this.trigger('selected', null);
+    },
+
     onTypeaheadSelect: function(e, datum) {
         console.debug('typeahead selected', e, datum);
         this.selectedImage = datum.model;
+        this.$el.tooltip('destroy');
         this.trigger('selected', datum.model);
     },
 
@@ -52,8 +58,16 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         if (this.selectedImage && $field.val() === this.selectedImage.get('uuid')) {
             return;
         }
+
         if ($field.val().length !== 36) {
             this.clearField();
+            this.$el.tooltip({
+                placement: 'top',
+                title: 'Invalid image UUID provided.'
+            });
+            if ($field.val().length !== 0) {
+                this.$el.focus();
+            }
         }
     },
 

@@ -36,6 +36,7 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
 
     onTypeaheadSelect: function(e, datum) {
         console.debug('typeahead selected', e, datum);
+        this.$el.tooltip('destroy');
         this.selectedUser = datum.model;
         this.trigger('selected', datum.model);
     },
@@ -46,16 +47,28 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
         }.bind(this));
     },
 
+    onOpened: function() {
+        this.selectedUser = null;
+        this.trigger('selected', null);
+    },
+
     onTypeaheadClosed: function(e, suggestion, dataset) {
         console.debug('typeahead closed');
         var $field = this.$el;
-        console.log(this.selectedUser);
 
         if (this.selectedUser && $field.val() === this.selectedUser.get('uuid')) {
             return;
         }
+
         if ($field.val().length !== 36) {
+            this.$el.tooltip({
+                placement: 'top',
+                title: 'Invalid user UUID provided.'
+            });
             this.clearField();
+            if ($field.val().length !== 0) {
+                this.$el.focus();
+            }
         }
     },
 

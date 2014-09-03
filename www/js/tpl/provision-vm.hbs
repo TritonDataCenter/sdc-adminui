@@ -18,10 +18,9 @@
         </div>
 
         <div class="form-group">
-            <label class="col-md-2 control-label" for="input-owner">Owner</label>
+            <label class="col-md-2 control-label required" for="input-owner">Owner</label>
             <div class="col-md-7">
                 <input id="input-owner" type="text" placeholder="Search by uuid, login or email" class="form-control " name="owner">
-                <span class="help-block">Required</span>
                 <div class="help-block no-sshkeys-warning alert alert-warning">
                     Warning: This user does not have any SSH Keys.
                 </div>
@@ -31,17 +30,16 @@
 
 
         <div class="form-group">
-            <label class="col-md-2 control-label" for="input-alias">Alias</label>
+            <label class="col-md-2 control-label" for="input-alias">Name / Alias</label>
             <div class="col-md-7">
                 <input id="input-alias" name="alias"
                 placeholder="name as it appears to the customer"
                 type="text" class="form-control ">
-                <span class="help-block">Optional: Alias to provision VM with</span>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-md-2 control-label">Package</label>
+            <label class="col-md-2 control-label required">Package</label>
             <div class="col-md-7">
                 <div class="chosen">
                     <select name="package" data-placeholder="Select a Package"></select>
@@ -51,11 +49,11 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">Image</label>
+            <label class="control-label col-md-2 required">Image</label>
             <div class="col-md-7">
                 <input id="input-image" type="text" placeholder="Enter UUID or search image by name"
                 class="form-control" name="image">
-                <span class="help-block">Required: Image to provision machine with</span>
+                <span class="help-block">Image to provision machine with</span>
             </div>
         </div>
 
@@ -63,19 +61,19 @@
             <label class="control-label col-md-2">Server</label>
             <div class="col-md-7">
                 <input id="input-server" type="text" placeholder="enter UUID or search by hostname" class="form-control " name="server">
-                <span class="help-block">Optional: Server to provision machine to</span>
+                <span class="help-block">Server to provision machine to (optional)</span>
             </div>
         </div>
 
         <div class="form-group form-group-networks">
-            <label class="control-label col-md-2">Network Interfaces</label>
+            <label class="control-label col-md-2 required">Network Interfaces</label>
             <div class="col-md-10">
                 <div class="network-selection"></div>
             </div>
         </div>
 
         <div class="form-group form-group-brand">
-            <label class="control-label col-md-2">Brand</label>
+            <label class="control-label col-md-2 required">Brand</label>
             <div class="col-md-7">
                 <select class="form-control" name="brand">
                     <option value="joyent">joyent</option>
