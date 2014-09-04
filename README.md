@@ -8,14 +8,12 @@
     Copyright (c) 2014, Joyent, Inc.
 -->
 
-# Admin UI
+# sdc-adminui
 
-Repository: <git@git.joyent.com:adminui.git>
+This repository is part of the Joyent SmartDataCenter project (SDC).  For
+contribution guidelines, issues, and general documentation, visit the main
+[SDC](http://github.com/joyent/sdc) project page.
 
-Browsing: <https://mo.joyent.com/adminui>
+sdc-adminui is a web frontend to SDC for managing many aspects of an SDC installation.
 
-End User Documentation: <https://docs.joyent.com/sdc7/operations-portal-walkthrough>
-
-Who: Kevin Chan
-
-Tickets/bugs: <https://devhub.joyent.com/jira/browse/ADMINUI>
+Most Recent End User docs: <https://docs.joyent.com/sdc7/operations-portal-walkthrough>
