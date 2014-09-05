@@ -8,6 +8,8 @@
  * Copyright (c) 2014, Joyent, Inc.
  */
 
+var IMAGE_FETCH_SIZE = 15;
+
 var app = require('../../adminui');
 var React = require('react');
 var BackboneMixin = require('../_backbone-mixin');
@@ -84,29 +86,50 @@ var ImagesView = React.createClass({
         url: 'images',
         sidebar: 'images'
     },
+    getInitialState: function() {
+        return {hasMore: false};
+    },
     _onSync: function(collection, objs) {
+        if (IMAGE_FETCH_SIZE === objs.length) {
+            var lastNewItem = objs[objs.length-1].uuid;
+            var lastPrevItem = this.images.at(this.images.length-1).get('uuid');
+            if (typeof(this.images.params.marker) === 'undefined' || lastNewItem !== lastPrevItem) {
+                this.setState({hasMore: true});
+            } else {
+                this.setState({hasMore: false});
+            }
+        } else {
+            this.setState({hasMore: false});
+        }
     },
     componentWillMount: function() {
         this.images = new ImagesCollection(null);
         this.images.on('sync', this._onSync, this);
-        this.images.fetch({params: {limit: 1000}});
+        this.images.params = {limit: IMAGE_FETCH_SIZE};
+        this.images.fetch();
     },
     componentWillUmount: function() {
         this.images.off('fetch');
     },
     _searchImage: function(e) {
         var value = e.target.value;
-        var params = {
-            limit: 1000
-        };
+
         if (value && value.length) {
             if (value.length === 36) {
-                params.uuid = value;
+                this.images.params.uuid = value;
             } else {
-                params.name = value;
+                this.images.params.name = value;
             }
+        } else {
+            delete this.images.params.uuid;
+            delete this.images.params.name;
         }
-        this.images.fetch({params: params });
+        delete this.images.params.marker;
+        this.images.fetch();
+    },
+    _loadMore: function() {
+        this.images.params.marker = this.images.at(this.images.length-1).get('uuid');
+        this.images.fetch({remove: false});
     },
     render: function() {
         var page = <div id="page-images">
@@ -127,6 +150,7 @@ var ImagesView = React.createClass({
                 </div>
             </div>
             <ImagesList images={this.images} />
+            { (this.state.hasMore) ? <button onClick={this._loadMore} className="btn btn-block btn-info load-more">Load More</button> : ''}
         </div>;
 
         return page;
