@@ -18,12 +18,14 @@
  * value            String   uuid of initial selected network
  * onPropertyChange         Function fn(property, value, nicObject) callback to value changes
  */
+
+var $ = require('jquery');
 var React = require('react');
 var Networks = require('../models/networks');
 var NetworkPools = require('../models/network-pools');
 var Chosen = require('react-chosen');
 
-var NicConfig = module.exports = React.createClass({
+var NicConfig = React.createClass({
     propTypes: {
         expandAntispoofOptions: React.PropTypes.bool,
         nic: React.PropTypes.object,
@@ -56,6 +58,7 @@ var NicConfig = module.exports = React.createClass({
 
         console.log('NicConfig initial state', state);
         console.log('NicConfig initial props', this.props);
+        state.loading = true;
         return state;
     },
     componentDidMount: function() {
@@ -63,11 +66,13 @@ var NicConfig = module.exports = React.createClass({
 
         this.networks = new Networks();
         this.networkPools = new NetworkPools();
+        this.setState({loading: true});
         $.when(
             this.networks.fetch({ params: this.state.networkFilters }),
             this.networkPools.fetch({ params: this.state.networkFilters })
         ).done(function() {
             self.setState({
+                loading: false,
                 networks: this.networks.toJSON(),
                 networkPools: this.networkPools.toJSON()
             });
@@ -98,33 +103,36 @@ var NicConfig = module.exports = React.createClass({
         var expandAntispoofOptions = (nic.allow_dhcp_spoofing || nic.allow_ip_spoofing ||
             nic.allow_mac_spoofing || nic.allow_restricted_traffic || this.state.expandAntispoofOptions);
 
-        /* jshint ignore:begin  */
+        console.log(this.state.loading);
+
         return (
             <div className="nic-config form-horizontal">
                 <div className="form-group form-group-network row">
                     <label className="control-label col-md-4">Network</label>
                     <div className="controls col-sm-5">
-                    <Chosen onChange={this.onChange}
-                            className="form-control"
-                            name="network_uuid"
-                            data-placeholder="Select a Network"
-                            value={this.state.nic.network_uuid}>
-                        <option value=""></option>
-                        <optgroup label="Networks">
-                            {
-                                this.state.networks.map(function(n) {
-                                    return (<option key={n.uuid} value={n.uuid}> {n.name} - {n.subnet} </option>)
-                                })
-                            }
-                        </optgroup>
-                        <optgroup label="Network Pools">
-                            {
-                                this.state.networkPools.map(function(n) {
-                                    return (<option key={n.uuid} value={n.uuid}> {n.name}</option>)
-                                })
-                            }
-                        </optgroup>
-                    </Chosen>
+                        { this.state.loading ?
+                            <div className="loading"><i className="fa fa-spinner fa-spin"></i> Retrieving Networks</div>
+                        : <Chosen onChange={this.onChange}
+                                className="form-control"
+                                name="network_uuid"
+                                data-placeholder="Select a Network"
+                                value={this.state.nic.network_uuid}>
+                            <option value=""></option>
+                            <optgroup label="Networks">
+                                {
+                                    this.state.networks.map(function(n) {
+                                        return (<option key={n.uuid} value={n.uuid}> {n.name} - {n.subnet} </option>);
+                                    })
+                                }
+                            </optgroup>
+                            <optgroup label="Network Pools">
+                                {
+                                    this.state.networkPools.map(function(n) {
+                                        return (<option key={n.uuid} value={n.uuid}> {n.name}</option>);
+                                    })
+                                }
+                            </optgroup>
+                        </Chosen> }
                     </div>
                 </div>
 
@@ -158,7 +166,9 @@ var NicConfig = module.exports = React.createClass({
                         </div>) : ''
                 }
             </div>
-        )
-        /* jshint ignore:end */
+        );
     }
 });
+
+
+module.exports = NicConfig;
