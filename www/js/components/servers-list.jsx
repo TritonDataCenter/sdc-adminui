@@ -122,7 +122,7 @@ var ServersListItem = React.createClass({
                 <div className="memory-usage-data">
                     <div className="memory-usage-avail">
                         <strong>Provisionable</strong>
-                        <span className={'avail ' + (!server.memory_provisionable_percent && 'full') }>{server.memory_provisionable_gb} GB</span>
+                        <span className={'avail ' + ((server.memory_utilization_percent > 90) && 'full') }>{server.memory_provisionable_gb} GB</span>
                     </div>
                     <div className="memory-usage-total">
                         <strong>Total</strong>
