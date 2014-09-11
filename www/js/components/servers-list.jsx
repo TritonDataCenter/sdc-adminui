@@ -95,6 +95,20 @@ var ServersListItem = React.createClass({
             server.memory_utilization_percent = 0;
         }
 
+        var traitsNodes = [];
+        if (server.headnode) {
+            traitsNodes.push(<span className="headnode">HEADNODE</span>);
+        }
+
+        if (server.traits.customer) {
+            traitsNodes.push(<span className="customer">CUSTOMER</span>);
+        }
+
+        Object.keys(server.traits).forEach(function(t) {
+            if (server.traits[t] === true) {
+                traitsNodes.push(<span className="trait">{t}</span>);
+            }
+        });
 
         return <div className="servers-list-item">
             <div className={"status " + server.status}></div>
@@ -103,12 +117,7 @@ var ServersListItem = React.createClass({
                 <a onClick={this.navigateToServerDetails} href={'/servers/' + server.uuid}>{server.hostname}</a>
                 { server.reserved && <span className="reserved"><i className="fa fa-lock"></i></span> }
                 <span className="uuid"><span className="selectable">{server.uuid}</span></span>
-                <div className="traits">
-                    { server.headnode && <span className="headnode">HEADNODE</span> }
-                    { server.traits.ssd && <span className="ssd">SSD</span> }
-                    { server.traits.manta && <span className="manta">MANTA</span> }
-                    { server.traits.customer && <span className="customer">CUSTOMER</span> }
-                </div>
+                <div className="traits">{traitsNodes}</div>
             </div>
 
             { server.setup ?
