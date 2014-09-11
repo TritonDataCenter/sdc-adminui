@@ -102,7 +102,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     setupAuthenciatedState: function() {
         $.ajaxSetup({
-            timeout: 15000,
+            timeout: 30000,
             headers: {'x-adminui-token': this.user.getToken()}
         });
 

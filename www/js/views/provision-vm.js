@@ -234,6 +234,12 @@ var View = Backbone.Marionette.Layout.extend({
 
             self.renderMultiNicSelect(networkPresets);
             self.checkFields();
+        }, function failure() {
+            console.error('failed to retrieve settings');
+            var networkPresets = [];
+            networkPresets.push({primary: true});
+            self.renderMultiNicSelect(networkPresets);
+            self.checkFields();
         });
 
 
