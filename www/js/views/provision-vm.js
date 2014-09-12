@@ -430,6 +430,9 @@ var View = Backbone.Marionette.Layout.extend({
             owner_uuid: formData.owner,
             brand: formData.brand
         };
+        if (formData.delegate_dataset) {
+            values.delegate_dataset = true;
+        }
 
 
         if (formData.alias && formData.alias.length) {
