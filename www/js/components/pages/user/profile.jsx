@@ -29,7 +29,16 @@ var UserProfile = React.createClass({
         var isTopLevelAccount = !user.account;
 
         var locked = user.pwdaccountlockedtime && (new Date()).getTime() < user.pwdaccountlockedtime;
-        var pwdfailuretimes = Array.isArray(user.pwdfailuretime) ? user.pwdfailuretime : [user.pwdfailuretime];
+        var pwdfailuretimes = [];
+        if (user.pwdfailuretimes) {
+            if (! Array.isArray(user.pwdfailuretimes)) {
+                pwdfailuretimes = [user.pwdfailuretimes];
+            } else {
+                pwdfailuretimes = user.pwdfailuretimes;
+            }
+        } else {
+            pwdfailuretimes = [];
+        }
         pwdfailuretimes = pwdfailuretimes.map(function(m) {
             var date = moment(new Date(Number(m)));
             return {
