@@ -14,6 +14,31 @@ This repository is part of the Joyent SmartDataCenter project (SDC).  For
 contribution guidelines, issues, and general documentation, visit the main
 [SDC](http://github.com/joyent/sdc) project page.
 
-sdc-adminui is a web frontend to SDC for managing many aspects of an SDC installation.
+Adminui is a the SDC Operations Portal -- web frontend to SDC for managing many
+aspects of an SDC installation.
 
-Most Recent End User docs: <https://docs.joyent.com/sdc7/operations-portal-walkthrough>
+Most recent docs: <https://docs.joyent.com/sdc7/operations-portal-walkthrough>
+(Note that screenshots can get out of date.)
+
+
+# Development
+
+You can build adminui locally on a Mac (or SmartOS) and run it against
+SDC services running in
+[CoaL](https://github.com/joyent/sdc/blob/master/docs/glossary.md#coal):
+
+    git clone git@github.com:joyent/sdc-adminui.git
+    cd adminui
+    make all
+
+    cp etc/config.json.in etc/config.json
+    # Modify etc/config.json if you don't use the default coal answers file
+
+    make devrun
+
+    open http://localhost:4000
+
+
+# License
+
+MPL v. 2. See [LICENSE](./LICENSE).
