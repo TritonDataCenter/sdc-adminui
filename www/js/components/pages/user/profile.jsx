@@ -126,7 +126,7 @@ var UserProfile = React.createClass({
                                         <span><i className="fa fa-times"></i> disabled</span>
                                         }
                                     </span>
-                                    <a onClick={this.props.handleToggleTwoFactorAuth} className="toggle-2fa">{ twoFactorAuth ? 'Disable' : 'Enable'}</a>
+                                    { twoFactorAuth ? <a onClick={this.props.handleToggleTwoFactorAuth} className="disable-2fa">Disable Two Factor Auth</a> : '' }
                                 </td>
                             </tr>
                             }
