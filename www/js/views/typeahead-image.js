@@ -91,7 +91,7 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
             queryTokenizer: function(query) {
                 return Bloodhound.tokenizers.whitespace(query);
             },
-            limit: 8
+            limit: 30
         });
 
         this.engine.initialize();

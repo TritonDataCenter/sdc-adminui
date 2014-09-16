@@ -74,7 +74,8 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
 
     initializeEngine: function() {
         var self = this;
-        this.engine= new Bloodhound({
+        this.engine = new Bloodhound({
+            limit: 25,
             name: 'users',
             remote: {
                 url: '/api/users?q=%QUERY',
