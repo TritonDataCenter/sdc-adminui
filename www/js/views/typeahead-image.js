@@ -72,10 +72,26 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
 
     initializeEngine: function() {
         var source = this.imagesCollection.map(function(i) {
+            var tokens = [i.get('uuid'), i.get('version'), i.get('name')];
+            if (i.get('billing_tags') && Array.isArray(i.get('billing_tags'))) {
+                i.get('billing_tags').forEach(function(t) {
+                    tokens.push(t);
+                });
+            }
+
+            if (i.get('tags') && typeof i.get('tags') === 'object') {
+                var tags = i.get('tags');
+                Object.keys(tags).forEach(function(tagKey) {
+                    var tagValue = tags[tagKey];
+                    var token = ['tag', tagKey, tagValue].join(':');
+                    tokens.push(token);
+                });
+            }
+
             return {
                 'model': i,
                 'uuid': i.get('uuid'),
-                'tokens': [i.get('uuid'), i.get('version'), i.get('name')],
+                'tokens': tokens,
                 'name': i.get('name'),
                 'version': i.get('version')
             };
