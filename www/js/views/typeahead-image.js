@@ -53,7 +53,6 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
     onTypeaheadClosed: function(e, suggestion, dataset) {
         console.debug('typeahead closed');
         var $field = this.$el;
-        console.log(this.selectedImage);
 
         if (this.selectedImage && $field.val() === this.selectedImage.get('uuid')) {
             return;
@@ -87,6 +86,9 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
             local: source,
             datumTokenizer: function(datum) {
                 return datum.tokens;
+            },
+            sorter: function(a, b) {
+                return -(a.version.localeCompare(b.version));
             },
             queryTokenizer: function(query) {
                 return Bloodhound.tokenizers.whitespace(query);
