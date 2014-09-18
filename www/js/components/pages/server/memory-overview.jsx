@@ -9,7 +9,7 @@
  */
 
 var React = require('react');
-var ServerMemoryUtilizationCircle = require('./utilization-circle');
+var ServerMemoryUtilizationCircle = require('./memory-utilization-circle');
 var BackboneMixin = require('../../_backbone-mixin');
 
 var ServerMemoryOverview = React.createClass({
@@ -32,28 +32,33 @@ var ServerMemoryOverview = React.createClass({
         }
         return <div className="memory-overview">
             <div className="row">
+                <div className="col-sm-12">
+                    <h5 className="overview-title">Memory Utilization</h5>
+                </div>
+            </div>
+            <div className="row">
                 <div className="server-memory-utilization-container">
                     <ServerMemoryUtilizationCircle diameter="120px" inner="38" server={this.props.server} />
                 </div>
                 <div className="provisionable-memory">
                     <div className="value">{server.memory_provisionable_gb} GB</div>
-                    <div className="title">Provisionable RAM</div>
+                    <div className="title">Provisionable</div>
                 </div>
                 <div className="provisioned-memory">
                     <div className="value">{server.memory_provisioned_gb} GB</div>
-                    <div className="title">Provisioned RAM</div>
+                    <div className="title">Provisioned</div>
                 </div>
                 <div className="reserved-memory">
                     <div className="value">{server.memory_reserved_gb} GB</div>
-                    <div className="title">Reserved RAM</div>
+                    <div className="title">Reserved</div>
                 </div>
                 <div className="unreserved-memory">
                     <div className="value">{server.memory_unreserved_gb} GB</div>
-                    <div className="title">Unreserved RAM</div>
+                    <div className="title">Unreserved</div>
                 </div>
                 <div className="total-memory">
                     <div className="value">{server.memory_total_gb} GB</div>
-                    <div className="title">Total RAM</div>
+                    <div className="title">Total</div>
                 </div>
             </div>
         </div>;

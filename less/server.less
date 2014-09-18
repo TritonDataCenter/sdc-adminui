@@ -13,12 +13,38 @@
 
 
 #page-server {
+  .server-disk-utilization-container {
+    .make-sm-column(2, 0);
+    .server-disk-utilization-circle {
+      margin: 0 auto;
+    }
+  }
+  .provisionable-disk,
+  .provisioned-disk,
+  .total-disk,
+  .reserved-disk {
+    .make-sm-column(2, 0);
+
+    margin-top: 20px;
+    text-align: center;
+    .value { font-size: 28px; font-weight: 200; }
+    .title { text-transform: uppercase; color: #666;  font-size: 12px; }
+  }
+
+  .memory-overview h5 {
+    text-transform: uppercase;
+  }
+  .disk-overview h5 {
+    text-transform: uppercase;
+    margin-top: 20px;
+  }
   .server-memory-utilization-container {
     .make-sm-column(2, 0);
     .server-memory-utilization-circle {
       margin: 0 auto;
     }
   }
+
   .provisionable-memory,
   .provisioned-memory,
   .total-memory,

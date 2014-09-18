@@ -26,7 +26,9 @@ var React = require('react');
 var ServerPageHeader = require('../components/pages/server/header.jsx');
 
 var NotesComponent = require('../components/notes');
+
 var ServerMemoryOverview = require('../components/pages/server/memory-overview');
+var ServerDiskOverview = require('../components/pages/server/disk-overview');
 var ServerNicsList = require('../components/server-nics');
 
 var VmsList = require('./vms-list');
@@ -419,6 +421,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
         if (this.model.get('setup')) {
             React.renderComponent(ServerMemoryOverview({ server: this.model }), this.$('.memory-overview-container').get(0));
+            React.renderComponent(ServerDiskOverview({server: this.model }), this.$('.disk-overview-container').get(0));
         }
 
         React.renderComponent(new ServerNicsList({

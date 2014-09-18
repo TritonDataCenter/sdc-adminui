@@ -17,7 +17,7 @@ var React = require('react');
 
 var Servers = require('../models/servers');
 var ServerSetup = require('../views/server-setup');
-var ServerMemoryUtilizationCircle = require('./pages/server/utilization-circle');
+var ServerMemoryUtilizationCircle = require('./pages/server/memory-utilization-circle');
 
 var ServersListItem = React.createClass({
     setup: function() {
