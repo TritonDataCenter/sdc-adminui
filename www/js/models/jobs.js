@@ -8,7 +8,6 @@
  * Copyright (c) 2014, Joyent, Inc.
  */
 
-var Backbone = require('backbone');
 var _ = require('underscore');
 
 var Collection = require('./collection');

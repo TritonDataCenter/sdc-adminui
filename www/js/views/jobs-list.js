@@ -113,6 +113,7 @@ var JobsList = Backbone.Marionette.CompositeView.extend({
 
     query: function(params) {
         this.collection.params = params;
+        this.collection.firstPage();
         this.collection.fetch();
     },
 
