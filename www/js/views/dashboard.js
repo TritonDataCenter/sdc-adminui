@@ -26,6 +26,7 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
     template: DashboardTemplate,
 
     initialize: function() {
+        this._requests = [];
     },
 
     _bytesToGb: function(val) {
@@ -35,11 +36,11 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
     onRender: function() {
 
         var self = this;
-        $.getJSON("/api/stats/vm_count", function(res) {
+        this._requests.push($.getJSON("/api/stats/vm_count", function(res) {
             self.$('.vm-count').html(res.total);
-        });
+        }));
 
-        $.getJSON("/api/stats/server_memory", function(res) {
+        this._requests.push($.getJSON("/api/stats/server_memory", function(res) {
             var total = self._bytesToGb(res.total);
             self.$('.server-total-memory').html(_.str.sprintf('%.2f GB', total));
 
@@ -53,18 +54,22 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
             self.$('.server-utilization-percent').html(
                 _.str.sprintf('%.2f%%', percent)
             );
-        });
+        }));
 
-        $.getJSON("/api/stats/server_count", function(res) {
+        this._requests.push($.getJSON("/api/stats/server_count", function(res) {
             self.$('.server-count').html(res.total);
             self.$('.server-reserved').html(res.reserved);
             self.$('.server-unreserved').html(res.unreserved);
-        });
+        }));
 
-        $.getJSON("/api/users?per_page=1", function(res, status, xhr) {
+        this._requests.push($.getJSON("/api/users?per_page=1", function(res, status, xhr) {
             self.$('.user-count').html(xhr.getResponseHeader('x-object-count'));
+        }));
+    },
+    onClose: function() {
+        this._requests.map(function(r) {
+            r.abort();
         });
-
     }
 });
 

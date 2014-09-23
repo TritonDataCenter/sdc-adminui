@@ -31,10 +31,11 @@ var _getServerPromises = {};
 function getServer(serverUuid) {
     var url = _.str.sprintf('/api/servers/%s', serverUuid);
     if (_getServerPromises[serverUuid]) {
-        return _getServerPromises[serverUuid];
+        return _getServerPromises[serverUuid].p;
     } else {
-        _getServerPromises[serverUuid] = new Promise(function(resolve, reject) {
-            request.get(url).end(function(res) {
+        var r, p;
+        p = new Promise(function(resolve, reject) {
+            r = request.get(url).end(function(res) {
                 if (res.ok) {
                     resolve(res.body);
                 } else {
@@ -42,7 +43,29 @@ function getServer(serverUuid) {
                 }
             });
         });
-        return _getServerPromises[serverUuid];
+        _getServerPromises[serverUuid] = {p: p, r: r};
+        return _getServerPromises[serverUuid].p;
+    }
+}
+
+var _getUserPromises = {};
+function getUser(userUuid) {
+    var url = _.str.sprintf('/api/users/%s', userUuid);
+    if (_getUserPromises[userUuid]) {
+        return _getUserPromises[userUuid].p;
+    } else {
+        var r = null;
+        var p = new Promise(function(resolve, reject) {
+            r = request.get(url).end(function(res) {
+                if (res.ok) {
+                    resolve(res.body);
+                } else {
+                    reject(res.body);
+                }
+            });
+        });
+        _getUserPromises[userUuid] = {p: p, r:r };
+        return _getUserPromises[userUuid].p;
     }
 }
 
@@ -90,11 +113,11 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         var pkg = this.pkg;
         var vm = this.model;
 
-        this.user.fetch().done(function() {
-            self.$('.owner-name').html(user.get('login'));
-            self.$('.owner-name').attr("href", "/users/" + user.get('uuid'));
-            if (user.get('company') && user.get('company').length) {
-                self.$('.owner-company').html(user.get('company'));
+        getUser(this.user.get('uuid')).done(function(user) {
+            self.$('.owner-name').html(user.login);
+            self.$('.owner-name').attr("href", "/users/" + user.uuid);
+            if (user.company && user.company.length) {
+                self.$('.owner-company').html(user.company);
                 self.$('.owner-company-container').show();
             } else {
                 self.$('.owner-company-container').hide();
@@ -108,6 +131,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
             });
         }
     },
+
     onRender: function() {
         this.$('.owner-company-container').hide();
         React.renderComponent( ServerName({serverUuid: this.model.get('server_uuid')}), this.$('.server').get(0));
@@ -176,7 +200,8 @@ module.exports = require('./composite').extend({
 
     initialize: function() {
         this.images = new Images();
-        this.images.fetch().done(this.render);
+        this._requests = [];
+        this._requests.push(this.images.fetch().done(this.render));
         this.listenTo(this.collection, 'request', this.onRequest, this);
     },
 
@@ -206,7 +231,7 @@ module.exports = require('./composite').extend({
 
     onAll: function() {
         this.collection.pagingParams.perPage = null;
-        this.collection.fetch({remove: false});
+        this._requests.push(this.collection.fetch({remove: false}));
     },
 
     onRender: function() {
@@ -221,7 +246,7 @@ module.exports = require('./composite').extend({
     next: function() {
         if (this.collection.hasNext()) {
             this.collection.next();
-            this.collection.fetch({remove: false});
+            this._requests.push(this.collection.fetch({remove: false}));
         }
     },
 
@@ -248,8 +273,19 @@ module.exports = require('./composite').extend({
         this.$('.current-count').html(this.collection.length);
     },
     onClose: function() {
-        process.nextTick(function() {
-            _getServerPromises = {};
+        this._requests.map(function(r) {
+            r.abort();
         });
+
+        Object.keys(_getServerPromises).forEach(function(k) {
+            _getServerPromises[k].r.abort();
+        });
+
+        Object.keys(_getUserPromises).forEach(function(k) {
+            _getUserPromises[k].r.abort();
+        });
+
+        Object._getServerPromises = {};
+        Object._getUserPromises = {};
     }
 });
