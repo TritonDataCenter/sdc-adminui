@@ -275,6 +275,8 @@ module.exports = require('./composite').extend({
     onClose: function() {
         this._requests.map(function(r) {
             r.abort();
+
+
         });
 
         Object.keys(_getServerPromises).forEach(function(k) {

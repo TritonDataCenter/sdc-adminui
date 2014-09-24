@@ -8,8 +8,6 @@
  * Copyright (c) 2014, Joyent, Inc.
  */
 
-"use strict";
-
 var path = require('path');
 var assert = require('assert');
 var fs = require('fs');
