@@ -176,8 +176,11 @@ var NotesDropdown = React.createClass({
     componentDidMount: function() {
         this.fetchNotes();
     },
-    componentDidUnmount: function() {
+    componentWillUnmount: function() {
         $("body").off('click.notes-component');
+        if (this.req) {
+            this.req.abort();
+        }
     },
     componentDidUpdate: function() {
         if (this.state.dropdown) {
@@ -205,15 +208,20 @@ var NotesDropdown = React.createClass({
     },
 
     fetchNotes: function() {
-        console.info('NotesComponent: fetch notes', this.props.item);
+        if (this.req) {
+            this.req.abort();
+        }
+
+        console.debug('NotesComponent: fetch notes', this.props.item);
         var self = this;
         var collection = new Notes();
         collection.item_uuid = this.props.item;
         var req = collection.fetch();
         req.done(function(notes) {
-            console.info('NotesComponent: fetched', notes.length);
+            console.debug('NotesComponent: fetched', notes.length);
             self.setState({notes: notes});
         });
+        this.req = req;
     },
     toggleDropdown: function() {
         var dropdown = !this.state.dropdown;
