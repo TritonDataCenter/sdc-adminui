@@ -59,14 +59,14 @@ module.exports = React.createClass({
             }.bind(this));
         }.bind(this));
 
-        console.debug('fetching', id);
+        console.debug('[AlarmsMenu] fetching', id);
         this._probeGroupFetches[id] = p;
 
         p.then(function(res) {
             var probes = this.state.probes;
             probes[id] = res;
             this.setState({probes: probes});
-            console.debug('fetch', id, 'done');
+            console.debug('[AlarmsMenu] fetch', id, 'done');
         }.bind(this));
     },
 
