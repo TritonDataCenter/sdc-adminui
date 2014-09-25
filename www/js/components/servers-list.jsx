@@ -97,16 +97,16 @@ var ServersListItem = React.createClass({
 
         var traitsNodes = [];
         if (server.headnode) {
-            traitsNodes.push(<span className="headnode">HEADNODE</span>);
+            traitsNodes.push(<span key="headnode" className="headnode">HEADNODE</span>);
         }
 
         if (server.traits.customer) {
-            traitsNodes.push(<span className="customer">CUSTOMER</span>);
+            traitsNodes.push(<span key="customer" className="customer">CUSTOMER</span>);
         }
 
         Object.keys(server.traits).forEach(function(t) {
             if (server.traits[t] === true) {
-                traitsNodes.push(<span className="trait">{t}</span>);
+                traitsNodes.push(<span key={t} className="trait">{t}</span>);
             }
         });
 
