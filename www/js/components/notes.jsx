@@ -220,7 +220,7 @@ var NotesDropdown = React.createClass({
         req.done(function(notes) {
             console.debug('[Notes] fetch', this.props.item, 'done', notes.length);
             self.setState({notes: notes});
-        });
+        }.bind(this));
         this.req = req;
     },
     toggleDropdown: function() {
