@@ -83,7 +83,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         window.server = this.model;
         this._timer = setInterval(function() {
             this.model.fetch();
-        }.bind(this), 5000);
+        }.bind(this), 10000);
 
         this.nics = new Nics(null, {
             params: {
