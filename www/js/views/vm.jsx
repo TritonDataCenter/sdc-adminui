@@ -514,8 +514,7 @@ var VmView = Backbone.Marionette.Layout.extend({
                     onUserDetails: function(user) {
                         adminui.vent.trigger('showcomponent', 'user', {uuid: user.uuid });
                     }
-                }),
-                this.$('.user-tile-container').get(0));
+                }), this.$('.user-tile-container').get(0));
         }
     },
 
@@ -665,6 +664,11 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.jobsListRegion.show(this.jobsListView);
 
         return this;
+    },
+    onClose: function() {
+        React.unmountComponentAtNode(this.$('.user-tile-container').get(0));
+        React.unmountComponentAtNode(this.$('.firewall-toggle-button').get(0));
+        React.unmountComponentAtNode(this.$('.notes-component-container').get(0));
     }
 
 });
