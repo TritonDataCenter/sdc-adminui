@@ -38,7 +38,7 @@ var adminui = require('./lib/adminui').createServer({
     version: require('./package.json').version
 });
 
-adminui.listen(function() {
+adminui.listen(function ready() {
     log.info('Ready to rock!');
 });
 

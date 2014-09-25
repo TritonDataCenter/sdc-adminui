@@ -34,7 +34,7 @@ JS_FILES	:= $(shell ls *.js) $(shell find lib test -name '*.js')
 JSL_CONF_NODE	 = tools/jsl.node.conf
 JSL_FILES_NODE   = $(JS_FILES)
 JSSTYLE_FILES	 = $(JS_FILES)
-JSSTYLE_FLAGS    = -o "indent=2,doxygen,unparenthesized-return=0,no-blank-for-anon-function=1,line-length=120"
+JSSTYLE_FLAGS    = -o "indent=2,doxygen,unparenthesized-return=0,line-length=120"
 
 REPO_MODULES	 =
 SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
