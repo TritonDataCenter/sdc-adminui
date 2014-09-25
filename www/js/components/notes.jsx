@@ -212,13 +212,13 @@ var NotesDropdown = React.createClass({
             this.req.abort();
         }
 
-        console.debug('NotesComponent: fetch notes', this.props.item);
+        console.debug('[Notes] fetch ', this.props.item);
         var self = this;
         var collection = new Notes();
         collection.item_uuid = this.props.item;
         var req = collection.fetch();
         req.done(function(notes) {
-            console.debug('NotesComponent: fetched', notes.length);
+            console.debug('[Notes] fetch', this.props.item, 'done', notes.length);
             self.setState({notes: notes});
         });
         this.req = req;
@@ -235,7 +235,7 @@ var NotesDropdown = React.createClass({
     render: function() {
         var classNames = ["notes-count btn btn-default"];
         var count = this.state.notes.length;
-        console.info('NotesComponent: render', count);
+        console.info('[Notes] render', count);
 
         if (count > 0) {
             classNames.push('has-notes');
