@@ -13,7 +13,7 @@
 var User = require('../models/user');
 var React = require('react');
 
-var UserTile = module.exports = React.createClass({
+var UserTile = React.createClass({
     propTypes: {
         uuid: React.PropTypes.string.isRequired,
         onUserDetails: React.PropTypes.func
@@ -26,7 +26,17 @@ var UserTile = module.exports = React.createClass({
     componentWillReceiveProps: function(props) {
         this._load(props.uuid);
     },
+    componentWillUnmount: function() {
+        console.log('[UserTile] unmount');
+        if (this.req) {
+            this.req.abort();
+        }
+    },
     _load: function(uuid) {
+        if (this.req) {
+            this.req.abort();
+        }
+
         console.info('[UserTile] Loading user info ', uuid);
         var user = new User({uuid: uuid });
 
@@ -44,6 +54,7 @@ var UserTile = module.exports = React.createClass({
                 loadingFailed: true
             });
         }.bind(this));
+        this.req = req;
     },
     componentDidMount: function() {
         this._load(this.props.uuid);
@@ -58,7 +69,7 @@ var UserTile = module.exports = React.createClass({
         if (this.state.loading) {
             return <div className="user-tile loading" key={this.props.uuid}>
                 Fetching User Information <span className="fa fa-spinner fa-spin"></span>
-            </div>
+            </div>;
         }
 
         if (this.state.loadingFailed) {
@@ -70,7 +81,7 @@ var UserTile = module.exports = React.createClass({
                         <span className="uuid selectable">{this.props.uuid}</span>
                     </div>
                 </div>
-            </div>
+            </div>;
         }
 
         return (
@@ -103,3 +114,5 @@ var UserTile = module.exports = React.createClass({
         );
     }
 });
+
+module.exports = UserTile;
