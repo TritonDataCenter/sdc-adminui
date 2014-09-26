@@ -76,13 +76,31 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
     onClose: function() {
         clearInterval(this._timer);
+        this._requests.forEach(function(r) {
+            r.abort();
+        });
+        this._requests = [];
+
+        if (app.user.role('operators')) {
+            React.unmountComponentAtNode(this.$('.notes-component-container').get(0));
+        }
+
+        React.unmountComponentAtNode(this.$('.server-page-header').get(0));
+
+        if (this.model.get('setup')) {
+            React.unmountComponentAtNode(this.$('.memory-overview-container').get(0));
+            React.unmountComponentAtNode(this.$('.disk-overview-container').get(0));
+        }
+
+        React.unmountComponentAtNode(this.$('.server-nics').get(0));
     },
 
     initialize: function(options) {
+        this._requests = [];
         this.model = options.server || new Server({uuid: options.uuid});
         window.server = this.model;
         this._timer = setInterval(function() {
-            this.model.fetch();
+            this._requests.push(this.model.fetch());
         }.bind(this), 10000);
 
         this.nics = new Nics(null, {
@@ -104,7 +122,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
     onUpdate: function(model) {
         var changed = model.changed;
         this.postRender();
-        console.log(changed);
         // don't update if it's just sysinfo change;
         if (changed.traits ||
             changed.rack_identifier ||
@@ -408,9 +425,9 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     onShow: function() {
-        this.model.fetch().done(this.render);
-        this.nics.fetch();
-        this.vms.fetch();
+        this._requests.push(this.model.fetch().done(this.render));
+        this._requests.push(this.nics.fetch());
+        this._requests.push(this.vms.fetch());
     },
 
     postRender: function() {
