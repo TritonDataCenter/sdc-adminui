@@ -290,7 +290,10 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
-        this.userInput = new TypeaheadUser({el: this.$('[name=owner]') });
+        this.userInput = new TypeaheadUser({
+            accountsOnly: true,
+            el: this.$('[name=owner]')
+        });
         this.listenTo(this.userInput, 'selected', this.onSelectUser, this);
         this.userInput.render();
 

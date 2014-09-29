@@ -48,7 +48,11 @@ var View = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        this.userInput = new UserInput({el: this.$('input[name=owner_uuid]')});
+        this.userInput = new UserInput({
+            accountsOnly: true,
+            el: this.$('input[name=owner_uuid]')
+        });
+
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
         this.userInput.render();
         this.$('.btn-primary').prop('disabled', true);
