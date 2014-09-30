@@ -51,7 +51,7 @@ var UserProfile = React.createClass({
             <div className="row">
                 <div className="col-sm-12">
                     <div className="user-profile">
-                        {locked &&
+                        {locked ?
                             <div className="alert alert-warning">
                                 <h5><strong>User Account Temporarily Locked</strong></h5>
                                 <p>
@@ -61,7 +61,7 @@ var UserProfile = React.createClass({
                                 <a onClick={this.props.handleUnlockUser} className="btn btn-default"><i className="fa fa-unlock"></i> Unlock User Now</a>
                                 </p>
                             </div>
-                        }
+                        : null }
                         <h3>User Profile
                             <div className="actions">
                                 <button onClick={this.props.handleModifyUser} className="edit-user btn btn-sm btn-info"><i className="fa fa-pencil"></i> Edit User Profile</button>
@@ -86,7 +86,7 @@ var UserProfile = React.createClass({
                                 <td><span className="phone">{user.phone}</span></td>
                             </tr>
 
-                            { isTopLevelAccount &&
+                            { isTopLevelAccount ?
                             <tr>
                                 <th>Provisioning</th>
                                 <td>
@@ -99,9 +99,9 @@ var UserProfile = React.createClass({
                                     </span>
                                 </td>
                             </tr>
-                            }
+                            : null }
 
-                            { isTopLevelAccount &&
+                            { isTopLevelAccount ?
                             <tr>
                                 <th>Registered Developer</th>
                                 <td>
@@ -113,9 +113,9 @@ var UserProfile = React.createClass({
                                     </span>
                                 </td>
                             </tr>
-                            }
+                            : null }
 
-                            { isTopLevelAccount &&
+                            { isTopLevelAccount ?
                             <tr>
                                 <th>Two Factor Auth</th>
                                 <td>
@@ -129,9 +129,9 @@ var UserProfile = React.createClass({
                                     { twoFactorAuth ? <a onClick={this.props.handleToggleTwoFactorAuth} className="disable-2fa">Disable Two Factor Auth</a> : '' }
                                 </td>
                             </tr>
-                            }
+                            : null }
 
-                            { pwdfailuretimes.length &&
+                            { pwdfailuretimes.length ?
                             <tr>
                                 <th>Past Failed Authentication Attempts</th>
                                 <td>
@@ -144,7 +144,7 @@ var UserProfile = React.createClass({
                                     </ul>
                                 </td>
                             </tr>
-                            }
+                            : null }
 
                         </tbody>
                         </table>
