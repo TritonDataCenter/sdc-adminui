@@ -82,7 +82,7 @@ var ServerName = React.createClass({
         if (!this.state || !this.state.server) {
             return null;
         }
-        return <div className="server-name"><i className="fa fa-list"></i> <a href={'/servers/'+this.props.serverUuid} onClick={this.goToServer}>{this.state.server.hostname} </a></div>
+        return <div className="server-name"><i className="fa fa-list"></i> <a href={'/servers/'+this.props.serverUuid} onClick={this.goToServer}>{this.state.server.hostname} </a></div>;
     },
     goToServer: function(e) {
         if (e.metaKey || e.ctrlKey) {
@@ -99,7 +99,8 @@ var ItemView = Backbone.Marionette.ItemView.extend({
 
     events: {
         'click .alias a': 'navigateToVmDetails',
-        'click a.owner-name': 'navigateToOwnerDetails'
+        'click a.owner-name': 'navigateToOwnerDetails',
+        'click a.image-name': 'navigateToImageDetails'
     },
 
     initialize: function(options) {
@@ -164,6 +165,13 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         }
         e.preventDefault();
         adminui.vent.trigger('showcomponent', 'user', { user: this.user });
+    },
+    navigateToImageDetails: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+        e.preventDefault();
+        adminui.router.showImage(this.model.get('image_uuid'));
     }
 });
 
