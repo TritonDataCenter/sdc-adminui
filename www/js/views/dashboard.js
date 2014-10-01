@@ -15,8 +15,8 @@
  **/
 
 var Backbone = require('backbone');
-var _ = require('underscore');
 var $ = require('jquery');
+var _ = require('underscore');
 
 var DashboardTemplate = require('../tpl/dashboard.hbs');
 var Dashboard = Backbone.Marionette.ItemView.extend({
@@ -34,33 +34,27 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-
         var self = this;
-        this._requests.push($.getJSON("/api/stats/vm_count", function(res) {
-            self.$('.vm-count').html(res.total);
-        }));
+        this._requests.push(
+            $.getJSON("/api/stats/all", function(res) {
+                self.$('.vm-count').text(res.vmCount.total);
+                self.$('.server-total-memory').text(_.str.sprintf('%.2f GB',
+                    self._bytesToGb(res.serverMemory.total)
+                ));
 
-        this._requests.push($.getJSON("/api/stats/server_memory", function(res) {
-            var total = self._bytesToGb(res.total);
-            self.$('.server-total-memory').html(_.str.sprintf('%.2f GB', total));
+                var provisionable = self._bytesToGb(res.serverMemory.provisionable);
+                self.$('.server-provisionable-memory').text(_.str.sprintf('%.2f', provisionable));
 
-            var provisionable = self._bytesToGb(res.provisionable);
-            self.$('.server-provisionable-memory').html(_.str.sprintf('%.2f', provisionable));
-
-            var percent = ((res.total - res.provisionable) / res.total) * 100;
-            if (isNaN(percent)) {
-                percent = 100;
+                var percent = ((res.serverMemory.total - res.serverMemory.provisionable) / res.serverMemory.total) * 100;
+                if (isNaN(percent)) {
+                    percent = 100;
+                }
+                self.$('.server-utilization-percent').text( _.str.sprintf('%.2f%%', percent) );
+                self.$('.server-count').text(res.serverCount.total);
+                self.$('.server-reserved').text(res.serverCount.reserved);
+                self.$('.server-unreserved').text(res.serverCount.unreserved);
             }
-            self.$('.server-utilization-percent').html(
-                _.str.sprintf('%.2f%%', percent)
-            );
-        }));
-
-        this._requests.push($.getJSON("/api/stats/server_count", function(res) {
-            self.$('.server-count').html(res.total);
-            self.$('.server-reserved').html(res.reserved);
-            self.$('.server-unreserved').html(res.unreserved);
-        }));
+        ));
 
         this._requests.push($.getJSON("/api/users?per_page=1", function(res, status, xhr) {
             self.$('.user-count').html(xhr.getResponseHeader('x-object-count'));
