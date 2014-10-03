@@ -14,6 +14,7 @@ var app = require('../../adminui');
 var React = require('react');
 var BackboneMixin = require('../_backbone-mixin');
 var moment = require('moment');
+var _ = require('underscore');
 
 var ImagesList = React.createClass({
     mixins: [BackboneMixin],
@@ -103,33 +104,38 @@ var ImagesView = React.createClass({
         }
     },
     componentWillMount: function() {
+        this._requests = [];
+
         this.images = new ImagesCollection(null);
         this.images.on('sync', this._onSync, this);
         this.images.params = {limit: IMAGE_FETCH_SIZE};
-        this.images.fetch();
+        this._requests.push(this.images.fetch());
     },
     componentWillUmount: function() {
         this.images.off('fetch');
+        this._requests.forEach(function (r) {
+            r.abort();
+        });
     },
     _searchImage: function(e) {
-        var value = e.target.value;
+        var value = this.refs.searchInput.getDOMNode().value;
 
         if (value && value.length) {
             if (value.length === 36) {
                 this.images.params.uuid = value;
             } else {
-                this.images.params.name = value;
+                this.images.params.name = _.str.sprintf('~%s', value);
             }
         } else {
             delete this.images.params.uuid;
             delete this.images.params.name;
         }
         delete this.images.params.marker;
-        this.images.fetch();
+        this._requests.push(this.images.fetch());
     },
     _loadMore: function() {
         this.images.params.marker = this.images.at(this.images.length-1).get('uuid');
-        this.images.fetch({remove: false});
+        this._requests.push(this.images.fetch({remove: false}));
     },
     render: function() {
         var page = <div id="page-images">
@@ -144,8 +150,11 @@ var ImagesView = React.createClass({
             </div>
             <div className="row">
                 <div className="col-sm-12">
-                    <div className="form-group">
-                    <input type="text" className="form-control" onChange={this._searchImage} placeholder="Search for images by exact name or UUID" />
+                    <div className="input-group">
+                    <input type="text" ref="searchInput" className="form-control" onChange={this._searchImage} placeholder="Search for images by exact name or UUID" />
+                        <span className="input-group-btn">
+                            <button onClick={this._searchImage} type="button" className="btn btn-info"><i className="fa fa-search"> </i> Search</button>
+                        </span>
                     </div>
                 </div>
             </div>
