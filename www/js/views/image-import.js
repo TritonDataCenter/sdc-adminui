@@ -77,11 +77,16 @@ var ImageImportView = Backbone.Marionette.Layout.extend({
         e.preventDefault();
 
         var repo = this.$('.image-source').val();
-        var name = this.$('input[name=name]').val();
-        var collection = new Images([], { params: {
-            name: _.str.sprintf('~%s', name),
+        var searchStr = _.str.trim(this.$('input[name=name]').val());
+        var params = {
             repository: repo
-        } });
+        };
+        if (searchStr.length === 36) {
+            params.uuid = searchStr;
+        } else {
+            params.name = _.str.sprintf('~%s', searchStr);
+        }
+        var collection = new Images([], { params:  params });
         var imagesListView = new ImportImageSelector({collection: collection });
         this.imagesList.show(imagesListView);
         this.$('h3').html('Showing images on: ' + repo).show();
