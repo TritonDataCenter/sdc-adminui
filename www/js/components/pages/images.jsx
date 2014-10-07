@@ -29,7 +29,7 @@ var ImagesList = React.createClass({
     renderItem: function(i) {
         var img = i.toJSON();
         var href = "/images/" + img.uuid;
-        var publish_date = moment(img.published_at).format("MMM D, YYYY");
+        var publish_date = moment(img.published_at).format("MM/DD/YYYY");
 
         return <tr key={img.uuid}>
             <td className="state">
@@ -60,6 +60,11 @@ var ImagesList = React.createClass({
         </tr>;
     },
     render: function() {
+        console.log(this.props.images);
+        if (this.props.images.length === 0) {
+            return <div className="zero-state">No Images Found matching search criteria</div>;
+        }
+
         return <table className="images-list">
                 <thead>
                 <tr>
@@ -73,9 +78,6 @@ var ImagesList = React.createClass({
             <tbody>
                 { this.props.images.map(this.renderItem) }
             </tbody>
-            <caption align="bottom">
-            <span className="record-count">{this.props.images.length}</span> Images
-            </caption>
             </table>;
     }
 });
@@ -88,9 +90,10 @@ var ImagesView = React.createClass({
         sidebar: 'images'
     },
     getInitialState: function() {
-        return {hasMore: false};
+        return {hasMore: false, loaded: false};
     },
     _onSync: function(collection, objs) {
+        this.setState({loaded: true});
         if (IMAGE_FETCH_SIZE === objs.length) {
             var lastNewItem = objs[objs.length-1].uuid;
             var lastPrevItem = this.images.at(this.images.length-1).get('uuid');
@@ -110,6 +113,9 @@ var ImagesView = React.createClass({
         this.images.on('sync', this._onSync, this);
         this.images.params = {limit: IMAGE_FETCH_SIZE};
         this._requests.push(this.images.fetch());
+    },
+    componentDidMount: function() {
+        this.refs.searchInput.getDOMNode().focus();
     },
     componentWillUmount: function() {
         this.images.off('fetch');
@@ -137,6 +143,11 @@ var ImagesView = React.createClass({
         this.images.params.marker = this.images.at(this.images.length-1).get('uuid');
         this._requests.push(this.images.fetch({remove: false}));
     },
+    onChangeSearchInput: function(e) {
+        if (e.key === 'Enter') {
+            this._searchImage();
+        }
+    },
     render: function() {
         var page = <div id="page-images">
             <div className="page-header">
@@ -151,14 +162,17 @@ var ImagesView = React.createClass({
             <div className="row">
                 <div className="col-sm-12">
                     <div className="input-group">
-                    <input type="text" ref="searchInput" className="form-control" onChange={this._searchImage} placeholder="Search for images by exact name or UUID" />
+                    <input type="text" ref="searchInput" className="form-control"
+                        onBlur={this._searchImage}
+                        onKeyPress={this.onChangeSearchInput}
+                        placeholder="Search for images by exact name or UUID" />
                         <span className="input-group-btn">
                             <button onClick={this._searchImage} type="button" className="btn btn-info"><i className="fa fa-search"> </i> Search</button>
                         </span>
                     </div>
                 </div>
             </div>
-            <ImagesList images={this.images} />
+            { this.state.loaded && <ImagesList images={this.images} /> }
             { (this.state.hasMore) ? <button onClick={this._loadMore} className="btn btn-block btn-info load-more">Load More</button> : ''}
         </div>;
 
