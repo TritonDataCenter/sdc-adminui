@@ -8,7 +8,7 @@
  * Copyright (c) 2014, Joyent, Inc.
  */
 
-var IMAGE_FETCH_SIZE = 15;
+var IMAGE_FETCH_SIZE = 25;
 
 var app = require('../../adminui');
 var React = require('react');
@@ -60,7 +60,6 @@ var ImagesList = React.createClass({
         </tr>;
     },
     render: function() {
-        console.log(this.props.images);
         if (this.props.images.length === 0) {
             return <div className="zero-state">No Images Found matching search criteria</div>;
         }
@@ -95,9 +94,9 @@ var ImagesView = React.createClass({
     _onSync: function(collection, objs) {
         this.setState({loaded: true});
         if (IMAGE_FETCH_SIZE === objs.length) {
-            var lastNewItem = objs[objs.length-1].uuid;
-            var lastPrevItem = this.images.at(this.images.length-1).get('uuid');
-            if (typeof(this.images.params.marker) === 'undefined' || lastNewItem !== lastPrevItem) {
+            var newMarker = objs[objs.length-1].uuid;
+            var oldMarker = this.images.params.marker;
+            if (typeof(oldMarker) === 'undefined' || newMarker !== oldMarker) {
                 this.setState({hasMore: true});
             } else {
                 this.setState({hasMore: false});
