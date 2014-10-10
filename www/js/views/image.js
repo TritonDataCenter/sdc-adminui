@@ -231,6 +231,8 @@ var ImageView = Backbone.Marionette.ItemView.extend({
 
         var model = this.model;
         var self = this;
+        adminui.vent.trigger('settitle', _.str.sprintf('image: %s %s', this.model.get('name'), this.model.get('version') ));
+
 
         var imageAclComponent = this.imageAclComponent = React.renderComponent(
             new ImageAclComponent({

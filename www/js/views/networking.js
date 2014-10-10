@@ -57,6 +57,7 @@ var Networking = Backbone.Marionette.Layout.extend({
         }
     },
     onRender: function() {
+        adminui.vent.trigger('settitle', 'networking');
         this.makeActive(this.options.tab || 'networks');
     },
     onShow: function() {

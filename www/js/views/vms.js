@@ -213,6 +213,8 @@ module.exports = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
+        app.vent.trigger('settitle', 'vms');
+
         this.filterView.setElement(this.$('.vms-filter'));
         this.filterView.render();
 

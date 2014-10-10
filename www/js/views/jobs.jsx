@@ -15,11 +15,12 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var moment = require('moment');
 var $ = require('jquery');
-
 var React = require('react');
 var Chosen = require('react-chosen');
 var Jobs = require('../models/jobs');
 var JobsList = require('./jobs-list');
+
+var adminui = require('../adminui');
 
 var PRESET_FILTERS = [
     {
@@ -243,6 +244,8 @@ var JobsView = Backbone.Marionette.Layout.extend({
 
     onShow: function() {
         var initialFilter = PRESET_FILTERS[0];
+
+        adminui.vent.trigger('settitle', 'jobs');
 
 
         this.jobFilters = React.renderComponent(

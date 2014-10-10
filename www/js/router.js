@@ -134,18 +134,23 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
-    renderTitle: function() {
-        document.title = [ this.app.state.get('datacenter'), 'Operations Portal' ].join(' | ');
+    renderTitle: function(t) {
+        var p =[ this.app.state.get('datacenter'), 'Operations Portal' ];
+        if (t) {
+            p.unshift(t);
+        }
+        document.title = p.join(' | ');
     },
 
     start: function() {
         this.listenTo(this.app.vent, 'showview', this.presentView, this);
         this.listenTo(this.app.vent, 'showcomponent', this.presentComponent, this);
+        this.listenTo(this.app.vent, 'settitle', this.renderTitle, this);
         this.listenTo(this.app.vent, 'signout', this.signout, this);
         this.listenTo(this.app.vent, 'notfound', this.notFound, this);
         this.listenTo(this.app.user, 'authenticated', this.didAuthenticate, this);
 
-        this.listenTo(this.app.state, 'change:datacenter', this.renderTitle);
+        this.listenTo(this.app.state, 'change:datacenter', this.renderTitle, this);
         this.listenTo(this.app.state, 'change', this.initializeChrome, this);
 
         if (this.user.authenticated()) {
@@ -205,12 +210,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     presentView: function(viewName, args) {
-        console.log('showing view', viewName, args);
+        console.log('[app] showing view', viewName, args);
         var View = Views[viewName];
 
         if (typeof(View) === 'undefined') {
             this.notFound({ view: viewName, args: args });
-            console.log("View not found: " + viewName);
+            console.log("[app] view not found: " + viewName);
             return;
         }
 
@@ -232,7 +237,8 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             }
         }
 
-        console.debug('app state change', state);
+        this.renderTitle(null);
+        console.debug('[app]', state);
         this.state.set(state);
 
         if (typeof(view.url) === 'function') {
@@ -249,6 +255,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     presentComponent: function(compName, args) {
         args = args || {};
         var ComponentType = Components[compName];
+        this.renderTitle(null);
 
         if (typeof(ComponentType) === 'undefined') {
             this.notFound({ view: ComponentType, args: args });
@@ -261,7 +268,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 'rootnav.active': ComponentType.sidebar,
                 'localnav.active': ComponentType.sidebar
             };
-            console.log(ComponentType.sidebar);
 
             state['chrome.fullwidth'] = (compName === 'users' || compName === 'alarm' || compName === 'user' || compName === 'settings');
             this.state.set(state);

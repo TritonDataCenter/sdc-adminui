@@ -138,6 +138,8 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
+        adminui.vent.trigger('settitle', _.str.sprintf('network: %s %s', this.model.get('name')));
+
         React.renderComponent(
             new NotesComponent({item: this.model.get('uuid')}),
             this.$('.notes-component-container').get(0)

@@ -290,6 +290,8 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
+        adminui.vent.trigger('settitle', 'provision');
+
         this.userInput = new TypeaheadUser({
             accountsOnly: true,
             el: this.$('[name=owner]')

@@ -83,6 +83,9 @@ var VmView = Backbone.Marionette.Layout.extend({
     template: require('../tpl/vm.hbs'),
     id: 'page-vm',
     sidebar: 'vms',
+    title: function() {
+        return _.str.sprintf('vm:', this.vm.get('alias'));
+    },
     events: {
         'click .server-hostname': 'clickedServerHostname',
         'click li:not(.disabled) .start': 'clickedStartVm',
@@ -539,6 +542,7 @@ var VmView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
+        adminui.vent.trigger('settitle', _.str.sprintf('vm: %s', ( this.vm.get('alias') || this.vm.get('uuid')) ));
         this.nicsRegion.show(this.nicsList);
         this.renderUserTile();
 

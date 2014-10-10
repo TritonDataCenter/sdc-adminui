@@ -134,6 +134,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.$('.caption').hide();
         this.$('.alert').hide();
         this.$('input').focus();
+        adminui.vent.trigger('settitle', 'users');
     },
 
     next: function() {

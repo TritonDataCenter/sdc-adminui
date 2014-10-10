@@ -56,6 +56,8 @@ var SettingsView = Backbone.Marionette.ItemView.extend({
         });
     },
     onRender: function() {
+        app.vent.trigger('settitle', 'settings');
+
         this.component = <MultipleNicConfigComponent networksFilter={{provisionable_by: null}} />;
         React.renderComponent(this.component, this.$('.nic-selection-container').get(0));
     },

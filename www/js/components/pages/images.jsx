@@ -114,6 +114,7 @@ var ImagesView = React.createClass({
         this._requests.push(this.images.fetch());
     },
     componentDidMount: function() {
+        app.vent.trigger('settitle', 'images');
         this.refs.searchInput.getDOMNode().focus();
     },
     componentWillUmount: function() {

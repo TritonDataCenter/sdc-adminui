@@ -199,6 +199,7 @@ module.exports = React.createClass({
         }.bind(this));
     },
     render: function() {
+        adminui.vent.trigger('settitle', _.str.sprintf('alarm: %s.%s', this.props.user, this.props.id));
 
         if (this.state.error) {
             return this.renderError();

@@ -448,6 +448,8 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
+        app.vent.trigger('settitle', _.str.sprintf('server: %s', this.model.get('hostname')));
+
         this.jobsListView = new JobsList({
             perPage: 100,
             params: {server_uuid: this.model.get('uuid')}

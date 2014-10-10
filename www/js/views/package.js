@@ -194,11 +194,11 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
     },
 
     renderNetworkPools: function() {
+        var self = this;
         var networks = new Networks();
         networks.fetch().done(done.bind(this));
 
         function done() {
-            var self = this;
 
             self.networkPools = new NetworkPools(self.nets);
 
@@ -235,6 +235,8 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
 
 
     onRender: function() {
+        adminui.vent.trigger('settitle', _.str.sprintf('package: %s', this.model.get('name'), this.model.get('version')));
+
         if (0 === this.networks.length) {
             this.$('.networks').hide();
         }

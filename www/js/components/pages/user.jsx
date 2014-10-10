@@ -277,9 +277,13 @@ var PageUser = React.createClass({
             </div>;
         }
 
+
+
         var user = this.state.userModel.toJSON();
         var currentView = this.getCurrentView();
         var isTopLevelAccount = !user.account;
+
+        adminui.vent.trigger('settitle', _.str.sprintf('user: %s', user.login));
 
         var userIconUrl;
         if (user.emailhash) {

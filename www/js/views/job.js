@@ -218,6 +218,7 @@ var JobView = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         this.renderJobDetails();
         this.model.getJobInfo(this.renderInfo.bind(this));
+        adminui.vent.trigger('settitle', _.str.sprintf('job: %s %s', this.model.get('name'), this.model.get('uuid') ));
     },
 
     renderInfo: function(info) {

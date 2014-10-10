@@ -17,9 +17,7 @@ var Packages = require('../models/packages');
 
 var PackagesTemplate = require('../tpl/packages.hbs');
 var PackagesListItemTemplate = require('../tpl/packages-list-item.hbs');
-var PackageForm = require('./packages-form');
 
-var User = require('../models/user');
 var UserInput = require('./typeahead-user');
 
 var adminui = require('../adminui');
@@ -123,6 +121,8 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
+        adminui.vent.trigger('settitle', 'packages');
+
         var packagesList = new PackagesList({ collection: this.packages });
 
         this.search().done(function() {

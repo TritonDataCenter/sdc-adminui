@@ -17,6 +17,7 @@
 var Backbone = require('backbone');
 var $ = require('jquery');
 var _ = require('underscore');
+var adminui = require('../adminui');
 
 var DashboardTemplate = require('../tpl/dashboard.hbs');
 var Dashboard = Backbone.Marionette.ItemView.extend({
@@ -35,6 +36,8 @@ var Dashboard = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         var self = this;
+        adminui.vent.trigger('settitle', 'dashboard');
+
         this._requests.push(
             $.getJSON("/api/stats/all", function(res) {
                 self.$('.vm-count').text(res.vmCount.total);

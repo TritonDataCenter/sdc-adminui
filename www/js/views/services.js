@@ -8,6 +8,8 @@
  * Copyright (c) 2014, Joyent, Inc.
  */
 
+var $ = require('jquery');
+
 var Backbone = require('backbone');
 var adminui = require('../adminui');
 
@@ -121,6 +123,8 @@ var View = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
+        adminui.vent.trigger('settitle', 'services');
+
         this.applicationsView = new ApplicationsListView({
             el: this.$('.applications'),
             collection: this.applications

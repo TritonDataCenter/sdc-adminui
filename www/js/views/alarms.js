@@ -111,6 +111,7 @@ var AlarmsView = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
+        adminui.vent.trigger('settitle', 'alarms');
         this.$('.details').hide();
     }
 });

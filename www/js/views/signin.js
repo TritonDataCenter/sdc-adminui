@@ -12,9 +12,10 @@
  * ./signin !!
  */
 
-var _ = require('underscore');
 var Backbone = require('backbone');
 var tplSignin = require('../tpl/signin.hbs');
+var $ = require('jquery');
+var adminui = require('../adminui');
 
 var View = Backbone.Marionette.ItemView.extend({
     attributes: {
@@ -71,6 +72,7 @@ var View = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.hideMessage();
+        adminui.vent.trigger('settitle', 'sign in');
     },
 
     centerSigninBox: function() {
