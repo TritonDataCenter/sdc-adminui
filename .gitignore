@@ -9,5 +9,6 @@ cscope.out
 smf/manifests/*.xml
 .DS_Store
 www/app.js*
+www/app.css*
 www/libs.js*
 npm-debug.log

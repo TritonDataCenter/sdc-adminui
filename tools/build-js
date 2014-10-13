@@ -25,6 +25,8 @@ var join = path.join;
 
 var uglify = require('uglify-js');
 
+var buildLESS = require('../lib/assets').buildLESS;
+
 
 var root = path.resolve(__dirname, '..', 'www', 'js');
 
@@ -104,7 +106,7 @@ var shimConfig = {
 
 Object.keys(shimConfig).forEach(function(k) {
     if (shimConfig[k].path) {
-        shimConfig[k].path = path.join(root, shimConfig[k].path);
+        shimConfig[k].path = join(root, shimConfig[k].path);
     }
 });
 
@@ -158,6 +160,25 @@ function prepLibsBundle() {
 
     async.parallel([
         function(cb) {
+            LOG.info('[app.css] BUILDING');
+            buildLESS(function(buildErr, css) {
+                if (buildErr) {
+                    LOG.fatal('[app.less] BUILD ERRR', buildErr);
+                    return;
+                }
+
+                LOG.info('[app.css] WRITING');
+                fs.writeFile(join(root, '..', 'app.css'), css, function(err) {
+                    if (err) {
+                        LOG.fatal('[app.css] WRITE ERRR', err);
+                    } else {
+                        LOG.info('[app.css] OK (%s bytes)', css.length);
+                    }
+
+                });
+            });
+        },
+        function(cb) {
             bundle(ba, 'app.js', cb);
         },
         function(cb) {
@@ -190,6 +211,7 @@ function bundle(bundler, out, cb) {
 
     bs.on('error', function(err) {
         LOG.fatal(err, '[%s] BUILD ERROR', out);
+        cb(err);
     });
 
     bs.on('end', function() {
