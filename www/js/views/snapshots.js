@@ -58,6 +58,7 @@ var View = Backbone.Marionette.CompositeView.extend({
     },
     resetSnapshots: function(vm, n) {
         this.collection.reset(vm.get('snapshots'));
+        this.render();
     },
     onBeforeItemAdded: function(view) {
         view.vm = this.vm;
@@ -65,7 +66,9 @@ var View = Backbone.Marionette.CompositeView.extend({
     templateHelpers: function() {
         var self = this;
         return {
-            snapshots: this.collection,
+            snapshots: function() {
+                return self.collection;
+            },
             kvm: function() {
                 return self.vm.get('brand') === 'kvm';
             },
