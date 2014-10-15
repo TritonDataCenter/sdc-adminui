@@ -53,7 +53,7 @@ var NetworksListItem = Backbone.Marionette.ItemView.extend({
 
     serializeData: function() {
         var data = this.model.toJSON();
-        data.show_delete = this.showDelete;
+        data.show_delete = this.showDelete && data.name !== 'admin' && data.name !== 'external';
         return data;
     },
 

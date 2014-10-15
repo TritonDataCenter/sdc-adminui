@@ -136,6 +136,11 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     onClose: function() {
         this.$el.modal('hide');
     },
+    templateHelpers: {
+        coreNetwork: function() {
+            return this.name === 'admin' || this.name === 'external';
+        }
+    },
 
     onRender: function() {
         adminui.vent.trigger('settitle', _.str.sprintf('network: %s %s', this.model.get('name')));
