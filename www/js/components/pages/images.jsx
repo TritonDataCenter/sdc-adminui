@@ -110,7 +110,10 @@ var ImagesView = React.createClass({
 
         this.images = new ImagesCollection(null);
         this.images.on('sync', this._onSync, this);
-        this.images.params = {limit: IMAGE_FETCH_SIZE};
+        this.images.params = {
+            sort: 'published_at.desc',
+            limit: IMAGE_FETCH_SIZE
+        };
         this._requests.push(this.images.fetch());
     },
     componentDidMount: function() {
