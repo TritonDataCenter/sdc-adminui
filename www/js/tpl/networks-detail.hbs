@@ -17,18 +17,17 @@
 <div class="actions">
   <div class="notes-component-container"></div>
   {{#role "operators"}}
-      {{#unless coreNetwork}}
-          <button class="btn btn-info edit-network"><i class="fa fa-pencil"></i> Edit Network</button>
-      {{/unless}}
+    <button class="btn btn-info edit-network"><i class="fa fa-pencil"></i> Edit Network</button>
   {{/role}}
 </div>
 
-
-{{#if coreNetwork}}
+{{#if networkIsInUse}}
 <div class="alert alert-warning">
     <strong>Note!</strong>
-    This is a network used by SDC internally. Making changes to this network is not supported in Operations Portal.</div>
+    This network is in use by Servers and/or Virtual Machines. Changes to this network cannot be performed in Operations Portal.
+</div>
 {{/if}}
+
 
 <section>
   <ul class="list-unstyled attributes">

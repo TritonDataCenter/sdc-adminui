@@ -21,12 +21,17 @@
                     <strong>Error!</strong> <span class="error"></span>
                 </div>
 
-
+                {{#if inUse}}
+                <div class="alert alert-warning">
+                    <strong>Note!</strong> This network is in use by Virtual Machines / Servers. Changes to certain network properties is restricted.
+                </div>
+                {{/if}}
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-name">Name</label>
                     <div class="controls col-sm-5">
                         <input type="text" id="network-name" value="{{name}}"
                             class="form-control"
+                            {{#if inUse}} readonly {{/if}}
                             name="name" placeholder="Name of the network">
                     </div>
                 </div>
@@ -46,6 +51,7 @@
 
                     <div class="controls col-sm-6">
                         <input type="text"
+                            {{#if inUse}} readonly {{/if}}
                             class="form-control"
                             id="netework-gateway"
                             value="{{subnet}}"
@@ -64,6 +70,7 @@
                             class="form-control"
                             id="netework-gateway"
                             value="{{gateway}}"
+                            {{#if inUse}} readonly {{/if}}
                             name="gateway" placeholder="Gateway Address">
                     </div>
                 </div>
@@ -71,14 +78,14 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-provision-start-ip">Provision IP Range</label>
 
-                    <div class="col-sm-4" style="padding-right: 0;">
+                    <div class="col-sm-3" style="padding-right: 0;">
                         <input type="text" id="netework-start-ip"
                             class="form-control"
                             value="{{provision_start_ip}}"
                             name="provision_start_ip" placeholder="Start IP">
                     </div>
 
-                    <div class="col-sm-4" style="padding-left: 0;">
+                    <div class="col-sm-3" style="padding-left: 0;">
                         <input type="text" id="netework-end-ip"
                             class="form-control"
                             value="{{provision_end_ip}}"
@@ -93,34 +100,52 @@
                         {{#each routes}}
                         <div class="routes-controls row">
                             <div class="col-sm-5">
-                                <input type="text" name="routes[{{@index}}][subnet]" value="{{subnet}}" class="form-control" placeholder="IP or Subnet">
+                                <input type="text"
+                                {{#if inUse}} readonly {{/if}}
+                                name="routes[{{@index}}][subnet]" value="{{subnet}}" class="form-control" placeholder="IP or Subnet">
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" value="{{gateway}}" name="routes[{{@index}}][gateway]" class="form-control" placeholder="Gateway">
+                                <input type="text"
+                                value="{{gateway}}"
+                                {{#if inUse}} readonly {{/if}}
+                                name="routes[{{@index}}][gateway]"
+                                class="form-control" placeholder="Gateway">
                             </div>
                             <div class="col-sm-2">
+                                {{#unless inUse}}
                                 <a class="remove-route"><i class="fa fa-trash-o"></i></a>
+                                {{/unless}}
                             </div>
                         </div>
                         {{/each}}
                         {{else}}
-                        <div class="routes-controls row">
-                            <div class="col-sm-5">
-                                <input type="text" name="routes[0][subnet]" class="form-control" placeholder="IP or Subnet">
+                            {{#unless inUse}}
+                            <div class="routes-controls row">
+                                <div class="col-sm-5">
+                                    <input type="text" name="routes[0][subnet]" class="form-control" placeholder="IP or Subnet">
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" name="routes[0][gateway]" class="form-control" placeholder="Gateway">
+                                </div>
+                                <div class="col-sm-2">
+                                    <a class="remove-route"><i class="fa fa-trash-o"></i></a>
+                                </div>
                             </div>
-                            <div class="col-sm-5">
-                                <input type="text" name="routes[0][gateway]" class="form-control" placeholder="Gateway">
+                            {{else}}
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-control-static">No routes assigned</div>
+                                </div>
                             </div>
-                            <div class="col-sm-2">
-                                <a class="remove-route"><i class="fa fa-trash-o"></i></a>
-                            </div>
-                        </div>
+                            {{/unless}}
                         {{/if}}
+                        {{#unless inUse}}
                         <div class="row">
                             <div class="col-sm-12">
                                 <a class="add-route">Add another route</a>
                             </div>
                         </div>
+                        {{/unless}}
                     </div>
                 </div>
 
@@ -128,15 +153,19 @@
                     <label class="control-label col-sm-4" for="network-nic-tag">NIC Tag</label>
 
                     <div class="controls col-sm-6">
+                        {{#unless inuse}}
                         <select class="form-control" name="nic_tag">
                             <option>Select a nic tag</option>
                             {{#each nic_tags}}
-                            <option value="{{name}}">{{name}}</option>
+                            <opunlessvalue="{{name}}">{{name}}</option>
                             {{/each}}
                         </select>
 
                         <button type="button" class="btn btn-link create-new-nic-tag">Create a New NIC Tag</button>
                         <div class="create-nic-tag-region"></div>
+                        {{else}}
+                            <div class="form-control-static">{{nic_tag}}</div>
+                        {{/unless}}
                     </div>
                 </div>
 
@@ -158,8 +187,9 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-vlan-id">VLAN ID</label>
 
-                    <div class="controls col-sm-6">
+                    <div class="controls col-sm-3">
                         <input type="text"
+                        {{#if inUse}} readonly {{/if}}
                         value="{{vlan_id}}"
                         class="form-control"
                         id="netework-vlan-id" name="vlan_id" placeholder="VLAN ID">

@@ -13,6 +13,7 @@ var Backbone = require('backbone');
 require('backbone.syphon');
 
 var _ = require('underscore');
+var $ = require('jquery');
 
 var Template = require('../tpl/networks-create.hbs');
 var Network = require('../models/network');
@@ -164,6 +165,11 @@ var View = Backbone.Marionette.Layout.extend({
 
     serializeData: function() {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.apply(this, arguments);
+        if (data.uuid) {
+            data.inUse = this.options.inUse || false;
+        } else {
+            data.inUse = false;
+        }
         var routes = data.routes;
         data.routes = [];
         if (data.owner_uuids) {
@@ -195,7 +201,7 @@ var View = Backbone.Marionette.Layout.extend({
 
     show: function() {
         this.render();
-        this.$('.alert').hide();
+        this.$('.alert-danger').hide();
         this.$el.modal('show');
     }
 

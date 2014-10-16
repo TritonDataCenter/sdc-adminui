@@ -55,7 +55,7 @@ var AddressesTableRow = Backbone.Marionette.ItemView.extend({
         var uuid = this.model.get('belongs_to_uuid');
         var type = this.model.get('belongs_to_type');
         if (type === 'server') {
-            adminui.vent.trigger('showcomponent', 'server', {uuid: uuid });
+            adminui.vent.trigger('showview', 'server', {uuid: uuid });
         }
         if (type === 'zone') {
             adminui.vent.trigger('showview', 'vm', {uuid: uuid });
@@ -106,8 +106,16 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         'click .edit-network': 'editNetwork'
     },
 
+    initialize: function(options) {
+        this.addresses = new Addresses({uuid: this.model.get('uuid') });
+        this.listenTo(this.addresses, 'sync', this.render, this);
+    },
+
     editNetwork: function() {
-        var view = this.networkForm = new NetworkForm({model: this.model});
+        var view = this.networkForm = new NetworkForm({
+            model: this.model,
+            inUse: this.networkIsInUse()
+        });
         var self = this;
         this.listenTo(view, 'saved', function(network) {
             self.model.fetch().done(this.render);
@@ -136,10 +144,24 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     onClose: function() {
         this.$el.modal('hide');
     },
-    templateHelpers: {
-        coreNetwork: function() {
-            return this.name === 'admin' || this.name === 'external';
+
+    networkIsInUse: function() {
+        var ips = this.addresses.toJSON();
+        for (var i in ips) {
+            var ip = ips[i];
+            if (ip.belongs_to_type === 'server' || ip.belongs_to_type === 'zone') {
+                return true;
+            }
         }
+        return false;
+    },
+    onShow: function() {
+        this.addresses.fetch();
+    },
+    serializeData: function() {
+        var data = _.clone(this.model.toJSON());
+        data.networkIsInUse = this.networkIsInUse();
+        return data;
     },
 
     onRender: function() {
@@ -149,12 +171,12 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
             new NotesComponent({item: this.model.get('uuid')}),
             this.$('.notes-component-container').get(0)
         );
-        var addresses = new Addresses({uuid: this.model.get('uuid') });
-        var addressesTable = new AddressesTable({
+
+        this.addressesTable = new AddressesTable({
             el: this.$(".addresses tbody"),
-            collection: addresses
+            collection: this.addresses
         });
-        addresses.fetch();
+        this.addressesTable.render();
     }
 });
 
