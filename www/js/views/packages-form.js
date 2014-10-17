@@ -107,6 +107,9 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
             if (typeof(v) === 'string' && /^\d+$/.test(v)) {
                 values[k] = Number(v);
             }
+            if (k === 'name' || k === 'version') {
+                values[k] = _.str.trim(v);
+            }
         });
         console.log('package values', values);
 
