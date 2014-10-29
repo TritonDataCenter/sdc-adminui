@@ -55,4 +55,3 @@ var UserVmsComponent = React.createClass({
 });
 
 module.exports = UserVmsComponent;
-

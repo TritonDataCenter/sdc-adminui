@@ -134,6 +134,10 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
                 suggestion: UserTypeaheadTpl
             }
         });
+    },
+    remove: function() {
+        this.$el.typeahead('destroy');
+        return Backbone.Marionette.View.prototype.remove.call(this);
     }
 });
 
