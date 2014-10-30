@@ -31,7 +31,7 @@
     "moray": "git+ssh://git@github.com:joyent/node-moray.git#771b4759f6d175f944024eaeaad038c4cd5488c6",
     "promise": "^5.0.0",
     "react": "0.11.2",
-    "reactify": "0.14.0",
+    "reactify": "0.15.2",
     "restify": "2.8.3",
     "sdc-clients": "git+ssh://git@github.com:joyent/node-sdc-clients.git#df5c6fb27ca34f876226784c6ce57aeed52ab6e2",
     "superagent": "^0.17.0",
