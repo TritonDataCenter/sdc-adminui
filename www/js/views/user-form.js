@@ -49,6 +49,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         '[name=email]': 'email',
         '[name=company]': 'company',
         '[name=phone]': 'phone',
+        '[name=tenant]': 'tenant',
         '[name=password]': 'password',
         '[name=last_name]': 'sn',
         '[name=first_name]': 'givenname',

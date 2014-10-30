@@ -81,10 +81,18 @@ var UserProfile = React.createClass({
                                 <th>Company</th>
                                 <td><span className="company">{user.company}</span></td>
                             </tr>
+                            { user.tenant ?
+                            <tr>
+                                <th>Tenant</th>
+                                <td><span className="tenant">{user.tenant}</span></td>
+                            </tr> : null
+                            }
+
+                            { user.phone ?
                             <tr>
                                 <th>Phone</th>
                                 <td><span className="phone">{user.phone}</span></td>
-                            </tr>
+                            </tr> : null }
 
                             { isTopLevelAccount ?
                             <tr>
