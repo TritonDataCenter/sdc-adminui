@@ -1,0 +1,5 @@
+{
+	"name": "adminui_sslcert",
+	"path": "/opt/smartdc/adminui/etc/ssl/ADMINUI.crt",
+	"post_cmd": "/usr/sbin/svcadm restart adminui"
+}

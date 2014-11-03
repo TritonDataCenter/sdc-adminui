@@ -3,8 +3,8 @@
 	"port": 80,
 	"sslport": 443,
 	"ssl": {
-		"certificate": "{{ssl_certificate}}",
-		"key": "{{ssl_key}}"
+		"certificate": "/opt/smartdc/adminui/etc/ssl/ADMINUI.crt",
+		"key": "/opt/smartdc/etc/ssl/ADMINUI.key"
 	},
 	"ufdsMaster": {
 		"url": "ldaps://{{^ufds_remote_ip}}{{{ufds_domain}}}{{/ufds_remote_ip}}{{{ufds_remote_ip}}}",
