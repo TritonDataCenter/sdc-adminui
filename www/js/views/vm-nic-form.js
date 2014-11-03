@@ -16,7 +16,7 @@ var _ = require('underscore');
 
 var React = require('react');
 
-var NicConfigComponent = require('../components/nic-config');
+var NicConfigComponent = React.createFactory(require('../components/nic-config'));
 
 
 var JobProgress = require('./job-progress');
@@ -77,6 +77,21 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
             } else {
                 nics.push(nic);
             }
+            nics = nics.map(function(n) {
+                delete n.vlan_id;
+                delete n.nic_tag;
+                delete n.ip;
+                delete n.netmask;
+                delete n.state;
+                delete n.belongs_to_type;
+                delete n.belongs_to_uuid;
+                delete n.gateway;
+                delete n.resolvers;
+                delete n.network_uuid;
+                delete n.owner_uuid;
+                delete n.uuid;
+                return n;
+            });
 
             vm.updateNics(nics, function(err, job) {
                 if (err) {
@@ -114,9 +129,10 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        this.nicConfig = React.renderComponent(
+        this.nicConfig = React.render(
             new NicConfigComponent({
                 nic: this.model.toJSON(),
+                readonlyNetwork: true,
                 expandAntispoofOptions: false,
                 onPropertyChange: this.onNicPropertyChange.bind(this)
             }),

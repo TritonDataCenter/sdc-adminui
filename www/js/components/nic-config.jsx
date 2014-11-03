@@ -27,6 +27,7 @@ var Chosen = require('react-chosen');
 
 var NicConfig = React.createClass({
     propTypes: {
+        readonlyNetwork: React.PropTypes.bool,
         expandAntispoofOptions: React.PropTypes.bool,
         nic: React.PropTypes.object,
         onPropertyChange: React.PropTypes.func
@@ -48,6 +49,7 @@ var NicConfig = React.createClass({
             networkFilters: this.props.networkFilters || {},
             networks: [],
             networkPools: [],
+            readonlyNetwork: this.props.readonlyNetwork === true,
             expandAntispoofOptions: this.props.expandAntispoofOptions
         };
 
@@ -98,6 +100,42 @@ var NicConfig = React.createClass({
     getValue: function() {
         return this.state.nic;
     },
+    renderNetworkSelect: function() {
+        var self = this;
+        var networks, networkPools;
+        if (this.state.readonlyNetwork) {
+            networks = this.state.networks.filter(function(n) {
+                return n.uuid === self.state.nic.network_uuid;
+            });
+            networkPools = this.state.networkPools.filter(function(n) {
+                return n.uuid === self.state.nic.network_uuid;
+            });
+        } else {
+            networks = this.state.networks;
+            networkPools = this.state.networkPools;
+        }
+        return <Chosen onChange={this.onChange}
+                className="form-control"
+                name="network_uuid"
+                data-placeholder="Select a Network"
+                value={this.state.nic.network_uuid}>
+            <option value=""></option>
+            <optgroup label="Networks">
+                {
+                    networks.map(function(n) {
+                        return (<option key={n.uuid} value={n.uuid}> {n.name} - {n.subnet} </option>);
+                    })
+                }
+            </optgroup>
+            <optgroup label="Network Pools">
+                {
+                    networkPools.map(function(n) {
+                        return (<option key={n.uuid} value={n.uuid}> {n.name}</option>);
+                    })
+                }
+            </optgroup>
+        </Chosen>;
+    },
     render: function() {
         var nic = this.state.nic;
         var expandAntispoofOptions = (nic.allow_dhcp_spoofing || nic.allow_ip_spoofing ||
@@ -108,29 +146,8 @@ var NicConfig = React.createClass({
                 <div className="form-group form-group-network row">
                     <label className="control-label col-sm-4">Network</label>
                     <div className="controls col-sm-5">
-                        { this.state.loading ?
-                            <div className="loading"><i className="fa fa-spinner fa-spin"></i> Retrieving Networks</div>
-                        : <Chosen onChange={this.onChange}
-                                className="form-control"
-                                name="network_uuid"
-                                data-placeholder="Select a Network"
-                                value={this.state.nic.network_uuid}>
-                            <option value=""></option>
-                            <optgroup label="Networks">
-                                {
-                                    this.state.networks.map(function(n) {
-                                        return (<option key={n.uuid} value={n.uuid}> {n.name} - {n.subnet} </option>);
-                                    })
-                                }
-                            </optgroup>
-                            <optgroup label="Network Pools">
-                                {
-                                    this.state.networkPools.map(function(n) {
-                                        return (<option key={n.uuid} value={n.uuid}> {n.name}</option>);
-                                    })
-                                }
-                            </optgroup>
-                        </Chosen> }
+                        { this.state.loading ? <div className="loading"><i className="fa fa-spinner fa-spin"></i> Retrieving Networks</div> : null }
+                        { !this.state.loading ? this.renderNetworkSelect() : null }
                     </div>
                 </div>
 
