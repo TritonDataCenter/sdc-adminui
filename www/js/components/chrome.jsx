@@ -61,8 +61,14 @@ var Chrome = React.createClass({
     _handleSignout: function() {
         adminui.vent.trigger('signout');
     },
-    _handleRootMenuSelect: function(view) {
-        adminui.vent.trigger('showview', view, {});
+    _handleRootMenuSelect: function(name, type) {
+        var evt;
+        if (type === 'component') {
+            evt = 'showcomponent';
+        } else {
+            evt = 'showview';
+        }
+        adminui.vent.trigger(evt, name, {});
     },
     _handleSelectCurrentUser: function(user) {
         adminui.vent.trigger('showcomponent', 'user', {user: user});

@@ -26,10 +26,14 @@ var NotFoundView = require('./views/error/not-found');
 var Components = {
     'alarm': require('./components/pages/alarm'),
     'alarms': require('./components/pages/alarms'),
+    'settings': require('./components/pages/settings'),
     'user': require('./components/pages/user'),
     'images': require('./components/pages/images'),
     'manta/agents': require('./components/pages/manta/agents.jsx')
 };
+Object.keys(Components).forEach(function(k) {
+    Components[k] = React.createFactory(Components[k]);
+});
 
 var Views = {
     'vms': require('./views/vms'),
@@ -46,7 +50,6 @@ var Views = {
 
     'dashboard': require('./views/dashboard'),
 
-    'settings': require('./views/settings'),
     'image': require('./views/image'),
     'image-import': require('./views/image-import'),
 
@@ -187,7 +190,11 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
         if (this.authenticated()) {
             page = page || 'dashboard';
-            this.presentView(page);
+            if (Components[page]) {
+                this.presentComponent(page);
+            } else {
+                this.presentView(page);
+            }
         }
     },
 
@@ -203,7 +210,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     initializeChrome: function() {
         console.info('Rendering State', this.state.toJSON());
-        this.chrome = React.renderComponent(Chrome({
+        this.chrome = React.render(Chrome({
             content: this.state.get('content'),
             state: this.state
         }), document.body );
@@ -254,28 +261,30 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     presentComponent: function(compName, args) {
         args = args || {};
-        var ComponentType = Components[compName];
+        var ComponentClass = Components[compName];
         this.renderTitle(null);
 
-        if (typeof(ComponentType) === 'undefined') {
-            this.notFound({ view: ComponentType, args: args });
-            console.log("Component not found: " + compName);
+        if (typeof(ComponentClass) === 'undefined') {
+            this.notFound({ component: ComponentClass, args: args });
+            console.log("[Router] Component not found: " + compName);
         } else {
-            var component = new ComponentType(args);
+            var component = new ComponentClass(args);
+            var type = component.type;
             var state = {
                 'chrome.content': component,
                 'chrome.rootnav': true,
-                'rootnav.active': ComponentType.sidebar,
-                'localnav.active': ComponentType.sidebar
+                'rootnav.active': type.sidebar,
+                'localnav.active': type.sidebar
             };
 
             state['chrome.fullwidth'] = (compName === 'users' || compName === 'alarm' || compName === 'user' || compName === 'settings');
             this.state.set(state);
+            console.log('[Router] presentComponent', component);
 
-            if (typeof(ComponentType.url) === 'function') {
-                Backbone.history.navigate(ComponentType.url(args));
-            } else if (typeof(ComponentType.url) === 'string') {
-                Backbone.history.navigate(ComponentType.url);
+            if (typeof(type.url) === 'function') {
+                Backbone.history.navigate(type.url(args));
+            } else if (typeof(type.url) === 'string') {
+                Backbone.history.navigate(type.url);
             }
         }
     },

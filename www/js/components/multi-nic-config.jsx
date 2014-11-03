@@ -11,10 +11,11 @@
 /** @jsx React.DOM **/
 
 var React = require('react');
+var _ = require('underscore');
 
 var NicConfigComponent = require('./nic-config');
 
-var MultipleNicConfigComponent = module.exports = React.createClass({
+var MultipleNicConfigComponent = React.createClass({
     propTypes: {
         nics: React.PropTypes.array,
         networkFilters: React.PropTypes.object,
@@ -34,10 +35,16 @@ var MultipleNicConfigComponent = module.exports = React.createClass({
     getInitialState: function() {
         var state = {};
         state.nics = this.props.nics || [];
+        console.log('[MultiNicConfig] initial state', state);
         return state;
     },
+    componentWillReceiveProps: function(props) {
+        if (props.nics) {
+            this.setState({nics: props.nics});
+        }
+    },
     onNicPropertyChange: function(prop, value, nic, com) {
-        console.info('onNicPropertyChange', prop, value, nic);
+        console.info('[MultiNicConfig] onNicPropertyChange', prop, value, nic);
         var nics = this.state.nics;
         if (prop === 'primary' && value === true) {
             nics = _.map(nics, function(n) {
@@ -50,7 +57,9 @@ var MultipleNicConfigComponent = module.exports = React.createClass({
             });
         }
         this.setState({nics: nics});
-        this.props.onChange(nics);
+        if (this.props.onChange) {
+            this.props.onChange(nics);
+        }
     },
     addNewNic: function() {
         var nics = this.state.nics;
@@ -69,6 +78,8 @@ var MultipleNicConfigComponent = module.exports = React.createClass({
         }.bind(this));
     },
     render: function() {
+        console.log('[MultiNicConfig] props', this.props);
+        console.log('[MultiNicConfig] state', this.state);
         var nodes = _.map(this.state.nics, function(nic) {
             return <div className="nic-config-component-container">
                 <div className="nic-config-action">
@@ -83,7 +94,7 @@ var MultipleNicConfigComponent = module.exports = React.createClass({
                         networkFilters={this.props.networkFilters}
                         nic={nic} />
                 </div>
-            </div>
+            </div>;
         }, this);
 
         return <div className="multiple-nic-config-component">
@@ -92,3 +103,6 @@ var MultipleNicConfigComponent = module.exports = React.createClass({
         </div>;
     }
 });
+
+
+module.exports = MultipleNicConfigComponent;

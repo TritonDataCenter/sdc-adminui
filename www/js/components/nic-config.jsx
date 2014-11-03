@@ -52,12 +52,12 @@ var NicConfig = React.createClass({
         };
 
         if (typeof(state.expandAntispoofOptions) !== 'boolean') {
-            console.warn('NicConfig expandAntispoofOptions property is not a boolean, using defaults(true)');
+            console.warn('[NicConfig] expandAntispoofOptions property is not a boolean, using defaults(true)');
             state.expandAntispoofOptions = true;
         }
 
-        console.log('NicConfig initial state', state);
-        console.log('NicConfig initial props', this.props);
+        console.log('[NicConfig] initial state', state);
+        console.log('[NicConfig] initial props', this.props);
         state.loading = true;
         return state;
     },
@@ -103,12 +103,10 @@ var NicConfig = React.createClass({
         var expandAntispoofOptions = (nic.allow_dhcp_spoofing || nic.allow_ip_spoofing ||
             nic.allow_mac_spoofing || nic.allow_restricted_traffic || this.state.expandAntispoofOptions);
 
-        console.log(this.state.loading);
-
         return (
             <div className="nic-config form-horizontal">
                 <div className="form-group form-group-network row">
-                    <label className="control-label col-md-4">Network</label>
+                    <label className="control-label col-sm-4">Network</label>
                     <div className="controls col-sm-5">
                         { this.state.loading ?
                             <div className="loading"><i className="fa fa-spinner fa-spin"></i> Retrieving Networks</div>
@@ -137,10 +135,10 @@ var NicConfig = React.createClass({
                 </div>
 
                 <div className="form-group form-group-primary row">
-                    <div className="control-label col-md-4">
+                    <div className="control-label col-sm-4">
                     &nbsp;
                     </div>
-                    <div className="controls col-md-6">
+                    <div className="controls col-sm-6">
                         <div className="checkbox">
                             <label><input onChange={this.onChange} checked={this.state.nic.primary} type="checkbox" className="primary" name="primary" /> Make this the primary NIC</label>
                         </div>
@@ -156,7 +154,7 @@ var NicConfig = React.createClass({
 
                     (expandAntispoofOptions === true) ?
                         (<div className="form-group form-group-spoofing row">
-                            <label className="control-label col-md-4">Anti-Spoofing Options</label>
+                            <label className="control-label col-sm-4">Anti-Spoofing Options</label>
                             <div className="col-sm-5">
                                 <div className="checkbox"><label><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label></div>
                                 <div className="checkbox"><label><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label></div>

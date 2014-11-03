@@ -38,8 +38,13 @@ var Rootnav = React.createClass({
 
     _clickedMenuItem: function(e) {
         e.preventDefault();
-        var view = e.currentTarget.getAttribute('data-view');
-        this.props.handleMenuSelect(view);
+        var view = e.currentTarget.getAttribute('data-view') ;
+        var component = e.currentTarget.getAttribute('data-component');
+        if (view) {
+            this.props.handleMenuSelect(view, 'view');
+        } else {
+            this.props.handleMenuSelect(component, 'component');
+        }
     },
 
     componentDidMount: function() {
@@ -56,8 +61,8 @@ var Rootnav = React.createClass({
                         <div className="col-xs-2">
                             <div className="navbar-brand">
                                 <h1 className="branding">
-                                <span className="product">SDC</span>
-                                <span className="ops-portal">Operations Portal</span>
+                                    <span className="product">SDC</span>
+                                    <span className="ops-portal">Operations Portal</span>
                                 </h1>
                             </div>
                         </div>
@@ -88,7 +93,7 @@ var Rootnav = React.createClass({
 
                                 {
                                     !this.props.readonly &&
-                                    <li onClick={this._clickedMenuItem} className={this.classesFor('settings')}  data-view="settings">
+                                    <li onClick={this._clickedMenuItem} className={this.classesFor('settings')}  data-component="settings">
                                     <a href="/settings"><i className="fa fa-gear fa-fw"></i></a>
                                     </li>
                                 }
@@ -101,7 +106,7 @@ var Rootnav = React.createClass({
                                 {
                                  this.props.user.get('emailhash') ?
                                     <div className="user-icon" style={{
-                                        'background-image': 'url(https://www.gravatar.com/avatar/'+this.props.user.get('emailhash') + '?d=identicon&s=32)'
+                                        'backgroundImage': 'url(https://www.gravatar.com/avatar/'+this.props.user.get('emailhash') + '?d=identicon&s=32)'
                                     }} />
                                     :
                                     <div className="user-icon"></div>
