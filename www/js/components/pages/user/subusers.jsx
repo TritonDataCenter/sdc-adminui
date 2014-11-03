@@ -71,7 +71,7 @@ var UserSubusers = React.createClass({
         } else {
             userIconUrl = '';
         }
-        var userIconStyle = { 'background-image': userIconUrl };
+        var userIconStyle = { 'backgroundImage': userIconUrl };
 
 
         return <div key={u.uuid} className="subuser panel">

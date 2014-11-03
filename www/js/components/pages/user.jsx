@@ -292,7 +292,7 @@ var PageUser = React.createClass({
             userIconUrl = '';
         }
 
-        var userIconStyle = { 'background-image': userIconUrl };
+        var userIconStyle = { 'backgroundImage': userIconUrl };
 
         return <div id="page-user">
             <div className="page-header">
