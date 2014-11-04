@@ -132,7 +132,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
         this.nicConfig = React.render(
             new NicConfigComponent({
                 nic: this.model.toJSON(),
-                readonlyNetwork: true,
+                readonlyNetwork: !this.model.isNew(),
                 expandAntispoofOptions: false,
                 onPropertyChange: this.onNicPropertyChange.bind(this)
             }),
