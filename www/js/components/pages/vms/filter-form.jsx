@@ -11,11 +11,14 @@ INPUT_TYPES.uuid = React.createClass({
     onChange: function(e) {
         this.props.onChange('uuid', e.target.value);
     },
+    focusInput: function() {
+        this.refs.input.getDOMNode().focus();
+    },
     render: function() {
         return <div className="form-group">
             <label className="col-sm-3 control-label">UUID</label>
             <div className="col-sm-5">
-                <input value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="uuid" placeholder="UUID" />
+                <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="uuid" placeholder="UUID" />
             </div>
             <div className="col-sm-1">
                 <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'uuid')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
@@ -29,11 +32,14 @@ INPUT_TYPES.alias = React.createClass({
     onChange: function(e) {
         this.props.onChange('alias', e.target.value);
     },
+    focusInput: function() {
+        this.refs.input.getDOMNode().focus();
+    },
     render: function() {
         return <div className="form-group">
             <label className="col-sm-3 control-label">Alias</label>
             <div className="col-sm-5">
-                <input value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="alias" placeholder="vm alias" />
+                <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="alias" placeholder="vm alias" />
             </div>
             <div className="col-sm-1">
                 <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'package_name')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
@@ -48,11 +54,14 @@ INPUT_TYPES.package_name = React.createClass({
     onChange: function(e) {
         this.props.onChange('package_name', e.target.value);
     },
+    focusInput: function() {
+        this.refs.input.getDOMNode().focus();
+    },
     render: function() {
         return <div className="form-group">
             <label className="col-sm-3 control-label">Package Name</label>
             <div className="col-sm-5">
-                <input value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="package_name" placeholder="Package Name" />
+                <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="package_name" placeholder="Package Name" />
             </div>
             <div className="col-sm-1">
                 <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'package_name')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
@@ -66,11 +75,14 @@ INPUT_TYPES.ip = React.createClass({
     onChange: function(e) {
         this.props.onChange('ip', e.target.value);
     },
+    focusInput: function() {
+        this.refs.input.getDOMNode().focus();
+    },
     render: function() {
         return <div className="form-group">
             <label className="col-sm-3 control-label">IP Address</label>
             <div className="col-sm-5">
-                <input value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="ip" placeholder="IP Address" />
+                <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="ip" placeholder="IP Address" />
             </div>
             <div className="col-sm-1">
                 <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'ip')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
@@ -85,6 +97,9 @@ INPUT_TYPES.owner_uuid = React.createClass({
     onSelectUser: function(u) {
         var uuid = u ? u.get('uuid') : null;
         this.props.onChange('owner_uuid', uuid);
+    },
+    focusInput: function() {
+        this.refs.input.getDOMNode().focus();
     },
     componentDidMount: function() {
         var node = this.refs.input.getDOMNode();
@@ -147,7 +162,6 @@ var FilterForm = React.createClass({
     _onChange: function(prop, value) {
         var values = this.state.values;
         values[prop] = value;
-        console.log('values', values);
         this.setState({values: values});
     },
     _handleRemoveCriteria: function(type) {
@@ -164,7 +178,7 @@ var FilterForm = React.createClass({
         return this.state.filterControls.map(function(f) {
             var TYPE = INPUT_TYPES[f.type];
             var value = this.state.values[f.type];
-            return <TYPE key={f.type} handleRemoveCriteria={this._handleRemoveCriteria} onChange={this._onChange} value={value} />;
+            return <TYPE ref={f.type} key={f.type} handleRemoveCriteria={this._handleRemoveCriteria} onChange={this._onChange} value={value} />;
         }, this);
     },
     _addFilter: function() {
@@ -172,7 +186,9 @@ var FilterForm = React.createClass({
         if (t && t.length) {
             var filterControls = this.state.filterControls;
             filterControls.push({type: t});
-            this.setState({filterControls: filterControls});
+            this.setState({filterControls: filterControls}, function() {
+                this.refs[t].focusInput();
+            }.bind(this));
         }
     },
     render: function() {
