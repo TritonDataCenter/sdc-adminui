@@ -15,9 +15,9 @@ INPUT_TYPES.uuid = React.createClass({
         this.refs.input.getDOMNode().focus();
     },
     render: function() {
-        return <div className="form-group">
-            <label className="col-sm-3 control-label">UUID</label>
-            <div className="col-sm-5">
+        return <div className="form-group form-group-sm">
+            <label className="col-sm-2 control-label">UUID</label>
+            <div className="col-sm-4">
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="uuid" placeholder="UUID" />
             </div>
             <div className="col-sm-1">
@@ -36,7 +36,7 @@ INPUT_TYPES.alias = React.createClass({
         this.refs.input.getDOMNode().focus();
     },
     render: function() {
-        return <div className="form-group">
+        return <div className="form-group form-group-sm">
             <label className="col-sm-3 control-label">Alias</label>
             <div className="col-sm-5">
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="alias" placeholder="vm alias" />
@@ -58,7 +58,7 @@ INPUT_TYPES.package_name = React.createClass({
         this.refs.input.getDOMNode().focus();
     },
     render: function() {
-        return <div className="form-group">
+        return <div className="form-group form-group-sm">
             <label className="col-sm-3 control-label">Package Name</label>
             <div className="col-sm-5">
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="package_name" placeholder="Package Name" />
@@ -79,7 +79,7 @@ INPUT_TYPES.ip = React.createClass({
         this.refs.input.getDOMNode().focus();
     },
     render: function() {
-        return <div className="form-group">
+        return <div className="form-group form-group-sm">
             <label className="col-sm-3 control-label">IP Address</label>
             <div className="col-sm-5">
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="ip" placeholder="IP Address" />
@@ -111,7 +111,7 @@ INPUT_TYPES.owner_uuid = React.createClass({
         this.typeahead.remove();
     },
     render: function() {
-        return <div className="form-group">
+        return <div className="form-group form-group-sm">
             <label className="col-sm-3 control-label">Owner UUID</label>
             <div className="col-sm-5">
                 <input ref="input" value={this.props.value} className="form-control" type="text" name="owner_uuid" placeholder="Search by login or uuid" />
@@ -129,9 +129,9 @@ INPUT_TYPES.state = React.createClass({
         this.props.onChange('state', e.target.value);
     },
     render: function() {
-        return <div className="form-group">
-            <label className="col-sm-3 control-label">State</label>
-            <div className="col-sm-3">
+        return <div className="form-group form-group-sm">
+            <label className="col-sm-2 control-label">State</label>
+            <div className="col-sm-2">
                 <select onChange={this.onChange} value={this.props.value} name="state" className="form-control">
                     <option value="">any</option>
                     <option value="running">running</option>
