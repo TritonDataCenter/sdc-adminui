@@ -16,7 +16,7 @@ INPUT_TYPES.uuid = React.createClass({
     },
     render: function() {
         return <div className="form-group form-group-sm">
-            <label className="col-sm-2 control-label">UUID</label>
+            <label className="col-sm-3 control-label">UUID</label>
             <div className="col-sm-4">
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="uuid" placeholder="UUID" />
             </div>
@@ -130,7 +130,7 @@ INPUT_TYPES.state = React.createClass({
     },
     render: function() {
         return <div className="form-group form-group-sm">
-            <label className="col-sm-2 control-label">State</label>
+            <label className="col-sm-3 control-label">State</label>
             <div className="col-sm-2">
                 <select onChange={this.onChange} value={this.props.value} name="state" className="form-control">
                     <option value="">any</option>
@@ -219,10 +219,10 @@ var FilterForm = React.createClass({
             <div className="panel-body">
                 <div className="form form-horizontal" onSubmit={this._onSubmit}>
                     {this.renderFilterControls()}
-                    <div className="form-group">
+                    <div className="form-group form-group-sm">
                         <div className="col-sm-3"></div>
                         <div className="col-sm-6">
-                            <button type="submit" onClick={this._onSubmit} className="btn btn-primary"><i className="fa fa-search"></i> Search Virtual Machines</button>
+                            <button type="submit" onClick={this._onSubmit} className="btn btn-sm btn-primary"><i className="fa fa-search"></i> Search Virtual Machines</button>
                         </div>
                     </div>
                 </div>
