@@ -151,13 +151,20 @@ var FilterForm = React.createClass({
         handleSearch: React.PropTypes.func.isRequired
     },
     getInitialState: function() {
-        return {
-            values: this.props.initialParams,
-            filterControls: [
+        var state = {};
+        if (this.props.initialParams && Object.keys(this.props.initialParams).length) {
+            state.filterControls = Object.keys(this.props.initialParams).map(function(t) {
+                return { type: t };
+            });
+        } else {
+            state.filterControls = [
                 { type: "uuid" },
                 { type: "state" }
-            ]
-        };
+            ];
+        }
+
+        state.values = this.props.initialParams;
+        return state;
     },
     _onChange: function(prop, value) {
         var values = this.state.values;
@@ -172,7 +179,12 @@ var FilterForm = React.createClass({
                 delete filterControls[i];
             }
         }
-        this.setState({filterControls: filterControls});
+        var values = this.state.values;
+        delete values[type];
+        this.setState({
+            values: values,
+            filterControls: filterControls
+        });
     },
     renderFilterControls: function() {
         return this.state.filterControls.map(function(f) {
@@ -217,7 +229,7 @@ var FilterForm = React.createClass({
                 </div>
             </div>
             <div className="panel-body">
-                <div className="form form-horizontal" onSubmit={this._onSubmit}>
+                <form className="form form-horizontal" onSubmit={this._onSubmit}>
                     {this.renderFilterControls()}
                     <div className="form-group form-group-sm">
                         <div className="col-sm-3"></div>
@@ -225,7 +237,7 @@ var FilterForm = React.createClass({
                             <button type="submit" onClick={this._onSubmit} className="btn btn-sm btn-primary"><i className="fa fa-search"></i> Search Virtual Machines</button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>;
     },

@@ -23,7 +23,7 @@ var Vms = require('../models/vms');
 var VmsList = require('./vms-list');
 var VmsTemplate = require('../tpl/vms.hbs');
 
-var FilterForm = require('../components/pages/vms/filter-form');
+var FilterForm = React.createFactory(require('../components/pages/vms/filter-form'));
 
 module.exports = Backbone.Marionette.Layout.extend({
     name: 'vms',
@@ -53,6 +53,9 @@ module.exports = Backbone.Marionette.Layout.extend({
         this.listView = new VmsList({ collection: this.collection });
 
         this.listenTo(this.collection, 'error', this.onError, this);
+
+        this.initialFilter = JSON.parse(window.localStorage.getItem('vms::last_filter')) || {};
+        console.log('[vms] initialFilter', this.initialFilter);
     },
 
     provision: function() {
@@ -64,7 +67,11 @@ module.exports = Backbone.Marionette.Layout.extend({
         this.ui.alert.hide();
         this.collection.params = params;
         this.collection.firstPage();
-        this.collection.fetch({reset: true});
+        this.collection.fetch({reset: true}).done(function() {
+            var val = JSON.stringify(params);
+            console.log('[vms] set vms::last_filter', val);
+            window.localStorage.setItem('vms::last_filter', val);
+        });
     },
 
 
@@ -99,8 +106,8 @@ module.exports = Backbone.Marionette.Layout.extend({
 
     onShow: function() {
         this.$('.alert').hide();
-        React.renderComponent(FilterForm({
-            initialParams: { state: 'running'},
+        React.render(FilterForm({
+            initialParams: this.initialFilter,
             handleSearch: this.query.bind(this)
         }), this.$('.filter-form').get(0));
 
@@ -110,7 +117,7 @@ module.exports = Backbone.Marionette.Layout.extend({
     onRender: function() {
         app.vent.trigger('settitle', 'vms');
 
-        this.query({state: 'running', sort: "create_timestamp.desc"});
+        this.query(this.initialFilter);
 
         return this;
     }

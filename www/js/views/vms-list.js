@@ -24,7 +24,8 @@ var Promise = require('promise');
 var Images = require('../models/images');
 var User = require('../models/user');
 var Package = require('../models/package');
-var JSONExport = require('../components/json-export.jsx');
+
+var JSONExport = React.createFactory(require('../components/json-export.jsx'));
 
 
 var _getServerPromises = {};
@@ -135,7 +136,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.$('.owner-company-container').hide();
-        React.renderComponent( ServerName({serverUuid: this.model.get('server_uuid')}), this.$('.server').get(0));
+        React.render( ServerName({serverUuid: this.model.get('server_uuid')}), this.$('.server').get(0));
     },
 
 
@@ -223,7 +224,7 @@ module.exports = require('./composite').extend({
         var vms = new Vms({params: this.collection.params});
         var node = this.$('.export-container').get(0);
         vms.exportGroupedByCustomer().done(function(exported) {
-            React.renderComponent(new JSONExport({
+            React.render(new JSONExport({
                 description: "Virtual Machines grouped by owner",
                 data: exported,
                 onRequestHide: function() {
