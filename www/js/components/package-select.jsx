@@ -13,7 +13,7 @@ var React = require('react');
 var Chosen = require('react-chosen');
 module.exports = React.createClass({
     getInitialState: function() {
-        return { packages: [] }
+        return { packages: [] };
     },
     componentWillMount: function() {
         var p = new Packages();
@@ -23,7 +23,7 @@ module.exports = React.createClass({
     },
     renderPackages: function() {
         return this.state.packages.map(function(p) {
-            return <option value={p.uuid}>{p.name} {p.version}</option>
+            return <option value={p.uuid}>{p.name} {p.version}</option>;
         });
     },
     render: function() {

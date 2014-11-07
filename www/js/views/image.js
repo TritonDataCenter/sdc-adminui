@@ -14,8 +14,8 @@ var $ = require('jquery');
 var adminui = require('../adminui');
 
 var React = require('react');
-var ImageAclComponent = require('../components/image-acl.jsx');
-var NotesComponent = require('../components/notes');
+var ImageAclComponent = React.createFactory(require('../components/image-acl.jsx'));
+var NotesComponent = React.createFactory(require('../components/notes'));
 
 
 var JSONEditor = require('./traits-editor');
@@ -224,7 +224,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         this.tagsList.render();
 
         if (adminui.user.role('operators')) {
-            this.notesComponent = React.renderComponent(
+            this.notesComponent = React.render(
                 new NotesComponent({item: this.model.get('uuid')}),
                 this.$('.notes-component-container').get(0));
         }
@@ -234,7 +234,7 @@ var ImageView = Backbone.Marionette.ItemView.extend({
         adminui.vent.trigger('settitle', _.str.sprintf('image: %s %s', this.model.get('name'), this.model.get('version') ));
 
 
-        var imageAclComponent = this.imageAclComponent = React.renderComponent(
+        var imageAclComponent = this.imageAclComponent = React.render(
             new ImageAclComponent({
                 owner: model.get('owner'),
                 public: model.get('public'),

@@ -188,7 +188,7 @@ var JobProgressView = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         var job = this.serializeData();
 
-        this.component = React.renderComponent(
+        this.component = React.render(
             <JobProgressComponent job={job} onCancel={this.onCancel.bind(this)} />, this.$el.get(0));
     },
 

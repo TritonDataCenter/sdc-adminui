@@ -26,11 +26,11 @@ var MantaAgentsDashboard = React.createClass({
 
     _parseData: function(data) {
         var _agents = data.cs_objects.agent;
-        var _service = data.cs_objects.service;
+        // var _service = data.cs_objects.service;
         var _zones = data.cs_objects.zone;
         var _stats = data.cs_objects.stats;
 
-        var hosts = [];
+        // var hosts = [];
 
         var agentData = {};
         var zoneData = {};

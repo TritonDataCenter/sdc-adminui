@@ -10,6 +10,7 @@
 
 var React = require('react');
 var PropTypes = React.PropTypes;
+var _ = require('underscore');
 
 var api = require('../../../request');
 var UserPolicyForm = require('./policy-form');
@@ -68,8 +69,6 @@ var UserPolicies = React.createClass({
         this.setState({loading: true});
         api.get(this._policiesApiUrl()).end(function(res) {
             if (res.ok) {
-                var policies = res.body;
-
                 this.setState({
                     loading: false,
                     policies: res.body

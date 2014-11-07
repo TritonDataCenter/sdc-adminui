@@ -21,7 +21,7 @@ var Users = require('../models/users');
 var tplUsers = require('../tpl/users.hbs');
 var $ = require('jquery');
 var React = require('react');
-var GroupLabels = require('../components/pages/user/group-labels');
+var GroupLabels = React.createFactory(require('../components/pages/user/group-labels'));
 
 
 var UsersListItem = Backbone.Marionette.ItemView.extend({
@@ -35,7 +35,7 @@ var UsersListItem = Backbone.Marionette.ItemView.extend({
     },
     onRender: function() {
         var container = this.$('.groups-container').get(0);
-        React.renderComponent(GroupLabels({userUuid : this.model.get('uuid')}), container);
+        React.render(GroupLabels({userUuid : this.model.get('uuid')}), container);
     },
     onClose: function() {
         React.unmountComponentAtNode(this.$('.groups-container').get(0));

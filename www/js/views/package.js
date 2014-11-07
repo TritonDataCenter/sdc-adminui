@@ -30,7 +30,7 @@ var TraitsEditor = require('./traits-editor');
 var PackageTemplate = require('../tpl/package.hbs');
 
 var React = require('react');
-var NotesComponent = require('../components/notes');
+var NotesComponent = React.createFactory(require('../components/notes'));
 
 var Handlebars = require('handlebars');
 Handlebars.registerHelper('normalize', function(v) {
@@ -242,8 +242,8 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
         }
 
         if (adminui.user.role('operators')) {
-            React.renderComponent(
-                new NotesComponent({item: this.model.get('billing_id')}),
+            React.render(
+                NotesComponent({item: this.model.get('billing_id')}),
                 this.$('.notes-component-container').get(0));
         }
 

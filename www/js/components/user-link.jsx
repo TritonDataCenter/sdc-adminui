@@ -12,7 +12,8 @@
 
 var React = require('react');
 var User = require('../models/user');
-var UserLink = module.exports = React.createClass({
+
+var UserLink =  React.createClass({
     getInitialState: function() {
         return {
             user: {},
@@ -35,9 +36,11 @@ var UserLink = module.exports = React.createClass({
     render: function() {
         if (this.state.loaded) {
             var user = this.state.user.toJSON();
-            return <a className="user-link-component" onClick={this.handleClick} href={"/users/" + this.props.uuid}>{user.cn}</a>
+            return <a className="user-link-component" onClick={this.handleClick} href={"/users/" + this.props.uuid}>{user.cn}</a>;
         } else {
-            return <a className="user-link-component loading" onClick={this.handleClick} href={"/users/" + this.props.uuid}>Loading</a>
+            return <a className="user-link-component loading" onClick={this.handleClick} href={"/users/" + this.props.uuid}>Loading</a>;
         }
     }
 });
+
+module.exports = UserLink;

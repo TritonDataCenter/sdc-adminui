@@ -59,7 +59,7 @@ var NicTagsPage = React.createClass({
             { this.state.error && <ErrorAlert error={this.state.error} /> }
             { this.state.form && <NicTagForm handleClose={this._hideForm} handleSave={this.handleSave}/> }
             { !this.state.form && <NicTagsList /> }
-        </div>
+        </div>;
     }
 });
 
@@ -135,7 +135,8 @@ var NicTagsList = React.createClass({
 module.exports = Backbone.Marionette.View.extend({
     sidebar: 'networking',
     onShow: function() {
-        React.renderComponent(new NicTagsPage(), this.$el.get(0));
+        var Page = React.createFactory(NicTagsPage);
+        React.render(Page(), this.$el.get(0));
         return this;
     }
 })

@@ -17,7 +17,7 @@ var FormTemplate = require('../tpl/packages-form.hbs');
 var Package = require('../models/package');
 var UserInput = require('../views/typeahead-user');
 var React = require('react');
-var ErrorAlert = require('../components/error-alert');
+var ErrorAlert = React.createFactory(require('../components/error-alert'));
 
 var PackageForm = Backbone.Marionette.ItemView.extend({
     template: FormTemplate,
@@ -138,7 +138,7 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
     },
     renderError: function(error) {
         var c = this.$('.error-alert-container').get(0);
-        React.renderComponent(new ErrorAlert({error: error}), c);
+        React.render(ErrorAlert({error: error}), c);
     },
 
     onRender: function() {

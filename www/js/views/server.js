@@ -23,13 +23,13 @@ var Vms = require('../models/vms');
 
 var React = require('react');
 
-var ServerPageHeader = require('../components/pages/server/header.jsx');
+var ServerPageHeader = React.createFactory(require('../components/pages/server/header.jsx'));
 
-var NotesComponent = require('../components/notes');
+var NotesComponent =  React.createFactory(require('../components/notes'));
 
-var ServerMemoryOverview = require('../components/pages/server/memory-overview');
-var ServerDiskOverview = require('../components/pages/server/disk-overview');
-var ServerNicsList = require('../components/server-nics');
+var ServerMemoryOverview = React.createFactory(require('../components/pages/server/memory-overview'));
+var ServerDiskOverview = React.createFactory(require('../components/pages/server/disk-overview'));
+var ServerNicsList = React.createFactory(require('../components/server-nics'));
 
 var VmsList = require('./vms-list');
 var JSONEditor = require('./traits-editor');
@@ -243,7 +243,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         var container = $node.find('.modal-body').get(0);
 
         var ManageLinkAggr = require('../components/server-link-aggr/main');
-        React.renderComponent(new ManageLinkAggr({
+        React.render(new ManageLinkAggr({
             server: this.model.get('uuid')
         }), container);
         $node.modal();
@@ -432,16 +432,16 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
     postRender: function() {
         if (app.user.role('operators')) {
-            React.renderComponent( new NotesComponent({item: this.model.get('uuid')}), this.$('.notes-component-container').get(0));
+            React.render( new NotesComponent({item: this.model.get('uuid')}), this.$('.notes-component-container').get(0));
         }
-        React.renderComponent(ServerPageHeader({server: this.model }), this.$('.server-page-header').get(0));
+        React.render(ServerPageHeader({server: this.model }), this.$('.server-page-header').get(0));
 
         if (this.model.get('setup')) {
-            React.renderComponent(ServerMemoryOverview({ server: this.model }), this.$('.memory-overview-container').get(0));
-            React.renderComponent(ServerDiskOverview({server: this.model }), this.$('.disk-overview-container').get(0));
+            React.render(ServerMemoryOverview({ server: this.model }), this.$('.memory-overview-container').get(0));
+            React.render(ServerDiskOverview({server: this.model }), this.$('.disk-overview-container').get(0));
         }
 
-        React.renderComponent(new ServerNicsList({
+        React.render(new ServerNicsList({
             server: this.model,
             nics: this.nics
         }), this.$('.server-nics').get(0));

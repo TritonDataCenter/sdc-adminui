@@ -22,7 +22,7 @@ var React = require('react');
 var Addresses = require('../models/addresses');
 var AddressesTableRowTemplate = require('../tpl/networks-detail-address-row.hbs');
 
-var NotesComponent = require('../components/notes');
+var NotesComponent = React.createFactory(require('../components/notes'));
 
 var AddressesTableRow = Backbone.Marionette.ItemView.extend({
     tagName: "tr",
@@ -81,8 +81,8 @@ var AddressesTableRow = Backbone.Marionette.ItemView.extend({
         var networkUuid = this.model.collection.uuid;
         var ip = this.model.get('ip');
         var item = [networkUuid, ip].join('.');
-        React.renderComponent(
-            new NotesComponent({item: item}),
+        React.render(
+            NotesComponent({item: item}),
             this.$('.notes-component-container').get(0));
     }
 });
@@ -167,8 +167,8 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     onRender: function() {
         adminui.vent.trigger('settitle', _.str.sprintf('network: %s %s', this.model.get('name')));
 
-        React.renderComponent(
-            new NotesComponent({item: this.model.get('uuid')}),
+        React.render(
+            NotesComponent({item: this.model.get('uuid')}),
             this.$('.notes-component-container').get(0)
         );
 

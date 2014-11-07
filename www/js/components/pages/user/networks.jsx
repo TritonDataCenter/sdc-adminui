@@ -52,7 +52,6 @@ var UserNetworksList = React.createClass({
     },
     componentWillMount: function() {
         var user = this.props.user;
-        var self = this;
         this.allNetworks = new Networks();
         this.allNetworks.fetch().done(function() {
             this.renderNetworkPools.apply(this);

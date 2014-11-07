@@ -21,7 +21,7 @@ var ProvisioningLimitsList = require('./list.jsx');
 var ProvisioningLimitsForm = require('./form.jsx');
 
 
-module.exports = ProvisioningLimits = React.createClass({
+var ProvisioningLimits = React.createClass({
     propTypes: {
         user: React.PropTypes.string.isRequired,
         readonly: React.PropTypes.bool
@@ -112,3 +112,6 @@ module.exports = ProvisioningLimits = React.createClass({
         );
     }
 });
+
+
+module.exports = ProvisioningLimits;

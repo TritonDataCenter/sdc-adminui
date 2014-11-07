@@ -70,7 +70,7 @@ function getUser(userUuid) {
     }
 }
 
-var ServerName = React.createClass({
+var ServerName = React.createFactory(React.createClass({
     propTypes: {
         serverUuid: React.PropTypes.string
     },
@@ -83,7 +83,7 @@ var ServerName = React.createClass({
         if (!this.state || !this.state.server) {
             return null;
         }
-        return <div className="server-name"><i className="fa fa-list"></i> <a href={'/servers/'+this.props.serverUuid} onClick={this.goToServer}>{this.state.server.hostname} </a></div>;
+        return <div className="server-name"><i className="fa fa-list"></i> <a href={'/servers/'+this.props.serverUuid} onClick={this.goToServer}>{this.state.server.hostname} </a></div>;;
     },
     goToServer: function(e) {
         if (e.metaKey || e.ctrlKey) {
@@ -92,7 +92,7 @@ var ServerName = React.createClass({
         e.preventDefault();
         adminui.vent.trigger('showview', 'server', { uuid: this.props.serverUuid });
     },
-});
+}));
 
 var ItemView = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
@@ -221,7 +221,7 @@ module.exports = require('./composite').extend({
 
     onExport: function(e) {
         e.preventDefault();
-        var vms = new Vms({params: this.collection.params});
+        var vms = new Vms(null, {params: this.collection.params});
         var node = this.$('.export-container').get(0);
         vms.exportGroupedByCustomer().done(function(exported) {
             React.render(new JSONExport({

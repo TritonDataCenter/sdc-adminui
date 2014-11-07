@@ -12,7 +12,7 @@ var Backbone = require('backbone');
 var React = require('react');
 var _ = require('underscore');
 
-var PackageSelect = require('../components/package-select.jsx');
+var PackageSelect = React.createFactory(require('../components/package-select'));
 
 var UserVmsFilter = Backbone.Marionette.ItemView.extend({
     attributes: {
@@ -34,8 +34,8 @@ var UserVmsFilter = Backbone.Marionette.ItemView.extend({
         this.trigger('query', data);
     },
     onRender: function() {
-        React.renderComponent(
-            new PackageSelect({}),
+        React.renderC(
+            PackageSelect({}),
             this.$('.package-select').get(0)
         );
     }

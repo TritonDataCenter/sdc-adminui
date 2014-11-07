@@ -39,11 +39,11 @@ var JobsList = require('./jobs-list');
 var JobProgressView = require('./job-progress');
 var VmChangeOwner = require('./vm-change-owner');
 
-var NotesComponent = require('../components/notes');
-var UserTileComponent = require('../components/user-tile');
-var ReprovisionVmComponent = require('../components/reprovision-vm');
+var NotesComponent = React.createFactory(require('../components/notes'));
+var UserTileComponent = React.createFactory(require('../components/user-tile'));
+var ReprovisionVmComponent = React.createFactory(require('../components/reprovision-vm'));
 
-var FirewallToggleButton = React.createClass({
+var FirewallToggleButton = React.createFactory(React.createClass({
     getInitialState: function() {
         var value = this.props.initialValue || false;
         return {value: value};
@@ -70,7 +70,7 @@ var FirewallToggleButton = React.createClass({
         }
         return <div className="firewall-toggle-button-component">{node}</div>;
     }
-});
+}));
 
 
 /**
@@ -341,7 +341,7 @@ var VmView = Backbone.Marionette.Layout.extend({
         var self = this;
         var $container = $('<div class="reprovision-vm-component-container"></div>');
         $(document.body).append($container);
-        React.renderComponent(new ReprovisionVmComponent({
+        React.render(new ReprovisionVmComponent({
             uuid: this.vm.get('uuid'),
             onRequestHide: function() {
                 React.unmountComponentAtNode($container.get(0));
@@ -511,8 +511,8 @@ var VmView = Backbone.Marionette.Layout.extend({
     },
     renderUserTile: function() {
         if (this.vm.get('owner_uuid')) {
-            React.renderComponent(
-                new UserTileComponent({
+            React.renderC(
+                UserTileComponent({
                     uuid: this.vm.get('owner_uuid'),
                     onUserDetails: function(user) {
                         adminui.vent.trigger('showcomponent', 'user', {uuid: user.uuid });
@@ -534,7 +534,7 @@ var VmView = Backbone.Marionette.Layout.extend({
 
 
         this.fwrulesListRegion.show(this.fwrulesList);
-        this.fwToggleButton = React.renderComponent(new FirewallToggleButton({
+        this.fwToggleButton = React.render(FirewallToggleButton({
             initialValue: this.vm.get('firewall_enabled'),
             onToggle: this.onToggleFirewallEnabled.bind(this)
         }), this.$('.firewall-toggle-button').get(0));
@@ -556,7 +556,7 @@ var VmView = Backbone.Marionette.Layout.extend({
         this.renderMetadata();
         this.renderSnapshots();
 
-        React.renderComponent(
+        React.render(
             new NotesComponent({item: this.vm.get('uuid')}),
             this.$('.notes-component-container').get(0)
         );

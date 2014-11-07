@@ -299,13 +299,14 @@ var UserRolesForm = React.createClass({
             { this.props.initialRole ? <div>Modify Role <strong>{this.props.initialRole.name}</strong></div> : 'Create New Role' }
         </div>;
 
-        var loading =
-            <div className="panel user-roles-form">
+        if (this.state.loading) {
+            return <div className="panel user-roles-form">
                 <div className="panel-body">
                     { formTitle }
                     <div className="loading-role">Retrieving Role Information.</div>
                 </div>
             </div>;
+        }
 
         var members;
         if (!this.state.selectedMembers.length && !this.state.selectMember) {

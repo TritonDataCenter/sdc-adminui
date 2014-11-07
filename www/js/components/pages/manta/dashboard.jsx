@@ -8,8 +8,9 @@
  * Copyright (c) 2014, Joyent, Inc.
  */
 
+var React = require('react');
 var MantaAgentsDashboard = React.createClass({
 
 });
 
-module.exports = MarlinDashboard;
+module.exports = MantaAgentsDashboard;

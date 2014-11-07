@@ -8,15 +8,16 @@
  * Copyright (c) 2014, Joyent, Inc.
  */
 
+var React = require('react');
+
 var adminui = require('adminui');
 var Backbone = require('backbone');
 var Networks = require('../models/networks');
 var NetworksListView = require('./networks-list');
 var Servers = require('../models/servers');
-var ServersListComponent = require('../components/servers-list');
 
-var React = require('react');
-var NotesComponent = require('../components/notes');
+var ServersListComponent = React.createFactory(require('../components/servers-list'));
+var NotesComponent = React.createFactory(require('../components/notes'));
 
 module.exports = Backbone.Marionette.Layout.extend({
     template: require('../tpl/nictag.hbs'),
@@ -53,12 +54,12 @@ module.exports = Backbone.Marionette.Layout.extend({
             this.networksRegion.show(this.networksView);
         }.bind(this));
 
-        React.renderComponent(ServersListComponent({collection: this.servers}), this.$('.servers-region').get(0));
+        React.render(ServersListComponent({collection: this.servers}), this.$('.servers-region').get(0));
     },
 
     onRender: function() {
-        React.renderComponent(
-            new NotesComponent({ item: this.model.get('uuid')}),
+        React.render(
+            NotesComponent({ item: this.model.get('uuid')}),
             this.$('.notes-component-container').get(0)
         );
     }

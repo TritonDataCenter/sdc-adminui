@@ -248,7 +248,7 @@ var JobsView = Backbone.Marionette.Layout.extend({
         adminui.vent.trigger('settitle', 'jobs');
 
 
-        this.jobFilters = React.renderComponent(
+        this.jobFilters = React.render(
             JobFiltersList({
                 filters: PRESET_FILTERS,
                 filter: initialFilter,
@@ -256,7 +256,7 @@ var JobsView = Backbone.Marionette.Layout.extend({
             }), this.$('.job-filters-list').get(0));
 
 
-        this.jobCriteras = React.renderComponent(
+        this.jobCriteras = React.render(
             JobCriterias({
                 onChange: this.onFilterChange.bind(this),
                 initialCriteria: initialFilter

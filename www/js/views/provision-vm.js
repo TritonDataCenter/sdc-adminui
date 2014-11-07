@@ -24,7 +24,7 @@ var _ = require('underscore');
  */
 
 var React = require('react');
-var MultiNicConfigComponent = require('../components/multi-nic-config');
+var MultiNicConfigComponent = React.createFactory(require('../components/multi-nic-config'));
 
 var _ = require('underscore');
 
@@ -277,7 +277,7 @@ var View = Backbone.Marionette.Layout.extend({
             return nic;
         });
 
-        this.multiNicConfigComponent = React.renderComponent(
+        this.multiNicConfigComponent = React.render(
             MultiNicConfigComponent({
                 expandAntispoofOptions: false,
                 networkFilters: {provisionable_by: this.selectedUser.get('uuid')},

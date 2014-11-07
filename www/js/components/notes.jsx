@@ -83,11 +83,11 @@ var NotesPanel = React.createClass({
         this.setState({disableButton: true});
     },
     handleArchive: function(note) {
-        console.log('NotesPanel', 'handleArchive', note);
+        console.log('[NotesPanel]', 'handleArchive', note);
         this.props.handleArchive(note);
     },
     handleUnarchive: function(note) {
-        console.log('NotesPanel', 'handleUnarchive', note);
+        console.log('[NotesPanel]', 'handleUnarchive', note);
         this.props.handleUnarchive(note);
     },
     focus: function() {
@@ -235,7 +235,6 @@ var NotesDropdown = React.createClass({
     render: function() {
         var classNames = ["notes-count btn btn-default"];
         var count = this.state.notes.length;
-        console.info('[Notes] render', count);
 
         if (count > 0) {
             classNames.push('has-notes');

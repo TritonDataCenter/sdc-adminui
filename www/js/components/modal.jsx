@@ -27,10 +27,10 @@ var Modal =  React.createClass({
         this.props.onRequestHide();
     },
     renderTitle: function() {
-        return React.isValidComponent(this.props.title) ? this.props.title : <h4 className="modal-title">{this.props.title}</h4>;
+        return React.isValidElement(this.props.title) ? this.props.title : <h4 className="modal-title">{this.props.title}</h4>;
     },
     render: function() {
-        var modal = this.transferPropsTo(<div ref="modal"
+        var modal = <div ref="modal" {...this.props}
             onClick={this.props.backdrop ? this.handleBackdropClick : null}
             className="modal in" style={{display: 'block'}}>
             <div className="modal-dialog">
@@ -44,7 +44,7 @@ var Modal =  React.createClass({
                     { this.props.children }
                 </div>
             </div>
-        </div>);
+        </div>;
 
         if (this.props.backdrop) {
             return <div>

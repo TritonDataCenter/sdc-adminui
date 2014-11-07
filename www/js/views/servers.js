@@ -104,10 +104,9 @@ var ServersView = Backbone.Marionette.Layout.extend({
     },
 
     onShow: function() {
-        this.serversList = ServersList({ collection: this.collection, });
         this.listenTo(this.filterForm, 'query', this.query);
 
-        React.renderComponent(this.serversList, this.$('.servers-list-region').get(0));
+        React.render(ServersList({ collection: this.collection}), this.$('.servers-list-region').get(0));
         this.filterRegion.show(this.filterForm);
         app.vent.trigger('settitle', 'servers');
     },

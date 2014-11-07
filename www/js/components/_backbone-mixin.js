@@ -8,7 +8,7 @@
  * Copyright (c) 2014, Joyent, Inc.
  */
 
-var BackboneMixin = module.exports = {
+var BackboneMixin =  {
     componentDidMount: function() {
     // Whenever there may be a change in the Backbone data, trigger a reconcile.
         this.getBackboneModels().forEach(function(model) {
@@ -24,3 +24,5 @@ var BackboneMixin = module.exports = {
         }, this);
     }
 };
+
+module.exports = BackboneMixin;

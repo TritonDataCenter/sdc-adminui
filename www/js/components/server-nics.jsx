@@ -147,15 +147,15 @@ var ServerNicsList = React.createClass({
         var nics = res.filter(function(n) {
             return n.kind === 'nic';
         });
-        var nicsNodes = nics.length ? nics.map(function(nic, ifname) {
-            return <ServerNic key={nic.mac} nic={nic} />;
+        var nicsNodes = nics.length ? nics.map(function(nic, i) {
+            return <ServerNic key={'nic-'+nic.ifname} nic={nic} />;
         }) : <li className="empty">No Network Interfaces Found</li>;
 
         var vnics = res.filter(function(n) {
             return n.kind === 'vnic';
         });
-        var vnicsNodes = vnics.length ? vnics.map(function(nic, ifname) {
-            return <ServerNic key={nic.mac} nic={nic} />;
+        var vnicsNodes = vnics.length ? vnics.map(function(nic, i) {
+            return <ServerNic key={'vnic-'+ nic.ifname} nic={nic} />;
         }) : <li className="empty">No Virtual Nics Found</li>;
 
         var aggrs = res.filter(function(n) {
@@ -163,7 +163,7 @@ var ServerNicsList = React.createClass({
         });
 
         var aggrsNodes = aggrs.length ? aggrs.map(function(aggr, ifname) {
-            return <ServerNicAggr key={ifname} aggr={aggr} />;
+            return <ServerNicAggr key={'aggr-' + ifname} aggr={aggr} />;
         }) : <li className="empty">No Link Aggregations Found</li>;
 
         return <div className="server-nics-list">

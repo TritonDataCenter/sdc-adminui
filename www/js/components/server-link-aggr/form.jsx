@@ -11,8 +11,10 @@
 var Chosen = require('react-chosen');
 var api = require('../../request');
 var ErrorAlert = require('../error-alert.jsx');
+var React = require('react');
+var _ = require('underscore');
 
-var LinkAggregationForm = module.exports = React.createClass({
+var LinkAggregationForm = React.createClass({
     propTypes: {
         server: React.PropTypes.string.isRequired,
         onSaved: React.PropTypes.func.isRequired,
@@ -41,13 +43,13 @@ var LinkAggregationForm = module.exports = React.createClass({
         api.get('/api/nics')
             .query({belongs_to_uuid: this.props.server})
             .end(function(err, res) {
-                this.setState({nics: res.body})
+                this.setState({nics: res.body});
             }.bind(this));
 
         api.get('/api/nic_tags')
             .end(function(err, res) {
                 this.setState({nictags: res.body });
-            }.bind(this))
+            }.bind(this));
     },
     componentDidMount: function() {
         this.refs.nameInput.getDOMNode().focus();
@@ -144,7 +146,7 @@ var LinkAggregationForm = module.exports = React.createClass({
                     {
                         this.state.nics.map(function(nic) {
                             var nicClasses = ['nic'];
-                            var selected = this.state.linkAggr.macs.indexOf(nic.mac) !== -1
+                            var selected = this.state.linkAggr.macs.indexOf(nic.mac) !== -1;
 
                             if (selected) {
                                 nicClasses.push('selected');
@@ -157,7 +159,7 @@ var LinkAggregationForm = module.exports = React.createClass({
                                     </label>
                                     <div className="tag">{nic.nic_tag}</div>
                                 </div>
-                            )
+                            );
                         }, this)
                     }
                     </div>
@@ -170,7 +172,7 @@ var LinkAggregationForm = module.exports = React.createClass({
                         <Chosen multiple="true" value={this.state.linkAggr.nic_tags_provided} onChange={this.onChangeNicTags}>
                         {
                             this.state.nictags.map(function(nictag) {
-                                return <option>{nictag.name}</option>
+                                return <option>{nictag.name}</option>;
                             }, this)
                         }
                         </Chosen>
@@ -184,6 +186,9 @@ var LinkAggregationForm = module.exports = React.createClass({
                     onClick={this.handleSubmit}>Save Aggregation</button>
             </div>
             </div>
-        )
+        );
     }
 });
+
+
+module.exports = LinkAggregationForm;

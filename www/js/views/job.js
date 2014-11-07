@@ -18,7 +18,8 @@ var moment = require('moment');
 
 var adminui = require('../adminui');
 var React = require('react');
-var BackboneMixin = require('../components/_backbone-mixin');
+var BackboneMixin = React.createFactory(require('../components/_backbone-mixin'));
+var JSONView = React.createFactory(require('../components/json-view'));
 var Job = require('../models/job');
 
 var JobDetailsComponent = React.createClass({
@@ -139,18 +140,6 @@ var JobDetailsComponent = React.createClass({
     }
 });
 
-var JSONView = React.createClass({
-    getInitialState: function() {
-        return {
-            json: this.props.json || {}
-        };
-    },
-
-    render: function() {
-        var contents = JSON.stringify(this.state.json, null, 2);
-        return <div className={this.props.className}>{contents}</div>;
-    }
-});
 
 var JobView = Backbone.Marionette.ItemView.extend({
     sidebar: 'jobs',
@@ -211,8 +200,7 @@ var JobView = Backbone.Marionette.ItemView.extend({
     },
 
     renderJobDetails: function() {
-        var jobComponent = JobDetailsComponent({ job: this.model });
-        React.renderComponent(jobComponent, this.$el.get(0));
+        React.render(JobDetailsComponent({ job: this.model }), this.$el.get(0));
     },
 
     onRender: function() {
@@ -222,8 +210,7 @@ var JobView = Backbone.Marionette.ItemView.extend({
     },
 
     renderInfo: function(info) {
-        var infoComponent = JSONView({ json: info });
-        React.renderComponent(infoComponent, this.$('.info').get(0));
+        React.render( JSONView({ json: info }), this.$('.info').get(0));
     },
 
     onShow: function() {
