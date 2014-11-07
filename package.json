@@ -29,7 +29,7 @@
     "less": "^1.6.3",
     "libuuid": "0.1.2",
     "mime": "~1.2.9",
-    "moray": "git+ssh://git@github.com:joyent/node-moray.git#771b4759f6d175f944024eaeaad038c4cd5488c6",
+    "moray": "git+ssh://git@github.com:joyent/node-moray.git#441fd44",
     "promise": "^5.0.0",
     "react": "0.12.0",
     "reactify": "0.15.2",
