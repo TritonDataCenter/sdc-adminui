@@ -80,7 +80,7 @@ var DashboardPage = React.createClass({
                     </div>
                 </div>
 
-                { haveStats && <div className="col-sm-12">
+                { haveStats ? <div className="col-sm-12">
                     <div className="first-row">
                         <div className="counter">
                             <div className="vms">
@@ -95,9 +95,9 @@ var DashboardPage = React.createClass({
                             </div>
                         </div>
                     </div>
-                </div> }
+                </div> : null }
 
-                { haveStats && <div className="col-md-12 servers">
+                { haveStats ? <div className="col-md-12 servers">
                     <div className="data">
                         <div className="stat servers">
                             <div className="name">Servers</div>
@@ -122,7 +122,7 @@ var DashboardPage = React.createClass({
                             </div>
                         </div>
                     </div>
-                </div> }
+                </div> : null }
             </div>
         );
     }
