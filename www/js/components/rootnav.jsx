@@ -69,7 +69,7 @@ var Rootnav = React.createClass({
                         <div className="col-xs-7">
                             <ul className="nav navbar-nav main-nav">
 
-                                <li onClick={this._clickedMenuItem} data-view="dashboard" className={this.classesFor('datacenter dashboard')}>
+                                <li onClick={this._clickedMenuItem} data-component="dashboard" className={this.classesFor('datacenter dashboard')}>
                                     <a href="/dashboard" className="datacenter-name">
                                         <small>Datacenter</small> {this.props.currentDatacenter}
                                     </a>

@@ -29,7 +29,9 @@ var Components = {
     'settings': require('./components/pages/settings'),
     'user': require('./components/pages/user'),
     'images': require('./components/pages/images'),
-    'manta/agents': require('./components/pages/manta/agents.jsx')
+    'manta/agents': require('./components/pages/manta/agents'),
+    'dashboard': require('./components/pages/dashboard'),
+
 };
 Object.keys(Components).forEach(function(k) {
     Components[k] = React.createFactory(Components[k]);
@@ -47,8 +49,6 @@ var Views = {
     'packages': require('./views/packages'),
     'packages-form': require('./views/packages-form'),
     'package': require('./views/package'),
-
-    'dashboard': require('./views/dashboard'),
 
     'image': require('./views/image'),
     'image-import': require('./views/image-import'),
@@ -186,7 +186,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     defaultAction: function(page) {
-        console.log(_.str.sprintf('[route] defaultAction: %s', page));
+        console.log(_.str.sprintf('[Router] defaultAction: %s', page));
 
         if (this.authenticated()) {
             page = page || 'dashboard';
@@ -200,7 +200,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     authenticated: function() {
         if (! this.user.authenticated()) {
-            console.log('[app] not authenticated, showing sign in');
+            console.log('[Router] not authenticated, showing sign in');
             this.showSignin();
             return false;
         } else {
@@ -209,7 +209,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     initializeChrome: function() {
-        console.info('Rendering State', this.state.toJSON());
+        console.info('[Router] Initialize Chrome', this.state.toJSON());
         this.chrome = React.render(Chrome({
             content: this.state.get('content'),
             state: this.state
@@ -463,13 +463,13 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 props.account = account;
             }
 
-            console.log(_.str.sprintf('[route] showUser:', props));
+            console.log(_.str.sprintf('[Router] showUser:', props));
             this.presentComponent('user', props);
         }
     },
 
     showServer: function(uuid) {
-        console.log(_.str.sprintf('[route] showServer: %s', uuid));
+        console.log(_.str.sprintf('[Router] showServer: %s', uuid));
         var self = this;
         if (this.authenticated()) {
             var Server = require('./models/server');
@@ -487,7 +487,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     showSignin: function() {
-        console.log('[route] showSignin');
+        console.log('[Router] showSignin');
         var signinView = new SigninView({model: this.user});
         this.state.set({
             'chrome.content': new BBComponent({view: signinView}),
