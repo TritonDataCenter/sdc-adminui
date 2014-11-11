@@ -44,8 +44,10 @@ var MultipleNicConfigComponent = React.createClass({
         }
     },
     onNicPropertyChange: function(prop, value, nic, com) {
-        console.info('[MultiNicConfig] onNicPropertyChange', prop, value, nic);
+        console.info('[MultiNicConfig] onNicPropertyChange', prop, value, nic, com);
         var nics = this.state.nics;
+        nics[com.props.index] = nic;
+
         if (prop === 'primary' && value === true) {
             nics = _.map(nics, function(n) {
                 if (n === nic) {
@@ -56,10 +58,13 @@ var MultipleNicConfigComponent = React.createClass({
                 return n;
             });
         }
-        this.setState({nics: nics});
-        if (this.props.onChange) {
-            this.props.onChange(nics);
-        }
+
+        console.log('[MultiNicConfig] new state', nics);
+        this.setState({nics: nics}, function() {
+            if (this.props.onChange) {
+                this.props.onChange(nics);
+            }
+        }.bind(this));
     },
     addNewNic: function() {
         var nics = this.state.nics;
@@ -68,8 +73,8 @@ var MultipleNicConfigComponent = React.createClass({
             this.props.onChange(nics);
         }.bind(this));
     },
-    removeNic: function(nic) {
-        var nics = _.without(this.state.nics, nic);
+    removeNic: function(index) {
+        var nics = this.state.nics.splice(index, 1);
         if (nics.length === 1) {
             nics[0].primary = true;
         }
@@ -78,12 +83,10 @@ var MultipleNicConfigComponent = React.createClass({
         }.bind(this));
     },
     render: function() {
-        console.log('[MultiNicConfig] props', this.props);
-        console.log('[MultiNicConfig] state', this.state);
-        var nodes = _.map(this.state.nics, function(nic) {
+        var nodes = _.map(this.state.nics, function(nic, i) {
             return <div className="nic-config-component-container">
                 <div className="nic-config-action">
-                    <a className="remove" onClick={this.removeNic.bind(this, nic)}>
+                    <a className="remove" onClick={this.removeNic.bind(this, i)}>
                         <i className="fa fa-trash-o"></i> Remove
                     </a>
                 </div>
@@ -92,6 +95,7 @@ var MultipleNicConfigComponent = React.createClass({
                         expandAntispoofOptions={this.props.expandAntispoofOptions}
                         onPropertyChange={this.onNicPropertyChange}
                         networkFilters={this.props.networkFilters}
+                        index={i}
                         nic={nic} />
                 </div>
             </div>;

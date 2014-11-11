@@ -211,7 +211,7 @@ var View = Backbone.Marionette.Layout.extend({
         if (!u) {
             this.userPreview.close();
             this.removeAllNics();
-            self.checkFields();
+            this.checkFields();
             return;
         }
 
