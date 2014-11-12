@@ -511,7 +511,7 @@ var VmView = Backbone.Marionette.Layout.extend({
     },
     renderUserTile: function() {
         if (this.vm.get('owner_uuid')) {
-            React.renderC(
+            React.render(
                 UserTileComponent({
                     uuid: this.vm.get('owner_uuid'),
                     onUserDetails: function(user) {
