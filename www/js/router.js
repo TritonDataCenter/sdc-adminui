@@ -16,7 +16,7 @@ var $ = require('jquery');
 var React = require('react');
 
 var User = require('./models/user');
-var SigninView = require('./views/signin');
+// var SigninView = require('./views/signin');
 
 var Chrome = require('./components/chrome');
 var BBComponent = require('./components/bb.jsx');
@@ -24,6 +24,7 @@ var BBComponent = require('./components/bb.jsx');
 var NotFoundView = require('./views/error/not-found');
 
 var Components = {
+    'signin': require('./components/pages/signin'),
     'alarm': require('./components/pages/alarm'),
     'alarms': require('./components/pages/alarms'),
     'settings': require('./components/pages/settings'),
@@ -488,9 +489,10 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     showSignin: function() {
         console.log('[Router] showSignin');
-        var signinView = new SigninView({model: this.user});
+        // var signinView = new SigninView({model: this.user});
+        var SigninComponent = Components['signin'];
         this.state.set({
-            'chrome.content': new BBComponent({view: signinView}),
+            'chrome.content': SigninComponent({ userModel: this.user }),
             'chrome.rootnav': false,
             'chrome.fullwidth': true
         });
