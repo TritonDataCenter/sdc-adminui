@@ -14,13 +14,19 @@ var SigninComponent = React.createClass({
     },
     _onAuthenticate: function(e) {
         e.preventDefault();
-        this.setState({errorMessage: false});
+        this.setState({
+            signingIn: true,
+            errorMessage: false
+        });
         var username = this.refs.username.getDOMNode().value;
         var password = this.refs.password.getDOMNode().value;
         this.props.userModel.authenticate(username, password);
     },
     _onSigninError: function(err) {
-        this.setState({errorMessage: err});
+        this.setState({
+            errorMessage: err,
+            signingIn: false
+        });
     },
     componentDidMount: function() {
         this.centerSigninBox();
@@ -74,7 +80,9 @@ var SigninComponent = React.createClass({
                     </div>
 
                     <div className="controls">
-                        <button type="submit" className="btn input-lg btn-block btn-info">Sign In to SmartDataCenter</button>
+                        <button type="submit" disabled={this.state.signingIn} className="btn input-lg btn-block btn-info">
+                        { this.state.signingIn ? 'Hold on, Signing in...' : 'Sign In to SmartDataCenter' }
+                        </button>
                     </div>
                 </form>
             </div>
