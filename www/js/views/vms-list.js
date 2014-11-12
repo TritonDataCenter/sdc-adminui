@@ -109,6 +109,13 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         this.pkg = new Package({uuid: options.model.get('billing_id')});
     },
 
+    templateHelpers: {
+        docker: function() {
+            return this.docker === true || this.tags.JPC_tag === 'DockerHost';
+        }
+    },
+
+
     onShow: function() {
         var self = this;
         var user = this.user;

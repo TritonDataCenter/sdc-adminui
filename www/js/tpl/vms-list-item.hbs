@@ -13,10 +13,9 @@
 </td>
 <td class="alias">
   <a href="/vms/{{uuid}}">{{#if alias}}{{alias}}{{else}}{{uuid}}{{/if}}</a>
-  {{#if tags.smartdc_type}}
-  <span class="type">{{tags.smartdc_type}}</span>
-  {{/if}}
   <span class="uuid"><span class="selectable">{{uuid}}</span></span>
+  {{#if tags.smartdc_type}}<span class="type {{tags.smartdc_type}}">{{tags.smartdc_type}}</span>{{/if}}
+  {{#if docker}}<span class="type docker">docker</span>{{/if}}
 </td>
 <td class="owned-by">
   <div class="owner">
