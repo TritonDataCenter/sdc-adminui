@@ -110,7 +110,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     },
 
     templateHelpers: {
-        docker: function() {
+        isDocker: function() {
             return this.docker === true || this.tags.JPC_tag === 'DockerHost';
         }
     },
