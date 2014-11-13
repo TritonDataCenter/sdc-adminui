@@ -27,6 +27,8 @@ var SigninComponent = React.createClass({
             errorMessage: err,
             signingIn: false
         });
+        this.refs.password.getDOMNode().value = '';
+        this.focusFirstInput();
     },
     componentDidMount: function() {
         this.centerSigninBox();
