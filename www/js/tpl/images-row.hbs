@@ -23,10 +23,10 @@
   {{#if public}}
   <span class="public">public</span>
   {{else}}
-  <span class="private">owner</span>
+  <span class="private">owner </span>
     {{#if acl}}
     <span class="acl">
-      and <a>{{acl.length}} others</a>
+      and {{acl.length}} others
     </span>
     {{/if}}
   {{/if}}

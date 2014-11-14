@@ -10,7 +10,6 @@
 
 var Backbone = require('backbone');
 var moment = require('moment');
-var _ = require('underscore');
 
 var app = require('../adminui');
 var Images = require('../models/images');

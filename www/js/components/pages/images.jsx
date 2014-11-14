@@ -54,7 +54,7 @@ var ImagesList = React.createClass({
                 }
 
                 { img.acl &&
-                <span className="acl">and <a>{img.acl.length} others</a></span>
+                <span className="acl"> and {img.acl.length} others</span>
                 }
             </td>
         </tr>;
