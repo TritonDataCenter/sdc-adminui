@@ -10,27 +10,30 @@
 
 "use strict";
 
-var _ = require('underscore');
 var api = require('./request');
-var Backbone = require('backbone');
 var app = require('adminui');
 
-var Pinger = function(options) {
-    this.options = options || {};
-    this.options.interval = this.options.interval || (60 * 1000);
-};
+var PING_INTERVAL = (60 * 1000);
+var EventEmitter = require('events').EventEmitter;
 
-_.extend(Pinger, Backbone.Events);
+
+var Pinger = function(options) {
+    EventEmitter.call(this);
+    this.options = options || {};
+    this.options.interval = this.options.interval || PING_INTERVAL;
+};
+Pinger.prototype = new EventEmitter();
 
 Pinger.prototype.start = function() {
-    this.timer = setInterval(this.ping, this.options.interval);
+    this.timer = setInterval(this.ping.bind(this), this.options.interval);
     this.ping();
 };
 
 Pinger.prototype.ping = function() {
+    var self = this;
     api.get('/api/ping').end(function(res) {
         if (res.ok) {
-            return;
+            self.emit('ping', null, res.body);
         }
         if (res.forbidden) {
             app.router.signout();
