@@ -9,24 +9,24 @@
  */
 
 var React = require('react');
-var BB = require('../../bb');
 var ImagesCollection = require('../../../models/images');
-var ImagesList = require('../../../views/images-list');
+var ImagesList = require('../images/list');
 
 
 var UserImagesList = React.createClass({
     componentWillMount: function() {
-        this.imagesListView = new ImagesList({
-            collection: new ImagesCollection(null, {
-                params: { owner: this.props.user }
-            })
+        this.images = new ImagesCollection(null, {
+            params: { owner: this.props.user }
         });
+        this.images.fetch().done(function() {
+            this.setState({images: this.images});
+        }.bind(this));
     },
     render: function() {
         return (
             <div className="user-images-list">
                 <h3>Images owned by this user</h3>
-                <BB view={this.imagesListView} />
+                <ImagesList images={this.images} />
             </div>
         );
     }
