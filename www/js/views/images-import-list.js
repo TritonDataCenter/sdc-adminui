@@ -9,52 +9,46 @@
  */
 
 var Backbone = require('backbone');
-var moment = require('moment');
-
 var app = require('../adminui');
-var Images = require('../models/images');
 
-var ImageRow = Backbone.Marionette.ItemView.extend({
+var ImagesImportListItem = Backbone.Marionette.ItemView.extend({
+    template: require('../tpl/images-import-list-item.hbs'),
     tagName: 'tr',
-    template: require('../tpl/images-row.hbs'),
     events: {
-        'click .image-name': 'onClickImageName'
+        'click .import a': 'startImport'
     },
-    onClickImageName: function(e) {
-        if (e.metaKey || e.ctrlKey) {
+    startImport: function(e) {
+        e.preventDefault();
+        var confirm = window.confirm('Confirm import image: ' + this.model.nameWithVersion());
+        if (confirm === false) {
             return;
         }
-        e.preventDefault();
-        app.vent.trigger('showview', 'image', {image: this.model});
-    },
-
-    templateHelpers: {
-        publish_date: function() {
-            var d = moment(this.published_at);
-            return d.format("MMM D, YYYY");
-        },
-        active: function() {
-            return this.state === 'active';
-        },
-        unactivated: function() {
-            return this.state === 'unactivated';
-        },
-        disabled: function() {
-            return this.state === 'disabled';
-        }
+        var self = this;
+        this.model.adminImportRemote(function(err, job) {
+            if (err) {
+                app.vent.trigger('notification', {
+                    level: 'error',
+                    message: err.message
+                });
+                return;
+            }
+            app.vent.trigger('showjob', job );
+            self.listenTo(job, 'execution:succeeded', function() {
+                app.vent.trigger('showview', 'image', {uuid: job.get('params').image_uuid });
+            });
+        });
     }
 });
 
-
-module.exports = Backbone.Marionette.CompositeView.extend({
-    template: require('../tpl/images-list.hbs'),
-    itemView: ImageRow,
+var ImagesImport = Backbone.Marionette.CompositeView.extend({
+    template: require('../tpl/images-import-list.hbs'),
+    itemView: ImagesImportListItem,
     tagName: 'table',
-    attributes: {
-        'class': 'images-list'
-    },
-    emptyView: require('./empty').extend({columns: 5}),
     itemViewContainer: 'tbody',
+    attributes: {
+        'class': 'images-list image-import-selector'
+    },
+    emptyView: require('./empty').extend({columns: 3}),
     itemViewOptions: function() {
         return { emptyViewModel: this.collection };
     },
@@ -90,3 +84,6 @@ module.exports = Backbone.Marionette.CompositeView.extend({
 
     }
 });
+
+
+module.exports = ImagesImport;

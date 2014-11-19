@@ -12,51 +12,13 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var app = require('../adminui');
 var Images = require('../models/images');
-var ImagesList = require('./images-list');
-
-var ImportImageSelectorItem = ImagesList.prototype.itemView.extend({
-    template: require('../tpl/image-import-select-item.hbs'),
-    events: {
-        'click .import a': 'startImport'
-    },
-    startImport: function(e) {
-        e.preventDefault();
-        var confirm = window.confirm('Confirm import image: ' + this.model.nameWithVersion());
-        if (confirm === false) {
-            return;
-        }
-        var self = this;
-        this.model.adminImportRemote(function(err, job) {
-            if (err) {
-                app.vent.trigger('notification', {
-                    level: 'error',
-                    message: err.message
-                });
-                return;
-            }
-            app.vent.trigger('showjob', job );
-            self.listenTo(job, 'execution:succeeded', function() {
-                app.vent.trigger('showview', 'image', {uuid: job.get('params').image_uuid });
-            });
-        });
-    }
-});
-
-
-var ImportImageSelector = ImagesList.extend({
-    attributes: {
-        'class': 'images-list image-import-selector'
-    },
-    emptyView: require('./empty').extend({columns: 3}),
-    itemView: ImportImageSelectorItem
-});
-
+var ImportImageSelector = require('./images-import-list');
 
 var ImageImportView = Backbone.Marionette.Layout.extend({
     id: 'page-image-import',
     sidebar: 'images',
-    url: 'image-import',
-    template: require('../tpl/image-import.hbs'),
+    url: 'images-import',
+    template: require('../tpl/images-import.hbs'),
     regions: function() {
         return { imagesList: '.images-list-region' };
     },
@@ -86,6 +48,7 @@ var ImageImportView = Backbone.Marionette.Layout.extend({
         } else {
             params.name = _.str.sprintf('~%s', searchStr);
         }
+
         var collection = new Images([], { params:  params });
         var imagesListView = new ImportImageSelector({collection: collection });
         this.imagesList.show(imagesListView);

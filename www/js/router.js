@@ -51,8 +51,8 @@ var Views = {
     'packages-form': require('./views/packages-form'),
     'package': require('./views/package'),
 
+    'images-import': require('./views/images-import'),
     'image': require('./views/image'),
-    'image-import': require('./views/image-import'),
 
     'jobs': require('./views/jobs'),
     'job': require('./views/job'),

@@ -116,7 +116,7 @@ var ImagesView = React.createClass({
         return page;
     },
     onClickImportImage: function() {
-        app.vent.trigger('showview', 'image-import');
+        app.vent.trigger('showview', 'images-import');
     }
 });
 
