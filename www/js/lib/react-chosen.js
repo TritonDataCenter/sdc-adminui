@@ -9,6 +9,8 @@
  */
 
 var React = require('react');
+var $ = require('jquery');
+
 var Chosen = React.createClass({
     displayName: 'Chosen',
     componentDidUpdate: function() {
@@ -41,19 +43,21 @@ var Chosen = React.createClass({
     getDefaultProps: function() {
         return {
             width: '100%'
-        }
+        };
     },
     activate: function() {
         $(this.refs.select.getDOMNode()).trigger('chosen:activate');
     },
     open: function() {
-        $(this.refs.select.getDOMNode()).trigger('chosen:open')
+        $(this.refs.select.getDOMNode()).trigger('chosen:open');
     },
     close: function() {
         $(this.refs.select.getDOMNode()).data('chosen').close_field();
         $(this.refs.select.getDOMNode()).data('chosen').container.remove();
     },
     render: function() {
-        return this.transferPropsTo(React.DOM.select({ref: 'select'}, this.props.children));
+        var props = this.props;
+        this.props.ref = 'select';
+        return React.DOM.select(props, this.props.children);
     }
 });
