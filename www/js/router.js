@@ -18,8 +18,8 @@ var React = require('react');
 var User = require('./models/user');
 // var SigninView = require('./views/signin');
 
-var Chrome = require('./components/chrome');
-var BBComponent = require('./components/bb.jsx');
+var Chrome = React.createFactory(require('./components/chrome'));
+var BBComponent = React.createFactory(require('./components/bb.jsx'));
 
 var NotFoundView = require('./views/error/not-found');
 

@@ -17,7 +17,7 @@ var React = require('react');
 var api = require('../../request');
 var adminui = require('adminui');
 
-module.exports = React.createClass({
+var AlarmPage = React.createClass({
     displayName: 'PageAlarm',
     propTypes: {
         'user': React.PropTypes.string.isRequired,
@@ -344,3 +344,6 @@ module.exports = React.createClass({
         </div>;
     }
 });
+
+
+module.exports = AlarmPage;

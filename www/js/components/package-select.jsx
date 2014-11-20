@@ -11,7 +11,8 @@
 var Packages = require('../models/packages');
 var React = require('react');
 var Chosen = require('react-chosen');
-module.exports = React.createClass({
+
+var PackageSelect = React.createClass({
     getInitialState: function() {
         return { packages: [] };
     },
@@ -33,3 +34,6 @@ module.exports = React.createClass({
         </Chosen>;
     }
 });
+
+
+module.exports = PackageSelect;

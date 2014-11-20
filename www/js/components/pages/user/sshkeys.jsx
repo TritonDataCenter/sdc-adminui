@@ -16,7 +16,7 @@ var AddKeyView = require('./sshkey-create');
 var Backbone = require('backbone');
 var $ = require('jquery');
 
-module.exports = React.createClass({
+var SSHKeysPage = React.createClass({
     componentWillMount: function() {
         this.sshkeys = new SSHKeys(null, {
             account: this.props.account,
@@ -111,3 +111,4 @@ var SSHKeysList = Backbone.Marionette.CollectionView.extend({
     }
 });
 
+module.exports = SSHKeysPage;

@@ -20,7 +20,7 @@ var Promise = require('promise');
 
 var AMON_POLL_INTERVAL = 60000;
 
-module.exports = React.createClass({
+var AlarmsMenu = React.createClass({
     propTypes: {
         'user': React.PropTypes.string.isRequired
     },
@@ -208,3 +208,6 @@ module.exports = React.createClass({
         </div>;
     }
 });
+
+
+module.exports = AlarmsMenu;

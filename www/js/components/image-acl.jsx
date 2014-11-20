@@ -9,6 +9,7 @@
  */
 
 var React = require('react');
+var $ = require('jquery');
 var adminui = require('../adminui');
 
 var User = require('../models/user');
@@ -139,7 +140,7 @@ var ImageAclForm = React.createClass({
     }
 });
 
-module.exports = React.createClass({
+var ImageAcl = React.createClass({
     propTypes: {
         acl: React.PropTypes.array,
         public: React.PropTypes.bool.isRequired,
@@ -167,14 +168,16 @@ module.exports = React.createClass({
     render: function() {
         var nodes = [];
         if (this.props.public) {
-            nodes.push(<div className="acl-public">This image is available to everyone.</div>);
+            nodes.push(<div key='public' className="acl-public">This image is available to everyone.</div>);
         } else if (this.props.owner) {
             nodes.push(<UserTile
                 onUserDetails={this.onUserDetails}
+                key={this.props.owner}
                 uuid={this.props.owner} owner></UserTile>);
+
             if (this.props.acl.length) {
                 this.props.acl.map(function(uuid) {
-                    nodes.push(<UserTile uuid={uuid} />);
+                    nodes.push(<UserTile key={uuid} uuid={uuid} />);
                     if (! this.props.readonly) {
                         nodes.push(<a className="remove-acl" data-uuid={uuid} onClick={this.props.handleRemoveAcl.bind(null, uuid)}><i className="fa fa-times"></i></a>);
                     }
@@ -192,3 +195,5 @@ module.exports = React.createClass({
             </div>);
     }
 });
+
+module.exports = ImageAcl;
