@@ -35,6 +35,21 @@ var ImageImportView = Backbone.Marionette.Layout.extend({
         });
     },
 
+    checkImgapiExternalNic: function() {
+        var self = this;
+        Images.hasExternalNic(function(err, stat) {
+            if (stat && stat.externalNic === false) {
+                self.$('a.imgapi-vm-btn').attr('href', '/vms/'+stat.imgapiUuid).click(function(e) {
+                    e.preventDefault();
+                    app.router.showVm(stat.imgapiUuid);
+                });
+                self.$('.no-external-nic-alert').show();
+            } else {
+                self.$('.no-external-nic-alert').hide();
+            }
+        });
+    },
+
     onQuery: function(e) {
         e.preventDefault();
 
@@ -58,6 +73,7 @@ var ImageImportView = Backbone.Marionette.Layout.extend({
     onShow: function() {
         this.$('h3').hide();
         this.$('[name=name]').focus();
+        this.checkImgapiExternalNic();
     }
 
 });
