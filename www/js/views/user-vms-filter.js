@@ -34,7 +34,7 @@ var UserVmsFilter = Backbone.Marionette.ItemView.extend({
         this.trigger('query', data);
     },
     onRender: function() {
-        React.renderC(
+        React.render(
             PackageSelect({}),
             this.$('.package-select').get(0)
         );
