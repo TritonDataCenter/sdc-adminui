@@ -113,6 +113,9 @@ module.exports = Backbone.Marionette.Layout.extend({
 
         this.listRegion.show(this.listView);
     },
+    onClose: function() {
+        React.unmountComponentAtNode(this.$('.filter-form').get(0));
+    },
 
     onRender: function() {
         app.vent.trigger('settitle', 'vms');

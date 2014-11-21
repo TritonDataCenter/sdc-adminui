@@ -24,7 +24,7 @@ var PackageSelect = React.createClass({
     },
     renderPackages: function() {
         return this.state.packages.map(function(p) {
-            return <option value={p.uuid}>{p.name} {p.version}</option>;
+            return <option key={p.uuid} value={p.uuid}>{p.name} {p.version}</option>;
         });
     },
     render: function() {

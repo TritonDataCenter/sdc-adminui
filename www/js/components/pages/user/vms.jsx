@@ -11,7 +11,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var BB = require('../../bb.jsx');
+var BB = React.createFactory(require('../../bb.jsx'));
 
 var Vms = require('../../../models/vms');
 

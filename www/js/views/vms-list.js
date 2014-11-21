@@ -71,6 +71,7 @@ function getUser(userUuid) {
 }
 
 var ServerName = React.createFactory(React.createClass({
+    displayName: 'ServerNameLink',
     propTypes: {
         serverUuid: React.PropTypes.string
     },
@@ -143,7 +144,10 @@ var ItemView = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.$('.owner-company-container').hide();
-        React.render( ServerName({serverUuid: this.model.get('server_uuid')}), this.$('.server').get(0));
+        React.render(ServerName({serverUuid: this.model.get('server_uuid')}), this.$('.server').get(0));
+    },
+    onClose: function() {
+        React.unmountComponentAtNode(this.$('.server').get(0));
     },
 
 
@@ -183,7 +187,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     }
 });
 
-module.exports = require('./composite').extend({
+var VmsList = require('./composite').extend({
     itemView: ItemView,
     itemViewContainer: 'tbody',
     attributes: {
@@ -307,3 +311,6 @@ module.exports = require('./composite').extend({
         Object._getUserPromises = {};
     }
 });
+
+
+module.exports = VmsList;

@@ -38,7 +38,7 @@ var SlidingPanelRegionType = Backbone.Marionette.Region.extend({
     }
 });
 
-var ServersList = require('../components/servers-list');
+var ServersList = React.createFactory(require('../components/servers-list'));
 
 var FilterForm = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/servers-filter.hbs'),
@@ -110,7 +110,6 @@ var ServersView = Backbone.Marionette.Layout.extend({
         this.filterRegion.show(this.filterForm);
         app.vent.trigger('settitle', 'servers');
     },
-
 
     onClose: function() {
         React.unmountComponentAtNode(this.$('.servers-list-region').get(0));
