@@ -1896,7 +1896,7 @@ caWidgetChart.prototype.tickFormat = function ()
  */
 caWidgetChart.prototype.updateLegend = function (urows, uopts)
 {
-	var max = 9;
+	var max = 100;
 	var options = uopts || {};
 	var rcomponents, rsummary, rows;
 	var restsum;

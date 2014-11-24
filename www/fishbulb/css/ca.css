@@ -174,6 +174,7 @@ div.caGraphData div.caSlider {
     -moz-box-sizing: border-box;
     display: inline-block;
     margin-top: -200px;
+    overflow-y: auto;
 }
 
 .caGraphHeatMap .caGraphLegend {
