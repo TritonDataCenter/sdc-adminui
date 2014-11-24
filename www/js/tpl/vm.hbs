@@ -13,6 +13,8 @@
   <h1>
     <span class="vm-alias"></span>
     <small class="uuid vm-uuid selectable"></small>
+    {{#if tags.smartdc_type}}<span class="type {{tags.smartdc_type}}">{{tags.smartdc_type}}</span>{{/if}}
+    {{#if isDocker}}<span class="type docker">docker</span>{{/if}}
   </h1>
 </div>
 

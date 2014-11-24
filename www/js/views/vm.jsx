@@ -509,6 +509,12 @@ var VmView = Backbone.Marionette.Layout.extend({
             this.$('.dropdown-menu .stop').parent('li').addClass('disabled');
         }
     },
+    templateHelpers: {
+        isDocker: function() {
+            return this.docker === true || this.tags.JPC_tag === 'DockerHost';
+        }
+    },
+
     renderUserTile: function() {
         if (this.vm.get('owner_uuid')) {
             React.render(
