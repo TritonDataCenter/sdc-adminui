@@ -546,11 +546,24 @@ var VmView = Backbone.Marionette.Layout.extend({
         }), this.$('.firewall-toggle-button').get(0));
         this.$('.fwrules').show();
     },
+    renderDiskQuota: function() {
+        var quota = 0;
+        if (this.vm.get('brand') === 'kvm') {
+            this.vm.get('disks').forEach(function(k) {
+                quota = quota + k.image_size;
+            });
+        } else {
+            quota = this.vm.get('quota');
+        }
 
+        this.$('.vm-disk-quota').html(quota + ' GB');
+    },
     onRender: function() {
         adminui.vent.trigger('settitle', _.str.sprintf('vm: %s', ( this.vm.get('alias') || this.vm.get('uuid')) ));
+
         this.nicsRegion.show(this.nicsList);
         this.renderUserTile();
+        this.renderDiskQuota();
 
         this.snapshotsListView = new SnapshotsList({
             vm: this.vm,
@@ -620,6 +633,7 @@ var VmView = Backbone.Marionette.Layout.extend({
                     }
                 }
             },
+
             '.vm-state': {
                 observe: 'state',
                 attributes: [{
