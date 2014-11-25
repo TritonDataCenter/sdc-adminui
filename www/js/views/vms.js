@@ -20,7 +20,8 @@ var _ = require('underscore');
 var Backbone = require('backbone');
 
 var Vms = require('../models/vms');
-var VmsList = require('./vms-list');
+// var VmsList = require('./vms-list');
+var VmsListComponent = React.createFactory(require('../components/vms-list'));
 var VmsTemplate = require('../tpl/vms.hbs');
 
 var FilterForm = React.createFactory(require('../components/pages/vms/filter-form'));
@@ -50,7 +51,6 @@ module.exports = Backbone.Marionette.Layout.extend({
     initialize: function(options) {
         this.filterView = new FilterForm();
         this.collection = new Vms(null, { perPage: 20 });
-        this.listView = new VmsList({ collection: this.collection });
 
         this.listenTo(this.collection, 'error', this.onError, this);
 
@@ -111,10 +111,13 @@ module.exports = Backbone.Marionette.Layout.extend({
             handleSearch: this.query.bind(this)
         }), this.$('.filter-form').get(0));
 
-        this.listRegion.show(this.listView);
+        React.render(VmsListComponent({
+            collection: this.collection
+        }), this.$('.list-region').get(0));
     },
     onClose: function() {
         React.unmountComponentAtNode(this.$('.filter-form').get(0));
+        React.unmountComponentAtNode(this.$('.list-region').get(0));
     },
 
     onRender: function() {

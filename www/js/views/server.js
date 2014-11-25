@@ -31,7 +31,7 @@ var ServerMemoryOverview = React.createFactory(require('../components/pages/serv
 var ServerDiskOverview = React.createFactory(require('../components/pages/server/disk-overview'));
 var ServerNicsList = React.createFactory(require('../components/server-nics'));
 
-var VmsList = require('./vms-list');
+var VmsList = require('../components/vms-list');
 var JSONEditor = require('./traits-editor');
 var ChangeRackForm = require('./server-change-rack');
 var ChangePlatformForm = require('./server-change-platform');
@@ -93,6 +93,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         }
 
         React.unmountComponentAtNode(this.$('.server-nics').get(0));
+        React.unmountComponentAtNode(this.$('.vms-region').get(0));
     },
 
     initialize: function(options) {
@@ -441,7 +442,11 @@ var ServerView = Backbone.Marionette.Layout.extend({
             React.render(ServerDiskOverview({server: this.model }), this.$('.disk-overview-container').get(0));
         }
 
-        React.render(new ServerNicsList({
+        React.render(VmsList({
+            collection: this.vms
+        }), this.$('.vms-region').get(0));
+
+        React.render(ServerNicsList({
             server: this.model,
             nics: this.nics
         }), this.$('.server-nics').get(0));
@@ -460,7 +465,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
         this.$("[data-toggle=tooltip]").tooltip();
 
         this.vmsListView = new VmsList({collection: this.vms });
-        this.vmsRegion.show(this.vmsListView);
         this.postRender();
     }
 });

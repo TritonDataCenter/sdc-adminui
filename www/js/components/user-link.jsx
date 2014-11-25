@@ -14,6 +14,10 @@ var React = require('react');
 var User = require('../models/user');
 
 var UserLink =  React.createClass({
+    propTypes: {
+        'userUuid': React.PropTypes.string.isRequired,
+        'handleClick': React.PropTypes.func
+    },
     getInitialState: function() {
         return {
             user: {},
@@ -21,24 +25,44 @@ var UserLink =  React.createClass({
         };
     },
     componentDidMount: function() {
-        var user = this.user = new User({uuid: this.props.uuid});
+        var user = this.user = new User({uuid: this.props.userUuid});
         var self = this;
         var req = this.user.fetch();
         req.done(function() {
             self.setState({user: user, loaded: true});
         });
     },
-    handleClick: function() {
+    handleClick: function(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+        e.preventDefault();
         if (this.props.handleClick) {
-            this.props.handleClick(this.state.user);
+            this.props.handleClick(this.user);
         }
     },
     render: function() {
+        var userIcon = this.props.icon ? <i className="fa fa-user fa-fw"></i> : null;
+
         if (this.state.loaded) {
             var user = this.state.user.toJSON();
-            return <a className="user-link-component" onClick={this.handleClick} href={"/users/" + this.props.uuid}>{user.cn}</a>;
+            var company = this.props.company && user.company && user.company.length ?
+                <div className="user-link-company">
+                    { this.props.icon ? <span className="fa fa-building fa-fw"></span> : null}
+                    <div className="owner-company">{user.company}</div>
+                </div> : null;
+
+
+            return <div className="user-link-component">
+                { userIcon }
+                <a onClick={this.handleClick} href={"/users/" + this.props.userUuid}>{user.cn}</a>
+                { company }
+            </div>;
         } else {
-            return <a className="user-link-component loading" onClick={this.handleClick} href={"/users/" + this.props.uuid}>Loading</a>;
+            return <div className="user-link-component loading">
+                { userIcon }
+                <a onClick={this.handleClick} href={"/users/" + this.props.userUuid}>Loading</a>
+            </div>;
         }
     }
 });

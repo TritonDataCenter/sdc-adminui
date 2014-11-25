@@ -15,7 +15,7 @@ var BB = React.createFactory(require('../../bb.jsx'));
 
 var Vms = require('../../../models/vms');
 
-var VmsList = require('../../../views/vms-list');
+var VmsList = require('../../../components/vms-list');
 var VmsFilter = require('../../../views/user-vms-filter');
 
 var UserVmsComponent = React.createClass({
@@ -41,14 +41,13 @@ var UserVmsComponent = React.createClass({
         this.vms.fetch({params: params});
     },
     render: function() {
-        var vmsList = this.vmsList;
         var vmsFilter = this.vmsFilter;
 
         return <div className="row">
             <div className="col-md-12">
                 <h3>Virtual Machines</h3>
                 <div className="vms-filter-region"><BB key="filter" view={vmsFilter} /></div>
-                <div className="vms-region"><BB key="list" view={vmsList} /></div>
+                <div className="vms-region"><VmsList collection={this.vms} /></div>
             </div>
         </div>;
     }

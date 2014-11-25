@@ -48,7 +48,7 @@ var NotesPanelNode = React.createClass({
             <li className={note.archived ? 'archived': ''} key={note.uuid}>
                 <div className="meta">
                     <div className="author">
-                    <UserLink uuid={note.owner_uuid} /></div>
+                    <UserLink userUuid={note.owner_uuid} /></div>
                     <div className="date">{moment(note.created).utc().format("LLL")}</div>
                     <div className="actions">
                     {
