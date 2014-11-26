@@ -4,7 +4,7 @@
 	"sslport": 443,
 	"ssl": {
 		"certificate": "/opt/smartdc/adminui/etc/ssl/ADMINUI.crt",
-		"key": "/opt/smartdc/etc/ssl/ADMINUI.key"
+		"key": "/opt/smartdc/adminui/etc/ssl/ADMINUI.key"
 	},
 	"ufdsMaster": {
 		"url": "ldaps://{{^ufds_remote_ip}}{{{ufds_domain}}}{{/ufds_remote_ip}}{{{ufds_remote_ip}}}",
