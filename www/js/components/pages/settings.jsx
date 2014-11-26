@@ -43,13 +43,14 @@ var SettingsComponent = React.createClass({
         });
     },
     getInitialState: function() {
-        return {};
+        return {certForm: false};
     },
     onChangeCertFile: function(e) {
         var self = this;
         var reader = new FileReader();
         var f = e.target.files[0];
         reader.onload = function(e) {
+            console.log(e.target.result);
             self.setState({'new_ssl_certificate': e.target.result});
         };
 
@@ -60,6 +61,7 @@ var SettingsComponent = React.createClass({
         var reader = new FileReader();
         var f = e.target.files[0];
         reader.onload = function(e) {
+            console.log(e.target.result);
             self.setState({'new_ssl_key': e.target.result});
         };
 
@@ -71,14 +73,14 @@ var SettingsComponent = React.createClass({
 
         var values = { 'provision.preset_networks': networks };
 
-        if (this.state.new_ssl_certificate) {
+        if (this.state.new_ssl_key && this.state.new_ssl_key.length &&
+            this.state.new_ssl_certificate && this.state.new_ssl_certificate.length) {
             values.ssl_certificate = this.state.new_ssl_certificate;
-        }
-
-        if (this.state.new_ssl_key) {
             values.ssl_key = this.state.new_ssl_key;
         }
 
+        console.log('[settings] save', values);
+        SettingsModel.clear();
         SettingsModel.save(values).done(function() {
             self.hideAddCertForm();
             self.fetchSettings();
@@ -173,7 +175,7 @@ var SettingsComponent = React.createClass({
                                 </div> : null }
 
                         </div>
-                    </div>
+                  </div>
                 </div>
             </div>
 
@@ -195,7 +197,9 @@ var SettingsComponent = React.createClass({
                 </div>
             </div>
 
-            <button onClick={this.saveSettings} className="btn save btn-primary">Save Changes</button>
+            <button onClick={this.saveSettings} disabled={
+                this.state.certForm && (!this.state.new_ssl_key || !this.state.new_ssl_certificate)
+            } className="btn save btn-primary">Save Changes</button>
         </div>;
     }
 });
