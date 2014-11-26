@@ -18,6 +18,14 @@ function _bytesToGb(val) {
     return val / 1024 / 1024 / 1024;
 }
 
+function _nanToEmptyString(val) {
+    if (isNaN(val)) {
+        return '';
+    } else {
+        return val;
+    }
+}
+
 
 var DashboardPage = React.createClass({
     statics: {
@@ -47,6 +55,7 @@ var DashboardPage = React.createClass({
             state.serverReserved = body.serverCount.reserved;
             state.serverUnreserved = body.serverCount.unreserved;
             state.serverProvisionable = _bytesToGb(body.serverMemory.provisionable);
+            state.serverProvisionable = NaN;
 
             state.serverUtilization = ((body.serverMemory.total - body.serverMemory.provisionable) / body.serverMemory.total) * 100;
             if (isNaN(state.serverUtilization)) {
@@ -69,6 +78,12 @@ var DashboardPage = React.createClass({
     render: function() {
         var stats = this.state;
         var haveStats = Object.keys(stats).length;
+        var serverProvisionableMemory = _nanToEmptyString(_bytesToGb(stats.serverProvisionable));
+        if (serverProvisionableMemory.length) {
+            serverProvisionableMemory = _.str.sprintf('%0.2f', serverProvisionableMemory);
+        } else {
+            serverProvisionableMemory = '0';
+        }
 
         return (
             <div id="page-dashboard">
@@ -112,13 +127,16 @@ var DashboardPage = React.createClass({
                         <div className="stat ram-provisionable-total">
                             <div className="name">RAM Provisionable / Total </div>
                             <div className="value">
-                                <span className="server-provisionable-memory">{_.str.sprintf('%.2f', _bytesToGb(stats.serverProvisionable)) } </span> / <span className="server-total-memory">{stats.serverTotalMemory}</span>
+                                <span className="server-provisionable-memory">{serverProvisionableMemory}</span> / <span className="server-total-memory">{stats.serverTotalMemory}
+                                </span>
                             </div>
                         </div>
                         <div className="stat ram-utilization">
                             <div className="name">Utilization %</div>
                             <div className="value">
-                                <span className="server-utilization-percent">{ stats.serverUtilization ? _.str.sprintf('%.2f%%', stats.serverUtilization) : null }</span>
+                                <span className="server-utilization-percent">
+                                    { stats.serverUtilization ? _.str.sprintf('%.2f%%', _nanToEmptyString(stats.serverUtilization)) : null }
+                                </span>
                             </div>
                         </div>
                     </div>
