@@ -16,7 +16,6 @@ var $ = require('jquery');
 var React = require('react');
 
 var User = require('./models/user');
-// var SigninView = require('./views/signin');
 
 var Chrome = React.createFactory(require('./components/chrome'));
 var BBComponent = React.createFactory(require('./components/bb.jsx'));
@@ -138,12 +137,16 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
-    renderTitle: function(t) {
-        var p =[ this.app.state.get('datacenter'), 'Operations Portal' ];
-        if (t) {
-            p.unshift(t);
+    renderTitle: function(sectionTitle) {
+        var title = ['Operations Portal' ];
+        var datacenter = this.app.state.get('datacenter');
+        if (datacenter && typeof(datacenter) === 'string') {
+            title.unshift(datacenter);
         }
-        document.title = p.join(' | ');
+        if (sectionTitle && typeof(sectionTitle) === 'string') {
+            title.unshift(sectionTitle);
+        }
+        document.title = title.join(' | ');
     },
 
     start: function() {
