@@ -15,7 +15,7 @@ var JSONExport = React.createClass({
         return <Modal {...this.props} title="JSON Export" className="json-export">
             <div className="modal-body">
                 <p>{this.props.description}</p>
-                <textarea className="form-control" readOnly value={JSON.stringify(this.props.data, null, 2)}></textarea>
+                <textarea style={{minHeight:400}} className="form-control" readOnly value={JSON.stringify(this.props.data, null, 2)}></textarea>
             </div>
         </Modal>;
     }

@@ -26,6 +26,7 @@ var Components = {
     'signin': require('./components/pages/signin'),
     'alarm': require('./components/pages/alarm'),
     'alarms': require('./components/pages/alarms'),
+    'vms': require('./components/pages/vms'),
     'settings': require('./components/pages/settings'),
     'user': require('./components/pages/user'),
     'images': require('./components/pages/images'),
@@ -38,7 +39,6 @@ Object.keys(Components).forEach(function(k) {
 });
 
 var Views = {
-    'vms': require('./views/vms'),
     'vm': require('./views/vm'),
     'provision': require('./views/provision-vm'),
     'servers': require('./views/servers'),
@@ -326,7 +326,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     showVms: function() {
         if (this.authenticated()) {
-            this.presentView('vms');
+            this.presentComponent('vms');
         }
     },
 

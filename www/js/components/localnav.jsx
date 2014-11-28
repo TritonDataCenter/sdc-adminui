@@ -55,7 +55,7 @@ var SecondaryNav = React.createClass({
             <ul className="nav">
                 <li className="nav-header">Compute</li>
                 <li className={this._classesFor('dashboard')} onClick={this._clickedMenuItem} data-component="dashboard"><a href="/dashboard"><i className="fa fa-home"></i> Dashboard</a></li>
-                <li className={this._classesFor('vms')} onClick={this._clickedMenuItem} data-view="vms"><a href="/vms"><i className="fa fa-cubes"></i> Virtual Machines</a></li>
+                <li className={this._classesFor('vms')} onClick={this._clickedMenuItem} data-component="vms"><a href="/vms"><i className="fa fa-cubes"></i> Virtual Machines</a></li>
                 <li className={this._classesFor('servers')} onClick={this._clickedMenuItem} data-view="servers"><a href="/servers"><i className="fa fa-list"></i> Servers</a></li>
                 <li className={this._classesFor('images')} onClick={this._clickedMenuItem} data-component="images"><a href="/images"><i className="fa fa-photo"></i> Images</a></li>
                 <li className={this._classesFor('packages')} onClick={this._clickedMenuItem} data-view="packages"><a href="/packages"><i className="fa fa-codepen"></i> Packages</a></li>
