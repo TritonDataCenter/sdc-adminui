@@ -11,10 +11,7 @@
 "use strict";
 
 
-var _ = require('underscore');
 var adminui = require('../adminui');
-var Promise = require('promise');
-var request = require('../request');
 
 var React = require('react');
 
@@ -22,10 +19,16 @@ var ServerLink = require('./server-link');
 var ImageLnk = require('./image-link');
 var UserLink = require('./user-link');
 
+var Vms = require('../models/vms');
+var JSONExport = require('./json-export');
+
 
 
 var VmsList = React.createClass({
     displayName: 'VmsList',
+    propTypes: {
+        'collection': React.PropTypes.object.isRequired
+    },
     componentDidMount: function() {
         this._requests = [];
         this.props.collection.on('request', this._onRequest, this);
@@ -45,6 +48,16 @@ var VmsList = React.createClass({
     _onSync: function() {
         this.setState({loading: false});
     },
+    handleExport: function(e) {
+        e.preventDefault();
+        var vms = new Vms(null, {params: this.props.collection.params});
+        vms.exportGroupedByCustomer().done(function(exported) {
+            this.setState({'exported': exported});
+        }.bind(this));
+    },
+    handleDismissExport: function() {
+        this.setState({'exported': false});
+    },
     handleLoadMore: function() {
         if (this.props.collection.hasNext()) {
             this.props.collection.next();
@@ -56,39 +69,53 @@ var VmsList = React.createClass({
         this._requests.push(this.props.collection.fetch({remove: false}));
     },
     render: function() {
-        return <div className="vms-list">
-            <div className="vms-list-header">
-                <div className="title">
-                    Showing <span className="current-count">{this.props.collection.length}</span> of <span className="record-count">{this.props.collection.objectCount}</span> Virtual Machines<br/>
-                </div>
-                <div className="actions">
-                    <a className="export">Export (<span className="record-count">{this.props.collection.length}</span>) <i className="fa fa-share-square"></i></a>
-                </div>
-            </div>
-            <table className="table">
-                <tbody>
-                    { this.props.collection.map(this.renderVm, this) }
-                </tbody>
-                <caption className="row" style={{visibility: this.state.loading ? 'hidden': 'visible'}}>
-                    <div className="col-sm-offset-6 col-sm-4" style={{paddingLeft: 0, paddingRight:0}}>
-                    {
-                        this.props.collection.objectCount && this.props.collection.objectCount !== this.props.collection.length ?
-                        <a onClick={this.handleLoadMore}
-                            className="more btn btn-block btn-success"><i className="fa fa-arrow-circle-down"></i> &nbsp; Load More</a>
-                        : null
-                    }
+        var list;
+        if (this.props.collection.length) {
+            list = <div className="vms-list">
+                <div className="vms-list-header">
+                    <div className="title">
+                        Showing <span className="current-count">{this.props.collection.length}</span> of <span className="record-count">{this.props.collection.objectCount}</span> Virtual Machines<br/>
                     </div>
-                    <div className="col-sm-2" style={{paddingLeft: 0}}>
-                    {
-                        this.props.collection.objectCount && this.props.collection.objectCount !== this.props.collection.length ?
-                        <a onClick={this.handleLoadAll} className="all btn btn-block btn-info"><i className="fa fa-arrow-circle-down"></i> &nbsp; Load All (<span className="record-count"></span>)</a>
-                        : null
-                    }
+                    <div className="actions">
+                        {this.props.collection.objectCount ?
+                            <a onClick={this.handleExport} className="export">Export (<span className="record-count">{this.props.collection.length}</span>) <i className="fa fa-share-square"></i></a>
+                            : null }
                     </div>
-                </caption>
-            </table>
-            <div className="export-container"></div>
-        </div>;
+                </div>
+                <table className="table">
+                    <tbody>{ this.props.collection.map(this.renderVm, this) }</tbody>
+                    <caption className="row" style={{visibility: this.state.loading ? 'hidden': 'visible'}}>
+                        <div className="col-sm-offset-6 col-sm-4" style={{paddingLeft: 0, paddingRight:0}}>
+                        {
+                            this.props.collection.objectCount && this.props.collection.objectCount !== this.props.collection.length ?
+                            <a onClick={this.handleLoadMore}
+                                className="more btn btn-block btn-success"><i className="fa fa-arrow-circle-down"></i> &nbsp; Load More</a>
+                            : null
+                        }
+                        </div>
+                        <div className="col-sm-2" style={{paddingLeft: 0}}>
+                        {
+                            this.props.collection.objectCount && this.props.collection.objectCount !== this.props.collection.length ?
+                            <a onClick={this.handleLoadAll}
+                                className="all btn btn-block btn-info"><i className="fa fa-arrow-circle-down"></i>
+                                    &nbsp; Load All (<span className="record-count">{this.props.collection.objectCount}</span>)</a>
+                            : null
+                        }
+                        </div>
+                    </caption>
+                </table>
+                {
+                    this.state.exported ? <div className="export-container">
+                        <JSONExport description="Virtual Machines grouped by owner" data={this.state.exported} onRequestHide={this.handleDismissExport} />
+                    </div> : null
+                }
+            })
+            </div>;
+        } else {
+            list = <div className="zero-state">No Virtual Machines were found matching specified criteria</div>;
+        }
+
+        return list;
     },
     navigateToVmPage: function(e) {
         if (e.metaKey || e.ctrlKey) {
