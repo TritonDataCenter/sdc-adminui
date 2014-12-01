@@ -233,6 +233,11 @@ var NotesDropdown = React.createClass({
         this.setState({dropdown: dropdown});
     },
     render: function() {
+        if (! this.props.item) {
+            console.warn('[Notes] Missing `item` property for notes component, rendering nothing');
+            return null;
+        }
+
         var classNames = ["notes-count btn btn-default"];
         var count = this.state.notes.length;
 
