@@ -243,7 +243,7 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
 
         if (adminui.user.role('operators')) {
             React.render(
-                NotesComponent({item: this.model.get('billing_id')}),
+                NotesComponent({item: this.model.get('uuid')}),
                 this.$('.notes-component-container').get(0));
         }
 
