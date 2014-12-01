@@ -145,7 +145,7 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     backToVirtualMachines: function() {
-        adminui.vent.trigger('showview', 'vms');
+        adminui.vent.trigger('showcomponent', 'vms');
     },
 
     onBlurOwnerField: function(e) {
