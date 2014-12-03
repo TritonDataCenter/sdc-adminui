@@ -114,7 +114,6 @@ var VmsList = React.createClass({
                         <JSONExport description="Virtual Machines grouped by owner" data={this.state.exported} onRequestHide={this.handleDismissExport} />
                     </div> : null
                 }
-            })
             </div>;
         } else {
             list = <div className="zero-state">No Virtual Machines were found matching specified criteria</div>;
