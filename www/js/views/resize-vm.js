@@ -9,7 +9,9 @@
  */
 
 var Backbone = require('backbone');
-var Packages = require('../models/packages');
+var React = require('react');
+
+var PackageSelect = React.createFactory(require('../components/package-select'));
 var Package = require('../models/package');
 var JobProgressView = require('./job-progress');
 var PackagePreviewView = require('./package-preview');
@@ -27,19 +29,24 @@ var View = Backbone.Marionette.ItemView.extend({
         this.vm = options.vm;
         this.model = new ViewModel();
 
-        this.packages = new Packages();
-        this.packages.fetch();
         this.selectedPackage = new Package();
         this.packagePreviewView = new PackagePreviewView({
             model: this.selectedPackage
         });
-        this.listenTo(this.packages, 'sync', this.render, this);
-        this.listenTo(this.model, 'change:package', this.onSelectPackage, this);
+    },
+    onSelectPackage: function(pkg) {
+        if (pkg && typeof(pkg) === 'object') {
+            this.selectedPackage.set(pkg);
+            this.$('button').prop('disabled', false);
+        } else {
+            this.$('button').prop('disabled', true);
+            this.selectedPackage.clear();
+        }
     },
     onClickResize: function() {
         this.$('.alert').hide();
         var self = this;
-        var pkg = new ViewModel(this.model.get('package'));
+        var pkg = this.selectedPackage;
         var values = {};
         values.billing_id = pkg.get('uuid');
         values.package_name = pkg.get('name');
@@ -69,40 +76,10 @@ var View = Backbone.Marionette.ItemView.extend({
             }
         });
     },
-    onSelectPackage: function(p) {
-        var pkg = p.get('package');
-        if (pkg && typeof(pkg) === 'object') {
-            this.selectedPackage.set(pkg);
-        } else {
-            this.selectedPackage.clear();
-        }
-    },
     onRender: function() {
         this.$('.alert').hide();
-        this.$('.package-preview-container').html(this.packagePreviewView.render().el);
-        var self = this;
-        this.stickit(this.model, {
-            'button': {
-                attributes: [{
-                    name: 'disabled',
-                    observe: 'package',
-                    onGet: function(pkg) {
-                        return pkg === null || pkg.length === 0;
-                    }
-                }]
-            },
-            'select': {
-                observe: 'package',
-                selectOptions: {
-                    'collection': 'this.packages',
-                    defaultOption: {
-                        label: 'Select a Package'
-                    },
-                    'labelPath': 'name'
-                }
-            }
-        });
-        this.$('select').chosen();
+        React.render(PackageSelect({onChange: this.onSelectPackage.bind(this)}), this.$('.package-preview-container').get(0));
+        this.$('button').prop('disabled', true);
     },
     show: function() {
         this.render();
