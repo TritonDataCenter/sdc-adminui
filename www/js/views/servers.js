@@ -13,6 +13,7 @@ var _ = require('underscore');
 var Backbone = require('backbone');
 var React = require('react');
 var app = require('adminui');
+var $ = require('jquery');
 var Servers = require('../models/servers');
 var ServerBootOptionsView = require('./server-boot-options');
 
@@ -40,12 +41,27 @@ var SlidingPanelRegionType = Backbone.Marionette.Region.extend({
 
 var ServersList = React.createFactory(require('../components/servers-list'));
 
+var NicTags = require('../models/nictags');
 var FilterForm = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/servers-filter.hbs'),
     events: {
         'submit form': 'onSubmit',
         'keyup input': 'onSubmit',
         'change select': 'onSubmit'
+    },
+    onShow: function() {
+        this.nictags = new NicTags();
+        this.nictags.on('sync', this.renderNicTagsDropdown, this);
+        this.nictags.fetch();
+    },
+    renderNicTagsDropdown: function() {
+        var $select = this.$('select[name=nictag]');
+        $select.empty();
+        $select.append($('<option value="">any</option>'));
+        this.nictags.each(function(nt) {
+            var option = $('<option />').attr('value', nt.get('name')).html(nt.get('name'));
+            $select.append(option);
+        }, this);
     },
     getQuery: function() {
         return Backbone.Syphon.serialize(this);
