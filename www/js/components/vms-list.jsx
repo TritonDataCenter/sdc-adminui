@@ -69,6 +69,11 @@ var VmsList = React.createClass({
         this._requests.push(this.props.collection.fetch({remove: false}));
     },
     render: function() {
+        if (this.state.loading) {
+            return <div className="vms-list">
+            <div className="zero-state">Retrieving Virtual Machines</div>
+            </div>;
+        }
         var list;
         if (this.props.collection.length) {
             list = <div className="vms-list">
