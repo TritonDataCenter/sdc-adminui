@@ -57,8 +57,8 @@ var JobsList = React.createClass({
             job.when = 'unknown';
         }
 
-        if (job.params && job.params.subtask) {
-            job.summary = job.params.subtask;
+        if (job.params) {
+            job.summary = job.params.subtask || '';
         }
 
         return <tr key={job.uuid}>
