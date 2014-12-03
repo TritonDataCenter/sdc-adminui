@@ -13,8 +13,20 @@ var React = require('react');
 var Chosen = require('react-chosen');
 
 var PackageSelect = React.createClass({
+    propTypes: {
+        onChange: React.PropTypes.func
+    },
     getInitialState: function() {
         return { packages: [] };
+    },
+    _onChange: function(e) {
+        var packageUuid = e.target.value;
+        var pkg = this.state.packages.filter(function(p) {
+            return p.uuid === packageUuid;
+        })[0];
+        if (this.props.onChange) {
+            this.props.onChange(pkg);
+        }
     },
     componentWillMount: function() {
         var p = new Packages();
@@ -28,7 +40,7 @@ var PackageSelect = React.createClass({
         });
     },
     render: function() {
-        return <Chosen data-placeholder="Select a Package" name="billing_id">
+        return <Chosen onChange={this._onChange} data-placeholder="Select a Package" name="billing_id">
             <option></option>
             {this.renderPackages()}
         </Chosen>;
