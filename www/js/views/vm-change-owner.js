@@ -65,7 +65,12 @@ var View = Backbone.Marionette.ItemView.extend({
         var owner = this.$('[name=owner_uuid]').val();
         this.vm.update({
             'new_owner_uuid': owner
-        }, function(job) {
+        }, function(job, err) {
+            if (err) {
+                console.log(err);
+                window.alert('Error changing VM owner, '+ err.message);
+                return;
+            }
             app.vent.trigger('showjob', job);
             job.on('execution:succeeded', function() {
                 console.log('[VMChangeOwner] success');
