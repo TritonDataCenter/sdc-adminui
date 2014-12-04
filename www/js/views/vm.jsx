@@ -41,7 +41,7 @@ var VmChangeOwner = require('./vm-change-owner');
 
 var NotesComponent = React.createFactory(require('../components/notes'));
 var UserTileComponent = React.createFactory(require('../components/user-tile'));
-var ReprovisionVmComponent = React.createFactory(require('../components/reprovision-vm'));
+var ReprovisionVmComponent = React.createFactory(require('../components/pages/vm/reprovision'));
 
 var FirewallToggleButton = React.createFactory(React.createClass({
     getInitialState: function() {
@@ -343,10 +343,10 @@ var VmView = Backbone.Marionette.Layout.extend({
         $(document.body).append($container);
         React.render(new ReprovisionVmComponent({
             uuid: this.vm.get('uuid'),
-            onRequestHide: function() {
+            onReprovisionCancel: function() {
                 React.unmountComponentAtNode($container.get(0));
             },
-            handleJobCreated: function(job) {
+            onJobCreated: function(job) {
                 var jobView = new JobProgressView({ model: job });
                 jobView.show();
                 self.listenTo(jobView, 'finished', function() {

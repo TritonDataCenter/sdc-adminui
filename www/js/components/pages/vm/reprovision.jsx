@@ -9,15 +9,16 @@
  */
 
 var React = require('react');
-var Modal = require('./modal.jsx');
+var Modal = require('../../modal');
 var Chosen = require('react-chosen');
-var Images = require('../models/images');
-var Vm = require('../models/vm');
+var Images = require('../../../models/images');
+var Vm = require('../../../models/vm');
 
 var ReprovisionVm = React.createClass({
     propTypes: {
         uuid: React.PropTypes.string.isRequired,
-        handleJobCreated: React.PropTypes.func.isRequired
+        onJobCreated: React.PropTypes.func.isRequired,
+        onReprovisionCancel: React.PropTypes.func.isRequired
     },
     getInitialState: function() {
         return {
@@ -45,8 +46,10 @@ var ReprovisionVm = React.createClass({
         vm.reprovision(this.state.selectedImage, function(err, job) {
             if (job) {
                 self.setState({show: false});
+                self.props.onJobCreated(job);
+            } else {
+                alert('Error reprovisioning VM: ' + JSON.stringify(err));
             }
-            self.props.handleJobCreated(job);
         });
     },
 
@@ -66,7 +69,7 @@ var ReprovisionVm = React.createClass({
         if (this.state.show === false) {
             return null;
         }
-        var node = <Modal {...this.props} title="Reprovision Virtual Machine" ref="modal">
+        var node = <Modal onRequestHide={this.props.onReprovisionCancel} {...this.props} title="Reprovision Virtual Machine" ref="modal">
             <div className="modal-body">
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
@@ -94,7 +97,7 @@ var ReprovisionVm = React.createClass({
                 </form>
             </div>
             <div className="modal-footer">
-                <button type="button" onClick={this.props.onRequestHide} className="btn btn-link">Close</button>
+                <button type="button" onClick={this.props.onReprovisionCancel} className="btn btn-link">Close</button>
                 <button type="submit" disabled={ this.isValid() ? '': 'disabled' } onClick={this.onSubmit} className="btn btn-primary">Reprovision</button>
             </div>
         </Modal>;

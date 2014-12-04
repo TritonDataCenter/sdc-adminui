@@ -30,9 +30,12 @@ var Modal =  React.createClass({
         return React.isValidElement(this.props.title) ? this.props.title : <h4 className="modal-title">{this.props.title}</h4>;
     },
     render: function() {
-        var modal = <div ref="modal" {...this.props}
+        var modal = <div ref="modal"
             onClick={this.props.backdrop ? this.handleBackdropClick : null}
-            className="modal in" style={{display: 'block'}}>
+            className="modal in" style={{display: 'block'}} {...this.props}>
+            { this.props.backdrop ?
+                <div className="modal-backdrop in" ref="backdrop" onClick={this.handleBackdropClick}></div>
+            : null }
             <div className="modal-dialog">
                 <div className="modal-content">
                 { this.props.title ?
@@ -46,15 +49,7 @@ var Modal =  React.createClass({
             </div>
         </div>;
 
-        if (this.props.backdrop) {
-            return <div>
-                <div className="modal-backdrop in" ref="backdrop" onClick={this.handleBackdropClick}></div>
-                {modal}
-            </div>;
-        } else {
-            return modal;
-        }
-
+        return modal;
     }
 });
 
