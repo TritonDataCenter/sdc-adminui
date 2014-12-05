@@ -16,6 +16,7 @@ var Backbone = require('backbone');
  */
 var Snapshots = Backbone.Collection.extend({});
 var JobProgressView = require('./job-progress');
+var adminui = require('../adminui');
 
 var SnapshotRowTemplate = require('../tpl/snapshots-row.hbs');
 var SnapshotRow = Backbone.Marionette.ItemView.extend({
@@ -80,10 +81,14 @@ var View = Backbone.Marionette.CompositeView.extend({
     clickedCreateSnapshot: function() {
         var vm = this.vm;
         var self = this;
-        this.vm.createSnapshot(function(job) {
+        this.vm.createSnapshot(function(job, err) {
+            if (err) {
+                console.log('[Snapshots] error', err);
+                adminui.vent.trigger('notification', {level:'error', message: err.message});
+                return;
+            }
             var jobView = new JobProgressView({model: job});
             self.listenTo(jobView, 'execution', function(exec) {
-                console.log(exec);
                 if (exec === 'succeeded') {
                     vm.fetch();
                 }

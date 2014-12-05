@@ -70,11 +70,21 @@ var Vm = Model.extend({
     },
 
     createSnapshot: function(cb) {
-        $.post(this.url() + '?action=create_snapshot', {}, function(data) {
+        var req = $.post(this.url() + '?action=create_snapshot', {});
+        req.done(function(data) {
             var job = new Job({
                 uuid: data.job_uuid
             });
             cb(job);
+        });
+        req.error(function(res) {
+            var error = {};
+            try {
+                error = JSON.parse(res.responseText);
+            } catch (e) {
+                error.message = 'Error creating snapshot: '+ res.statusText;
+            }
+            cb(null, error);
         });
     },
 
@@ -103,6 +113,10 @@ var Vm = Model.extend({
         req.fail(function(xhr, status, errThrown) {
             cb(errThrown);
         });
+    },
+
+    isDocker: function() {
+        return this.get('docker') === true || this.get('tags').JPC_tag === 'DockerHost';
     },
 
     addNics: function(networks, cb) {
