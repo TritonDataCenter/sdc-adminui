@@ -1,0 +1,476 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+/*
+ * Copyright (c) 2014, Joyent, Inc.
+ */
+
+"use strict";
+
+var React = require('react');
+var moment = require('moment');
+
+var api = require('../../../request');
+var VMModel = require('../../../models/vm');
+
+var JobProgress = require('../../job-progress');
+var UserTile = require('../../user-tile');
+var FirewallToggleButton = require('./fw-toggle-button');
+
+
+var BB = require('../../bb.jsx');
+
+// These are views that are still BB views
+var OwnerChange = require('../../../views/vm-change-owner');
+var SnapshotsList = require('../../../views/snapshots');
+var NicsList = require('../../../views/nics');
+
+var Metadata =  require('./metadata');
+var Notes = require('../../notes');
+var ResizeVm = require('./resize');
+var JobsList = require('../../jobs-list');
+
+var ReprovisionVm = require('./reprovision');
+
+var VMPage = React.createClass({
+    statics: {
+        sidebar: 'vms'
+    },
+    getInitialState: function() {
+        return {};
+    },
+    reloadData: function() {
+        var uuid = this.props.vmUuid;
+        api.get('/api/page/vm').query({uuid: uuid}).end(function(res) {
+            this.setState(res.body);
+        }.bind(this));
+    },
+    componentDidMount: function() {
+        this.reloadData();
+    },
+    render: function() {
+        if (!this.state.vm) {
+            return null;
+        }
+
+        var adminui = this.props.adminui;
+
+        var image = this.state.image;
+        var server = this.state.server;
+        var vm = this.state.vm;
+
+        var quota = 0;
+        if (vm.brand === 'kvm') {
+            vm.disks.forEach(function(k) {
+                quota = quota + k.image_size;
+            });
+        } else {
+            quota = vm.quota;
+        }
+
+        var ips;
+        if (vm.nics.length) {
+            ips = vm.nics.map(function(nic) {
+                return nic.ip;
+            }).join(' ');
+        } else {
+            ips = vm.nics = '';
+        }
+
+        return <div id="page-vm">
+            { this.state.currentJob ? <JobProgress onClose={this._handleJobModalClose} job={this.state.currentJob} /> : null }
+            { this.state.editing === 'package' ? <ResizeVm vmUuid={this.state.vm.uuid} onCancel={this._handleResizeVmCancel} onResizeJobCreated={this._handleResizeJobCreated} /> : null }
+            { this.state.editing === 'reprovision' ? <ReprovisionVm uuid={this.state.vm.uuid} onJobCreated={this._handleReprovisionJobCreated} onReprovisionCancel={this._handleReprovisionCancel} /> : null }
+
+            <div className="page-header">
+                <div className="resource-status"><span className={'vm-state ' + vm.state}>{vm.state}</span></div>
+                <h1>
+                    <span className="vm-alias">{vm.alias || vm.uuid}</span>&nbsp;
+                    <small className="uuid vm-uuid selectable">{vm.uuid}</small>&nbsp;
+                    {vm.tags.smartdc_type ? <span className={'type ' + vm.tags.smartdc_type}>{vm.tags.smartdc_type}</span> : null }
+                    {vm.docker ? <span className="type docker">docker</span> : null }
+                </h1>
+            </div>
+
+            { adminui.user.role('operators') ?
+            <div className="actions">
+                <div className="notes-component-container"><Notes item={vm.uuid} /></div>
+                <div className="btn-group">
+                    <a className="btn dropdown-toggle btn-info" data-toggle="dropdown" href="#">Actions <span className="caret"></span></a>
+
+                    <ul className="dropdown-menu dropdown-menu-right">
+                        <li><a onClick={this._handleStartVm} className="start">Start</a></li>
+                        <li><a onClick={this._handleStopVm} className="stop">Stop</a></li>
+                        <li><a onClick={this._handleReobotVm} className="reboot">Reboot</a></li>
+
+                        { vm.brand !== 'kvm' ?
+                            [
+                                <li className="divider"></li>,
+                                <li><a onClick={this._handleReprovisionVm} className="reprovision">Reprovision</a></li>,
+                                <li><a onClick={this._handleResizeVm} className="resize">Resize</a></li>
+                            ]
+                        : null }
+
+                        <li className="divider"></li>
+                        <li><a className="delete">Delete</a></li>
+                    </ul>
+                </div>
+            </div> : null }
+
+
+
+            <section className="vms-details">
+              <div className="row">
+                <div className="col-md-9">
+                  <table className="overview">
+                    <tr>
+                      <th>Name</th>
+                      <td>
+                        <span className="alias">
+                            <form className="form-inline"></form>
+                            <span className="value vm-alias">{vm.alias || vm.uuid}</span>
+                        </span>
+
+                        <span className="vm-uuid selectable">{vm.uuid}</span>
+                      </td>
+                    </tr>
+
+                    <tr>
+                        <th>Memory &amp; Swap</th>
+                        <td>
+                            <span className="vm-memory">{vm.ram}</span> MB / <span className="vm-swap">{vm.max_swap}</span> MB
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <th>Disk Quota</th>
+                        <td>
+                            <span className="vm-disk-quota">{quota} GB</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                      <th>IP Addresses</th>
+                      <td>
+                        <span className="vm-ips">{ips}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Image</th>
+                      <td>
+                        <a className="image-name-version">{image.name} {image.version}</a>
+                        <span className="image-uuid selectable">{image.uuid}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Server</th>
+                      <td>
+                        <a className="server-hostname">{server.hostname}</a>
+                        <span className="server-uuid selectable">{vm.server_uuid}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Package</th>
+                      <td>
+                        <a className="package" href={'/packages/'+vm.billing_id} onClick={function() {
+                            adminui.router.showPackage(vm.billing_id);
+                        }}>
+                            <span className="package-name">{vm.package_name}</span> &nbsp;
+                            <span className="package-version">{vm.package_version}</span>
+                        </a>
+                        <span className="billing-id selectable">{vm.billing_id}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Created</th>
+                      <td>
+                        <span className="created">
+                        {
+                            moment(vm.create_timestamp).utc().format('D MMMM, YYYY HH:mm:ss z')
+                        }
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Last Modified</th>
+                      <td>
+                        <span className="last-modified">
+                            {
+                                moment(vm.last_modified).utc().format('D MMMM, YYYY HH:mm:ss z')
+                            }
+                        </span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div className="col-md-3">
+                    <div className="user-tile-icon">
+                        <i className="fa fa-user"></i>
+                    </div>
+                    {
+                        adminui.user.role('operators') ?
+                            <a onClick={this._handleChangeOwner} className="change-owner"><i className="fa fa-pencil"></i> change</a>
+                        : null
+                    }
+                    <div className="user-tile-container">
+                        <UserTile uuid={vm.owner_uuid} onUserDetails={
+                            function(user) { adminui.vent.trigger('showcomponent', 'user', {uuid: user.uuid }); }
+                         } />
+                    </div>
+                </div>
+            </div>
+            </section>
+
+
+
+            <section>
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="nics-region">
+                    <BB view={new NicsList({
+                        vm: new VMModel(this.state.vm)
+                    })} />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+
+            <section>
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="snapshots">
+                    <BB view={new SnapshotsList({
+                        vm: new VMModel(this.state.vm)
+                    })} />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="customer-metadata">
+                <div className="row">
+                    <div className="col-md-12">
+                        <h3>
+                            Customer Metadata
+                            { adminui.user.role('operators') && this.state.editing !== 'customer_metadata' ?
+                                <div className="actions"><button onClick={this._handleCustomerMetadataEdit} className="btn-link btn-xs edit-customer-metadata"><i className="fa fa-pencil"></i> Edit Metadata</button></div>
+                            : null }
+                        </h3>
+                        <div className="customer-metadata-region">
+                            <Metadata
+                                onSave={this._handleCustomerMetadataSave}
+                                onCancel={this._handleCustomerMetadataEditCancel}
+                                editing={this.state.editing === 'customer_metadata'}
+                                metadata={vm.customer_metadata} />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section className="internal-metadata-and-tags">
+                <div className="row">
+                    <div className="col-md-6">
+                        <h3>Internal Metadata
+                            { adminui.user.role('operators') && this.state.editing !== 'internal_metadata' ?
+                            <div className="actions">
+                                <button onClick={this._handleInternalMetadataEdit} className="btn-link btn-xs edit-internal-metadata"><i className="fa fa-pencil"></i> Edit Metadata</button>
+                            </div> : null }
+                        </h3>
+                        <div className="internal-metadata-region">
+                            <Metadata
+                                onSave={this._handleInternalMetadataSave}
+                                onCancel={this._handleInternalMetadataEditCancel}
+                                editing={this.state.editing === 'internal_metadata'}
+                                metadata={vm.internal_metadata} />
+                        </div>
+                    </div>
+                    <div className="col-md-6">
+                        <h3>Tags
+                            { adminui.user.role('operators') && this.state.editing !== 'tags' ?
+                            <div className="actions">
+                                <button onClick={this._handleTagsEdit} className="btn-link btn-xs edit-tags"><i className="fa fa-pencil"></i> Edit Tags</button>
+                            </div> : null }
+                        </h3>
+                        <div className="tags-container">
+                            <Metadata
+                                onSave={this._handleTagsSave}
+                                onCancel={this._handleTagsEditCancel}
+                                editing={this.state.editing === 'tags'}
+                                metadata={vm.tags} />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {
+                (vm.brand === 'kvm' && server.current_platform && Number(server.current_platform.slice(0,8) > 20140314)) ?
+                <section className="fwrules">
+                    <div className="row">
+                        <div className="col-md-12">
+                            <h3>
+                                Firewall
+                                { adminui.user.role('operators') ?
+                                    <div className="actions">
+                                        <div className="firewall-toggle-button">
+                                            <FirewallToggleButton initialValue={vm.firewall_enabled} onToggle={this._handleFirewallToggle} />
+                                        </div>
+                                        <a className="btn btn-info btn-sm show-fwrules-form"><i className="fa fa-plus"></i> Create Firewall Rule</a>
+                                    </div> : null
+                                }
+                            </h3>
+                            <div className="fwrules-form-region"></div>
+                            <div className="fwrules-list-region"></div>
+                        </div>
+                    </div>
+                </section>
+            : null }
+
+            <section>
+              <div className="row">
+                <div className="col-md-12">
+                  <h3>Jobs</h3>
+                  <div className="jobs-list-region"><JobsList perPage={1000} params={ {vm_uuid: vm.uuid} }/></div>
+                </div>
+              </div>
+            </section>
+        </div>;
+    },
+    _handleStartVm: function() {
+        var vm = new VMModel({uuid: this.state.vm.uuid});
+        var self = this;
+        vm.start(function(job, err) {
+            if (job) {
+                self.setState({currentJob: job});
+            }
+        });
+    },
+    _handleStopVm: function() {
+        if (window.confirm('Are you sure you want to shut down this VM?')) {
+            var vm = new VMModel({uuid: this.state.vm.uuid});
+            var self = this;
+            vm.stop(function(job, err) {
+                if (job) {
+                    self.setState({currentJob: job});
+                }
+            });
+        }
+    },
+    _handleReobotVm: function() {
+        if (window.confirm('Are you sure you want to reboot this VM?')) {
+            var vm = new VMModel({uuid: this.state.vm.uuid});
+            var self = this;
+            vm.reboot(function(job, err) {
+                if (job) {
+                    self.setState({currentJob: job});
+                }
+            });
+        }
+    },
+    _handleResizeVm: function() {
+        this.setState({editing: 'package'});
+    },
+    _handleResizeVmCancel: function() {
+        this.setState({editing: null});
+    },
+    _handleResizeJobCreated: function(job) {
+        this.setState({currentJob: job});
+    },
+    _handleChangeOwner: function() {
+        var vm = new VMModel({uuid: this.state.vm.uuid});
+        var changeOwner = new OwnerChange({vm: vm});
+        changeOwner.show();
+    },
+    _handleReprovisionVm: function() {
+        this.setState({editing: 'reprovision'});
+    },
+    _handleReprovisionCancel: function() {
+        this.setState({editing: false});
+    },
+    _handleReprovisionJobCreated: function(job) {
+        this.setState({currentJob: job, editing: false});
+    },
+
+    _handleJobModalClose: function() {
+        this.setState({
+            editing: false,
+            currentJob: null
+        });
+        this.reloadData();
+    },
+
+
+    /** Tags handlers **/
+    _handleTagsEdit: function() {
+        this.setState({editing: 'tags'});
+    },
+    _handleTagsEditCancel: function() {
+        this.setState({editing: false});
+    },
+    _handleTagsSave: function(data) {
+        var vm = new VMModel({uuid: this.state.vm.uuid});
+        var self = this;
+        vm.update({tags: data}, function(job, err) {
+            if (job) {
+                self.setState({currentJob: job});
+            }
+        });
+    },
+
+
+    /** InternalMetadata handlers */
+    _handleInternalMetadataEdit: function() {
+        this.setState({editing: 'internal_metadata'});
+    },
+    _handleInternalMetadataEditCancel: function() {
+        this.setState({editing: false});
+    },
+    _handleInternalMetadataSave: function(data) {
+        var vm = new VMModel({uuid: this.state.vm.uuid});
+        var self = this;
+        vm.update({internal_metadata: data}, function(job, err) {
+            if (job) {
+                self.setState({currentJob: job});
+            }
+        });
+    },
+
+
+
+
+    /** Customer Metadata Edit Handlers */
+
+    _handleCustomerMetadataEdit: function() {
+        this.setState({editing: 'customer_metadata'});
+    },
+    _handleCustomerMetadataSave: function(data) {
+        var vm = new VMModel({uuid: this.state.vm.uuid});
+        var self = this;
+        vm.update({customer_metadata: data}, function(job, err) {
+            if (job) {
+                self.setState({currentJob: job});
+            }
+        });
+    },
+    _handleCustomerMetadataEditCancel: function() {
+        this.setState({editing: false});
+    },
+
+    /* Firewall */
+    _handleFirewallToggle: function(value) {
+        var vm = new VMModel(this.state.vm);
+        var self = this;
+        vm.update({firewall_enabled: value}, function(job) {
+            self.setState({currentJob: job});
+        });
+
+
+    }
+});
+
+module.exports = VMPage;

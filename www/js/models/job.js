@@ -10,6 +10,7 @@
 
 var moment = require('moment');
 var _  = require('underscore');
+var $ = require('jquery');
 var Model = require('./model');
 var Job = Model.extend({
     defaults: {},
@@ -25,6 +26,9 @@ var Job = Model.extend({
     onChangeExecution: function() {
         var exec = this.get('execution');
         this.trigger('execution:'+exec);
+        if (this.finished()) {
+            this.trigger('finished');
+        }
     },
 
     finished: function() {

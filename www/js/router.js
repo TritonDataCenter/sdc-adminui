@@ -26,12 +26,13 @@ var Components = {
     'signin': require('./components/pages/signin'),
     'alarm': require('./components/pages/alarm'),
     'alarms': require('./components/pages/alarms'),
+    'vm': require('./components/pages/vm'),
     'vms': require('./components/pages/vms'),
     'settings': require('./components/pages/settings'),
     'user': require('./components/pages/user'),
     'images': require('./components/pages/images'),
     'manta/agents': require('./components/pages/manta/agents'),
-    'dashboard': require('./components/pages/dashboard'),
+    'dashboard': require('./components/pages/dashboard')
 
 };
 Object.keys(Components).forEach(function(k) {
@@ -70,6 +71,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'signin': 'showSignin',
         'vms': 'showVms',
         'vms/:uuid': 'showVm',
+        'vms2/:uuid': 'showVm2',
         'users/:uuid': 'showUser',
         'users/:uuid/:tab': 'showUser',
         'users/:account/:uuid/:tab': 'showUser',
@@ -436,6 +438,14 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
+    showVm2: function(uuid) {
+        if (this.authenticated()) {
+            this.presentComponent('vm', {
+                vmUuid: uuid,
+                adminui: this.app
+            });
+        }
+    },
     showVm: function(uuid) {
         var self = this;
         if (this.authenticated()) {

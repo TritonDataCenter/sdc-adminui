@@ -39,6 +39,9 @@ var JobsList = React.createClass({
         this.collection.on('fetch:done', function() {
             this.setState({'fetching': false});
         }, this);
+        this.collection.on('error', function(model, xhr) {
+            this.setState({'error': xhr.responseText});
+        }, this);
         this.collection.firstPage();
         this.collection.fetch();
     },
@@ -81,6 +84,7 @@ var JobsList = React.createClass({
                 Retrieving Jobs...
             </div>;
         }
+
         if (! this.collection.length) {
             return <div className="zero-state">
                 There are no jobs found matching the specified criteria

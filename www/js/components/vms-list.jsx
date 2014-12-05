@@ -74,9 +74,11 @@ var VmsList = React.createClass({
             <div className="zero-state">Retrieving Virtual Machines</div>
             </div>;
         }
-        var list;
-        if (this.props.collection.length) {
-            list = <div className="vms-list">
+        if (! this.props.collection.length) {
+            return <div className="zero-state">No Virtual Machines were found matching specified criteria</div>;
+        }
+
+        return <div className="vms-list">
                 <div className="vms-list-header">
                     <div className="title">
                         Showing <span className="current-count">{this.props.collection.length}</span> of <span className="record-count">{this.props.collection.objectCount}</span> Virtual Machines<br/>
@@ -115,11 +117,6 @@ var VmsList = React.createClass({
                     </div> : null
                 }
             </div>;
-        } else {
-            list = <div className="zero-state">No Virtual Machines were found matching specified criteria</div>;
-        }
-
-        return list;
     },
     navigateToVmPage: function(e) {
         if (e.metaKey || e.ctrlKey) {

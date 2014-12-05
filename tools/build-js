@@ -211,7 +211,6 @@ function bundle(bundler, out, cb) {
 
     bs.on('error', function(err) {
         LOG.fatal(err, '[%s] BUILD ERROR', out);
-        cb(err);
     });
 
     bs.on('end', function() {
