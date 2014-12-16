@@ -75,7 +75,7 @@ var SigninComponent = React.createClass({
         $v.find("input[value='']:not(:checkbox,:button):visible:first").focus();
     },
     render: function() {
-        var login = this.props.userModel.get('login');
+        var login = this.props.userModel.get('login') || '';
         var dc = this.props.userModel.getDatacenter();
         var buttonClasses = cx({
             'btn': true,
