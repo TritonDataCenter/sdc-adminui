@@ -45,13 +45,27 @@ var VMPage = React.createClass({
     reloadData: function() {
         var uuid = this.props.vmUuid;
         api.get('/api/page/vm').query({uuid: uuid}).end(function(res) {
-            this.setState(res.body);
+            if (res.ok) {
+                this.setState(res.body);
+            }
+            if (res.notFound) {
+                this.setState({notFound: true});
+            }
         }.bind(this));
     },
     componentDidMount: function() {
         this.reloadData();
     },
     render: function() {
+        if (this.state.notFound) {
+            return <div id="page-vm">
+                <div className="page-header">
+                    <h2>Virtual Machine Not Found</h2>
+                </div>
+                <p>The Virtual Machine with ID <code>{this.props.vmUuid}</code> could not be found.</p>
+            </div>;
+        }
+
         if (!this.state.vm) {
             return null;
         }
