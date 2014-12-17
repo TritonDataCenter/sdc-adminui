@@ -20,9 +20,8 @@ var BBComponent = React.createClass({
         view: React.PropTypes.object.isRequired
     },
     componentDidMount: function() {
-        var view = this.props.view;
         this.region = new Region({el: this.getDOMNode() });
-        this.region.show(view);
+        this.region.show(this.props.view);
     },
     componentDidUpdate: function() {
         this.region.show(this.props.view);

@@ -27,6 +27,8 @@ var BB = require('../../bb.jsx');
 var OwnerChange = require('../../../views/vm-change-owner');
 var SnapshotsList = require('../../../views/snapshots');
 var NicsList = require('../../../views/nics');
+var FWRulesList = require('../../../views/fwrules-list');
+var FWRulesForm = require('../../../views/fwrules-form');
 
 var Metadata =  require('./metadata');
 var Notes = require('../../notes');
@@ -54,9 +56,28 @@ var VMPage = React.createClass({
         }.bind(this));
     },
     componentDidMount: function() {
+        this.fwrulesList = new FWRulesList({vm: new VMModel({uuid: this.props.vmUuid}) });
+        this.fwrulesList.on('itemview:edit:rule', function(iv) {
+            iv.$el.addClass('editing');
+            this.fwrulesForm = new FWRulesForm({model: iv.model });
+            this.setState({ editing: 'fwrule' });
+
+            this.fwrulesForm.on('close', function() {
+                this.setState({ editing: false });
+                iv.$el.removeClass('editing');
+            }, this);
+
+            this.fwrulesForm.on('rule:saved', function() {
+                this.setState({ editing: false });
+                this.fwrulesList.collection.fetch();
+            }, this);
+        }, this);
+
         this.reloadData();
     },
     render: function() {
+        console.log('[vm] state', this.state);
+
         if (this.state.notFound) {
             return <div id="page-vm">
                 <div className="page-header">
@@ -74,6 +95,7 @@ var VMPage = React.createClass({
 
         var image = this.state.image;
         var server = this.state.server;
+        var pkg = this.state.package;
         var vm = this.state.vm;
 
         var quota = 0;
@@ -193,8 +215,8 @@ var VMPage = React.createClass({
                         <a className="package" href={'/packages/'+vm.billing_id} onClick={function() {
                             adminui.router.showPackage(vm.billing_id);
                         }}>
-                            <span className="package-name">{vm.package_name}</span> &nbsp;
-                            <span className="package-version">{vm.package_version}</span>
+                            <span className="package-name">{pkg.name}</span> &nbsp;
+                            <span className="package-version">{pkg.version}</span>
                         </a>
                         <span className="billing-id selectable">{vm.billing_id}</span>
                       </td>
@@ -338,8 +360,12 @@ var VMPage = React.createClass({
                                     </div> : null
                                 }
                             </h3>
-                            <div className="fwrules-form-region"></div>
-                            <div className="fwrules-list-region"></div>
+                            <div className="fwrules-form-region">
+                                {this.state.editing === 'fwrule' ? <BB view={this.fwrulesForm} /> : null }
+                            </div>
+                            <div className="fwrules-list-region">
+                                <BB view={this.fwrulesList} />
+                            </div>
                         </div>
                     </div>
                 </section>
