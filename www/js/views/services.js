@@ -54,7 +54,7 @@ var InstanceView = Backbone.Marionette.ItemView.extend({
         'class': 'instance'
     },
     navigateToVm: function() {
-        adminui.vent.trigger('showview', 'vm', {uuid: this.model.get('uuid')});
+        adminui.router.showVm(this.model.get('uuid'));
     },
     onRender: function() {
         var self = this;

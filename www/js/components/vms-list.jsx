@@ -125,7 +125,7 @@ var VmsList = React.createClass({
         e.preventDefault();
 
         var vmModel = this.props.collection.get(e.target.getAttribute('data-vm-uuid'));
-        adminui.vent.trigger('showview', 'vm', { vm: vmModel });
+        adminui.router.showVm(vmModel.get('uuid'));
     },
     navigateToOwnerDetailsPage: function(user) {
         adminui.vent.trigger('showcomponent', 'user', { user: user });

@@ -58,7 +58,7 @@ var AddressesTableRow = Backbone.Marionette.ItemView.extend({
             adminui.vent.trigger('showview', 'server', {uuid: uuid });
         }
         if (type === 'zone') {
-            adminui.vent.trigger('showview', 'vm', {uuid: uuid });
+            adminui.router.showVm(uuid);
         }
     },
 

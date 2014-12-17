@@ -12,6 +12,7 @@
 
 var React = require('react');
 var moment = require('moment');
+var _ = require('underscore');
 
 var api = require('../../../request');
 var VMModel = require('../../../models/vm');
@@ -39,7 +40,10 @@ var ReprovisionVm = require('./reprovision');
 
 var VMPage = React.createClass({
     statics: {
-        sidebar: 'vms'
+        sidebar: 'vms',
+        url: function(props) {
+            return _.str.sprintf('/vms/%s', props.vmUuid);
+        }
     },
     getInitialState: function() {
         return {};
@@ -198,21 +202,28 @@ var VMPage = React.createClass({
                     <tr>
                       <th>Image</th>
                       <td>
-                        <a className="image-name-version">{image.name} {image.version}</a>
+                        <a href={'/images/'+image.uuid} onClick={function(e) {
+                            e.preventDefault();
+                            adminui.router.showImage(image.uuid);
+                        }} className="image-name-version">{image.name} {image.version}</a>
                         <span className="image-uuid selectable">{image.uuid}</span>
                       </td>
                     </tr>
                     <tr>
                       <th>Server</th>
                       <td>
-                        <a className="server-hostname">{server.hostname}</a>
+                        <a href={'/servers/'+server.uuid} onClick={function(e) {
+                            e.preventDefault();
+                            adminui.router.showServer(vm.server_uuid);
+                        }} className="server-hostname">{server.hostname}</a>
                         <span className="server-uuid selectable">{vm.server_uuid}</span>
                       </td>
                     </tr>
                     <tr>
                       <th>Package</th>
                       <td>
-                        <a className="package" href={'/packages/'+vm.billing_id} onClick={function() {
+                        <a className="package" href={'/packages/'+vm.billing_id} onClick={function(e) {
+                            e.preventDefault();
                             adminui.router.showPackage(vm.billing_id);
                         }}>
                             <span className="package-name">{pkg.name}</span> &nbsp;

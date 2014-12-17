@@ -181,7 +181,7 @@ var JobView = Backbone.Marionette.ItemView.extend({
             return;
         }
         e.preventDefault();
-        adminui.vent.trigger('showview', 'vm', {uuid: this.model.get('params').vm_uuid});
+        adminui.router.showVm(this.model.get('params').vm_uuid);
     },
 
     onError: function(e, xhr, s) {

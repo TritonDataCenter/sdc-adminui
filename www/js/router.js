@@ -40,7 +40,6 @@ Object.keys(Components).forEach(function(k) {
 });
 
 var Views = {
-    'vm': require('./views/vm'),
     'provision': require('./views/provision-vm'),
     'servers': require('./views/servers'),
     'server': require('./views/server'),
@@ -438,7 +437,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
-    showVm2: function(uuid) {
+    showVm: function(uuid) {
         if (this.authenticated()) {
             this.presentComponent('vm', {
                 vmUuid: uuid,
@@ -446,23 +445,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             });
         }
     },
-    showVm: function(uuid) {
-        var self = this;
-        if (this.authenticated()) {
-            var Vm = require('./models/vm');
-            var vm = new Vm({uuid: uuid});
-            vm.fetch().done(function() {
-                self.presentView('vm', { vm: vm });
-            }).fail(function(xhr) {
-                self.notFound({
-                    view: 'vm',
-                    args: {uuid: uuid},
-                    xhr: xhr
-                });
-            });
-        }
-    },
-
     showUser: function(account, user, tab) {
         if (this.authenticated()) {
             if (arguments.length === 1) {
