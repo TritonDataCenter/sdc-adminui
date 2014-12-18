@@ -37,6 +37,7 @@ var ResizeVm = require('./resize');
 var JobsList = require('../../jobs-list');
 
 var ReprovisionVm = require('./reprovision');
+var RenameVm = require('./rename');
 
 var VMPage = React.createClass({
     statics: {
@@ -124,6 +125,7 @@ var VMPage = React.createClass({
             { this.state.currentJob ? <JobProgress onClose={this._handleJobModalClose} job={this.state.currentJob} /> : null }
             { this.state.editing === 'package' ? <ResizeVm vmUuid={this.state.vm.uuid} onCancel={this._handleResizeVmCancel} onResizeJobCreated={this._handleResizeJobCreated} /> : null }
             { this.state.editing === 'reprovision' ? <ReprovisionVm uuid={this.state.vm.uuid} onJobCreated={this._handleReprovisionJobCreated} onReprovisionCancel={this._handleReprovisionCancel} /> : null }
+            { this.state.editing === 'alias' ? <RenameVm uuid={this.state.vm.uuid} onJobCreated={this._handleRenameJobCreated} onCancel={this._handleRenameVmCancel} /> : null }
 
             <div className="page-header">
                 <div className="resource-status"><span className={'vm-state ' + vm.state}>{vm.state}</span></div>
@@ -145,6 +147,8 @@ var VMPage = React.createClass({
                         <li><a onClick={this._handleStartVm} className="start">Start</a></li>
                         <li><a onClick={this._handleStopVm} className="stop">Stop</a></li>
                         <li><a onClick={this._handleReobotVm} className="reboot">Reboot</a></li>
+                        <li className="divider"></li>
+                        <li><a onClick={this._handleRenameVm} className="rename">Rename Alias</a></li>
 
                         { vm.brand !== 'kvm' ?
                             [
@@ -412,6 +416,17 @@ var VMPage = React.createClass({
             });
         }
     },
+    _handleRenameVm: function() {
+        this.setState({editing: 'alias'});
+    },
+    _handleRenameVmCancel: function() {
+        this.setState({editing: null});
+    },
+    _handleRenameJobCreated: function(job) {
+        this.setState({currentJob: job, editing: null});
+    },
+
+
     _handleReobotVm: function() {
         if (window.confirm('Are you sure you want to reboot this VM?')) {
             var vm = new VMModel({uuid: this.state.vm.uuid});
