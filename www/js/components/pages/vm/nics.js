@@ -9,15 +9,15 @@
  */
 
 var Backbone = require('backbone');
-var Networks = require('../models/networks');
-var Nics = require('../models/nics');
+var Networks = require('../../../models/networks');
+var Nics = require('../../../models/nics');
 
+var AddNicView = require('./nics-form');
 var NicsRowView = require('./nics-row');
-var JobProgress = require('./job-progress');
-var AddNicView = require('./vm-nic-form');
+var JobProgress = require('../../../views/job-progress');
 
 var NicsView = Backbone.Marionette.CompositeView.extend({
-    template: require('../tpl/nics.hbs'),
+    template: require('./nics.hbs'),
     itemView: NicsRowView,
     itemViewContainer: 'tbody',
     attributes: {

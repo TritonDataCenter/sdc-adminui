@@ -9,10 +9,9 @@
  */
 
 var Backbone = require('backbone');
-var Template = require('../tpl/vm-change-owner.hbs');
-var app = require('../adminui');
+var Template = require('./vm-change-owner.hbs');
 
-var UserInput = require('./typeahead-user');
+var UserInput = require('../../../views/typeahead-user');
 
 var View = Backbone.Marionette.ItemView.extend({
     id: 'vm-change-owner',
@@ -28,7 +27,7 @@ var View = Backbone.Marionette.ItemView.extend({
         if (typeof(options.vm) === 'undefined') {
             throw "options.vm not present";
         }
-
+        this.app = options.app;
         this.vm = options.vm;
     },
 
@@ -71,7 +70,7 @@ var View = Backbone.Marionette.ItemView.extend({
                 window.alert('Error changing VM owner, '+ err.message);
                 return;
             }
-            app.vent.trigger('showjob', job);
+            self.app.vent.trigger('showjob', job);
             job.on('execution:succeeded', function() {
                 console.log('[VMChangeOwner] success');
                 vm.set({owner_uuid: owner});

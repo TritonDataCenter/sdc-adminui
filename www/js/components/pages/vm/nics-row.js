@@ -9,10 +9,7 @@
  */
 
 var Backbone = require('backbone');
-var adminui = require('../adminui');
-
-var NicFormView = require('./vm-nic-form');
-
+var adminui = require('../../../adminui');
 
 /**
  * Events
@@ -23,7 +20,7 @@ var NicFormView = require('./vm-nic-form');
  */
 var NicsRowView = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
-    template: require('../tpl/nics-row.hbs'),
+    template: require('./nics-row.hbs'),
 
     events: {
         'change input': 'onSelect',

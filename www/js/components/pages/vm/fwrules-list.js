@@ -10,13 +10,12 @@
 
 var Backbone = require('backbone');
 var $ = require('jquery');
-var FWRules = require('../models/fwrules');
-var adminui = require('../adminui');
+var FWRules = require('../../../models/fwrules');
 var _ = require('underscore');
 
 var FWRulesListItem = Backbone.Marionette.ItemView.extend({
     tagName: 'li',
-    template: require('../tpl/fwrules-list-item.hbs'),
+    template: require('./fwrules-list-item.hbs'),
     events: {
         'click .enable-rule': 'onEnableRule',
         'click .edit-rule': 'onEditRule',
@@ -51,7 +50,7 @@ var FWRulesListItem = Backbone.Marionette.ItemView.extend({
     }
 });
 
-var FWRulesList = require('./collection').extend({
+var FWRulesList = require('../../../views/collection').extend({
     tagName: 'ul',
     attributes: {
         'class': 'list-unstyled fwrules-list'
@@ -65,7 +64,7 @@ var FWRulesList = require('./collection').extend({
         };
     },
 
-    emptyView: require('./empty').extend({
+    emptyView: require('../../../views/empty').extend({
         loadingMessage: 'Loading Firewall Rules...',
         emptyMessage: 'No Firewall Rules'
     }),
@@ -75,6 +74,7 @@ var FWRulesList = require('./collection').extend({
      * @param  {Object} options.vm VM object to scope fw rules
      */
     initialize: function(options) {
+        var app = this.app = options.app;
         if (options.vm) {
             this.collection = new FWRules(null, {params: { vm_uuid: options.vm.get('uuid') }});
         } else {
@@ -83,7 +83,7 @@ var FWRulesList = require('./collection').extend({
 
         this.on('itemview:disable:rule', function(iv) {
             iv.model.on('sync', function() {
-                adminui.vent.trigger('notification', {
+                app.vent.trigger('notification', {
                     level: 'success',
                     message: "Firewall rule disabled successfully."
                 });
@@ -95,7 +95,7 @@ var FWRulesList = require('./collection').extend({
 
         this.on('itemview:enable:rule', function(iv) {
             iv.model.on('sync', function() {
-                adminui.vent.trigger('notification', {
+                app.vent.trigger('notification', {
                     level: 'success',
                     message: "Firewall rule enabled successfully."
                 });
@@ -108,7 +108,7 @@ var FWRulesList = require('./collection').extend({
         var self = this;
         this.on('itemview:delete:rule', function(iv) {
             $.delete_(iv.model.url(), function(data) {
-                adminui.vent.trigger('notification', {
+                app.vent.trigger('notification', {
                     level: 'success',
                     message: "Firewall rule deleted successfully."
                 });

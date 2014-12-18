@@ -17,6 +17,8 @@ var _ = require('underscore');
 var api = require('../../../request');
 var VMModel = require('../../../models/vm');
 
+var cx = React.addons.classSet;
+
 var JobProgress = require('../../job-progress');
 var UserTile = require('../../user-tile');
 var FirewallToggleButton = require('./fw-toggle-button');
@@ -25,11 +27,12 @@ var FirewallToggleButton = require('./fw-toggle-button');
 var BB = require('../../bb.jsx');
 
 // These are views that are still BB views
-var OwnerChange = require('../../../views/vm-change-owner');
-var SnapshotsList = require('../../../views/snapshots');
-var NicsList = require('../../../views/nics');
-var FWRulesList = require('../../../views/fwrules-list');
-var FWRulesForm = require('../../../views/fwrules-form');
+var OwnerChange = require('./vm-change-owner');
+var SnapshotsList = require('./snapshots');
+var NicsList = require('./nics');
+var FWRulesList = require('./fwrules-list');
+var FWRulesForm = require('./fwrules-form');
+
 
 var Metadata =  require('./metadata');
 var Notes = require('../../notes');
@@ -61,7 +64,10 @@ var VMPage = React.createClass({
         }.bind(this));
     },
     componentDidMount: function() {
-        this.fwrulesList = new FWRulesList({vm: new VMModel({uuid: this.props.vmUuid}) });
+        this.fwrulesList = new FWRulesList({
+            app: this.props.adminui,
+            vm: new VMModel({uuid: this.props.vmUuid})
+        });
         this.fwrulesList.on('itemview:edit:rule', function(iv) {
             iv.$el.addClass('editing');
             this.fwrulesForm = new FWRulesForm({model: iv.model });
@@ -144,9 +150,9 @@ var VMPage = React.createClass({
                     <a className="btn dropdown-toggle btn-info" data-toggle="dropdown" href="#">Actions <span className="caret"></span></a>
 
                     <ul className="dropdown-menu dropdown-menu-right">
-                        <li><a onClick={this._handleStartVm} className="start">Start</a></li>
-                        <li><a onClick={this._handleStopVm} className="stop">Stop</a></li>
-                        <li><a onClick={this._handleReobotVm} className="reboot">Reboot</a></li>
+                        <li className={cx({disabled: vm.state === 'running'})}><a onClick={this._handleStartVm} className="start">Start</a></li>
+                        <li className={cx({disabled: vm.state !== 'running'})}><a onClick={this._handleStopVm} className="stop">Stop</a></li>
+                        <li className={cx({disabled: vm.state !== 'running'})}><a onClick={this._handleReobotVm} className="reboot">Reboot</a></li>
                         <li className="divider"></li>
                         <li><a onClick={this._handleRenameVm} className="rename">Rename Alias</a></li>
 
@@ -159,7 +165,7 @@ var VMPage = React.createClass({
                         : null }
 
                         <li className="divider"></li>
-                        <li><a className="delete">Delete</a></li>
+                        <li><a onClick={this._handleDeleteVm} className="delete">Delete</a></li>
                     </ul>
                 </div>
             </div> : null }
@@ -447,9 +453,23 @@ var VMPage = React.createClass({
     _handleResizeJobCreated: function(job) {
         this.setState({currentJob: job});
     },
+    _handleDeleteVm: function() {
+        if (window.confirm('Are you sure you want to delete this VM?')) {
+            var vm = new VMModel({uuid: this.state.vm.uuid});
+            var self = this;
+            vm.del(function(job, err) {
+                if (job) {
+                    self.setState({currentJob: job});
+                }
+            });
+        }
+    },
     _handleChangeOwner: function() {
         var vm = new VMModel({uuid: this.state.vm.uuid});
-        var changeOwner = new OwnerChange({vm: vm});
+        var changeOwner = new OwnerChange({
+            app: this.props.adminui,
+            vm: vm
+        });
         changeOwner.show();
     },
     _handleReprovisionVm: function() {

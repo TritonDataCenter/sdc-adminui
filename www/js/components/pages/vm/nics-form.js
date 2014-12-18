@@ -16,13 +16,13 @@ var _ = require('underscore');
 
 var React = require('react');
 
-var NicConfigComponent = React.createFactory(require('../components/nic-config'));
+var NicConfigComponent = React.createFactory(require('../../nic-config'));
 
 
-var JobProgress = require('./job-progress');
+var JobProgress = require('../../../views/job-progress');
 
 var VMNicForm = Backbone.Marionette.ItemView.extend({
-    template: require('../tpl/vm-nic-form.hbs'),
+    template: require('./nics-form.hbs'),
     id: 'vm-nic-form',
     attributes: {
         'class': 'modal'

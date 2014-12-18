@@ -15,10 +15,10 @@ var Backbone = require('backbone');
  * Snapshots Table/List
  */
 var Snapshots = Backbone.Collection.extend({});
-var JobProgressView = require('./job-progress');
-var adminui = require('../adminui');
+var JobProgressView = require('../../../views/job-progress');
+var adminui = require('../../../adminui');
 
-var SnapshotRowTemplate = require('../tpl/snapshots-row.hbs');
+var SnapshotRowTemplate = require('./snapshots-row.hbs');
 var SnapshotRow = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
     template: SnapshotRowTemplate,
@@ -45,7 +45,7 @@ var SnapshotRow = Backbone.Marionette.ItemView.extend({
 var View = Backbone.Marionette.CompositeView.extend({
     itemView: SnapshotRow,
     itemViewContainer: 'tbody',
-    template: require('../tpl/snapshots.hbs'),
+    template: require('./snapshots.hbs'),
     events: {
         'click button': 'clickedCreateSnapshot'
     },

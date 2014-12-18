@@ -10,10 +10,10 @@
 
 var Backbone = require('backbone');
 var _ = require('underscore');
-var adminui = require('../adminui');
+var adminui = require('../../../adminui');
 
 var sprintf = _.str.sprintf;
-var FWRule = require('../models/fwrule');
+var FWRule = require('../../../models/fwrule');
 
 var FWRulesForm = Backbone.Marionette.ItemView.extend({
     attributes: {
@@ -31,7 +31,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
         'error': 'onError'
     },
 
-    template: require('../tpl/fwrules-form.hbs'),
+    template: require('./fwrules-form.hbs'),
 
     initialize: function(options) {
         if (!options.model) {
