@@ -62,6 +62,18 @@
         </div>
       </div>
 
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="package-group">Group</label>
+            <div class="col-sm-5">
+                <input type="text"
+                name="group"
+                class="form-control"
+                value="{{group}}"
+                id="package-group"
+                placeholder="Package Group">
+                <p class="help-block">For similar packages grouping</p>
+            </div>
+        </div>
       {{#unless changeOwnerMode}}
       <div class="form-group">
         <label class="control-label col-sm-4" for="package-version">Version</label>
@@ -208,6 +220,8 @@
         </div>
 
         {{/unless}}
+
+
 
       <div class="form-group">
         <div class="col-sm-offset-4 col-sm-8">

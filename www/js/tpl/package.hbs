@@ -18,8 +18,7 @@
   </div>
   <h2>
     Package
-    {{name}} {{version}}
-
+    {{name}} {{version}} {{#if group}} &nbsp;<small>{{group}}</small>{{/if}}
   </h2>
 </div>
 
@@ -38,7 +37,6 @@
 
   {{#if description}}
   <div class="description">{{description}}</div>
-
   {{/if}}
 
   {{#if owner_uuids}}
