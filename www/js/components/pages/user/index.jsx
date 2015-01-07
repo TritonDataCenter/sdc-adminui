@@ -14,22 +14,23 @@ var adminui = require('adminui');
 
 var _ = require('underscore');
 var React = require('react');
-var UserModel = require('../../models/user');
-var api = require('../../request');
-var NotesComponent = require('../notes');
+var UserModel = require('../../../models/user');
+var api = require('../../../request');
+var NotesComponent = require('../../notes');
 
 
-var UserProfile = require('./user/profile');
-var UserVms = require('./user/vms');
-var UserSSHKeys = require('./user/sshkeys');
-var UserImages = require('./user/images');
-var UserLimits = require('./user/limits/main');
-var UserPolicies = require('./user/policies');
-var UserSubusers = require('./user/subusers');
-var UserNetworks = require('./user/networks');
-var UserRoles = require('./user/roles');
+var UserProfile = require('./profile');
+var UserVms = require('./vms');
+var UserSSHKeys = require('./sshkeys');
+var UserImages = require('./images');
+var UserLimits = require('./limits/main');
+var UserPolicies = require('./policies');
+var UserSubusers = require('./subusers');
+var UserNetworks = require('./networks');
+var UserRoles = require('./roles');
+var UserFirewall = require('./firewall');
 
-var UserForm = require('../../views/user-form');
+var UserForm = require('../../../views/user-form');
 
 var PageUser = React.createClass({
     statics: {
@@ -166,6 +167,12 @@ var PageUser = React.createClass({
 
             case 'networks':
                 view = <UserNetworks
+                    readonly={!adminui.user.role('operators')}
+                    user={this.state.userModel.get('uuid')} />;
+                break;
+
+            case 'firewall':
+                view = <UserFirewall
                     readonly={!adminui.user.role('operators')}
                     user={this.state.userModel.get('uuid')} />;
                 break;
@@ -357,6 +364,10 @@ var PageUser = React.createClass({
 
                         { isTopLevelAccount && <li className={this.state.tab === 'networks' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'networks')}><i className="fa fa-fw fa-globe"></i> Networks</a>
+                        </li> }
+
+                        { isTopLevelAccount && <li className={this.state.tab === 'firewall' ? 'active' : ''}>
+                            <a onClick={this._changeTab.bind(null, 'firewall')}><i className="fa fa-fw fa-shield"></i> Firewall</a>
                         </li> }
                     </ul>
                 </div>

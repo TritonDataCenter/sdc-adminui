@@ -80,7 +80,6 @@ var UserNetworksList = React.createClass({
         console.log(this.networksView);
     },
     render: function() {
-
         return <div className="user-networks">
             <h3>Networks</h3>
 

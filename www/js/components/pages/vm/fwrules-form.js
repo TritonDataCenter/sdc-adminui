@@ -39,9 +39,15 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
         }
         if (options.vm && options.vm.get('owner_uuid')) {
             this.model.set({owner_uuid: options.vm.get('owner_uuid')});
+        } else if (options.user) {
+            this.model.set({owner_uuid: options.user});
         }
-        if (this.model.isNew() && options.vm) {
-            this.model.set({rule: 'FROM any TO vm '+options.vm.get('uuid') + ' ALLOW '});
+        if (this.model.isNew()) {
+            if (options.vm) {
+                this.model.set({rule: 'FROM any TO vm '+options.vm.get('uuid') + ' ALLOW '});
+            } else if (options.user) {
+                this.model.set({rule: 'FROM any TO all vms ALLOW '});
+            }
         }
     },
 

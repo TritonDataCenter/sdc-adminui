@@ -72,11 +72,14 @@ var FWRulesList = require('../../../views/collection').extend({
     /**
      * Constructor
      * @param  {Object} options.vm VM object to scope fw rules
+     * @param  {string} options.user User UUID to scope fw rules
      */
     initialize: function(options) {
         var app = this.app = options.app;
         if (options.vm) {
             this.collection = new FWRules(null, {params: { vm_uuid: options.vm.get('uuid') }});
+        } else if (options.user) {
+            this.collection = new FWRules(null, {params: { owner_uuid: options.user }});
         } else {
             this.collection = new FWRules();
         }
