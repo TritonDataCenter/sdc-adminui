@@ -366,7 +366,7 @@ var VMPage = React.createClass({
             </section>
 
             {
-                (vm.brand === 'kvm' && server.current_platform && Number(server.current_platform.slice(0,8) > 20140314)) ?
+                (vm.brand !== 'kvm' && server.current_platform && Number(server.current_platform.slice(0,8) > 20140314)) ?
                 <section className="fwrules">
                     <div className="row">
                         <div className="col-md-12">
@@ -377,7 +377,7 @@ var VMPage = React.createClass({
                                         <div className="firewall-toggle-button">
                                             <FirewallToggleButton initialValue={vm.firewall_enabled} onToggle={this._handleFirewallToggle} />
                                         </div>
-                                        <a className="btn btn-info btn-sm show-fwrules-form"><i className="fa fa-plus"></i> Create Firewall Rule</a>
+                                        <a onClick={this._handleAddFirewallRule} className="btn btn-info btn-sm show-fwrules-form"><i className="fa fa-plus"></i> Create Firewall Rule</a>
                                     </div> : null
                                 }
                             </h3>
@@ -430,6 +430,21 @@ var VMPage = React.createClass({
     },
     _handleRenameJobCreated: function(job) {
         this.setState({currentJob: job, editing: null});
+    },
+
+    _handleAddFirewallRule: function() {
+        this.fwrulesForm = new FWRulesForm({ vm: new VMModel({uuid: this.state.vm.uuid})});
+
+        this.fwrulesForm.on('close', function() {
+            this.setState({ editing: false });
+        }, this);
+
+        this.fwrulesForm.on('rule:saved', function() {
+            this.setState({ editing: false });
+            this.fwrulesList.collection.fetch();
+        }, this);
+
+        this.setState({ editing: 'fwrule' });
     },
 
 
