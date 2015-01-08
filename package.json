@@ -31,7 +31,7 @@
     "mime": "~1.2.9",
     "moray": "git+ssh://git@github.com:joyent/node-moray.git#441fd44",
     "promise": "^5.0.0",
-    "react": "0.12.0",
+    "react": "0.12.2",
     "reactify": "0.15.2",
     "restify": "2.8.3",
     "sdc-clients": "git+ssh://git@github.com:joyent/node-sdc-clients.git#ba83e881e3080672c8fa8303ef88c173681d94a7",
@@ -45,7 +45,7 @@
   "devDependencies": {
     "node-dev": "^2.3.0",
     "jest-cli": "^0.1.15",
-    "react-tools": "0.12.0"
+    "react-tools": "0.12.2"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/test/jsx-preprocessor.js",
