@@ -16,6 +16,7 @@ var _ = require('underscore');
 var api = require('../request');
 var React = require('react');
 var cx = React.addons.classSet;
+var Modal = require('./modal');
 
 var ServerLink = require('./server-link');
 var ImageLnk = require('./image-link');
@@ -24,6 +25,39 @@ var UserLink = require('./user-link');
 var Vms = require('../models/vms');
 var JSONExport = require('./json-export');
 var BatchJobProgress = require('./batch-job-progress');
+
+var BatchActionPreview = React.createClass({
+    displayName: 'BatchActionPreview',
+    propTypes: {
+        'vms': React.PropTypes.array.isRequired,
+        'prompt': React.PropTypes.string.isRequired,
+        'action': React.PropTypes.string.isRequired,
+        'onClose': React.PropTypes.func.isRequired,
+        'onConfirm': React.PropTypes.func.isRequired
+    },
+    render: function() {
+        return <Modal id="batch-action-preview" onRequestHide={this.props.onClose} title={this.props.prompt} ref="modal">
+            <div className="modal-body">
+                {
+                    this.props.vms.map(function(vm) {
+                        return <div className="item row">
+                            <div className="col-sm-12">
+                                <div className="alias">{vm.alias}</div>
+                                <div className="uuid">{vm.uuid}</div>
+                            </div>
+                        </div>;
+                    }, this)
+                }
+            </div>
+            <div className="modal-footer">
+                <button type="button" onClick={this.props.onConfirm} className="btn btn-primary">{this.props.action}</button>
+                <button type="button" onClick={this.props.onClose} className="btn btn-link">Cancel</button>
+            </div>
+        </Modal>;
+    }
+});
+
+
 
 
 var VmsList = React.createClass({
@@ -53,7 +87,7 @@ var VmsList = React.createClass({
     _onSync: function() {
         this.setState({loading: false});
     },
-    handleExport: function(e) {
+    _handleExport: function(e) {
         e.preventDefault();
         var vms = new Vms(null, {params: this.props.collection.params});
         vms.exportGroupedByCustomer().done(function(exported) {
@@ -61,18 +95,18 @@ var VmsList = React.createClass({
         }.bind(this));
     },
 
-    handleDismissExport: function() {
+    _HandleDismissExport: function() {
         this.setState({'exported': false});
     },
 
-    handleLoadMore: function() {
+    _handleLoadMore: function() {
         if (this.props.collection.hasNext()) {
             this.props.collection.next();
             this._requests.push(this.props.collection.fetch({remove: false}));
         }
     },
 
-    handleLoadAll: function() {
+    _handleLoadAll: function() {
         this.props.collection.pagingParams.perPage = null;
         this._requests.push(this.props.collection.fetch({remove: false}));
     },
@@ -82,6 +116,11 @@ var VmsList = React.createClass({
     _handleClearSelection: function() {
         this.setState({selected: []});
     },
+    _handleCloseBatchActionPreview: function() {
+        this.setState({confirm: null});
+    },
+
+
 
     renderActionBar: function() {
         var numSelectedMachines = this.state.selected.length;
@@ -112,7 +151,9 @@ var VmsList = React.createClass({
 
         return <tr key={vm.uuid} className={ cx({selected: selected})}>
             <td className="select">
+                { adminui.user.role('operators') ?
                 <input onChange={this._handleSelectVm} data-vm-uuid={vm.uuid} type="checkbox" checked={selected} className="input" />
+                : null }
             </td>
 
             <td className="status">
@@ -174,6 +215,9 @@ var VmsList = React.createClass({
         return <div className="vms-list">
                 { this.state.selected.length > 0 ? this.renderActionBar() : null }
                 { this.state.jobs ? <BatchJobProgress {...this.state.jobs} onClose={this._handleCloseJobs} /> : null }
+                { this.state.confirm ? <BatchActionPreview
+                    onClose={this._handleCloseBatchActionPreview}
+                    {...this.state.confirm} /> : null }
 
                 <div className="vms-list-header">
                     <div className="title">
@@ -181,7 +225,7 @@ var VmsList = React.createClass({
                     </div>
                     <div className="actions">
                         {this.props.collection.objectCount ?
-                            <a onClick={this.handleExport} className="export">Export (<span className="record-count">{this.props.collection.length}</span>) <i className="fa fa-share-square"></i></a>
+                            <a onClick={this._handleExport} className="export">Export (<span className="record-count">{this.props.collection.length}</span>) <i className="fa fa-share-square"></i></a>
                             : null }
                     </div>
                 </div>
@@ -192,7 +236,7 @@ var VmsList = React.createClass({
                         <div className="col-sm-offset-6 col-sm-4" style={{paddingLeft: 0, paddingRight:0}}>
                         {
                             this.props.collection.objectCount && this.props.collection.objectCount !== this.props.collection.length ?
-                            <a onClick={this.handleLoadMore}
+                            <a onClick={this._handleLoadMore}
                                 className="more btn btn-block btn-success"><i className="fa fa-arrow-circle-down"></i> &nbsp; Load More</a>
                             : null
                         }
@@ -200,7 +244,7 @@ var VmsList = React.createClass({
                         <div className="col-sm-2" style={{paddingLeft: 0}}>
                         {
                             this.props.collection.objectCount && this.props.collection.objectCount !== this.props.collection.length ?
-                            <a onClick={this.handleLoadAll}
+                            <a onClick={this._handleLoadAll}
                                 className="all btn btn-block btn-info"><i className="fa fa-arrow-circle-down"></i>
                                     &nbsp; Load All (<span className="record-count">{this.props.collection.objectCount}</span>)</a>
                             : null
@@ -210,7 +254,7 @@ var VmsList = React.createClass({
                 </table>
                 {
                     this.state.exported ? <div className="export-container">
-                        <JSONExport description="Virtual Machines grouped by owner" data={this.state.exported} onRequestHide={this.handleDismissExport} />
+                        <JSONExport description="Virtual Machines grouped by owner" data={this.state.exported} onRequestHide={this._HandleDismissExport} />
                     </div> : null
                 }
             </div>;
@@ -237,41 +281,63 @@ var VmsList = React.createClass({
 
         var self = this;
         console.log('[VmsList] action', action);
+        var confirm = {};
+        confirm.vms = selected;
 
         switch (action) {
             case 'reboot':
-                window.confirm("Are you sure you want to reboot "+selectedVmUuids.length + ' Virtual Machines?');
-                api.post('/api/vm-reboot').send(selectedVmUuids).end(function(res) {
-                    self.setState({jobs: {
-                        vms: selected,
-                        action: 'Reboot Virtual Machines',
-                        jobs: res.body
-                    }});
-                });
+                confirm.prompt = "Are you sure you want to reboot "+selectedVmUuids.length + ' Virtual Machines?';
+                confirm.action = 'Reboot Virtual Machine(s)';
+                confirm.onConfirm = function() {
+                    api.post('/api/vm-reboot').send(selectedVmUuids).end(function(res) {
+                        self.setState({
+                            jobs: {
+                                vms: selected,
+                                action: 'Reboot Virtual Machines',
+                                jobs: res.body
+                            },
+                            confirm: null
+                        });
+                    });
+                }.bind(self);
                 break;
 
             case 'start':
-                window.confirm("Are you sure you want to stop " + selectedVmUuids.length + ' Virtual Machines?');
-                api.post('/api/vm-start').send(selectedVmUuids).end(function(res) {
-                    self.setState({jobs: {
-                        vms: selected,
-                        action: 'Start Virtual Machines',
-                        jobs: res.body
-                    }});
-                });
+                confirm.prompt = "Are you sure you want to start " + selectedVmUuids.length + ' Virtual Machines?';
+                confirm.action = 'Stop Virtual Machine(s)';
+                confirm.onConfirm = function() {
+                    api.post('/api/vm-start').send(selectedVmUuids).end(function(res) {
+                        self.setState({
+                            confirm: null,
+                            jobs: {
+                                vms: selected,
+                                action: 'Start Virtual Machines',
+                                jobs: res.body
+                            }
+                        });
+                    });
+                }.bind(self);
                 break;
 
             case 'stop':
-                window.confirm("Are you sure you want to stop " + selectedVmUuids.length + ' Virtual Machines?');
-                api.post('/api/vm-stop').send(selectedVmUuids).end(function(res) {
-                    self.setState({jobs: {
-                        vms: selected,
-                        action: 'Stop Virtual Machines',
-                        jobs: res.body
-                    }});
-                });
+                confirm.action = "Start Virtual Machine(s)";
+                confirm.prompt = "Are you sure you want to stop " + selectedVmUuids.length + ' Virtual Machines?';
+                confirm.onConfirm = function() {
+                    api.post('/api/vm-stop').send(selectedVmUuids).end(function(res) {
+                        self.setState({
+                            confirm: null,
+                            jobs: {
+                                vms: selected,
+                                action: 'Stop Virtual Machines',
+                                confirm: null,
+                                jobs: res.body
+                            }
+                        });
+                    });
+                }.bind(self);
                 break;
         }
+        this.setState({confirm: confirm});
     },
 
     _handleSelectVm: function(e) {
