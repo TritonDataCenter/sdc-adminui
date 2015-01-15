@@ -11,6 +11,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var adminui = require('../../../adminui');
 var BackboneMixin = require('../../_backbone-mixin');
 var moment = require('moment');
 var UserProfile = React.createClass({
@@ -63,9 +64,12 @@ var UserProfile = React.createClass({
                             </div>
                         : null }
                         <h3>User Profile
-                            <div className="actions">
-                                <button onClick={this.props.handleModifyUser} className="edit-user btn btn-sm btn-info"><i className="fa fa-pencil"></i> Edit User Profile</button>
-                            </div>
+                            {
+                                adminui.user.role('operators') ?
+                                <div className="actions">
+                                    <button onClick={this.props.handleModifyUser} className="edit-user btn btn-sm btn-info"><i className="fa fa-pencil"></i> Edit User Profile</button>
+                                </div> : null
+                            }
                         </h3>
                         <table className="table">
                         <tbody>

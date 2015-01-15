@@ -99,11 +99,14 @@ var UserSubusers = React.createClass({
                         <div className="roles-header">No Roles</div>
                     }
                 </div>
-                <div className="subuser-actions">
-                    <button onClick={this.deleteUser.bind(null, u)} className="btn-link btn-danger"><i className="fa fa-trash-o"></i></button>
-                    <button onClick={this.showEditUser.bind(null, u)} className="btn-link"><i className="fa fa-pencil"></i></button>
+                {
+                    adminui.user.role('operators') ?
+                    <div className="subuser-actions">
+                        <button onClick={this.deleteUser.bind(null, u)} className="btn-link btn-danger"><i className="fa fa-trash-o"></i></button>
+                        <button onClick={this.showEditUser.bind(null, u)} className="btn-link"><i className="fa fa-pencil"></i></button>
+                    </div> : null
+                }
                 </div>
-            </div>
         </div>;
     },
 
@@ -151,9 +154,12 @@ var UserSubusers = React.createClass({
     render: function() {
         return (<div className="user-subusers">
             <h3>Account Users
+            {
+                adminui.user.role('operators') ?
                 <div className="actions">
                     <button onClick={this.showUserForm} className="btn btn-info"><i className="fa fa-plus" /> Create User</button>
-                </div>
+                </div> : null
+            }
             </h3>
 
             {

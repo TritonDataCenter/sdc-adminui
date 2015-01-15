@@ -67,7 +67,11 @@ var UserFirewall = React.createClass({
         return <div className="user-firewall">
             <h3>User Firewall
                 <div className="actions">
+                {
+                    adminui.user.role('operators') ?
                     <button onClick={this._handleAddFirewallRule} className="btn btn-info"><i className="fa fa-plus" /> Add Firewall Rule</button>
+                    : null
+                }
                 </div>
             </h3>
             <div className="fwrules-form-region">
