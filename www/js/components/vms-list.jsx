@@ -41,7 +41,10 @@ var BatchActionPreview = React.createClass({
                 {
                     this.props.vms.map(function(vm) {
                         return <div className="item row">
-                            <div className="col-sm-12">
+                            <div className="col-sm-2">
+                                <span className={"state " +vm.state}>{vm.state}</span>
+                            </div>
+                            <div className="col-sm-10">
                                 <div className="alias">{vm.alias}</div>
                                 <div className="uuid">{vm.uuid}</div>
                             </div>
@@ -131,6 +134,7 @@ var VmsList = React.createClass({
             <div className="actionbar-actions col-sm-6">
                 <a data-action="reboot" onClick={this._handleAction}><i className="fa fa-fw fa-refresh" /> Reboot</a>
                 <a data-action="stop" onClick={this._handleAction}><i className="fa fa-fw fa-power-off" /> Stop</a>
+                <a data-action="start" onClick={this._handleAction}><i className="fa fa-fw fa-power-off" /> Start</a>
                 { /* <a data-action="apply-tags" onClick={this._handleAction}><i className="fa fa-fw fa-tag" /> Apply Tags</a> */}
             </div>
             <div className="actionbar-clear col-sm-2">
@@ -286,7 +290,7 @@ var VmsList = React.createClass({
 
         switch (action) {
             case 'reboot':
-                confirm.prompt = "Are you sure you want to reboot "+selectedVmUuids.length + ' Virtual Machines?';
+                confirm.prompt = "Are you sure you want to reboot "+selectedVmUuids.length + ' Virtual Machine(s)?';
                 confirm.action = 'Reboot Virtual Machine(s)';
                 confirm.onConfirm = function() {
                     api.post('/api/vm-reboot').send(selectedVmUuids).end(function(res) {
