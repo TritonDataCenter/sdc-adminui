@@ -16,52 +16,42 @@ var _ = require('underscore');
 var api = require('../request');
 var React = require('react');
 var cx = React.addons.classSet;
-var Modal = require('./modal');
 
 var ServerLink = require('./server-link');
 var ImageLnk = require('./image-link');
 var UserLink = require('./user-link');
 
+var Modal = require('./modal');
 var Vms = require('../models/vms');
 var JSONExport = require('./json-export');
 var BatchJobProgress = require('./batch-job-progress');
+var BatchJobConfirm = require('./batch-job-confirm');
 
-var BatchActionPreview = React.createClass({
-    displayName: 'BatchActionPreview',
+var MetadataForm = require('./pages/vm/metadata');
+var MetadataModal = React.createClass({
     propTypes: {
-        'vms': React.PropTypes.array.isRequired,
-        'prompt': React.PropTypes.string.isRequired,
-        'action': React.PropTypes.string.isRequired,
-        'onClose': React.PropTypes.func.isRequired,
-        'onConfirm': React.PropTypes.func.isRequired
+        type: React.PropTypes.string.isRequired
     },
     render: function() {
-        return <Modal id="batch-action-preview" onRequestHide={this.props.onClose} title={this.props.prompt} ref="modal">
-            <div className="modal-body">
-                {
-                    this.props.vms.map(function(vm) {
-                        return <div className="item row">
-                            <div className="col-sm-2">
-                                <span className={"state " +vm.state}>{vm.state}</span>
-                            </div>
-                            <div className="col-sm-10">
-                                <div className="alias">{vm.alias}</div>
-                                <div className="uuid">{vm.uuid}</div>
-                            </div>
-                        </div>;
-                    }, this)
-                }
-            </div>
-            <div className="modal-footer">
-                <button type="button" onClick={this.props.onConfirm} className="btn btn-primary">{this.props.action}</button>
-                <button type="button" onClick={this.props.onClose} className="btn btn-link">Cancel</button>
-            </div>
-        </Modal>;
+        var title;
+        switch(this.props.type) {
+            case 'customer_metadata':
+                title = "Add Metadata to Virtual Machines";
+                break;
+            case 'tags':
+                title = "Add Tags to Virtual Machines";
+                break;
+        }
+        return (
+            <Modal onRequestHide={this.props.onClose} title={title}>
+                <div className="modal-body">
+                    <MetadataForm editing={true} metadata={{}} onCancel={this.props.onClose} onSave={this.props.onSave} />
+                </div>
+            </Modal>
+        );
     }
+
 });
-
-
-
 
 var VmsList = React.createClass({
     displayName: 'VmsList',
@@ -119,7 +109,7 @@ var VmsList = React.createClass({
     _handleClearSelection: function() {
         this.setState({selected: []});
     },
-    _handleCloseBatchActionPreview: function() {
+    _handleCloseBatchJobConfirm: function() {
         this.setState({confirm: null});
     },
 
@@ -135,7 +125,8 @@ var VmsList = React.createClass({
                 <a data-action="reboot" onClick={this._handleAction}><i className="fa fa-fw fa-refresh" /> Reboot</a>
                 <a data-action="stop" onClick={this._handleAction}><i className="fa fa-fw fa-power-off" /> Stop</a>
                 <a data-action="start" onClick={this._handleAction}><i className="fa fa-fw fa-power-off" /> Start</a>
-                { /* <a data-action="apply-tags" onClick={this._handleAction}><i className="fa fa-fw fa-tag" /> Apply Tags</a> */}
+                <a data-action="apply-tags" data-type="tags" onClick={this._handleApplyMetadata}><i className="fa fa-fw fa-tag" /> Tags</a>
+                <a data-action="apply-metadata" data-type="customer_metadata" onClick={this._handleApplyMetadata}><i className="fa fa-fw fa-tag" /> Customer Metadata</a>
             </div>
             <div className="actionbar-clear col-sm-2">
                 <a onClick={this._handleClearSelection}><i className="fa fa-times" /> Clear</a>
@@ -219,9 +210,10 @@ var VmsList = React.createClass({
         return <div className="vms-list">
                 { this.state.selected.length > 0 ? this.renderActionBar() : null }
                 { this.state.jobs ? <BatchJobProgress {...this.state.jobs} onClose={this._handleCloseJobs} /> : null }
-                { this.state.confirm ? <BatchActionPreview
-                    onClose={this._handleCloseBatchActionPreview}
+                { this.state.confirm ? <BatchJobConfirm
+                    onClose={this._handleCloseBatchJobConfirm}
                     {...this.state.confirm} /> : null }
+                { this.state.metadata ? <MetadataModal type={this.state.metadata.type} onSave={this._handleSaveMetadata} onClose={this._handleCloseMetadata} /> : null}
 
                 <div className="vms-list-header">
                     <div className="title">
@@ -276,6 +268,44 @@ var VmsList = React.createClass({
 
     navigateToOwnerDetailsPage: function(user) {
         adminui.vent.trigger('showcomponent', 'user', { user: user });
+    },
+
+    _handleApplyMetadata: function(e) {
+        var type = e.currentTarget.getAttribute('data-type');
+        console.log(this.state.metadata);
+        this.setState({metadata: {type: type}});
+    },
+
+    _handleSaveMetadata: function(metadata) {
+        var self = this;
+        var selected = this.state.selected;
+        var selectedVmUuids = _.pluck(selected, 'uuid');
+        var type = this.state.metadata.type;
+        console.log('metadata', this.state.metadata);
+        var confirm = {};
+        confirm.vms = selected;
+        confirm.prompt = "Are you sure you want to apply " + this.state.type + "to "+selectedVmUuids.length + ' Virtual Machine(s)?';
+        confirm.action = 'Apply ' + type;
+        confirm.onConfirm = function() {
+            api.post('/api/vm-metadata').send({
+                type: type,
+                metadata: metadata,
+                vms: selectedVmUuids
+            }).end(function(res) {
+                self.setState({
+                    jobs: {
+                        vms: selected,
+                        action: 'Apply ' + type,
+                        jobs: res.body
+                    },
+                    confirm: null
+                });
+            });
+        }.bind(this);
+        this.setState({ confirm: confirm, metadata: null});
+    },
+    _handleCloseMetadata: function() {
+        this.setState({metadata: null});
     },
 
     _handleAction: function(e) {

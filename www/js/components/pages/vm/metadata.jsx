@@ -105,9 +105,9 @@
                         <tr>
                             <td colSpan="2">
                                 <button onClick={this._onSave} className="btn btn-primary save pull-right">
-                                    <i className="fa-plus-sign"></i> Save Metadata
+                                    <i className="fa-plus-sign"></i> Save
                                 </button>
-                                <button onClick={this._onCancel} className="btn btn-default cancel pull-right">Cancel</button>
+                                <button onClick={this._onCancel} className="btn btn-link cancel pull-right">Cancel</button>
                             </td>
                         </tr>
                     </tfoot> : null

@@ -1,3 +1,13 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+/*
+ * Copyright (c) 2014, Joyent, Inc.
+ */
+
 var React = require('react');
 var Modal = require('./modal');
 var api = require('../request');
@@ -56,7 +66,7 @@ var BatchJobProgress = React.createClass({
                             </div>
 
                             <div className="col-sm-4">
-                                {jobData ? <div className={"execution " + jobData.execution}>{jobData.execution}</div> : null }
+                                {jobData ? <div className={"execution " + jobData.execution}>JOB {jobData.execution}</div> : null }
                             </div>
                         </div>;
                     }, this)
