@@ -433,7 +433,7 @@ var VMPage = React.createClass({
     },
 
     _handleAddFirewallRule: function() {
-        this.fwrulesForm = new FWRulesForm({ vm: new VMModel({uuid: this.state.vm.uuid})});
+        this.fwrulesForm = new FWRulesForm({ vm: new VMModel(this.state.vm) });
 
         this.fwrulesForm.on('close', function() {
             this.setState({ editing: false });
