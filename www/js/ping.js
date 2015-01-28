@@ -13,7 +13,7 @@
 var api = require('./request');
 var app = require('adminui');
 
-var PING_INTERVAL = (60 * 1000);
+var PING_INTERVAL = (30 * 1000);
 var EventEmitter = require('events').EventEmitter;
 
 
