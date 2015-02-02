@@ -64,7 +64,7 @@ var VmsList = React.createClass({
         this.props.collection.on('sync', this._onSync, this);
     },
     componentWillUnmount: function() {
-        this.props.colleciton.off('request');
+        this.props.collection.off('request');
         this.props.collection.off('sync');
 
         this._requests.map(function(r) {
