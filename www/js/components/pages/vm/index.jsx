@@ -112,7 +112,7 @@ var VMPage = React.createClass({
         var quota = 0;
         if (vm.brand === 'kvm') {
             vm.disks.forEach(function(k) {
-                quota = quota + k.image_size;
+                quota = quota + k.size;
             });
         } else {
             quota = vm.quota;
