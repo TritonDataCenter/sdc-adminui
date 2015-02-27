@@ -16,6 +16,7 @@ var moment = require('moment');
 var React = require('react');
 var _ = require('underscore');
 var adminui = require('../adminui');
+var Modal = require('./modal');
 var $ = require('jquery');
 
 var JobProgressHeader = React.createClass({
@@ -143,25 +144,17 @@ var JobProgress = React.createClass({
         job.finished = job.execution === 'succeeded' || job.execution === 'failed';
 
         return (
-            <div className="modal in" style={{display:'block'}} id="job-progress">
-                <div className="modal-backdrop in" ref="backdrop"></div>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <JobProgressHeader job={job} onClickJobDetails={this._onClickJobDetails} />
-                        </div>
-                        <div className="modal-body">
-                            <JobProgressSummary job={job} />
-                        </div>
-                        <div className="modal-footer">
-                            <JobProgressFooter
-                                onClose={this.props.onClose}
-                                onCancel={this.props.onCancel}
-                                job={job} />
-                        </div>
-                    </div>
+            <Modal onRequestHide={this.props.onClose} id="job-progress">
+                <div className="modal-header">
+                    <JobProgressHeader job={job} onClickJobDetails={this._onClickJobDetails} />
                 </div>
-            </div>
+                <div className="modal-body">
+                    <JobProgressSummary job={job} />
+                </div>
+                <div className="modal-footer">
+                    <JobProgressFooter onClose={this.props.onClose} onCancel={this.props.onCancel} job={job} />
+                </div>
+            </Modal>
         );
     },
 

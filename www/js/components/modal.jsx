@@ -14,6 +14,14 @@ var Modal =  React.createClass({
     propTypes: {
         onRequestHide: React.PropTypes.func.isRequired
     },
+    componentDidMount: function() {
+        var container = (this.props.container && this.props.container.getDOMNode()) || document.body;
+        container.className += container.className.length ? ' modal-open' : 'modal-open';
+    },
+    componentWillUnmount: function() {
+        var container = (this.props.container && this.props.container.getDOMNode()) || document.body;
+        container.className = container.className.replace(/ ?modal-open/, '');
+    },
     getDefaultProps: function() {
         return {
             backdrop: true
@@ -31,6 +39,7 @@ var Modal =  React.createClass({
     },
     render: function() {
         var modal = <div ref="modal"
+            tabIndex="-1"
             onClick={this.props.backdrop ? this.handleBackdropClick : null}
             className="modal in" style={{display: 'block'}} {...this.props}>
             { this.props.backdrop ?
