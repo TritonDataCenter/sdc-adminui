@@ -122,10 +122,10 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     onRender: function() {
         this.stickit();
-        this.$el.modal({keyboard: false});
-        this.$el.on('shown', _.bind(function() {
+        this.$el.on('shown.bs.modal', _.bind(function() {
             this.$("input:first").focus();
         }, this));
+        this.$el.modal({keyboard: false});
         this.$('.alert').hide();
 
         return this;

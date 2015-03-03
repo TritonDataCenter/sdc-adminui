@@ -115,12 +115,18 @@ var UserSubusers = React.createClass({
         var confirm = window.confirm('Are you sure you want to delete user '+ u.login + ' ?');
         var self = this;
         if (confirm) {
-            user.destroy().done(function() {
+            user.destroy().then(function success() {
                 adminui.vent.trigger('notification', {
                     level: 'success',
                     message: _.str.sprintf('User <strong>%s</strong> deleted successfully', user.get('login'))
                 });
                 self._load();
+            }, function error(xhr) {
+                adminui.vent.trigger('notification', {
+                    level: 'error',
+                    message: _.str.sprintf('Error deleting user <strong>%s</strong>, because: ', user.get('login'), xhr.responseText)
+                });
+                console.error('Error deleting user', xhr);
             });
         }
     },
