@@ -519,6 +519,9 @@ var VMPage = React.createClass({
         vm.update({tags: data}, function(job, err) {
             if (job) {
                 self.setState({currentJob: job});
+                job.on('finished', function() {
+                    self.fwrulesList.refresh();
+                });
             }
         });
     },

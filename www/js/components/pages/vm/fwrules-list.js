@@ -120,6 +120,9 @@ var FWRulesList = require('../../../views/collection').extend({
         }, this);
     },
 
+    refresh: function() {
+        this.collection.fetch({reset: true});
+    },
 
     onShow: function() {
         this.collection.fetch();
