@@ -108,6 +108,7 @@ var VmsList = React.createClass({
     },
     _handleCloseJobs: function() {
         this.setState({jobs: null});
+        this.props.collection.fetch();
     },
     _handleClearSelection: function() {
         this.setState({selected: []});
