@@ -125,7 +125,9 @@ var VmsList = React.createClass({
                 {numSelectedMachines} Virtual Machine{numSelectedMachines > 1 ? 's' : ''} selected
             </div>
             <div className="actionbar-actions col-sm-6">
+                { _.where(this.state.selected, {state: 'running'}).length === this.state.selected.length ?
                 <a data-action="reboot" onClick={this._handleAction}><i className="fa fa-fw fa-refresh" /> Reboot</a>
+                    : null }
                 { _.where(this.state.selected, {state: 'running'}).length === this.state.selected.length ?
                     <a data-action="stop" onClick={this._handleAction}><i className="fa fa-fw fa-power-off" /> Stop</a>
                     : null }
