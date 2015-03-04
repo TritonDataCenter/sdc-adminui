@@ -366,7 +366,7 @@ var VMPage = React.createClass({
             </section>
 
             {
-                (vm.brand !== 'kvm' && server.current_platform && Number(server.current_platform.slice(0,8) > 20140314)) ?
+                (vm.brand !== 'kvm' || (vm.brand === 'kvm' && server.current_platform && Number(server.current_platform.slice(0,8) > 20140314))) ?
                 <section className="fwrules">
                     <div className="row">
                         <div className="col-md-12">
