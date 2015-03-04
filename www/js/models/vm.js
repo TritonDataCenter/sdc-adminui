@@ -115,10 +115,6 @@ var Vm = Model.extend({
         });
     },
 
-    isDocker: function() {
-        return this.get('docker') === true || this.get('tags').JPC_tag === 'DockerHost';
-    },
-
     addNics: function(networks, cb) {
         var req = $.post(this.url() + '?action=add_nics', {
             networks: networks

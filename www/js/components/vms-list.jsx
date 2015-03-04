@@ -141,7 +141,8 @@ var VmsList = React.createClass({
         console.debug('[VmsList] renderVm: ', vm);
         var vmUrl = '/vms/' + vm.uuid;
 
-        var isDocker = vm.docker === true || vm.tags.JPC_tag === 'DockerHost';
+        var isDocker = vm.docker === true;
+        var isDockerHost = vm.tags.JPC_tag === 'DockerHost';
         var ips = vm.nics.map(function(n) {
             return n.ip;
         });
@@ -167,6 +168,7 @@ var VmsList = React.createClass({
                 <span className="uuid"><span className="selectable">{vm.uuid}</span></span>
                 { vm.tags.smartdc_type ? <span className={"type " + vm.tags.smartdc_type}>{vm.tags.smartdc_type}</span> : null }
                 { isDocker ? <span className="type docker">docker</span> : null }
+                { isDockerHost ? <span className="type docker">dockerhost</span> : null }
             </td>
             <td className="owned-by">
                 <div className="owner">
