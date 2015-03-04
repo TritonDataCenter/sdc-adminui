@@ -126,8 +126,12 @@ var VmsList = React.createClass({
             </div>
             <div className="actionbar-actions col-sm-6">
                 <a data-action="reboot" onClick={this._handleAction}><i className="fa fa-fw fa-refresh" /> Reboot</a>
-                <a data-action="stop" onClick={this._handleAction}><i className="fa fa-fw fa-power-off" /> Stop</a>
-                <a data-action="start" onClick={this._handleAction}><i className="fa fa-fw fa-power-off" /> Start</a>
+                { _.where(this.state.selected, {state: 'running'}).length === this.state.selected.length ?
+                    <a data-action="stop" onClick={this._handleAction}><i className="fa fa-fw fa-power-off" /> Stop</a>
+                    : null }
+                { _.where(this.state.selected, {state: 'stopped'}).length === this.state.selected.length ?
+                    <a data-action="start" onClick={this._handleAction}><i className="fa fa-fw fa-power-off" /> Start</a>
+                    : null }
                 <a data-action="apply-tags" data-type="tags" onClick={this._handleApplyMetadata}><i className="fa fa-fw fa-tag" /> Tags</a>
                 <a data-action="apply-metadata" data-type="customer_metadata" onClick={this._handleApplyMetadata}><i className="fa fa-fw fa-tag" /> Customer Metadata</a>
             </div>
