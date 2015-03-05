@@ -349,8 +349,8 @@ var VmsList = React.createClass({
                 break;
 
             case 'start':
-                confirm.prompt = "Are you sure you want to start " + selectedVmUuids.length + ' Virtual Machines?';
-                confirm.action = 'Stop Virtual Machine(s)';
+                confirm.prompt = "Are you sure you want to start " + selectedVmUuids.length + ' Virtual Machine(s)?';
+                confirm.action = 'Start Virtual Machine(s)';
                 confirm.onConfirm = function() {
                     api.post('/api/vm-start').send(selectedVmUuids).end(function(res) {
                         self.setState({
@@ -366,8 +366,8 @@ var VmsList = React.createClass({
                 break;
 
             case 'stop':
-                confirm.action = "Start Virtual Machine(s)";
-                confirm.prompt = "Are you sure you want to stop " + selectedVmUuids.length + ' Virtual Machines?';
+                confirm.action = "Stop Virtual Machine(s)";
+                confirm.prompt = "Are you sure you want to stop " + selectedVmUuids.length + ' Virtual Machine(s)?';
                 confirm.onConfirm = function() {
                     api.post('/api/vm-stop').send(selectedVmUuids).end(function(res) {
                         self.setState({
