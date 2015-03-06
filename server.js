@@ -21,15 +21,16 @@ function loadConfig(file) {
     return JSON.parse(_f);
 }
 
-var log = require('bunyan').createLogger({
-    name: 'adminui',
-    level: process.env.LOG || 'info',
-    serializers: restify.bunyan.serializers
-});
-
 
 var cfgFile = path.join(__dirname, '/etc/config.json');
 var cfg = loadConfig(cfgFile);
+
+var log = require('bunyan').createLogger({
+    name: 'adminui',
+    level: process.env.LOG || cfg.logLevel || 'info',
+    serializers: restify.bunyan.serializers
+});
+
 
 log.info('Initializing AdminUI');
 var adminui = require('./lib/adminui').createServer({
