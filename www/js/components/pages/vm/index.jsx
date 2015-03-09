@@ -112,7 +112,9 @@ var VMPage = React.createClass({
         var quota = 0;
         if (vm.brand === 'kvm') {
             vm.disks.forEach(function(k) {
-                quota = quota + k.size;
+                if (k.size && typeof(k.size) === 'number' && k.size > 0) {
+                    quota = quota + (k.size/1024); // disk.size is in mib
+                }
             });
         } else {
             quota = vm.quota;
