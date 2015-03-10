@@ -199,9 +199,21 @@ var VMPage = React.createClass({
 
 
                     <tr>
-                        <th>Disk Quota</th>
+                        <th>Disk</th>
                         <td>
-                            <span className="vm-disk-quota">{quota} GB</span>
+                            <span className="vm-disk-quota">
+                            {vm.brand === 'kvm' ?
+                                <div className="vm-disk-quota-kvm">
+                                    Total: {quota} GB
+                                    <span className="details">
+                                        [<span className="img">IMG: {vm.disks[0].image_size/1024} GB</span> + <span className="pkg">PKG: {vm.disks[1].size / 1024} GB</span>]
+                                    </span>
+                                </div>
+                            : <div>
+                                {quota} GB
+                                </div>
+                            }
+                            </span>
                         </td>
                     </tr>
 
@@ -574,8 +586,6 @@ var VMPage = React.createClass({
         vm.update({firewall_enabled: value}, function(job) {
             self.setState({currentJob: job});
         });
-
-
     }
 });
 
