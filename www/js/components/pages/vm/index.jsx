@@ -11,13 +11,13 @@
 "use strict";
 
 var React = require('react');
+var cx = require('classnames');
 var moment = require('moment');
 var _ = require('underscore');
 
 var api = require('../../../request');
 var VMModel = require('../../../models/vm');
 
-var cx = React.addons.classSet;
 
 var JobProgress = require('../../job-progress');
 var UserTile = require('../../user-tile');
@@ -54,6 +54,7 @@ var VMPage = React.createClass({
     },
     reloadData: function() {
         var uuid = this.props.vmUuid;
+        var self = this;
         api.get('/api/page/vm').query({uuid: uuid}).end(function(res) {
             if (res.ok) {
                 this.setState(res.body);
@@ -160,9 +161,9 @@ var VMPage = React.createClass({
 
                         { vm.brand !== 'kvm' ?
                             [
-                                <li className="divider"></li>,
-                                <li><a onClick={this._handleReprovisionVm} className="reprovision">Reprovision</a></li>,
-                                <li><a onClick={this._handleResizeVm} className="resize">Resize</a></li>
+                                <li key="1" className="divider"></li>,
+                                <li key="2"><a onClick={this._handleReprovisionVm} className="reprovision">Reprovision</a></li>,
+                                <li key="3"><a onClick={this._handleResizeVm} className="resize">Resize</a></li>
                             ]
                         : null }
 
@@ -296,32 +297,6 @@ var VMPage = React.createClass({
             </div>
             </section>
 
-
-
-            <section>
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="nics-region">
-                    <BB view={new NicsList({
-                        vm: new VMModel(this.state.vm)
-                    })} />
-                  </div>
-                </div>
-              </div>
-            </section>
-
-
-            <section>
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="snapshots">
-                    <BB view={new SnapshotsList({
-                        vm: new VMModel(this.state.vm)
-                    })} />
-                  </div>
-                </div>
-              </div>
-            </section>
 
             <section className="customer-metadata">
                 <div className="row">

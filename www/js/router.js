@@ -118,23 +118,24 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     checkAuth: function() {
         if (this._checkAuth === true) {
-            return true;
+            return Promise.resolve(true);
         } else {
             var self = this;
-            var xhr = $.ajax({
-                type: 'GET',
-                timeout: 15000,
-                url: '/api/auth',
-                async: false,
-                error: function(x, t, m) {
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    type: 'GET',
+                    timeout: 15000,
+                    url: '/api/auth',
+                }).fail(function(xhr, t, m) {
+                    reject();
                     self.showSignin();
                     if (t==="timeout") {
                         window.alert("One more the services required for Authentication Timed out.");
                     }
-                }
-            });
-
-            return (xhr.status === 200);
+                }).done(function() {
+                    resolve();
+                });
+            })
         }
     },
 
@@ -192,22 +193,23 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
     defaultAction: function(page) {
         console.log(_.str.sprintf('[Router] defaultAction: %s', page));
+        var self = this;
 
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             page = page || 'dashboard';
             if (Components[page]) {
-                this.presentComponent(page);
+                self.presentComponent(page);
             } else {
-                this.presentView(page);
+                self.presentView(page);
             }
-        }
+        });
     },
 
     authenticated: function() {
         if (! this.user.authenticated()) {
             console.log('[Router] not authenticated, showing sign in');
             this.showSignin();
-            return false;
+            return Promise.reject('User not authenticated, showing sign in');
         } else {
             return this.checkAuth();
         }
@@ -312,42 +314,45 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
 
     showAlarm: function(user, id) {
-        if (this.authenticated()) {
-            this.presentComponent('alarm', {user: user, id: id});
-        }
+        var self = this;
+        this.authenticated().then(function() {
+            self.presentComponent('alarm', {user: user, id: id});
+        });
     },
 
     showAlarms: function(user) {
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             this.presentComponent('alarms', {user: user });
-        }
+        });
     },
 
     showImages: function() {
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             this.presentComponent('images', {});
-        }
+        });
     },
 
     showMantaAgents: function() {
-        this.presentComponent('manta/agents');
+        this.authenticated().then(function() {
+            this.presentComponent('manta/agents');
+        }.bind(this));
     },
 
     showVms: function() {
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             this.presentComponent('vms');
-        }
+        }.bind(this));
     },
 
     showNetworking: function(tab) {
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             this.presentView('networking', {tab: tab});
-        }
+        }.bind(this));
     },
 
     showNetwork: function(uuid) {
         var self = this;
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             var Network = require('./models/network');
             var net = new Network({uuid: uuid});
             net.fetch().done(function() {
@@ -359,12 +364,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                     xhr: xhr
                 });
             });
-        }
+        });
     },
 
     showNicTag: function(name) {
         var self = this;
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             var Nictag = require('./models/nictag');
             var nt = new Nictag({name: name});
             nt.fetch().done(function() {
@@ -376,13 +381,13 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                     xhr: xhr
                 });
             });
-        }
+        }.bind(this));
     },
 
 
     showPackage: function(uuid) {
         var self = this;
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             var Package = require('./models/package');
             var p = new Package({uuid: uuid});
             p.fetch().done(function() {
@@ -394,12 +399,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                     xhr: xhr
                 });
             });
-        }
+        }.bind(this));
     },
 
     showImage: function(uuid) {
         var self = this;
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             var Img = require('./models/image');
             var img = new Img({uuid: uuid});
             img.fetch().done(function() {
@@ -411,12 +416,12 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                     xhr: xhr
                 });
             });
-        }
+        }.bind(this));
     },
 
     showJob: function(uuid) {
         var self = this;
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             var Job = require('./models/job');
             var job = new Job({uuid: uuid});
             job.fetch().done(function() {
@@ -428,25 +433,25 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                     xhr: xhr
                 });
             });
-        }
+        });
     },
 
     showImageImport: function() {
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             this.presentView('image-import');
-        }
+        }.bind(this));
     },
 
     showVm: function(uuid) {
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             this.presentComponent('vm', {
                 vmUuid: uuid,
                 adminui: this.app
             });
-        }
+        }.bind(this));
     },
     showUser: function(account, user, tab) {
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             if (arguments.length === 1) {
                 user = account;
                 account = null;
@@ -469,13 +474,13 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
             console.log(_.str.sprintf('[Router] showUser:', props));
             this.presentComponent('user', props);
-        }
+        }.bind(this));
     },
 
     showServer: function(uuid) {
         console.log(_.str.sprintf('[Router] showServer: %s', uuid));
         var self = this;
-        if (this.authenticated()) {
+        this.authenticated().then(function() {
             var Server = require('./models/server');
             var server = new Server({uuid: uuid});
             server.fetch().done(function() {
@@ -487,7 +492,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                     xhr: xhr
                 });
             });
-        }
+        }.bind(this));
     },
 
     showSignin: function() {

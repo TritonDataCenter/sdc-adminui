@@ -15,7 +15,7 @@ var adminui = require('../adminui');
 var _ = require('underscore');
 var api = require('../request');
 var React = require('react');
-var cx = React.addons.classSet;
+var cx = require('classnames');
 
 var ServerLink = require('./server-link');
 var ImageLnk = require('./image-link');
@@ -185,7 +185,7 @@ var VmsList = React.createClass({
             <td className="ips">
                 {
                     ips.map(function(ip) {
-                        return <span className="selectable">{ip}</span>;
+                        return <span key={ip} className="selectable">{ip}</span>;
                     })
                 }
             </td>

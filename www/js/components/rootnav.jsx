@@ -8,9 +8,9 @@
  * Copyright (c) 2014, Joyent, Inc.
  */
 
-var React = require('react/addons');
+var React = require('react');
 var AlarmsMenu = require('./alarms-menu.jsx');
-var cx = React.addons.classSet;
+var cx = require('classnames');
 
 var Rootnav = React.createClass({
     propTypes: {

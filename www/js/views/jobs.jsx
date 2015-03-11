@@ -11,6 +11,7 @@
  */
 
 "use strict";
+
 var Backbone = require('backbone');
 var _ = require('underscore');
 var moment = require('moment');
@@ -78,17 +79,17 @@ var JobExecutionCriteria = React.createClass({
         }
     },
     render: function() {
-        var node;
-        node = (<Chosen className="form-control" value={this.props.value} onChange={this.onChange} ref="chosen" name="execution">
-            <option value="">any</option>
-            <option value="succeeded">succeeded</option>
-            <option value="failed">failed</option>
-            <option value="running">running</option>
-            <option value="queued">queued</option>
-            <option value="canceled">canceled</option>
-        </Chosen>);
 
-        return <div className="form-group criteria criteria-execution">{node}</div>;
+        return <div className="form-group criteria criteria-execution">
+            <Chosen className="form-control" value={this.props.value} onChange={this.onChange} ref="chosen" name="execution">
+                <option value="">any</option>
+                <option value="succeeded">succeeded</option>
+                <option value="failed">failed</option>
+                <option value="running">running</option>
+                <option value="queued">queued</option>
+                <option value="canceled">canceled</option>
+            </Chosen>
+        </div>;
     }
 });
 
@@ -116,7 +117,7 @@ var JobDateCriteria = React.createClass({
 });
 
 
-var JobCriterias = React.createClass({
+var JobCriterias = React.createFactory(React.createClass({
     getInitialState: function() {
         var state = {};
         if (this.props.initialCriteria && this.props.initialCriteria.params) {
@@ -159,10 +160,10 @@ var JobCriterias = React.createClass({
             <li className="col-md-4" style={ {paddingLeft:0} }><span className="criteria-name">Until</span><JobDateCriteria name="until" onChange={this.onDateUtilChange} value={this.state.until} /></li>
         </ul>;
     }
-});
+}));
 
 
-var JobFiltersList = React.createClass({
+var JobFiltersList = React.createFactory(React.createClass({
     propTypes: {
         filters: React.PropTypes.array,
         filter: React.PropTypes.object,
@@ -207,7 +208,7 @@ var JobFiltersList = React.createClass({
 
         return <ul className="list-unstyled">{liNodes}</ul>;
     }
-});
+}));
 
 var JobsView = Backbone.Marionette.Layout.extend({
     name: 'jobs',

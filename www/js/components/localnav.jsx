@@ -12,7 +12,7 @@
 
 var adminui = require('../adminui');
 var React = require('react');
-var cx = React.addons.classSet;
+var cx = require('classnames');
 
 var SecondaryNav = React.createClass({
     displayName: 'Localnav',

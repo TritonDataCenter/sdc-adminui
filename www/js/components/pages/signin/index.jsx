@@ -4,7 +4,7 @@
 var $ = require('jquery');
 var _ = require('underscore');
 var React = require('react');
-var cx = React.addons.classSet;
+var cx = require('classnames');
 
 var Pinger = require('../../../ping');
 var SigninComponent = React.createClass({

@@ -18,8 +18,8 @@ var moment = require('moment');
 
 var adminui = require('../adminui');
 var React = require('react');
-var BackboneMixin = React.createFactory(require('../components/_backbone-mixin'));
-var JSONView = React.createFactory(require('../components/json-view'));
+var BackboneMixin = require('../components/_backbone-mixin');
+var JSONView = require('../components/json-view');
 var Job = require('../models/job');
 
 var JobDetailsComponent = React.createClass({
@@ -73,7 +73,7 @@ var JobDetailsComponent = React.createClass({
         });
 
 
-        return <div>
+        return <div className="page-job">
             <div className="page-header">
                 <div className="resource-status">
                     <span className={'execution ' + job.execution}>{job.execution}</span>
@@ -200,7 +200,10 @@ var JobView = Backbone.Marionette.ItemView.extend({
     },
 
     renderJobDetails: function() {
-        React.render(JobDetailsComponent({ job: this.model }), this.$el.get(0));
+        React.render(
+            React.createFactory(JobDetailsComponent)({ job: this.model }),
+            this.$el.get(0)
+        );
     },
 
     onRender: function() {
@@ -210,7 +213,10 @@ var JobView = Backbone.Marionette.ItemView.extend({
     },
 
     renderInfo: function(info) {
-        React.render( JSONView({ json: info }), this.$('.info').get(0));
+        React.render(
+            React.createFactory(JSONView)({ json: info }),
+            this.$('.info').get(0)
+        );
     },
 
     onShow: function() {

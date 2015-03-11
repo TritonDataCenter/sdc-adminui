@@ -123,7 +123,7 @@ var prepAppBundle = function() {
     bundle.external('underscore');
     bundle.external('underscore.string');
     bundle.external('epoch');
-    bundle.external('react/addons' + ':react');
+    bundle.external('react');
     bundle.external('backbone');
     bundle.external('superagent');
     bundle.external('bootstrap.datetimepicker');

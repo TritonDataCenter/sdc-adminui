@@ -30,8 +30,8 @@ var NotesComponent =  React.createFactory(require('../components/notes'));
 var ServerMemoryOverview = React.createFactory(require('../components/pages/server/memory-overview'));
 var ServerDiskOverview = React.createFactory(require('../components/pages/server/disk-overview'));
 var ServerNicsList = React.createFactory(require('../components/server-nics'));
-
-var VmsList = require('../components/vms-list');
+var ManageLinkAggr = React.createFactory(require('../components/server-link-aggr/main'));
+var VmsList = React.createFactory(require('../components/vms-list'));
 var JSONEditor = require('./traits-editor');
 var ChangeRackForm = require('./server-change-rack');
 var ChangePlatformForm = require('./server-change-platform');
@@ -243,7 +243,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
         var $node = $("<div id='server-link-aggr-modal' class='modal'><div class='modal-dialog'><div class='modal-content'><div class='modal-body'></div></div></div></div>");
         var container = $node.find('.modal-body').get(0);
 
-        var ManageLinkAggr = require('../components/server-link-aggr/main');
         React.render(new ManageLinkAggr({
             server: this.model.get('uuid')
         }), container);

@@ -2,7 +2,7 @@
 var React = require('react');
 
 
-var FirewallToggleButton = React.createFactory(React.createClass({
+var FirewallToggleButton = React.createClass({
     propTypes: {
         initialValue: React.PropTypes.bool,
         onToggle: React.PropTypes.func.isRequired
@@ -33,7 +33,7 @@ var FirewallToggleButton = React.createFactory(React.createClass({
         }
         return <div className="firewall-toggle-button-component">{node}</div>;
     }
-}));
+});
 
 
 module.exports = FirewallToggleButton;
