@@ -257,6 +257,18 @@ var VMPage = React.createClass({
                         <span className="billing-id selectable">{vm.billing_id}</span>
                       </td>
                     </tr>
+                    {vm.datasets.length ?
+                        <tr>
+                          <th>Datasets</th>
+                          <td className="datasets">
+                          {
+                            vm.datasets.map(function(d) {
+                                return <span className="selectable">{d}</span>;
+                            })
+                          }
+                          </td>
+                        </tr>
+                    :null}
                     <tr>
                       <th>Created</th>
                       <td>
