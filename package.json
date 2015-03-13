@@ -35,7 +35,7 @@
     "reactify": "1.0.0",
     "restify": "2.8.5",
     "sdc-clients": "git+ssh://git@github.com:joyent/node-sdc-clients.git#ba83e881e3080672c8fa8303ef88c173681d94a7",
-    "sdc-events": "git+ssh://github.com/joyent/sdc-events.git",
+    "sdc-events": "git+ssh://git@github.com:joyent/sdc-events.git",
     "superagent": "0.21.0",
     "through": "2.3.4",
     "trace-event": "1.3.0",
