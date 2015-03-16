@@ -16,6 +16,7 @@ var $ = require('jquery');
 var React = require('react');
 
 var User = require('./models/user');
+var Promise = require('promise');
 
 var Chrome = React.createFactory(require('./components/chrome'));
 var BBComponent = React.createFactory(require('./components/bb.jsx'));
@@ -33,8 +34,8 @@ var Components = {
     'images': require('./components/pages/images'),
     'manta/agents': require('./components/pages/manta/agents'),
     'dashboard': require('./components/pages/dashboard')
-
 };
+
 Object.keys(Components).forEach(function(k) {
     Components[k] = React.createFactory(Components[k]);
 });
@@ -135,7 +136,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 }).done(function() {
                     resolve();
                 });
-            })
+            });
         }
     },
 
