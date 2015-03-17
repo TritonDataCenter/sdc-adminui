@@ -102,7 +102,7 @@ var ApplicationsListView = Backbone.Marionette.CollectionView.extend({
                 collection: this.services
             });
             var self = this;
-            this.services.fetch({ data: {application: this.model.get('uuid')}})
+            this.services.fetch({ reset: true, data: {application: this.model.get('uuid')}})
                 .done(function(res) {
                     self.$('.number-of-services').html(res.length);
                 });
