@@ -29,7 +29,7 @@
 	},
 	"datacenters": {
 		"{{datacenter_name}}": {
-      "rabbitmq": "{{{rabbitmq}}}",
+			"rabbitmq": "{{{rabbitmq}}}",
 			"moray": {
 				"host": "{{{MORAY_SERVICE}}}",
 				"port": 2020,
