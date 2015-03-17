@@ -28,10 +28,10 @@ var BB = require('../../bb.jsx');
 
 // These are views that are still BB views
 var OwnerChange = require('./vm-change-owner');
-var SnapshotsList = require('./snapshots');
-var NicsList = require('./nics');
 var FWRulesList = require('./fwrules-list');
 var FWRulesForm = require('./fwrules-form');
+var SnapshotsList = require('./snapshots');
+var NicsList = require('./nics');
 
 
 var Metadata =  require('./metadata');
@@ -54,7 +54,6 @@ var VMPage = React.createClass({
     },
     reloadData: function() {
         var uuid = this.props.vmUuid;
-        var self = this;
         api.get('/api/page/vm').query({uuid: uuid}).end(function(res) {
             if (res.ok) {
                 this.setState(res.body);
@@ -309,6 +308,30 @@ var VMPage = React.createClass({
             </div>
             </section>
 
+            <section>
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="nics-region">
+                    <BB view={new NicsList({
+                        vm: new VMModel(this.state.vm)
+                    })} />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+
+            <section>
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="snapshots">
+                    <BB view={new SnapshotsList({
+                        vm: new VMModel(this.state.vm)
+                    })} />
+                  </div>
+                </div>
+              </div>
+            </section>
 
             <section className="customer-metadata">
                 <div className="row">
