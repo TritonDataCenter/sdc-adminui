@@ -48,7 +48,7 @@ var Applications = require('../models/collection').extend({
 var InstanceView = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/services-instance.hbs'),
     events: {
-        'click a': 'navigateToVm'
+        'click a.vm': 'navigateToVm'
     },
     attributes: {
         'class': 'instance'
@@ -56,12 +56,20 @@ var InstanceView = Backbone.Marionette.ItemView.extend({
     navigateToVm: function() {
         adminui.router.showVm(this.model.get('uuid'));
     },
+    serializeData: function() {
+        var data = this.model.toJSON();
+        data.vm = data.type === 'vm';
+        data.agent = data.type === 'agent';
+        return data;
+    },
     onRender: function() {
         var self = this;
-        $.get('/api/vms/'+this.model.get('uuid')).done(function(res) {
-            self.$('.state').addClass(res.state).html(res.state);
-            self.$('.ram').addClass(res.state).html(res.ram + ' MB');
-        });
+        if (this.model.get('type') === 'vm') {
+            $.get('/api/vms/'+this.model.get('uuid')).done(function(res) {
+                self.$('.state').addClass(res.state).html(res.state);
+                self.$('.ram').addClass(res.state).html(res.ram + ' MB');
+            });
+        }
     }
 });
 
@@ -81,7 +89,7 @@ var ServicesListItemView = Backbone.Marionette.ItemView.extend({
             collection: this.instances
         });
         this.instances.params = { service_uuid: this.model.get('uuid') };
-        this.instances.fetch();
+        this.instances.fetch({reset: true});
     }
 });
 
@@ -102,7 +110,8 @@ var ApplicationsListView = Backbone.Marionette.CollectionView.extend({
                 collection: this.services
             });
             var self = this;
-            this.services.fetch({ reset: true, data: {application: this.model.get('uuid')}})
+            this.services.params = { applications_uuid: this.model.get('uuid') };
+            this.services.fetch({ reset: true })
                 .done(function(res) {
                     self.$('.number-of-services').html(res.length);
                 });
@@ -129,7 +138,7 @@ var View = Backbone.Marionette.ItemView.extend({
             el: this.$('.applications'),
             collection: this.applications
         });
-        this.applications.fetch();
+        this.applications.fetch({reset: true});
     }
 });
 

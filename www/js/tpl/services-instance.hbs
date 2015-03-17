@@ -9,6 +9,12 @@
 -->
 
 <div class="alias">{{params.alias}}</div>
-<div class="uuid"><a>{{uuid}}</a></div>
+<div class="uuid">
+    {{#if vm}}
+    <a class="{{type}}">{{uuid}}</a>
+    {{else}}
+    {{uuid}} (agent)
+    {{/if}}
+</div>
 <div class="state"></div>
 <div class="ram"></div>
