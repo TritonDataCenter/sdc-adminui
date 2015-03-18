@@ -30,6 +30,7 @@ var Components = {
     'vm': require('./components/pages/vm'),
     'vms': require('./components/pages/vms'),
     'settings': require('./components/pages/settings'),
+    'events': require('./components/pages/events'),
     'user': require('./components/pages/user'),
     'images': require('./components/pages/images'),
     'manta/agents': require('./components/pages/manta/agents'),
@@ -83,6 +84,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'packages/:uuid': 'showPackage',
         'servers/:uuid': 'showServer',
         'nictags/:uuid': 'showNicTag',
+        'events': 'showEvents',
         'networking': 'showNetworking',
         'networking/:tab': 'showNetworking',
         'alarms/:user/:id': 'showAlarm',
@@ -274,7 +276,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
         if (typeof(ComponentClass) === 'undefined') {
             this.notFound({ component: ComponentClass, args: args });
-            console.log("[Router] Component not found: " + compName);
+            console.error("[Router] Component not found: " + compName);
         } else {
             var component = new ComponentClass(args);
             var type = component.type;
@@ -447,6 +449,13 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         this.authenticated().then(function() {
             this.presentComponent('vm', {
                 vmUuid: uuid,
+                adminui: this.app
+            });
+        }.bind(this));
+    },
+    showEvents: function(uuid) {
+        this.authenticated().then(function() {
+            this.presentComponent('events', {
                 adminui: this.app
             });
         }.bind(this));

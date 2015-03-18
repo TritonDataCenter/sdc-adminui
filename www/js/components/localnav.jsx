@@ -66,6 +66,7 @@ var SecondaryNav = React.createClass({
                 <li className={this._classesFor('networking')} onClick={this._clickedMenuItem} data-view="networking"><a href="/networks">Networking</a></li>
                 <li className={this._classesFor('jobs')} onClick={this._clickedMenuItem} data-view="jobs"><a href="/jobs">Jobs</a></li>
                 <li className={this._classesFor('services')} onClick={this._clickedMenuItem} data-view="services"><a href="/services">Services</a></li>
+                <li className={this._classesFor('events')} onClick={this._clickedMenuItem} data-component="events"><a href="/events">Events</a></li>
             </ul>
         </div>);
     }

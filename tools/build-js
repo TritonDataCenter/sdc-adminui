@@ -110,12 +110,17 @@ Object.keys(shimConfig).forEach(function(k) {
     }
 });
 
+var reactify = require('reactify');
+var reactifyES6 = function(file) {
+    return reactify(file, {es6: true});
+};
+
 var prepAppBundle = function() {
     var bundler = process.env.WATCH ? watchify : browserify;
     var bundle = shim(bundler({ extensions: ['.js', '.jsx'] }), shimConfig);
     bundle
         .transform(require.resolve(join(root, './transforms/tpl')))
-        .transform(require('reactify'))
+        .transform(reactifyES6)
         .require(require.resolve(join(root, './adminui')), {expose: 'adminui', entry: true});
 
     bundle.external('jquery');
