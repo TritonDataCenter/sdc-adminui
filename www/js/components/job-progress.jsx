@@ -111,6 +111,7 @@ var JobProgressFooter = React.createClass({
 
 var JobProgress = React.createClass({
     propTypes: {
+        job: React.PropTypes.object.isRequired,
         onCancel: React.PropTypes.func,
         onUpdate: React.PropTypes.func,
         onFinish: React.PropTypes.func
@@ -121,7 +122,7 @@ var JobProgress = React.createClass({
         }
         this.update();
     },
-    componentDidUnmount: function() {
+    componentWillUnmount: function() {
         if (this._timer) {
             clearInterval(this._timer);
         }
@@ -131,6 +132,12 @@ var JobProgress = React.createClass({
     },
     update: function() {
         this.props.job.fetch({success: this.onUpdate});
+    },
+    onClickClose: function() {
+        this.props.onClose();
+        if (this._timer) {
+            clearInterval(this._timer);
+        }
     },
     render: function() {
         var job = this.props.job.toJSON();
@@ -144,7 +151,7 @@ var JobProgress = React.createClass({
         job.finished = job.execution === 'succeeded' || job.execution === 'failed';
 
         return (
-            <Modal onRequestHide={this.props.onClose} id="job-progress">
+            <Modal onRequestHide={this.onClickClose} id="job-progress">
                 <div className="modal-header">
                     <JobProgressHeader job={job} onClickJobDetails={this._onClickJobDetails} />
                 </div>

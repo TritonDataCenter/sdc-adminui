@@ -10,13 +10,11 @@
 
 var React = require('react');
 
-var Modal =  React.createClass({
+var Modal = React.createClass({
     propTypes: {
         onRequestHide: React.PropTypes.func.isRequired
     },
     componentDidMount: function() {
-        var container = (this.props.container && this.props.container.getDOMNode()) || document.body;
-        container.className += container.className.length ? ' modal-open' : 'modal-open';
     },
     componentWillUnmount: function() {
         var container = (this.props.container && this.props.container.getDOMNode()) || document.body;
@@ -38,6 +36,11 @@ var Modal =  React.createClass({
         return React.isValidElement(this.props.title) ? this.props.title : <h4 className="modal-title">{this.props.title}</h4>;
     },
     render: function() {
+        var container = (this.props.container && this.props.container.getDOMNode()) || document.body;
+        if (container.className.indexOf('modal-open') === -1) {
+            container.className += container.className.length ? ' modal-open' : 'modal-open';
+        }
+
         var modal = <div ref="modal"
             tabIndex="-1"
             onClick={this.props.backdrop ? this.handleBackdropClick : null}

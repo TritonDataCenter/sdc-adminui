@@ -43,7 +43,6 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
                     message: _.str.sprintf('Server %s setup complete.', server.get('hostname'))
                 });
             });
-            self.$el.modal('hide').remove();
         });
     },
     onRender: function() {
@@ -57,7 +56,7 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
                 visible: true
             }
         });
-        this.$el.modal('show');
+        this.$el.modal().show();
     }
 });
 module.exports = ServerSetupView;

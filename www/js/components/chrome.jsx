@@ -23,10 +23,9 @@ var adminui = require('../adminui');
 
 var Topnav = require('./rootnav.jsx');
 var Notifications = require('./notifications.jsx');
+var JobProgressComponent = require('./job-progress.jsx');
 var Localnav = require('./localnav.jsx');
 var ServerTime = require('./server-time.jsx');
-
-var JobProgressView = require('../views/job-progress');
 
 var Chrome = React.createClass({
     propTypes: {
@@ -41,8 +40,13 @@ var Chrome = React.createClass({
         adminui.vent.off('showjob', this.onShowjob);
     },
     onShowjob: function(job) {
-        var jobView = new JobProgressView({model: job});
-        jobView.show();
+        this.setState({job: job});
+    },
+    _handleHideJob: function() {
+        this.setState({job: null});
+    },
+    getInitialState: function() {
+        return {};
     },
     getDefaultProps: function() {
         return {};
@@ -84,6 +88,7 @@ var Chrome = React.createClass({
 
         return (
             <div id="adminui">
+                { this.state.job ? <JobProgressComponent job={this.state.job} onClose={this._handleHideJob} /> : null}
                 {
                     this.props.state.get('chrome.rootnav') && <Topnav
                         readonly={!adminui.user.role('operators')}

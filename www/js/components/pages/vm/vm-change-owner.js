@@ -36,7 +36,7 @@ var View = Backbone.Marionette.ItemView.extend({
     show: function() {
         this.render();
         var self = this;
-        this.$el.modal('show').on('hidden.bs.modal', function() {
+        this.$el.modal().on('hidden.bs.modal', function() {
             self.remove();
         });
         this.$('input:first').focus();
@@ -70,12 +70,12 @@ var View = Backbone.Marionette.ItemView.extend({
                 window.alert('Error changing VM owner, '+ err.message);
                 return;
             }
+            self.$el.modal('hide').remove();
             self.app.vent.trigger('showjob', job);
             job.on('execution:succeeded', function() {
                 console.log('[VMChangeOwner] success');
                 vm.set({owner_uuid: owner});
             });
-            self.$el.modal('hide').remove();
         });
     }
 });
