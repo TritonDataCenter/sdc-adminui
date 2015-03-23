@@ -225,13 +225,16 @@ var VMPage = React.createClass({
                     </tr>
                     <tr>
                       <th>Image</th>
-                      <td>
-                        <a href={'/images/'+image.uuid} onClick={function(e) {
-                            e.preventDefault();
-                            adminui.router.showImage(image.uuid);
-                        }} className="image-name-version">{image.name} {image.version}</a>
-                        <span className="image-uuid selectable">{image.uuid}</span>
-                      </td>
+                      { image ?
+                          <td>
+                            <a href={'/images/'+image.uuid} onClick={function(e) {
+                                e.preventDefault();
+                                adminui.router.showImage(image.uuid);
+                            }} className="image-name-version">{image.name} {image.version}</a>
+                            <span className="image-uuid selectable">{image.uuid}</span>
+                          </td> :
+                          <td><span className="image-name-version error">Error retrieving Image information</span></td>
+                      }
                     </tr>
                     <tr>
                       <th>Server</th>
