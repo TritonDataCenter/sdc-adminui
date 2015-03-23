@@ -29,14 +29,17 @@ SDC services running in
 
     git clone git@github.com:joyent/sdc-adminui.git
     cd adminui
-    make all
+
+    make dev
 
     cp etc/config.json.in etc/config.json
     # Modify etc/config.json if you don't use the default coal answers file
 
+    # run adminui with, devrun automatically restarts node process and
+    # incrementally re-builds assets
     make devrun
 
-    open http://localhost:4000
+    open http://localhost:4443
 
 
 # License

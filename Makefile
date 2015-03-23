@@ -70,9 +70,16 @@ JS_BUNDLE_FILES	+= ./tools/build-js
 .PHONY: all
 all: $(SMF_MANIFESTS) node_modules js sdc-scripts
 
+.PHONY: dev
+dev: node_modules_dev sdc-scripts
+
 .PHONY: node_modules
 node_modules: | $(NPM_EXEC)
 	$(NPM) install --production
+
+node_modules_dev: | $(NPM_EXEC)
+	@echo "Installing NPM deps"
+	$(NPM) install
 
 CLEAN_FILES += ./node_modules $(JS_BUNDLE)
 
@@ -82,9 +89,6 @@ js: $(JS_BUNDLE)
 $(JS_BUNDLE): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
 	@echo "Building js bundle"
 	MINIFY=true $(NODE) tools/build-js | bunyan
-
-.PHONY: dev
-dev: $(JS_BUNDLE)
 
 
 .PHONY: devrun
