@@ -12,7 +12,7 @@ var Modal =require('./modal');
 var React = require('react');
 var JSONExport = React.createClass({
     render: function() {
-        return <Modal {...this.props} title="JSON Export" className="json-export">
+        return <Modal {...this.props} title="JSON Export" className="modal json-export">
             <div className="modal-body">
                 <p>{this.props.description}</p>
                 <textarea style={{minHeight:400}} className="form-control" readOnly value={JSON.stringify(this.props.data, null, 2)}></textarea>
