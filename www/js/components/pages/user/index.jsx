@@ -306,7 +306,7 @@ var PageUser = React.createClass({
                 <h1>
                     <div className="user-icon" style={userIconStyle}></div>
                     <div className="user-info">
-                        <div className="cn">{user.cn}</div>
+                        <div className="cn">{user.login}</div>
                         <div className="user-groups">
                         { user.groups && user.groups.map(function(g) {
                             return <div className={"group "+g}>{g}</div>;
