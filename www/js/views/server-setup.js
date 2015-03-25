@@ -38,6 +38,7 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
                 if (status === 'succeeded') {
                     server.fetch();
                 }
+                self.$el.modal('hide').remove();
                 app.vent.trigger('notification', {
                     level: 'success',
                     message: _.str.sprintf('Server %s setup complete.', server.get('hostname'))
