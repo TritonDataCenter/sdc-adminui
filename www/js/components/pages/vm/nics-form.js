@@ -83,6 +83,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                 delete n.ip;
                 delete n.netmask;
                 delete n.state;
+                delete n.routes;
                 delete n.belongs_to_type;
                 delete n.belongs_to_uuid;
                 delete n.gateway;
