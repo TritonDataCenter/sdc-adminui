@@ -39,7 +39,7 @@ SDC services running in
     # incrementally re-builds assets
     make devrun
 
-    open http://localhost:4443
+    open https://localhost:4443
 
 
 # License
