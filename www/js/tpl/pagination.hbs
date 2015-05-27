@@ -1,0 +1,49 @@
+{{#ifCond firstPage '!=' lastPage}}
+    {{#ifCond firstPage '!=' currentPage}}
+        <a href="#" class="first-page">First</a>
+    {{else}}
+        <span>First</span>
+    {{/ifCond}}
+    {{#ifCond currentPage '>' firstPage}}
+        <a href="#" class="previous-page">Previous</a>
+    {{else}}
+        <span>Previous</span>
+    {{/ifCond}}
+    {{#ifCond currentPage '<' totalPages}}
+        <a href="#" class="next-page">Next</a>
+    {{else}}
+        <span>Next</span>
+    {{/ifCond}}
+    {{#ifCond lastPage '!=' currentPage}}
+        <a href="#" class="last-page">Last</a>
+    {{else}}
+        <span>Last</span>
+    {{/ifCond}}
+    <span class="divider">  /  </span>
+{{/ifCond}}
+<span class="cell page-size">
+            Show
+            {{#sizeList pageSizes}}
+                {{#ifCond ../pageSize '==' size}} {{size}} {{else}}<a href="#" class="">{{size}}</a>{{/ifCond}}
+            {{/sizeList}}
+            per page
+        </span>
+<span class="divider">  /  </span>
+<span class="cell first records">
+            Page: <span class="current">{{currentPage}}</span>
+            of
+            <span class="total">{{math totalPages '||' 1}}</span>
+                        shown
+        </span>
+{{#if sort}}
+    <span class="divider">  /  </span>
+    <span class="cell sort">
+        <a href="#" class="orderUpdate btn small">Sort by:</a>
+    </span>
+    <select id="sortByField">
+        {{#each sort}}
+            <option value="{{val}}">{{label}}</option>
+        {{/each}}
+    </select>
+    </span>
+{{/if}}

@@ -38,6 +38,19 @@
     {{/if}}
   </span>
 </div>
+
+<div class="owners">
+    <strong>Owners</strong>
+  <span class="value">
+    {{#if owner_uuids}}
+      {{#each owner_uuids}}
+          <a class="owner-link" data-owner-uuid="{{this}}" target="_tab" href="/users/{{this}}"><i class="fa fa-external-link"></i>&nbsp;{{this}}</a>
+      {{/each}}
+    {{else}}
+        -
+    {{/if}}
+  </span>
+</div>
 {{#if show_delete}}
   {{#role "operators"}}
     <div class="actions">

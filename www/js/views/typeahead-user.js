@@ -12,8 +12,11 @@
 
 var Backbone = require('backbone');
 var Bloodhound = require('bloodhound');
+var app = require('adminui');
 
 var User = require('../models/user');
+var UserPreview = require('./user-preview');
+var $ = require('jquery');
 
 var UserTypeaheadTpl = require('../tpl/typeahead-user-select.hbs');
 
@@ -30,8 +33,8 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
 
     initialize: function(options) {
         options = options || {};
+        this.elemValue = this.$el.val();
         this.selectedUser = null;
-        this.initializeEngine();
     },
 
     onTypeaheadSelect: function(e, datum) {
@@ -39,11 +42,14 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
         this.$el.tooltip('destroy');
         this.selectedUser = datum.model;
         this.trigger('selected', datum.model);
+        if (this.options.showPreview) {
+            this.$el.after(new UserPreview({model: datum.model, previewType: this.options.previewType || 'short'}).render().el);
+        }
     },
 
-    clearField: function() {
+    clearField: function(force) {
         process.nextTick(function() {
-            this.$el.val('');
+            this.$el.val(force ? '' : this.elemValue);
         }.bind(this));
     },
 
@@ -60,21 +66,14 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
             return;
         }
 
-        if ($field.val().length !== 36) {
-            this.$el.tooltip({
-                placement: 'top',
-                title: 'Invalid user UUID provided.'
-            });
-            this.clearField();
-            if ($field.val().length !== 0) {
-                this.$el.focus();
-            }
+        if ($field.val().length !== 36 && this.options.showPreview) {
+            this.$el.parent().find('.user-preview').remove();
         }
     },
 
     initializeEngine: function() {
         var self = this;
-        var url = this.options.accountsOnly ? '/api/users?accountsonly=true&q=%QUERY' : '/api/users?q=%QUERY' ;
+        var url = this.options.accountsOnly ? '/api/users?accountsonly=true&q=%QUERY' : '/api/users?q=%QUERY';
         this.engine = new Bloodhound({
             limit: 25,
             name: 'users',
@@ -82,6 +81,9 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
                 url: url,
                 ajax: {
                     beforeSend: function(xhr) {
+                        if (!this.headers['x-adminui-token'] && app.user && app.user.getToken()) {
+                            xhr.setRequestHeader('x-adminui-token', app.user.getToken());
+                        }
                         self.showLoading();
                     }
                 },
@@ -98,7 +100,7 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
                         };
                     });
                     return datums;
-                },
+                }
             },
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             datumTokenizer: function(u) {
@@ -106,6 +108,19 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
             }
         });
         this.engine.initialize();
+        this.$el.typeahead({
+                name: 'users',
+                minLength: 1,
+                highlight: true
+            },
+            {
+                displayKey: 'uuid',
+                name: 'users',
+                source: this.engine.ttAdapter(),
+                templates: {
+                    suggestion: UserTypeaheadTpl
+                }
+            });
     },
 
     showLoading: function() {
@@ -121,19 +136,7 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
     },
 
     render: function() {
-        this.$el.typeahead({
-            name: 'users',
-            minLength: 1,
-            highlight: true,
-        },
-        {
-            displayKey: 'uuid',
-            name: 'users',
-            source: this.engine.ttAdapter(),
-            templates: {
-                suggestion: UserTypeaheadTpl
-            }
-        });
+        this.initializeEngine();
     },
     remove: function() {
         this.$el.typeahead('destroy');

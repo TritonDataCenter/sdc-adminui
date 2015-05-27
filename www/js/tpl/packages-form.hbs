@@ -98,13 +98,12 @@
 
     <div class="form-group package-owners">
         <label class="control-label col-sm-4" for="package-owner">Owners</label>
-
-        <div class="col-sm-5">
+        <div class="col-sm-6">
             {{#unless owner_uuids.length}}
               <input type="text"
               class="form-control input-xl package-owner"
               name="owner_uuids[]"
-              placeholder="Search by login or uuid">
+              placeholder="Search by login, email, uuid">
             {{else}}
 
             {{#each owner_uuids}}
@@ -112,16 +111,15 @@
                   value="{{this}}"
                   class="form-control package-owner"
                   name="owner_uuids[]"
-                  placeholder="Search by login or uuid">
+                  placeholder="Search by login, email, uuid">
             {{/each}}
             {{/unless}}
         </div>
         <div class="clearfix"></div>
-        <div class="col-sm-4 col-sm-offset-4">
+        <div class="col-sm-6 col-sm-offset-4">
             <a class="add-owner-entry"><i class="fa fa-plus"></i> Add Another Owner</a>
         </div>
     </div>
-
 
       {{#unless changeOwnerMode}}
 
@@ -220,8 +218,6 @@
         </div>
 
         {{/unless}}
-
-
 
       <div class="form-group">
         <div class="col-sm-offset-4 col-sm-8">

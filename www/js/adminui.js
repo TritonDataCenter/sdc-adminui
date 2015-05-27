@@ -35,10 +35,10 @@ Backbone.$ = $;
 
 require('backbone.stickit');
 require('backbone.marionette');
-
+require('backbone.paginator');
 
 var Handlebars = require('handlebars');
-Handlebars.registerHelper('role', function(role, options) {
+Handlebars.registerHelper('role', function (role, options) {
     var args = Array.prototype.slice.call(arguments);
     var opts = args.pop();
     var userRoles = adminui.user.getRoles();
@@ -51,6 +51,66 @@ Handlebars.registerHelper('role', function(role, options) {
     return '';
 });
 
+Handlebars.registerHelper('debug', function (optionalValue) {
+    console.log('Current Context: ', this);
+
+    if (optionalValue) {
+        console.log('Value:', optionalValue);
+    }
+});
+
+Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+
+    switch (operator) {
+        case '==':
+            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '!=':
+            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        case '===':
+            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '<':
+            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=':
+            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>':
+            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=':
+            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        case '&&':
+            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        case '||':
+            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
+});
+
+Handlebars.registerHelper('math', function (v1, operator, v2) {
+    v1 = parseFloat(v1);
+    v2 = parseFloat(v2);
+    switch (operator) {
+        case '+':
+            return v1 + v2;
+        case '-':
+            return v1 - v2;
+        case '*':
+            return v1 * v2;
+        case '/':
+            return v1 / v2;
+        case '||':
+            return v1 || v2;
+        default:
+            return v1 + v2;
+    }
+});
+
+Handlebars.registerHelper('sizeList', function(context, options) {
+    var ret = '';
+    for(var i = 0, j = context.length; i < j; i++) {
+        ret = ret + options.fn(context[i]) + (i < (j + 1) ? '|' : '');
+    }
+    return ret ;
+});
 var Pinger = require('./ping');
 
 /* Extend jQuery with functions for PUT and DELETE requests. */
