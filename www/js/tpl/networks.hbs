@@ -9,23 +9,35 @@
 -->
 
 <section>
-  <h3>Networks
+    <h3>Networks
     {{#role "operators"}}
-    <div class="actions pull-right">
-      <button type="button" class="btn btn-sm btn-info" name="create-network"><i class="fa fa-plus"></i> New Network</button>
-    </div>
+        <div class="actions pull-right">
+            <button type="button" class="btn btn-sm btn-info" name="create-network"><i class="fa fa-plus"></i> New Network</button>
+        </div>
     {{/role}}
-  </h3>
-  <div class="networks-list"></div>
+    </h3>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="input-group">
+                <input type="text" name="owner_uuid" class="form-control search-owner"
+                       placeholder="Search for Networks by Owner login, email or uuid" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-info search-by-owner"><i class="fa fa-search"> </i> Search</button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="networks-list"></div>
+    <div class="pagination-networks"></div>
 </section>
 
 <section>
-  <h3>Network Pools
+    <h3>Network Pools
     {{#role "operators"}}
-    <div class="actions pull-right">
-      <button type="button" class="btn btn-sm btn-info" name="create-network-pool"><i class="fa fa-plus"></i> New Network Pool</button>
-    </div>
+        <div class="actions pull-right">
+            <button type="button" class="btn btn-sm btn-info" name="create-network-pool"><i class="fa fa-plus"></i> New Network Pool</button>
+        </div>
     {{/role}}
-  </h3>
-  <div class="network-pools-list"></div>
+    </h3>
+    <div class="network-pools-list"></div>
 </section>

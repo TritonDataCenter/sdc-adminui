@@ -10,10 +10,13 @@
 
 var Backbone = require('backbone');
 var adminui = require('../adminui');
-
+var preview = require('../tpl/user-preview.hbs');
+var shortPreview = require('../tpl/user-preview-short.hbs');
 
 var UserPreview = Backbone.Marionette.ItemView.extend({
-    template: require('../tpl/user-preview.hbs'),
+    getTemplate: function () {
+        return this.options.previewType ? shortPreview : preview;
+    },
     attributes: {
         'class': 'user-preview'
     },

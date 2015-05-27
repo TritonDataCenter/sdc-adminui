@@ -38,11 +38,11 @@ module.exports = Backbone.Marionette.ItemView.extend({
         'submit form': 'onSubmit'
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
         options = options || {};
         this.networks = options.networks || new Networks();
         this.model = this.networkPool = options.networkPool || new NetworkPool();
-        this.userInput = new TypeaheadUser();
+        this.userInput = new TypeaheadUser({showPreview: true});
 
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
         this.listenTo(this.networks, 'sync', this.render);
@@ -52,7 +52,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.selectedUser = null;
     },
 
-    checkInput: function() {
+    checkInput: function () {
         if (this.validNetworks() && this.validPoolName()) {
             this.enableSaveButton();
         } else {
@@ -60,12 +60,12 @@ module.exports = Backbone.Marionette.ItemView.extend({
         }
     },
 
-    validPoolName: function() {
+    validPoolName: function () {
         var val = this.$('input[name=name]').val();
         return (val.length > 0);
     },
 
-    validNetworks: function() {
+    validNetworks: function () {
         var val = this.$('select').val();
 
         if (val === null || val.length === 0) {
@@ -75,20 +75,20 @@ module.exports = Backbone.Marionette.ItemView.extend({
         }
     },
 
-    enableSaveButton: function() {
+    enableSaveButton: function () {
         this.$('button.save').prop('disabled', false);
     },
 
-    disableSaveButton: function() {
+    disableSaveButton: function () {
         this.$('button.save').prop('disabled', true);
     },
 
-    serializeData: function() {
+    serializeData: function () {
         var networkPool = this.networkPool.toJSON();
         var networks = this.networks.toJSON();
 
         if (networkPool.networks) {
-            _.each(networks, function(d) {
+            _.each(networks, function (d) {
                 if (networkPool.networks.indexOf(d.uuid) !== -1) {
                     d.selected = true;
                 }
@@ -100,12 +100,12 @@ module.exports = Backbone.Marionette.ItemView.extend({
         };
     },
 
-    onFocusOwnerField: function(e) {
+    onFocusOwnerField: function (e) {
         this.selectedUser = null;
     },
 
-    onSyncError: function(model, xhr) {
-        var ul = $("<ul />");
+    onSyncError: function (model, xhr) {
+        var ul = $('<ul />');
         this.$('.control-group').removeClass('error');
 
         _(xhr.responseData.errors).each(function(e) {
@@ -113,14 +113,14 @@ module.exports = Backbone.Marionette.ItemView.extend({
             ul.append('<li>'+e.message+' (' + e.field + ')</li>');
         });
 
-        this.$(".alert")
+        this.$('.alert')
             .empty()
             .append('<h4 class="alert-heading">Please fix the following errors</h4>')
             .append(ul)
             .show();
     },
 
-    onBlurOwnerField: function(e) {
+    onBlurOwnerField: function (e) {
         /*
          * prevent the user from de-focusing on the field if the user never selected
          * a user from the dropdown
@@ -137,11 +137,11 @@ module.exports = Backbone.Marionette.ItemView.extend({
         }
     },
 
-    onSelectUser: function(user) {
+    onSelectUser: function (user) {
         this.selectedUser = user;
     },
 
-    onSubmit: function(e) {
+    onSubmit: function (e) {
         e.preventDefault();
         this.$('.alert').hide();
         var data = Backbone.Syphon.serialize(this);
@@ -150,11 +150,11 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.networkPool.save();
     },
 
-    onSaved: function() {
+    onSaved: function () {
         this.trigger('saved', this.networkPool);
     },
 
-    onRender: function() {
+    onRender: function () {
         this.userInput.setElement(this.ui.ownerInput);
         this.userInput.render();
         this.ui.saveButton.prop('disabled', true);
@@ -163,7 +163,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
             'input[name="owner_uuids[]"]': 'owner_uuids'
         });
         this.$('select').chosen({
-            width: "280px"
+            width: '280px'
         });
     },
 

@@ -38,10 +38,13 @@
 
     {{#if owner_uuids}}
     <li>
-      <strong>Owner</strong>
-      <div class="value">
-        {{#each owner_uuids}}
-        <a class="owner-link" data-owner-uuid="{{this}}" href="/users/{{this}}">{{this}}</a>
+      <strong>Owners</strong>
+      <div class="value owners">
+        {{#each owners}}
+          <div class="owner-details">
+            <a class="owner-link" data-owner-uuid="{{uuid}}" target="_tab" href="/users/{{uuid}}"><i class="fa fa-external-link"></i> {{uuid}}</a>
+            <span class="login"><i class="fa fa-user"></i> {{login}}</span>
+          </div>
         {{/each}}
       </div>
     </li>

@@ -12,7 +12,6 @@ var Backbone = require('backbone');
 
 var adminui = require('../adminui');
 
-var Networks = require('../models/networks');
 var NetworksListItem = require('./networks-list-item');
 var NetworksListEmptyView = require('./empty').extend({
     emptyMessage: 'No networks found'
