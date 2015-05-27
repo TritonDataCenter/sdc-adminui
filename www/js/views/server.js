@@ -187,7 +187,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
     onError: function(e, xhr, s) {
         app.vent.trigger('notification', {
             level: 'error',
-            message: 'Error retreving Server Information. CNAPI said: ' + xhr.responseData.message,
+            message: 'Error retrieving server information. CNAPI said: ' + xhr.responseData.message,
             persistent: true
         });
         this.close();
