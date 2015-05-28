@@ -427,6 +427,18 @@ var VMPage = React.createClass({
                 </div>
               </div>
             </section>
+            <section>
+              <div className="row">
+                <div className="col-md-12">
+                  <h3>Cloud Analytics</h3>
+                  <div className="cloud-analytics-region">
+                    <a className="btn btn-info btn-sm" target="fishbulb" href={'/fishbulb?user=' + vm.owner_uuid + '&vm=' + vm.uuid}>
+                        <i className="fa fa-bars fa-lg"></i> View Cloud Analytics
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </section>
         </div>;
     },
     _handleStartVm: function() {

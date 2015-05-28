@@ -369,6 +369,10 @@ var PageUser = React.createClass({
                         { isTopLevelAccount && <li className={this.state.tab === 'firewall' ? 'active' : ''}>
                             <a onClick={this._changeTab.bind(null, 'firewall')}><i className="fa fa-fw fa-shield"></i> Firewall</a>
                         </li> }
+
+                        { isTopLevelAccount && <li>
+                            <a href={'/fishbulb?user=' + user.uuid} target="fishbulb"><i className="fa fa-fw fa-bars"></i> Cloud Analytics</a>
+                        </li> }
                     </ul>
                 </div>
 

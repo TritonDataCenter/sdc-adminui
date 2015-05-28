@@ -49,41 +49,50 @@ var capWidgets = [];            /* all widgets in the panel */
 /*
  * DOM nodes
  */
- var capDomContent;          /* body of the panel */
+var capDomContent;                                     /* body of the panel */
 
- var capDefaultIp = window.location.hostname;   /* default backend IP */
- var capDefaultPort = Number(window.location.port);
- var capDefaultProtocol = 'https';
- var capLegendWidth = 200;       /* legend width */
- var capSliderWidth = 50;        /* heat map slider width */
- var capGraphHeight = 200;       /* graph height */
- var capGraphWidth;          /* graph width (auto-configured) */
-
- var capConfig = {           /* CA backend configuration */
-    'type': 'direct',
-    'host': capDefaultIp,
-    'port': capDefaultPort || 443,
-    'protocol': capDefaultProtocol,
+var capDefaultIp = window.location.hostname;           /* default backend IP */
+var capDefaultPort = Number(window.location.port);
+var capDefaultProtocol = 'https';
+var capLegendWidth = 200;                              /* legend width */
+var capSliderWidth = 50;                               /* heat map slider width */
+var capGraphHeight = 200;                              /* graph height */
+var capGraphWidth;                                     /* graph width (auto-configured) */
+var capConfig = {                                      /* CA backend configuration */
+    type: 'direct',
+    host: capDefaultIp,
+    port: capDefaultPort || 443,
+    protocol: capDefaultProtocol,
+    customer: getParameterByName('user') || null,      // ?user=uuid
+    zonename: getParameterByName('vm') || null,        // ?vm=uuid
+    hostname: getParameterByName('server') || null     // ?server=server name
 };
 
+var capTitle = 'Cloud Analytics';
+if (capConfig.zonename) {
+    capTitle = capTitle + ' for VM UUID: ' + capConfig.zonename;
+} else if (capConfig.customer) {
+    capTitle = capTitle + ' for User UUID ' + capConfig.customer;
+} else if (capConfig.hostname) {
+    capTitle = capTitle + ' for Server Name ' + capConfig.hostname;
+}
+$('.capHeader').text(capTitle);
 /*
  * Prompt the user for backend configuration details once the whole document is
  * loaded.
  */
- $(document).ready(capInitConfig);
-
+$(document).ready(capInitConfig);
 /*
  * Initialize this application based on the user-entered configuration
  * describing how to connect to the remote CA service.
  */
- function capInitConfig()
- {
+function capInitConfig() {
     capDomContent = $('.capConsole');
 
     capBackend = caBackendCreate(capConfig);
-    capPanel = new caPanel({ 'backend': capBackend });
+    capPanel = new caPanel({backend: capBackend});
     capPanel.on('error', capError);
-    capConf = new caConf({ 'backend': capBackend });
+    capConf = new caConf({backend: capBackend});
 
     jQuery.ajaxSetup({
         beforeSend: function(xhr) {
@@ -92,11 +101,11 @@ var capWidgets = [];            /* all widgets in the panel */
     });
 
     capConf.load(function (err) {
-        if (err)
+        if (err) {
             jsFatalError(err);
+        }
 
-        capGraphWidth = $(capDomContent).width() - capLegendWidth - 30 -
-        capSliderWidth;
+        capGraphWidth = $(capDomContent).width() - capLegendWidth - 30 - capSliderWidth;
         capInitSelectors();
         capPanel.unpause();
         capWidgetTimer = setInterval(capTick, 1000);
@@ -106,26 +115,26 @@ var capWidgets = [];            /* all widgets in the panel */
 /*
  * Initialize the main metric selector widget based on the available metrics.
  */
- function capInitSelectors()
- {
-    var groupdiv, div, widget;
-
-    groupdiv = jsCreateElement('div', 'capControls');
+function capInitSelectors() {
+    var groupdiv = jsCreateElement('div', 'capControls');
     capDomContent[0].appendChild(groupdiv);
-    capDomContent[0].appendChild(
-        jsCreateElement('div', 'capHorizontalSeparator'));
+    capDomContent[0].appendChild(jsCreateElement('div', 'capHorizontalSeparator'));
 
-    widget = new caWidgetCreateInstn({
-        'conf': capConf,
-        'oncreate': capInstnCreate
+    var widget = new caWidgetCreateInstn({
+        conf: capConf,
+        oncreate: capInstnCreate
     });
     groupdiv.appendChild(widget.caElement);
 
-    div = jsCreateElement('div');
-    div.appendChild(jsCreateText('Load server instrumentations'));
+    var div = jsCreateElement('div');
+    var loadFor = capConfig.zonename ? 'vm' : 'user';
+    div.appendChild(jsCreateText('Load ' + (capConfig.customer ? loadFor : 'server')
+     + ' instrumentations'));
     groupdiv.appendChild(div);
     $(div).button().click(function () {
-        $(div).fadeOut(250, function () { $(div).remove(); });
+        $(div).fadeOut(250, function () {
+            $(div).remove();
+        });
         capLoadServerInstns();
     });
 }
@@ -134,11 +143,11 @@ var capWidgets = [];            /* all widgets in the panel */
  * Invoked when the user clicks "Create" to create a new instrumentation as well
  * as a new widget to present it.
  */
- function capInstnCreate(params)
- {
+function capInstnCreate(params) {
     capBackend.instnCreate(params, function (err, instn) {
-        if (err)
+        if (err) {
             jsFatalError(err);
+        }
 
         capInstnMakeWidget(instn, capInstnRemoveNew);
     });
@@ -148,11 +157,11 @@ var capWidgets = [];            /* all widgets in the panel */
  * Load instrumentations that already exist on the server and create widgets for
  * each one.
  */
- function capLoadServerInstns()
- {
+function capLoadServerInstns() {
     capBackend.instnsList(function (err, instns) {
-        if (err)
+        if (err) {
             jsFatalError(err);
+        }
 
         instns.forEach(function (instn) {
             capInstnMakeWidget(instn, capInstnRemoveServer);
@@ -163,8 +172,7 @@ var capWidgets = [];            /* all widgets in the panel */
 /*
  * Invoked once per second to update each widget.
  */
- function capTick()
- {
+function capTick() {
     capWidgets.forEach(function (w) { w.tick(); });
 }
 
@@ -175,33 +183,32 @@ var capWidgets = [];            /* all widgets in the panel */
  * user asks to removes the widget, and this callback is responsible for
  * actually removing the widget and optionally deleting the instrumentation.
  */
- function capInstnMakeWidget(instn, removecb)
- {
-    var options, cons, widget;
-
-    options = {
-        'title': instn.title(),
-        'panel': capPanel,
-        'pxHeight': capGraphHeight,
-        'pxWidth': capGraphWidth,
-        'onremove': function () {
+function capInstnMakeWidget(instn, removecb) {
+    var options = {
+        title: instn.title(),
+        panel: capPanel,
+        pxHeight: capGraphHeight,
+        pxWidth: capGraphWidth,
+        onremove: function () {
             removecb(widget, instn);
         },
-        'oninstn': function (newinstn) {
+        oninstn: function (newinstn) {
             capInstnMakeWidget(newinstn, capInstnRemoveNew);
         }
     };
-
+    var cons;
     if (instn.isNumericDecomposition()) {
         cons = caWidgetHeatMap;
-        options['source'] = instn;
+        options.source = instn;
     } else {
         cons = caWidgetLineGraph;
-        options['sources'] = [ { 'instn': instn } ];
+        options.sources = [
+            {instn: instn}
+        ];
     }
 
     capPanel.instnAdd(instn);
-    widget = new cons(options);
+    var widget = new cons(options);
     capWidgets.push(widget);
 
     $(widget.caElement).hide();
@@ -212,8 +219,7 @@ var capWidgets = [];            /* all widgets in the panel */
 /*
  * Removes the given widget from the UI.
  */
- function capWidgetRemove(widget, callback)
- {
+function capWidgetRemove(widget, callback) {
     $(widget.caElement).fadeOut(250, function () {
         $(widget.caElement).remove();
         capWidgets.splice(capWidgets.indexOf(widget), 1);
@@ -225,8 +231,7 @@ var capWidgets = [];            /* all widgets in the panel */
  * "remove" callback for instrumentations created by the user.  This removes the
  * widget itself and then deletes the instrumentation from the server.
  */
- function capInstnRemoveNew(widget, instn)
- {
+function capInstnRemoveNew(widget, instn) {
     capWidgetRemove(widget, function () {
         capPanel.widgetRemove(widget);
         capBackend.instnDelete(instn, function () {});
@@ -238,8 +243,7 @@ var capWidgets = [];            /* all widgets in the panel */
  * the user with the option of just removing the widget or also deleting the
  * instrumentaiton from the server.
  */
- function capInstnRemoveServer(widget, instn)
- {
+function capInstnRemoveServer(widget, instn) {
     var div = $([
         '<div>',
         'This instrumentation was loaded from the server and another user ',
@@ -248,11 +252,11 @@ var capWidgets = [];            /* all widgets in the panel */
         ].join('\n'));
 
     $(div).dialog({
-        'resizable': false,
-        'modal': true,
-        'title': 'Remove loaded instrumentation',
-        'width': '400px',
-        'buttons': {
+        resizable: false,
+        modal: true,
+        title: 'Remove loaded instrumentation',
+        width: '400px',
+        buttons: {
             'Just remove it from this screen': function () {
                 $(this).dialog('close');
                 capWidgetRemove(widget, function () {
@@ -270,8 +274,7 @@ var capWidgets = [];            /* all widgets in the panel */
 /*
  * Report an error to the user.
  */
- function capError(err)
- {
+function capError(err) {
     var div = $([
         '<div>',
         '<p><span class="ui-icon ui-icon-alert caDialogIcon"></span>',
@@ -281,12 +284,12 @@ var capWidgets = [];            /* all widgets in the panel */
         ].join('\n'));
 
     $(div).dialog({
-        'resizable': false,
-        'modal': true,
-        'title': 'Error',
-        'width': '400px',
-        'buttons': {
-            'OK': function () {
+        resizable: false,
+        modal: true,
+        title: 'Error',
+        width: '400px',
+        buttons: {
+            OK: function () {
                 $(this).dialog('close');
             }
         }

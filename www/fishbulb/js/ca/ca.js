@@ -36,6 +36,9 @@ var caUniqueId = 0;			/* unique widget identifier */
 var caDefaultBarColor = '#E57F44';	/* default color for bar graphs */
 var caDefaultHue = 22;			/* default hue for heat maps */
 
+var preselectedCustomer;
+var preselectedZonename;
+var preselectedHostname;
 /*
  * We use a set of secondary colors to highlight individual components in bar
  * charts or heatmaps.
@@ -58,108 +61,136 @@ var jqClickRight = 3;	/* right-click event code */
  * publicly accessible cloudapi service) and also provides methods for
  * retrieving individual values.
  */
-function caBackendCreate(args)
-{
+function caBackendCreate(args) {
 	jsAssertObject(args, 'args');
-	jsAssertString(args['type'], 'args.type');
-	jsAssertEnum(args['type'], 'args.type', [ 'direct' ]);
+	jsAssertString(args.type, 'args.type');
+	jsAssertEnum(args.type, 'args.type', ['direct']);
 	return (new caBackendDirect(args));
 }
 
-function caBackendDirect(args)
-{
+function caBackendDirect(args) {
 	jsAssertObject(args, 'args');
-	jsAssertString(args['host'], 'args.host');
-	jsAssertIntOptional(args['port'], 'args.port');
+	jsAssertString(args.host, 'args.host');
+	jsAssertIntOptional(args.port, 'args.port');
 
-	this.cbd_host = args['host'];
-	this.cbd_port = args['port'] || 23181;
-    this.cbd_protocol = args['protocol'] || 'http';
+	this.cbd_host = args.host;
+	this.cbd_port = args.port || 23181;
+	this.cbd_protocol = args.protocol || 'http';
+
+	preselectedCustomer = args.customer;
+	preselectedZonename = args.zonename;
+	preselectedHostname = args.hostname;
+
 	this.cbd_conf = undefined;
 }
 
-caBackendDirect.prototype.request = function (args, callback)
-{
+caBackendDirect.prototype.getUri = function (uri) {
+	var result = '/ca';
+	if (preselectedCustomer) {
+		result = result + '/customers/' + preselectedCustomer + (uri || '');
+	} else if (uri) {
+		result = result + uri;
+	}
+	return result;
+};
+
+caBackendDirect.prototype.request = function (args, callback) {
 	var obj = Object.create(args);
-	obj['host'] = this.cbd_host;
-	obj['port'] = this.cbd_port;
-    obj['protocol'] = this.cbd_protocol;
+	obj.host = this.cbd_host;
+	obj.port = this.cbd_port;
+	obj.protocol = this.cbd_protocol;
 
 	jsRequestJson(obj, callback);
 };
 
-caBackendDirect.prototype.config = function (callback)
-{
-	this.request({ 'method': 'GET', 'uri': '/ca' }, callback);
-};
-
-/* backend operations */
-caBackendDirect.prototype.instnsList = function (callback)
-{
-	var be = this;
-
-	this.request({ 'method': 'GET', 'uri': '/ca/instrumentations' },
-	    function (err, instns) {
-		if (err) {
-			callback(err);
-			return;
-		}
-
-		callback(null, instns.map(function (instninfo) {
-			return (new caInstn(instninfo, be.cbd_conf));
-		}));
-	    });
-};
-
-caBackendDirect.prototype.instnCreate = function (params, callback)
-{
-	var be = this;
-
+caBackendDirect.prototype.config = function (callback) {
 	this.request({
-	    'method': 'POST',
-	    'uri': '/ca/instrumentations',
-	    'body': params
-	}, function (err, instninfo) {
-		if (err) {
-			callback(err);
-			return;
-		}
-
-		if (!instninfo)
-			jsFatal('no data from successful instn_json; ' +
-			    'check browser JavaScript console for errors');
-
-		callback(null, new caInstn(instninfo, be.cbd_conf));
-	});
-};
-
-caBackendDirect.prototype.instnDelete = function (instn, callback)
-{
-	this.request({
-	    'method': 'DELETE',
-	    'uri': instn.ci_instn['uri']
+		method: 'GET',
+		uri: this.getUri()
 	}, callback);
 };
 
-caBackendDirect.prototype.instnClone = function (instn, args, callback)
-{
-	var be = this;
+/* backend operations */
+caBackendDirect.prototype.instnsList = function (callback) {
+	var self = this;
+
+	this.request({method: 'GET', uri: self.getUri('/instrumentations')},
+	    function (err, instns) {
+			if (err) {
+				return callback(err);
+			}
+
+			if (preselectedZonename && preselectedCustomer || preselectedHostname) {
+				instns = instns.filter(function (instr) {
+					if (instr.predicate && instr.predicate.eq) {
+						var eq = instr.predicate.eq;
+						var isInSearch = function (field, value) {
+							return eq.indexOf(field) > -1 && eq.indexOf(value) > -1;
+						}
+						if (preselectedZonename) {
+							return isInSearch('zonename', preselectedZonename);
+						} else if (preselectedHostname) {
+							return isInSearch('hostname', preselectedHostname);
+						}
+					} else {
+						return null;
+					}
+				});
+			}
+
+			callback(null, instns.map(function (instninfo) {
+				return (new caInstn(instninfo, self.cbd_conf));
+			}));
+	    });
+};
+
+caBackendDirect.prototype.instnCreate = function (params, callback) {
+	var self = this;
 
 	this.request({
-	    'method': 'POST',
-	    'uri': instn.ci_instn['uri'] + '/clone',
-	    'body': args
+	    method: 'POST',
+	    uri: self.getUri('/instrumentations'),
+	    body: params
 	}, function (err, instninfo) {
 		if (err) {
 			callback(err);
 			return;
 		}
 
-		if (!instninfo)
+		if (!instninfo) {
 			jsFatal('no data from successful instn_json; ' +
 			    'check browser JavaScript console for errors');
+		}
 
-		callback(null, new caInstn(instninfo, be.cbd_conf));
+		callback(null, new caInstn(instninfo, self.cbd_conf));
+	});
+};
+
+caBackendDirect.prototype.instnDelete = function (instn, callback) {
+	this.request({
+	    method: 'DELETE',
+	    uri: instn.ci_instn.uri
+	}, callback);
+};
+
+caBackendDirect.prototype.instnClone = function (instn, args, callback) {
+	var self = this;
+
+	this.request({
+	    method: 'POST',
+	    uri: instn.ci_instn.uri + '/clone',
+	    body: args
+	}, function (err, instninfo) {
+		if (err) {
+			return callback(err);
+		}
+
+		if (!instninfo) {
+			jsFatal('no data from successful instn_json; ' +
+			    'check browser JavaScript console for errors');
+		}
+
+		callback(null, new caInstn(instninfo, self.cbd_conf));
 	});
 };
 
@@ -1285,22 +1316,22 @@ caWidgetCreateInstn.prototype.decompSelected = function ()
 	$(this.wci_decomp2).attr('disabled', options.length == 1);
 };
 
-caWidgetCreateInstn.prototype.created = function ()
-{
-	var metric, value;
+caWidgetCreateInstn.prototype.created = function () {
+	var metric = this.baseMetric();
+	metric.decomposition = [];
 
-	metric = this.baseMetric();
-	metric['decomposition'] = [];
-
-	value = $(this.wci_decomp1).val();
+	var value = $(this.wci_decomp1).val() || $(this.wci_decomp2).val();
 	if (value !== '') {
-		metric['decomposition'].push(value);
-
-		value = $(this.wci_decomp2).val();
-		if (value !== '')
-			metric['decomposition'].push(value);
+		metric.decomposition.push(value);
 	}
 
+	if (preselectedZonename) {
+		metric.predicate = {eq: ['zonename', preselectedZonename]};
+	}
+	if (preselectedHostname) {
+		metric.predicate = {eq: ['hostname', preselectedHostname]};
+	}
+	
 	this.wci_oncreate(metric);
 };
 
