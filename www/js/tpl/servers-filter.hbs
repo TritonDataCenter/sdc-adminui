@@ -5,61 +5,57 @@
 -->
 
 <!--
-    Copyright (c) 2014, Joyent, Inc.
+    Copyright (c) 2015, Joyent, Inc.
 -->
 
-<div class="row">
-    <div class="col-md-12">
-        <form role="form" class="filter-options">
-            <div class="row">
-                <div class="form-group col-md-3">
-                    <label class="control-label">UUID</label>
-                    <input type="text" class="form-control" name="uuid" placeholder="UUID">
-                </div>
-                <div class="form-group col-md-3">
-                    <label class="control-label">Hostname</label>
-                    <input type="text" class="form-control" name="hostname" placeholder="Hostname">
-                </div>
-                <div class="form-group col-md-2">
-                    <label class="control-label">Setup State</label>
-                    <select class="form-control" name="setup" class="col-md-2">
-                        <option value="">any</option>
-                        <option value="true">setup</option>
-                        <option value="false">not setup</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-2">
-                    <label class="control-label">NIC Tag</label>
-                    <select class="form-control" name="nictag" class="col-md-2"></select>
-                </div>
-                <div class="form-group col-md-2">
-                    <label class="control-label">Sort By</label>
-                    <div class="input-group">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-alphabet"></span></span>
-                        <select name="sort" class="form-control sort">
-                            <option value="hostname">hostname</option>
-                            <option value="provisionable_ram">provisionable ram</option>
-                            <option value="current_platform">current platform</option>
-                            <option value="boot_platform">boot platform</option>
-                        </select>
-                        <input type="hidden" class="change-direction" name="direction" value="asc" />
-                    </div>
-                </div>
+<form role="form" class="filter-options">
+    <div class="row">
+        <div class="form-group col-md-3">
+            <label class="control-label">UUID</label>
+            <input type="text" class="form-control" name="uuid" placeholder="UUID">
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label">Hostname</label>
+            <input type="text" class="form-control" name="hostname" placeholder="Hostname">
+        </div>
+        <div class="form-group col-md-2">
+            <label class="control-label">Setup State</label>
+            <select class="form-control" name="setup" class="col-md-2">
+                <option value="">any</option>
+                <option value="true">setup</option>
+                <option value="false">not setup</option>
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <label class="control-label">NIC Tag</label>
+            <select class="form-control" name="nictag" class="col-md-2"></select>
+        </div>
+        <div class="form-group col-md-2">
+            <label class="control-label">Sort By</label>
+            <div class="input-group">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-alphabet"></span></span>
+                <select name="sort" class="form-control sort">
+                    <option value="hostname">hostname</option>
+                    <option value="provisionable_ram">provisionable ram</option>
+                    <option value="current_platform">current platform</option>
+                    <option value="boot_platform">boot platform</option>
+                </select>
+                <input type="hidden" class="change-direction" name="direction" value="asc" />
             </div>
-            <div class="row">
-                <div class="form-group col-md-3">
-                    <label class="control-label">Traits</label>
-                    <input type="text" class="form-control" name="traits" placeholder="<key>: <value> or just <key>">
-                </div>
-                <div class="form-group col-md-2">
-                    <label class="control-label">PROVISIONING</label>
-                    <select class="form-control" name="reserved" class="col-md-2">
-                        <option value="">any</option>
-                        <option value="false">Enabled</option>
-                        <option value="true">Disabled</option>
-                    </select>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+    <div class="row">
+        <div class="form-group col-md-3">
+            <label class="control-label">Traits</label>
+            <input type="text" class="form-control" name="traits" placeholder="<key>: <value> or just <key>">
+        </div>
+        <div class="form-group col-md-2">
+            <label class="control-label">PROVISIONING</label>
+            <select class="form-control" name="reserved" class="col-md-2">
+                <option value="">any</option>
+                <option value="false">Enabled</option>
+                <option value="true">Disabled</option>
+            </select>
+        </div>
+    </div>
+</form>

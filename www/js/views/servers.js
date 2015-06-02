@@ -105,21 +105,11 @@ var ServersView = Backbone.Marionette.Layout.extend({
         this.$('.record-summary').hide();
     },
 
-    onSync: function () {
-        if (this.collection.length) {
-            this.$('.record-count').html(this.collection.length);
-            this.$('.record-summary').show();
-        } else {
-            this.$('.record-summary').hide();
-        }
-    },
-
-    initialize: function () {
-        this.collection = new Servers(null, {params: {sort: 'hostname'}});
+    initialize: function() {
+        this.collection = new Servers(null, {params: {sort: 'hostname'} });
         this.filterForm = new FilterForm();
 
         this.listenTo(this.collection, 'request', this.onRequest);
-        this.listenTo(this.collection, 'sync', this.onSync);
     },
 
     query: function (params) {

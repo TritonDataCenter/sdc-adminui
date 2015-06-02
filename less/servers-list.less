@@ -5,10 +5,20 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
+@import "__vms-list";
+
 .servers-list {
+  .server-list-header {
+    .__vms-list.vms-list-header;
+    .select {
+      padding-left: 4px;
+      width: auto;
+    }
+  }
+
   .zero-state {
     text-align: center;
     display: block;
@@ -54,13 +64,15 @@
 
     .status {
       float: left;
-      width: 15px;
+      width: 20px;
       height: 80px;
       &.running { background: @brand-success; }
       &.rebooting { background: @brand-warning; }
       &.unavailable { background: @brand-danger;}
       &.unknown { background: @brand-danger;}
+      &.un-reserve { background: @brand-success; }
     }
+
     .data {
       .make-row(0);
       margin-left: 20px;
@@ -77,16 +89,6 @@
     .name {
       .make-sm-column(4);
       padding: 10px;
-
-      .uuid {
-        font-size: 10px;
-        line-height: 14px;
-        color: @gray-light;
-        font-style: italic;
-        display: block;
-        width: 280px;
-        font-family: monospace;
-      }
     }
 
     a { cursor: pointer; }
@@ -188,4 +190,23 @@
     }
   }
 
+  .uuid {
+    font-size: 10px;
+    line-height: 14px;
+    color: @gray-light;
+    font-style: italic;
+    display: block;
+    width: 280px;
+    font-family: monospace;
+  }
+  
+  .state {
+    font-size: 10px;
+    padding: 4px 6px;
+    text-transform: uppercase;
+    &.stopped { background-color: @gray-light; color: #fff; }
+    &.failed, &.reserve { background-color: @brand-danger; color: #fff; }
+    &.running, &.un-reserve { background-color: @brand-success; color: #fff; }
+    &.destroyed { background-color: @gray-dark; color: #fff; }
+  }
 }
