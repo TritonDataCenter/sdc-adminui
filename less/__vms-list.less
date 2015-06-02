@@ -42,39 +42,20 @@
 }
 
 .__vms-list {
-  .actionbar {
-    position: fixed;
-    width: 100%;
-    left: 0;
-    right: 0;
-    margin: 0;
-    z-index: 100;
-    bottom: 0;
-    font-size: 12px;
-    opacity: 0.95;
-    color: #fff;
-    background: #006481;
-    a { color: #fff; }
-    .actionbar-actions {
-      padding: 10px;
-      a+a { margin-left: 20px;}
-    }
-   .actionbar-items { font-weight: bold; padding: 10px; }
-   .actionbar-clear {
-      padding: 10px;
-   }
-  }
-
   .vms-list-header {
     .make-row(0);
     background: @state-info-bg;
+    .select {
+      .make-xs-column(0.4, 0);
+      padding: 10px 8px;
+    }
     .title {
       .make-xs-column(6, 0);
       padding: 10px 15px;
     }
     .actions {
       color: #aaa;
-      .make-xs-column(6, 0);
+      .make-xs-column(5, 0);
       padding: 10px 15px;
       text-align: right;
     }
