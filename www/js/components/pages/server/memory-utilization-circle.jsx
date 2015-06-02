@@ -84,8 +84,8 @@ var ServerMemoryUtilizationCircle = React.createClass({
 
         return <div className="server-memory-utilization-circle" style={ {width: this.props.diameter, height: this.props.diameter} }>
             <div className="graph epoch" style={ {width: this.props.diameter, height: this.props.diameter} }></div>
-            <div className="percent" style={ { 'font-size': pctSize, 'margin-top': percentmTop}}>
-                <strong style={ { 'font-size':labelSize }}>UTILIZATION</strong> {server.memory_utilization_percent}%
+            <div className="percent" style={ {'fontSize': pctSize, 'marginTop': percentmTop} }>
+                <strong style={ {'fontSize':labelSize} }>UTILIZATION</strong> {server.memory_utilization_percent}%
             </div>
         </div>;
     }

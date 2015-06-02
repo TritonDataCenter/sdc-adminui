@@ -17,7 +17,8 @@ var EditableField = React.createClass({
         return {
             edit: false,
             openedEditField: false,
-            tooltipText: 'Press ENTER to <i class="fa fa-check"></i> Save<br/>Press ESC to <i class="fa fa-undo"></i> Cancel'
+            tooltipText: 'Press ENTER to <i class="fa fa-check"></i> Save<br/>Press ESC to <i class="fa fa-undo"></i> Cancel',
+            showTitle: this.props.showTitle
         };
     },
     componentDidMount: function () {
@@ -84,7 +85,7 @@ var EditableField = React.createClass({
 
         return (
             <li>
-                <strong>{title}</strong>
+                {this.state.showTitle && <strong>{title}</strong>}
                 {this.state.edit ? <input type='text' 
                     ref="textField" 
                     data-toggle="tooltip" 

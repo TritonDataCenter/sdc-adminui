@@ -5,10 +5,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 
 
 var adminui = require('../adminui');
@@ -32,7 +32,7 @@ var MetadataModal = React.createClass({
     propTypes: {
         type: React.PropTypes.string.isRequired
     },
-    render: function() {
+    render: function () {
         var title;
         switch(this.props.type) {
             case 'customer_metadata':
@@ -50,7 +50,6 @@ var MetadataModal = React.createClass({
             </Modal>
         );
     }
-
 });
 
 var VmsList = React.createClass({
@@ -58,68 +57,64 @@ var VmsList = React.createClass({
     propTypes: {
         'collection': React.PropTypes.object.isRequired
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         this._requests = [];
         this.props.collection.on('request', this._onRequest, this);
         this.props.collection.on('sync', this._onSync, this);
     },
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         this.props.collection.off('request');
         this.props.collection.off('sync');
 
-        this._requests.map(function(r) {
+        this._requests.map(function (r) {
             r.abort();
         });
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             loading: true,
             selected: []
         };
     },
-    _onRequest: function() {
+    _onRequest: function () {
         this.setState({loading: true});
     },
-    _onSync: function() {
+    _onSync: function () {
         this.setState({loading: false});
     },
-    _handleExport: function(e) {
+    _handleExport: function (e) {
         e.preventDefault();
         var vms = new Vms(null, {params: this.props.collection.params});
-        vms.exportGroupedByCustomer().done(function(exported) {
+        vms.exportGroupedByCustomer().done(function (exported) {
             this.setState({'exported': exported});
         }.bind(this));
     },
-
-    _HandleDismissExport: function() {
+    _HandleDismissExport: function () {
         this.setState({'exported': false});
     },
 
-    _handleLoadMore: function() {
+    _handleLoadMore: function () {
         if (this.props.collection.hasNext()) {
             this.props.collection.next();
             this._requests.push(this.props.collection.fetch({remove: false}));
         }
     },
-
-    _handleLoadAll: function() {
+    _handleLoadAll: function () {
         this.props.collection.pagingParams.perPage = null;
         this._requests.push(this.props.collection.fetch({remove: false}));
     },
-    _handleCloseJobs: function() {
+    _handleCloseJobs: function () {
         this.setState({jobs: null});
         this.props.collection.fetch();
     },
-    _handleClearSelection: function() {
+    _handleClearSelection: function () {
         this.setState({selected: []});
     },
-    _handleCloseBatchJobConfirm: function() {
+    _handleCloseBatchJobConfirm: function () {
         this.setState({confirm: null});
     },
 
-
-
-    renderActionBar: function() {
+    renderActionBar: function () {
         var numSelectedMachines = this.state.selected.length;
         return <div className="actionbar row">
             <div className="actionbar-items col-sm-4">
@@ -143,23 +138,20 @@ var VmsList = React.createClass({
             </div>
         </div>;
     },
-    renderVm: function(vmModel) {
+    renderVm: function (vmModel) {
         var vm = vmModel.toJSON();
-        console.debug('[VmsList] renderVm: ', vm);
         var vmUrl = '/vms/' + vm.uuid;
 
         var isDocker = vm.docker === true;
         var isDockerHost = vm.tags.JPC_tag === 'DockerHost';
-        var ips = vm.nics.map(function(n) {
-            return n.ip;
-        });
+        var ips = _.pluck(vm.nics, 'ip');
         var selected = _.findWhere(this.state.selected, {uuid: vm.uuid});
 
-        return <tr key={vm.uuid} className={ cx({selected: selected})}>
+        return <tr key={vm.uuid} className={cx({selected: selected})}>
             <td className="select">
-                { adminui.user.role('operators') ?
-                <input onChange={this._handleSelectVm} data-vm-uuid={vm.uuid} type="checkbox" checked={selected} className="input" />
-                : null }
+                {adminui.user.role('operators') &&
+                    <input onChange={this._handleSelectVm} data-vm-uuid={vm.uuid} type="checkbox" checked={selected} className="input" />
+                }
             </td>
 
             <td className="status">
@@ -170,12 +162,12 @@ var VmsList = React.createClass({
                 <a href={vmUrl}
                     data-vm-uuid={vm.uuid}
                     onClick={this.navigateToVmPage}>
-                    {vm.alias ? vm.alias : vm.uuid }
+                    {vm.alias ? vm.alias : vm.uuid}
                 </a>
                 <span className="uuid"><span className="selectable">{vm.uuid}</span></span>
-                { vm.tags.smartdc_type ? <span className={"type " + vm.tags.smartdc_type}>{vm.tags.smartdc_type}</span> : null }
-                { isDocker ? <span className="type docker">docker</span> : null }
-                { isDockerHost ? <span className="type docker">dockerhost</span> : null }
+                {vm.tags.smartdc_type && <span className={'type ' + vm.tags.smartdc_type}>{vm.tags.smartdc_type}</span>}
+                {isDocker && <span className="type docker">docker</span>}
+                {isDockerHost && <span className="type docker">dockerhost</span>}
             </td>
             <td className="owned-by">
                 <div className="owner">
@@ -184,7 +176,7 @@ var VmsList = React.createClass({
             </td>
             <td className="ips">
                 {
-                    ips.map(function(ip) {
+                    ips.map(function (ip) {
                         return <span key={ip} className="selectable">{ip}</span>;
                     })
                 }
@@ -193,12 +185,12 @@ var VmsList = React.createClass({
                 <div className="server">
                     <ServerLink serverUuid={vm.server_uuid} />
                 </div>
-                { vm.package_name ?
+                {vm.package_name &&
                     <div className="package">
                         <i className="fa fa-codepen fa-fw"></i>
                         <span className="package-name">{vm.package_name}</span>
                         <span className="package-version">{vm.package_version}</span>
-                    </div> : null
+                    </div>
                 }
                 <div className="image">
                     <ImageLnk imageUuid={vm.image_uuid} />
@@ -206,40 +198,37 @@ var VmsList = React.createClass({
             </td>
         </tr>;
     },
-    render: function() {
+    render: function () {
         if (this.state.loading) {
             return <div className="vms-list">
                 <div className="zero-state">Retrieving Virtual Machines</div>
             </div>;
         }
 
-        if (! this.props.collection.length) {
+        if (!this.props.collection.length) {
             return <div className="zero-state">No Virtual Machines were found matching specified criteria</div>;
         }
 
-        console.log('[VmsList] state', this.state);
-
         return <div className="vms-list">
-                { this.state.selected.length > 0 ? this.renderActionBar() : null }
-                { this.state.jobs ? <BatchJobProgress {...this.state.jobs} onClose={this._handleCloseJobs} /> : null }
-                { this.state.confirm ? <BatchJobConfirm
-                    onClose={this._handleCloseBatchJobConfirm}
-                    {...this.state.confirm} /> : null }
-                { this.state.metadata ? <MetadataModal type={this.state.metadata.type} onSave={this._handleSaveMetadata} onClose={this._handleCloseMetadata} /> : null}
+                {this.state.selected.length > 0 && this.renderActionBar()}
+                {this.state.jobs && <BatchJobProgress {...this.state.jobs} onClose={this._handleCloseJobs} />}
+                {this.state.confirm && <BatchJobConfirm onClose={this._handleCloseBatchJobConfirm} {...this.state.confirm} />}
+                {this.state.metadata && <MetadataModal type={this.state.metadata.type} onSave={this._handleSaveMetadata} onClose={this._handleCloseMetadata} />}
 
                 <div className="vms-list-header">
+                    {adminui.user.role('operators') && <div className="select"><input onChange={this._handleSelectAll} type="checkbox" checked={this._isSelectedAll()} className="input" /></div>}
                     <div className="title">
                         Showing <span className="current-count">{this.props.collection.length}</span> of <span className="record-count">{this.props.collection.objectCount}</span> Virtual Machines<br/>
                     </div>
                     <div className="actions">
-                        {this.props.collection.objectCount ?
+                        {this.props.collection.objectCount &&
                             <a onClick={this._handleExport} className="export">Export (<span className="record-count">{this.props.collection.length}</span>) <i className="fa fa-share-square"></i></a>
-                            : null }
+                        }
                     </div>
                 </div>
 
                 <table className="table">
-                    <tbody>{ this.props.collection.map(this.renderVm, this) }</tbody>
+                    <tbody>{this.props.collection.map(this.renderVm, this)}</tbody>
                     <caption className="row" style={{visibility: this.state.loading ? 'hidden': 'visible'}}>
                         <div className="col-sm-offset-6 col-sm-4" style={{paddingLeft: 0, paddingRight:0}}>
                         {
@@ -268,7 +257,7 @@ var VmsList = React.createClass({
             </div>;
     },
 
-    navigateToVmPage: function(e) {
+    navigateToVmPage: function (e) {
         if (e.metaKey || e.ctrlKey) {
             return;
         }
@@ -278,32 +267,30 @@ var VmsList = React.createClass({
         adminui.router.showVm(vmModel.get('uuid'));
     },
 
-    navigateToOwnerDetailsPage: function(user) {
-        adminui.vent.trigger('showcomponent', 'user', { user: user });
+    navigateToOwnerDetailsPage: function (user) {
+        adminui.vent.trigger('showcomponent', 'user', {user: user});
     },
 
-    _handleApplyMetadata: function(e) {
+    _handleApplyMetadata: function (e) {
         var type = e.currentTarget.getAttribute('data-type');
-        console.log(this.state.metadata);
         this.setState({metadata: {type: type}});
     },
 
-    _handleSaveMetadata: function(metadata) {
+    _handleSaveMetadata: function (metadata) {
         var self = this;
         var selected = this.state.selected;
         var selectedVmUuids = _.pluck(selected, 'uuid');
         var type = this.state.metadata.type;
-        console.log('metadata', this.state.metadata);
         var confirm = {};
-        confirm.vms = selected;
-        confirm.prompt = "Are you sure you want to apply " + this.state.type + "to "+selectedVmUuids.length + ' Virtual Machine(s)?';
+        confirm.items = selected;
+        confirm.prompt = 'Are you sure you want to apply ' + this.state.type + ' to ' + selectedVmUuids.length + ' Virtual Machine(s)?';
         confirm.action = 'Apply ' + type;
-        confirm.onConfirm = function() {
+        confirm.onConfirm = function () {
             api.post('/api/vm-metadata').send({
                 type: type,
                 metadata: metadata,
                 vms: selectedVmUuids
-            }).end(function(res) {
+            }).end(function (res) {
                 self.setState({
                     jobs: {
                         vms: selected,
@@ -314,28 +301,28 @@ var VmsList = React.createClass({
                 });
             });
         }.bind(this);
-        this.setState({ confirm: confirm, metadata: null});
+        this.setState({confirm: confirm, metadata: null});
     },
-    _handleCloseMetadata: function() {
+
+    _handleCloseMetadata: function () {
         this.setState({metadata: null});
     },
 
-    _handleAction: function(e) {
+    _handleAction: function (e) {
         var action = e.currentTarget.getAttribute('data-action');
         var selected = this.state.selected;
         var selectedVmUuids = _.pluck(selected, 'uuid');
 
         var self = this;
-        console.log('[VmsList] action', action);
         var confirm = {};
-        confirm.vms = selected;
+        confirm.items = selected;
 
         switch (action) {
             case 'reboot':
-                confirm.prompt = "Are you sure you want to reboot "+selectedVmUuids.length + ' Virtual Machine(s)?';
+                confirm.prompt = 'Are you sure you want to reboot ' + selectedVmUuids.length + ' Virtual Machine(s)?';
                 confirm.action = 'Reboot Virtual Machine(s)';
-                confirm.onConfirm = function() {
-                    api.post('/api/vm-reboot').send(selectedVmUuids).end(function(res) {
+                confirm.onConfirm = function () {
+                    api.post('/api/vm-reboot').send(selectedVmUuids).end(function (res) {
                         self.setState({
                             jobs: {
                                 vms: selected,
@@ -349,10 +336,10 @@ var VmsList = React.createClass({
                 break;
 
             case 'start':
-                confirm.prompt = "Are you sure you want to start " + selectedVmUuids.length + ' Virtual Machine(s)?';
+                confirm.prompt = 'Are you sure you want to start ' + selectedVmUuids.length + ' Virtual Machine(s)?';
                 confirm.action = 'Start Virtual Machine(s)';
-                confirm.onConfirm = function() {
-                    api.post('/api/vm-start').send(selectedVmUuids).end(function(res) {
+                confirm.onConfirm = function () {
+                    api.post('/api/vm-start').send(selectedVmUuids).end(function (res) {
                         self.setState({
                             confirm: null,
                             jobs: {
@@ -366,10 +353,10 @@ var VmsList = React.createClass({
                 break;
 
             case 'stop':
-                confirm.action = "Stop Virtual Machine(s)";
-                confirm.prompt = "Are you sure you want to stop " + selectedVmUuids.length + ' Virtual Machine(s)?';
-                confirm.onConfirm = function() {
-                    api.post('/api/vm-stop').send(selectedVmUuids).end(function(res) {
+                confirm.action = 'Stop Virtual Machine(s)';
+                confirm.prompt = 'Are you sure you want to stop ' + selectedVmUuids.length + ' Virtual Machine(s)?';
+                confirm.onConfirm = function () {
+                    api.post('/api/vm-stop').send(selectedVmUuids).end(function (res) {
                         self.setState({
                             confirm: null,
                             jobs: {
@@ -386,17 +373,25 @@ var VmsList = React.createClass({
         this.setState({confirm: confirm});
     },
 
-    _handleSelectVm: function(e) {
+    _handleSelectVm: function (e) {
         var selected = this.state.selected;
         var uuid = e.target.getAttribute('data-vm-uuid');
         var vm = this.props.collection.get(uuid);
         if (e.target.checked) {
             selected.push(vm.toJSON());
         } else {
-             var i = _.findWhere(selected, {uuid: vm.get('uuid')});
-             selected.splice(i, 1);
+             var index = _.findIndex(selected, {uuid: uuid});
+             selected.splice(index, 1);
         }
         this.setState({selected: selected});
+    },
+
+    _handleSelectAll: function (e) {
+        this.setState({selected: e.target.checked ? this.props.collection.toJSON() : []});
+    },
+
+    _isSelectedAll: function () {
+        return this.state.selected.length === this.props.collection.length;
     }
 });
 

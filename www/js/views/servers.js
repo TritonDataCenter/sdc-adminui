@@ -136,15 +136,6 @@ var ServersView = Backbone.Marionette.Layout.extend({
         this.$('.record-summary').hide();
     },
 
-    onSync: function () {
-        if (this.collection.length) {
-            this.$('.record-count').html(this.collection.length);
-            this.$('.record-summary').show();
-        } else {
-            this.$('.record-summary').hide();
-        }
-    },
-
     initialize: function (options) {
         this.collection = new Servers(null, {
             params: Object.keys(options || {}).length ? options : {sort: 'hostname'}
@@ -152,7 +143,6 @@ var ServersView = Backbone.Marionette.Layout.extend({
         this.filterForm = new FilterForm(options);
 
         this.listenTo(this.collection, 'request', this.onRequest);
-        this.listenTo(this.collection, 'sync', this.onSync);
     },
 
     query: function (params) {
