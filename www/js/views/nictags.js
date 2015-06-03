@@ -18,6 +18,8 @@ var ErrorAlert = require('../components/error-alert');
 var $ = require('jquery');
 var api =require('../request');
 var _ = require('underscore');
+var NicTagForm = require('./nictag-form');
+var app = require('../adminui');
 
 var NicTagsPage = React.createClass({
     getInitialState: function() {
@@ -33,6 +35,7 @@ var NicTagsPage = React.createClass({
         this.setState({form: false});
     },
     handleSave: function(params) {
+        params.mtu = /^[0-9]+$/.test(params.mtu) ? parseInt(params.mtu, 10) : params.mtu;
         api.post('/api/nic_tags').send(params).end(function(res) {
             if (res.error) {
                 this.setState({error: res.body});
@@ -51,51 +54,16 @@ var NicTagsPage = React.createClass({
         return <div className="nic-tags">
             <h3>Nic Tags
                 <div className="actions">
+                    {app.user.role('operators') &&  
                     <button className="btn btn-info" onClick={this._showForm}>
                         <i className="fa fa-plus"> New NIC Tag</i>
-                    </button>
+                    </button>}
                 </div>
             </h3>
             { this.state.error && <ErrorAlert error={this.state.error} /> }
             { this.state.form && <NicTagForm handleClose={this._hideForm} handleSave={this.handleSave}/> }
             { !this.state.form && <NicTagsList /> }
         </div>;
-    }
-});
-
-
-
-var NicTagForm = React.createClass({
-    getInitialState: function() {
-        return {};
-    },
-    _onChangeName: function(e) {
-        this.setState({name: e.target.value});
-    },
-    _onSave: function(e) {
-        e.preventDefault();
-        this.props.handleSave({name: this.state.name});
-    },
-    render: function() {
-        return <div className="panel">
-            <div className="panel-body">
-                <h4 className="panel-title">New NIC Tag</h4>
-                <form className="form form-horizontal">
-                    <div className="form-group">
-                        <label className="control-label col-sm-5">NIC Tag Name</label>
-                        <div className="col-sm-5">
-                            <input placeholder="name of NIC Tag (eg: acme-admin)" onChange={this._onChangeName} type="text" value={this.state.name} className="form-control" />
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <div className="col-sm-offset-5 col-sm-5">
-                            <button disabled={ !(this.state.name && this.state.name.length) }  className="btn btn-primary" onClick={this._onSave} type="submit">Save NIC Tag</button>
-                            <button className="btn btn-link" onClick={this.props.handleClose} type="button">Cancel</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
     }
 });
 
@@ -123,7 +91,7 @@ var NicTagsList = React.createClass({
             var url = "/nictags/" + nc.name;
             return (
                 <li key={nc.name}>
-                    <a onClick={this.onClick.bind(this, nictag)} data-uuid={nc.name} href={url}>{nc.name}</a>
+                    <a onClick={this.onClick.bind(this, nictag)} data-uuid={nc.name} href={url}>{nc.name}</a><br/><span>mtu: {nc.mtu}</span>  
                 </li>
                 );
         }, this);
