@@ -11,6 +11,7 @@
 var Backbone = require('backbone');
 var adminui = require('adminui');
 var NetworksListItemTemplate = require('../tpl/networks-list-item.hbs');
+var NicTag = require('../models/nictag');
 var _ = require('underscore');
 
 var NetworksListItem = Backbone.Marionette.ItemView.extend({
@@ -20,6 +21,9 @@ var NetworksListItem = Backbone.Marionette.ItemView.extend({
 
     initialize: function(options) {
         this.showDelete = options.showDelete || false;
+        this.nicTag = new NicTag({name: options.model.get('nic_tag')});
+        this.nicTag.fetch();
+        this.listenTo(this.nicTag, 'sync', this.render);
     },
 
     events: {
@@ -53,6 +57,7 @@ var NetworksListItem = Backbone.Marionette.ItemView.extend({
 
     serializeData: function() {
         var data = this.model.toJSON();
+        data.nicTagMtu = this.nicTag.get('mtu');
         data.show_delete = this.showDelete && data.name !== 'admin' && data.name !== 'external';
         return data;
     },

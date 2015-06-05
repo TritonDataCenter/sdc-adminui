@@ -10,6 +10,7 @@
 
 var Backbone = require('backbone');
 var Model = require('./model');
+var NicTag = require('./nictag');
 
 module.exports = Model.extend({
     urlRoot: "/api/networks",
