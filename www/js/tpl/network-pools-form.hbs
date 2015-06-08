@@ -23,14 +23,14 @@
         <div class="alert alert-danger hide"></div>
         <div class="form-group">
           <label class="control-label col-sm-4">Network Pool Name</label>
-          <div class="controls col-sm-6">
+          <div class="controls col-sm-7">
             <input type="text" class="form-control" name="name" value="{{name}}" placeholder="name of network pool">
           </div>
         </div>
 
         <div class="form-group">
           <label class="control-label col-sm-4">Networks</label>
-          <div class="controls col-sm-6">
+          <div class="controls col-sm-7">
             <div class="chosen">
               <select class="form-control" width="100%" name="networks" multiple>
                 {{#each networks}}
@@ -45,12 +45,12 @@
 
         <div class="form-group">
             <label class="control-label col-sm-4">Owner</label>
-            <div class="controls col-sm-6">
+            <div class="controls col-sm-7">
             {{#if owner_uuids.length}}
             {{#each owner_uuids}}
                 <div class="row">
                     <div class="col-sm-12">
-                        <input type="text" name="owner_uuids[]" value="{{this}}" class="form-control"></input>
+                        <input type="text" name="owner_uuids[]" value="{{this}}" class="form-control" placeholder="Search by login, email or uuid"></input>
                         <span class="help-block">Optionally select an owner</span>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
             {{else}}
                 <div class="row">
                     <div class="controls col-sm-12">
-                        <input type="text" name="owner_uuids[]" value="" class="form-control"></input>
+                        <input type="text" name="owner_uuids[]" value="" class="form-control" placeholder="Search by login, email or uuid"></input>
                         <span class="help-block">Optionally select an owner</span>
                     </div>
                 </div>

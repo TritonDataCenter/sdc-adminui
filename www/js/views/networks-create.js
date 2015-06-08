@@ -18,8 +18,8 @@ var $ = require('jquery');
 var Template = require('../tpl/networks-create.hbs');
 var Network = require('../models/network');
 var NicTags = require('../models/nictags');
-
 var TypeaheadUserInput = require('./typeahead-user');
+var utils = require('../lib/utils');
 
 var NicTagSelectItem = Backbone.View.extend({
     tagName: 'option',
@@ -48,7 +48,8 @@ var View = Backbone.Marionette.Layout.extend({
         'click .save': 'onSubmit',
         'click .create-new-nic-tag': 'onClickCreateNewNicTag',
         'click .add-route': 'onAddRoute',
-        'click .remove-route': 'onRemoveRoute'
+        'click .remove-route': 'onRemoveRoute',
+        'click a.add-owner-entry': 'onAddOwnerEntry'
     },
 
     ui: {
@@ -63,7 +64,7 @@ var View = Backbone.Marionette.Layout.extend({
         'error': 'onError'
     },
 
-    initialize: function() {
+    initialize: function () {
         if (!this.model) {
             this.model = new Network();
         }
@@ -74,31 +75,31 @@ var View = Backbone.Marionette.Layout.extend({
         });
     },
 
-    onClickCreateNewNicTag: function() {
+    onClickCreateNewNicTag: function () {
         var self = this;
         this.ui.nicTagSelect.hide();
         this.ui.createNewNicTagButton.hide();
 
         var createNicTagView = new CreateNicTagView();
         this.createNicTagRegion.show(createNicTagView);
-        createNicTagView.on('save', function(tag) {
-            self.nicTags.fetch().done(function() {
+        createNicTagView.on('save', function (tag) {
+            self.nicTags.fetch().done(function () {
                 self.ui.nicTagSelect.val(tag.get('name'));
                 self.ui.nicTagSelect.show();
                 self.ui.createNewNicTagButton.show();
             });
         });
-        createNicTagView.on('close', function() {
+        createNicTagView.on('close', function () {
             self.ui.nicTagSelect.show();
             self.ui.createNewNicTagButton.show();
         });
     },
 
-    onSaved: function() {
+    onSaved: function () {
         this.trigger('saved', this.model);
     },
 
-    onSubmit: function(e) {
+    onSubmit: function (e) {
         e.preventDefault();
 
         var data = Backbone.Syphon.serialize(this);
@@ -111,6 +112,7 @@ var View = Backbone.Marionette.Layout.extend({
                 routes[data.subnet] = data.gateway;
             }
         });
+        utils.setOwnerData(data);
         data.routes = routes;
         data.nic_tag = this.$('select[name=nic_tag]').val();
         this.model.set(data);
@@ -118,7 +120,7 @@ var View = Backbone.Marionette.Layout.extend({
         this.model.save();
     },
 
-    onError: function(model, xhr, options) {
+    onError: function (model, xhr, options) {
         var fieldMap = {
             'name': '[name=name]',
             'subnet': '[name=subnet]',
@@ -135,7 +137,7 @@ var View = Backbone.Marionette.Layout.extend({
         this.$('.form-groupo').removeClass('error');
         this.$('.help-block', 'form-group').remove();
 
-        _.each(err.errors, function(errObj) {
+        _.each(err.errors, function (errObj) {
             var $field = $(fieldMap[errObj.field]);
             var $controlGroup = $field.parents('.form-group');
             $controlGroup.addClass('has-error');
@@ -149,9 +151,8 @@ var View = Backbone.Marionette.Layout.extend({
         this.ui.alert.show();
     },
 
-    onAddRoute: function() {
+    onAddRoute: function () {
         var l = $('.routes-controls').length.toString();
-
         var controls = $('.routes-controls:last').clone();
         $('input:first', controls).attr('name', 'routes['+l+'][subnet]').val('');
         $('input:last', controls).attr('name', 'routes['+l+'][gateway]').val('');
@@ -159,11 +160,11 @@ var View = Backbone.Marionette.Layout.extend({
         $('.remove-route', controls).show();
     },
 
-    onRemoveRoute: function(e) {
+    onRemoveRoute: function (e) {
         $(e.currentTarget).parent('.routes-controls').remove();
     },
 
-    serializeData: function() {
+    serializeData: function () {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.apply(this, arguments);
         if (data.uuid) {
             data.inUse = this.options.inUse || false;
@@ -172,34 +173,53 @@ var View = Backbone.Marionette.Layout.extend({
         }
         var routes = data.routes;
         data.routes = [];
-        if (data.owner_uuids) {
-            data.owner_uuid = data.owner_uuids[0];
-        }
         for (var subnet in routes) {
             data.routes.push({subnet: subnet, gateway: routes[subnet]});
         }
         data.resolvers = (this.model.get('resolvers') || []).join(' ');
-
         return data;
     },
 
+    onAddOwnerEntry: function () {
+        var self = this;
+        var wrapper = $('<div class="add-owner-wrapper"></div>');
+        this.$('.add-owner-entry').before(wrapper);
+        var node = $('<input type="text" class="form-control" name="owner_uuids[]" placeholder="Search by login, email or uuid" /></div>');
+        wrapper = $(wrapper);
+        wrapper.html(node);
+        var userInput = new TypeaheadUserInput({
+            el: $(node),
+            showPreview: true
+        });
+        userInput.render();
+        userInput.$el.focus();
 
-    onRender: function() {
+        wrapper.append('<a class="remove-owner-entry"><i class="fa fa-minus"></i></a>');
+        wrapper.find('.remove-owner-entry').on('click', self.onRemoveOwnerEntry);
+    },
+
+    onRemoveOwnerEntry: function (e) {
+        $(e.target).parent().parent().remove();
+    },
+
+    onRender: function () {
         var self = this;
 
         this.ui.newNicTagForm.hide();
 
         this.nicTagsSelect.setElement(this.$('select[name=nic_tag]'));
 
-        this.userInput = new TypeaheadUserInput({el: this.$('[name="owner_uuids[]"]') });
-        this.userInput.render();
-        this.nicTags.fetch().done(function() {
+        this.$('[name="owner_uuids[]"]').each(function () {
+            var userInput = new TypeaheadUserInput({el: $(this), showPreview: true});
+            userInput.render();
+        });
+        this.nicTags.fetch().done(function () {
             self.$('select[name=nic_tag]').val(self.model.get('nic_tag'));
         });
         this.$('.remove-route:first').hide();
     },
 
-    show: function() {
+    show: function () {
         this.render();
         this.$('.alert-danger').hide();
         this.$el.modal('show');

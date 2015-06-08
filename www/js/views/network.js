@@ -18,6 +18,7 @@ var Template = require('../tpl/networks-detail.hbs');
 var $ = require('jquery');
 
 var React = require('react');
+var utils = require('../lib/utils');
 
 var Addresses = require('../models/addresses');
 var AddressesTableRowTemplate = require('../tpl/networks-detail-address-row.hbs');
@@ -106,18 +107,24 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         'click .edit-network': 'editNetwork'
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
         this.addresses = new Addresses({uuid: this.model.get('uuid') });
+        this.setOwners();
         this.listenTo(this.addresses, 'sync', this.render, this);
     },
 
-    editNetwork: function() {
+    setOwners: function () {
+        var data = this.model.attributes;
+        return utils.setOwnerData(data);
+    },
+
+    editNetwork: function () {
         var view = this.networkForm = new NetworkForm({
             model: this.model,
             inUse: this.networkIsInUse()
         });
         var self = this;
-        this.listenTo(view, 'saved', function(network) {
+        this.listenTo(view, 'saved', function (network) {
             self.model.fetch().done(this.render);
             view.$el.modal('hide').remove();
             adminui.vent.trigger('notification', {
@@ -130,22 +137,22 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         this.networkForm.show();
     },
 
-    goToOwner: function(e) {
+    goToOwner: function (e) {
         e.preventDefault();
         var uuid = $(e.target).attr('data-owner-uuid');
         this.close();
         adminui.vent.trigger('showcomponent', 'user', {uuid: uuid });
     },
 
-    url: function() {
+    url: function () {
         return _.str.sprintf('networks/%s', this.model.get('uuid'));
     },
 
-    onClose: function() {
+    onClose: function () {
         this.$el.modal('hide');
     },
 
-    networkIsInUse: function() {
+    networkIsInUse: function () {
         var ips = this.addresses.toJSON();
         for (var i in ips) {
             var ip = ips[i];
@@ -155,18 +162,17 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         }
         return false;
     },
-    onShow: function() {
+    onShow: function () {
         this.addresses.fetch();
     },
-    serializeData: function() {
+    serializeData: function () {
         var data = _.clone(this.model.toJSON());
         data.networkIsInUse = this.networkIsInUse();
         return data;
     },
 
-    onRender: function() {
+    onRender: function () {
         adminui.vent.trigger('settitle', _.str.sprintf('network: %s %s', this.model.get('name')));
-
         React.render(
             NotesComponent({item: this.model.get('uuid')}),
             this.$('.notes-component-container').get(0)

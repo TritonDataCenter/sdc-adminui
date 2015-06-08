@@ -28,7 +28,7 @@
                 {{/if}}
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-name">Name</label>
-                    <div class="controls col-sm-5">
+                    <div class="controls col-sm-7">
                         <input type="text" id="network-name" value="{{name}}"
                             class="form-control"
                             {{#if inUse}} readonly {{/if}}
@@ -37,11 +37,26 @@
                 </div>
 
                 <div class="form-group .owner">
-                    <label class="control-label col-sm-4" for="network-owners">Owner</label>
-                    <div class="controls col-sm-6">
-                        <input class="form-control"
-                            value="{{owner_uuid}}"
-                            type="text" name="owner_uuids[]" placeholder="Search by login, email, uuid" />
+                    <label class="control-label col-sm-4" for="network-owners">Owners</label>
+                    <div class="col-sm-7">
+                        {{#unless owner_uuids.length}}
+                            <input type="text"
+                                   class="form-control input-xl package-owner"
+                                   name="owner_uuids[]"
+                                   placeholder="Search by login, email or uuid">
+                        {{else}}
+                            {{#each owner_uuids}}
+                                <input type="text"
+                                       value="{{this}}"
+                                       class="form-control package-owner"
+                                       name="owner_uuids[]"
+                                       placeholder="Search by login, email or uuid">
+                            {{/each}}
+                        {{/unless}}
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-sm-7 col-sm-offset-4">
+                        <a class="add-owner-entry"><i class="fa fa-plus"></i> Add Another Owner</a>
                     </div>
                 </div>
 
@@ -49,7 +64,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-gateway">Subnet</label>
 
-                    <div class="controls col-sm-6">
+                    <div class="controls col-sm-7">
                         <input type="text"
                             {{#if inUse}} readonly {{/if}}
                             class="form-control"
@@ -65,7 +80,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-gateway">Gateway</label>
 
-                    <div class="controls col-sm-6">
+                    <div class="controls col-sm-7">
                         <input type="text"
                             class="form-control"
                             id="netework-gateway"
@@ -152,7 +167,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-nic-tag">NIC Tag</label>
 
-                    <div class="controls col-sm-6">
+                    <div class="controls col-sm-7">
                         {{#unless inuse}}
                         <select class="form-control" name="nic_tag">
                             <option>Select a nic tag</option>
@@ -172,7 +187,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-resolvers">DNS Resolvers</label>
 
-                    <div class="controls col-sm-6">
+                    <div class="controls col-sm-7">
                         <input type="text"
                             value="{{resolvers}}"
                             id="netework-resolvers"

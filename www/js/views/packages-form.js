@@ -42,16 +42,13 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
     },
 
     onAddOwnerEntry: function() {
-        var node = $([ '<input type="text"',
-        'class="form-control"',
-        'name="owner_uuids[]"',
-        'placeholder="Search by login or uuid">',
-        '</div>'].join(''));
+        var node = $('<input type="text" class="form-control" name="owner_uuids[]" placeholder="Search by login, email or uuid"></div>');
 
         this.$('.add-owner-entry').before(node);
 
         var userInput = new UserInput({
-            el: $('input', node)
+            el: $(node),
+            showPreview: true
         });
 
         userInput.render();
@@ -142,7 +139,7 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        this.userInput = new UserInput({el: this.$('.package-owner')});
+        this.userInput = new UserInput({el: this.$('.package-owner'), showPreview: true});
         this.userInput.render();
         this.checkFields();
     },
