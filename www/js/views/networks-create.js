@@ -111,6 +111,15 @@ var View = Backbone.Marionette.Layout.extend({
                 routes[data.subnet] = data.gateway;
             }
         });
+        var mtu = data.mtu;
+        if (mtu !== '') {
+            data.mtu = /^[0-9]+$/.test(mtu) ? parseInt(mtu, 10) : mtu;
+        } else {
+            if (this.model.has('mtu')) {
+                this.model.unset('mtu');
+            }
+            delete data.mtu;
+        }
         data.routes = routes;
         data.nic_tag = this.$('select[name=nic_tag]').val();
         this.model.set(data);
@@ -120,15 +129,16 @@ var View = Backbone.Marionette.Layout.extend({
 
     onError: function(model, xhr, options) {
         var fieldMap = {
-            'name': '[name=name]',
-            'subnet': '[name=subnet]',
-            'gateway': '[name=gateway]',
-            'provision_start_ip': '[name=provision_start_ip]',
-            'provision_end_ip': '[name=provision_end_ip]',
-            'resolvers': '[name=resolvers]',
-            'owner_uuids': '[name="owner_uuids[]"]',
-            'nic_tag': 'input[name=nic_tag]',
-            'vlan_id': '[name=vlan_id]'
+            name: '[name=name]',
+            subnet: '[name=subnet]',
+            gateway: '[name=gateway]',
+            provision_start_ip: '[name=provision_start_ip]',
+            provision_end_ip: '[name=provision_end_ip]',
+            resolvers: '[name=resolvers]',
+            owner_uuids: '[name="owner_uuids[]"]',
+            nic_tag: 'input[name=nic_tag]',
+            vlan_id: '[name=vlan_id]',
+            mtu: 'input[name=mtu]'
         };
         var err = xhr.responseData;
         console.log('network creation validation failed', err);
