@@ -33,4 +33,6 @@
       "cnapi": { "url": "http://10.99.99.16" }
     }
   }
+  "tokenTimeout": 300000,
+  "expiredSessionTimeout": 3600000
 }
