@@ -1,0 +1,42 @@
+<!--
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
+<!--
+    Copyright (c) 2015, Joyent, Inc.
+-->
+
+<div class="page-header">
+    <h1>Fabric vLAN</h1>
+</div>
+<div class="actions">
+    <div class="notes-component-container"></div>
+</div>
+
+<section>
+    <ul class="list-unstyled attributes">
+        <li><ul class="list-unstyled name-field"></ul></li>
+        <li>
+            <strong>Owner</strong><!--
+            --><div class="value">
+                <a class="owner-link" data-owner-uuid="{{owner_uuid}}" href="/users/{{owner_uuid}}">{{owner_uuid}}</a>
+            </div>
+        </li>
+        <li>
+            <strong>VLAN ID</strong><!--
+            --><div class="value">{{vlan_id}}</div>
+        </li>
+        <li>
+            <strong>VNET ID</strong><!--
+            --><div class="value">{{vnet_id}}</div>
+        </li>
+        <li><ul class="list-unstyled description-field"></ul></li>
+    </ul>
+</section>
+
+<section>
+    <h3>Fabric Networks</h3>
+    <div class="networks-region"></div>
+</section>

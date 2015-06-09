@@ -62,7 +62,7 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
         console.debug('typeahead closed');
         var $field = this.$el;
 
-        if (this.selectedUser && $field.val() === this.selectedUser.get('uuid')) {
+        if (this.selectedUser && this.selectedUser.attributes && $field.val() === this.selectedUser.get('uuid')) {
             return;
         }
 

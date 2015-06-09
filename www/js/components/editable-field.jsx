@@ -46,7 +46,7 @@ var EditableField = React.createClass({
                 if (intKey === 13) {
                     self.props.onSave(field.value, self.props.params, function (res) {
                         if (res.error) {
-                            var errors = res.body.errors;
+                            var errors = res.body ? res.body.errors : res.responseData.errors ;
                             var errorMessage = errors && errors.length &&
                                 errors.map(function (err) { return err.message; }) || res.error;
                             showTooltip(field.value, errorMessage);
@@ -90,7 +90,7 @@ var EditableField = React.createClass({
                     data-toggle="tooltip" 
                     data-placement="top" 
                     onBlur={self.editDone} /> : <div className="value selectable">{value}</div>}
-                {app.user.role('operators') && <a onClick={self.clickEdit} className="edit-mtu">{'Edit ' + title + ' '}
+                {app.user.role('operators') && <a onClick={self.clickEdit} className="editable-value">{'Edit ' + title + ' '}
                     <i className="fa fa-pencil"></i></a>}
             </li>
         )
