@@ -1,0 +1,86 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+/*
+ * Copyright (c) 2015, Joyent, Inc.
+ */
+
+#page-fabric-vlan {
+  .networks-region {position: relative;}
+  .create-action {
+    position: absolute;
+    top: -35px;
+    right: 0;
+  }
+}
+
+.fabric-vlans-list, .fabric-networks-list {
+  li {
+    &.hover {background: @state-warning-bg;}
+    .widget-content;
+    display: block;
+    padding: 10px;
+    margin-bottom: 1px;
+
+    &>div {
+      vertical-align:top;
+      display: inline-block;
+      width: 100px;
+    }
+    strong {display: block;}
+    .name {
+      width: 260px;
+      a {
+        display: block;
+        clear: both;
+        font-weight: bold;
+      }
+    }
+    .provision-ip-range {
+      width: 200px;
+    }
+    .resolvers {
+      width: 120px;
+    }
+    .description {
+      width: 400px;
+    }
+    strong {
+      font-size: 12px;
+      color: @gray-light;
+    }
+    .actions {
+      .edit {
+        margin-left: 20px;
+        font-weight: bold;
+        visibility: hidden;
+      };
+      .delete {
+        margin-left: 20px;
+        font-weight: bold;
+        color: @state-danger-text;
+        float: right;
+        visibility: hidden;
+      }
+      width: 150px;
+      float: right;
+      vertical-align: middle;
+      color: @state-danger-text;
+      visibility: hidden;
+    }
+
+    &:hover .delete, &:hover .edit {
+      text-decoration: none;
+      visibility: visible;
+    }
+
+    .value {
+      color: @gray-dark;
+      font-family: @font-family-monospace;
+      font-size: 10px;
+    }
+  }
+}

@@ -67,6 +67,7 @@ var NetworksView = Backbone.Marionette.Layout.extend({
     initialize: function (options) {
         options = options || {};
         this.networks = options.networks || new Networks(null, {mode: 'client'});
+        this.networks.params = {fabric: false};
         this.networkPools = options.networkPools || new NetworkPools();
 
         this.networksList = new NetworksListView({

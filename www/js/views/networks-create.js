@@ -126,6 +126,15 @@ var View = Backbone.Marionette.Layout.extend({
 
         data.routes = routes;
         data.nic_tag = this.$('select[name=nic_tag]').val();
+
+        if (this.options.isFabric) {
+            var vlan = this.options.data || {};
+            data = _.extend(data, {
+                fabric: true,
+                owner_uuids: [vlan.owner_uuid],
+                owner_uuid: vlan.owner_uuid
+            });
+        }
         this.model.set(data);
         console.log('save data:', data);
         this.model.save();
@@ -183,6 +192,7 @@ var View = Backbone.Marionette.Layout.extend({
         } else {
             data.inUse = false;
         }
+        data.isNotFabric = !this.options.isFabric;
         var routes = data.routes;
         data.routes = [];
         for (var subnet in routes) {

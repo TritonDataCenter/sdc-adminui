@@ -12,6 +12,7 @@ var adminui = require('adminui');
 var Backbone = require('backbone');
 var NetworksView = require('./networks');
 var NictagsView = require('./nictags');
+var FabricsView = require('./fabrics');
 
 var Networking = Backbone.Marionette.Layout.extend({
     template: require('../tpl/networking.hbs'),
@@ -37,7 +38,8 @@ var Networking = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.networksView = new NetworksView();
         this.nictagsView = new NictagsView();
-        this.currentView = this.options.tab === 'nictags' ? this.nictagsView : this.networksView;
+        this.fabricsView = new FabricsView();
+        this.currentView = this[this.options.tab + 'View'] || this.networksView;
     },
 
     makeActive: function(view) {
@@ -51,7 +53,10 @@ var Networking = Backbone.Marionette.Layout.extend({
         if (v === 'nictags') {
             this.tabContent.show(this.nictagsView);
             adminui.router.navigate('networking/nictags');
-        } else if (v === 'networks') {
+        } else if (v === 'fabrics') {
+            this.tabContent.show(this.fabricsView);
+            adminui.router.navigate('networking/fabrics');
+        } else {
             this.tabContent.show(this.networksView);
             adminui.router.navigate('networking/networks');
         }
