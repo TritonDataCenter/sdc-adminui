@@ -25,12 +25,12 @@ var NetworksCreateView = require('./networks-create');
 
 var TypeaheadUserInput = require('./typeahead-user');
 
-var ___NETWORK_POOL_CREATED = function(networkPool) {
+var ___NETWORK_POOL_CREATED = function (networkPool) {
     return _.str.sprintf('Network Pool <strong>%s</strong> created successfully.',
         networkPool.get('name'));
 };
 
-var ___NETWORK_CREATED = function(network) {
+var ___NETWORK_CREATED = function (network) {
     return _.str.sprintf('Network <strong>%s</strong> created successfully.', network.get('name'));
 };
 
@@ -67,6 +67,7 @@ var NetworksView = Backbone.Marionette.Layout.extend({
     initialize: function (options) {
         options = options || {};
         this.networks = options.networks || new Networks(null, {mode: 'client'});
+        this.networks.params = {fabric: false};
         this.networkPools = options.networkPools || new NetworkPools();
 
         this.networksList = new NetworksListView({
@@ -116,15 +117,10 @@ var NetworksView = Backbone.Marionette.Layout.extend({
         view.show();
     },
 
-    showCreateNetworkForm: function() {
+    showCreateNetworkForm: function () {
         var view = new NetworksCreateView();
-        this.listenTo(view, 'saved', function(network) {
+        this.listenTo(view, 'saved', function (network) {
             this.networks.add(network);
-            view.$el.modal('hide').remove();
-            adminui.vent.trigger('notification', {
-                level: 'success',
-                message: ___NETWORK_CREATED(network)
-            });
         }, this);
         view.show();
     },
@@ -147,7 +143,7 @@ var NetworksView = Backbone.Marionette.Layout.extend({
         });
     },
 
-    onShow: function() {
+    onShow: function () {
         this.networkPoolsListRegion.show(this.networkPoolsList);
         this.networksListRegion.show(this.networksList);
         this.paginationNetworksRegion.show(new PaginationView({

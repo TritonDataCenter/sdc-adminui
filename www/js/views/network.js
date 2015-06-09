@@ -145,7 +145,16 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     },
 
     url: function () {
-        return _.str.sprintf('networks/%s', this.model.get('uuid'));
+        var network = this.model.toJSON();
+        var url = '';
+        if (network.fabric) {
+            url = 'fabrics/';
+            if (network.owner_uuid !== adminui.user.id) {
+                url += network.owner_uuid + '/';
+            }
+            url += 'vlan/' + network.vlan_id + '/';
+        }
+        return url + 'networks/' + network.uuid;
     },
 
     onClose: function () {
@@ -168,6 +177,7 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     serializeData: function () {
         var data = _.clone(this.model.toJSON());
         data.networkIsInUse = this.networkIsInUse();
+        data.isNotFabric = !data.fabric;
         return data;
     },
 

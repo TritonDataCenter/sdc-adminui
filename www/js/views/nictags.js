@@ -107,5 +107,5 @@ module.exports = Backbone.Marionette.View.extend({
         React.render(Page(), this.$el.get(0));
         return this;
     }
-})
+});
 

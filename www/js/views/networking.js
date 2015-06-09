@@ -5,13 +5,14 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var adminui = require('adminui');
 var Backbone = require('backbone');
 var NetworksView = require('./networks');
 var NictagsView = require('./nictags');
+var FabricsView = require('./fabrics');
 
 var Networking = Backbone.Marionette.Layout.extend({
     template: require('../tpl/networking.hbs'),
@@ -26,41 +27,49 @@ var Networking = Backbone.Marionette.Layout.extend({
 
     sidebar: 'networking',
 
-    url: function() {
+    url: function () {
+        var url = '/networking';
         if (this.options.tab) {
-            return '/networking/' + this.options.tab;
-        } else {
-            return '/networking';
+            url += '/' + this.options.tab;
+            if (this.options.owner_uuid) {
+                url += '/' + this.options.owner_uuid;
+            }
         }
+        return url;
     },
 
-    initialize: function() {
+    initialize: function () {
+        var params = this.options.owner_uuid && adminui.user.attributes.roles.indexOf('operators') !== -1 ? {owner_uuid: this.options.owner_uuid} : null;
         this.networksView = new NetworksView();
         this.nictagsView = new NictagsView();
-        this.currentView = this.options.tab === 'nictags' ? this.nictagsView : this.networksView;
+        this.fabricsView = new FabricsView(params);
+        this.currentView = this[this.options.tab + 'View'] || this.networksView;
     },
 
-    makeActive: function(view) {
-        this.$('[data-view='+view+']').parent().addClass('active').siblings().removeClass('active');
+    makeActive: function (view) {
+        this.$('[data-view=' + view + ']').parent().addClass('active').siblings().removeClass('active');
     },
 
-    onChangeView: function(e) {
+    onChangeView: function (e) {
         e.preventDefault();
-        var v = e.target.getAttribute('data-view');
-        this.makeActive(v);
-        if (v === 'nictags') {
+        var view = e.target.getAttribute('data-view');
+        this.makeActive(view);
+        if (view === 'nictags') {
             this.tabContent.show(this.nictagsView);
             adminui.router.navigate('networking/nictags');
-        } else if (v === 'networks') {
+        } else if (view === 'fabrics') {
+            this.tabContent.show(this.fabricsView);
+            adminui.router.navigate('networking/fabrics');
+        } else {
             this.tabContent.show(this.networksView);
             adminui.router.navigate('networking/networks');
         }
     },
-    onRender: function() {
+    onRender: function () {
         adminui.vent.trigger('settitle', 'networking');
         this.makeActive(this.options.tab || 'networks');
     },
-    onShow: function() {
+    onShow: function () {
         this.tabContent.show(this.currentView);
     }
 });
