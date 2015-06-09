@@ -36,6 +36,8 @@ var MultipleNicConfigComponent = React.createClass({
         var state = {};
         state.nics = this.props.nics || [];
         console.log('[MultiNicConfig] initial state', state);
+        state.networkFilters = this.props.networkFilters;
+        state.expandAntispoofOptions = this.props.expandAntispoofOptions;
         return state;
     },
     componentWillReceiveProps: function(props) {
@@ -92,9 +94,9 @@ var MultipleNicConfigComponent = React.createClass({
                 </div>
                 <div className="nic-config-component">
                     <NicConfigComponent
-                        expandAntispoofOptions={this.props.expandAntispoofOptions}
+                        expandAntispoofOptions={this.state.expandAntispoofOptions}
                         onPropertyChange={this.onNicPropertyChange}
-                        networkFilters={this.props.networkFilters}
+                        networkFilters={this.state.networkFilters}
                         index={i}
                         nic={nic} />
                 </div>
