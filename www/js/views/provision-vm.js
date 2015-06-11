@@ -207,16 +207,19 @@ var View = Backbone.Marionette.Layout.extend({
         this.nicSelects = [];
     },
 
-    onSelectUser: function(u) {
-        if (!u) {
+    onSelectUser: function(user) {
+        if (!user) {
             this.userPreview.close();
             this.removeAllNics();
             this.checkFields();
             return;
         }
-
-        this.selectedUser = u;
-        this.userPreview.show(new UserPreview({model: u}));
+        if (this.selectedUser && this.selectedUser.id === user.id) {
+            return this.userPreview.show(new UserPreview({model: user}));
+        }
+        
+        this.selectedUser = user;
+        this.userPreview.show(new UserPreview({model: user}));
         this.removeAllNics();
 
         var settings = this.settings;
@@ -231,7 +234,6 @@ var View = Backbone.Marionette.Layout.extend({
             while (networkPresets.length < 1) {
                 networkPresets.push({primary: true});
             }
-
             self.renderMultiNicSelect(networkPresets);
             self.checkFields();
         }, function failure() {
@@ -243,7 +245,7 @@ var View = Backbone.Marionette.Layout.extend({
         });
 
 
-        this.sshKeys = new SSHKeys(null, {user: u});
+        this.sshKeys = new SSHKeys(null, {user: user});
         this.listenTo(this.sshKeys, 'sync', this.onFetchKeys);
         this.sshKeys.fetch();
     },
@@ -276,15 +278,17 @@ var View = Backbone.Marionette.Layout.extend({
             }
             return nic;
         });
-
-        this.multiNicConfigComponent = React.render(
-            MultiNicConfigComponent({
-                expandAntispoofOptions: false,
-                networkFilters: {provisionable_by: this.selectedUser.get('uuid')},
-                nics: nics,
-                onChange: this.onNicConfigChange.bind(this)
-            }), this.$('.network-selection').get(0));
-
+        var props = {
+            expandAntispoofOptions: false,
+            networkFilters: {provisionable_by: this.selectedUser.get('uuid')},
+            nics: nics,
+            onChange: this.onNicConfigChange.bind(this)
+        };
+        if (this.multiNicConfigComponent) {
+            React.unmountComponentAtNode(this.$('.network-selection').get(0));
+        }
+        this.multiNicConfigComponent = React.render(new MultiNicConfigComponent(props),
+            this.$('.network-selection').get(0));
         this.$('.form-group-networks').show();
         this.$('.form-group-primary-network').show();
     },
