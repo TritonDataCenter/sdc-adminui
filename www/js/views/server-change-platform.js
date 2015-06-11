@@ -57,7 +57,7 @@ var ChangePlatformForm = Backbone.Marionette.ItemView.extend({
                 },
                 selectOptions: {
                     collection: 'this.platforms',
-                    labelPath: 'version',
+                    labelPath: 'label',
                     valuePath: 'version'
                 }
             }
