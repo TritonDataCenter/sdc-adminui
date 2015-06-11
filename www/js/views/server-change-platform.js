@@ -5,11 +5,11 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
-
+var api = require('../request');
 
 var Platforms = require('../models/platforms');
 var Platform = Backbone.Model.extend({});
@@ -28,8 +28,9 @@ var ChangePlatformForm = Backbone.Marionette.ItemView.extend({
         'click button.save': 'save',
         'click button.cancel': 'cancel'
     },
-    initialize: function(options) {
+    initialize: function (options) {
         this.platforms = new Platforms();
+        this.platforms.params = {for_server: true};
         this.platforms.fetch();
         this.listenTo(this.platforms, 'sync', this.applyBindings);
         this.viewModel = new ViewModel();
@@ -37,27 +38,32 @@ var ChangePlatformForm = Backbone.Marionette.ItemView.extend({
             platform: options.model.get('boot_platform')
         });
     },
-    save: function() {
+    save: function () {
         var self = this;
         var platform = this.$('select').val();
-        this.model.save({'boot_platform': platform}, {patch: true}).done(function() {
-            self.trigger('save', platform);
-        });
+        var params = platform === 'latest' ? {} : {platform: platform};
+        api.post('/api/boot/' + this.model.id).send(params).end(function (res) {
+            if (res.ok) {
+                self.trigger('save', platform);
+            } else {
+                self.trigger('error', res);
+            }
+        }.bind(this));
     },
-    cancel: function() {
+    cancel: function () {
         this.trigger('cancel');
         this.remove();
     },
-    applyBindings: function() {
+    applyBindings: function () {
         this.stickit(this.viewModel, {
             'select': {
                 observe: 'platform',
-                initialize: function($el, model, options) {
+                initialize: function ($el, model, options) {
                     $el.chosen();
                 },
                 selectOptions: {
                     collection: 'this.platforms',
-                    labelPath: 'version',
+                    labelPath: 'label',
                     valuePath: 'version'
                 }
             }

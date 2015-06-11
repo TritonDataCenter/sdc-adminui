@@ -5,21 +5,30 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
 var Platforms = Backbone.Collection.extend({
     url: '/api/platforms',
-    parse: function(res) {
+    parse: function (res) {
         var arr = [];
+        var forServer = this.params && this.params.for_server;
         _.each(res, function(n, d) {
             arr.push({
                 version: d,
-                latest: n.latest
+                latest: n.latest,
+                label: n.latest && !forServer ? 'latest (' + d + ')' : d
             });
+            if (n.latest && forServer) {
+                arr.push({
+                    version: 'latest',
+                    latest: n.latest,
+                    label: 'latest (' + d + ')'
+                });
+            }
         });
-        return arr;
+        return arr.reverse();
     }
 });
 

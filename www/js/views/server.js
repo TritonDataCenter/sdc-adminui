@@ -5,10 +5,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 
 var $ = require('jquery');
 var Backbone = require('backbone');
@@ -65,7 +65,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         'click .manage-link-aggr': 'showManageLinkAggr'
     },
 
-    url: function() {
+    url: function () {
         return _.str.sprintf('servers/%s', this.model.get('uuid'));
     },
 
@@ -74,9 +74,9 @@ var ServerView = Backbone.Marionette.Layout.extend({
         'error': 'onError'
     },
 
-    onClose: function() {
+    onClose: function () {
         clearInterval(this._timer);
-        this._requests.forEach(function(r) {
+        this._requests.forEach(function (r) {
             r.abort();
         });
         this._requests = [];
@@ -96,11 +96,11 @@ var ServerView = Backbone.Marionette.Layout.extend({
         React.unmountComponentAtNode(this.$('.vms-region').get(0));
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
         this._requests = [];
         this.model = options.server || new Server({uuid: options.uuid});
         window.server = this.model;
-        this._timer = setInterval(function() {
+        this._timer = setInterval(function () {
             this._requests.push(this.model.fetch());
         }.bind(this), 10000);
 
@@ -120,7 +120,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         });
     },
 
-    onUpdate: function(model) {
+    onUpdate: function (model) {
         var changed = model.changed;
         this.postRender();
         // don't update if it's just sysinfo change;
@@ -133,42 +133,42 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     templateHelpers: {
-        platform_version: function() {
+        platform_version: function () {
             return this.sysinfo['Live Image'];
         },
-        cpu_type: function() {
+        cpu_type: function () {
             return this.sysinfo['CPU Type'];
         },
-        cpu_physical_cores: function() {
+        cpu_physical_cores: function () {
             return this.sysinfo['CPU Physical Cores'];
         },
-        cpu_total_cores: function() {
+        cpu_total_cores: function () {
             return this.sysinfo['CPU Total Cores'];
         },
-        serial_number: function() {
+        serial_number: function () {
             return this.sysinfo['Serial Number'];
         },
-        total_memory: function() {
+        total_memory: function () {
             return this.sysinfo['MiB of Memory'];
         }
     },
 
-    serializeData: function() {
+    serializeData: function () {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.call(this);
         data.total_quota = 0;
 
-        _.each(data.sysinfo['Disks'], function(v, k) {
+        _.each(data.sysinfo['Disks'], function (v, k) {
             data.total_quota += v['Size in GB'];
         });
 
 
-        data.disks = _.map(data.sysinfo['Disks'], function(v, k) {
+        data.disks = _.map(data.sysinfo['Disks'], function (v, k) {
             return {
                 name: k,
                 size: v['Size in GB']
             };
         });
-        data.traits = _.map(data.traits, function(v, k) {
+        data.traits = _.map(data.traits, function (v, k) {
             if (typeof(v) === 'object') {
                 v = JSON.stringify(v, null, 2);
             } else {
@@ -179,12 +179,12 @@ var ServerView = Backbone.Marionette.Layout.extend({
         return data;
     },
 
-    toggleReserve: function() {
+    toggleReserve: function () {
         var newValue = !this.model.get('reserved');
         this.model.save({'reserved': newValue}, {patch: true});
     },
 
-    onError: function(e, xhr, s) {
+    onError: function (e, xhr, s) {
         app.vent.trigger('notification', {
             level: 'error',
             message: 'Error retrieving server information. CNAPI said: ' + xhr.responseData.message,
@@ -193,7 +193,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         this.close();
     },
 
-    showManageNics: function() {
+    showManageNics: function () {
         var view = new ServerNicsEdit({
             server: this.model,
             nics: this.nics
@@ -201,7 +201,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         view.show();
     },
 
-    showChangeSerialConsole: function() {
+    showChangeSerialConsole: function () {
         function input(fieldName, value) {
             return $("<input type='text'>").attr('value', value).attr('name', fieldName);
         }
@@ -221,15 +221,15 @@ var ServerView = Backbone.Marionette.Layout.extend({
         var self = this;
         var model = this.model;
 
-        cancel.on('click', function() {
+        cancel.on('click', function () {
             self.render();
         });
 
-        btn.on('click', function() {
+        btn.on('click', function () {
             model.save({
                 default_console: $defaultConsole.val(),
                 serial: $serial.val()
-            }, {patch: true}).done(function() {
+            }, {patch: true}).done(function () {
                 app.vent.trigger('notification', {
                     level: 'success',
                     message: 'Serial console settings updated.'
@@ -239,7 +239,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         });
     },
 
-    showManageLinkAggr: function() {
+    showManageLinkAggr: function () {
         var $node = $("<div id='server-link-aggr-modal' class='modal'><div class='modal-dialog'><div class='modal-content'><div class='modal-body'></div></div></div></div>");
         var container = $node.find('.modal-body').get(0);
 
@@ -249,7 +249,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         $node.modal();
     },
 
-    showChangeReservationRatio: function() {
+    showChangeReservationRatio: function () {
         var $reservationRatio = this.$('span.reservation-ratio');
         var $changeReservationRatio = this.$('.change-reservation-ratio');
         var $input = $("<input type='text'/>").addClass('reservation-ratio');
@@ -259,11 +259,11 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
         var self = this;
 
-        $input.on('blur', function(e) {
+        $input.on('blur', function (e) {
             saveVal();
         });
 
-        $input.on('keyup', function(e) {
+        $input.on('keyup', function (e) {
             if (e.which === 27) {
                 exitEditMode();
             }
@@ -306,25 +306,33 @@ var ServerView = Backbone.Marionette.Layout.extend({
         }
     },
 
-    showChangePlatformField: function() {
+    showChangePlatformField: function () {
         var $link = this.$('.platform a');
         var $value = this.$('.platform .value');
         var view = new ChangePlatformForm({ model: this.model });
 
-        view.on('cancel', function() {
-            $value.show();
-            $link.show();
-        });
-
-        view.on('save', function(platform) {
-            var message = _.str.sprintf('Server has been configured to use platform: <strong>%s</strong> on next boot.', platform);
+        var showNotification = function (message, level) {
             app.vent.trigger('notification', {
-                level: 'success',
+                level: level || 'success',
                 message: message
             });
             view.remove();
             $value.show();
             $link.show();
+        };
+        view.on('cancel', function () {
+            $value.show();
+            $link.show();
+        });
+
+        view.on('save', function (platform) {
+            var message = _.str.sprintf('Server has been configured to use platform: <strong>%s</strong> on next boot.', platform);
+            showNotification(message);
+        });
+
+        view.on('error', function (xhr) {
+            var err = xhr.body ? xhr.body : xhr.responseData;
+            showNotification('Error retrieving server information: ' + err.message, 'error');
         });
 
         this.$('.platform .boot .item-content').append(view.el);
@@ -333,7 +341,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         view.render();
     },
 
-    showChangeRackField: function() {
+    showChangeRackField: function () {
         var self = this;
         var view = new ChangeRackForm({
             model: this.model
@@ -341,12 +349,12 @@ var ServerView = Backbone.Marionette.Layout.extend({
         var $span = this.$('.rack .item-content span');
         var $link = this.$('.rack .item-content a');
 
-        this.listenTo(view, 'cancel', function() {
+        this.listenTo(view, 'cancel', function () {
             $span.show();
             $link.show();
         }, this);
 
-        this.listenTo(view, 'save', function(rack) {
+        this.listenTo(view, 'save', function (rack) {
             self.model.set({
                 rack_identifier: rack
             });
@@ -364,17 +372,17 @@ var ServerView = Backbone.Marionette.Layout.extend({
         view.render();
     },
 
-    showTraitsModal: function() {
+    showTraitsModal: function () {
         var modal = new JSONEditor({
             data: this.model.get('traits'),
             title: _.str.sprintf('Traits for server: %s', this.model.get('hostname'))
         });
         modal.show();
-        modal.on('save', function(data) {
+        modal.on('save', function (data) {
             this.model.save(
                 {traits: data},
                 {patch: true})
-            .done(function() {
+            .done(function () {
                 modal.close();
                 app.vent.trigger('notification', {
                     level: 'success',
@@ -384,15 +392,15 @@ var ServerView = Backbone.Marionette.Layout.extend({
         }, this);
     },
 
-    showSetupModal: function() {
+    showSetupModal: function () {
         var view = new ServerSetup({ model: this.model });
         view.render();
     },
 
-    factoryReset: function() {
+    factoryReset: function () {
         var confirm = window.confirm('!!!!!! WARNING !!!!!!! \n\nAre you sure you want to run Factory Reset on this Server?');
         if (confirm) {
-            this.model.factoryReset(function(err, job) {
+            this.model.factoryReset(function (err, job) {
                 if (err) {
                     window.alert(err);
                 } else {
@@ -402,19 +410,19 @@ var ServerView = Backbone.Marionette.Layout.extend({
         }
     },
 
-    reboot: function() {
+    reboot: function () {
         var confirm = window.confirm('!!!!!!! WARNING !!!!!!!! \n\nAre you sure you want to reboot this server? All customer zones will be rebooted');
         if (confirm) {
-            this.model.reboot(function(job) {
+            this.model.reboot(function (job) {
                 app.vent.trigger('showjob', job);
             });
         }
     },
 
-    forget: function() {
+    forget: function () {
         var confirm = window.confirm('!!!!!!!!! WARNING !!!!!!!! \n\nAre you sure you want to remove this server?');
         if (confirm) {
-            this.model.forget(function(err) {
+            this.model.forget(function (err) {
                 app.vent.trigger('notification', {
                     level: 'success',
                     message: 'Server removed from SmartDataCenter.'
@@ -424,13 +432,13 @@ var ServerView = Backbone.Marionette.Layout.extend({
         }
     },
 
-    onShow: function() {
+    onShow: function () {
         this._requests.push(this.model.fetch().done(this.render));
         this._requests.push(this.nics.fetch());
         this._requests.push(this.vms.fetch());
     },
 
-    postRender: function() {
+    postRender: function () {
         if (app.user.role('operators')) {
             React.render( new NotesComponent({item: this.model.get('uuid')}), this.$('.notes-component-container').get(0));
         }
@@ -451,7 +459,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
         }), this.$('.server-nics').get(0));
     },
 
-    onRender: function() {
+    onRender: function () {
         app.vent.trigger('settitle', _.str.sprintf('server: %s', this.model.get('hostname')));
 
         this.jobsListView = new JobsList({
