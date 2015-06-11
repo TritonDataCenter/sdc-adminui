@@ -63,7 +63,7 @@ var NetworksListItem = Backbone.Marionette.ItemView.extend({
     },
 
     select: function() {
-        this.trigger('select', this.model);
+        adminui.vent.trigger('showview', 'network', {model: this.model});
     }
 });
 

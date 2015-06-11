@@ -104,16 +104,11 @@ module.exports = Backbone.Marionette.CollectionView.extend({
         });
     },
 
-    onSelect: function(network) {
-        this.trigger('select', network);
-    },
-
-    onBeforeItemAdded: function(itemView) {
-        var networks = _.map(itemView.model.get('networks'), function(networkUuid) {
+    onBeforeItemAdded: function (itemView) {
+        var networks = _.map(itemView.model.get('networks'), function (networkUuid) {
             return this.networks.get(networkUuid).toJSON();
         }, this);
         itemView.networksList = new NetworksList({collection: new Networks(networks)});
-        this.listenTo(itemView.networksList, 'select', this.onSelect);
         this.listenTo(itemView, 'edit', this.onEditNetworkPool);
     }
 });

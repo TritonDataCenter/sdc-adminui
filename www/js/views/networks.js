@@ -137,9 +137,7 @@ var NetworksView = Backbone.Marionette.Layout.extend({
         this.userInput = new TypeaheadUserInput({el: this.$('.search-owner')});
         this.userInput.render();
         this.search().done(function () {});
-        this.listenTo(this.networksList, 'itemview:select', this.showNetwork, this);
         this.listenTo(this.networksList, 'itemview:destroy', this.refreshList, this);
-        this.listenTo(this.networkPoolsList, 'itemview:select', this.showNetwork, this);
     },
 
     refreshList: function () {
