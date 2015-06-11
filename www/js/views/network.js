@@ -24,6 +24,7 @@ var Addresses = require('../models/addresses');
 var AddressesTableRowTemplate = require('../tpl/networks-detail-address-row.hbs');
 
 var NotesComponent = React.createFactory(require('../components/notes'));
+var RoutesList = React.createFactory(require('../components/pages/network/routes-list'));
 
 var AddressesTableRow = Backbone.Marionette.ItemView.extend({
     tagName: "tr",
@@ -187,7 +188,13 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
             NotesComponent({item: this.model.get('uuid')}),
             this.$('.notes-component-container').get(0)
         );
-
+        var routes = this.model.get('routes');
+        if (routes) {
+            React.render(
+                RoutesList({routes: routes}),
+                this.$('.routes-list').get(0));
+        }
+        
         this.addressesTable = new AddressesTable({
             el: this.$(".addresses tbody"),
             collection: this.addresses
