@@ -5,13 +5,24 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
 var Platforms = require('../models/platforms');
 
 var _ = require('underscore');
+
+var platformsSelectItem = Backbone.View.extend({
+    tagName: 'option',
+    render: function () {
+        var version = this.model.get('version');
+        this.$el.attr('value', version);
+        var latest = this.model.get('latest');
+        version += latest ? ' (latest)' : '';
+        this.$el.text(version);
+    }
+});
 
 module.exports = Backbone.Marionette.ItemView.extend({
     id: 'server-boot-options',
@@ -23,49 +34,27 @@ module.exports = Backbone.Marionette.ItemView.extend({
         'keyup textarea': 'onInputKeyup'
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
         this.platforms = new Platforms();
-        this.listenTo(this.platforms, 'sync', this.populatePlatforms, this);
-    },
-
-    populatePlatforms: function(models) {
-        var self = this;
-        var $sel = self.$('select[name=platform]');
-
-        this.platforms.each(function(p) {
-            var label = p.get('version');
-
-            if (p.get('latest')) {
-                label = label + ' (latest)';
-            }
-
-            var n = $("<option/>");
-            n.val(p.get('version'));
-            n.html(label);
-
-            $sel.append(n);
+        this.platformSelect = new Backbone.Marionette.CollectionView({
+            itemView: platformsSelectItem,
+            collection: this.platforms
         });
-        $sel.val(this.model.get('version'));
     },
 
-    onShow: function() {
-        this.platforms.fetch();
-    },
-
-
-    serializeData: function() {
+    serializeData: function () {
         var data = _.clone(this.model.toJSON());
         data.kernel_args = JSON.stringify(data.kernel_args, null, 2);
         return data;
     },
 
-    onInputKeydown: function() {
+    onInputKeydown: function () {
         this.$('.error').text();
         this.$('.error').hide();
         this.$('.save').prop('disabled', true);
     },
 
-    onInputKeyup: _.debounce(function() {
+    onInputKeyup: _.debounce(function () {
         var text = this.$('textarea').val();
         try {
             var json = JSON.parse(text);
@@ -79,15 +68,27 @@ module.exports = Backbone.Marionette.ItemView.extend({
         }
     }, 200),
 
-    onRender: function() {
+    onRender: function () {
+        var self = this;
+        var platform = this.model.get('platform');
         this.$('textarea').autosize();
+
+        this.platformSelect.setElement(this.$('select[name=platform]'));
+        this.platforms.fetch().done(function () {
+            self.platforms.forEach(function (data) {
+                data = data.toJSON();
+                if (data[platform] || data.version === platform) {
+                    self.$('select[name=platform]').val(data.version);
+                }
+            });
+        });
     },
 
-    onCancel: function() {
+    onCancel: function () {
         this.trigger('cancel');
     },
 
-    onSave: function(e) {
+    onSave: function (e) {
         e.preventDefault();
         var self = this;
 
@@ -96,7 +97,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
             platform: this.$('[name=platform]').val()
         };
 
-        this.model.save(data).done(function() {
+        this.model.save(data).done(function () {
             self.trigger('saved');
         });
     }
