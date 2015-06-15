@@ -56,7 +56,7 @@ var ImageLink = React.createClass({
         }
         var image = this.state.image;
         return <div className="image-link">
-            <i className="fa fa-picture-o fa-fw"></i> <a className="image-name" href={"/images/"+image.uuid}>{image.name}</a>
+            <i className="fa fa-picture-o fa-fw"></i> <a className="image-name" href={"/images/"+image.uuid}>{image.name + ' ' + image.version}</a>
         </div>;
     }
 });
