@@ -20,9 +20,9 @@ INPUT_TYPES.uuid = React.createClass({
             <div className="col-sm-4">
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="uuid" placeholder="UUID" />
             </div>
-            <div className="col-sm-1">
+            {this.props.showTrash && <div className="col-sm-1">
                 <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'uuid')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
-            </div>
+            </div>}
         </div>;
     }
 });
@@ -41,9 +41,9 @@ INPUT_TYPES.alias = React.createClass({
             <div className="col-sm-5">
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="alias" placeholder="vm alias" />
             </div>
-            <div className="col-sm-1">
-                <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'package_name')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
-            </div>
+            {this.props.showTrash && <div className="col-sm-1">
+                <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'alias')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
+            </div>}
         </div>;
     }
 });
@@ -63,9 +63,9 @@ INPUT_TYPES.package_name = React.createClass({
             <div className="col-sm-5">
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="package_name" placeholder="Package Name" />
             </div>
-            <div className="col-sm-1">
+            {this.props.showTrash && <div className="col-sm-1">
                 <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'package_name')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
-            </div>
+            </div>}
         </div>;
     }
 });
@@ -84,9 +84,9 @@ INPUT_TYPES.ip = React.createClass({
             <div className="col-sm-5">
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="ip" placeholder="IP Address" />
             </div>
-            <div className="col-sm-1">
+            {this.props.showTrash && <div className="col-sm-1">
                 <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'ip')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
-            </div>
+            </div>}
         </div>;
     }
 });
@@ -116,9 +116,9 @@ INPUT_TYPES.owner_uuid = React.createClass({
             <div className="col-sm-5">
                 <input ref="input" value={this.props.value} className="form-control" type="text" name="owner_uuid" placeholder="Search by login or uuid" />
             </div>
-            <div className="col-sm-1">
+            {this.props.showTrash && <div className="col-sm-1">
                 <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'owner_uuid')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
-            </div>
+            </div>}
         </div>;
     }
 });
@@ -134,6 +134,7 @@ INPUT_TYPES.state = React.createClass({
             <div className="col-sm-2">
                 <select onChange={this.onChange} value={this.props.value} name="state" className="form-control">
                     <option value="">any</option>
+                    <option value="provisioning">provisioning</option>
                     <option value="running">running</option>
                     <option value="stopped">stopped</option>
                     <option value="active">active</option>
@@ -141,6 +142,9 @@ INPUT_TYPES.state = React.createClass({
                     <option value="destroyed">destroyed</option>
                 </select>
             </div>
+            {this.props.showTrash && <div className="col-sm-1">
+                <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'state')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
+            </div>}
         </div>;
     }
 });
@@ -150,60 +154,65 @@ var FilterForm = React.createClass({
         initialParams: React.PropTypes.object,
         handleSearch: React.PropTypes.func.isRequired
     },
-    getInitialState: function() {
+    getInitialState: function () {
         var state = {};
-        if (this.props.initialParams && Object.keys(this.props.initialParams).length) {
-            state.filterControls = Object.keys(this.props.initialParams).map(function(t) {
-                return { type: t };
+        var filterTypes = Object.keys(this.props.initialParams);
+        if (filterTypes.length) {
+            state.filterControls = filterTypes.map(function (type) {
+                return {type: type};
             });
         } else {
             state.filterControls = [
-                { type: "uuid" },
-                { type: "state" }
+                {type: "uuid"},
+                {type: "state"}
             ];
         }
-
+        state.showTrash = state.filterControls.length > 1;
         state.values = this.props.initialParams;
         return state;
     },
-    _onChange: function(prop, value) {
+    _onChange: function (prop, value) {
         var values = this.state.values;
         values[prop] = value;
         this.setState({values: values});
     },
-    _handleRemoveCriteria: function(type) {
+    _handleRemoveCriteria: function (type) {
         var filterControls = this.state.filterControls;
-        for (var i in filterControls) {
-            var f = filterControls[i];
-            if (f.type === type) {
-                delete filterControls[i];
+        for (var index in filterControls) {
+            var filter = filterControls[index];
+            if (filter.type === type) {
+                filterControls.splice(index, 1);
             }
         }
         var values = this.state.values;
         delete values[type];
         this.setState({
             values: values,
-            filterControls: filterControls
+            filterControls: filterControls,
+            showTrash: filterControls.length > 1
         });
     },
-    renderFilterControls: function() {
-        return this.state.filterControls.map(function(f) {
-            var TYPE = INPUT_TYPES[f.type];
-            var value = this.state.values[f.type];
-            return <TYPE ref={f.type} key={f.type} handleRemoveCriteria={this._handleRemoveCriteria} onChange={this._onChange} value={value} />;
+    renderFilterControls: function () {
+        return this.state.filterControls.map(function (filter) {
+            var TYPE = INPUT_TYPES[filter.type];
+            var value = this.state.values[filter.type];
+            return <TYPE ref={filter.type} key={filter.type} handleRemoveCriteria={this._handleRemoveCriteria} onChange={this._onChange} value={value} showTrash={this.state.showTrash} />;
         }, this);
     },
-    _addFilter: function() {
-        var t = this.refs.filterSelect.getDOMNode().value;
-        if (t && t.length) {
+    _addFilter: function () {
+        var type = this.refs.filterSelect.getDOMNode().value;
+        if (type && type.length) {
             var filterControls = this.state.filterControls;
-            filterControls.push({type: t});
-            this.setState({filterControls: filterControls}, function() {
-                this.refs[t].focusInput();
+            filterControls.push({type: type});
+            this.setState({
+                filterControls: filterControls,
+                showTrash: filterControls.length > 1
+            }, function () {
+                this.refs[type].focusInput();
             }.bind(this));
         }
     },
-    render: function() {
+    render: function () {
         var filterControls = this.state.filterControls;
         var filterSelect = <select ref="filterSelect" className="form-control">
         {
