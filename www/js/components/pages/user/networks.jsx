@@ -57,19 +57,14 @@ var UserNetworksList = React.createClass({
             this.renderNetworkPools.apply(this);
         }.bind(this));
 
-        this.networks = new Networks(null, {params: { provisionable_by: this.props.user } });
-        this.networksView = new NetworksList({ collection: this.networks });
+        this.networks = new Networks(null, {
+            params: {
+                provisionable_by: this.props.user
+            }
+        });
+        this.networksView = new NetworksList({collection: this.networks});
 
-        this.networks.on('sync', function(collection, resp, options) {
-            var filtered = collection.filter(function(m) {
-                var ownerUuids = m.get('owner_uuids') || [];
-                return (ownerUuids.indexOf(user) !== -1);
-            });
-            console.log('on sync');
-            collection.reset(filtered);
-        }, this);
-
-        this.networksView.on('itemview:select', function(view) {
+        this.networksView.on('itemview:select', function (view) {
             console.log('on select');
             adminui.vent.trigger('showview', 'network', {model: view.model});
         }, this);
