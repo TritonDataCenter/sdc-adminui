@@ -13,6 +13,7 @@ var _ = require('underscore');
 
 var adminui = require('../adminui');
 var Networks = require('../models/networks');
+var Network = require('../models/network');
 var NetworksList = require('./networks-list');
 
 var NetworkPoolsForm = require('./network-pools-form');
@@ -105,10 +106,15 @@ module.exports = Backbone.Marionette.CollectionView.extend({
     },
 
     onBeforeItemAdded: function (itemView) {
-        var networks = _.map(itemView.model.get('networks'), function (networkUuid) {
-            return this.networks.get(networkUuid).toJSON();
-        }, this);
-        itemView.networksList = new NetworksList({collection: new Networks(networks)});
+        var networks = new Networks();
+        _.each(itemView.model.get('networks'), function (networkUuid) {
+            var network = new Network({uuid: networkUuid});
+            network.fetch().done(function () {
+                networks.add(network);
+            });
+        });
+        
+        itemView.networksList = new NetworksList({collection: networks});
         this.listenTo(itemView, 'edit', this.onEditNetworkPool);
     }
 });
