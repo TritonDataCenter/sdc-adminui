@@ -108,15 +108,15 @@ module.exports = Backbone.Marionette.ItemView.extend({
         var ul = $('<ul />');
         this.$('.control-group').removeClass('error');
 
-        _(xhr.responseData.errors).each(function(e) {
-            this.$('[name='+e.field+']').parents('.control-group').addClass('error');
-            ul.append('<li>'+e.message+' (' + e.field + ')</li>');
+        _(xhr.responseData.errors).each(function (error) {
+            this.$('[name=' + error.field + ']').parents('.form-group').addClass('has-error');
+            ul.append('<li>' + error.message + ' (' + error.field + ')</li>');
         });
-
         this.$('.alert')
             .empty()
             .append('<h4 class="alert-heading">Please fix the following errors</h4>')
             .append(ul)
+            .removeClass('hide')
             .show();
     },
 
