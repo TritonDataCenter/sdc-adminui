@@ -20,23 +20,27 @@ var NetworkPoolsList = require('../../../views/network-pools-list');
 var PaginationView = require('../../../views/pagination');
 
 var UserNetworksList = React.createClass({
-    renderNetworkPools: function() {
+    renderNetworkPools: function () {
         var self = this;
         var user = this.props.user;
 
-        self.networkPools = new NetworkPools(null, {params: { provisionable_by: user } });
+        self.networkPools = new NetworkPools(null, {
+            params: {
+                provisionable_by: user
+            }
+        });
+
         self.networkPoolsView = new NetworkPoolsList({
-            networks: self.allNetworks,
             collection: self.networkPools
         });
 
-        self.networkPoolsView.on('itemview:select', function(model) {
+        self.networkPoolsView.on('itemview:select', function (model) {
             adminui.vent.trigger('showview', 'network', {model: model});
         }, self);
 
-        self.networkPools.on('sync', function(collection, resp, options) {
-            var filtered = collection.filter(function(m) {
-                var ownerUuids = m.get('owner_uuids') || [];
+        self.networkPools.on('sync', function (collection, resp, options) {
+            var filtered = collection.filter(function (model) {
+                var ownerUuids = model.get('owner_uuids') || [];
                 return (ownerUuids.indexOf(user) !== -1);
             });
 
@@ -47,16 +51,13 @@ var UserNetworksList = React.createClass({
             collection.reset(filtered);
         });
 
-        self.networkPools.fetch().done(function() {
+        self.networkPools.fetch().done(function () {
             self.forceUpdate();
         });
     },
-    componentWillMount: function() {
+    componentWillMount: function () {
         var user = this.props.user;
-        this.allNetworks = new Networks();
-        this.allNetworks.fetch().done(function() {
-            this.renderNetworkPools.apply(this);
-        }.bind(this));
+        this.renderNetworkPools.apply(this);
 
         this.networks = new Networks(null, {
             params: {
