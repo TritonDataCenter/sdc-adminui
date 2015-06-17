@@ -113,7 +113,30 @@
           font-weight: 400;
         }
       }
-
+      .provisioning-state {
+        color: @gray-light;
+        font-size: 12px;
+        text-transform: uppercase;
+        text-align: right;
+        strong {
+          font-weight: 200;
+          color: @gray;
+          font-weight: 100;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          padding: 0 5px;
+        }
+        span {
+          font-weight: 400;
+          text-transform: capitalize;
+        }
+        .disabled {
+          #page-server.disabled
+        }
+        .enabled {
+          #page-server.enabled
+        }
+      }
       .memory-usage-avail {
         font-size: 12px;
         text-align: right;
@@ -133,7 +156,7 @@
       .memory-usage-data {
         float: right;
         margin-right: 15px;
-        margin-top: 21px;
+        margin-top: 10px;
       }
       .memory-usage-graph-container {
         width: 80px;

@@ -137,6 +137,10 @@ var ServersListItem = React.createClass({
                         <strong>Total</strong>
                         <span className="total">{server.memory_total_gb} GB</span>
                     </div>
+                    <div className="provisioning-state">
+                        <strong>Provisioning</strong>
+                        <span className={'state ' + (server.reserved ? 'disabled' : 'enabled') }>{server.reserved ? 'Disabled' : 'Enabled'}</span>
+                    </div>
                 </div>
             </div>
             :
