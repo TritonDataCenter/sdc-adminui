@@ -165,7 +165,6 @@ var View = Backbone.Marionette.Layout.extend({
             mtu: 'input[name=mtu]'
         };
         var err = xhr.responseData;
-        console.log('network creation validation failed', err, xhr);
         $('.form-groupo').removeClass('error');
         $('.help-block', 'form-group').remove();
 
