@@ -9,7 +9,7 @@
 -->
 
 <div class="page-header">
-    <h1>Fabric VLAN: {{name}}</h1>
+    <h1>Fabric VLAN</h1>
 </div>
 <div class="actions">
     <div class="notes-component-container"></div>
@@ -17,24 +17,22 @@
 
 <section>
     <ul class="list-unstyled attributes">
+        <li><ul class="list-unstyled name-field"></ul></li>
         <li>
-            <strong>Owner</strong>
-            <div class="value">
+            <strong>Owner</strong><!--
+            --><div class="value">
                 <a class="owner-link" data-owner-uuid="{{owner_uuid}}" href="/users/{{owner_uuid}}">{{owner_uuid}}</a>
             </div>
         </li>
         <li>
-            <strong>VLAN ID</strong>
-            <div class="value">{{vlan_id}}</div>
+            <strong>VLAN ID</strong><!--
+            --><div class="value">{{vlan_id}}</div>
         </li>
         <li>
-            <strong>VNET ID</strong>
-            <div class="value">{{vnet_id}}</div>
+            <strong>VNET ID</strong><!--
+            --><div class="value">{{vnet_id}}</div>
         </li>
-        <li>
-            <strong>Description</strong>
-            <div class="value">{{description}}</div>
-        </li>
+        <li><ul class="list-unstyled description-field"></ul></li>
     </ul>
 </section>
 

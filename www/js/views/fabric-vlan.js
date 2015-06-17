@@ -14,6 +14,7 @@ var adminui = require('adminui');
 var Backbone = require('backbone');
 var Networks = require('../models/fabrics-vlan-networks');
 var NetworksComponent = React.createFactory(require('../components/fabric-networks'));
+var EditableField = React.createFactory(require('../components/editable-field'));
 
 module.exports = Backbone.Marionette.Layout.extend({
     template: require('../tpl/fabric-vlan-detail.hbs'),
@@ -35,13 +36,45 @@ module.exports = Backbone.Marionette.Layout.extend({
         this.networks = new Networks();
         this.networks.url = '/api/fabrics/' + this.model.get('owner_uuid') + '/vlan/' + this.model.get('vlan_id') + '/networks';
     },
+    vlanUpdate: function (params, callback) {
+        this.model.save(params).done(callback).fail(callback);
+    },
+    vlanUpdateName: function (value, params, callback) {
+        params.name = value;
+        this.vlanUpdate(params, callback);
+    },
+    vlanUpdateDescription: function (value, params, callback) {
+        if (value) {
+            params.description = value;
+        } else {
+            delete params.description;
+        }
+        this.vlanUpdate(params, callback);
+    },
     onShow: function() {
         var self = this;
+        var vlan = this.model.toJSON();
         this.networks.fetch().done(function () {
             React.render(
                 NetworksComponent({collection: self.networks, data: self.model.toJSON()}),
                 self.$('.networks-region').get(0)
             );
         });
+        React.render(
+            EditableField({
+                value: vlan.name,
+                title: 'Name',
+                onSave: this.vlanUpdateName.bind(self),
+                params: vlan
+            }), this.$('.name-field').get(0)
+        );
+        React.render(
+            EditableField({
+                value: vlan.description || '',
+                title: 'Description',
+                onSave: this.vlanUpdateDescription.bind(self),
+                params: vlan
+            }), this.$('.description-field').get(0)
+        );
     }
 });

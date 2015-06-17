@@ -13,7 +13,7 @@ var Model = require('./model');
 
 module.exports = Model.extend({
     idAttribute: 'vlan_id',
-    urlRoot: '/api/fabrics/vlan',
+    urlRoot: '/api/fabrics',
     url: function () {
         var owner_uuid = this.get('owner_uuid');
         var vlan_id = this.get('vlan_id');

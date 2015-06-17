@@ -24,7 +24,8 @@ var FabricVlansPage = React.createClass({
             form: (this.props.form || false),
             formData: {},
             vlan: null,
-            userUuid: adminui.user.id
+            userUuid: adminui.user.id,
+            vlan_ids: []
         };
     },
     _showForm: function () {
@@ -40,12 +41,18 @@ var FabricVlansPage = React.createClass({
                 el: $node.find('.owner')
             });
             this.ownerInput.render();
+            this.ownerInput.$el.val(adminui.user.id);
         }
     },
     handleSetOwner: function () {
         this.ownerInput.selectedUser = this.ownerInput.selectedUser || {id: adminui.user.id};
         if (this.ownerInput.selectedUser.id !== this.state.userUuid) {
             this.setState({params: {owner_uuid: this.ownerInput.selectedUser.id}, userUuid: this.ownerInput.selectedUser.id});
+        }
+    },
+    keyUp: function(e) {
+        if (e.which === 13) {
+            this.handleSetOwner();
         }
     },
     handleSave: function (params) {
@@ -56,6 +63,9 @@ var FabricVlansPage = React.createClass({
                 level: 'success',
                 message: msg
             });
+        };
+        if (!params.description) {
+            delete params.description;
         }
         if (this.state.vlan) {
             return this.state.vlan.save(params).done(function () {
@@ -77,24 +87,34 @@ var FabricVlansPage = React.createClass({
     handleEdit: function (data) {
         this.setState({vlan: data, form: true});
     },
+    handleSetIds: function (ids) {
+        this.setState({vlan_ids: ids});
+    },
     render: function () {
+        var classString = this.state.form ? 'row hidden' : 'row';
+        var data = this.state.vlan && this.state.vlan.toJSON() || this.state.params || {owner_uuid: adminui.user.id};
         return <div className="fabric-vlans">
             <h3>Fabric Vlans
                 <div className="actions">
-                    <button className="btn btn-sm btn-info" onClick={this._showForm}>
+                    {!this.state.form && <button className="btn btn-sm btn-info" onClick={this._showForm}>
                         <i className="fa fa-plus"> New Fabric Vlan</i>
-                    </button>
+                    </button>}
                 </div>
             </h3>
-            { adminui.user.role('operators') && !this.state.form &&
-                <div className="row">
-                    <div className="col-sm-12">
-                        <input type="text" placeholder={this.state.userUuid} onBlur={this.handleSetOwner} className="form-control owner" name="owner_uuid" />
+            {adminui.user.role('operators') &&
+                <div className={classString}>
+                    <div className="col-sm-6">
+                        <div className="input-group">
+                            <input type="text" placeholder="Search Vlans by Owner login, email or uuid" onKeyUp={this.keyUp} className="form-control owner" name="owner_uuid" />
+                            <span className="input-group-btn">
+                                <button onClick={this.handleSetOwner} type="button" className="btn btn-info search-by-owner"><i className="fa fa-search"> </i> Search</button>
+                            </span>
+                        </div>
                     </div>
-                </div> }
-            { this.state.error && <ErrorAlert error={this.state.error} /> }
-            { this.state.form && <FabricVlanForm handleClose={this._hideForm} handleSave={this.handleSave} data={this.state.vlan && this.state.vlan.toJSON()} /> }
-            { !this.state.form && <FabricVlansList params={this.state.params} handleEdit={this.handleEdit} /> }
+                </div>}
+            {this.state.error && <ErrorAlert error={this.state.error} />}
+            {this.state.form && <FabricVlanForm handleClose={this._hideForm} handleSave={this.handleSave} data={data} vlan_ids={this.state.vlan_ids} />}
+            {!this.state.form && <FabricVlansList params={this.state.params} handleEdit={this.handleEdit} handleSetIds={this.handleSetIds}/>}
         </div>;
     }
 });
@@ -127,25 +147,17 @@ var FabricVlanForm = React.createClass({
         }
         this.props.handleSave(vlan);
     },
-    componentDidMount: function () {
-        if (adminui.user.role('operators')) {
-            var $node = $(this.getDOMNode());
-            this.ownerInput = new UserInput({
-                el: $node.find('.vlan-owner')
-            });
-            this.ownerInput.render();
-        }
-    },
     render: function () {
+        var reservedVlans = this.props.vlan_ids && this.props.vlan_ids.join(', ');
         return <div className="panel">
             <div className="panel-body">
              <h4 className="panel-title">{this.props.data ? 'Edit' : 'New'} Fabric Vlan</h4>
              <form className="form form-horizontal">
-                { adminui.user.role('operators') && !this.props.data &&
+                { adminui.user.role('operators') &&
                 <div className="form-group">
                     <label className="control-label col-sm-5">Owner</label>
                     <div className="col-sm-5">
-                        <input type="text" placeholder={adminui.user.id} onBlur={this._handleSetOwner} className="form-control vlan-owner" value={this.state.owner_uuid} name="owner_uuid" />
+                        <input type="text" readOnly className="form-control" value={this.state.owner_uuid} name="owner_uuid" />
                     </div>
                 </div> }
                 <div className="form-group">
@@ -160,16 +172,20 @@ var FabricVlanForm = React.createClass({
                         <textarea className="form-control" rows="3" name="description" onChange={this._onChangeDescription}>{this.state.description}</textarea>
                     </div>
                 </div>
-                { !this.props.data &&
                 <div className="form-group">
                     <label className="control-label col-sm-5">VLAN ID</label>
                     <div className="col-sm-5">
-                        <input placeholder="VLAN ID" value={this.state.vlan_id} onChange={this._onChangeVlanId} type="text" className="form-control" name="vlan_id" />
+                        {this.props.data.hasOwnProperty('vlan_id') ?
+                            <input value={this.state.vlan_id} readOnly type="text" className="form-control" name="vlan_id"/>
+                        :
+                            <input placeholder="VLAN ID" value={this.state.vlan_id} onChange={this._onChangeVlanId} type="text" className="form-control" name="vlan_id"/>
+                        }
+                        {reservedVlans && !this.props.data.hasOwnProperty('vlan_id') && <span>VLAN IDs: <strong>{reservedVlans}</strong> are already busy</span>}
                     </div>
-                </div> }
+                </div>
                 <div className="form-group">
                     <div className="col-sm-offset-5 col-sm-5">
-                        <button disabled={ !(this.state.name && this.state.name.length) }  className="btn btn-primary" onClick={this._onSave} type="submit">Save Fabric Vlan</button>
+                        <button disabled={!(this.state.name && this.state.name.length)}  className="btn btn-primary" onClick={this._onSave} type="submit">Save Fabric Vlan</button>
                         <button className="btn btn-link" onClick={this.props.handleClose} type="button">Cancel</button>
                     </div>
                 </div>
@@ -202,12 +218,17 @@ var FabricVlansList = React.createClass({
         params = params || null;
         this.fabrics.fetch(params).then(function () {
             self.setState({data: self.fabrics});
+            self.props.handleSetIds(self.fabrics.pluck('vlan_id'));
         });
+    },
+    onDelete: function () {
+        params = this.props.params ? {params: this.props.params} : null;
+        this.setData(params);
     },
     render: function () {
         var self = this;
         var nodes = this.state.data.map(function (vlan) {
-            return <FabricVlansListItem key={vlan.id} vlan={vlan} handleEdit={self.props.handleEdit} />;
+            return <FabricVlansListItem key={vlan.id} vlan={vlan} handleEdit={self.props.handleEdit} deleteHandler={self.onDelete} />;
         });
         return <ul className="list-unstyled fabric-vlans-list">{nodes}</ul>;
     }
@@ -224,6 +245,7 @@ var FabricVlansListItem = React.createClass({
         return false;
     },
     deleteVlan: function (data, e) {
+        var self = this;
         if (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -233,11 +255,12 @@ var FabricVlansListItem = React.createClass({
         );
         if (confirm) {
             this.state.model.destroy({contentType: 'application/json', data: JSON.stringify(data)}).done(function () {
-                var notifyMsg = _.str.sprintf('Fabric vlan <strong>%s</strong> deleted successfully.', vlan.name);
+                var notifyMsg = _.str.sprintf('Fabric vlan <strong>%s</strong> deleted successfully.', data.name);
                 adminui.vent.trigger('notification', {
                     level: 'success',
                     message: notifyMsg
                 });
+                self.props.deleteHandler();
             }).fail(function (err) {
                 adminui.vent.trigger('notification', {
                     level: 'error',

@@ -14,6 +14,7 @@ require('backbone.syphon');
 
 var _ = require('underscore');
 var $ = require('jquery');
+var adminui = require('../adminui');
 
 var Template = require('../tpl/networks-create.hbs');
 var Network = require('../models/network');
@@ -49,7 +50,8 @@ var View = Backbone.Marionette.Layout.extend({
         'click .create-new-nic-tag': 'onClickCreateNewNicTag',
         'click .add-route': 'onAddRoute',
         'click .remove-route': 'onRemoveRoute',
-        'click a.add-owner-entry': 'onAddOwnerEntry'
+        'click a.add-owner-entry': 'onAddOwnerEntry',
+        'change .fabric-network': 'onChangeFabric'
     },
 
     ui: {
@@ -57,11 +59,6 @@ var View = Backbone.Marionette.Layout.extend({
         'nicTagSelect': 'select[name=nic_tag]',
         'newNicTagForm': '.nic-tag-form',
         'createNewNicTagButton': '.create-new-nic-tag'
-    },
-
-    modelEvents: {
-        'sync': 'onSaved',
-        'error': 'onError'
     },
 
     initialize: function () {
@@ -73,6 +70,10 @@ var View = Backbone.Marionette.Layout.extend({
             itemView: NicTagSelectItem,
             collection: this.nicTags
         });
+    },
+
+    onChangeFabric: function (e) {
+        $('#network-mtu, select[name=nic_tag]').attr('readonly', e.target.checked);
     },
 
     onClickCreateNewNicTag: function () {
@@ -97,11 +98,16 @@ var View = Backbone.Marionette.Layout.extend({
 
     onSaved: function () {
         this.trigger('saved', this.model);
+        this.$el.modal('hide').remove();
+        adminui.vent.trigger('notification', {
+            level: 'success',
+            message: _.str.sprintf('Network <strong>%s</strong> created successfully.', this.model.get('name'))
+        });
     },
 
     onSubmit: function (e) {
         e.preventDefault();
-
+        var self = this;
         var data = Backbone.Syphon.serialize(this);
         data.owner_uuids = _.compact(data.owner_uuids);
         data.resolvers = data.resolvers.split(" ");
@@ -129,18 +135,23 @@ var View = Backbone.Marionette.Layout.extend({
 
         if (this.options.isFabric) {
             var vlan = this.options.data || {};
-            data = _.extend(data, {
-                fabric: true,
-                owner_uuids: [vlan.owner_uuid],
-                owner_uuid: vlan.owner_uuid
-            });
+            data.owner_uuids = [vlan.owner_uuid];
+            data.vlan_id = vlan.vlan_id;
+            if (data['fabric-network']) {
+                data = _.extend(data, {
+                    fabric: true,
+                    owner_uuid: vlan.owner_uuid
+                });
+            } else {
+                this.model = new Network();
+            }
         }
+
         this.model.set(data);
-        console.log('save data:', data);
-        this.model.save();
+        this.model.save().done(self.onSaved.bind(self)).fail(self.onError.bind(self));
     },
 
-    onError: function (model, xhr, options) {
+    onError: function (xhr) {
         var fieldMap = {
             name: '[name=name]',
             subnet: '[name=subnet]',
@@ -154,9 +165,9 @@ var View = Backbone.Marionette.Layout.extend({
             mtu: 'input[name=mtu]'
         };
         var err = xhr.responseData;
-        console.log('network creation validation failed', err);
-        this.$('.form-groupo').removeClass('error');
-        this.$('.help-block', 'form-group').remove();
+        console.log('network creation validation failed', err, xhr);
+        $('.form-groupo').removeClass('error');
+        $('.help-block', 'form-group').remove();
 
         _.each(err.errors, function (errObj) {
             var $field = $(fieldMap[errObj.field]);
@@ -192,7 +203,12 @@ var View = Backbone.Marionette.Layout.extend({
         } else {
             data.inUse = false;
         }
-        data.isNotFabric = !this.options.isFabric;
+        data.isNotFabric = data.isNotFabric || !this.options.isFabric;
+        if (this.options.isFabric) {
+            data.isFabric = true;
+            data.owner_uuid = this.options.data.owner_uuid;
+            data.vlan_id = this.options.data.vlan_id;
+        }
         var routes = data.routes;
         data.routes = [];
         for (var subnet in routes) {

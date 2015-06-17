@@ -34,7 +34,7 @@ var NetworksList = React.createClass({
         this.setState({collection: this.props.collection});
     },
 
-    saveNetwork: function () {
+    createNetwork: function () {
         var self = this;
         var model = new FabricNetwork();
         model.url = this.props.collection.url;
@@ -46,7 +46,6 @@ var NetworksList = React.createClass({
         view.show();
         model.on('sync', function () {
             self.props.collection.fetch();
-            view.$el.modal('hide').remove();
         });
     },
 
@@ -102,7 +101,7 @@ var NetworksList = React.createClass({
     render: function () {
         return <div>
             <div className="create-action">
-                <button type="button" className="btn btn-sm btn-info" onClick={this.saveNetwork.bind(this)}><i className="fa fa-plus"></i> New Network</button>
+                <button type="button" className="btn btn-sm btn-info" onClick={this.createNetwork.bind(this)}><i className="fa fa-plus"></i> New Network</button>
             </div>
             <div className="networks-list">
                 <ul className="list-unstyled fabric-networks-list">

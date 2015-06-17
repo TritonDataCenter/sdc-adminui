@@ -121,11 +121,6 @@ var NetworksView = Backbone.Marionette.Layout.extend({
         var view = new NetworksCreateView();
         this.listenTo(view, 'saved', function(network) {
             this.networks.add(network);
-            view.$el.modal('hide').remove();
-            adminui.vent.trigger('notification', {
-                level: 'success',
-                message: ___NETWORK_CREATED(network)
-            });
         }, this);
         view.show();
     },

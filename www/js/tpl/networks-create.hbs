@@ -35,10 +35,16 @@
                             name="name" placeholder="Name of the network">
                     </div>
                 </div>
-                {{#if isNotFabric}}
-                    <div class="form-group .owner">
-                        <label class="control-label col-sm-4" for="network-owners">Owners</label>
-                        <div class="col-sm-7">
+
+                <div class="form-group owner">
+                    <label class="control-label col-sm-4" for="network-owners">Owners</label>
+                    <div class="col-sm-7">
+                        {{#if owner_uuid}}
+                            <input type="text"
+                                   value="{{owner_uuid}}"
+                                   class="form-control package-owner"
+                                   readonly />
+                        {{else}}
                             {{#unless owner_uuids.length}}
                                 <input type="text"
                                        class="form-control input-xl package-owner"
@@ -53,13 +59,15 @@
                                            placeholder="Search by login, email or uuid">
                                 {{/each}}
                             {{/unless}}
-                        </div>
+                        {{/if}}
+                    </div>
+                    {{#ifCond 1 '!' isFabric}}
                         <div class="clearfix"></div>
                         <div class="col-sm-7 col-sm-offset-4">
                             <a class="add-owner-entry"><i class="fa fa-plus"></i> Add Another Owner</a>
                         </div>
-                    </div>
-                {{/if}}
+                    {{/ifCond}}
+                </div>
 
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-gateway">Subnet</label>
@@ -164,27 +172,27 @@
                     </div>
                 </div>
 
-                {{#if isNotFabric}}
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-nic-tag">NIC Tag</label>
 
                     <div class="controls col-sm-7">
                         {{#unless inuse}}
-                        <select class="form-control" name="nic_tag">
+                        <select class="form-control" name="nic_tag" {{#if isFabric}}readonly {{/if}}>
                             <option>Select a nic tag</option>
                             {{#each nic_tags}}
                             <opunlessvalue="{{name}}">{{name}}</option>
                             {{/each}}
                         </select>
-
-                        <button type="button" class="btn btn-link create-new-nic-tag">Create a New NIC Tag</button>
+                        {{#if isNotFabric}}
+                            <button type="button" class="btn btn-link create-new-nic-tag">Create a New NIC Tag</button>
+                        {{/if}}
                         <div class="create-nic-tag-region"></div>
                         {{else}}
                             <div class="form-control-static">{{nic_tag}}</div>
                         {{/unless}}
                     </div>
                 </div>
-                {{/if}}
+
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-resolvers">DNS Resolvers</label>
 
@@ -199,31 +207,43 @@
                     </div>
                 </div>
 
-                {{#if isNotFabric}}
-                    <div class="form-group">
-                        <label class="control-label col-sm-4" for="network-vlan-id">VLAN ID</label>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="network-vlan-id">VLAN ID</label>
 
-                        <div class="controls col-sm-3">
-                            <input type="text"
-                            {{#if inUse}} readonly {{/if}}
-                            value="{{vlan_id}}"
-                            class="form-control"
-                            id="netework-vlan-id" name="vlan_id" placeholder="VLAN ID">
-                        </div>
+                    <div class="controls col-sm-5">
+                        <input type="text"
+                        {{#ifCond inUse '||' isFabric}} readonly {{/ifCond}}
+                        value="{{vlan_id}}"
+                        class="form-control"
+                        id="netework-vlan-id" name="vlan_id" placeholder="VLAN ID">
+                        {{#if isFabric}}
+                            <div class="checkbox">
+                                <label>
+                                    <input class="fabric-network"
+                                           {{#role "readers"}} readonly {{/role}}
+                                           checked
+                                           name="fabric-network"
+                                           type="checkbox" />
+                                    Fabric Network
+                                </label>
+                            </div>
+                        {{/if}}
                     </div>
-                {{/if}}
+                </div>
 
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="network-mtu">MTU</label>
                     <div class="controls col-sm-5">
-                        <input type="text" 
-                            id="network-mtu"
-                            value="{{mtu}}"
-                            class="form-control"
-                            name="mtu"
-                            placeholder="MTU of the network">
+                        <input type="text"
+                               id="network-mtu"
+                               value="{{mtu}}"
+                               {{#if isFabric}} readonly {{/if}}
+                               class="form-control"
+                               name="mtu"
+                               placeholder="MTU of the network" />
                     </div>
                 </div>
+
             </div>
 
             <div class="modal-footer">
