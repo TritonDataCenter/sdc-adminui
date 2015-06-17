@@ -2247,18 +2247,21 @@ caWidgetLineGraph.prototype.update = function ()
 	this.cl_value = value;
 
 	var tabledata = [];
+	var roundLegendValue = function (value) {
+		return value < 1 && value > 0 ? Math.round(value * 100) / 100 : Math.round(value) || 0;
+	}
 	for (key in value['componentAverages']) {
 		var ccolor = widget.selectedColor(key);
 		tabledata.push([
 		    '<div>' + key + '</div>',
-		    Math.round(value['componentAverages'][key]),
+		    roundLegendValue(value['componentAverages'][key]),
 		    true,
 		    ccolor === null ? '' : ccolor.css()
 		]);
 	}
 
 	tabledata.push([
-	    'Range average', Math.round(value['rangeAverage']), false, '' ]);
+	    'Range average', roundLegendValue(value['rangeAverage']), false, '' ]);
 	this.updateLegend(tabledata, { 'trim': true });
 	this.updateWarning(!value['isComplete']);
 };
