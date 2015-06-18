@@ -70,22 +70,22 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     routes: {
         'signin': 'showSignin',
         'vms': 'showVms',
-        'vms/:uuid': 'showVm',
-        'vms2/:uuid': 'showVm2',
-        'users/:uuid': 'showUser',
-        'users/:uuid/:tab': 'showUser',
-        'users/:account/:uuid/:tab': 'showUser',
+        'vms/:uuid(/)': 'showVm',
+        'vms2/:uuid(/)': 'showVm2',
+        'users/:uuid(/)': 'showUser',
+        'users/:uuid/:tab(/)': 'showUser',
+        'users/:account/:uuid/:tab(/)': 'showUser',
         'image-import': 'showImageImport',
         'images': 'showImages',
-        'images/:uuid': 'showImage',
-        'jobs/:uuid': 'showJob',
-        'networks/:uuid': 'showNetwork',
-        'packages/:uuid': 'showPackage',
-        'servers/:uuid': 'showServer',
-        'nictags/:uuid': 'showNicTag',
+        'images/:uuid(/)': 'showImage',
+        'jobs/:uuid(/)': 'showJob',
+        'networks/:uuid(/)': 'showNetwork',
+        'packages/:uuid(/)': 'showPackage',
+        'servers/:uuid(/)': 'showServer',
+        'nictags/:uuid(/)': 'showNicTag',
         'networking': 'showNetworking',
-        'networking/:tab': 'showNetworking',
-        'alarms/:user/:id': 'showAlarm',
+        'networking/:tab(/)': 'showNetworking',
+        'alarms/:user/:id(/)': 'showAlarm',
         'manta/agents': 'showMantaAgents',
         '*default': 'defaultAction'
     },
@@ -197,7 +197,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         var self = this;
 
         this.authenticated().then(function() {
-            page = page || 'dashboard';
+            page = page && self.sanitizePath(page) || 'dashboard';
             if (Components[page]) {
                 self.presentComponent(page);
             } else {
@@ -314,51 +314,50 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
 
-    showAlarm: function(user, id) {
-        var self = this;
-        this.authenticated().then(function() {
-            self.presentComponent('alarm', {user: user, id: id});
-        });
+    showAlarm: function (user, id) {
+        this.authenticated().then(function () {
+            this.presentComponent('alarm', {user: user, id: id});
+        }.bind(this));
     },
 
-    showAlarms: function(user) {
-        this.authenticated().then(function() {
-            this.presentComponent('alarms', {user: user });
-        });
+    showAlarms: function (user) {
+        this.authenticated().then(function () {
+            this.presentComponent('alarms', {user: user});
+        }.bind(this));
     },
 
-    showImages: function() {
-        this.authenticated().then(function() {
+    showImages: function () {
+        this.authenticated().then(function () {
             this.presentComponent('images', {});
-        });
+        }.bind(this));
     },
 
-    showMantaAgents: function() {
-        this.authenticated().then(function() {
+    showMantaAgents: function () {
+        this.authenticated().then(function () {
             this.presentComponent('manta/agents');
         }.bind(this));
     },
 
-    showVms: function() {
-        this.authenticated().then(function() {
+    showVms: function () {
+        this.authenticated().then(function () {
             this.presentComponent('vms');
         }.bind(this));
     },
 
-    showNetworking: function(tab) {
-        this.authenticated().then(function() {
+    showNetworking: function (tab) {
+        this.authenticated().then(function () {
             this.presentView('networking', {tab: tab});
         }.bind(this));
     },
 
-    showNetwork: function(uuid) {
+    showNetwork: function (uuid) {
         var self = this;
-        this.authenticated().then(function() {
+        this.authenticated().then(function () {
             var Network = require('./models/network');
             var net = new Network({uuid: uuid});
-            net.fetch().done(function() {
+            net.fetch().done(function () {
                 self.presentView('network', { model: net });
-            }).fail(function(xhr) {
+            }).fail(function (xhr) {
                 self.notFound({
                     view: 'networks',
                     args: {uuid: uuid},
@@ -507,8 +506,22 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         });
     },
 
-    signout: function() {
+    signout: function () {
         this.user.signout();
         this.showSignin();
+    },
+    sanitizePath: function (path) {
+        // Be nice like apache and strip out any //my//foo//bar///blah
+        path = path.replace(/\/\/+/g, '/');
+
+        if (path.length > 1) {
+            // Kill a trailing '?' || '/'
+            var pathLength = path.length - 1;
+            if (path.lastIndexOf('?') === pathLength || path.lastIndexOf('/') === pathLength) {
+                path = path.substr(0, pathLength);
+            }
+        }
+        
+        return path;
     }
 });
