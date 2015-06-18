@@ -30,7 +30,7 @@ mkdir -p /opt/smartdc/adminui
 mkdir -p /opt/smartdc/adminui/etc/ssl
 echo "Generating SSL Certificate"
 /opt/local/bin/openssl req -x509 -nodes -subj '/CN=*' \
-    -newkey rsa:4096 -days 365 \
+    -newkey rsa:4096 -sha256 -days 365 \
     -keyout /opt/smartdc/adminui/etc/ssl/default.pem \
     -out /opt/smartdc/adminui/etc/ssl/default.pem
 

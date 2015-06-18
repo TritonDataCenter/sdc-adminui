@@ -95,6 +95,14 @@ $(JS_BUNDLE): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
 devrun:
 	@./tools/devrun.sh
 
+.PHONY: ssl
+ssl:
+	@echo "Generating SSL Certificate"
+	@openssl req -x509 -nodes -subj '/CN=*' \
+    	-newkey rsa:4096 -sha256 -days 365 \
+    	-keyout etc/ssl/default.pem \
+    	-out etc/ssl/default.pem
+
 .PHONY: test
 test: | $(JS_BUNDLE)
 	$(NPM) test
