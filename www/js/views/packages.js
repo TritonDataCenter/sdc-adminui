@@ -192,6 +192,12 @@ var PackagesView = Backbone.Marionette.Layout.extend({
             delete this.filterOptions['name'];
         }
 
+        if (this.$('input[name=traits]').val()) {
+            this.filterOptions['traits'] = this.$('input[name=traits]').val();
+        } else {
+            delete this.filterOptions['traits'];
+        }
+
         if (this.$('input[name=group]').val()) {
             this.filterOptions['group'] = this.$('input[name=group]').val();
         } else {
