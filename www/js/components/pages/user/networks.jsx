@@ -17,6 +17,7 @@ var Networks = require('../../../models/networks');
 var NetworksList = require('../../../views/networks-list');
 var NetworkPools = require('../../../models/network-pools');
 var NetworkPoolsList = require('../../../views/network-pools-list');
+var PaginationView = require('../../../views/pagination');
 
 var UserNetworksList = React.createClass({
     renderNetworkPools: function() {
@@ -63,6 +64,9 @@ var UserNetworksList = React.createClass({
             }
         });
         this.networksView = new NetworksList({collection: this.networks});
+        this.paginationView = new PaginationView({
+            collection: this.networks
+        });
 
         this.networksView.on('itemview:select', function (view) {
             console.log('on select');
@@ -79,7 +83,8 @@ var UserNetworksList = React.createClass({
             <h3>Networks</h3>
 
             { this.networksView && <div className="networks-region"><BB view={this.networksView} /></div> }
-
+            { this.paginationView && <div className="pagination-networks"><BB view={this.paginationView} /></div>  }
+            
             <h3>Network Pools</h3>
             { this.networkPoolsView && <div className="network-pools-region"><BB view={this.networkPoolsView} /></div> }
         </div>;
