@@ -10,6 +10,7 @@
 
 var Backbone = require('backbone');
 var adminui = require('../../../adminui');
+var Network = require('../../../models/network');
 
 /**
  * Events
@@ -37,10 +38,19 @@ var NicsRowView = Backbone.Marionette.ItemView.extend({
     },
 
     serializeData: function() {
+        var self = this;
         var data = this.model.toJSON();
+        var network = new Network({uuid: this.model.get('network_uuid')});
+
         if (this.network) {
             data.network_name = this.network.get('name');
-        }
+        } else {
+            network.fetch().done(function () {
+                self.network = network;
+                data.network_name = self.network.get('name');
+                self.render();
+            });
+        } 
         return data;
     },
 

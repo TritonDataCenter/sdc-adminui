@@ -9,7 +9,6 @@
  */
 
 var Backbone = require('backbone');
-var Networks = require('../../../models/networks');
 var Nics = require('../../../models/nics');
 
 var AddNicView = require('./nics-form');
@@ -44,10 +43,6 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
         });
         this.collection.fetch();
 
-        this.networks = new Networks();
-        this.networks.fetch();
-
-        this.listenTo(this.networks, 'sync', this.networksLoaded, this);
         this.listenTo(this.selectedNics, 'add remove reset', this.onChangeSelectedNics, this);
         this.listenTo(this.model, 'change:nics', this.resetNics, this);
 
@@ -60,10 +55,6 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
             vm: this.model,
             model: nic
         }).render();
-    },
-
-    networksLoaded: function() {
-        this.render();
     },
 
     resetNics: function() {
@@ -110,10 +101,6 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
 
     disableActions: function() {
         this.$(".remove-nics").hide();
-    },
-
-    onBeforeItemAdded: function(itemView) {
-        itemView.network = this.networks.get(itemView.model.get('network_uuid'));
     },
 
     onSelectNic: function(view, nic) {
