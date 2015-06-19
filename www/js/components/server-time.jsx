@@ -19,7 +19,7 @@ var ServerTime = React.createClass({
         this._interval = setInterval(this._getTime, 1000);
     },
     _getTime: function() {
-        this.setState({time: moment().utc().format("MMM D h:mm") });
+        this.setState({time: moment().utc().format("MMM D H:MM") + 'Z' });
     },
     render: function() {
         return <div id="server-time"><i className="fa fa-clock-o"></i> UTC <time>{this.state.time}</time></div>;
