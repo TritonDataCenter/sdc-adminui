@@ -75,7 +75,7 @@ var NicConfig = React.createClass({
         ).done(function() {
             self.setState({
                 loading: false,
-                networks: this.networks.toJSON(),
+                networks: this.networks.fullCollection.toJSON(),
                 networkPools: this.networkPools.toJSON()
             });
         }.bind(this));
