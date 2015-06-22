@@ -89,5 +89,25 @@
   .input-group-btn {
     vertical-align: top;
   }
+  .filters {
+    position: relative;
+    display: table;
+    border-collapse: separate;
+    > div {
+      padding-left: 0;
+    }
+    .nictag {
+      min-height: 40px;
+      span {
+        display: inline-block;
+        width: 24%;
+        white-space: nowrap;
+      }
+      select.form-control {
+        display: inline-block;
+        width: 74%;
+      }
+    }
+  }
 }
 
