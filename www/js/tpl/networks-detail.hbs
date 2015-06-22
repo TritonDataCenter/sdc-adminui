@@ -5,7 +5,7 @@
 -->
 
 <!--
-    Copyright (c) 2014, Joyent, Inc.
+    Copyright (c) 2015, Joyent, Inc.
 -->
 
 <div class="page-header">
@@ -16,9 +16,11 @@
 
 <div class="actions">
   <div class="notes-component-container"></div>
-  {{#role "operators"}}
-    <button class="btn btn-info edit-network"><i class="fa fa-pencil"></i> Edit Network</button>
-  {{/role}}
+  {{#if isNotFabric}}
+    {{#role "operators"}}
+      <button class="btn btn-info edit-network"><i class="fa fa-pencil"></i> Edit Network</button>
+    {{/role}}
+  {{/if}}
 </div>
 
 {{#if networkIsInUse}}

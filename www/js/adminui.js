@@ -60,29 +60,32 @@ Handlebars.registerHelper('debug', function (optionalValue) {
 });
 
 Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
-
+    var condition;
     switch (operator) {
         case '==':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+            condition = v1 == v2;
         case '!=':
-            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+            condition = v1 != v2;
         case '===':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+            condition = v1 === v2;
         case '<':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+            condition = v1 < v2;
         case '<=':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+            condition = v1 <= v2;
         case '>':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+            condition = v1 > v2;
         case '>=':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+            condition = v1 >= v2;
         case '&&':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+            condition = v1 && v2;
         case '||':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+            condition = v1 || v2;
+        case '!':
+            condition = !v2;
         default:
-            return options.inverse(this);
+            condition = false;
     }
+    return condition ? options.fn(this) : options.inverse(this);
 });
 
 Handlebars.registerHelper('math', function (v1, operator, v2) {

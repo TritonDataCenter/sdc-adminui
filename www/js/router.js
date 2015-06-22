@@ -62,6 +62,7 @@ var Views = {
     'network': require('./views/network'),
 
     'nictag': require('./views/nictag'),
+    'fabric-vlan': require('./views/fabric-vlan'),
 
     'services': require('./views/services')
 };
@@ -85,6 +86,10 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'nictags/:uuid': 'showNicTag',
         'networking': 'showNetworking',
         'networking/:tab': 'showNetworking',
+        'fabrics/:uuid/vlan/:id': 'showFabricVlan',
+        'fabrics/vlan/:id': 'showFabricVlan',
+        'fabrics/:owner_uuid/vlan/:id/networks/:uuid': 'showFabricNetwork',
+        'fabrics/vlan/:id/networks/:uuid': 'showFabricNetwork',
         'alarms/:user/:id': 'showAlarm',
         'manta/agents': 'showMantaAgents',
         '*default': 'defaultAction'
@@ -368,14 +373,14 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         });
     },
 
-    showNicTag: function(name) {
+    showNicTag: function (name) {
         var self = this;
-        this.authenticated().then(function() {
+        this.authenticated().then(function () {
             var Nictag = require('./models/nictag');
             var nt = new Nictag({name: name});
-            nt.fetch().done(function() {
-                self.presentView('nictag', { model: nt });
-            }).fail(function(xhr) {
+            nt.fetch().done(function () {
+                self.presentView('nictag', {model: nt});
+            }).fail(function (xhr) {
                 self.notFound({
                     view: 'nictag',
                     args: {name: name},
@@ -385,15 +390,58 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }.bind(this));
     },
 
-
-    showPackage: function(uuid) {
+    showFabricVlan: function (owner_uuid, id) {
         var self = this;
-        this.authenticated().then(function() {
+        this.authenticated().then(function () {
+            if (!id) {
+                id = owner_uuid;
+                owner_uuid = null;
+            }
+            var vlanModel = require('./models/fabrics-vlan');
+            var vlan = new vlanModel({vlan_id: id, owner_uuid: owner_uuid});
+            vlan.fetch().done(function () {
+                self.presentView('fabric-vlan', {model: vlan});
+            }).fail(function (xhr) {
+                self.notFound({
+                    view: 'fabric-vlan',
+                    args: {vlan_id: id},
+                    xhr: xhr
+                });
+            });
+        }.bind(this));
+    },
+
+    showFabricNetwork: function (owner_uuid, id, uuid) {
+        var self = this;
+        this.authenticated().then(function () {
+            if (!uuid) {
+                uuid = id;
+                id = owner_uuid;
+                owner_uuid = null;
+            }
+            var networkModel = require('./models/fabrics-vlan-network');
+            var network = new networkModel({uuid: uuid, vlan_id: id, owner_uuid: owner_uuid});
+            network.fetch().done(function () {
+                self.presentView('network', {model: network});
+            }).fail(function (xhr) {
+                self.notFound({
+                    view: 'network',
+                    args: {uuid: uuid},
+                    xhr: xhr
+                });
+            });
+        }.bind(this));
+    },
+
+
+    showPackage: function (uuid) {
+        var self = this;
+        this.authenticated().then(function () {
             var Package = require('./models/package');
             var p = new Package({uuid: uuid});
             p.fetch().done(function() {
-                self.presentView('package', { model: p });
-            }).fail(function(xhr) {
+                self.presentView('package', {model: p});
+            }).fail(function (xhr) {
                 self.notFound({
                     view: 'package',
                     args: {uuid: uuid},
@@ -403,14 +451,14 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }.bind(this));
     },
 
-    showImage: function(uuid) {
+    showImage: function (uuid) {
         var self = this;
-        this.authenticated().then(function() {
+        this.authenticated().then(function () {
             var Img = require('./models/image');
             var img = new Img({uuid: uuid});
             img.fetch().done(function() {
-                self.presentView('image', { image: img });
-            }).fail(function(xhr) {
+                self.presentView('image', {image: img});
+            }).fail(function (xhr) {
                 self.notFound({
                     view: 'image',
                     args: {uuid: uuid},
