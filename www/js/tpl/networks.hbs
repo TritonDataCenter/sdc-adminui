@@ -17,15 +17,20 @@
     {{/role}}
     </h3>
     <div class="row">
-        <div class="col-sm-6">
-            <div class="input-group">
+        <div class="col-sm-9 filters">
+            <div class="col-md-8">
                 <input type="text" name="owner_uuid" class="form-control search-owner"
                        placeholder="Search for Networks by Owner login, email or uuid" />
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-info search-by-owner"><i class="fa fa-search"> </i> Search</button>
-                </span>
             </div>
+            <div class="col-md-4">
+                <span class="control-label">NIC Tag: </span>
+                <select class="form-control" name="nictag" class="col-md-2"></select>
+            </div>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-info search-networks"><i class="fa fa-search"> </i> Search</button>
+            </span>
         </div>
+
     </div>
     <div class="networks-list"></div>
     <div class="pagination-networks"></div>
