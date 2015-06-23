@@ -112,8 +112,11 @@ var ServersView = Backbone.Marionette.Layout.extend({
         this.listenTo(this.collection, 'sync', this.onSync);
     },
 
-    query: function(params) {
+    query: function (params) {
         if (params) {
+            if (params.reserved === 'false' && params.setup === '') {
+                params.setup = 'true';
+            }
             this.collection.params = params;
         }
         this.collection.fetch();
