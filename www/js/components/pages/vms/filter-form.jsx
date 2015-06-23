@@ -94,8 +94,12 @@ INPUT_TYPES.ip = React.createClass({
 var TypeaheadUser = require('../../../views/typeahead-user');
 INPUT_TYPES.owner_uuid = React.createClass({
     statics: { label: 'Owner' },
-    onSelectUser: function(u) {
-        var uuid = u ? u.get('uuid') : null;
+    onSelectUser: function (user) {
+        var uuid = null;
+        if (user) {
+            uuid = user.get && user.get('uuid') || user;
+        }
+        this.props.value = uuid;
         this.props.onChange('owner_uuid', uuid);
     },
     focusInput: function() {
@@ -103,7 +107,7 @@ INPUT_TYPES.owner_uuid = React.createClass({
     },
     componentDidMount: function() {
         var node = this.refs.input.getDOMNode();
-        this.typeahead = new TypeaheadUser({el: node});
+        this.typeahead = new TypeaheadUser({el: node, preSelectedUser: this.props.value});
         this.typeahead.on('selected', this.onSelectUser);
         this.typeahead.render();
     },
@@ -114,7 +118,7 @@ INPUT_TYPES.owner_uuid = React.createClass({
         return <div className="form-group form-group-sm">
             <label className="col-sm-3 control-label">Owner UUID</label>
             <div className="col-sm-5">
-                <input ref="input" value={this.props.value} className="form-control" type="text" name="owner_uuid" placeholder="Search by login or uuid" />
+                <input ref="input" className="form-control" type="text" name="owner_uuid" placeholder="Search by login or uuid" />
             </div>
             {this.props.showTrash && <div className="col-sm-1">
                 <button type="button" onClick={this.props.handleRemoveCriteria.bind(null, 'owner_uuid')} className="btn btn-link btn-block"><i className="fa fa-trash-o"></i></button>
