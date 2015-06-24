@@ -15,6 +15,7 @@ var adminui = require('../adminui');
 
 var Networks = require('../models/networks');
 var NetworkPools = require('../models/network-pools');
+var NicTags = require('../models/nictags');
 
 var NetworksListView = require('./networks-list');
 var NetworkPoolsListView = require('./network-pools-list');
@@ -44,7 +45,7 @@ var NetworksView = Backbone.Marionette.Layout.extend({
     events: {
         'click button[name=create-network]': 'showCreateNetworkForm',
         'click button[name=create-network-pool]': 'showCreateNetworkPoolForm',
-        'click button.search-by-owner': 'searchByOwner'
+        'click button.search-networks': 'searchByParams'
     },
     ui: {
         'networksList': '.networks-list',
@@ -80,9 +81,12 @@ var NetworksView = Backbone.Marionette.Layout.extend({
             collection: this.networkPools
         });
 
+        this.nictags = new NicTags();
+        this.nictags.on('sync', this.renderNicTagsDropdown, this);
+
         this.filterOptions = {};
     },
-    searchByOwner: function () {
+    searchByParams: function () {
         var searchInput = this.$('input[name=owner_uuid]');
         var owner = searchInput.val();
         delete this.filterOptions['owner_uuid'];
@@ -94,6 +98,12 @@ var NetworksView = Backbone.Marionette.Layout.extend({
                 placement: 'top',
                 title: 'Invalid user UUID provided.'
             });
+        }
+        var nictagValue = this.$('select[name=nictag]').val();
+        if (nictagValue) {
+            this.filterOptions['nic_tag'] = nictagValue;
+        } else {
+            delete this.filterOptions['nic_tag'];
         }
         var params = Object.keys(this.filterOptions).length ? {params: this.filterOptions} : null;
         return this.search(params);
@@ -129,10 +139,22 @@ var NetworksView = Backbone.Marionette.Layout.extend({
         adminui.vent.trigger('showview', 'network', {model: view.model});
     },
 
+    renderNicTagsDropdown: function () {
+        var $select = this.$('select[name=nictag]');
+        $select.empty();
+        $select.append($('<option value="">any</option>'));
+        this.nictags.each(function (nictag) {
+            var nicTagName = nictag.get('name');
+            var option = $('<option />').attr('value', nicTagName).html(nicTagName);
+            $select.append(option);
+        }, this);
+    },
+
     onRender: function () {
         this.userInput = new TypeaheadUserInput({el: this.$('.search-owner')});
         this.userInput.render();
         this.search().done(function () {});
+        this.nictags.fetch();
         this.listenTo(this.networksList, 'itemview:destroy', this.refreshList, this);
     },
 
