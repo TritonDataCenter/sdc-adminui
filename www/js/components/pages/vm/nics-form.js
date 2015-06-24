@@ -63,13 +63,6 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
             });
         } else {
             var nics = vm.get('nics');
-            if (nic.primary) {
-                nics = nics.map(function(n) {
-                    delete n.primary;
-                    return n;
-                });
-            }
-
             var existingNic = _.findWhere(nics, {mac: nic.mac});
 
             if (existingNic) {
@@ -91,6 +84,8 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                 delete n.network_uuid;
                 delete n.owner_uuid;
                 delete n.uuid;
+                delete n.mtu;
+                delete n.cn_uuid;
                 return n;
             });
 
