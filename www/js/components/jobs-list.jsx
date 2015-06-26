@@ -24,23 +24,32 @@ var JobsList = React.createClass({
         page: React.PropTypes.number,
         params: React.PropTypes.object
     },
-    getBackboneModels: function() {
+    getBackboneModels: function () {
         return [this.collection];
     },
-    componentWillMount: function() {
+    componentWillMount: function () {
         this.collection = new Jobs(null, {
             perPage: this.props.perPage,
             page: this.props.page
         });
         this.collection.params = this.props.params;
-        this.collection.on('fetch:start', function() {
+        this.collection.on('fetch:start', function () {
             this.setState({'fetching': true});
         }, this);
-        this.collection.on('fetch:done', function() {
+        this.collection.on('fetch:done', function () {
             this.setState({'fetching': false});
         }, this);
-        this.collection.on('error', function(model, xhr) {
-            this.setState({'error': xhr.responseText});
+        this.collection.on('error', function (model, xhr) {
+            var message = 'Failed to fetch jobs: ';
+            try {
+                message += JSON.parse(xhr.responseText).message;
+            } catch (ex) {
+                message += ex;
+            }
+            adminui.vent.trigger('notification', {
+                level: 'error',
+                message: message
+            });
         }, this);
         this.collection.firstPage();
         this.collection.fetch();
