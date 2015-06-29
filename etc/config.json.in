@@ -2,37 +2,73 @@
   "host": "0.0.0.0",
   "port": 4000,
   "sslport": 4443,
-  "ssl":{
-    "certificate":"/opt/smartdc/adminui/etc/ssl/default.pem",
-    "key":"/opt/smartdc/adminui/etc/ssl/default.key"
-  },
-  "ufds": {
-    "url": "ldaps://10.99.99.13",
-      "bindDN": "cn=root",
+  "ssl":{},
+  "simulateLatency": true,
+  "ufdsMaster": {
+    "url": "ldaps://10.99.99.18",
+    "bindDN": "cn=root",
     "bindPassword": "secret",
     "cache": {
-    "adminUuid": "00000000-0000-0000-0000-000000000000",
       "size": 1000,
       "expiry": 300
     }
   },
-  "dsapi": { "url": "https://datasets.joyent.com/" },
+  "adminUuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+  "ufds": {
+    "url": "ldaps://10.99.99.18",
+    "bindDN": "cn=root",
+    "bindPassword": "secret",
+    "cache": {
+      "size": 1000,
+      "expiry": 300
+    }
+  },
+  "redis": {
+    "host": "10.99.99.24",
+    "port": "6379",
+    "db": 3
+  },
   "datacenters": {
     "coal": {
-      "ufds": {
-        "url": "ldaps://10.99.99.13",
-        "bindDN": "cn=root",
-        "bindPassword": "secret",
-        "cache": {
-          "size": 1000,
-          "expiry": 300
+      "moray": {
+        "host":"10.99.99.17",
+        "port":2020,
+        "connectTimeout": 200,
+        "retry": {
+          "retries": 2,
+          "minTimeout": 500
         }
       },
-      "vmapi": { "url": "http://10.99.99.18" },
-      "napi": { "url": "http://10.99.99.10" },
-      "cnapi": { "url": "http://10.99.99.16" }
+      "amon": {
+        "url": "http://10.99.99.25"
+      },
+      "ca": {
+        "url": "http://10.99.99.30:23181"
+      },
+      "vmapi": {
+        "url": "http://10.99.99.27"
+      },
+      "imgapi": {
+        "url": "http://10.99.99.21"
+      },
+      "cnapi": {
+        "url": "http://10.99.99.22"
+      },
+      "napi": {
+        "url": "http://10.99.99.10"
+      },
+      "sapi": {
+        "url": "http://10.99.99.32"
+      },
+      "fwapi": {
+        "url": "http://10.99.99.26"
+      },
+      "papi": {
+        "url": "http://10.99.99.29"
+      },
+      "workflow": {
+        "url": "http://10.99.99.19"
+      }
     }
   }
-  "tokenTimeout": 300000,
-  "expiredSessionTimeout": 3600000
 }
