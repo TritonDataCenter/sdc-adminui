@@ -5,10 +5,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 var _ = require('underscore');
 var Backbone = require('backbone');
 var React = require('react');
@@ -22,18 +22,20 @@ require('d3');
 require('epoch');
 
 var SlidingPanelRegionType = Backbone.Marionette.Region.extend({
-    open: function(view) {
+    open: function (view) {
         this.$el.hide();
         this.$el.html(view.el);
-        this.$el.slideDown("fast");
+        this.$el.slideDown('fast');
     },
-    close: function() {
+    close: function () {
         var view = this.currentView;
         var self = this;
-        if (!view || view.isClosed){ return; }
+        if (!view || view.isClosed) {
+            return;
+        }
 
         var close = Backbone.Marionette.Region.prototype.close;
-        this.currentView.$el.slideUp('fast', function() {
+        this.currentView.$el.slideUp('fast', function () {
             close.apply(self);
         });
     }
@@ -47,14 +49,22 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
     events: {
         'submit form': 'onSubmit',
         'keyup input': 'onSubmit',
-        'change select': 'onSubmit'
+        'change select': 'onSubmit',
+        'click .input-group-addon': 'changeDirection'
     },
-    onShow: function() {
+    changeDirection: function (e) {
+        var $directionInput = $('input[name=direction]');
+        var directionValue = $directionInput.val();
+        $('.input-group-addon span').toggleClass('glyphicon-sort-by-alphabet glyphicon-sort-by-alphabet-alt');
+        $directionInput.val(directionValue === 'asc' ? 'desc' : 'asc');
+        this.onSubmit(e);
+    },
+    onShow: function () {
         this.nictags = new NicTags();
         this.nictags.on('sync', this.renderNicTagsDropdown, this);
         this.nictags.fetch();
     },
-    renderNicTagsDropdown: function() {
+    renderNicTagsDropdown: function () {
         var $select = this.$('select[name=nictag]');
         $select.empty();
         $select.append($('<option value="">any</option>'));
@@ -63,10 +73,10 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
             $select.append(option);
         }, this);
     },
-    getQuery: function() {
+    getQuery: function () {
         return Backbone.Syphon.serialize(this);
     },
-    onSubmit: _.debounce(function(e) {
+    onSubmit: _.debounce(function (e) {
         e.preventDefault();
         var params = Backbone.Syphon.serialize(this);
         this.trigger('query', params);
@@ -80,7 +90,7 @@ var ServersView = Backbone.Marionette.Layout.extend({
     events: {
         'click .toggle-boot-options':'toggleBootOptions'
     },
-    url: function() {
+    url: function () {
         return 'servers';
     },
     regions: {
@@ -91,11 +101,11 @@ var ServersView = Backbone.Marionette.Layout.extend({
         'filterRegion': '.servers-filter-region'
     },
 
-    onRequest: function() {
+    onRequest: function () {
         this.$('.record-summary').hide();
     },
 
-    onSync: function() {
+    onSync: function () {
         if (this.collection.length) {
             this.$('.record-count').html(this.collection.length);
             this.$('.record-summary').show();
@@ -104,8 +114,8 @@ var ServersView = Backbone.Marionette.Layout.extend({
         }
     },
 
-    initialize: function() {
-        this.collection = new Servers(null, {params: {sort: 'hostname'} });
+    initialize: function () {
+        this.collection = new Servers(null, {params: {sort: 'hostname'}});
         this.filterForm = new FilterForm();
 
         this.listenTo(this.collection, 'request', this.onRequest);
@@ -122,28 +132,28 @@ var ServersView = Backbone.Marionette.Layout.extend({
         this.collection.fetch();
     },
 
-    onShow: function() {
+    onShow: function () {
         this.listenTo(this.filterForm, 'query', this.query);
 
-        React.render(ServersList({ collection: this.collection}), this.$('.servers-list-region').get(0));
+        React.render(ServersList({collection: this.collection}), this.$('.servers-list-region').get(0));
         this.filterRegion.show(this.filterForm);
         app.vent.trigger('settitle', 'servers');
     },
 
-    onClose: function() {
+    onClose: function () {
         React.unmountComponentAtNode(this.$('.servers-list-region').get(0));
     },
 
-    toggleBootOptions: function() {
+    toggleBootOptions: function () {
         var bootOptionsButton = this.$('.toggle-boot-options');
         var bootOptionsRegion = this.bootOptionsRegion;
 
-        function close() {
+        function close () {
             bootOptionsRegion.close();
             bootOptionsButton.removeClass('disabled');
         }
 
-        function saved() {
+        function saved () {
             app.vent.trigger('notification', {
                 level: 'success',
                 message: 'Default Boot Options updated'
@@ -158,11 +168,11 @@ var ServersView = Backbone.Marionette.Layout.extend({
 
             var bootOptions = new Backbone.Model();
             bootOptions.url = '/api/boot/default';
-            var bootOptionsView = new ServerBootOptionsView({ model: bootOptions });
+            var bootOptionsView = new ServerBootOptionsView({model: bootOptions});
             bootOptionsView.on('saved', saved);
             bootOptionsView.on('cancel', close);
 
-            bootOptions.fetch().done(function() {
+            bootOptions.fetch().done(function () {
                 bootOptionsRegion.show(bootOptionsView);
             });
         }

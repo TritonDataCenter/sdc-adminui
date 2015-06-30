@@ -35,13 +35,14 @@
                 <div class="form-group col-md-2">
                     <label class="control-label">Sort By</label>
                     <div class="input-group">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-sort"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-alphabet"></span></span>
                         <select name="sort" class="form-control sort">
                             <option value="hostname">hostname</option>
                             <option value="provisionable_ram">provisionable ram</option>
                             <option value="current_platform">current platform</option>
-                            <option value="current_platform">boot platform</option>
+                            <option value="boot_platform">boot platform</option>
                         </select>
+                        <input type="hidden" class="change-direction" name="direction" value="asc" />
                     </div>
                 </div>
             </div>
