@@ -18,16 +18,21 @@ var React = require('react');
 var moment = require('moment');
 var Promise = require('promise');
 
-var AMON_POLL_INTERVAL = 60000;
+var AMON_POLL_INTERVAL = 3000;
 
 var AlarmsMenu = React.createClass({
     propTypes: {
         'user': React.PropTypes.string.isRequired
     },
-    getInitialState: function() {
-        return { menu: false, alarms: [], probes: {} };
+    getInitialState: function () {
+        return {
+            menu: false,
+            error: null,
+            alarms: [],
+            probes: {}
+        };
     },
-    toggleMenu: function() {
+    toggleMenu: function () {
         this.setState({menu: !this.state.menu});
     },
 
@@ -97,27 +102,47 @@ var AlarmsMenu = React.createClass({
             console.debug('fetch', id, 'done');
         }.bind(this));
     },
-    fetchAlarms: function() {
+
+    fetchAlarms: function () {
         var user = this.props.user;
-        api.get('/api/amon/alarms').query({user: user, state:'open'}).end(function(res) {
-            if (res.ok) {
+        api.get('/api/amon/alarms').query({
+            user: user,
+            state:'open'
+        }).end(function (err, res) {
+            if (!err && res.ok) {
                 var alarms = res.body;
-                this.setState({alarms: alarms});
-                alarms.map(function(a) {
-                    if (a.probe) {
-                        this.fetchProbe(a.probe);
+                if (this.state.error) {
+                    adminui.vent.trigger('notification', {
+                        level: 'success',
+                        message: 'AdminUI: Connected.'
+                    });
+                }
+                this.setState({alarms: alarms, error: null});
+                alarms.map(function (alarm) {
+                    if (alarm.probe) {
+                        this.fetchProbe(alarm.probe);
                     }
-                    if (a.probeGroup) {
-                        this.fetchProbeGroup(a.probeGroup);
+                    if (alarm.probeGroup) {
+                        this.fetchProbeGroup(alarm.probeGroup);
                     }
                 }.bind(this));
             } else {
-                console.error('Error fetching alarms', res.text);
-                this.setState({error: res.body});
+                var message = 'AdminUI service stopped responding.';
+                if (err) {
+                    adminui.vent.trigger('notification', {
+                        level: 'error',
+                        message: message
+                    });
+                } else {
+                    console.error('Error fetching alarms', res.text);
+                    message = res && res.body;
+                }
+                this.setState({error: message});
             }
         }.bind(this));
     },
-    gotoAlarm: function(alarm) {
+
+    gotoAlarm: function (alarm) {
         console.log('go to alarm', alarm);
         adminui.vent.trigger('showcomponent', 'alarm', { user: alarm.user, id: alarm.id.toString() });
     },
