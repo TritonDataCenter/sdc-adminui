@@ -347,7 +347,7 @@ var PageUser = React.createClass({
                         <li className="nav-divider"></li>
 
                         { isTopLevelAccount && <li className={this.state.tab === 'vms' ? 'active' : ''}>
-                            <a onClick={this._changeTab.bind(null, 'vms')}><i className="fa fa-fw fa-cubes"></i> Virtual Machines</a>
+                            <a onClick={this._changeTab.bind(null, 'vms')}><i className="fa fa-fw fa-cubes"></i> Containers</a>
                         </li> }
 
                         <li className={this.state.tab === 'sshkeys' ? 'active' : ''}>

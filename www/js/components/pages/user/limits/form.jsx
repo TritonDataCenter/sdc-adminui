@@ -187,7 +187,7 @@ var Form = React.createClass({
                             <Chosen className="form-control" onChange={this.handleChangeLimitUnit} value={this.state.limitUnit }>
                                 <option value="ram">MB of RAM</option>
                                 <option value="quota">GB of Disk Space</option>
-                                <option value="machines">Virtual Machines</option>
+                                <option value="machines">Containers</option>
                             </Chosen>
                         </div>
                     </div>
@@ -197,7 +197,7 @@ var Form = React.createClass({
                         <div className="col-md-7">
                             <div>
                                 <Chosen className="form-control" value={this.state.criteriaType } onChange={ this.handleChangeCriteriaType }>
-                                    <option value="any">Any VM Type</option>
+                                    <option value="any">Any Container Type</option>
                                     <option value="os">Operating System...</option>
                                     <option value="image">Image...</option>
                                 </Chosen>

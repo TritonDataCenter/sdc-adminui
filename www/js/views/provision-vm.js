@@ -170,7 +170,7 @@ var View = Backbone.Marionette.Layout.extend({
         e.preventDefault();
         var view = new JSONEditor({
             title: "Metadata",
-            description: "Metadata to include in the provisioned Virtual Machine, stored into customer_metadata property.",
+            description: "Metadata to include in the provisioned Container, stored into customer_metadata property.",
             data: this.customer_metadata
         });
         view.on('save', function(data) {
