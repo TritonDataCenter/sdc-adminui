@@ -48,7 +48,7 @@ var ReprovisionVm = React.createClass({
                 self.setState({show: false});
                 self.props.onJobCreated(job);
             } else {
-                alert('Error reprovisioning VM: ' + JSON.stringify(err));
+                alert('Error reprovisioning Container: ' + JSON.stringify(err));
             }
         });
     },
@@ -69,13 +69,13 @@ var ReprovisionVm = React.createClass({
         if (this.state.show === false) {
             return null;
         }
-        var node = <Modal onRequestHide={this.props.onReprovisionCancel} {...this.props} title="Reprovision Virtual Machine" ref="modal">
+        var node = <Modal onRequestHide={this.props.onReprovisionCancel} {...this.props} title="Reprovision Container" ref="modal">
             <div className="modal-body">
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
                         <div className="alert alert-danger">
                             <p><strong>WARNING:</strong></p>
-                            <p>This feature will destroy all data on this Virtual Machine. This operation cannot be undone.</p>
+                            <p>This feature will destroy all data on this Container. This operation cannot be undone.</p>
                         </div>
                     </div>
                     <div className="form-group">

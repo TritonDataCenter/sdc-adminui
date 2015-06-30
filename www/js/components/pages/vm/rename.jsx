@@ -38,7 +38,7 @@ var RenameVm = React.createClass({
         model.saveAlias(function(err, job) {
             if (err) {
                 if (err.errors[0].code === 'Duplicate') {
-                    self.setState({error: 'This alias is in use by another Virtual Machine owned by this user.'});
+                    self.setState({error: 'This alias is in use by another Container owned by this user.'});
                 } else {
                     self.setState({error: err.message});
                 }
@@ -48,18 +48,18 @@ var RenameVm = React.createClass({
         });
     },
     render: function() {
-        return <Modal title="Rename Virtual Machine Alias" onRequestHide={this.props.onCancel} {...this.props} ref="modal">
+        return <Modal title="Rename Container Alias" onRequestHide={this.props.onCancel} {...this.props} ref="modal">
             <div className="modal-body">
                 <form onSubmit={this._onSubmit}>
                     {this.state.error ? <div className="alert alert-danger">{this.state.error}</div> : null}
                     <div className="form-group">
-                        <input ref="input" onChange={this._onChangeInput} type="text" value={this.state.alias} className="form-control" placeholder="New Virtual Machine Alias" />
+                        <input ref="input" onChange={this._onChangeInput} type="text" value={this.state.alias} className="form-control" placeholder="New Container Alias" />
                     </div>
                 </form>
             </div>
             <div className="modal-footer">
                 <button className="btn btn-default" onClick={this.props.onCancel}>Cancel</button>
-                <button className="btn btn-primary" disabled={this.state.alias.length === 0} onClick={this._onSubmit} type="submit">Change Virtual Machine Alias</button>
+                <button className="btn btn-primary" disabled={this.state.alias.length === 0} onClick={this._onSubmit} type="submit">Change Container Alias</button>
             </div>
         </Modal>;
     }

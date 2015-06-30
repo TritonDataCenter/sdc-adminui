@@ -49,10 +49,10 @@ var VmsPage = React.createClass({
         return (
             <div className="page" id="page-vms">
                 <div className="page-header">
-                  <h1>Virtual Machines
+                  <h1>Containers
                     { app.user.role('operators') ?
                         <div className="actions">
-                          <button onClick={this.provision} className="provision-button btn btn-info"><i className="fa fa-plus"></i> Provision Virtual Machine</button>
+                          <button onClick={this.provision} className="provision-button btn btn-info"><i className="fa fa-plus"></i> Provision Container</button>
                         </div> : null
                     }
                   </h1>

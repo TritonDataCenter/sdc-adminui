@@ -5,10 +5,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 
 
 var adminui = require('../adminui');
@@ -36,10 +36,10 @@ var MetadataModal = React.createClass({
         var title;
         switch(this.props.type) {
             case 'customer_metadata':
-                title = "Add Metadata to Virtual Machines";
+                title = "Add Metadata to Containers";
                 break;
             case 'tags':
-                title = "Add Tags to Virtual Machines";
+                title = "Add Tags to Containers";
                 break;
         }
         return (
@@ -123,7 +123,7 @@ var VmsList = React.createClass({
         var numSelectedMachines = this.state.selected.length;
         return <div className="actionbar row">
             <div className="actionbar-items col-sm-4">
-                {numSelectedMachines} Virtual Machine{numSelectedMachines > 1 ? 's' : ''} selected
+                {numSelectedMachines} Container{numSelectedMachines > 1 ? 's' : ''} selected
             </div>
             <div className="actionbar-actions col-sm-6">
                 { _.where(this.state.selected, {state: 'running'}).length === this.state.selected.length ?
@@ -209,12 +209,12 @@ var VmsList = React.createClass({
     render: function() {
         if (this.state.loading) {
             return <div className="vms-list">
-                <div className="zero-state">Retrieving Virtual Machines</div>
+                <div className="zero-state">Retrieving Containers</div>
             </div>;
         }
 
         if (! this.props.collection.length) {
-            return <div className="zero-state">No Virtual Machines were found matching specified criteria</div>;
+            return <div className="zero-state">No Containers were found matching specified criteria</div>;
         }
 
         console.log('[VmsList] state', this.state);
@@ -229,7 +229,7 @@ var VmsList = React.createClass({
 
                 <div className="vms-list-header">
                     <div className="title">
-                        Showing <span className="current-count">{this.props.collection.length}</span> of <span className="record-count">{this.props.collection.objectCount}</span> Virtual Machines<br/>
+                        Showing <span className="current-count">{this.props.collection.length}</span> of <span className="record-count">{this.props.collection.objectCount}</span> Containers<br/>
                     </div>
                     <div className="actions">
                         {this.props.collection.objectCount ?
@@ -262,7 +262,7 @@ var VmsList = React.createClass({
                 </table>
                 {
                     this.state.exported ? <div className="export-container">
-                        <JSONExport description="Virtual Machines grouped by owner" data={this.state.exported} onRequestHide={this._HandleDismissExport} />
+                        <JSONExport description="Containers grouped by owner" data={this.state.exported} onRequestHide={this._HandleDismissExport} />
                     </div> : null
                 }
             </div>;
@@ -296,7 +296,7 @@ var VmsList = React.createClass({
         console.log('metadata', this.state.metadata);
         var confirm = {};
         confirm.vms = selected;
-        confirm.prompt = "Are you sure you want to apply " + this.state.type + "to "+selectedVmUuids.length + ' Virtual Machine(s)?';
+        confirm.prompt = "Are you sure you want to apply " + this.state.type + "to "+selectedVmUuids.length + ' Container(s)?';
         confirm.action = 'Apply ' + type;
         confirm.onConfirm = function() {
             api.post('/api/vm-metadata').send({
@@ -332,14 +332,14 @@ var VmsList = React.createClass({
 
         switch (action) {
             case 'reboot':
-                confirm.prompt = "Are you sure you want to reboot "+selectedVmUuids.length + ' Virtual Machine(s)?';
-                confirm.action = 'Reboot Virtual Machine(s)';
+                confirm.prompt = 'Are you sure you want to reboot ' + selectedVmUuids.length + ' Container(s)?';
+                confirm.action = 'Reboot Container(s)';
                 confirm.onConfirm = function() {
                     api.post('/api/vm-reboot').send(selectedVmUuids).end(function(res) {
                         self.setState({
                             jobs: {
                                 vms: selected,
-                                action: 'Reboot Virtual Machines',
+                                action: 'Reboot Containers',
                                 jobs: res.body
                             },
                             confirm: null
@@ -349,15 +349,15 @@ var VmsList = React.createClass({
                 break;
 
             case 'start':
-                confirm.prompt = "Are you sure you want to start " + selectedVmUuids.length + ' Virtual Machine(s)?';
-                confirm.action = 'Start Virtual Machine(s)';
+                confirm.prompt = 'Are you sure you want to start ' + selectedVmUuids.length + ' Container(s)?';
+                confirm.action = 'Start Container(s)';
                 confirm.onConfirm = function() {
                     api.post('/api/vm-start').send(selectedVmUuids).end(function(res) {
                         self.setState({
                             confirm: null,
                             jobs: {
                                 vms: selected,
-                                action: 'Start Virtual Machines',
+                                action: 'Start Containers',
                                 jobs: res.body
                             }
                         });
@@ -366,15 +366,15 @@ var VmsList = React.createClass({
                 break;
 
             case 'stop':
-                confirm.action = "Stop Virtual Machine(s)";
-                confirm.prompt = "Are you sure you want to stop " + selectedVmUuids.length + ' Virtual Machine(s)?';
+                confirm.action = 'Stop Container(s)';
+                confirm.prompt = 'Are you sure you want to stop ' + selectedVmUuids.length + ' Container(s)?';
                 confirm.onConfirm = function() {
                     api.post('/api/vm-stop').send(selectedVmUuids).end(function(res) {
                         self.setState({
                             confirm: null,
                             jobs: {
                                 vms: selected,
-                                action: 'Stop Virtual Machines',
+                                action: 'Stop Containers',
                                 confirm: null,
                                 jobs: res.body
                             }

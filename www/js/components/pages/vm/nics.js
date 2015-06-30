@@ -62,7 +62,7 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
     },
 
     onClickRemoveNics: function() {
-        var confirm = window.confirm('Are you sure you want to remove selected nics? This will reboot the VM.');
+        var confirm = window.confirm('Are you sure you want to remove selected nics? This will reboot the Container.');
         if (! confirm) {
             return;
         }
