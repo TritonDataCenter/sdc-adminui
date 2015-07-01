@@ -50,8 +50,7 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         this.trigger('selected', datum.model);
     },
 
-    onTypeaheadClosed: function (e, suggestion, dataset) {
-        console.debug('typeahead closed');
+    onTypeaheadClosed: function () {
         var $field = this.$el;
 
         if (this.selectedImage && $field.val() === this.selectedImage.get('uuid')) {
@@ -60,43 +59,38 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
 
         if ($field.val().length !== 36) {
             this.clearField();
-            this.$el.tooltip({
-                placement: 'top',
-                title: 'Invalid image UUID provided.'
-            });
-            if ($field.val().length !== 0) {
-                this.$el.focus();
-            }
         }
     },
 
     initializeEngine: function () {
-        var source = this.imagesCollection.map(function (i) {
-            var tokens = [i.get('uuid'), i.get('version'), i.get('name')];
-            if (i.get('billing_tags') && Array.isArray(i.get('billing_tags'))) {
-                i.get('billing_tags').forEach(function(t) {
+        var source = this.imagesCollection.map(function (img) {
+            var image = img.toJSON();
+            var tokens = [image.uuid, image.version, image.name];
+            if (image.billing_tags && Array.isArray(image.billing_tags)) {
+                image.billing_tags.forEach(function (t) {
                     tokens.push(t);
                 });
             }
 
-            if (i.get('tags') && typeof i.get('tags') === 'object') {
-                var tags = i.get('tags');
-                Object.keys(tags).forEach(function(tagKey) {
-                    var tagValue = tags[tagKey];
-                    var token = ['tag', tagKey, tagValue].join(':');
-                    tokens.push(token);
+            if (image.tags && typeof image.tags === 'object') {
+                var tags = image.tags;
+                Object.keys(tags).forEach(function (tagKey) {
+                    tagKey = tagKey.split(':')[0];
+                    tokens.push(tagKey);
                 });
             }
 
             return {
-                'model': i,
-                'uuid': i.get('uuid'),
-                'tokens': tokens,
-                'name': i.get('name'),
-                'version': i.get('version')
+                model: img,
+                uuid: image.uuid,
+                tokens: tokens,
+                name: image.name,
+                version: image.version,
+                tags: Object.keys(image.tags).join(', '),
+                os: image.os,
+                type: image.type === 'docker' ? image.type : image.type === 'zvol' ? 'kvm' : 'container'
             };
         });
-
         this.engine = new Bloodhound({
             name: 'images',
             local: source,
@@ -104,7 +98,7 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
                 return datum.tokens;
             },
             sorter: function (a, b) {
-                return -(a.version.localeCompare(b.version));
+                return a.name.localeCompare(b.name) === 0 ? -a.version.localeCompare(b.version) : a.name.localeCompare(b.name);
             },
             queryTokenizer: function (query) {
                 return Bloodhound.tokenizers.whitespace(query);
@@ -128,18 +122,18 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         this.$el.parent().parent().find(".tt-loading").hide();
     },
     renderInput: function () {
+        var self = this;
         var substringMatcher = function (strs, property) {
             return function findMatches(q, cb) {
                 var matches = [];
                 var substrRegex = new RegExp(q, 'i');
-
                 strs.forEach(function (str) {
                     if (substrRegex.test(property ? str[property] : str.toString())) {
                         matches.push(str);
                     }
                 });
 
-                cb(matches);
+                cb(matches.sort(self.engine.sorter).slice(0, self.engine.limit));
             };
         };
 
