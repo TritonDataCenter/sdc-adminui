@@ -11,7 +11,7 @@
 <div class="modal-dialog">
     <form class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <button type="button" data-dismiss="modal" class="close" aria-hidden="true">&times;</button>
             <h3 class="modal-title"><span class="action"></span>
                 {{#if account}}
                     Account Sub-user
@@ -108,7 +108,7 @@
         </div> {{! .modal-body}}
 
         <div class="modal-footer">
-            <button data-dismiss="modal" type="button" class="btn btn-default">Close</button>
+            <button data-dismiss="modal" type="button" class="btn btn-default">Cancel</button>
             <button type="submit" class="save btn btn-primary">Save
                 {{#if account}}
                     Sub-user
