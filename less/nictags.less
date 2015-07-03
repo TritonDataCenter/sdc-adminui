@@ -9,7 +9,10 @@
  */
 
 .nictags-component {
-  ul { margin: 0; .make-row(0); }
+  ul {
+    margin: 0;
+    .make-row(0);
+  }
   ul li {
     .make-xs-column(4);
     list-style: none;
@@ -23,10 +26,26 @@
     a {
       font-weight: bold;
     }
-    span {
+    .mtu {
       color: #333333;
       font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
       font-size: 10px;
+    }
+
+    .actions {
+      a.delete-nictag {
+        font-size: 12px;
+        color: @state-danger-text;
+        text-decoration: none;
+      }
+      position: absolute;
+      right: 10px;
+      top: 20px;
+      color: @state-danger-text;
+      visibility: hidden;
+    }
+    &:hover .actions {
+      visibility: visible;
     }
   }
   ul li:last-child {
