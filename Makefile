@@ -97,11 +97,7 @@ devrun:
 
 .PHONY: ssl
 ssl:
-	@echo "Generating SSL Certificate"
-	@openssl req -x509 -nodes -subj '/CN=*' \
-    	-newkey rsa:4096 -sha256 -days 365 \
-    	-keyout etc/ssl/default.pem \
-    	-out etc/ssl/default.pem
+	@./tools/ssl.sh openssl etc/ssl/default.pem
 
 .PHONY: test
 test: | $(JS_BUNDLE)
