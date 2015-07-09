@@ -18,6 +18,18 @@ var api =require('../request');
 var _ = require('underscore');
 var UserInput = require('../views/typeahead-user');
 
+var setUserInput = function (element, defaultValue) {
+    var options = {
+        el: React.findDOMNode(element)
+    };
+    if (defaultValue !== adminui.user.id) {
+        options.preSelectedUser = defaultValue;
+    }
+    var node = new UserInput(options);
+    node.render();
+    return node;
+};
+
 var FabricVlansPage = React.createClass({
     getInitialState: function () {
         return {
@@ -36,14 +48,7 @@ var FabricVlansPage = React.createClass({
     },
     componentDidMount: function () {
         if (adminui.user.role('operators')) {
-            var options = {
-                el: React.findDOMNode(this.refs.owner)
-            }
-            if (this.state.ownerUuid !== adminui.user.id) {
-                options.preSelectedUser = this.state.ownerUuid;
-            }
-            this.ownerInput = new UserInput(options);
-            this.ownerInput.render();
+            this.ownerInput = setUserInput(this.refs.owner, this.state.ownerUuid);
         }
     },
     handleSetOwner: function () {
@@ -142,6 +147,11 @@ var FabricVlanForm = React.createClass({
     getInitialState: function () {
         return this.props.data || {};
     },
+    componentDidMount: function () {
+        if (adminui.user.role('operators') && !this.props.data.hasOwnProperty('vlan_id')) {
+            this.ownerInput = setUserInput(this.refs.owner, this.state.owner_uuid);
+        }
+    },
     _onChangeName: function (e) {
         this.setState({name: e.target.value});
     },
@@ -153,16 +163,28 @@ var FabricVlanForm = React.createClass({
         val = isNaN(val) ? '' : val;
         this.setState({vlan_id: val});
     },
+    _onBlurOwnerField: function () {
+        var selectedUserId = this.ownerInput.selectedUser && this.ownerInput.selectedUser.id;
+        if (selectedUserId !== this.state.owner_uuid) {
+            var fabrics = new Fabrics();
+            var self = this;
+            fabrics.fetch({params: {owner_uuid: selectedUserId}}).then(function () {
+                self.setState({owner_uuid: selectedUserId, vlan_ids: fabrics.pluck('vlan_id')});
+            });
+        }
+    },
     _onSave: function (e) {
         e.preventDefault();
         var vlan = this.state;
+        delete vlan.vlan_ids;
         if (vlan.owner_uuid && vlan.owner_uuid.length !== 36) {
             vlan.owner_uuid = '';
         }
         this.props.handleSave(vlan);
     },
     render: function () {
-        var reservedVlans = this.props.vlan_ids && this.props.vlan_ids.join(', ');
+        var reservedVlans = this.state.vlan_ids || this.props.vlan_ids;
+        reservedVlans = reservedVlans.join(', ');
         return <div className="panel">
             <div className="panel-body">
              <h4 className="panel-title">{this.props.data.hasOwnProperty('vlan_id')? 'Edit' : 'New'} Fabric vLAN</h4>
@@ -171,7 +193,11 @@ var FabricVlanForm = React.createClass({
                 <div className="form-group">
                     <label className="control-label col-sm-5">Owner</label>
                     <div className="col-sm-5">
-                        <input type="text" readOnly className="form-control" value={this.state.owner_uuid} name="owner_uuid" />
+                        {this.props.data.hasOwnProperty('vlan_id') ?
+                            <input type="text" value={this.state.owner_uuid} readOnly className="form-control" name="owner_uuid" />
+                            :
+                            <input type="text" onBlur={this._onBlurOwnerField} className="form-control" name="owner_uuid" ref="owner" />
+                        }
                     </div>
                 </div> }
                 <div className="form-group">
