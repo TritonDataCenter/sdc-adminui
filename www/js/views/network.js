@@ -179,6 +179,7 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         var data = _.clone(this.model.toJSON());
         data.networkIsInUse = this.networkIsInUse();
         data.isNotFabric = !data.fabric;
+        data.isFabric = data.fabric;
         return data;
     },
 

@@ -95,6 +95,12 @@
       <strong>MTU</strong>
       <div class="value" name="mtu">{{mtu}}</div>
     </li>
+    {{#if isFabric}}
+      <li>
+          <strong>Provision a NAT zone</strong>
+      <div class="value" name="internet_nat">{{#if internet_nat}}yes{{else}}no{{/if}}</div>
+      </li>
+    {{/if}}
   </ul>
 </section>
 
