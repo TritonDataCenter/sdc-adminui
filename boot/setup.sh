@@ -28,11 +28,7 @@ mkdir -p /opt/smartdc/adminui
 
 # We need to generate our own self signed certificate for Nginx.
 mkdir -p /opt/smartdc/adminui/etc/ssl
-echo "Generating SSL Certificate"
-/opt/local/bin/openssl req -x509 -nodes -subj '/CN=*' \
-    -newkey rsa:4096 -days 365 \
-    -keyout /opt/smartdc/adminui/etc/ssl/default.pem \
-    -out /opt/smartdc/adminui/etc/ssl/default.pem
+$(dirname ${BASH_SOURCE[0]})../tools/ssl.sh /opt/local/bin/openssl /opt/smartdc/adminui/etc/ssl/default.pem
 
 # Extend the PATH for convenience.
 echo -e "\nexport PATH=\$PATH:/opt/smartdc/adminui/node_modules/.bin:/opt/smartdc/adminui/build/node/bin" >> /root/.bashrc
