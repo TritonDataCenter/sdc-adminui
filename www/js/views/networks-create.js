@@ -208,6 +208,7 @@ var View = Backbone.Marionette.Layout.extend({
             data.isFabric = true;
             data.owner_uuid = this.options.data.owner_uuid;
             data.vlan_id = this.options.data.vlan_id;
+            data.internet_nat = data.hasOwnProperty('internet_nat') ? data.internet_nat : true;
         }
         var routes = data.routes;
         data.routes = [];

@@ -242,6 +242,20 @@
                                placeholder="MTU of the network" />
                     </div>
                 </div>
+                {{#if isFabric}}
+                    <div class="form-group">
+                        <div class="col-sm-4"></div>
+                        <div class="checkbox col-sm-7">
+                            <label>
+                                <input class="network-internet-nat"
+                                       checked="{{internet_nat}}"
+                                       name="internet_nat"
+                                       type="checkbox" />
+                                Provision a NAT zone on the gateway address
+                            </label>
+                        </div>
+                    </div>
+                {{/if}}
 
             </div>
 
