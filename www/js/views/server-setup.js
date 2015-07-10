@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
@@ -24,21 +24,21 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
         'submit form': 'setup',
         'click .setup': 'setup'
     },
-    initialize: function(options) {
+    initialize: function (options) {
         this.viewModel = new ViewModel({customHostname: false});
     },
-    setup: function(e) {
+    setup: function (e) {
         e.preventDefault();
         var server = this.model;
         var self = this;
         var hostname = this.$('input[name=hostname]').val();
-        this.model.setup({hostname: hostname}, function(job) {
+        this.model.setup({hostname: hostname}, function (job) {
+            self.$el.modal('hide').remove();
             app.vent.trigger('showjob', job);
-            self.listenTo(job, 'execution', function(status) {
+            self.listenTo(job, 'execution', function (status) {
                 if (status === 'succeeded') {
                     server.fetch();
                 }
-                self.$el.modal('hide').remove();
                 app.vent.trigger('notification', {
                     level: 'success',
                     message: _.str.sprintf('Server %s setup complete.', server.get('hostname'))
@@ -46,7 +46,7 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
             });
         });
     },
-    onRender: function() {
+    onRender: function () {
         this.stickit(this.model, {
             '.custom-hostname': {
                 observe: 'customHostname'
