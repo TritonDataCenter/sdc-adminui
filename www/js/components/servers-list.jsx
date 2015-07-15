@@ -101,7 +101,10 @@ var ServersListItem = React.createClass({
         if (server.memory_utilization_percent < 0) {
             server.memory_utilization_percent = 0;
         }
-
+        var statusClass = server.status;
+        if (server.setting_up && !server.headnode) {
+            statusClass = server.setup_state === 'running' ? 'rebooting' : 'unknown';
+        }
         var traitsNodes = [];
         if (server.headnode) {
             traitsNodes.push(<span key="headnode" className="headnode">HEADNODE</span>);
@@ -118,7 +121,7 @@ var ServersListItem = React.createClass({
         });
 
         return <div className="servers-list-item">
-            <div className={"status " + server.status}></div>
+            <div className={"status " + statusClass}></div>
             <div className="data">
             <div className="name">
                 <a onClick={this.navigateToServerDetails} href={'/servers/' + server.uuid}>{server.hostname}</a>
@@ -152,10 +155,10 @@ var ServersListItem = React.createClass({
             </div>
             :
             <div className="setup-status">
-                { server.setting_up ? 'Setting up' : ''}
-                { !server.setting_up && adminui.user.role('operators') ?
+                {server.setting_up && server.setup_state === 'running' ? 'Setting up' : ''}
+                {!server.setting_up || server.setup_state !== 'running' && adminui.user.role('operators') ?
                 <div>
-                    <small className="requires-setup">Requires Setup</small>
+                    {server.setting_up ? 'Setup failed' : <small className="requires-setup">Requires Setup</small>}
                     <button onClick={this.setup} className="setup btn btn-info btn-sm setup"><i className="fa fa-magic"></i> Setup this Server</button>
                 </div>
                 : ''}

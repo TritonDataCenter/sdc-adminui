@@ -26,11 +26,12 @@
       <li><a class="forget"><i class="fa fa-trash-o"></i> Forget Server (DANGER)</a></li>
     </ul>
   </div>
-
   {{#unless setup}}
-    <div class="btn-group">
-      <button class="btn btn-info setup">Setup Server</button>
-    </div>
+      {{#ifCond setup_state '!=' 'running'}}
+        <div class="btn-group">
+          <button class="btn btn-info setup">Setup Server</button>
+        </div>
+    {{/ifCond}}
   {{/unless}}
   {{/role}}
 </div>
