@@ -45,11 +45,7 @@ SDC services running in
 
 1) ssh to head node
 ```bash
-<<<<<<< HEAD
 $ ssh root@10.88.88.200
-=======
-$ ssh root@10.99.99.200
->>>>>>> ADMINUI-2126 doc development zone in CoaL w/ sdc-admin:master
 ```
 
 2) create adminui_payload.json
@@ -61,15 +57,9 @@ $ ssh root@10.99.99.200
   "zfs_storage_pool_name": "zones",
   "archive_on_delete": true,
   "package_name": "sdc_2048",
-<<<<<<< HEAD
   "image_uuid": "bed8190a-1b07-11e5-af52-ef1156e1b040",
   "maintain_resolvers": true,
   "server_uuid": "564db874-1cca-8c84-7bfd-2602014520f9",
-=======
-  "image_uuid": "36786922-1b96-11e5-9af2-43e75d0a43d0",
-  "maintain_resolvers": true,
-  "server_uuid": "564de7fb-e36c-ad57-ab5c-f52f7037e8ce",
->>>>>>> ADMINUI-2126 doc development zone in CoaL w/ sdc-admin:master
   "networks": [
     "77605452-fa18-4379-b454-45fe79520f60",
     "0dd6df88-a325-44dd-8bec-95d34c5c377f"
