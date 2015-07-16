@@ -59,10 +59,9 @@ $ ssh root@10.88.88.200
   "package_name": "sdc_2048",
   "image_uuid": "bed8190a-1b07-11e5-af52-ef1156e1b040",
   "maintain_resolvers": true,
-  "server_uuid": "564db874-1cca-8c84-7bfd-2602014520f9",
   "networks": [
-    "77605452-fa18-4379-b454-45fe79520f60",
-    "0dd6df88-a325-44dd-8bec-95d34c5c377f"
+    "admin",
+    "external"
   ],
   "tags": {
     "smartdc_role": "adminui",
@@ -84,6 +83,25 @@ $ ssh root@10.88.88.200
     "assets-ip": "10.99.99.8"
   },
   "alias": "adminui-test",
+  "nics": [
+    {
+      "ip": "10.99.99.41",
+      "netmask": "255.255.255.0",
+      "nic_tag": "admin",
+      "vlan_id": 0,
+      "interface": "net0",
+      "primary": false
+    },
+    {
+      "ip": "10.88.88.6",
+      "netmask": "255.255.255.0",
+      "nic_tag": "external",
+      "vlan_id": 0,
+      "interface": "net1",
+      "gateway": "10.88.88.2",
+      "primary": true
+    }
+  ],
   "resolvers": [
     "10.99.99.11",
     "8.8.8.8",
@@ -113,43 +131,115 @@ admin        0dd6df88-a325-44dd-8bec-95d34c5c377f     0    10.99.99.0/24        
 external     77605452-fa18-4379-b454-45fe79520f60     0    10.88.88.0/24       10.88.88.2
 ```
 
+and ip for nic with nic_tag "admin":
+```bash
+sdc-napi /networks/`sdc-napi /networks?name=admin | json -Ha uuid`/ips | json  -Hac 'this.free && !this.reserved' ip | head -n 1)
+10.99.99.41
+
+and ip for nic with nic_tag "external":
+```bash
+sdc-napi /networks/`sdc-napi /networks?name=external | json -Ha uuid`/ips | json  -Hac 'this.free && !this.reserved' ip | head -n 1)
+10.88.88.6
+
 3) create zone with
 
 ```bash
-$ cat adminui_payload.json | sdc-vm create
+$ vmadm create -f adminui_payload.json
 ```
 
-4) get adminui-test UUID and zlogin to it
+4) get adminui UUID and launch service
 ```bash
-$ sdc-vmapi /vms?state=running | json -H -ga alias uuid | grep adminui-test
-f82ce452-554c-e323-99cd-cf9e42e8c887
-
-$ zlogin f82ce452-554c-e323-99cd-cf9e42e8c887
+$ vmadm list | grep admin
+b86cf459-f7d1-4d45-b8a9-6de503ab98f4  OS    2048     running           adminui0
+e250ba9a-c718-449d-b69c-e23b48649585  OS    2048     running           adminui-test
 ```
 
-5) download and unpack source
+then create json file adminui-service.json
+```json
+ {
+   "uuid": "e250ba9a-c718-449d-b69c-e23b48649585",
+   "service_uuid": "be5e7c5d-0906-4cf5-9e87-f8ec2f85d919",
+   "params": {
+     "alias": "adminui-test"
+   },
+   "metadata": {},
+   "type": "vm"
+ }
+```
+where service_uuid:
+```bash
+sdc-sapi /instances/b86cf459-f7d1-4d45-b8a9-6de503ab98f4 | grep service_uuid
+```
+and then
+```bash
+$ sdc-sapi /instances -XPOST -d@adminui-service.json
+$ vmadm reboot e250ba9a-c718-449d-b69c-e23b48649585
+
+
+```
+
+5) zlogin to new adminui zone and check services
+```bash
+$ zlogin e250ba9a-c718-449d-b69c-e23b48649585
+$ svcs
+```
+and check networks
+```bash
+$ netstat -rn
+
+Routing Table: IPv4
+  Destination           Gateway           Flags  Ref     Use     Interface
+-------------------- -------------------- ----- ----- ---------- ---------
+default              10.88.88.2           UG        2          2 net1
+10.88.88.0           10.88.88.6           U         3          0 net1
+10.99.99.0           10.99.99.41          U         4        781 net0
+127.0.0.1            127.0.0.1            UH        2          0 lo0
+```
+if "default" doesn't be in table
+```bash
+$ route add default 10.88.88.2
+```
+
+6) download and unpack source
+a) Simple variant
+```bash
+$ cd /opt/smartdc/adminui/
+$ curl -ksS https://$(dig +short @8.8.8.8 codeload.github.com)/joyent/sdc-adminui/tar.gz/master -H'Host: codeload.github.com' | tar --strip-components=1 -xzvf -
+```
+
+if adminui doesn't start, try
+```bash
+$ boot/configure.sh
+```
+and setup keys if it needs
+``bash
+$ tools/ssl.sh /opt/local/bin/openssl etc/ssl/default.pem
+```
+
+If error happens remove service
+```bash
+$ svcadm disable svc:/smartdc/application/adminui:default
+$ svccfg delete -f svc:/smartdc/application/adminui:default
+$ rm -rf /opt/smartdc/adminui/
+```
+and try second variant
+
+b) More complex
 ```bash
 $ curl -ksS https://$(dig +short @8.8.8.8 codeload.github.com)/joyent/sdc-adminui/tar.gz/master -H'Host: codeload.github.com' >> sdc-adminui.tar.gz
 $ tar xvfz sdc-adminui.tar.gz
-```
-
-6) overwrite the code
-```bash
 $ cp -r sdc-adminui-master/* /opt/smartdc/adminui/
 ```
-
-7) optionally create config
+optionally create config
 ```bash
 $ cp /opt/smartdc/adminui/etc/config.json.in /opt/smartdc/adminui/etc/config.json
 ```
-
-8) configure and make keys
+configure and make keys
 ```bash
 $ /opt/smartdc/adminui/boot/configure.sh
 $ /opt/smartdc/adminui/tools/ssl.sh /opt/local/bin/openssl /opt/smartdc/adminui/etc/ssl/default.pem
 ```
-
-9) start with
+and start with
 ```bash
 $ svcadm enable svc:/smartdc/application/adminui:default
 ```
