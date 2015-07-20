@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 "use strict";
@@ -36,7 +36,7 @@ var Components = {
     'dashboard': require('./components/pages/dashboard')
 };
 
-Object.keys(Components).forEach(function(k) {
+Object.keys(Components).forEach(function (k) {
     Components[k] = React.createFactory(Components[k]);
 });
 
@@ -96,25 +96,27 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         '*default': 'defaultAction'
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
         this.app = options.app;
         this.state = options.state;
         this.app.user = this.app.user || User.currentUser();
         this.user = this.app.user;
     },
 
-    didAuthenticate: function(data) {
+    didAuthenticate: function (data) {
         this.setupAuthenciatedState();
         this._checkAuth = true;
-        if (typeof(Backbone.history.fragment) !== 'undefined') {
+        if (typeof Backbone.history.fragment !== 'undefined') {
             Backbone.history.loadUrl(Backbone.history.fragment);
         }
     },
 
-    setupAuthenciatedState: function() {
+    setupAuthenciatedState: function () {
         $.ajaxSetup({
             timeout: 30000,
-            headers: {'x-adminui-token': this.user.getToken()}
+            headers: {
+                'x-adminui-token': this.user.getToken()
+            }
         });
 
         this.state.set({
@@ -123,42 +125,42 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         });
     },
 
-    checkAuth: function() {
+    checkAuth: function () {
         if (this._checkAuth === true) {
             return Promise.resolve(true);
         } else {
             var self = this;
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 $.ajax({
                     type: 'GET',
                     timeout: 15000,
                     url: '/api/auth',
-                }).fail(function(xhr, t, m) {
+                }).fail(function (xhr, t, m) {
                     reject();
                     self.showSignin();
-                    if (t==="timeout") {
+                    if (t === "timeout") {
                         window.alert("One more the services required for Authentication Timed out.");
                     }
-                }).done(function() {
+                }).done(function () {
                     resolve();
                 });
             });
         }
     },
 
-    renderTitle: function(sectionTitle) {
-        var title = ['Operations Portal' ];
+    renderTitle: function (sectionTitle) {
+        var title = ['Operations Portal'];
         var datacenter = this.app.state.get('datacenter');
-        if (datacenter && typeof(datacenter) === 'string') {
+        if (datacenter && typeof datacenter === 'string') {
             title.unshift(datacenter);
         }
-        if (sectionTitle && typeof(sectionTitle) === 'string') {
+        if (sectionTitle && typeof sectionTitle === 'string') {
             title.unshift(sectionTitle);
         }
         document.title = title.join(' | ');
     },
 
-    start: function() {
+    start: function () {
         this.listenTo(this.app.vent, 'showview', this.presentView, this);
         this.listenTo(this.app.vent, 'showcomponent', this.presentComponent, this);
         this.listenTo(this.app.vent, 'settitle', this.renderTitle, this);
@@ -175,7 +177,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
         var self = this;
 
-        $(document).ajaxError(function(e, xhr, settings, exception) {
+        $(document).ajaxError(function (e, xhr, settings, exception) {
             if (xhr.status === 403) {
                 self.signout();
             }
@@ -183,7 +185,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
 
         // enable selection
-        $(document).on('click', '.selectable', function() {
+        $(document).on('click', '.selectable', function () {
             var range;
 
             if (document.selection) {
@@ -198,22 +200,22 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         });
     },
 
-    defaultAction: function(page) {
+    defaultAction: function (page, args) {
         console.log(_.str.sprintf('[Router] defaultAction: %s', page));
         var self = this;
 
-        this.authenticated().then(function() {
+        this.authenticated().then(function () {
             page = page && self.sanitizePath(page) || 'dashboard';
             if (Components[page]) {
-                self.presentComponent(page);
+                self.presentComponent(page, args);
             } else {
-                self.presentView(page);
+                self.presentView(page, args);
             }
         });
     },
 
-    authenticated: function() {
-        if (! this.user.authenticated()) {
+    authenticated: function () {
+        if (!this.user.authenticated()) {
             console.log('[Router] not authenticated, showing sign in');
             this.showSignin();
             return Promise.reject('User not authenticated, showing sign in');
@@ -222,20 +224,27 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
     },
 
-    initializeChrome: function() {
+    initializeChrome: function () {
         console.info('[Router] Initialize Chrome', this.state.toJSON());
         this.chrome = React.render(Chrome({
             content: this.state.get('content'),
             state: this.state
-        }), document.body );
+        }), document.body);
     },
 
-    presentView: function(viewName, args) {
+    presentView: function (viewName, args) {
+        args = args || {};
+        if (typeof args === 'string') {
+            args = this.parseURI(args);
+        }
         console.log('[app] showing view', viewName, args);
         var View = Views[viewName];
 
-        if (typeof(View) === 'undefined') {
-            this.notFound({ view: viewName, args: args });
+        if (typeof View === 'undefined') {
+            this.notFound({
+                view: viewName,
+                args: args
+            });
             console.log("[app] view not found: " + viewName);
             return;
         }
@@ -244,7 +253,9 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         var state = {};
 
         state['chrome.rootnav'] = true;
-        state['chrome.content'] = BBComponent({view: view });
+        state['chrome.content'] = BBComponent({
+            view: view
+        });
         state['chrome.fullwidth'] = (viewName === 'users' || viewName === 'user' || viewName === 'settings');
         state['localnav.active'] = view.sidebar || viewName;
 
@@ -262,24 +273,27 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         console.debug('[app]', state);
         this.state.set(state);
 
-        if (typeof(view.url) === 'function') {
+        if (typeof view.url === 'function') {
             this.changeUrl(view.url());
-        } else if (typeof(view.url) === 'string') {
+        } else if (typeof view.url === 'string') {
             this.changeUrl(view.url);
         }
     },
 
-    changeUrl: function(url) {
-       this.navigate(url);
+    changeUrl: function (url) {
+        this.navigate(url);
     },
 
-    presentComponent: function(compName, args) {
+    presentComponent: function (compName, args) {
         args = args || {};
         var ComponentClass = Components[compName];
         this.renderTitle(null);
 
-        if (typeof(ComponentClass) === 'undefined') {
-            this.notFound({ component: ComponentClass, args: args });
+        if (typeof ComponentClass === 'undefined') {
+            this.notFound({
+                component: ComponentClass,
+                args: args
+            });
             console.log("[Router] Component not found: " + compName);
         } else {
             var component = new ComponentClass(args);
@@ -303,38 +317,48 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             this.state.set(state);
             console.log('[Router] presentComponent', component);
 
-            if (typeof(type.url) === 'function') {
+            if (typeof type.url === 'function') {
                 Backbone.history.navigate(type.url(args));
-            } else if (typeof(type.url) === 'string') {
+            } else if (typeof type.url === 'string') {
                 Backbone.history.navigate(type.url);
             }
         }
     },
 
-    notFound: function(args) {
+    notFound: function (args) {
         var view = new NotFoundView(args);
         this.state.set({
             'chrome.rootnav': true,
-            'chrome.content': BBComponent({ view: view })
+            'chrome.content': BBComponent({
+                view: view
+            })
         });
     },
 
 
     showAlarm: function (user, id) {
         this.authenticated().then(function () {
-            this.presentComponent('alarm', {user: user, id: id});
+            this.presentComponent('alarm', {
+                user: user,
+                id: id
+            });
         }.bind(this));
     },
 
     showAlarms: function (user) {
         this.authenticated().then(function () {
-            this.presentComponent('alarms', {user: user});
+            this.presentComponent('alarms', {
+                user: user
+            });
         }.bind(this));
     },
 
-    showImages: function () {
+    showImages: function (args) {
+        if (typeof args === 'string') {
+            args = this.parseURI(args);
+        }
         this.authenticated().then(function () {
-            this.presentComponent('images', {});
+            this.presentComponent('images', args || {});
         }.bind(this));
     },
 
@@ -344,16 +368,21 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }.bind(this));
     },
 
-    showVms: function () {
+    showVms: function (args) {
+        if (typeof args === 'string') {
+            args = this.parseURI(args);
+        }
         this.authenticated().then(function () {
-            this.presentComponent('vms');
+            this.presentComponent('vms', args ? {params: args} : {});
         }.bind(this));
     },
 
 
     showNetworking: function (tab, uuid) {
         this.authenticated().then(function () {
-            var data = {tab: tab};
+            var data = {
+                tab: tab
+            };
             if (uuid) {
                 data.owner_uuid = uuid;
             }
@@ -365,13 +394,19 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         var self = this;
         this.authenticated().then(function () {
             var Network = require('./models/network');
-            var net = new Network({uuid: uuid});
+            var net = new Network({
+                uuid: uuid
+            });
             net.fetch().done(function () {
-                self.presentView('network', { model: net });
+                self.presentView('network', {
+                    model: net
+                });
             }).fail(function (xhr) {
                 self.notFound({
                     view: 'networks',
-                    args: {uuid: uuid},
+                    args: {
+                        uuid: uuid
+                    },
                     xhr: xhr
                 });
             });
@@ -382,13 +417,19 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         var self = this;
         this.authenticated().then(function () {
             var Nictag = require('./models/nictag');
-            var nt = new Nictag({name: name});
+            var nt = new Nictag({
+                name: name
+            });
             nt.fetch().done(function () {
-                self.presentView('nictag', {model: nt});
+                self.presentView('nictag', {
+                    model: nt
+                });
             }).fail(function (xhr) {
                 self.notFound({
                     view: 'nictag',
-                    args: {name: name},
+                    args: {
+                        name: name
+                    },
                     xhr: xhr
                 });
             });
@@ -403,13 +444,20 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 owner_uuid = null;
             }
             var vlanModel = require('./models/fabrics-vlan');
-            var vlan = new vlanModel({vlan_id: id, owner_uuid: owner_uuid});
+            var vlan = new vlanModel({
+                vlan_id: id,
+                owner_uuid: owner_uuid
+            });
             vlan.fetch().done(function () {
-                self.presentView('fabric-vlan', {model: vlan});
+                self.presentView('fabric-vlan', {
+                    model: vlan
+                });
             }).fail(function (xhr) {
                 self.notFound({
                     view: 'fabric-vlan',
-                    args: {vlan_id: id},
+                    args: {
+                        vlan_id: id
+                    },
                     xhr: xhr
                 });
             });
@@ -425,13 +473,21 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 owner_uuid = null;
             }
             var networkModel = require('./models/fabrics-vlan-network');
-            var network = new networkModel({uuid: uuid, vlan_id: id, owner_uuid: owner_uuid});
+            var network = new networkModel({
+                uuid: uuid,
+                vlan_id: id,
+                owner_uuid: owner_uuid
+            });
             network.fetch().done(function () {
-                self.presentView('network', {model: network});
+                self.presentView('network', {
+                    model: network
+                });
             }).fail(function (xhr) {
                 self.notFound({
                     view: 'network',
-                    args: {uuid: uuid},
+                    args: {
+                        uuid: uuid
+                    },
                     xhr: xhr
                 });
             });
@@ -443,13 +499,19 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         var self = this;
         this.authenticated().then(function () {
             var Package = require('./models/package');
-            var p = new Package({uuid: uuid});
-            p.fetch().done(function() {
-                self.presentView('package', {model: p});
+            var p = new Package({
+                uuid: uuid
+            });
+            p.fetch().done(function () {
+                self.presentView('package', {
+                    model: p
+                });
             }).fail(function (xhr) {
                 self.notFound({
                     view: 'package',
-                    args: {uuid: uuid},
+                    args: {
+                        uuid: uuid
+                    },
                     xhr: xhr
                 });
             });
@@ -460,52 +522,64 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         var self = this;
         this.authenticated().then(function () {
             var Img = require('./models/image');
-            var img = new Img({uuid: uuid});
-            img.fetch().done(function() {
-                self.presentView('image', {image: img});
+            var img = new Img({
+                uuid: uuid
+            });
+            img.fetch().done(function () {
+                self.presentView('image', {
+                    image: img
+                });
             }).fail(function (xhr) {
                 self.notFound({
                     view: 'image',
-                    args: {uuid: uuid},
+                    args: {
+                        uuid: uuid
+                    },
                     xhr: xhr
                 });
             });
         }.bind(this));
     },
 
-    showJob: function(uuid) {
+    showJob: function (uuid) {
         var self = this;
-        this.authenticated().then(function() {
+        this.authenticated().then(function () {
             var Job = require('./models/job');
-            var job = new Job({uuid: uuid});
-            job.fetch().done(function() {
-                self.presentView('job', { model: job });
-            }).fail(function(xhr) {
+            var job = new Job({
+                uuid: uuid
+            });
+            job.fetch().done(function () {
+                self.presentView('job', {
+                    model: job
+                });
+            }).fail(function (xhr) {
                 self.notFound({
                     view: 'job',
-                    args: {uuid: uuid},
+                    args: {
+                        uuid: uuid
+                    },
                     xhr: xhr
                 });
             });
         });
     },
 
-    showImageImport: function() {
-        this.authenticated().then(function() {
+    showImageImport: function () {
+        this.authenticated().then(function () {
             this.presentView('image-import');
         }.bind(this));
     },
 
-    showVm: function(uuid) {
-        this.authenticated().then(function() {
+    showVm: function (uuid) {
+        this.authenticated().then(function () {
             this.presentComponent('vm', {
                 vmUuid: uuid,
                 adminui: this.app
             });
         }.bind(this));
     },
-    showUser: function(account, user, tab) {
-        this.authenticated().then(function() {
+    showUser: function (account, user, tab) {
+        this.authenticated().then(function () {
             if (arguments.length === 1) {
                 user = account;
                 account = null;
@@ -531,30 +605,37 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }.bind(this));
     },
 
-    showServer: function(uuid) {
+    showServer: function (uuid) {
         console.log(_.str.sprintf('[Router] showServer: %s', uuid));
         var self = this;
-        this.authenticated().then(function() {
+        this.authenticated().then(function () {
             var Server = require('./models/server');
-            var server = new Server({uuid: uuid});
-            server.fetch().done(function() {
-                self.presentView('server', { server: server });
-            }).fail(function(xhr) {
+            var server = new Server({
+                uuid: uuid
+            });
+            server.fetch().done(function () {
+                self.presentView('server', {
+                    server: server
+                });
+            }).fail(function (xhr) {
                 self.notFound({
                     view: 'server',
-                    args: {uuid: uuid},
+                    args: {
+                        uuid: uuid
+                    },
                     xhr: xhr
                 });
             });
         }.bind(this));
     },
 
-    showSignin: function() {
+    showSignin: function () {
         console.log('[Router] showSignin');
-        // var signinView = new SigninView({model: this.user});
         var SigninComponent = Components['signin'];
         this.state.set({
-            'chrome.content': SigninComponent({ userModel: this.user }),
+            'chrome.content': SigninComponent({
+                userModel: this.user
+            }),
             'chrome.rootnav': false,
             'chrome.fullwidth': true
         });
@@ -575,7 +656,35 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 path = path.substr(0, pathLength);
             }
         }
-        
         return path;
-    }
+    },
+    serialize: function (obj, prefix) {
+        var str = [];
+        for (var p in obj) {
+            if (obj.hasOwnProperty(p)) {
+                var key = prefix ? prefix + '[' + p + ']' : p;
+                var value = obj[p];
+                str.push(typeof value === 'object' ?
+                    this.serialize(value, key) :
+                    encodeURIComponent(key) + '=' + encodeURIComponent(value));
+            }
+        }
+        return str.join('&');
+    },
+    changeSearch: function (query) {
+        var url = location.pathname;
+        if (typeof query === 'object' && Object.keys(query).length) {
+            query = this.serialize(query);
+            url += ('?' + query);
+        }
+        this.changeUrl(url);
+    },
+    parseURI: function (uri) {
+        var params = {};
+        uri = JSON.parse('{"' + decodeURI(uri).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
+        Object.keys(uri).forEach(function (key) {
+            params[decodeURIComponent(key)] = decodeURIComponent(uri[key]);
+        });
+        return params;
+    },
 });

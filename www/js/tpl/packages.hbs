@@ -30,10 +30,10 @@
 
         <div class="form-group">
             <label>State</label>
-            <select class="form-control" name="state">
+            <select class="form-control" name="active">
                 <option value="">any</option>
-                <option selected="selected" value="active">active</option>
-                <option value="inactive">inactive</option>
+                <option value="true">active</option>
+                <option value="false">inactive</option>
             </select>
         </div>
 
@@ -49,7 +49,7 @@
 
         <div class="form-group">
             <label>Owner UUID</label>
-            <input class="form-control" type="text" placeholder="Search by login, uuid, or email" name="owner_uuid"></input>
+            <input class="form-control" type="text" placeholder="Search by login, uuid, or email" name="owner_uuids"></input>
         </div>
 
         <div class="form-group">

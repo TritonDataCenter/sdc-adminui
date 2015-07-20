@@ -29,40 +29,39 @@ var Networking = Backbone.Marionette.Layout.extend({
 
     url: function () {
         var url = '/networking';
-        if (this.options.tab) {
+        if (this.options && this.options.tab) {
             url += '/' + this.options.tab;
             if (this.options.owner_uuid) {
                 url += '/' + this.options.owner_uuid;
             }
+        } else {
+            url += '/networks';
         }
         return url;
     },
 
     initialize: function () {
         var params = this.options.owner_uuid && adminui.user.attributes.roles.indexOf('operators') !== -1 ? {owner_uuid: this.options.owner_uuid} : null;
-        this.networksView = new NetworksView();
-        this.nictagsView = new NictagsView();
-        this.fabricsView = new FabricsView(params);
-        this.currentView = this[this.options.tab + 'View'] || this.networksView;
+        this.currentView = this.getCurrentView(this.options.tab, params);
     },
 
     makeActive: function (view) {
         this.$('[data-view=' + view + ']').parent().addClass('active').siblings().removeClass('active');
     },
-
     onChangeView: function (e) {
         e.preventDefault();
         var view = e.target.getAttribute('data-view');
         this.makeActive(view);
+        this.tabContent.show(this.getCurrentView(view));
+        adminui.router.navigate('networking/' + view);
+    },
+    getCurrentView: function (view, params) {
         if (view === 'nictags') {
-            this.tabContent.show(this.nictagsView);
-            adminui.router.navigate('networking/nictags');
+            return new NictagsView(params);
         } else if (view === 'fabrics') {
-            this.tabContent.show(this.fabricsView);
-            adminui.router.navigate('networking/fabrics');
+            return new FabricsView(params);
         } else {
-            this.tabContent.show(this.networksView);
-            adminui.router.navigate('networking/networks');
+            return new NetworksView(params);
         }
     },
     onRender: function () {
