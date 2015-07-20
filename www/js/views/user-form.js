@@ -5,10 +5,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 
 var Backbone = require('backbone');
 var _ = require('underscore');
@@ -37,7 +37,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     bindings: {
         '.action': {
             observe: 'uuid',
-            onGet: function(val) {
+            onGet: function (val) {
                 if (val && val.length) {
                     return 'Modify';
                 } else {
@@ -58,13 +58,13 @@ module.exports = Backbone.Marionette.ItemView.extend({
         '[name=registered_developer]': 'registered_developer',
     },
 
-    updateCommonName: function(e) {
+    updateCommonName: function (e) {
         var newcn = this.$('[name=first_name]').val() + ' ' + this.$('[name=last_name]').val();
         this.model.set({cn:newcn}, {silent: true});
     },
 
 
-    initialize: function(options) {
+    initialize: function (options) {
         if (options && options.user) {
             this.model = options.user;
             this.mode = 'edit';
@@ -77,24 +77,24 @@ module.exports = Backbone.Marionette.ItemView.extend({
         }
     },
 
-    onError: function(model, xhr) {
-        console.log({model: model, xhr: xhr});
-        var ul = $("<ul />");
+    onError: function (model, xhr) {
+        var ul = $('<ul />');
         this.$('.form-group').removeClass('has-error');
         console.log(xhr.responseData);
-        _(xhr.responseData.errors).each(function(e) {
-            this.$('[name='+e.field+']').parents('.form-group').addClass('has-error');
-            ul.append('<li>'+e.message+' (' + e.field + ')</li>');
+        _(xhr.responseData.errors).each(function (e) {
+            var errorMessage = '<li>'+ e.message + (e.field ? ' (' + e.field + ')' : '') + '</li>';
+            this.$('[name=' + e.field + ']').parents('.form-group').addClass('has-error');
+            ul.append(errorMessage);
         }, this);
 
-        this.$(".alert")
+        this.$('.alert')
             .empty()
             .append('<h4 class="alert-heading">Please fix the following errors</h4>')
             .append(ul)
             .show();
     },
 
-    save: function(e) {
+    save: function (e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -103,27 +103,27 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.$('.alert').hide();
         this.model.save(null, {
             patch: true,
-            success: function(model, resp) {
+            success: function (model, resp) {
                 self.$el.modal('hide').remove();
                 self.trigger('user:saved', self.model);
             }
         });
     },
 
-    serialize: function() {
+    serialize: function () {
         var obj = {};
 
-        _(this.$('form').serializeArray()).each(function(o) {
+        _(this.$('form').serializeArray()).each(function (o) {
             obj[o.name] = o.value;
         });
 
         return obj;
     },
 
-    onRender: function() {
+    onRender: function () {
         this.stickit();
-        this.$el.on('shown.bs.modal', _.bind(function() {
-            this.$("input:first").focus();
+        this.$el.on('shown.bs.modal', _.bind(function () {
+            this.$('input:first').focus();
         }, this));
         this.$el.modal({keyboard: false});
         this.$('.alert').hide();
