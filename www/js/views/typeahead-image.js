@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
@@ -25,32 +25,32 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
 
     template: ImageTypeaheadTpl,
 
-    initialize: function(options) {
+    initialize: function (options) {
         options = options || {};
         this.imagesCollection = new Images();
         this.listenTo(this.imagesCollection, 'sync', this.initializeEngine);
     },
 
-    clearField: function() {
-        process.nextTick(function() {
+    clearField: function () {
+        process.nextTick(function () {
             this.trigger('selected', null);
             this.$el.val('');
         }.bind(this));
     },
 
-    onOpened: function() {
+    onOpened: function () {
         this.selectedImage = null;
         this.trigger('selected', null);
     },
 
-    onTypeaheadSelect: function(e, datum) {
+    onTypeaheadSelect: function (e, datum) {
         console.debug('typeahead selected', e, datum);
         this.selectedImage = datum.model;
         this.$el.tooltip('destroy');
         this.trigger('selected', datum.model);
     },
 
-    onTypeaheadClosed: function(e, suggestion, dataset) {
+    onTypeaheadClosed: function (e, suggestion, dataset) {
         console.debug('typeahead closed');
         var $field = this.$el;
 
@@ -70,8 +70,8 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         }
     },
 
-    initializeEngine: function() {
-        var source = this.imagesCollection.map(function(i) {
+    initializeEngine: function () {
+        var source = this.imagesCollection.map(function (i) {
             var tokens = [i.get('uuid'), i.get('version'), i.get('name')];
             if (i.get('billing_tags') && Array.isArray(i.get('billing_tags'))) {
                 i.get('billing_tags').forEach(function(t) {
@@ -100,13 +100,13 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         this.engine = new Bloodhound({
             name: 'images',
             local: source,
-            datumTokenizer: function(datum) {
+            datumTokenizer: function (datum) {
                 return datum.tokens;
             },
-            sorter: function(a, b) {
+            sorter: function (a, b) {
                 return -(a.version.localeCompare(b.version));
             },
-            queryTokenizer: function(query) {
+            queryTokenizer: function (query) {
                 return Bloodhound.tokenizers.whitespace(query);
             },
             limit: 30
@@ -116,7 +116,7 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         this.renderInput();
     },
 
-    showLoading: function() {
+    showLoading: function () {
         if (this.$el.parent().parent().find('.tt-loading').length) {
             this.$el.parent().parent().find(".tt-loading").show();
         } else {
@@ -124,26 +124,41 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         }
     },
 
-    hideLoading: function() {
+    hideLoading: function () {
         this.$el.parent().parent().find(".tt-loading").hide();
     },
-    renderInput: function() {
+    renderInput: function () {
+        var substringMatcher = function (strs, property) {
+            return function findMatches(q, cb) {
+                var matches = [];
+                var substrRegex = new RegExp(q, 'i');
+
+                strs.forEach(function (str) {
+                    if (substrRegex.test(property ? str[property] : str.toString())) {
+                        matches.push(str);
+                    }
+                });
+
+                cb(matches);
+            };
+        };
+
         this.$el.typeahead({
             name: 'images',
             minLength: 3,
-            highlight: true,
+            highlight: true
         },
         {
             displayKey: 'uuid',
             name: 'images',
-            source: this.engine.ttAdapter(),
+            source: substringMatcher(this.engine.local, 'tokens'),
             templates: {
                 suggestion: ImageTypeaheadTpl
             }
         });
     },
 
-    render: function() {
+    render: function () {
         this.imagesCollection.fetch();
     }
 });
