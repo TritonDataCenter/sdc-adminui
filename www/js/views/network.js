@@ -142,7 +142,7 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         var uuid = $(e.target).attr('data-owner-uuid');
         this.close();
-        adminui.vent.trigger('showcomponent', 'user', {uuid: uuid });
+        adminui.vent.trigger('showcomponent', 'user', {uuid: uuid});
     },
 
     url: function () {

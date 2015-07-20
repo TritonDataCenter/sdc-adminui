@@ -19,18 +19,24 @@ var ImagesCollection = require('../../../models/images');
 
 var ImagesView = React.createClass({
     statics: {
-        url: 'images',
+        url: function () {
+            var url = 'images';
+            return location.pathname === '/images' ? (url + location.search || '') : url;
+        },
         sidebar: 'images'
     },
-    getInitialState: function() {
-        return {hasMore: false, loaded: false};
+    getInitialState: function () {
+        return {
+            hasMore: false,
+            loaded: false
+        };
     },
-    _onSync: function(collection, objs) {
+    _onSync: function (collection, objs) {
         this.setState({loaded: true});
         if (IMAGE_FETCH_SIZE === objs.length) {
-            var newMarker = objs[objs.length-1].uuid;
+            var newMarker = objs[objs.length - 1].uuid;
             var oldMarker = this.images.params.marker;
-            if (typeof(oldMarker) === 'undefined' || newMarker !== oldMarker) {
+            if (typeof oldMarker  === 'undefined' || newMarker !== oldMarker) {
                 this.setState({hasMore: true});
             } else {
                 this.setState({hasMore: false});
@@ -48,19 +54,24 @@ var ImagesView = React.createClass({
             sort: 'published_at.desc',
             limit: IMAGE_FETCH_SIZE
         };
+        var query = this.props.q;
+        if (query && query.length) {
+            this.images.params.name = _.str.sprintf('~%s', query);
+        }
         this._requests.push(this.images.fetch());
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         app.vent.trigger('settitle', 'images');
+        this.refs.searchInput.getDOMNode().value = this.props.q || '';
         this.refs.searchInput.getDOMNode().focus();
     },
-    componentWillUmount: function() {
+    componentWillUmount: function () {
         this.images.off('fetch');
-        this._requests.forEach(function (r) {
-            r.abort();
+        this._requests.forEach(function (request) {
+            request.abort();
         });
     },
-    _searchImage: function(e) {
+    _searchImage: function () {
         var value = this.refs.searchInput.getDOMNode().value;
 
         if (value && value.length) {
@@ -72,15 +83,22 @@ var ImagesView = React.createClass({
         } else {
             delete this.images.params.uuid;
             delete this.images.params.name;
+            
         }
         delete this.images.params.marker;
-        this._requests.push(this.images.fetch());
+        this._requests.push(this.images.fetch().done(function () {
+            var params = {};
+            if (value && value.length) {
+                params.q = value;
+            }
+            app.router.changeSearch(params);
+        }));
     },
-    _loadMore: function() {
-        this.images.params.marker = this.images.at(this.images.length-1).get('uuid');
+    _loadMore: function () {
+        this.images.params.marker = this.images.at(this.images.length - 1).get('uuid');
         this._requests.push(this.images.fetch({remove: false}));
     },
-    onChangeSearchInput: function(e) {
+    onChangeSearchInput: function (e) {
         if (e.key === 'Enter') {
             this._searchImage();
         }
@@ -100,7 +118,6 @@ var ImagesView = React.createClass({
                 <div className="col-sm-12">
                     <div className="input-group">
                     <input type="text" ref="searchInput" className="form-control"
-                        onBlur={this._searchImage}
                         onKeyPress={this.onChangeSearchInput}
                         placeholder="Search for images by exact name or UUID" />
                         <span className="input-group-btn">

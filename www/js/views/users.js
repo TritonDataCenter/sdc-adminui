@@ -80,7 +80,9 @@ var UsersList = Backbone.Marionette.CompositeView.extend({
 
 module.exports = Backbone.Marionette.ItemView.extend({
     template: tplUsers,
-    url: 'users',
+    url: function () {
+        return 'users' + location.search || '';
+    },
     id: 'page-users',
     sidebar: 'users',
     events: {
@@ -89,12 +91,14 @@ module.exports = Backbone.Marionette.ItemView.extend({
         'click a.more': 'next'
     },
 
-    initialize: function () {
+    initialize: function (options) {
         this.collection = new Users();
+        if (options) {
+            this.collection.params = options;
+        }
         this.usersListView = new UsersList({
             collection: this.collection
         });
-
         this.listenTo(this.collection, 'error', this.onError, this);
         this.listenTo(this.collection, 'request', this.onRequest, this);
         this.listenTo(this.collection, 'sync', this.onSync, this);
@@ -114,7 +118,9 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.collection.firstPage();
         this.collection.reset();
         this.collection.params = params;
-        this.collection.fetch();
+        this.collection.fetch().done(function () {
+            Backbone.history.navigate(location.pathname + '?q=' + params.q);
+        });
     },
 
     onError: function (model, xhr) {
@@ -176,6 +182,10 @@ module.exports = Backbone.Marionette.ItemView.extend({
     onRender: function () {
         this.usersListView.setElement(this.$('.users-list'));
         this.usersListView.render();
+        var query = this.collection.params && this.collection.params.q;
+        if (query) {
+            this.$('input[name=quicksearch]').val(query);
+        }
         return this;
     },
 

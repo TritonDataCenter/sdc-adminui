@@ -24,15 +24,15 @@ var app = require('../../../adminui');
 var VmsListComponent = require('../../vms-list');
 var FilterForm = require('./filter-form');
 
-
 var Vms = require('../../../models/vms');
 
 
 var VmsPage = React.createClass({
     statics: {
         sidebar: 'vms',
-        url: function() {
-            return 'vms';
+        url: function () {
+            var url = 'vms';
+            return location.pathname === '/vms' ? (url + location.search || '') : url;
         }
     },
     getInitialState: function() {
@@ -41,8 +41,8 @@ var VmsPage = React.createClass({
         };
     },
     componentWillMount: function() {
-        this.collection = new Vms(null, { perPage: 20 });
-        this.query(this.state.initialFilter);
+        this.collection = new Vms(null, {perPage: 20});
+        this.query(this.props.params || this.state.initialFilter);
         app.vent.trigger('settitle', 'vms');
     },
     render: function() {
@@ -61,7 +61,7 @@ var VmsPage = React.createClass({
                 <div className="row">
                     <div className="col-md-12">
                         <section className="filter-form">
-                            <FilterForm initialParams={this.state.initialFilter} handleSearch={this.query} />
+                            <FilterForm initialParams={this.props.params || this.state.initialFilter} handleSearch={this.query} />
                         </section>
                     </div>
                 </div>

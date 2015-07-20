@@ -3,6 +3,7 @@
  */
 var React = require('react');
 var _ = require('underscore');
+var app = require('adminui');
 
 var INPUT_TYPES = {};
 
@@ -256,6 +257,7 @@ var FilterForm = React.createClass({
     },
     _onSubmit: function(e) {
         e.preventDefault();
+        app.router.changeSearch(this.state.values);
         this.props.handleSearch(this.state.values);
     }
 

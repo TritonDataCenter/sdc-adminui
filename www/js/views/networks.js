@@ -67,8 +67,18 @@ var NetworksView = Backbone.Marionette.Layout.extend({
      */
     initialize: function (options) {
         options = options || {};
-        this.networks = options.networks || new Networks(null, {mode: 'client'});
-        this.networks.params = {fabric: false};
+        this.networks = options.networks || new Networks(null, {
+            mode: 'client'
+        });
+        this.networks.params = {
+            fabric: false
+        };
+        this.filterOptions = {};
+        var owner_uuid = this.options.owner_uuid;
+        if (owner_uuid) {
+            this.networks.params.owner_uuid = owner_uuid;
+            this.filterOptions.owner_uuid = owner_uuid;
+        }
         this.networkPools = options.networkPools || new NetworkPools();
 
         this.networksList = new NetworksListView({
@@ -90,8 +100,10 @@ var NetworksView = Backbone.Marionette.Layout.extend({
         var searchInput = this.$('input[name=owner_uuid]');
         var owner = searchInput.val();
         delete this.filterOptions['owner_uuid'];
+        var url = this.sidebar + '\/' + this.url;
         if (owner.length === 36) {
             this.filterOptions['owner_uuid'] = owner;
+            url += '\/' + owner;
         } else {
             searchInput.typeahead('val', '');
             searchInput.tooltip({
@@ -99,23 +111,30 @@ var NetworksView = Backbone.Marionette.Layout.extend({
                 title: 'Invalid user UUID provided.'
             });
         }
+
         var nictagValue = this.$('select[name=nictag]').val();
         if (nictagValue) {
             this.filterOptions['nic_tag'] = nictagValue;
         } else {
             delete this.filterOptions['nic_tag'];
         }
+
+        Backbone.history.navigate(url);
         var params = Object.keys(this.filterOptions).length ? {params: this.filterOptions} : null;
         return this.search(params);
     },
     search: function (params) {
         var self = this;
-        return this.networks.fetch(_.extend(params, {}), {reset: true}).done(function () {
+        return this.networks.fetch(_.extend(params, {}), {
+            reset: true
+        }).done(function () {
             self.networkPools.fetch();
         });
     },
     showCreateNetworkPoolForm: function () {
-        var view = new NetworkPoolsFormView({networks: this.networks});
+        var view = new NetworkPoolsFormView({
+            networks: this.networks
+        });
         this.listenTo(view, 'saved', function (networkPool) {
             this.networkPools.add(networkPool);
             view.$el.modal('hide').remove();
@@ -136,7 +155,9 @@ var NetworksView = Backbone.Marionette.Layout.extend({
     },
 
     showNetwork: function (view) {
-        adminui.vent.trigger('showview', 'network', {model: view.model});
+        adminui.vent.trigger('showview', 'network', {
+            model: view.model
+        });
     },
 
     renderNicTagsDropdown: function () {
@@ -151,16 +172,32 @@ var NetworksView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function () {
-        this.userInput = new TypeaheadUserInput({el: this.$('.search-owner')});
+        var self = this;
+        var params = self.networks.params;
+        var uuid = params && params.owner_uuid;
+        var options = {
+            el: this.$('.search-owner')
+        }
+        if (uuid) {
+            options.preSelectedUser = uuid;
+        }
+        this.userInput = new TypeaheadUserInput(options);
         this.userInput.render();
-        this.search().done(function () {});
         this.nictags.fetch();
+        
+        this.search().done(function () {
+            if (uuid) {
+                delete params.owner_uuid;
+            }
+        });
         this.listenTo(this.networksList, 'itemview:destroy', this.refreshList, this);
     },
 
     refreshList: function () {
         console.log('networks - refreshList');
-        this.networks.fetch({reset: true}).done(function () {
+        this.networks.fetch({
+            reset: true
+        }).done(function () {
             console.log('networks refreshList - done');
         });
     },

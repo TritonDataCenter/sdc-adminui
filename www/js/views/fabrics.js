@@ -24,7 +24,7 @@ var FabricVlansPage = React.createClass({
             form: (this.props.form || false),
             formData: {},
             vlan: null,
-            params: {owner_uuid: this.props.uuid || adminui.user.id},
+            ownerUuid: this.props.uuid || adminui.user.id,
             vlan_ids: []
         };
     },
@@ -36,20 +36,24 @@ var FabricVlansPage = React.createClass({
     },
     componentDidMount: function () {
         if (adminui.user.role('operators')) {
-            this.ownerInput = new UserInput({
+            var options = {
                 el: React.findDOMNode(this.refs.owner)
-            });
-            this.ownerInput.render();
-            if (this.state.params.owner_uuid !== adminui.user.id) {
-                this.ownerInput.$el.val(this.state.params.owner_uuid);
             }
+            if (this.state.ownerUuid !== adminui.user.id) {
+                options.preSelectedUser = this.state.ownerUuid;
+            }
+            this.ownerInput = new UserInput(options);
+            this.ownerInput.render();
         }
     },
     handleSetOwner: function () {
-        this.ownerInput.selectedUser = this.ownerInput.selectedUser || {id: adminui.user.id};
-        if (this.ownerInput.selectedUser.id !== this.state.params.owner_uuid) {
-            adminui.vent.trigger('showview', 'networking', {owner_uuid: this.ownerInput.selectedUser.id, tab: 'fabrics'});
+        var selectedUser = this.ownerInput.selectedUser;
+        var uuid = '';
+        if (selectedUser) {
+            uuid = typeof selectedUser === 'string' ? selectedUser : selectedUser.id;
         }
+        this.setState({ownerUuid: uuid});
+        adminui.router.navigate('networking/fabrics/' + uuid);
     },
     keyUp: function (e) {
         if (e.which === 13) {
@@ -93,8 +97,21 @@ var FabricVlansPage = React.createClass({
     },
     render: function () {
         var classString = this.state.form ? 'row hidden' : 'row';
-        var data = this.state.vlan && this.state.vlan.toJSON() || this.state.params || {owner_uuid: adminui.user.id};
-        return <div className="fabric-vlans">
+        var data = this.state.vlan && this.state.vlan.toJSON() || {owner_uuid: this.state.ownerUuid} || {owner_uuid: adminui.user.id};
+        var list = (
+            <FabricVlansList
+                ownerUuid={this.state.ownerUuid}
+                handleEdit={this.handleEdit}
+                handleSetIds={this.handleSetIds} />
+        );
+        var form = (
+            <FabricVlanForm
+                handleClose={this._hideForm}
+                handleSave={this.handleSave}
+                data={data}
+                vlan_ids={this.state.vlan_ids} />
+        );
+        return (<div className="fabric-vlans">
             <h3>Fabric vLANs
                 <div className="actions">
                     {!this.state.form && <button className="btn btn-sm btn-info" onClick={this._showForm}>
@@ -106,17 +123,18 @@ var FabricVlansPage = React.createClass({
                 <div className={classString}>
                     <div className="col-sm-6">
                         <div className="input-group">
-                            <input type="text" placeholder="Search vLANs by Owner login, email or uuid" onKeyUp={this.keyUp} className="form-control owner" ref="owner" name="owner_uuid" />
+                            <input type="text" placeholder="Search vLANs by Owner login, email or uuid" className="form-control owner" ref="owner" name="owner_uuid" />
                             <span className="input-group-btn">
-                                <button onClick={this.handleSetOwner} type="button" className="btn btn-info search-by-owner"><i className="fa fa-search"> </i> Search</button>
+                                <button onClick={this.handleSetOwner} type="button" className="btn btn-info search-by-owner">
+                                    <i className="fa fa-search"> </i> Search
+                                </button>
                             </span>
                         </div>
                     </div>
                 </div>}
             {this.state.error && <ErrorAlert error={this.state.error} />}
-            {this.state.form && <FabricVlanForm handleClose={this._hideForm} handleSave={this.handleSave} data={data} vlan_ids={this.state.vlan_ids} />}
-            {!this.state.form && <FabricVlansList params={this.state.params} handleEdit={this.handleEdit} handleSetIds={this.handleSetIds}/>}
-        </div>;
+            {this.state.form ? form : list}
+        </div>);
     }
 });
 
@@ -134,11 +152,6 @@ var FabricVlanForm = React.createClass({
         var val = parseInt(e.target.value, 10);
         val = isNaN(val) ? '' : val;
         this.setState({vlan_id: val});
-    },
-    _handleSetOwner: function () {
-        if (this.ownerInput.selectedUser) {
-            this.setState({owner_uuid: this.ownerInput.selectedUser.id});
-        }
     },
     _onSave: function (e) {
         e.preventDefault();
@@ -204,27 +217,27 @@ var FabricVlansList = React.createClass({
     },
     componentWillMount: function () {
         this.fabrics = new Fabrics();
-        if (this.props.params) {
-            this.fabrics.params = this.props.params;
+        if (this.props.ownerUuid) {
+            this.fabrics.params.owner_uuid = this.props.ownerUuid;
         }
         this.setData();
     },
     componentWillReceiveProps: function (nextProps) {
-        if (nextProps.params !== this.props.params) {
-            this.setData({params: nextProps.params});
+        if (nextProps.ownerUuid !== this.props.ownerUuid) {
+            this.fabrics.params.owner_uuid = nextProps.ownerUuid;
+            this.setData();
         }
     },
-    setData: function (params) {
+    setData: function () {
         var self = this;
-        params = params || null;
-        this.fabrics.fetch(params).then(function () {
+        this.fabrics.fetch().done(function () {
             self.setState({data: self.fabrics});
             self.props.handleSetIds(self.fabrics.pluck('vlan_id'));
         });
     },
     onDelete: function () {
-        params = this.props.params ? {params: this.props.params} : null;
-        this.setData(params);
+        this.fabrics.params.owner_uuid = this.props.ownerUuid || null;
+        this.setData();
     },
     render: function () {
         var self = this;
