@@ -68,7 +68,8 @@ module.exports = Backbone.Marionette.Layout.extend({
         React.render(
             EditableField({
                 value: this.model.get('mtu'), 
-                title: 'MTU', 
+                title: 'MTU',
+                showTitle: true,
                 onSave: this.mtuUpdate, 
                 params: {name: this.model.get('name')}
             }), this.$('.mtu-field').get(0)

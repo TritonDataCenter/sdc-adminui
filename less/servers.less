@@ -5,22 +5,37 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 #page-servers {
-  .full { color: @brand-danger; }
+  .full {
+    color: @brand-danger;
+  }
+  .panel-body {
+    padding: 0
+  }
   .filter-options {
     .widget-content;
-    margin-bottom: 10px;
-    .input-group-addon {
-      cursor: pointer;
-    }
     label {
       color: @gray;
       font-size: 12px;
       padding: 0 3px;
       text-transform: uppercase;
+    }
+  }
+  #batch-action-preview {
+    ul li {
+      display: inline-block;
+      div {
+        display: inline-block;
+      }
+      a {
+        margin-left: 15px;
+      }
+    }
+    .alias {
+      width: 200px;
     }
   }
 }
