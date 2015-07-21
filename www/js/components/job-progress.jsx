@@ -7,10 +7,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 
 var moment = require('moment');
 var React = require('react');
@@ -20,7 +20,7 @@ var Modal = require('./modal');
 var $ = require('jquery');
 
 var JobProgressHeader = React.createClass({
-    render: function() {
+    render: function () {
         var job = this.props.job;
 
         return (
@@ -35,7 +35,7 @@ var JobProgressHeader = React.createClass({
 
 var JobProgressSummary = React.createClass({
 
-    render: function() {
+    render: function () {
         var job = this.props.job;
 
         return (
@@ -79,12 +79,12 @@ var JobProgressFooter = React.createClass({
         onClose: React.PropTypes.func,
         onCancel: React.PropTypes.func
     },
-    handleCancel: function(e) {
+    handleCancel: function (e) {
         e.preventDefault();
         this.props.onCancel();
     },
 
-    render: function() {
+    render: function () {
         var job = this.props.job;
 
         return (
@@ -116,30 +116,31 @@ var JobProgress = React.createClass({
         onUpdate: React.PropTypes.func,
         onFinish: React.PropTypes.func
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         if (! this._timer) {
             this._timer = setInterval(this.update.bind(this), 2000);
         }
         this.update();
     },
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         if (this._timer) {
             clearInterval(this._timer);
         }
     },
-    onClickJobDetails: function() {
-        adminui.vent.trigger('showview', 'job', {model: this.model});
+    _onClickJobDetails: function () {
+        this.onClickClose();
+        adminui.vent.trigger('showview', 'job', {model: this.props.job});
     },
-    update: function() {
-        this.props.job.fetch({success: this.onUpdate});
+    update: function () {
+        this.props.job.fetch({success: this._onUpdate});
     },
-    onClickClose: function() {
+    onClickClose: function () {
         this.props.onClose();
         if (this._timer) {
             clearInterval(this._timer);
         }
     },
-    render: function() {
+    render: function () {
         var job = this.props.job.toJSON();
         job.chain_results = _.map(job.chain_results, function(task) {
             var t = _.clone(task);
@@ -159,19 +160,19 @@ var JobProgress = React.createClass({
                     <JobProgressSummary job={job} />
                 </div>
                 <div className="modal-footer">
-                    <JobProgressFooter onClose={this.props.onClose} onCancel={this.props.onCancel} job={job} />
+                    <JobProgressFooter onClose={this.props.onClose} onCancel={this.props.onCancel || this._onCancel} job={job} />
                 </div>
             </Modal>
         );
     },
 
-    _onCancel: function() {
-        this.model.cancel(function(err, job) {
+    _onCancel: function () {
+        this.props.job.cancel(function (err, job) {
             console.log('cancel response', err, job);
         });
     },
 
-    onUpdate: function() {
+    _onUpdate: function () {
         var job = this.props.job;
         var $node = $(this.getDOMNode());
         this.forceUpdate();
