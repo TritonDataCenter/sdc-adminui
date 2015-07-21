@@ -149,10 +149,9 @@ var ServersListItem = React.createClass({
         });
 
         return <div className="servers-list-item">
-            <div className={'status ' + server.status}>
-            {adminui.user.role('operators') && <input type="checkbox" onChange={this.props.onClick} className="input"  checked={this.state.selected}/>}
-            </div>
-            <div className="data">
+            {adminui.user.role('operators') && <div className='select'><input type="checkbox" onChange={this.props.onClick} className="input" checked={this.state.selected}/></div>}
+            <div className={'status ' + server.status}></div>
+            <div className={'data' + (adminui.user.role('operators') ? ' has-select' : '')}>
             <div className="name">
                 <a onClick={this.navigateToServerDetails} href={'/servers/' + server.uuid}>{server.hostname}</a>
                 {server.reserved && <span className="reserved"><i className="fa fa-lock"></i></span>}
