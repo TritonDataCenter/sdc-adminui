@@ -51,42 +51,49 @@ var ServersListItem = React.createClass({
         this.postRender();
     },
 
-    postRender: function() {
+    postRender: function () {
         var model = this.props.server;
         var $node = $(this.getDOMNode());
-        $node.find(".last-platform").tooltip({
+        $node.find('.last-platform').tooltip({
             title: _.str.sprintf('Platform Version', model.get('current_platform')),
             placement: 'top',
             container: 'body'
         });
 
-        $node.find(".last-boot").tooltip({
+        $node.find('.last-boot').tooltip({
             title: _.str.sprintf('Last boot at %s',
                 moment(model.get('last_boot')).utc().format('LLL')),
             placement: 'top',
             container: 'body'
         });
 
-        $node.find(".last-heartbeat").tooltip({
+        $node.find('.last-heartbeat').tooltip({
             title: _.str.sprintf('Last heartbeat at %s',
                 moment(model.get('last_heartbeat')).utc().format('LLL')),
             placement: 'bottom',
             container: 'body'
         });
+
+        $node.find('.name .reserved').tooltip({
+            title: 'provisioning disabled',
+            placement: 'top',
+            container: 'body'
+        });
+
     },
-    render: function() {
+    render: function () {
         var server = this.props.server.toJSON();
         server.last_boot = moment(server.last_boot).fromNow();
         server.last_heartbeat = moment(server.last_heartbeat).fromNow();
-        server.memory_provisionable_mb = _.str.sprintf("%0.2f", server.memory_provisionable_bytes/1048576);
-        server.memory_total_mb = _.str.sprintf("%0.2f", server.memory_total_bytes/1048576);
-        server.memory_available_gb = _.str.sprintf("%0.2f", server.memory_available_bytes/1073741824);
-        server.memory_provisionable_gb = _.str.sprintf("%0.2f", server.memory_provisionable_bytes/1073741824);
-        server.memory_total_gb = _.str.sprintf("%0.2f", server.memory_total_bytes/1073741824);
+        server.memory_provisionable_mb = _.str.sprintf('%0.2f', server.memory_provisionable_bytes/1048576);
+        server.memory_total_mb = _.str.sprintf('%0.2f', server.memory_total_bytes/1048576);
+        server.memory_available_gb = _.str.sprintf('%0.2f', server.memory_available_bytes/1073741824);
+        server.memory_provisionable_gb = _.str.sprintf('%0.2f', server.memory_provisionable_bytes/1073741824);
+        server.memory_total_gb = _.str.sprintf('%0.2f', server.memory_total_bytes/1073741824);
 
         if (Number(server.memory_provisionable_mb) < 0) {
-            server.memory_provisionable_mb = "0";
-            server.memory_provisionable_gb = "0";
+            server.memory_provisionable_mb = '0';
+            server.memory_provisionable_gb = '0';
         }
         server.memory_total_provisionable_bytes = (server.memory_total_bytes * (1-server.reservation_ratio));
         server.memory_used_provisionable_bytes = (server.memory_total_provisionable_bytes - server.memory_provisionable_bytes);
