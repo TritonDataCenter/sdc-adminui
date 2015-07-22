@@ -16,6 +16,31 @@ var app = require('adminui');
 var $ = require('jquery');
 var Servers = require('../models/servers');
 var ServerBootOptionsView = require('./server-boot-options');
+var NicTags = require('../models/nictags');
+
+var GLYPH_ICON_CLASS = 'glyphicon';
+var GLYPH_ICONS = {
+    hostname: {
+        asc: 'glyphicon-sort-by-alphabet',
+        desc: 'glyphicon-sort-by-alphabet-alt'
+    },
+    provisionable_ram: {
+        asc: 'glyphicon-sort-by-attributes',
+        desc: 'glyphicon-sort-by-attributes-alt'
+    },
+    current_platform: {
+        asc: 'glyphicon-sort-by-order',
+        desc: 'glyphicon-sort-by-order-alt'
+    }
+};
+GLYPH_ICONS.boot_platform = GLYPH_ICONS.current_platform;
+
+function changeGlyphicon() {
+    var directionValue = $('input[name=direction]').val();
+    var sortValue = $('select[name=sort]').val();
+    var sortGlyphicons = GLYPH_ICONS[sortValue] || GLYPH_ICONS.hostname;
+    $('.input-group-addon span').removeClass().addClass(GLYPH_ICON_CLASS + ' ' + sortGlyphicons[directionValue] || sortGlyphicons.asc);
+}
 
 require('jquery');
 require('d3');
@@ -43,7 +68,6 @@ var SlidingPanelRegionType = Backbone.Marionette.Region.extend({
 
 var ServersList = React.createFactory(require('../components/servers-list'));
 
-var NicTags = require('../models/nictags');
 var FilterForm = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/servers-filter.hbs'),
     events: {
@@ -55,7 +79,6 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
     changeDirection: function (e) {
         var $directionInput = $('input[name=direction]');
         var directionValue = $directionInput.val();
-        $('.input-group-addon span').toggleClass('glyphicon-sort-by-alphabet glyphicon-sort-by-alphabet-alt');
         $directionInput.val(directionValue === 'asc' ? 'desc' : 'asc');
         this.onSubmit(e);
     },
@@ -78,6 +101,7 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
     },
     onSubmit: _.debounce(function (e) {
         e.preventDefault();
+        changeGlyphicon();
         var params = Backbone.Syphon.serialize(this);
         this.trigger('query', params);
     }, 300)
