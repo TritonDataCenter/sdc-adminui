@@ -107,6 +107,8 @@ release: all deps docs $(SMF_MANIFESTS)
 	@mkdir -p $(RELSTAGEDIR)/site
 	@touch $(RELSTAGEDIR)/site/.do-not-delete-me
 	cp -r $(ROOT)/* $(RELSTAGEDIR)/root/opt/smartdc/adminui/
+	rm $(RELSTAGEDIR)/root/opt/smartdc/adminui/image-version.json
+	@echo "{\"version\": \"$(STAMP)\"}" >> $(RELSTAGEDIR)/root/opt/smartdc/adminui/image-version.json
 	rm -rf $(RELSTAGEDIR)/root/opt/smartdc/adminui/deps
 	mkdir -p $(RELSTAGEDIR)/root/opt/smartdc/boot
 	cp -R $(ROOT)/deps/sdc-scripts/* $(RELSTAGEDIR)/root/opt/smartdc/boot/
