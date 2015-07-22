@@ -105,6 +105,8 @@ release: all deps docs $(SMF_MANIFESTS)
 	@echo "Building $(RELEASE_TARBALL)"
 	@mkdir -p $(RELSTAGEDIR)/root/opt/smartdc/adminui
 	@mkdir -p $(RELSTAGEDIR)/site
+	rm $(RELSTAGEDIR)/root/opt/smartdc/adminui/image-version.json
+	@echo "{\"version\": \"$(STAMP)\"}" >> $(RELSTAGEDIR)/root/opt/smartdc/adminui/image-version.json
 	@touch $(RELSTAGEDIR)/site/.do-not-delete-me
 	cp -r $(ROOT)/* $(RELSTAGEDIR)/root/opt/smartdc/adminui/
 	rm -rf $(RELSTAGEDIR)/root/opt/smartdc/adminui/deps
