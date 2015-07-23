@@ -138,6 +138,38 @@ var User = module.exports = Model.extend({
                 self.trigger('error', res.body);
             }
         });
+    },
+
+    validation: {
+        login: {
+            required: true,
+            minLength: 3,
+            maxLength: 32,
+            pattern: {
+                regex: /^[A-Za-z]+[A-Za-z0-9\.\_]*$/,
+                msg: "Must start with a letter, and contain letters, numbers and signs like '.' and '_'."
+            }
+
+        },
+        password: {
+            required: true,
+            minLength: 7
+        },
+        email: {
+            required: true
+        },
+        sn: {
+            required: true
+        },
+        givenname: {
+            required: true
+        },
+        phone: {
+            required: true
+        },
+        company: {
+            required: true
+        }
     }
 });
 

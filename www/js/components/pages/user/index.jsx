@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 /** @jsx React.DOM */
@@ -35,7 +35,7 @@ var UserForm = require('../../../views/user-form');
 var PageUser = React.createClass({
     statics: {
         sidebar: 'users',
-        url: function(props) {
+        url: function (props) {
             var uuid;
             var account;
 
@@ -56,12 +56,12 @@ var PageUser = React.createClass({
         }
     },
 
-    getInitialState: function() {
+    getInitialState: function () {
         var user;
         var state = {
             tab: this.props.tab || 'profile'
         };
-        if (this.props.user && typeof(this.props.user) === 'object') {
+        if (this.props.user && typeof this.props.user === 'object') {
             user = this.props.user;
         } else {
             user = new UserModel({
@@ -71,7 +71,6 @@ var PageUser = React.createClass({
                 user.set({account: this.props.account });
             }
         }
-
 
         state.userModel = user;
         // model already contains data
@@ -83,7 +82,7 @@ var PageUser = React.createClass({
         return state;
     },
 
-    componentWillReceiveProps: function(props) {
+    componentWillReceiveProps: function (props) {
         if (props.tab) {
             this.setState({tab: props.tab});
         }
@@ -98,14 +97,14 @@ var PageUser = React.createClass({
         console.log('componentWillReceiveProps', props);
     },
 
-    componentDidMount: function() {
+    componentDidMount: function () {
         this.fetchUser();
         this.fetch2fa();
     },
 
-    fetchUser: function() {
+    fetchUser: function () {
         var req = this.state.userModel.fetch();
-        req.fail(function(xhr) {
+        req.fail(function (xhr) {
             this.setState({
                 loading: false,
                 error: xhr.responseText,
@@ -113,7 +112,7 @@ var PageUser = React.createClass({
             });
         }.bind(this));
 
-        req.done(function() {
+        req.done(function () {
             this.setState({
                 error: null,
                 loading: false,
@@ -122,16 +121,16 @@ var PageUser = React.createClass({
         }.bind(this));
     },
 
-    fetch2fa: function() {
+    fetch2fa: function () {
         var url = _.str.sprintf('/api/users/%s/2fa', this.state.userModel.get('uuid'));
-        api.get(url).end(function(res) {
+        api.get(url).end(function (res) {
             if (res.ok) {
                 this.setState({'2fa': res.body.enabled});
             }
         }.bind(this));
     },
 
-    getCurrentView: function() {
+    getCurrentView: function () {
         var view;
         switch (this.state.tab) {
             case 'profile':
@@ -199,7 +198,7 @@ var PageUser = React.createClass({
         return view;
     },
 
-    _changeTab: function(t) {
+    _changeTab: function (t) {
         this.setState({tab: t});
         if (this.state.userModel.get('account')) {
             adminui.router.changeUrl(_.str.sprintf('/users/%s/%s/%s',
@@ -212,14 +211,13 @@ var PageUser = React.createClass({
 
     },
 
-
-
     // --- child component handlers
 
-    handleProfileModifyUser: function() {
-        var form = new UserForm({user: this.state.userModel});
+    handleProfileModifyUser: function () {
+        var form = new UserForm({user: this.state.userModel.clone()});
         form.render();
-        form.on('user:saved', function(user) {
+        form.on('user:saved', function (user) {
+            this.fetchUser();
             adminui.vent.trigger('notification', {
                 level: 'success',
                 message: _.str.sprintf('User <strong>%s</strong> saved', user.get('login'))
@@ -227,15 +225,15 @@ var PageUser = React.createClass({
         }, this);
 
     },
-    handleNavigateToAccount: function() {
+    handleNavigateToAccount: function () {
         adminui.vent.trigger('showcomponent', 'user', {user: this.state.userModel.get('account')});
     },
 
-    handleUnlockUser: function(e) {
+    handleUnlockUser: function (e) {
         e.preventDefault();
 
-        var url = '/api/users/'+this.state.userModel.get('uuid') + '/unlock';
-        api.post(url).send({}).end(function(res) {
+        var url = '/api/users/' + this.state.userModel.get('uuid') + '/unlock';
+        api.post(url).send({}).end(function (res) {
             if (res.ok) {
                 adminui.vent.trigger('notification', {
                     message: _.str.sprintf('User unlocked successfully'),
@@ -246,15 +244,15 @@ var PageUser = React.createClass({
         }.bind(this));
     },
 
-    handleProfileToggleTwoFactorAuth: function() {
+    handleProfileToggleTwoFactorAuth: function () {
         var self = this;
-        var url = '/api/users/'+this.state.userModel.get('uuid') + '/2fa';
+        var url = '/api/users/' + this.state.userModel.get('uuid') + '/2fa';
 
-        api.get(url).end(function(res) {
+        api.get(url).end(function (res) {
             var enabled = !res.body.enabled;
 
             if (res.ok) {
-                api.patch(url).send({enabled: enabled}).end(function() {
+                api.patch(url).send({enabled: enabled}).end(function () {
                     adminui.vent.trigger('notification', {
                         message: _.str.sprintf('Two factor %s for user', (enabled ? 'enabled': 'disabled')),
                         level: 'success'
@@ -265,8 +263,7 @@ var PageUser = React.createClass({
         });
     },
 
-
-    render: function() {
+    render: function () {
         if (this.state.loading) {
             return <div id="page-user">
                 <div className="loading">
@@ -283,8 +280,6 @@ var PageUser = React.createClass({
                 </div>
             </div>;
         }
-
-
 
         var user = this.state.userModel.toJSON();
         var currentView = this.getCurrentView();
@@ -308,8 +303,8 @@ var PageUser = React.createClass({
                     <div className="user-info">
                         <div className="cn">{user.login}</div>
                         <div className="user-groups">
-                        { user.groups && user.groups.map(function(g) {
-                            return <div className={"group "+g}>{g}</div>;
+                        { user.groups && user.groups.map(function (g) {
+                            return <div className={"group " + g}>{g}</div>;
                         })}
                         </div>
                         <div className="uuid selectable">{user.uuid}</div>
