@@ -7,18 +7,15 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 "use strict";
 
 var Backbone = require('backbone');
 var _ = require('underscore');
-
 var React = require('react');
 
 var NicConfigComponent = React.createFactory(require('../../nic-config'));
-
-
 var JobProgress = require('../../../views/job-progress');
 
 var VMNicForm = Backbone.Marionette.ItemView.extend({
@@ -31,22 +28,22 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
         'click button[type=submit]': 'onSubmit'
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
         if (! this.model) {
             this.model = new Backbone.Model();
         }
         this.vm = options.vm;
     },
 
-    onSubmit: function() {
+    onSubmit: function () {
         var self = this;
         var vm = this.vm;
         var nic = this.nicConfig.getValue();
         nic.uuid = nic.network_uuid;
         delete nic.network_uuid;
 
-        if (! nic.mac) {
-            vm.addNics([nic], function(err, job) {
+        if (!nic.mac) {
+            vm.addNics([nic], function (err, job) {
                 if (err) {
                     window.alert('Error adding network interface ' + err);
                     return;
@@ -70,7 +67,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
             } else {
                 nics.push(nic);
             }
-            nics = nics.map(function(n) {
+            nics = nics.map(function (n) {
                 delete n.vlan_id;
                 delete n.nic_tag;
                 delete n.ip;
@@ -92,7 +89,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                 return n;
             });
 
-            vm.updateNics(nics, function(err, job) {
+            vm.updateNics(nics, function (err, job) {
                 if (err) {
                     window.alert('Error updating network interfaces ' + err);
                     return;
@@ -102,7 +99,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                     model: job
                 });
                 view.show();
-                self.listenTo(view, 'execution', function(st) {
+                self.listenTo(view, 'execution', function (st) {
                     if (st === 'succeeded') {
                         vm.fetch();
                     }
@@ -111,15 +108,15 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
         }
     },
 
-    disableButtons: function() {
+    disableButtons: function () {
         this.$('button[type=submit]').prop('disabled', true);
     },
 
-    enableButtons: function() {
+    enableButtons: function () {
         this.$('button[type=submit]').prop('disabled', false);
     },
 
-    onNicPropertyChange: function(prop, value, nic) {
+    onNicPropertyChange: function (prop, value, nic) {
         if (nic.network_uuid) {
             this.enableButtons();
         } else {
@@ -127,7 +124,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
         }
     },
 
-    onRender: function() {
+    onRender: function () {
         this.nicConfig = React.render(
             new NicConfigComponent({
                 nic: this.model.toJSON(),
