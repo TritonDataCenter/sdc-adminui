@@ -33,7 +33,10 @@ var MultipleNicConfigComponent = React.createClass({
         };
     },
     getInitialState: function () {
-        var state = {};
+        var state = {
+            networks: [],
+            networkPools: []
+        };
         state.nics = this.props.nics || [];
         state.networkFilters = this.props.networkFilters;
         state.expandAntispoofOptions = this.props.expandAntispoofOptions;
@@ -83,7 +86,15 @@ var MultipleNicConfigComponent = React.createClass({
             this.props.onChange(nics);
         }.bind(this));
     },
+    onLoadNetworks: function (networks, networkPools) {
+        this.setState({
+            networks: networks,
+            networkPools: networkPools
+        });
+    },
     render: function () {
+        var networks = this.state.networks;
+        var networkPools = this.state.networkPools;
         var nodes = _.map(this.state.nics, function (nic, i) {
             return <div className="nic-config-component-container">
                 <div className="nic-config-action">
@@ -99,15 +110,18 @@ var MultipleNicConfigComponent = React.createClass({
                         isIpAvailable={this.state.isIpAvailable}
                         selectedIps={this.state.selectedIps}
                         index={i}
-                        nic={nic} />
+                        nic={nic}
+                        networks={networks}
+                        networkPools={networkPools}
+                        onLoadNetworks={this.onLoadNetworks} />
                 </div>
             </div>;
         }, this);
 
-        return <div className="multiple-nic-config-component">
+        return (<div className="multiple-nic-config-component">
             {nodes}
             <a className="attach-network-interface" onClick={this.addNewNic}>Attach Another NIC</a>
-        </div>;
+        </div>);
     }
 });
 

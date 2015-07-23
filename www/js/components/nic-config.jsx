@@ -48,8 +48,8 @@ var NicConfig = React.createClass({
         var state = {
             nic: this.props.nic,
             networkFilters: this.props.networkFilters || {},
-            networks: [],
-            networkPools: [],
+            networks: this.props.networks || [],
+            networkPools: this.props.networkPools || [],
             readonlyNetwork: this.props.readonlyNetwork === true,
             expandAntispoofOptions: this.props.expandAntispoofOptions,
             isIpAvailable: this.props.isIpAvailable || false
@@ -64,27 +64,43 @@ var NicConfig = React.createClass({
     },
     componentDidMount: function () {
         var self = this;
-
-        this.networks = new Networks();
-        this.networkPools = new NetworkPools();
-        this.setState({loading: true});
-        $.when(
-            this.networks.fetch({ params: this.state.networkFilters }),
-            this.networkPools.fetch({ params: this.state.networkFilters })
-        ).done(function () {
-            self.setState({
-                loading: false,
-                networks: this.networks.fullCollection.toJSON(),
-                networkPools: this.networkPools.toJSON()
+        if (this.state.networks.length || this.state.networkPools.length) {
+            this.setState({
+                loading: false
             });
-        }.bind(this));
+        } else {
+            this.networks = new Networks();
+            this.networkPools = new NetworkPools();
+            this.setState({
+                loading: true
+            });
+            $.when(
+                this.networks.fetch({
+                    params: this.state.networkFilters
+                }),
+                this.networkPools.fetch({
+                    params: this.state.networkFilters
+                })
+            ).done(function () {
+                var networks = this.networks.fullCollection.toJSON();
+                var networkPools = this.networkPools.toJSON();
+                this.setState({
+                    loading: false,
+                    networks: networks,
+                    networkPools: networkPools
+                });
+                if (typeof this.props.onLoadNetworks === 'function') {
+                    this.props.onLoadNetworks(networks, networkPools);
+                }
+            }.bind(this));
+        }
     },
     expandAntispoofOptions: function () {
         this.setState({expandAntispoofOptions: true});
     },
     onChange: function (e) {
         var value;
-        if (e.target.checked === true || e.target.checked === false) {
+        if (typeof e.target.checked === 'boolean') {
             value = e.target.checked;
         } else {
             value = e.target.value;
