@@ -16,6 +16,7 @@ var $ = require('jquery');
 
 var User = require('../models/user');
 var Template = require('../tpl/user-form.hbs');
+var utils = require('../lib/utils');
 
 module.exports = Backbone.Marionette.ItemView.extend({
 
@@ -30,8 +31,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
         'error': 'onError'
     },
     events: {
-        'input input[name=first_name]': 'updateCommonName',
-        'input input[name=last_name]': 'updateCommonName',
         'submit': 'save'
     },
     bindings: {
@@ -51,18 +50,12 @@ module.exports = Backbone.Marionette.ItemView.extend({
         '[name=phone]': 'phone',
         '[name=tenant]': 'tenant',
         '[name=password]': 'password',
-        '[name=last_name]': 'sn',
-        '[name=first_name]': 'givenname',
+        '[name=sn]': 'sn',
+        '[name=givenname]': 'givenname',
         '[name="groups"]': 'groups',
         '[name=approved_for_provisioning]': 'approved_for_provisioning',
-        '[name=registered_developer]': 'registered_developer',
+        '[name=registered_developer]': 'registered_developer'
     },
-
-    updateCommonName: function (e) {
-        var newcn = this.$('[name=first_name]').val() + ' ' + this.$('[name=last_name]').val();
-        this.model.set({cn:newcn}, {silent: true});
-    },
-
 
     initialize: function (options) {
         if (options && options.user) {
@@ -78,13 +71,15 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onError: function (model, xhr) {
+        this.showError(xhr.responseData.errors);
+    },
+
+    showError: function (errors) {
+        $('.form-group').removeClass('has-error');
         var ul = $('<ul />');
-        this.$('.form-group').removeClass('has-error');
-        console.log(xhr.responseData);
-        _(xhr.responseData.errors).each(function (e) {
-            var errorMessage = '<li>'+ e.message + (e.field ? ' (' + e.field + ')' : '') + '</li>';
+        _(errors).each(function (e) {
             this.$('[name=' + e.field + ']').parents('.form-group').addClass('has-error');
-            ul.append(errorMessage);
+            ul.append('<li>' + e.message + (e.field ? ' (' + e.field + ')' : '') + '</li>');
         }, this);
 
         this.$('.alert')
@@ -101,12 +96,17 @@ module.exports = Backbone.Marionette.ItemView.extend({
         var self = this;
 
         this.$('.alert').hide();
-        this.model.save(null, {
-            patch: true,
-            success: function (model, resp) {
-                self.$el.modal('hide').remove();
-                self.trigger('user:saved', self.model);
+        utils.validate(self.model, function (err) {
+            if (err) {
+                return self.showError(err);
             }
+            self.model.save(null, {
+                patch: true,
+                success: function (model, resp) {
+                    self.$el.modal('hide').remove();
+                    self.trigger('user:saved', self.model);
+                }
+            });
         });
     },
 

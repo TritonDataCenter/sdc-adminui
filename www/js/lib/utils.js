@@ -33,5 +33,44 @@ module.exports = {
                 }
             }
         });
+    },
+    validate: function (model, validation, cb) {
+        var errors = [];
+        if (typeof validation === 'function') {
+            cb = validation;
+            validation = model.validation;
+            model = model.attributes || model.toJSON;
+        }
+        var addErrors = function (field, msg, code) {
+            errors.push({
+                field: field,
+                code: code || 'Invalid parameter',
+                message: msg || 'This field is not valid '
+            });
+        };
+        Object.keys(validation).forEach(function (field) {
+            var error;
+            var validateProperty = validation[field];
+            var modelProperty = model[field];
+            if (validateProperty.required && !modelProperty) {
+                addErrors(field, 'This field is required', 'Missing');
+            } else if (modelProperty) {
+                var minLength = validateProperty.minLength;
+                var maxLength = validateProperty.maxLength;
+                var pattern = validateProperty.pattern;
+
+                if (minLength && modelProperty.length < minLength) {
+                    addErrors(field, 'This field is too short (must have at least ' + minLength + ' characters)');
+                }
+                if (maxLength && modelProperty.length > maxLength) {
+                    addErrors(field, 'This field is too long (must have less than ' + maxLength + ' characters)');
+                }
+                if (pattern && !pattern.regex.test(modelProperty)) {
+                    addErrors(field, pattern.msg || 'This field contains invalid characters');
+                }
+            }
+
+        });
+        return cb(errors.length ? errors : null);
     }
 };
