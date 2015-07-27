@@ -31,11 +31,7 @@
     .title { text-transform: uppercase; color: #666;  font-size: 12px; }
   }
 
-  .provisionable-disk .value { font-weight: 400; color: @brand-success; }
-  .provisioned-disk .value { color: #ec7676; font-weight: 400; }
   .total-disk { opacity: 0.5; }
-  .total-disk .value { color: #111; }
-
 
   .memory-overview h5 {
     text-transform: uppercase;
@@ -64,13 +60,26 @@
     .title { text-transform: uppercase; color: #666;  font-size: 12px; }
   }
 
-  .unreserved-memory, .total-memory { opacity: 0.5; }
-  .provisionable-memory .value { font-weight: 400; color: @brand-success; }
-  .provisioned-memory .value { color: #ec7676; font-weight: 400; }
-  .reserved-memory .value { color: #888; font-weight: 400; }
+  .provisionable-disk .value,
+  .provisioned-disk .value,
+  .provisionable-memory .value,
+  .provisioned-memory .value,
+  .reserved-memory .value {
+    font-weight: 400;
+  }
 
-  .unreserved-memory .value {  color: @brand-primary;  }
-  .total-memory .value { color: #111; }
+  .provisionable-disk .value,
+  .provisioned-disk .value,
+  .provisionable-memory .value,
+  .provisioned-memory .value,
+  .reserved-memory .value,
+  .total-disk .value,
+  .unreserved-memory .value,
+  .total-memory .value {
+    color: #888;
+  }
+
+  .unreserved-memory, .total-memory { opacity: 0.5; }
   .unreserved-memory {
     border-left: 1px solid #aaa;
   }
