@@ -28,6 +28,7 @@ var ServerPageHeader = React.createClass({
                 }
             </div>
             <h1> { server.get('hostname') } <small className="uuid selectable">{server.get('uuid')}</small> </h1>
+            { server.get('headnode') ? <span className="headnode">HEADNODE</span> : '' }
         </div>;
     }
 });
