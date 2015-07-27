@@ -52,8 +52,9 @@ var SigninComponent = React.createClass({
         this.centerSigninBox();
         this.focusFirstInput();
         this.props.userModel.on('error', this._onSigninError);
+        $(window).on('resize', this.centerSigninBox);
     },
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         this.pinger.stop();
         this.pinger.removeListener('ping', this.onPing);
         this.props.userModel.off('error', this._onSigninError);
