@@ -5,27 +5,30 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var React = require('react');
 var moment = require('moment');
+var adminui = require('../adminui');
 
 var ServerTime = React.createClass({
-    componentWillMount: function() {
+    componentWillMount: function () {
         this._getTime();
     },
-    componentDidMount: function() {
-        this._interval = setInterval(this._getTime, 1000);
+    componentDidMount: function () {
+        adminui.vent.on('changeTime', this._getTime, this);
     },
-    _getTime: function() {
-        this.setState({time: moment().utc().format("MMM D H:MM") + 'Z' });
+    _getTime: function (time) {
+        this.setState({time: moment(time || new Date()).utc().format("MMMM D H:mm") + 'Z' });
     },
-    render: function() {
-        return <div id="server-time"><i className="fa fa-clock-o"></i> UTC <time>{this.state.time}</time></div>;
-    },
-    componentWillUnmount: function() {
-        clearInterval(this._interval);
+    render: function () {
+        return (
+            <div id="server-time">
+                <i className="fa fa-clock-o"></i>
+                <time>{this.state.time}</time>
+            </div>
+        );
     }
 });
 

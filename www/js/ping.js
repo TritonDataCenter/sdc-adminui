@@ -5,43 +5,42 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 "use strict";
 
 var api = require('./request');
-var app = require('adminui');
 
 var PING_INTERVAL = (30 * 1000);
 var EventEmitter = require('events').EventEmitter;
 
-
-var Pinger = function(options) {
+var Pinger = function (options) {
     EventEmitter.call(this);
     this.options = options || {};
     this.options.interval = this.options.interval || PING_INTERVAL;
 };
 Pinger.prototype = new EventEmitter();
 
-Pinger.prototype.start = function() {
+Pinger.prototype.start = function () {
     this.timer = setInterval(this.ping.bind(this), this.options.interval);
     this.ping();
 };
 
-Pinger.prototype.ping = function() {
+Pinger.prototype.ping = function () {
     var self = this;
-    api.get('/api/ping').end(function(res) {
+    api.get('/api/ping').end(function (res) {
         if (res.ok) {
             self.emit('ping', null, res.body);
+            window.$a.vent.trigger('changeTime', res.body.time);
         }
         if (res.forbidden) {
-            app.router.signout();
+            window.$a.router.signout();
         }
     });
 };
 
-Pinger.prototype.stop = function() {
+Pinger.prototype.stop = function () {
     clearInterval(this.timer);
 };
 
