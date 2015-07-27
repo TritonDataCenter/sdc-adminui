@@ -16,10 +16,11 @@ var Platforms = Backbone.Collection.extend({
         _.each(res, function(n, d) {
             arr.push({
                 version: d,
-                latest: n.latest
+                latest: n.latest,
+                label: n.latest ? d + ' (latest)' : d
             });
         });
-        return arr;
+        return arr.reverse();
     }
 });
 
