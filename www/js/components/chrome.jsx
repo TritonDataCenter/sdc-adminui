@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 "use strict";
@@ -33,25 +33,25 @@ var Chrome = React.createClass({
         user: React.PropTypes.object
     },
     displayName: 'Chrome',
-    componentWillMount: function() {
+    componentWillMount: function () {
         adminui.vent.on('showjob', this.onShowjob, this);
     },
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         adminui.vent.off('showjob', this.onShowjob);
     },
-    onShowjob: function(job) {
+    onShowjob: function (job) {
         this.setState({job: job});
     },
-    _handleHideJob: function() {
+    _handleHideJob: function () {
         this.setState({job: null});
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {};
     },
-    getDefaultProps: function() {
+    getDefaultProps: function () {
         return {};
     },
-    _handleSecondnaryMenuSelect: function(item) {
+    _handleSecondnaryMenuSelect: function (item) {
         if (item.view)  {
             adminui.vent.trigger('showview', item.view, {});
             return;
@@ -62,33 +62,47 @@ var Chrome = React.createClass({
             return;
         }
     },
-    _handleSignout: function() {
+    _handleSignout: function () {
         adminui.vent.trigger('signout');
     },
-    _handleRootMenuSelect: function(name, type) {
-        var evt;
-        if (type === 'component') {
-            evt = 'showcomponent';
-        } else {
-            evt = 'showview';
-        }
+    _handleRootMenuSelect: function (name, type) {
+        var evt = type === 'component' ? 'showcomponent' : 'showview';
         adminui.vent.trigger(evt, name, {});
     },
-    _handleSelectCurrentUser: function(user) {
+    _handleSelectCurrentUser: function (user) {
         adminui.vent.trigger('showcomponent', 'user', {user: user});
         return false;
     },
-    render: function() {
-        if (! this.props.state.get('chrome.content')) {
-            return <noscript/>;
+    render: function () {
+        if (!this.props.state.get('chrome.content')) {
+            return (<noscript/>);
         }
-
         var contentClass = 'chrome ' + (this.props.state.get('chrome.fullwidth') ? 'no-sidebar': 'with-sidebar');
+        var localnavContainer = (
+            <div id="localnav-container">
+                <Localnav handleMenuSelect={this._handleSecondnaryMenuSelect} active={this.props.state.get('localnav.active')} />
+                {/* Don't remove this empty tag, CSS-Tricks */}
+                <div className="localnav-body"></div>
+                <ServerTime />
+            </div>
+        );
 
+        var contentContainer = (
+            <div id="content-container" className={contentClass}>
+                <Notifications bus={adminui.vent} />
+                <div className="row">
+                    <div id="content" className="col-sm-12">
+                        {this.props.state.get('chrome.content')}
+                    </div>
+                </div>
+            </div>
+        );
 
         return (
             <div id="adminui">
-                { this.state.job ? <JobProgressComponent job={this.state.job} onClose={this._handleHideJob} /> : null}
+                {
+                    this.state.job ? <JobProgressComponent job={this.state.job} onClose={this._handleHideJob} /> : null
+                }
                 {
                     this.props.state.get('chrome.rootnav') && <Topnav
                         readonly={!adminui.user.role('operators')}
@@ -99,22 +113,11 @@ var Chrome = React.createClass({
                         active={this.props.state.get('rootnav.active')}
                         user={adminui.user} />
                 }
-
-
                 <div id="wrapper" className={this.props.state.get('chrome.fullwidth') ? 'no-sidebar': 'with-sidebar'}>
                     {
-                        (!this.props.state.get('chrome.fullwidth')) &&
-                        (<div id="localnav-container">
-                            <Localnav handleMenuSelect={this._handleSecondnaryMenuSelect} active={this.props.state.get('localnav.active')} />
-                            <ServerTime />
-                            </div> )
+                        (!this.props.state.get('chrome.fullwidth')) && localnavContainer
                     }
-                    <div id="content-container" className={contentClass}>
-                        <Notifications bus={adminui.vent} />
-                        <div className="row">
-                            <div id="content" className="col-sm-12">{ this.props.state.get('chrome.content') }</div>
-                        </div>
-                    </div>
+                    {contentContainer}
                 </div>
             </div>
         );
