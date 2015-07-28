@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 @import "bootstrap.less";
@@ -279,9 +279,12 @@ h1.branding {
 }
 #footer { height: 24px; background: #dfe7ec; }
 
-
+.localnav-body {
+  display: table-column-group;
+}
 #localnav-container {
   position: fixed;
+  display: table;
   background: #434343;
   height: 100%;
   top: 60px;
@@ -306,7 +309,7 @@ h1.branding {
 
 #localnav {
   overflow-y: auto;
-  width: 100%;
+  width: @sidebar-width;
   bottom: 0;
   padding: 0;
 
@@ -340,14 +343,12 @@ h1.branding {
 #server-time {
   background: #4C4C4C;
   padding-top: 7px;
-  padding-bottom: 7px;
+  padding-bottom: 67px;
   font-size: 11px;
   color: #D5D5D5;
-
-  position: fixed;
-  top: 100%;
-  margin-top: -29px;
-  width: @sidebar-width;
+  display: table-cell;
+  width: 160px;
+  height: 89px;
   font-weight: 500;
   text-align: center;
   i { margin-right: 5px;}
