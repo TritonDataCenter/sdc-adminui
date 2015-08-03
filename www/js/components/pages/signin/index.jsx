@@ -45,9 +45,13 @@ var SigninComponent = React.createClass({
             });
         }
     },
+    onConnectionLost: function (err) {
+        this.setState({disableSignin: true, signingIn: false});
+    },
     componentDidMount: function() {
         this.pinger = new Pinger({interval: 5*1000});
         this.pinger.on('ping', this.onPing);
+        this.pinger.on('connectionLost', this.onConnectionLost);
         this.pinger.start();
         this.centerSigninBox();
         this.focusFirstInput();
