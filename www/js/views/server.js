@@ -466,6 +466,14 @@ var ServerView = Backbone.Marionette.Layout.extend({
             perPage: 100,
             params: {server_uuid: this.model.get('uuid')}
         });
+        
+        if (this.model.get('headnode')) {
+            this.$('.platform .boot .value').tooltip({
+                title: "Use 'sdcadm platform' to update the headnode's platform.",
+                placement: 'top',
+                container: 'body'
+            });
+        }
 
         this.jobsRegion.show(this.jobsListView);
 

@@ -108,7 +108,9 @@
         <div class="item-content">
           <span class="value">{{boot_platform}}</span>
           {{#role "operators"}}
-          <a class="change-platform"><i class="fa fa-pencil"></i></a>
+            {{#unless headnode}}
+              <a class="change-platform"><i class="fa fa-pencil"></i></a>
+            {{/unless}}
           {{/role}}
         </div>
       </div>
