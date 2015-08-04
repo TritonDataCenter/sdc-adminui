@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 /** @jsx React.DOM **/
@@ -22,70 +22,69 @@ var MultipleNicConfigComponent = React.createClass({
         expandAntispoofOptions: React.PropTypes.bool,
         onChange: React.PropTypes.func
     },
-    getValue: function() {
+    getValue: function () {
         return this.state.nics;
     },
-    getDefaultProps: function() {
+    getDefaultProps: function () {
         return {
             expandAntispoofOptions: false,
             networkFilters: {},
             nics: []
         };
     },
-    getInitialState: function() {
+    getInitialState: function () {
         var state = {};
         state.nics = this.props.nics || [];
-        console.log('[MultiNicConfig] initial state', state);
         state.networkFilters = this.props.networkFilters;
         state.expandAntispoofOptions = this.props.expandAntispoofOptions;
+        state.isIpAvailable = this.props.isIpAvailable || false;
         return state;
     },
-    componentWillReceiveProps: function(props) {
+    componentWillReceiveProps: function (props) {
         if (props.nics) {
             this.setState({nics: props.nics});
         }
     },
-    onNicPropertyChange: function(prop, value, nic, com) {
-        console.info('[MultiNicConfig] onNicPropertyChange', prop, value, nic, com);
+    onNicPropertyChange: function (prop, value, nic, com) {
         var nics = this.state.nics;
+        var self = this;
+        var selectedIps = {};
         nics[com.props.index] = nic;
 
-        if (prop === 'primary' && value === true) {
-            nics = _.map(nics, function(n) {
-                if (n === nic) {
-                    n.primary = true;
-                } else {
-                    n.primary = false;
-                }
-                return n;
-            });
-        }
+        nics = _.map(nics, function (n) {
+            if (prop === 'primary' && value === true) {
+                n.primary = n === nic;
+            }
+            if (self.state.isIpAvailable && n.ip) {
+                selectedIps[n.ip] = true;
+            }
+            return n;
+        });
 
-        console.log('[MultiNicConfig] new state', nics);
-        this.setState({nics: nics}, function() {
+        this.setState({nics: nics, selectedIps: selectedIps}, function () {
             if (this.props.onChange) {
                 this.props.onChange(nics);
             }
         }.bind(this));
     },
-    addNewNic: function() {
+    addNewNic: function () {
         var nics = this.state.nics;
         nics.push({});
-        this.setState({nics: nics}, function() {
+        this.setState({nics: nics}, function () {
             this.props.onChange(nics);
         }.bind(this));
     },
-    removeNic: function(index) {
+    removeNic: function (index) {
         var nics = this.state.nics.splice(index, 1);
         if (nics.length === 1) {
             nics[0].primary = true;
         }
-        this.setState({nics: nics}, function() {
+        this.setState({nics: nics}, function () {
             this.props.onChange(nics);
         }.bind(this));
     },
-    render: function() {
-        var nodes = _.map(this.state.nics, function(nic, i) {
+    render: function () {
+        var nodes = _.map(this.state.nics, function (nic, i) {
             return <div className="nic-config-component-container">
                 <div className="nic-config-action">
                     <a className="remove" onClick={this.removeNic.bind(this, i)}>
@@ -97,6 +96,8 @@ var MultipleNicConfigComponent = React.createClass({
                         expandAntispoofOptions={this.state.expandAntispoofOptions}
                         onPropertyChange={this.onNicPropertyChange}
                         networkFilters={this.state.networkFilters}
+                        isIpAvailable={this.state.isIpAvailable}
+                        selectedIps={this.state.selectedIps}
                         index={i}
                         nic={nic} />
                 </div>
