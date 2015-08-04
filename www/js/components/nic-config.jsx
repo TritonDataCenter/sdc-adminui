@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 /** @jsx React.DOM **/
@@ -23,6 +23,7 @@ var $ = require('jquery');
 var React = require('react');
 var Networks = require('../models/networks');
 var NetworkPools = require('../models/network-pools');
+var Addresses = require('../models/addresses');
 var Chosen = require('react-chosen');
 
 var NicConfig = React.createClass({
@@ -33,7 +34,7 @@ var NicConfig = React.createClass({
         onPropertyChange: React.PropTypes.func
     },
 
-    getInitialState: function() {
+    getInitialState: function () {
         if (! this.props.nic) {
             this.props.nic = {};
         }
@@ -50,20 +51,18 @@ var NicConfig = React.createClass({
             networks: [],
             networkPools: [],
             readonlyNetwork: this.props.readonlyNetwork === true,
-            expandAntispoofOptions: this.props.expandAntispoofOptions
+            expandAntispoofOptions: this.props.expandAntispoofOptions,
+            isIpAvailable: this.props.isIpAvailable || false
         };
 
         if (typeof(state.expandAntispoofOptions) !== 'boolean') {
             console.warn('[NicConfig] expandAntispoofOptions property is not a boolean, using defaults(true)');
             state.expandAntispoofOptions = true;
         }
-
-        console.log('[NicConfig] initial state', state);
-        console.log('[NicConfig] initial props', this.props);
         state.loading = true;
         return state;
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         var self = this;
 
         this.networks = new Networks();
@@ -72,7 +71,7 @@ var NicConfig = React.createClass({
         $.when(
             this.networks.fetch({ params: this.state.networkFilters }),
             this.networkPools.fetch({ params: this.state.networkFilters })
-        ).done(function() {
+        ).done(function () {
             self.setState({
                 loading: false,
                 networks: this.networks.fullCollection.toJSON(),
@@ -80,10 +79,10 @@ var NicConfig = React.createClass({
             });
         }.bind(this));
     },
-    expandAntispoofOptions: function() {
+    expandAntispoofOptions: function () {
         this.setState({expandAntispoofOptions: true});
     },
-    onChange: function(e) {
+    onChange: function (e) {
         var value;
         if (e.target.checked === true || e.target.checked === false) {
             value = e.target.checked;
@@ -94,20 +93,48 @@ var NicConfig = React.createClass({
         var prop = e.target.getAttribute('name');
         var nic = this.state.nic;
         nic[prop] = value;
+        if (this.props.isIpAvailable) {
+            delete nic.ip;
+            var self = this;
+            var selectedIps = this.props.selectedIps || {};
+            this.setState({loadingIp: true, showIpSelect: true});
+            this.addresses = new Addresses({uuid: value});
+            this.addresses.fetch().done(function () {
+                var freeIpAddresses = self.addresses.toJSON().filter(function (address) {
+                    return address.free && !address.reserved && !address.belongs_to_type && !selectedIps[address.ip];
+                });
+                self.setState({
+                    loadingIp: false,
+                    addresses: freeIpAddresses
+                });
+            });
+        }
         this.setState({nic: nic});
         this.props.onPropertyChange(prop, value, nic, this);
     },
-    getValue: function() {
+    onChangeIp: function (e) {
+        var value;
+        if (e.target.checked === true || e.target.checked === false) {
+            value = e.target.checked;
+        } else {
+            value = e.target.value;
+        }
+        var nic = this.state.nic;
+        nic.ip = value;
+        this.setState({nic: nic});
+        this.props.onPropertyChange('ip', value, nic, this);
+    },
+    getValue: function () {
         return this.state.nic;
     },
-    renderNetworkSelect: function() {
+    renderNetworkSelect: function () {
         var self = this;
         var networks, networkPools;
         if (this.state.readonlyNetwork) {
-            networks = this.state.networks.filter(function(n) {
+            networks = this.state.networks.filter(function (n) {
                 return n.uuid === self.state.nic.network_uuid;
             });
-            networkPools = this.state.networkPools.filter(function(n) {
+            networkPools = this.state.networkPools.filter(function (n) {
                 return n.uuid === self.state.nic.network_uuid;
             });
         } else {
@@ -122,21 +149,21 @@ var NicConfig = React.createClass({
             <option value=""></option>
             <optgroup label="Networks">
                 {
-                    networks.map(function(n) {
-                        return (<option key={n.uuid} value={n.uuid}> {n.name} - {n.subnet} </option>);
+                    networks.map(function (n) {
+                        return (<option key={n.uuid} value={n.uuid}>{n.name} - {n.subnet}</option>);
                     })
                 }
             </optgroup>
             <optgroup label="Network Pools">
                 {
-                    networkPools.map(function(n) {
-                        return (<option key={n.uuid} value={n.uuid}> {n.name}</option>);
+                    networkPools.map(function (n) {
+                        return (<option key={n.uuid} value={n.uuid}>{n.name}</option>);
                     })
                 }
             </optgroup>
         </Chosen>;
     },
-    render: function() {
+    render: function () {
         var nic = this.state.nic;
         var expandAntispoofOptions = (nic.allow_dhcp_spoofing || nic.allow_ip_spoofing ||
             nic.allow_mac_spoofing || nic.allow_restricted_traffic || this.state.expandAntispoofOptions);
@@ -146,11 +173,31 @@ var NicConfig = React.createClass({
                 <div className="form-group form-group-network row">
                     <label className="control-label col-sm-4">Network</label>
                     <div className="controls col-sm-5">
-                        { this.state.loading ? <div className="loading"><i className="fa fa-spinner fa-spin"></i> Retrieving Networks</div> : null }
-                        { !this.state.loading ? this.renderNetworkSelect() : null }
+                        {this.state.loading ? <div className="loading"><i className="fa fa-spinner fa-spin"></i> Retrieving Networks</div> : this.renderNetworkSelect()}
                     </div>
                 </div>
-
+                {this.state.isIpAvailable && this.state.showIpSelect &&
+                    <div className="form-group form-group-network-ip row">
+                        <label className="control-label col-sm-4">IP</label>
+                        <div className="controls col-sm-5">
+                            {this.state.loadingIp && <div className="loading"><i className="fa fa-spinner fa-spin"></i> Retrieving Network IPs</div>}
+                            {!this.state.loadingIp && <div>
+                                <Chosen onChange={this.onChangeIp}
+                                        className="form-control"
+                                        name="ip"
+                                        data-placeholder="Select IP address"
+                                        value={this.state.nic.ip}>
+                                    <option value=""></option>
+                                    {
+                                        this.state.addresses.map(function (address) {
+                                            return (<option key={address.ip} value={address.ip}>{address.ip}</option>);
+                                        })
+                                    }
+                                </Chosen></div>
+                            }
+                        </div>
+                    </div>
+                }
                 <div className="form-group form-group-primary row">
                     <div className="control-label col-sm-4">
                     &nbsp;
