@@ -29,7 +29,11 @@ Pinger.prototype.start = function () {
 
 Pinger.prototype.ping = function () {
     var self = this;
-    api.get('/api/ping').end(function (res) {
+    api.get('/api/ping').on('error', function (err) {
+        if (err.crossDomain) {
+            self.emit('connectionLost', err);
+        }
+    }).end(function (res) {
         if (res.ok) {
             self.emit('ping', null, res.body);
             window.$a.vent.trigger('changeTime', res.body.time);
