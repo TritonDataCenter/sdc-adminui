@@ -67,7 +67,7 @@ var View = Backbone.Marionette.ItemView.extend({
         }, function(job, err) {
             if (err) {
                 console.log(err);
-                window.alert('Error changing Container owner, '+ err.message);
+                window.alert('Error changing VM owner, '+ err.message);
                 return;
             }
             self.$el.modal('hide').remove();

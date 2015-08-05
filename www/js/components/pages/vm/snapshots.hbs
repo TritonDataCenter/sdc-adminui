@@ -13,7 +13,7 @@
   {{#if kvm}}
   <tbody>
     <tr>
-        <td class="empty">Snapshots are not supported for KVM based Containers</td>
+        <td class="empty">Snapshots are not supported for KVM based Virtual Machines</td>
     </tr>
   </tbody>
   {{else}}
@@ -28,7 +28,7 @@
 
       <tbody>
         {{#unless hasSnapshots}}
-        <tr><td class="empty">This Container does not have any snapshots.</td></tr>
+        <tr><td class="empty">This VM does not have any snapshots.</td></tr>
         {{/unless}}
       </tbody>
       {{#role "operators"}}

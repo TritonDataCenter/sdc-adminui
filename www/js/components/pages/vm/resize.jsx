@@ -60,7 +60,7 @@ var ResizeVm = React.createClass({
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h2 className="modal-title">Change Container Package</h2>
+                            <h2 className="modal-title">Change VM Package</h2>
                         </div>
                         <div className="modal-body">
                             { e ? <div className="alert alert-danger">
@@ -72,7 +72,7 @@ var ResizeVm = React.createClass({
                                 :null}
                             </div> : null }
                             <div>
-                                <p>Resize this Containers to package: </p>
+                                <p>Resize this Virtual Machines to package: </p>
                                 <PackageSelect onChange={this._onSelectPackage} />
                             </div>
                             { p ?

@@ -104,7 +104,7 @@ var JobDetailsComponent = React.createClass({
                 {
                     (job.params.vm_uuid) ?
                       <div className="vm widget-content">
-                      <strong>Container</strong>
+                      <strong>Virtual Machine</strong>
                       <span className="value"><a href={"/vms/" + job.params.vm_uuid}>{job.params.vm_uuid}</a></span>
                       </div> : ''
                 }

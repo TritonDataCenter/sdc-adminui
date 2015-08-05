@@ -92,9 +92,9 @@ var VMPage = React.createClass({
         if (this.state.notFound) {
             return <div id="page-vm">
                 <div className="page-header">
-                    <h2>Container Not Found</h2>
+                    <h2>Virtual Machine Not Found</h2>
                 </div>
-                <p>The Container with ID <code>{this.props.vmUuid}</code> could not be found.</p>
+                <p>The Virtual Machine with ID <code>{this.props.vmUuid}</code> could not be found.</p>
             </div>;
         }
 
@@ -439,7 +439,7 @@ var VMPage = React.createClass({
         });
     },
     _handleStopVm: function() {
-        if (window.confirm('Are you sure you want to shut down this Container?')) {
+        if (window.confirm('Are you sure you want to shut down this VM?')) {
             var vm = new VMModel({uuid: this.state.vm.uuid});
             var self = this;
             vm.stop(function(job, err) {
@@ -476,7 +476,7 @@ var VMPage = React.createClass({
 
 
     _handleReobotVm: function() {
-        if (window.confirm('Are you sure you want to reboot this Container?')) {
+        if (window.confirm('Are you sure you want to reboot this VM?')) {
             var vm = new VMModel({uuid: this.state.vm.uuid});
             var self = this;
             vm.reboot(function(job, err) {
@@ -496,7 +496,7 @@ var VMPage = React.createClass({
         this.setState({currentJob: job});
     },
     _handleDeleteVm: function() {
-        if (window.confirm('Are you sure you want to delete this Container?')) {
+        if (window.confirm('Are you sure you want to delete this VM?')) {
             var vm = new VMModel({uuid: this.state.vm.uuid});
             var self = this;
             vm.del(function(job, err) {

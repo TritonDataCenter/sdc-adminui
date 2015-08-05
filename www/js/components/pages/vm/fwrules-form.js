@@ -44,7 +44,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
         }
         if (this.model.isNew()) {
             if (options.vm) {
-                this.model.set({rule: 'FROM any TO vm ' + options.vm.get('uuid') + ' ALLOW '});
+                this.model.set({rule: 'FROM any TO vm '+options.vm.get('uuid') + ' ALLOW '});
             } else if (options.user) {
                 this.model.set({rule: 'FROM any TO all vms ALLOW '});
             }
@@ -89,7 +89,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
     onSync: function(model, resp, options) {
         adminui.vent.trigger('notification', {
             level: 'success',
-            message: 'Firewall rule saved successfully.'
+            message: "Firewall rule saved successfully."
         });
 
         this.trigger('rule:saved');

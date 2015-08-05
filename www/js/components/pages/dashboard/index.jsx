@@ -98,7 +98,7 @@ var DashboardPage = React.createClass({
                     <div className="first-row">
                         <div className="counter">
                             <div className="vms">
-                                <div className="name">Containers</div>
+                                <div className="name">Virtual Machines</div>
                                 <div className="value vm-count">{stats.vmCount}</div>
                             </div>
                         </div>

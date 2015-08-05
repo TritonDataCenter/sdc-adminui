@@ -247,7 +247,7 @@ var FilterForm = React.createClass({
                     <div className="form-group form-group-sm">
                         <div className="col-sm-3"></div>
                         <div className="col-sm-6">
-                            <button type="submit" onClick={this._onSubmit} className="btn btn-sm btn-primary"><i className="fa fa-search"></i> Search Containers</button>
+                            <button type="submit" onClick={this._onSubmit} className="btn btn-sm btn-primary"><i className="fa fa-search"></i> Search Virtual Machines</button>
                         </div>
                     </div>
                 </form>

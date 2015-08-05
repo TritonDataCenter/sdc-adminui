@@ -45,7 +45,7 @@ var UserVmsComponent = React.createClass({
 
         return <div className="row">
             <div className="col-md-12">
-                <h3>Containers</h3>
+                <h3>Virtual Machines</h3>
                 <div className="vms-filter-region"><BB key="filter" view={vmsFilter} /></div>
                 <div className="vms-region"><VmsList collection={this.vms} /></div>
             </div>
