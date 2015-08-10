@@ -5,10 +5,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 
 var React = require('react');
 var cx = require('classnames');
@@ -45,16 +45,16 @@ var RenameVm = require('./rename');
 var VMPage = React.createClass({
     statics: {
         sidebar: 'vms',
-        url: function(props) {
+        url: function (props) {
             return _.str.sprintf('/vms/%s', props.vmUuid);
         }
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {};
     },
-    reloadData: function() {
+    reloadData: function () {
         var uuid = this.props.vmUuid;
-        api.get('/api/page/vm').query({uuid: uuid}).end(function(res) {
+        api.get('/api/page/vm').query({uuid: uuid}).end(function (res) {
             if (res.ok) {
                 this.setState(res.body);
             }
@@ -63,22 +63,22 @@ var VMPage = React.createClass({
             }
         }.bind(this));
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         this.fwrulesList = new FWRulesList({
             app: this.props.adminui,
             vm: new VMModel({uuid: this.props.vmUuid})
         });
-        this.fwrulesList.on('itemview:edit:rule', function(iv) {
+        this.fwrulesList.on('itemview:edit:rule', function (iv) {
             iv.$el.addClass('editing');
             this.fwrulesForm = new FWRulesForm({model: iv.model });
             this.setState({ editing: 'fwrule' });
 
-            this.fwrulesForm.on('close', function() {
+            this.fwrulesForm.on('close', function () {
                 this.setState({ editing: false });
                 iv.$el.removeClass('editing');
             }, this);
 
-            this.fwrulesForm.on('rule:saved', function() {
+            this.fwrulesForm.on('rule:saved', function () {
                 this.setState({ editing: false });
                 this.fwrulesList.collection.fetch();
             }, this);
@@ -86,7 +86,7 @@ var VMPage = React.createClass({
 
         this.reloadData();
     },
-    render: function() {
+    render: function () {
         console.log('[vm] state', this.state);
 
         if (this.state.notFound) {
@@ -111,7 +111,7 @@ var VMPage = React.createClass({
 
         var quota = 0;
         if (vm.brand === 'kvm') {
-            vm.disks.forEach(function(k) {
+            vm.disks.forEach(function (k) {
                 if (k.size && typeof(k.size) === 'number' && k.size > 0) {
                     quota = quota + (k.size/1024); // disk.size is in mib
                 }
@@ -122,7 +122,7 @@ var VMPage = React.createClass({
 
         var ips;
         if (vm.nics.length) {
-            ips = vm.nics.map(function(nic) {
+            ips = vm.nics.map(function (nic) {
                 return nic.ip;
             }).join(' ');
         } else {
@@ -145,7 +145,7 @@ var VMPage = React.createClass({
                 </h1>
             </div>
 
-            { adminui.user.role('operators') ?
+            {adminui.user.role('operators') ?
             <div className="actions">
                 <div className="notes-component-container"><Notes item={vm.uuid} /></div>
                 <div className="btn-group">
@@ -171,169 +171,165 @@ var VMPage = React.createClass({
                     </ul>
                 </div>
             </div> : null }
-
-
-
+            
             <section className="vms-details">
-              <div className="row">
-                <div className="col-md-9">
-                  <table className="overview">
-                    <tr>
-                      <th>Name</th>
-                      <td>
-                        <span className="alias">
-                            <form className="form-inline"></form>
-                            <span className="value vm-alias">{vm.alias || vm.uuid}</span>
-                        </span>
-
-                        <span className="vm-uuid selectable">{vm.uuid}</span>
-                      </td>
-                    </tr>
-
-                    <tr>
-                        <th>Memory &amp; Swap</th>
-                        <td>
-                            <span className="vm-memory">{vm.ram}</span> MB / <span className="vm-swap">{vm.max_swap}</span> MB
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <th>Disk</th>
-                        <td>
-                            <span className="vm-disk-quota">
-                            {vm.brand === 'kvm' ?
-                                <div className="vm-disk-quota-kvm">
-                                    Total: {quota} GB
-                                    <span className="details">
-                                        [<span className="img">IMG: {vm.disks[0].image_size/1024} GB</span> + <span className="pkg">PKG: {vm.disks[1].size / 1024} GB</span>]
+                <div className="row">
+                    <div className="col-md-9">
+                        <table className="overview">
+                            <tr>
+                                <th>Name</th>
+                                <td>
+                                    <span className="alias">
+                                        <form className="form-inline"></form>
+                                        <span className="value vm-alias">{vm.alias || vm.uuid}</span>
                                     </span>
-                                </div>
-                            : <div>
-                                {quota} GB
-                                </div>
-                            }
-                            </span>
-                        </td>
-                    </tr>
 
-                    <tr>
-                      <th>IP Addresses</th>
-                      <td>
-                        <span className="vm-ips">{ips}</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Image</th>
-                      { image ?
-                          <td>
-                            <a href={'/images/'+image.uuid} onClick={function(e) {
-                                e.preventDefault();
-                                adminui.router.showImage(image.uuid);
-                            }} className="image-name-version">{image.name} {image.version}</a>
-                            <span className="image-uuid selectable">{image.uuid}</span>
-                          </td> :
-                          <td><span className="image-name-version error">Error retrieving Image information</span></td>
-                      }
-                    </tr>
-                    <tr>
-                      <th>Server</th>
-                      <td>
-                        <a href={'/servers/'+server.uuid} onClick={function(e) {
-                            e.preventDefault();
-                            adminui.router.showServer(vm.server_uuid);
-                        }} className="server-hostname">{server.hostname}</a>
-                        <span className="server-uuid selectable">{vm.server_uuid}</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Package</th>
-                      <td>
-                        <a className="package" href={'/packages/'+vm.billing_id} onClick={function(e) {
-                            e.preventDefault();
-                            adminui.router.showPackage(vm.billing_id);
-                        }}>
-                            <span className="package-name">{pkg.name}</span> &nbsp;
-                            <span className="package-version">{pkg.version}</span>
-                        </a>
-                        <span className="billing-id selectable">{vm.billing_id}</span>
-                      </td>
-                    </tr>
-                    {vm.datasets.length ?
-                        <tr>
-                          <th>Datasets</th>
-                          <td className="datasets">
-                          {
-                            vm.datasets.map(function(d) {
-                                return <span className="selectable">{d}</span>;
-                            })
-                          }
-                          </td>
-                        </tr>
-                    :null}
-                    <tr>
-                      <th>Created</th>
-                      <td>
-                        <span className="created">
+                                    <span className="vm-uuid selectable">{vm.uuid}</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>Memory &amp; Swap</th>
+                                <td>
+                                    <span className="vm-memory">{vm.ram}</span> MB / <span className="vm-swap">{vm.max_swap}</span> MB
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>Disk</th>
+                                <td>
+                                    <span className="vm-disk-quota">
+                                    {vm.brand === 'kvm' ?
+                                        <div className="vm-disk-quota-kvm">
+                                            Total: {quota} GB
+                                            <span className="details">
+                                                [<span className="img">IMG: {vm.disks[0].image_size/1024} GB</span> + <span className="pkg">PKG: {vm.disks[1].size / 1024} GB</span>]
+                                            </span>
+                                        </div>
+                                    : <div>
+                                        {quota} GB
+                                        </div>
+                                    }
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                              <th>IP Addresses</th>
+                              <td>
+                                <span className="vm-ips">{ips}</span>
+                              </td>
+                            </tr>
+
+                            <tr>
+                                <th>Image</th>
+                                    {image ?
+                                        <td>
+                                            <a href={'/images/' + image.uuid} onClick={function (e) {
+                                                e.preventDefault();
+                                                adminui.router.showImage(image.uuid);
+                                            }} className="image-name-version">{image.name} {image.version}</a>
+                                            <span className="image-uuid selectable">{image.uuid}</span>
+                                        </td>
+                                        :
+                                        <td><span className="image-name-version error">Error retrieving Image information</span></td>
+                                    }
+                            </tr>
+
+                            <tr>
+                                <th>Server</th>
+                                <td>
+                                    {server && vm.server_uuid &&
+                                        <a href={'/servers/' + server.uuid} onClick={function (e) {
+                                            e.preventDefault();
+                                            adminui.router.showServer(vm.server_uuid);
+                                        }} className="server-hostname">{server.hostname}</a>
+                                    }
+                                    <span className="server-uuid selectable">{vm.server_uuid}</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>Package</th>
+                                <td>
+                                    <a className="package" href={'/packages/' + vm.billing_id} onClick={function (e) {
+                                        e.preventDefault();
+                                        adminui.router.showPackage(vm.billing_id);
+                                    }}>
+                                        <span className="package-name">{pkg.name}</span> &nbsp;
+                                        <span className="package-version">{pkg.version}</span>
+                                    </a>
+                                    <span className="billing-id selectable">{vm.billing_id}</span>
+                                </td>
+                            </tr>
+
+                            {vm.datasets.length ?
+                                <tr>
+                                    <th>Datasets</th>
+                                    <td className="datasets">
+                                        {
+                                            vm.datasets.map(function (d) {
+                                                return <span className="selectable">{d}</span>;
+                                            })
+                                         }
+                                    </td>
+                                </tr>
+                            : null}
+                            <tr>
+                                <th>Created</th>
+                                <td>
+                                    <span className="created">
+                                        {vm.create_timestamp && moment(vm.create_timestamp).utc().format('D MMMM, YYYY HH:mm:ss z')}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Last Modified</th>
+                                <td>
+                                    <span className="last-modified">
+                                        {vm.last_modified && moment(vm.last_modified).utc().format('D MMMM, YYYY HH:mm:ss z')}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div className="col-md-3">
+                        <div className="user-tile-icon">
+                            <i className="fa fa-user"></i>
+                        </div>
                         {
-                            moment(vm.create_timestamp).utc().format('D MMMM, YYYY HH:mm:ss z')
+                            adminui.user.role('operators') &&
+                                <a onClick={this._handleChangeOwner} className="change-owner"><i className="fa fa-pencil"></i> change</a>
                         }
-                        </span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Last Modified</th>
-                      <td>
-                        <span className="last-modified">
-                            {
-                                moment(vm.last_modified).utc().format('D MMMM, YYYY HH:mm:ss z')
-                            }
-                        </span>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-                <div className="col-md-3">
-                    <div className="user-tile-icon">
-                        <i className="fa fa-user"></i>
-                    </div>
-                    {
-                        adminui.user.role('operators') ?
-                            <a onClick={this._handleChangeOwner} className="change-owner"><i className="fa fa-pencil"></i> change</a>
-                        : null
-                    }
-                    <div className="user-tile-container">
-                        <UserTile uuid={vm.owner_uuid} onUserDetails={
-                            function(user) { adminui.vent.trigger('showcomponent', 'user', {uuid: user.uuid }); }
-                         } />
+                        <div className="user-tile-container">
+                            <UserTile uuid={vm.owner_uuid} onUserDetails={
+                                function (user) { adminui.vent.trigger('showcomponent', 'user', {uuid: user.uuid }); }
+                                } />
+                        </div>
                     </div>
                 </div>
-            </div>
             </section>
 
             <section>
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="nics-region">
-                    <BB view={new NicsList({
-                        vm: new VMModel(this.state.vm)
-                    })} />
-                  </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="nics-region">
+                            <BB view={new NicsList({vm: new VMModel(this.state.vm)})} />
+                        </div>
+                    </div>
                 </div>
-              </div>
             </section>
 
 
             <section>
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="snapshots">
-                    <BB view={new SnapshotsList({
-                        vm: new VMModel(this.state.vm)
-                    })} />
-                  </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="snapshots">
+                            <BB view={new SnapshotsList({vm: new VMModel(this.state.vm)})} />
+                        </div>
+                    </div>
                 </div>
-              </div>
             </section>
 
             <section className="customer-metadata">
@@ -429,44 +425,44 @@ var VMPage = React.createClass({
             </section>
         </div>;
     },
-    _handleStartVm: function() {
+    _handleStartVm: function () {
         var vm = new VMModel({uuid: this.state.vm.uuid});
         var self = this;
-        vm.start(function(job, err) {
+        vm.start(function (job, err) {
             if (job) {
                 self.setState({currentJob: job});
             }
         });
     },
-    _handleStopVm: function() {
+    _handleStopVm: function () {
         if (window.confirm('Are you sure you want to shut down this VM?')) {
             var vm = new VMModel({uuid: this.state.vm.uuid});
             var self = this;
-            vm.stop(function(job, err) {
+            vm.stop(function (job, err) {
                 if (job) {
                     self.setState({currentJob: job});
                 }
             });
         }
     },
-    _handleRenameVm: function() {
+    _handleRenameVm: function () {
         this.setState({editing: 'alias'});
     },
-    _handleRenameVmCancel: function() {
+    _handleRenameVmCancel: function () {
         this.setState({editing: null});
     },
-    _handleRenameJobCreated: function(job) {
+    _handleRenameJobCreated: function (job) {
         this.setState({currentJob: job, editing: null});
     },
 
-    _handleAddFirewallRule: function() {
+    _handleAddFirewallRule: function () {
         this.fwrulesForm = new FWRulesForm({ vm: new VMModel(this.state.vm) });
 
-        this.fwrulesForm.on('close', function() {
+        this.fwrulesForm.on('close', function () {
             this.setState({ editing: false });
         }, this);
 
-        this.fwrulesForm.on('rule:saved', function() {
+        this.fwrulesForm.on('rule:saved', function () {
             this.setState({ editing: false });
             this.fwrulesList.collection.fetch();
         }, this);
@@ -475,38 +471,38 @@ var VMPage = React.createClass({
     },
 
 
-    _handleReobotVm: function() {
+    _handleReobotVm: function () {
         if (window.confirm('Are you sure you want to reboot this VM?')) {
             var vm = new VMModel({uuid: this.state.vm.uuid});
             var self = this;
-            vm.reboot(function(job, err) {
+            vm.reboot(function (job, err) {
                 if (job) {
                     self.setState({currentJob: job});
                 }
             });
         }
     },
-    _handleResizeVm: function() {
+    _handleResizeVm: function () {
         this.setState({editing: 'package'});
     },
-    _handleResizeVmCancel: function() {
+    _handleResizeVmCancel: function () {
         this.setState({editing: null});
     },
-    _handleResizeJobCreated: function(job) {
+    _handleResizeJobCreated: function (job) {
         this.setState({currentJob: job});
     },
-    _handleDeleteVm: function() {
+    _handleDeleteVm: function () {
         if (window.confirm('Are you sure you want to delete this VM?')) {
             var vm = new VMModel({uuid: this.state.vm.uuid});
             var self = this;
-            vm.del(function(job, err) {
+            vm.del(function (job, err) {
                 if (job) {
                     self.setState({currentJob: job});
                 }
             });
         }
     },
-    _handleChangeOwner: function() {
+    _handleChangeOwner: function () {
         var vm = new VMModel({uuid: this.state.vm.uuid});
         var changeOwner = new OwnerChange({
             app: this.props.adminui,
@@ -514,17 +510,17 @@ var VMPage = React.createClass({
         });
         changeOwner.show();
     },
-    _handleReprovisionVm: function() {
+    _handleReprovisionVm: function () {
         this.setState({editing: 'reprovision'});
     },
-    _handleReprovisionCancel: function() {
+    _handleReprovisionCancel: function () {
         this.setState({editing: false});
     },
-    _handleReprovisionJobCreated: function(job) {
+    _handleReprovisionJobCreated: function (job) {
         this.setState({currentJob: job, editing: false});
     },
 
-    _handleJobModalClose: function() {
+    _handleJobModalClose: function () {
         this.setState({
             editing: false,
             currentJob: null
@@ -534,19 +530,19 @@ var VMPage = React.createClass({
 
 
     /** Tags handlers **/
-    _handleTagsEdit: function() {
+    _handleTagsEdit: function () {
         this.setState({editing: 'tags'});
     },
-    _handleTagsEditCancel: function() {
+    _handleTagsEditCancel: function () {
         this.setState({editing: false});
     },
-    _handleTagsSave: function(data) {
+    _handleTagsSave: function (data) {
         var vm = new VMModel({uuid: this.state.vm.uuid});
         var self = this;
-        vm.update({tags: data}, function(job, err) {
+        vm.update({tags: data}, function (job, err) {
             if (job) {
                 self.setState({currentJob: job});
-                job.on('finished', function() {
+                job.on('finished', function () {
                     self.fwrulesList.refresh();
                 });
             }
@@ -555,16 +551,16 @@ var VMPage = React.createClass({
 
 
     /** InternalMetadata handlers */
-    _handleInternalMetadataEdit: function() {
+    _handleInternalMetadataEdit: function () {
         this.setState({editing: 'internal_metadata'});
     },
-    _handleInternalMetadataEditCancel: function() {
+    _handleInternalMetadataEditCancel: function () {
         this.setState({editing: false});
     },
-    _handleInternalMetadataSave: function(data) {
+    _handleInternalMetadataSave: function (data) {
         var vm = new VMModel({uuid: this.state.vm.uuid});
         var self = this;
-        vm.update({internal_metadata: data}, function(job, err) {
+        vm.update({internal_metadata: data}, function (job, err) {
             if (job) {
                 self.setState({currentJob: job});
             }
@@ -576,27 +572,27 @@ var VMPage = React.createClass({
 
     /** Customer Metadata Edit Handlers */
 
-    _handleCustomerMetadataEdit: function() {
+    _handleCustomerMetadataEdit: function () {
         this.setState({editing: 'customer_metadata'});
     },
-    _handleCustomerMetadataSave: function(data) {
+    _handleCustomerMetadataSave: function (data) {
         var vm = new VMModel({uuid: this.state.vm.uuid});
         var self = this;
-        vm.update({customer_metadata: data}, function(job, err) {
+        vm.update({customer_metadata: data}, function (job, err) {
             if (job) {
                 self.setState({currentJob: job});
             }
         });
     },
-    _handleCustomerMetadataEditCancel: function() {
+    _handleCustomerMetadataEditCancel: function () {
         this.setState({editing: false});
     },
 
     /* Firewall */
-    _handleFirewallToggle: function(value) {
+    _handleFirewallToggle: function (value) {
         var vm = new VMModel(this.state.vm);
         var self = this;
-        vm.update({firewall_enabled: value}, function(job) {
+        vm.update({firewall_enabled: value}, function (job) {
             self.setState({currentJob: job});
         });
     }
