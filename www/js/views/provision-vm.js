@@ -7,10 +7,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -25,8 +25,6 @@ var _ = require('underscore');
 
 var React = require('react');
 var MultiNicConfigComponent = React.createFactory(require('../components/multi-nic-config'));
-
-var _ = require('underscore');
 
 var Package = require('../models/package');
 var Packages = require('../models/packages');
@@ -47,14 +45,14 @@ var JSONEditor = require('./traits-editor');
 
 
 var PackageSelectOption = Backbone.Marionette.ItemView.extend({
-    attributes: function() {
+    attributes: function () {
         return {
             name: this.model.get('name'),
             value: this.model.get('uuid')
         };
     },
     tagName: 'option',
-    template: function(data) {
+    template: function (data) {
         return data.name + ' ' + data.version;
     }
 });
@@ -68,17 +66,17 @@ var PackageSelect = Backbone.Marionette.CollectionView.extend({
     events: {
         'change': 'onChange'
     },
-    onSync: function(e) {
+    onSync: function (e) {
         this.$el.trigger("chosen:updated");
     },
-    onRender: function() {
+    onRender: function () {
         this.$el.prepend('<option></option>');
         this.$el.chosen({
             disable_search_threshold: 5,
             width: '280px'
         });
     },
-    onChange: function(e) {
+    onChange: function (e) {
         var uuid = $(e.target).val();
         this.trigger('select', this.collection.get(uuid));
     }
@@ -90,15 +88,11 @@ var TypeaheadUser = require('./typeahead-user');
 
 var View = Backbone.Marionette.Layout.extend({
     url: 'provision',
-
     sidebar: 'vms',
-
     template: ProvisionVmTemplate,
-
     regions: {
         'userPreview': '.user-preview-region'
     },
-
     events: {
         'submit form': 'provision',
         'click .back': 'backToVirtualMachines',
@@ -106,11 +100,9 @@ var View = Backbone.Marionette.Layout.extend({
         'blur input#input-owner': 'onBlurOwnerField',
         'click .configure-metadata': 'showConfigureMetadata'
     },
-
     modelEvents: {
         'error': 'onError'
     },
-
     ui: {
         'form': 'form',
         'alert': '.validation-errors',
@@ -118,7 +110,7 @@ var View = Backbone.Marionette.Layout.extend({
         'brandControls': '.form-group-brand'
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
         this.vent = adminui.vent;
         this.model = new Vm();
         this.packages = new Packages();
@@ -133,32 +125,32 @@ var View = Backbone.Marionette.Layout.extend({
         this.selectedPackage = new Package();
         this.packagePreview = new PackagePreview({model: this.selectedPackage});
 
-        this.packages.on('reset', function(collection) {
+        this.packages.on('reset', function (collection) {
             this.selectedPackage.set(collection.models[0].attributes);
         }, this);
 
-        this.packageSelect.on('select', function(pkg) {
+        this.packageSelect.on('select', function (pkg) {
             this.selectedPackage.set(pkg.attributes);
         }, this);
 
         this.packages.fetchActive();
     },
 
-    backToVirtualMachines: function() {
+    backToVirtualMachines: function () {
         adminui.vent.trigger('showcomponent', 'vms');
     },
 
-    onBlurOwnerField: function(e) {
+    onBlurOwnerField: function (e) {
         var $field = this.ui.ownerInput;
         var self = this;
 
         if ($field.val().length === 36) {
             var u = new User({uuid: $field.val()});
-            u.fetch().done(function() {
+            u.fetch().done(function () {
                 this.onSelectUser(u);
             }.bind(this));
         } else {
-            process.nextTick(function() {
+            process.nextTick(function () {
                 self.$('.form-group-networks').hide();
                 self.userPreview.close();
                 self.removeAllNics();
@@ -173,7 +165,7 @@ var View = Backbone.Marionette.Layout.extend({
             description: "Metadata to include in the provisioned Virtual Machine, stored into customer_metadata property.",
             data: this.customer_metadata
         });
-        view.on('save', function(data) {
+        view.on('save', function (data) {
             if (Object.keys(data).length) {
                 this.$('.configure-metadata').addClass("btn-success");
             } else {
@@ -186,28 +178,27 @@ var View = Backbone.Marionette.Layout.extend({
         view.show();
     },
 
-    removeNic: function(nic) {
+    removeNic: function (nic) {
         if (this.nicSelects.length === 1) {
             window.alert('Cannot Remove last Network Interface');
             return false;
         }
         var self = this;
         React.unmountComponentAtNode(nic.getDOMNode());
-        $(nic.getDOMNode()).closest('.nic-config-container').fadeOut(function() {
+        $(nic.getDOMNode()).closest('.nic-config-container').fadeOut(function () {
             this.remove();
             self.nicSelects = _.without(self.nicSelects, nic);
-            console.debug(self.nicSelects.length);
         });
     },
-    removeAllNics: function() {
-        _.each(this.nicSelects, function(nic) {
+    removeAllNics: function () {
+        _.each(this.nicSelects, function (nic) {
             React.unmountComponentAtNode(nic.getDOMNode());
             $(nic.getDOMNode()).closest('.nic-config-container').remove();
         }, this);
         this.nicSelects = [];
     },
 
-    onSelectUser: function(user) {
+    onSelectUser: function (user) {
         if (!user) {
             this.userPreview.close();
             this.removeAllNics();
@@ -228,7 +219,7 @@ var View = Backbone.Marionette.Layout.extend({
 
         $.when(
             this.settings.fetch()
-        ).then(function() {
+        ).then(function () {
             var networkPresets = settings.get('provision.preset_networks') || [];
 
             while (networkPresets.length < 1) {
@@ -250,29 +241,27 @@ var View = Backbone.Marionette.Layout.extend({
         this.sshKeys.fetch();
     },
 
-    onFetchKeys: function(collection) {
+    onFetchKeys: function (collection) {
         if (this.sshKeys.length === 0) {
             this.$('.no-sshkeys-warning').show();
         } else {
             this.$('.no-sshkeys-warning').hide();
         }
-        this.userKeys = this.sshKeys.map(function(k) {
+        this.userKeys = this.sshKeys.map(function (k) {
             return k.get('openssh');
         });
-
-        console.log('onFetchKeys', this.userKeys);
     },
 
-    showNoSshkeysWarning: function() {
+    showNoSshkeysWarning: function () {
         this.$('.no-sshkeys-warning').show();
     },
 
-    onNicConfigChange: function(nics) {
+    onNicConfigChange: function (nics) {
         this.checkFields();
     },
 
-    renderMultiNicSelect: function(nics) {
-        nics = nics.map(function(nic) {
+    renderMultiNicSelect: function (nics) {
+        nics = nics.map(function (nic) {
             if (typeof(nic) === 'string') {
                 nic = {network_uuid: nic};
             }
@@ -282,6 +271,7 @@ var View = Backbone.Marionette.Layout.extend({
             expandAntispoofOptions: false,
             networkFilters: {provisionable_by: this.selectedUser.get('uuid')},
             nics: nics,
+            isIpAvailable: true,
             onChange: this.onNicConfigChange.bind(this)
         };
         if (this.multiNicConfigComponent) {
@@ -293,7 +283,7 @@ var View = Backbone.Marionette.Layout.extend({
         this.$('.form-group-primary-network').show();
     },
 
-    onRender: function() {
+    onRender: function () {
         adminui.vent.trigger('settitle', 'provision');
 
         this.userInput = new TypeaheadUser({
@@ -322,11 +312,11 @@ var View = Backbone.Marionette.Layout.extend({
         return this;
     },
 
-    onShow: function() {
+    onShow: function () {
         this.$("input:not([disabled]):first").focus();
     },
 
-    onSelectImage: function(image) {
+    onSelectImage: function (image) {
         if (!image) {
             this.ui.brandControls.show();
             this.disableBrands(false);
@@ -360,22 +350,22 @@ var View = Backbone.Marionette.Layout.extend({
         }
     },
 
-    disableBrands: function() {
+    disableBrands: function () {
         var brands = [];
         if (arguments[0] !== false) {
             brands = arguments;
         }
         this.$('.form-group-brand option').removeAttr('disabled');
-        _.each(brands, function(b) {
+        _.each(brands, function (b) {
             this.$('.form-group-brand option[value='+b+']').attr('disabled', true);
         }, this);
     },
 
-    setBrand: function(brand) {
+    setBrand: function (brand) {
         this.$('.form-group-brand').find('[name=brand]').val(brand);
     },
 
-    checkFields: function() {
+    checkFields: function () {
         this.hideError();
 
         var values = this.extractFormValues();
@@ -408,14 +398,15 @@ var View = Backbone.Marionette.Layout.extend({
 
         var primaryNetwork = _.findWhere(values.networks, {primary: true});
 
-        if (! primaryNetwork) { valid = false; }
+        if (!primaryNetwork) {
+            valid = false;
+        }
 
-        _.map(values.networks, function(n) {
-            if (typeof(n.uuid) !== 'string' || n.uuid.length === 0) {
+        _.map(values.networks, function (n) {
+            if (typeof n.ipv4_uuid !== 'string' || n.ipv4_uuid.length === 0) {
                 valid = false;
             }
         });
-
 
         if (valid) {
             this.enableProvisionButton();
@@ -424,15 +415,15 @@ var View = Backbone.Marionette.Layout.extend({
         }
     },
 
-    disableProvisionButton: function() {
+    disableProvisionButton: function () {
         this.$('button[type=submit]').attr('disabled', 'disabled');
     },
 
-    enableProvisionButton: function() {
+    enableProvisionButton: function () {
         this.$('button[type=submit]').removeAttr('disabled');
     },
 
-    extractFormValues: function() {
+    extractFormValues: function () {
         var formData = this.ui.form.serializeObject();
         var values = {
             image_uuid: formData.image,
@@ -499,7 +490,7 @@ var View = Backbone.Marionette.Layout.extend({
 
         if ((values['brand'] === 'kvm' || values['brand'] === 'lx') && this.userKeys) {
             values.customer_metadata = {
-                root_authorized_keys: this.userKeys.map(function(k) {
+                root_authorized_keys: this.userKeys.map(function (k) {
                     return  _.str.trim(k).replace(/(\r\n|\n|\r)/gm, "");
                 }).join("\n")
             };
@@ -509,25 +500,27 @@ var View = Backbone.Marionette.Layout.extend({
         values.customer_metadata = _.extend(values.customer_metadata, this.customer_metadata);
 
         if (this.multiNicConfigComponent) {
-            values.networks = _.map(this.multiNicConfigComponent.getValue(), function(nic) {
+            values.networks = _.map(this.multiNicConfigComponent.getValue(), function (nic) {
                 var net = _.clone(nic);
-                net.uuid = net.network_uuid;
+                if (net.ip) {
+                    net.ipv4_ips = [net.ip];
+                    delete net.ip;
+                }
+                net.ipv4_uuid = net.network_uuid;
                 delete net.network_uuid;
 
                 return net;
             });
         }
 
-        console.log("Provision Values:", values);
-
         return values;
     },
 
-    hideError: function() {
+    hideError: function () {
         this.ui.alert.hide();
     },
 
-    onError: function(model, xhr, options) {
+    onError: function (model, xhr, options) {
         var fieldMap = {
             'image_uuid': '[name=image]',
             'alias': '[name=alias]',
@@ -539,32 +532,28 @@ var View = Backbone.Marionette.Layout.extend({
         this.ui.alert.find('.message').html(err.message);
         this.ui.alert.append('<ul />');
         var ul = this.ui.alert.find('ul');
-        _.each(err.errors, function(errObj) {
+        _.each(err.errors, function (errObj) {
             var li = $('<li></li>');
             li.text(_.str.sprintf('[%s] %s', errObj.field, errObj.message));
             ul.append(li);
         }, this);
         this.$('.form-group').removeClass('has-error');
-        _.each(err.errors, function(errObj) {
+        _.each(err.errors, function (errObj) {
             var field = $(fieldMap[errObj.field]);
             field.parents('.form-group').addClass('has-error');
         }, this);
         this.ui.alert.show();
     },
 
-
-
-
-
-    provision: function(e) {
+    provision: function (e) {
         var self = this;
         e.preventDefault();
 
         this.model.save(this.extractFormValues(), {
-            success: function(m, obj) {
+            success: function (m, obj) {
                 var job = new Job({uuid: obj.job_uuid});
                 var jobView = new JobProgressView({model: job});
-                self.listenTo(jobView, 'succeeded', function() {
+                self.listenTo(jobView, 'succeeded', function () {
                     adminui.router.showVm(obj.vm_uuid);
                 });
                 jobView.show();
