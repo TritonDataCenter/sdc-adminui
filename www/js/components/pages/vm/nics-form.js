@@ -86,6 +86,9 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                 delete n.uuid;
                 delete n.mtu;
                 delete n.cn_uuid;
+                if (nic.primary && nic.mac !== n.mac) {
+                    n.primary = false;
+                }
                 return n;
             });
 
