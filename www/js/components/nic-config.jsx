@@ -93,21 +93,27 @@ var NicConfig = React.createClass({
         var prop = e.target.getAttribute('name');
         var nic = this.state.nic;
         nic[prop] = value;
-        if (this.props.isIpAvailable) {
+        if (this.props.isIpAvailable && prop === 'network_uuid') {
             delete nic.ip;
-            var self = this;
-            var selectedIps = this.props.selectedIps || {};
-            this.setState({loadingIp: true, showIpSelect: true});
-            this.addresses = new Addresses({uuid: value});
-            this.addresses.fetch().done(function () {
-                var freeIpAddresses = self.addresses.toJSON().filter(function (address) {
-                    return address.free && !address.reserved && !address.belongs_to_type && !selectedIps[address.ip];
-                });
-                self.setState({
-                    loadingIp: false,
-                    addresses: freeIpAddresses
-                });
+            var isNetwork = this.state.networks.some(function (network) {
+                return value === network.uuid;
             });
+
+            this.setState({loadingIp: true, showIpSelect: isNetwork});
+            if (isNetwork) {
+                var self = this;
+                var selectedIps = this.props.selectedIps || {};
+                this.addresses = new Addresses({uuid: value});
+                this.addresses.fetch().done(function () {
+                    var freeIpAddresses = self.addresses.toJSON().filter(function (address) {
+                        return address.free && !address.reserved && !address.belongs_to_type && !selectedIps[address.ip];
+                    });
+                    self.setState({
+                        loadingIp: false,
+                        addresses: freeIpAddresses
+                    });
+                });
+            }
         }
         this.setState({nic: nic});
         this.props.onPropertyChange(prop, value, nic, this);
@@ -120,7 +126,11 @@ var NicConfig = React.createClass({
             value = e.target.value;
         }
         var nic = this.state.nic;
-        nic.ip = value;
+        if (value) {
+            nic.ip = value;
+        } else {
+            delete nic.ip;
+        }
         this.setState({nic: nic});
         this.props.onPropertyChange('ip', value, nic, this);
     },
@@ -167,7 +177,6 @@ var NicConfig = React.createClass({
         var nic = this.state.nic;
         var expandAntispoofOptions = (nic.allow_dhcp_spoofing || nic.allow_ip_spoofing ||
             nic.allow_mac_spoofing || nic.allow_restricted_traffic || this.state.expandAntispoofOptions);
-
         return (
             <div className="nic-config form-horizontal">
                 <div className="form-group form-group-network row">
@@ -187,7 +196,7 @@ var NicConfig = React.createClass({
                                         name="ip"
                                         data-placeholder="Select IP address"
                                         value={this.state.nic.ip}>
-                                    <option value=""></option>
+                                    <option value="">automatic</option>
                                     {
                                         this.state.addresses.map(function (address) {
                                             return (<option key={address.ip} value={address.ip}>{address.ip}</option>);
