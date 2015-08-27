@@ -11,6 +11,7 @@
 var React = require('react');
 var BackboneMixin = require('../../_backbone-mixin');
 var ServerDiskUtilizationCircle = require('./disk-utilization-circle');
+var utils = require('../../../lib/utils');
 
 var ServerDiskOverview = React.createClass({
     mixins: [BackboneMixin],
@@ -33,10 +34,10 @@ var ServerDiskOverview = React.createClass({
         });
 
         var usedBytes = usedInGB * 1024 * 1024 * 1024;
-
-        var provisionable = total - usedBytes;
-
-
+        var unusedBytes = total - usedBytes;
+        var used = utils.getReadableSize(usedBytes);
+        var unused = utils.getReadableSize(unusedBytes);
+        var diskPoolSize = utils.getReadableSize(server.disk_pool_size_bytes);
         return <div className="disk-overview">
             <div className="row">
                 <div className="col-sm-12">
@@ -48,16 +49,16 @@ var ServerDiskOverview = React.createClass({
                     <ServerDiskUtilizationCircle diameter="120px" inner="38" server={this.props.server} />
                 </div>
                 <div className="provisionable-disk">
-                    <div className="value">{provisionable/1024/1024/1024} GB</div>
+                    <div className="value">{unused.value + ' ' + unused.measure}</div>
                     <div className="title">Provisionable</div>
                 </div>
                 <div className="provisioned-disk">
-                    <div className="value">{usedBytes/1024/1024/1024} GB</div>
+                    <div className="value">{used.value + ' ' + used.measure}</div>
                     <div className="title">Provisioned</div>
                 </div>
 
                 <div className="total-disk">
-                    <div className="value">{server.disk_pool_size_bytes/1024/1024/1024} GB</div>
+                    <div className="value">{diskPoolSize.value + ' ' + diskPoolSize.measure}</div>
                     <div className="title">Total</div>
                 </div>
             </div>
