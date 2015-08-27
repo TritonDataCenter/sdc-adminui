@@ -72,5 +72,16 @@ module.exports = {
 
         });
         return cb(errors.length ? errors : null);
+    },
+    getReadableSize: function (bytes, base) {
+        var result = {value: 0, measure: 'Byte'};
+        if (bytes > 0) {
+            var sizes = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+            base = base || 1024;
+            var i = parseInt(Math.floor(Math.log(bytes) / Math.log(base)), 10);
+            result.value = parseFloat((bytes / Math.pow(base, i)).toFixed(1));
+            result.measure = sizes[i];
+        }
+        return result;
     }
 };
