@@ -110,7 +110,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
                 belongs_to_uuid: this.model.get('uuid')
             }
         });
-
         this.vms = new Vms(null, {
             params: {
                 server_uuid: this.model.get('uuid'),
@@ -433,9 +432,12 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     onShow: function () {
-        this._requests.push(this.model.fetch().done(this.render));
-        this._requests.push(this.nics.fetch());
-        this._requests.push(this.vms.fetch());
+        var self = this;
+        this._requests.push(this.model.fetch().done(function () {
+            self.render();
+            self.nics.fetch();
+            self.vms.fetch();
+        }));
     },
 
     postRender: function () {
@@ -449,14 +451,14 @@ var ServerView = Backbone.Marionette.Layout.extend({
             React.render(ServerDiskOverview({server: this.model }), this.$('.disk-overview-container').get(0));
         }
 
-        React.render(VmsList({
-            collection: this.vms
-        }), this.$('.vms-region').get(0));
-
         React.render(ServerNicsList({
             server: this.model,
             nics: this.nics
         }), this.$('.server-nics').get(0));
+
+        React.render(VmsList({
+            collection: this.vms
+        }), this.$('.vms-region').get(0));
     },
 
     onRender: function () {
@@ -466,7 +468,8 @@ var ServerView = Backbone.Marionette.Layout.extend({
             perPage: 100,
             params: {server_uuid: this.model.get('uuid')}
         });
-        
+        this.jobsRegion.show(this.jobsListView);
+
         if (this.model.get('headnode')) {
             this.$('.platform .boot .value').tooltip({
                 title: "Use 'sdcadm platform' to update the headnode's platform.",
@@ -474,12 +477,8 @@ var ServerView = Backbone.Marionette.Layout.extend({
                 container: 'body'
             });
         }
-
-        this.jobsRegion.show(this.jobsListView);
-
+        
         this.$("[data-toggle=tooltip]").tooltip();
-
-        this.vmsListView = new VmsList({collection: this.vms });
         this.postRender();
     }
 });
