@@ -1,0 +1,6 @@
+#!/bin/sh
+if [[ -n '{{http_proxy}}' ]]; then
+    export http_proxy='{{http_proxy}}'
+    export https_proxy='{{http_proxy}}'
+fi
+
