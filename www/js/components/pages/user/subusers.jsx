@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var React = require('react');
@@ -23,25 +23,25 @@ var UserSubusers = React.createClass({
         'account': PropTypes.string.isRequired
     },
 
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             users: [],
             loading: true
         };
     },
-    _load: function() {
+    _load: function () {
         var self = this;
-        this._fetchUsers().then(this._fetchUsersRoles).then(function(res) {
+        this._fetchUsers().then(this._fetchUsersRoles).then(function (res) {
             self.setState({loading: false});
         });
     },
-    componentWillMount: function() {
+    componentWillMount: function () {
         this._load();
     },
-    componentDidReceiveProps: function(props) {
+    componentDidReceiveProps: function (props) {
         this._load();
     },
-    renderUserRow: function(u) {
+    renderUserRow: function (user) {
         /*
         {
             "account":"930896af-bf8c-48d4-885c-6573a94b1853",
@@ -66,34 +66,33 @@ var UserSubusers = React.createClass({
         }
         */
         var userIconUrl;
-        if (u.emailhash) {
-            userIconUrl = _.str.sprintf('url(https://www.gravatar.com/avatar/%s?d=identicon&s=48)', u.emailhash);
+        if (user.emailhash) {
+            userIconUrl = _.str.sprintf('url(https://www.gravatar.com/avatar/%s?d=identicon&s=48)', user.emailhash);
         } else {
             userIconUrl = '';
         }
-        var userIconStyle = { 'backgroundImage': userIconUrl };
+        var userIconStyle = {'backgroundImage': userIconUrl};
 
-
-        return <div key={u.uuid} className="subuser panel">
+        return <div key={user.uuid} className="subuser panel">
             <div className="panel-body">
                 <div className="subuser-icon-container">
                     <div className="subuser-icon" style={userIconStyle}></div>
                 </div>
                 <div className="subuser-details">
-                    <a onClick={this._handleNavigateToUser.bind(null, u)} className="alias">{u.alias}</a>
-                    <div className="cn">{u.cn}</div>
+                    <a onClick={this._handleNavigateToUser.bind(null, user)} className="alias">{user.alias}</a>
+                    <div className="cn">{user.cn}</div>
                 </div>
                 <div className="subuser-email">
-                    <a href={'mailto:' + u.email}><i className="fa fa-envelope"></i> {u.email}</a>
+                    <a href={'mailto:' + user.email}><i className="fa fa-envelope"></i> {user.email}</a>
                 </div>
                 <div className="subuser-roles">
                     {
-                        u.roles && u.roles.length ?
+                        user.roles && user.roles.length ?
                         <div className="roles-list">
                             <div className="roles-header">Roles</div>
-                            { u.roles && u.roles.map(function(r) {
-                                return <div className="role">{r.name}</div>;
-                            }) }
+                            {user.roles.map(function (role) {
+                                return <div className="role">{role.name}</div>;
+                            })}
                         </div>
                         :
                         <div className="roles-header">No Roles</div>
@@ -102,15 +101,15 @@ var UserSubusers = React.createClass({
                 {
                     adminui.user.role('operators') ?
                     <div className="subuser-actions">
-                        <button onClick={this.deleteUser.bind(null, u)} className="btn-link btn-danger"><i className="fa fa-trash-o"></i></button>
-                        <button onClick={this.showEditUser.bind(null, u)} className="btn-link"><i className="fa fa-pencil"></i></button>
+                        <button onClick={this.deleteUser.bind(null, user)} className="btn-link btn-danger"><i className="fa fa-trash-o"></i></button>
+                        <button onClick={this.showEditUser.bind(null, user)} className="btn-link"><i className="fa fa-pencil"></i></button>
                     </div> : null
                 }
                 </div>
         </div>;
     },
 
-    deleteUser: function(u) {
+    deleteUser: function (u) {
         var user = new User(u);
         var confirm = window.confirm('Are you sure you want to delete user '+ u.login + ' ?');
         var self = this;
@@ -131,33 +130,28 @@ var UserSubusers = React.createClass({
         }
     },
 
-    showEditUser: function(u) {
-        var editView = new UserForm({
-            user: new User(u),
-            account: this.props.account
+    showEditUser: function (user) {
+        adminui.vent.trigger('showview', 'user-form', {
+            user: new User(user),
+            account: this.props.account,
+            redirect: {
+                tab: 'subusers',
+                user: this.props.account
+            }
         });
-        editView.render();
-        editView.on('user:saved', function(user) {
-            adminui.vent.trigger('notification', {
-                level: 'success',
-                message: _.str.sprintf('User <strong>%s</strong> saved', user.get('login'))
-            });
-        }, this);
     },
 
-    showUserForm: function() {
-        var createView = new UserForm({account: this.props.account});
-        createView.render();
-        createView.on('user:saved', function(user) {
-            this._fetchUsers();
-
-            adminui.vent.trigger('notification', {
-                level: 'success',
-                message: _.str.sprintf('User <strong>%s</strong> saved under this account.', user.get('login'))
-            });
-        }, this);
+    showUserForm: function () {
+        adminui.vent.trigger('showview', 'user-form', {
+            account: this.props.account,
+            redirect: {
+                tab: 'subusers',
+                user: this.props.account
+            }
+        });
     },
-    render: function() {
+
+    render: function () {
         return (<div className="user-subusers">
             <h3>Account Users
             {
@@ -182,50 +176,50 @@ var UserSubusers = React.createClass({
         </div>);
     },
 
-
-    _handleNavigateToUser: function(u) {
+    _handleNavigateToUser: function (user) {
         adminui.vent.trigger('showcomponent', 'user', {
-            user: u.uuid,
-            account: u.account,
+            user: user.uuid,
+            account: user.account,
             tab: 'profile'
         });
     },
-    _fetchUsers: function() {
+
+    _fetchUsers: function () {
         var account = this.props.account;
-        var that = this;
-        return new Promise(function(resolve, reject) {
-            console.log('fetchUsers');
-            api.get('/api/users').query({account: account}).end(function(res) {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            api.get('/api/users').query({account: account}).end(function (res) {
                 if (res.ok) {
-                    that.setState({users: res.body});
+                    self.setState({users: res.body});
                     resolve(res.body);
                 } else {
                     reject(res.error);
                 }
-            }.bind(that));
+            }.bind(self));
         });
     },
 
-    _fetchUsersRoles: function() {
-        var that = this;
+    _fetchUsersRoles: function () {
+        var self = this;
         var users = this.state.users;
 
-        return Promise.all(users.map(function(user, index) {
-            return fetchUserRole(user, index);
-        }));
+        return Promise.all(users.map(function (user) {
+            return fetchUserRole(user);
+        })).then(function () {
+            self.setState({users: users});
+        });
 
-        function fetchUserRole(user, index) {
-            return new Promise(function(resolve, reject) {
+        function fetchUserRole(user) {
+            return new Promise(function (resolve, reject) {
                 var url = _.str.sprintf('/api/users/%s/%s/roles', user.account, user.uuid);
-                api.get(url).end(function(res) {
+                api.get(url).end(function (res) {
                     if (res.ok) {
-                        that.state.users[index].roles = res.body;
-                        that.setState({users: that.state.users});
+                        user.roles = res.body;
                         resolve(true);
                     } else {
                         reject(res.error);
                     }
-                }.bind(that));
+                }.bind(self));
             });
         }
     }

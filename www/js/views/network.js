@@ -93,8 +93,6 @@ var AddressesTable = Backbone.Marionette.CollectionView.extend({
     itemView: AddressesTableRow
 });
 
-var NetworkForm = require('../views/networks-create');
-
 var NetworkDetailView = Backbone.Marionette.ItemView.extend({
 
     template: Template,
@@ -120,22 +118,10 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     },
 
     editNetwork: function () {
-        var view = this.networkForm = new NetworkForm({
+        adminui.vent.trigger('showview', 'network-form', {
             model: this.model,
             inUse: this.networkIsInUse()
         });
-        var self = this;
-        this.listenTo(view, 'saved', function (network) {
-            self.model.fetch().done(this.render);
-            view.$el.modal('hide').remove();
-            adminui.vent.trigger('notification', {
-                level: 'success',
-                message: "Updated network successfully."
-            });
-            view.close();
-        });
-
-        this.networkForm.show();
     },
 
     goToOwner: function (e) {

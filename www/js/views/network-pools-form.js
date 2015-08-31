@@ -5,11 +5,12 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var _ = require('underscore');
 var Backbone = require('backbone');
+var adminui = require('adminui');
 
 var Networks = require('../models/networks');
 var NetworkPool = require('../models/network-pool');
@@ -19,11 +20,7 @@ var TypeaheadUser = require('./typeahead-user');
 
 module.exports = Backbone.Marionette.ItemView.extend({
     template: Template,
-    id: 'network-pools-create',
-    attributes: {
-        'class': 'modal'
-    },
-
+    id: 'network-pools-form',
     ui: {
         'ownerInput': 'input[name="owner_uuids[]"]',
         'nameInput': 'input[name=name]',
@@ -35,6 +32,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         'change select': 'checkInput',
         'blur input[name="owner_uuids[]"]': 'onBlurOwnerField',
         'focus input[name="owner_uuids[]"]': 'onFocusOwnerField',
+        'click button[type=cancel]': 'onCancel',
         'submit form': 'onSubmit'
     },
 
@@ -150,8 +148,17 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.networkPool.save();
     },
 
+    onCancel: function (e) {
+        e.preventDefault();
+        adminui.vent.trigger('showview', 'networking');
+    },
+
     onSaved: function () {
-        this.trigger('saved', this.networkPool);
+        adminui.vent.trigger('showview', 'networking');
+        adminui.vent.trigger('notification', {
+            level: 'success',
+            message: _.str.sprintf('Network Pool <strong>%s</strong> %s successfully.', this.model.get('name'), this.model.isNew() ? 'created' : 'updated')
+        });
     },
 
     onRender: function () {
@@ -165,15 +172,5 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.$('select').chosen({
             width: '280px'
         });
-    },
-
-    show: function() {
-        this.render();
-        this.$el.modal();
-        this.$('input:first').focus();
-    },
-
-    onClose: function() {
-        this.$el.modal('hide').remove();
     }
 });

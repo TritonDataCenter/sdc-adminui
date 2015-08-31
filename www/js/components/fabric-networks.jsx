@@ -13,7 +13,7 @@ var adminui = require('../adminui');
 var _ = require('underscore');
 var React = require('react');
 var FabricNetwork = require('../models/fabrics-vlan-network');
-var NetworkForm = require('../views/networks-create');
+var NetworkForm = require('../views/network-form');
 
 var NetworksList = React.createClass({
     displayName: 'NetworksList',
@@ -35,17 +35,12 @@ var NetworksList = React.createClass({
     },
 
     createNetwork: function () {
-        var self = this;
         var model = new FabricNetwork();
         model.url = this.props.collection.url;
-        var view = new NetworkForm({
+        adminui.vent.trigger('showview', 'network-form', {
             model: model,
             isFabric: true,
             data: this.props.data
-        });
-        view.show();
-        model.on('sync', function () {
-            self.props.collection.fetch();
         });
     },
 

@@ -29,8 +29,8 @@ var UserSubusers = require('./subusers');
 var UserNetworks = require('./networks');
 var UserRoles = require('./roles');
 var UserFirewall = require('./firewall');
-
 var UserForm = require('../../../views/user-form');
+var BB = require('../../bb');
 
 var PageUser = React.createClass({
     statics: {
@@ -211,20 +211,10 @@ var PageUser = React.createClass({
 
     },
 
-    // --- child component handlers
-
     handleProfileModifyUser: function () {
-        var form = new UserForm({user: this.state.userModel.clone()});
-        form.render();
-        form.on('user:saved', function (user) {
-            this.fetchUser();
-            adminui.vent.trigger('notification', {
-                level: 'success',
-                message: _.str.sprintf('User <strong>%s</strong> saved', user.get('login'))
-            });
-        }, this);
-
+       adminui.vent.trigger('showview', 'user-form', {user: this.state.userModel});
     },
+
     handleNavigateToAccount: function () {
         adminui.vent.trigger('showcomponent', 'user', {user: this.state.userModel.get('account')});
     },
@@ -294,7 +284,7 @@ var PageUser = React.createClass({
             userIconUrl = '';
         }
 
-        var userIconStyle = { 'backgroundImage': userIconUrl };
+        var userIconStyle = {'backgroundImage': userIconUrl};
 
         return <div id="page-user">
             <div className="page-header">
@@ -303,8 +293,8 @@ var PageUser = React.createClass({
                     <div className="user-info">
                         <div className="cn">{user.login}</div>
                         <div className="user-groups">
-                        { user.groups && user.groups.map(function (g) {
-                            return <div className={"group " + g}>{g}</div>;
+                        {user.groups && user.groups.map(function (group) {
+                            return <div className={"group " + group}>{group}</div>;
                         })}
                         </div>
                         <div className="uuid selectable">{user.uuid}</div>
