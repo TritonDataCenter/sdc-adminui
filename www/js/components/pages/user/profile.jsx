@@ -14,17 +14,29 @@ var React = require('react');
 var adminui = require('../../../adminui');
 var BackboneMixin = require('../../_backbone-mixin');
 var moment = require('moment');
+var UserForm = require('../../../views/user-form');
+var BB = require('../../bb');
+
 var UserProfile = React.createClass({
-    mixins: [ BackboneMixin ],
+    mixins: [BackboneMixin],
     propTypes: {
         handleModifyUser: React.PropTypes.func.isRequired,
         handleUnlockUser: React.PropTypes.func.isRequired,
         handleToggleTwoFactorAuth: React.PropTypes.func.isRequired
     },
-    getBackboneModels: function() {
+    getInitialState: function () {
+        return {};
+    },
+    getBackboneModels: function () {
         return [this.props.userModel];
     },
-    render: function() {
+    handleModifyUser: function () {
+        this.setState({form: true});
+    },
+    componentWillMount: function () {
+        this.userForm = new UserForm({user: this.props.userModel});
+    },
+    render: function () {
         var user = this.props.userModel.toJSON();
         var twoFactorAuth = this.props.twoFactorAuth;
         var isTopLevelAccount = !user.account;
@@ -40,7 +52,7 @@ var UserProfile = React.createClass({
         } else {
             pwdfailuretimes = [];
         }
-        pwdfailuretimes = pwdfailuretimes.map(function(m) {
+        pwdfailuretimes = pwdfailuretimes.map(function (m) {
             var date = moment(new Date(Number(m)));
             return {
                 absolute: date.utc().format('D MMMM, YYYY HH:mm:ss z'),
@@ -71,6 +83,7 @@ var UserProfile = React.createClass({
                                 </div> : null
                             }
                         </h3>
+                        {this.userForm && this.state.form && <div className="user-form-region"><BB view={this.userForm} /></div>}
                         <table className="table">
                         <tbody>
                             <tr>
@@ -150,7 +163,7 @@ var UserProfile = React.createClass({
                                 <td>
                                     <ul className="list list-unstyled">
                                     {
-                                        pwdfailuretimes.map(function(m) {
+                                        pwdfailuretimes.map(function (m) {
                                             return <li className="attempt">{m.absolute} ({m.relative})</li>;
                                         })
                                     }

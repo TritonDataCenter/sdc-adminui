@@ -16,10 +16,8 @@ var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
 var adminui = require('../adminui');
-var UserForm = require('./user-form');
 var Users = require('../models/users');
 var tplUsers = require('../tpl/users.hbs');
-var $ = require('jquery');
 var React = require('react');
 var GroupLabels = React.createFactory(require('../components/pages/user/group-labels'));
 
@@ -147,15 +145,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     newUser: function () {
-        var createView = new UserForm();
-        createView.render();
-        createView.on('user:saved', function (user) {
-            adminui.vent.trigger('showcomponent', 'user', {user: user});
-            adminui.vent.trigger('notification', {
-                level: 'success',
-                message: _.str.sprintf('User <strong>%s</strong> saved successfully.', user.get('login'))
-            });
-        });
+        adminui.vent.trigger('showview', 'user-form');
     },
 
     onSync: function (c) {

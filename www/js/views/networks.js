@@ -20,22 +20,7 @@ var NicTags = require('../models/nictags');
 var NetworksListView = require('./networks-list');
 var NetworkPoolsListView = require('./network-pools-list');
 var PaginationView = require('./pagination');
-
-var NetworkPoolsFormView = require('./network-pools-form');
-var NetworksCreateView = require('./networks-create');
-
 var TypeaheadUserInput = require('./typeahead-user');
-
-var ___NETWORK_POOL_CREATED = function (networkPool) {
-    return _.str.sprintf('Network Pool <strong>%s</strong> created successfully.',
-        networkPool.get('name'));
-};
-
-var ___NETWORK_CREATED = function (network) {
-    return _.str.sprintf('Network <strong>%s</strong> created successfully.', network.get('name'));
-};
-
-
 var NetworksTemplate = require('../tpl/networks.hbs');
 
 var NetworksView = Backbone.Marionette.Layout.extend({
@@ -132,26 +117,11 @@ var NetworksView = Backbone.Marionette.Layout.extend({
         });
     },
     showCreateNetworkPoolForm: function () {
-        var view = new NetworkPoolsFormView({
-            networks: this.networks
-        });
-        this.listenTo(view, 'saved', function (networkPool) {
-            this.networkPools.add(networkPool);
-            view.$el.modal('hide').remove();
-            adminui.vent.trigger('notification', {
-                level: 'success',
-                message: ___NETWORK_POOL_CREATED(networkPool)
-            });
-        }, this);
-        view.show();
+        adminui.vent.trigger('showview', 'network-pool-form', {networks: this.networks});
     },
 
     showCreateNetworkForm: function () {
-        var view = new NetworksCreateView();
-        this.listenTo(view, 'saved', function (network) {
-            this.networks.add(network);
-        }, this);
-        view.show();
+        adminui.vent.trigger('showview', 'network-form');
     },
 
     showNetwork: function (view) {

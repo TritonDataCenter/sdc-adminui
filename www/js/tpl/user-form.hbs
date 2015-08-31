@@ -5,13 +5,12 @@
 -->
 
 <!--
-    Copyright (c) 2014, Joyent, Inc.
+    Copyright (c) 2015, Joyent, Inc.
 -->
 
-<div class="modal-dialog">
-    <form class="modal-content">
-        <div class="modal-header">
-            <button type="button" data-dismiss="modal" class="close" aria-hidden="true">&times;</button>
+<div class="row">
+    <div class="col-md-8 col-md-offset-1">
+        <div class="page-header">
             <h3 class="modal-title"><span class="action"></span>
                 {{#if account}}
                     Account Sub-user
@@ -20,59 +19,62 @@
                 {{/if}}
             </h3>
         </div>
+    </div>
+</div>
 
-        <div class="modal-body">
-            <div class="alert alert-danger"></div>
-            <div class="form-horizontal">
-                <div class="form-group">
-                    <label class="control-label col-xs-3">Login Name</label>
-                    <div class="col-xs-7">
-                        <input type="text" name="login" class="form-control">
-                    </div>
+<div class="row">
+    <div class="col-md-9 col-md-offset-1">
+        <div class="alert alert-danger"></div>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="control-label col-xs-3">Login Name</label>
+                <div class="col-xs-7">
+                    <input type="text" name="login" class="form-control">
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-3">Password</label>
-                    <div class="col-xs-7">
-                        <input type="password" placeholder="Change password" name="password" class="form-control">
-                    </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-3">Password</label>
+                <div class="col-xs-7">
+                    <input type="password" placeholder="Change password" name="password" class="form-control">
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-3">Email Address</label>
-                    <div class="col-xs-7">
-                        <input type="text" name="email" class="form-control col-xs-7" placeholder="user@example.com">
-                    </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-3">Email Address</label>
+                <div class="col-xs-7">
+                    <input type="text" name="email" class="form-control col-xs-7" placeholder="user@example.com">
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-3">Name</label>
-                    <div class="col-xs-3">
-                        <input type="text" name="givenname" placeholder="given name" class="form-control">
-                    </div>
-                    <div class="col-xs-3">
-                        <input type="text" name="sn" placeholder="last name" class="form-control">
-                    </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-3">Name</label>
+                <div class="col-xs-3">
+                    <input type="text" name="givenname" placeholder="given name" class="form-control">
                 </div>
-                <div class="form-group">
-                    <label class="col-xs-3 control-label">Company</label>
-                    <div class="col-xs-7">
-                        <input type="text" class="form-control" name="company" placeholder="Company name">
-                    </div>
+                <div class="col-xs-3">
+                    <input type="text" name="sn" placeholder="last name" class="form-control">
                 </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Company</label>
+                <div class="col-xs-7">
+                    <input type="text" class="form-control" name="company" placeholder="Company name">
+                </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="col-xs-3 control-label">Tenant</label>
-                    <div class="col-xs-7">
-                        <input type="text" class="form-control" name="tenant" placeholder="Tenant (used for grouping accounts)">
-                    </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Tenant</label>
+                <div class="col-xs-7">
+                    <input type="text" class="form-control" name="tenant" placeholder="Tenant (used for grouping accounts)">
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="control-label col-xs-3">Phone Number</label>
-                    <div class="col-xs-7">
-                        <input type="text" class="form-control" name="phone" placeholder="510-123-4567">
-                    </div>
+            <div class="form-group">
+                <label class="control-label col-xs-3">Phone Number</label>
+                <div class="col-xs-7">
+                    <input type="text" class="form-control" name="phone" placeholder="510-123-4567">
                 </div>
+            </div>
 
-                {{#unless account}}
+            {{#unless account}}
 
                 <div class="form-group">
                     <label class="control-label col-xs-3">Role</label>
@@ -101,21 +103,22 @@
                     </div>
                 </div>
 
-                {{/unless}}
+            {{/unless}}
 
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-sm-8">
+                    <button type="submit" class="save btn btn-primary">Save
+                        {{#if account}}
+                            Sub-user
+                        {{else}}
+                            User
+                        {{/if}}
+                    </button>
+                    <button type="cancel" class="btn btn-default">Cancel</button>
+                </div>
             </div>
-            <input type="hidden" name="cn">
-        </div> {{! .modal-body}}
 
-        <div class="modal-footer">
-            <button data-dismiss="modal" type="button" class="btn btn-default">Cancel</button>
-            <button type="submit" class="save btn btn-primary">Save
-                {{#if account}}
-                    Sub-user
-                {{else}}
-                    User
-                {{/if}}
-             </button>
-        </div>
-    </form>
+            <input type="hidden" name="cn">
+        </form>
+    </div>
 </div>
