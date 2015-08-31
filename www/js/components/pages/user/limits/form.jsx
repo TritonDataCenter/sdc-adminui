@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 "use strict";
@@ -16,83 +16,88 @@ var Chosen = require('react-chosen');
 var Images = require('../../../../models/images');
 var api = require('../../../../request');
 var _ = require('underscore');
+var ErrorAlert = require('../../../error-alert');
 
 var OPERATING_SYSTEMS = require('./constants').OPERATING_SYSTEMS;
 
-var Form = React.createClass({
+var LimitsForm = React.createClass({
     propTypes: {
         user: React.PropTypes.string.isRequired,
         initialLimit: React.PropTypes.object
     },
-    getInitialState: function() {
+    getInitialState: function () {
         var state = {};
-        if (this.props.initialLimit && this.props.initialLimit.check) {
-            state = this.fromLimit(this.props.initialLimit);
+        var initialLimit = this.props.initialLimit;
+        if (initialLimit && initialLimit.check) {
+            state = this.fromLimit(initialLimit);
         } else {
             this.props.initialLimit = null;
             state.limitUnit  = 'ram';
             state.criteriaType = 'any';
         }
+        state.formError = false;
         state.images = [];
         state.datacenters = [];
         return state;
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         this.loadImages();
         this.loadDatacenters();
     },
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         if (this.request) {
             this.request.abort();
         }
     },
-    loadDatacenters: function() {
-        api.get('/api/datacenters').end(function(res) {
+    loadDatacenters: function () {
+        api.get('/api/datacenters').end(function (res) {
             if (res.ok) {
-                var dcs = res.body.map(function(dc) {
+                var datacenters = res.body.map(function (dc) {
                     return dc.datacenter;
                 });
                 if (this.state.datacenter) {
-                    dcs.push(this.state.datacenter);
+                    datacenters.push(this.state.datacenter);
                 }
-                this.setState({ datacenters: _.unique(dcs) });
+                this.setState({datacenters: _.unique(datacenters)});
             }
         }.bind(this));
     },
-    loadImages: function() {
+    loadImages: function () {
         var collection = new Images([], {
-            params: { repository: 'https://images.joyent.com' }
+            params: {repository: 'https://images.joyent.com'}
         });
-        this.request = collection.fetch().done(function(images) {
+        this.request = collection.fetch().done(function (images) {
             var imageNames = _.pluck(images, 'name');
-            this.setState({images: _.unique(imageNames).sort() });
+            this.setState({images: _.unique(imageNames).sort()});
         }.bind(this));
     },
-    handleChangeDatacenter: function(e) {
-        this.setState({datacenter: e.target.value });
+    handleChangeDatacenter: function (e) {
+        this.setState({datacenter: e.target.value});
     },
-    handleChangeCriteriaType: function(e, c) {
-        this.setState({criteriaType: c.selected });
+    handleChangeCriteriaType: function (e, criteriaType) {
+        this.setState({criteriaType: criteriaType.selected});
     },
-    handleChangeCriteriaValue: function(e, c) {
+    handleChangeCriteriaValue: function (e, criteriaValue) {
         if (c) {
-            this.setState({criteriaValue: c.selected });
+            this.setState({criteriaValue: criteriaValue.selected});
         } else {
-            this.setState({criteriaValue: e.target.value });
+            this.setState({criteriaValue: e.target.value});
         }
     },
 
-    handleChangeLimitValue: function(e) {
-        this.setState({limitValue: e.target.value });
+    handleChangeLimitValue: function (e) {
+        this.setState({limitValue: e.target.value});
     },
 
-    handleChangeLimitUnit: function(e, c) {
-        this.setState({limitUnit: c.selected });
+    handleChangeLimitUnit: function (e, limitUnit) {
+        this.setState({limitUnit: limitUnit.selected});
     },
 
-    fromLimit: function(limit) {
+    fromLimit: function (limit) {
         var state = {};
-        if (!limit.check || limit[limit.check] === 'any' || typeof(limit[limit.check]) === 'undefined') {
+        var limitCheck = limit.check;
+        var checkedLimit = limit[limitCheck];
+        if (!limitCheck || checkedLimit === 'any' || typeof checkedLimit === 'undefined') {
             state.criteriaType = 'any';
             state.criteriaValue = null;
         } else {
@@ -105,9 +110,11 @@ var Form = React.createClass({
         return state;
     },
 
-    isValid: function() {
-        var valid = (this.state.criteriaType && this.state.limitUnit && this.state.limitValue);
-        if (this.state.criteriaType !== 'any' && (!this.state.criteriaValue || 0 === this.state.criteriaValue.length)) {
+    isValid: function () {
+        var criteriaType = this.state.criteriaType;
+        var criteriaValue = this.state.criteriaValue;
+        var valid = criteriaType && this.state.limitUnit && this.state.limitValue;
+        if (criteriaType !== 'any' && (!criteriaValue || criteriaValue.length === 0)) {
             valid = false;
         }
         console.log('validation', this.state, valid);
@@ -115,7 +122,7 @@ var Form = React.createClass({
         return valid;
     },
 
-    toLimit: function() {
+    toLimit: function () {
         var state = this.state;
         var data = {};
         data.datacenter = state.datacenter;
@@ -130,10 +137,11 @@ var Form = React.createClass({
         data.value = state.limitValue;
         return data;
     },
-    handleCancel: function() {
+    handleCancel: function () {
         this.props.handleCancel();
     },
-    handleSave: function() {
+    handleSave: function (e) {
+        e.preventDefault();
         var limit = this.toLimit();
         var req;
         if (this.props.initialLimit) {
@@ -144,22 +152,22 @@ var Form = React.createClass({
         req.send({
             limit: limit,
             original: this.props.initialLimit
-        }).end(function(err, res) {
+        }).end(function (err, res) {
                 if (res.ok) {
                     this.props.onSaved(res);
+                } else {
+                    this.setState({formError: res.body});
                 }
             }.bind(this));
     },
 
-    render: function() {
-        return <div className="provisioning-limits-form">
-                <div className="modal-header">
-                { this.props.initialLimit ?
-                    <h4 className="modal-title">Update Limit for {this.props.initialLimit.datacenter}</h4> :
-                    <h4 className="modal-title">Add New Limit</h4> }
+    render: function () {
+        return <div className="panel user-limit-form">
+            <div className="panel-body">
+                <div className="panel-title">
+                    {this.props.initialLimit ? ('Update Limit for ' + this.props.initialLimit.datacenter) : 'Add New Limit'}
                 </div>
-
-            <div className="modal-body">
+                {this.state.formError ? <ErrorAlert error={this.form.formError} /> : ''}
                 <form onSubmit={this.handleSave} className="form-horizontal">
                     <div className="form-group">
                         <label className="col-md-4 control-label">Datacenter</label>
@@ -167,8 +175,8 @@ var Form = React.createClass({
                             <Chosen className="form-control" placeholder="Select a Datacenter" value={this.state.datacenter} onChange={this.handleChangeDatacenter}>
                             <option value=""></option>
                             {
-                                this.state.datacenters.map(function(d) {
-                                    return <option value={d}>{d}</option>;
+                                this.state.datacenters.map(function (dc) {
+                                    return <option value={dc}>{dc}</option>;
                                 })
                             }
                             </Chosen>
@@ -203,35 +211,38 @@ var Form = React.createClass({
                                 </Chosen>
                             </div>
 
-                            { this.state.criteriaType === 'os' ?
+                            {this.state.criteriaType === 'os' ?
                             <div>
                                 <Chosen onChange={this.handleChangeCriteriaValue} value={this.state.criteriaValue}>
                                 {
-                                    OPERATING_SYSTEMS.map(function(o) {
-                                        return <option value={o}>{o}</option>;
+                                    OPERATING_SYSTEMS.map(function (os) {
+                                        return <option value={os}>{os}</option>;
                                     })
                                 }
                                 </Chosen>
                             </div>
-                            : '' }
+                            : ''}
 
 
-                            { this.state.criteriaType === 'image' ?
+                            {this.state.criteriaType === 'image' ?
                             <input className="form-control" placeholder="Image Name (example: ubuntu)" onChange={this.handleChangeCriteriaValue} value={this.state.criteriaValue} />
-                            : '' }
+                            : ''}
 
                         </div>
                     </div>
 
+                    <div className="form-group">
+                        <div className="input-group col-sm-offset-4 col-sm-6">
+                            <button disabled={this.isValid() ? '' : 'disabled'} onClick={this.handleSave} className="btn btn-primary" type="submit">Save Limit</button>
+                            <button type="button" onClick={this.props.handleCancel} className="btn btn-default">Cancel</button>
+                        </div>
+                    </div>
+
                 </form>
-            </div>
-            <div className="modal-footer">
-                <button className="btn btn-default" onClick={this.handleCancel}>Close</button>
-                <button disabled={ this.isValid() ? '' : 'disabled' } onClick={this.handleSave} className="btn btn-primary" type="submit">Save Limit</button>
             </div>
         </div>;
     }
 });
 
 
-module.exports = Form;
+module.exports = LimitsForm;

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
@@ -16,7 +16,7 @@ var _ = require('underscore');
 var $ = require('jquery');
 var adminui = require('../adminui');
 
-var Template = require('../tpl/networks-create.hbs');
+var Template = require('../tpl/networks-form.hbs');
 var Network = require('../models/network');
 var NicTags = require('../models/nictags');
 var TypeaheadUserInput = require('./typeahead-user');
@@ -38,11 +38,7 @@ var View = Backbone.Marionette.Layout.extend({
         'createNicTagRegion': '.create-nic-tag-region'
     },
     template: Template,
-    attributes: {
-        'class': 'modal'
-    },
-
-    id: 'network-create-modal',
+    id: 'network-form',
 
     events: {
         'submit form': 'onSubmit',
@@ -51,7 +47,8 @@ var View = Backbone.Marionette.Layout.extend({
         'click .add-route': 'onAddRoute',
         'click .remove-route': 'onRemoveRoute',
         'click a.add-owner-entry': 'onAddOwnerEntry',
-        'change .fabric-network': 'onChangeFabric'
+        'change .fabric-network': 'onChangeFabric',
+        'click button[type=cancel]': 'onCancel'
     },
 
     ui: {
@@ -77,6 +74,12 @@ var View = Backbone.Marionette.Layout.extend({
         $('select[name=nic_tag]').prop('disabled', e.target.checked).val('');
     },
 
+    onCancel: function (e) {
+        e.preventDefault();
+        var view = this.model.isNew() ? (this.options.isFabric ? 'fabric-vlan' : 'networking') : 'network';
+        adminui.vent.trigger('showview', view, {model: this.model});
+    },
+
     onClickCreateNewNicTag: function () {
         var self = this;
         this.ui.nicTagSelect.hide();
@@ -98,11 +101,10 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     onSaved: function () {
-        this.trigger('saved', this.model);
-        this.$el.modal('hide').remove();
+        adminui.vent.trigger('showview', 'network', {model: this.model});
         adminui.vent.trigger('notification', {
             level: 'success',
-            message: _.str.sprintf('Network <strong>%s</strong> created successfully.', this.model.get('name'))
+            message: _.str.sprintf('Network <strong>%s</strong> %s successfully.', this.model.get('name'), this.model.isNew() || this.options.isFabric ? 'created' : 'updated')
         });
     },
 
@@ -209,6 +211,7 @@ var View = Backbone.Marionette.Layout.extend({
             data.owner_uuid = this.options.data.owner_uuid;
             data.vlan_id = this.options.data.vlan_id;
             data.internet_nat = data.hasOwnProperty('internet_nat') ? data.internet_nat : true;
+            _.extend(this.model.attributes, data);
         }
         var routes = data.routes;
         data.routes = [];
@@ -244,8 +247,8 @@ var View = Backbone.Marionette.Layout.extend({
     onRender: function () {
         var self = this;
 
+        this.ui.alert.hide();
         this.ui.newNicTagForm.hide();
-
         this.nicTagsSelect.setElement(this.$('select[name=nic_tag]'));
 
         this.$('[name="owner_uuids[]"]').each(function () {
@@ -256,14 +259,7 @@ var View = Backbone.Marionette.Layout.extend({
             self.$('select[name=nic_tag]').val(self.model.get('nic_tag'));
         });
         this.$('.remove-route:first').hide();
-    },
-
-    show: function () {
-        this.render();
-        this.$('.alert-danger').hide();
-        this.$el.modal('show');
     }
-
 });
 
 module.exports = View;

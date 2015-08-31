@@ -52,7 +52,7 @@ module.exports = {
             var error;
             var validateProperty = validation[field];
             var modelProperty = model[field];
-            if (validateProperty.required && !modelProperty) {
+            if (validateProperty.required && !modelProperty && !validation.disableRequiredValidation) {
                 addErrors(field, 'This field is required', 'Missing');
             } else if (modelProperty) {
                 var minLength = validateProperty.minLength;

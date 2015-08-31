@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
@@ -28,7 +28,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         'click .delete': 'onClickDelete'
     },
 
-    onClickDelete: function() {
+    onClickDelete: function () {
         var confirmMsg = _.str.sprintf('Confirm delete network pool: %s ?', this.model.get('name'));
         var res = window.confirm(confirmMsg);
         if (res === true) {
@@ -36,21 +36,21 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         }
     },
 
-    editNetworkPool: function(e) {
+    editNetworkPool: function (e) {
         e.preventDefault();
         e.stopPropagation();
 
         this.trigger('edit', this.model);
     },
 
-    deleteNetworkPool: function(e) {
+    deleteNetworkPool: function (e) {
         if (e) {
             e.preventDefault();
             e.stopPropagation();
         }
 
         var model = this.model;
-        this.model.destroy().done(function() {
+        this.model.destroy().done(function () {
             var notifyMsg = _.str.sprintf('Network <strong>%s</strong> deleted successfully.', model.get('name'));
             adminui.vent.trigger('notification', {
                 level: 'success',
@@ -59,11 +59,11 @@ var ItemView = Backbone.Marionette.ItemView.extend({
         });
     },
 
-    toggleDetails: function() {
+    toggleDetails: function () {
         this.$('.networks-list-container').slideToggle(50);
     },
 
-    onRender: function() {
+    onRender: function () {
         var el = this.networksList.render().el;
         this.$('.networks-list-container').html(el).hide();
     }
@@ -79,29 +79,21 @@ module.exports = Backbone.Marionette.CollectionView.extend({
     tagName: 'ul',
     emptyView: NetworkPoolListEmptyView,
     itemView: ItemView,
-    itemViewOptions: function() {
+    itemViewOptions: function () {
         return { emptyViewModel: this.networks };
     },
     attributes: {
         'class': 'list-unstyled network-pools-list'
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
         this.networks = options.networks || new Networks();
     },
 
-    onEditNetworkPool: function(model) {
-        var view = new NetworkPoolsForm({
+    onEditNetworkPool: function (model) {
+        adminui.vent.trigger('showview', 'network-pool-form',{
             networkPool: model,
             networks: this.networks
-        });
-        view.show();
-        view.once('saved', function() {
-            view.close();
-            adminui.vent.trigger('notification', {
-                level: 'success',
-                message: _.str.sprintf('Network Pool %s updated successfully.', model.get('name'))
-            });
         });
     },
 

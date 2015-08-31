@@ -5,59 +5,85 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 /** @jsx React.DOM */
 
 var BB = require('../../bb.jsx');
 var React = require('react');
-var AddKeyView = require('./sshkey-create');
+var SSHKeyForm = require('./sshkey-create');
 var Backbone = require('backbone');
 var $ = require('jquery');
+var adminui = require('adminui');
+var SSHKeyListItemTemplate = require('./sshKeys-list-item.hbs');
+var SSHKeys = require('../../../models/sshKeys');
+var SSHKey = require('../../../models/sshkey');
 
 var SSHKeysPage = React.createClass({
-    componentWillMount: function() {
-        this.sshkeys = new SSHKeys(null, {
+    getInitialState: function () {
+        return {
+            keyForm: false
+        };
+    },
+    componentWillMount: function () {
+        this.sshKeys = new SSHKeys(null, {
             account: this.props.account,
             user: this.props.user
         });
-        this.sshkeysList = new SSHKeysList({collection: this.sshkeys });
+        this.sshKey = new SSHKey({
+            account: this.props.account,
+            user: this.props.user
+        });
+        
+        this.sshKeysList = new SSHKeysList({collection: this.sshKeys});
 
-        this.view = new SSHKeysList({ collection: this.sshkeys });
-        this.sshkeys.fetch();
+        this.view = new SSHKeysList({collection: this.sshKeys});
+        this.sshKeys.fetch();
     },
-    componentWillReceiveProps: function(props) {
-        this.sshkeys.user = props.user;
-        this.sshkeys.account = props.account;
-        this.sshkeys.fetch();
+    componentWillReceiveProps: function (props) {
+        this.sshKeys.user = props.user;
+        this.sshKeys.account = props.account;
+        this.sshKeys.fetch();
     },
-    _showAddKey: function() {
-        var view = new AddKeyView({
-            account: this.props.account,
-            user: this.props.user
-        });
-        view.render();
-        view.on('saved', function(key) {
-            this.sshkeys.add(key);
-        }, this);
+    _handleCancel: function () {
+        this.setState({keyForm: false});
     },
-    render: function() {
-        return (<div className="user-sshkeys">
+    _handleNewKey: function () {
+        this.setState({keyForm: true});
+    },
+    _handleSave: function (key) {
+        var self = this;
+        this.sshKey.save(key).done(function (key) {
+                key.user = self.props.user;
+                self.sshKeys.add(key);
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: 'SSH Key has been added to account.'
+                });
+                self.setState({keyForm: false});
+            }).fail(function (xhr) {
+                self.setState({keyFormError: xhr.responseData});
+            }
+        );
+    },
+    render: function () {
+        return (<div className="user-sshKeys">
                 <h3>SSH Keys
                     <div className="actions">
-                        { !this.props.readonly && <button onClick={this._showAddKey} className="btn btn-info btn-sm add-key"><i className="fa fa-plus"></i> Add Key</button> }
+                        { !this.props.readonly && <button onClick={this._handleNewKey} className="btn btn-info btn-sm add-key"><i className="fa fa-plus"></i> Add Key</button> }
                     </div>
                 </h3>
+            {this.state.keyForm && <SSHKeyForm
+                error={this.state.keyFormError}
+                handleCancel={this._handleCancel}
+                handleSave={this._handleSave} />}
                 <div className="ssh-keys">
                     <div className="items"><BB view={this.view} /></div>
                 </div>
             </div>);
     }
 });
-
-var SSHKeyListItemTemplate = require('./sshkeys-list-item.hbs');
-var SSHKeys = require('../../../models/sshkeys');
 
 var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
     tagName: 'div',
@@ -67,12 +93,12 @@ var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
         'click .name a': 'showKey',
         'click .remove': 'onClickRemove'
     },
-    showKey: function() {
+    showKey: function () {
         var modalHeader = $('<div class="modal-header"></div>');
-        modalHeader.html('<h2 class="modal-title">'+this.model.get('name')+'</h2>');
+        modalHeader.html('<h2 class="modal-title">' + this.model.get('name') + '</h2>');
         var modalBody = $('<div class="modal-body"></div>');
         var text = $('<textarea readonly>').html(this.model.get('openssh'));
-        text.click(function() {
+        text.click(function () {
             $(this).select();
         });
 
@@ -88,9 +114,9 @@ var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
         modal.html(dialog);
         modal.modal();
     },
-    onClickRemove: function(e) {
+    onClickRemove: function (e) {
         e.preventDefault();
-        var confirm = window.confirm("Are you sure you want to remove this SSH Key?");
+        var confirm = window.confirm('Are you sure you want to remove this SSH Key?');
         if (confirm) {
             this.model.destroy();
         }
@@ -104,7 +130,7 @@ var SSHKeyEmptyView = require('../../../views/empty').extend({
 var SSHKeysList = Backbone.Marionette.CollectionView.extend({
     emptyView: SSHKeyEmptyView,
     itemView: SSHKeyListItem,
-    itemViewOptions: function() {
+    itemViewOptions: function () {
         return {
             emptyViewModel: this.collection
         };

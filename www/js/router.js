@@ -40,12 +40,20 @@ Object.keys(Components).forEach(function (k) {
     Components[k] = React.createFactory(Components[k]);
 });
 
+var FULL_WIDTH_VIEWS = [
+    'users',
+    'user',
+    'user-form',
+    'settings'
+];
+
 var Views = {
     'provision': require('./views/provision-vm'),
     'servers': require('./views/servers'),
     'server': require('./views/server'),
 
     'users': require('./views/users'),
+    'user-form': require('./views/user-form'),
 
     'packages': require('./views/packages'),
     'packages-form': require('./views/packages-form'),
@@ -60,6 +68,8 @@ var Views = {
     'networking': require('./views/networking'),
     'networks': require('./views/networks'),
     'network': require('./views/network'),
+    'network-form': require('./views/network-form'),
+    'network-pool-form': require('./views/network-pools-form'),
 
     'nictag': require('./views/nictag'),
     'fabric-vlan': require('./views/fabric-vlan'),
@@ -237,7 +247,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         if (typeof args === 'string') {
             args = this.parseURI(args);
         }
-        console.log('[app] showing view', viewName, args);
+        console.log('[app] showing view', viewName, args, Views);
         var View = Views[viewName];
 
         if (typeof View === 'undefined') {
@@ -256,7 +266,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         state['chrome.content'] = BBComponent({
             view: view
         });
-        state['chrome.fullwidth'] = (viewName === 'users' || viewName === 'user' || viewName === 'settings');
+        state['chrome.fullwidth'] = FULL_WIDTH_VIEWS.indexOf(viewName) !== -1;
         state['localnav.active'] = view.sidebar || viewName;
 
         if (state['chrome.fullwidth'] === false) {
@@ -264,6 +274,8 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         } else {
             if (viewName === 'user' && args.user && args.user.get('uuid') === this.user.get('uuid')) {
                 state['rootnav.active'] = 'current-user';
+            } else if (viewName === 'user-form') {
+                state['rootnav.active'] = 'users';
             } else {
                 state['rootnav.active'] = view.sidebar || viewName;
             }
@@ -305,7 +317,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 'localnav.active': type.sidebar
             };
 
-            if (compName === 'users' || compName === 'alarm' || compName === 'user' || compName === 'settings') {
+            if (FULL_WIDTH_VIEWS.indexOf(compName) !== -1 || compName === 'alarm') {
                 state['chrome.fullwidth'] = true;
                 state['rootnav.active'] = type.sidebar;
             } else {
@@ -686,5 +698,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
             params[decodeURIComponent(key)] = decodeURIComponent(uri[key]);
         });
         return params;
-    },
+    }
 });
+
