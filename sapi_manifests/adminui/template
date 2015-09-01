@@ -27,6 +27,7 @@
 			"expiry": 300
 		}
 	},
+	"httpProxy": "{{{http_proxy}}}",
 	"datacenters": {
 		"{{datacenter_name}}": {
 			"rabbitmq": "{{{rabbitmq}}}",
