@@ -15,17 +15,9 @@
 var Backbone = require('backbone');
 var $ = require('jquery');
 var _ = require('underscore');
-
-
-/**
- * ./provision-vm.js
- *
- * Provision a VM
- */
-
 var React = require('react');
-var MultiNicConfigComponent = React.createFactory(require('../components/multi-nic-config'));
 
+var MultiNicConfigComponent = React.createFactory(require('../components/multi-nic-config'));
 var Package = require('../models/package');
 var Packages = require('../models/packages');
 var SSHKeys = require('../models/sshkeys');
@@ -67,7 +59,7 @@ var PackageSelect = Backbone.Marionette.CollectionView.extend({
         'change': 'onChange'
     },
     onSync: function (e) {
-        this.$el.trigger("chosen:updated");
+        this.$el.trigger('chosen:updated');
     },
     onRender: function () {
         this.$el.prepend('<option></option>');
@@ -285,6 +277,7 @@ var View = Backbone.Marionette.Layout.extend({
 
     onRender: function () {
         adminui.vent.trigger('settitle', 'provision');
+        this.ui.brandControls.hide();
 
         this.userInput = new TypeaheadUser({
             accountsOnly: true,
@@ -313,14 +306,16 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     onShow: function () {
-        this.$("input:not([disabled]):first").focus();
+        this.$('input:not([disabled]):first').focus();
     },
 
     onSelectImage: function (image) {
         if (!image) {
-            this.ui.brandControls.show();
-            this.disableBrands(false);
-            this.checkFields();
+            var imgValue = this.imageInput.$el.val();
+            if (!imgValue || imgValue && imgValue.length !== 36) {
+                this.ui.brandControls.hide();
+                this.checkFields();
+            }
             return;
         }
 
@@ -329,25 +324,22 @@ var View = Backbone.Marionette.Layout.extend({
             image.requirements.brand &&
             typeof(image.requirements.brand) === 'string') {
             this.setBrand(image.requirements.brand);
-            this.ui.brandControls.hide();
+            this.ui.brandControls.prop('disabled', 'disabled');
         } else {
             if (image.get('type') === 'zvol') {
                 this.setBrand('kvm');
-                this.disableBrands('joyent');
-                this.ui.brandControls.hide();
+                this.disableBrands('joyent', 'joyent-minimal', 'lx', 'sngl');
             } else if (image.get('type') === 'lx-dataset') {
                 this.setBrand('lx');
-                this.disableBrands('joyent', 'kvm');
-                this.ui.brandControls.hide();
+                this.disableBrands('joyent', 'joyent-minimal', 'kvm', 'sngl');
             } else if (image.get('type') === 'zone-dataset') {
                 this.setBrand('joyent');
-                this.disableBrands('kvm');
-                this.ui.brandControls.hide();
+                this.disableBrands('kvm', 'lx', 'sngl');
             } else {
-                this.ui.brandControls.show();
                 this.disableBrands(false);
             }
         }
+        this.ui.brandControls.show();
     },
 
     disableBrands: function () {
@@ -357,7 +349,7 @@ var View = Backbone.Marionette.Layout.extend({
         }
         this.$('.form-group-brand option').removeAttr('disabled');
         _.each(brands, function (b) {
-            this.$('.form-group-brand option[value='+b+']').attr('disabled', true);
+            this.$('.form-group-brand option[value=' + b + ']').attr('disabled', true);
         }, this);
     },
 
@@ -381,7 +373,7 @@ var View = Backbone.Marionette.Layout.extend({
             valid = true;
         }
 
-        if (! values.billing_id) {
+        if (!values.billing_id) {
             valid = false;
         }
 
@@ -443,24 +435,6 @@ var View = Backbone.Marionette.Layout.extend({
             values['server_uuid'] = formData.server;
         }
 
-
-        if (formData.image.length) {
-            var image = this.imageInput.imagesCollection.get(formData.image);
-            if (image) {
-                var imageReqs = image.get('requirements') || {};
-
-                if (imageReqs['brand'] === 'kvm') {
-                    values['brand'] = 'kvm';
-                }
-                if (imageReqs['brand'] === 'lx') {
-                    values['brand'] = 'lx';
-                }
-                if (image.get('type') === 'zvol') {
-                    values['brand'] = 'kvm';
-                }
-            }
-        }
-
         var pkg = this.packages.get(formData['package']);
 
         if (pkg) {
@@ -477,8 +451,8 @@ var View = Backbone.Marionette.Layout.extend({
             if (values['brand'] === 'kvm') {
                 // disk size passed in as MiB.
                 values['disks'] = [
-                    {'image_uuid': values['image_uuid'] },
-                    {'size': quotaMib }
+                    {'image_uuid': values['image_uuid']},
+                    {'size': quotaMib}
                 ];
 
                 // KVM does not need top level image_uuid and quota passed in
@@ -491,8 +465,8 @@ var View = Backbone.Marionette.Layout.extend({
         if ((values['brand'] === 'kvm' || values['brand'] === 'lx') && this.userKeys) {
             values.customer_metadata = {
                 root_authorized_keys: this.userKeys.map(function (k) {
-                    return  _.str.trim(k).replace(/(\r\n|\n|\r)/gm, "");
-                }).join("\n")
+                    return  _.str.trim(k).replace(/(\r\n|\n|\r)/gm, '');
+                }).join('\n')
             };
         }
 
