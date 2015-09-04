@@ -111,7 +111,13 @@ var Vm = Model.extend({
             cb(null, job);
         });
         req.fail(function(xhr, status, errThrown) {
-            cb(errThrown);
+            var message;
+            try {
+                message = JSON.parse(xhr.responseText).message;
+            } catch(err) {
+                message = errThrown;
+            }
+            cb(message);
         });
     },
 
