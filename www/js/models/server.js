@@ -20,9 +20,9 @@ var Server = Model.extend({
         sysinfo: {}
     },
 
-    setup: function(opts, callback) {
+    setup: function (opts, callback) {
         opts = opts || {};
-        $.post(this.url() + '?action=setup', opts, function(data) {
+        $.post(this.url() + '?action=setup', opts, function (data) {
             var job = new Job({
                 uuid: data.job_uuid
             });
@@ -30,7 +30,7 @@ var Server = Model.extend({
         });
     },
 
-    factoryReset: function(callback) {
+    factoryReset: function (callback) {
         var req = $.ajax({
             url: this.url() + '?action=factory-reset',
             type: 'POST',
@@ -38,26 +38,26 @@ var Server = Model.extend({
             dataType: "json"
         });
 
-        req.done(function(data) {
+        req.done(function (data) {
             var job = new Job({
                 uuid: data.job_uuid
             });
             callback(null, job);
         });
 
-        req.fail(function(xhr, status, err) {
+        req.fail(function (xhr, status, err) {
             callback(xhr.responseText);
         });
     },
 
-    updateNics: function(data, callback) {
+    updateNics: function (data, callback) {
         $.ajax({
             url: this.url() + '?action=update-nics',
             type: "POST",
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function(res) {
+            success: function (res) {
                 var job = new Job({
                     uuid: res.job_uuid
                 });
@@ -66,8 +66,8 @@ var Server = Model.extend({
         });
     },
 
-    reboot: function(callback) {
-        $.post(this.url() + '?action=reboot', {}, function(data) {
+    reboot: function (callback) {
+        $.post(this.url() + '?action=reboot', {}, function (data) {
             var job = new Job({
                 uuid: data.job_uuid
             });
@@ -75,10 +75,20 @@ var Server = Model.extend({
         });
     },
 
-    forget: function(cb) {
-        $.delete_(this.url(), {}, function(data) {
+    forget: function (cb) {
+        $.delete_(this.url(), {}, function (data) {
             cb();
         });
+    },
+    getProvisionableValue: function () {
+        var attributes = this.attributes;
+        return attributes.disk_pool_size_bytes -
+            attributes.disk_kvm_zvol_used_bytes -
+            attributes.disk_kvm_quota_used_bytes -
+            attributes.disk_cores_quota_used_bytes -
+            attributes.disk_zone_quota_used_bytes -
+            attributes.disk_system_used_bytes -
+            attributes.disk_installed_images_used_bytes;
     }
 });
 

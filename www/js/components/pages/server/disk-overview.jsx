@@ -34,10 +34,12 @@ var ServerDiskOverview = React.createClass({
         });
 
         var usedBytes = usedInGB * 1024 * 1024 * 1024;
+
         var unusedBytes = total - usedBytes;
         var used = utils.getReadableSize(usedBytes);
-        var unused = utils.getReadableSize(unusedBytes);
+        var unused = utils.getReadableSize(this.props.server.getProvisionableValue());
         var diskPoolSize = utils.getReadableSize(server.disk_pool_size_bytes);
+
         return <div className="disk-overview">
             <div className="row">
                 <div className="col-sm-12">
