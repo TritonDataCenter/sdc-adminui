@@ -28,7 +28,6 @@ var ServerMemoryUtilizationCircle = React.createClass({
 
     getChartData: function() {
         var server = this.props.server.toJSON();
-        var total = server.disk_pool_size_bytes;
 
         var usedInGB = 0;
 
@@ -39,7 +38,7 @@ var ServerMemoryUtilizationCircle = React.createClass({
 
         var usedBytes = usedInGB * 1024 * 1024 * 1024;
 
-        var provisionable = total - usedBytes;
+        var provisionable = this.props.server.getProvisionableValue();
         if (provisionable < 0) {
             provisionable = 0;
         }
