@@ -34,8 +34,13 @@ var ServerDiskOverview = React.createClass({
 
         var usedBytes = usedInGB * 1024 * 1024 * 1024;
 
-        var provisionable = total - usedBytes;
-
+        var provisionable = server.disk_pool_size_bytes - 
+            server.disk_kvm_zvol_used_bytes -
+            server.disk_kvm_quota_used_bytes -
+            server.disk_cores_quota_used_bytes -
+            server.disk_zone_quota_used_bytes -
+            server.disk_system_used_bytes -
+            server.disk_installed_images_used_bytes;
 
         return <div className="disk-overview">
             <div className="row">
