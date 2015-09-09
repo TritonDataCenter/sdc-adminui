@@ -109,7 +109,7 @@ var FilterForm = Backbone.Marionette.ItemView.extend({
         changeGlyphicon();
         var params = Backbone.Syphon.serialize(this);
         app.router.changeSearch(params);
-        this.trigger('query', params);
+        app.vent.trigger('query', params);
     }, 300)
 });
 
@@ -137,34 +137,21 @@ var ServersView = Backbone.Marionette.Layout.extend({
     },
 
     initialize: function (options) {
-        this.collection = new Servers(null, {
-            params: Object.keys(options || {}).length ? options : {sort: 'hostname'}
-        });
+        this.serversOptions = options;
         this.filterForm = new FilterForm(options);
-
-        this.listenTo(this.collection, 'request', this.onRequest);
-    },
-
-    query: function (params) {
-        if (params) {
-            if (params.reserved === 'false' && params.setup === '') {
-                params.setup = 'true';
-            }
-            this.collection.params = params;
-        }
-        this.collection.fetch();
     },
 
     onShow: function () {
-        this.listenTo(this.filterForm, 'query', this.query);
+        var self = this;
         React.render(ServersList({
-            collection: this.collection
+            options: self.serversOptions
         }), this.$('.servers-list-region').get(0));
         this.filterRegion.show(this.filterForm);
         app.vent.trigger('settitle', 'servers');
     },
 
     onClose: function () {
+        app.poller.stop();
         React.unmountComponentAtNode(this.$('.servers-list-region').get(0));
     },
 

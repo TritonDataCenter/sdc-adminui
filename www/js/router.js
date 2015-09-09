@@ -225,6 +225,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
     initializeChrome: function () {
+        this.app.poller.stop();
         console.info('[Router] Initialize Chrome', this.state.toJSON());
         this.chrome = React.render(Chrome({
             content: this.state.get('content'),
