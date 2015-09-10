@@ -95,17 +95,46 @@ var NicConfig = React.createClass({
         nic[prop] = value;
         if (this.props.isIpAvailable && prop === 'network_uuid') {
             delete nic.ip;
-            var isNetwork = this.state.networks.some(function (network) {
-                return value === network.uuid;
-            });
-
+            var network = this.state.networks.filter(function (network) {
+                if (value === network.uuid) {
+                    return network;
+                }
+            })[0];
+            var isNetwork = network ? Object.keys(network).length : false;
             this.setState({loadingIp: true, showIpSelect: isNetwork});
             if (isNetwork) {
                 var self = this;
                 var selectedIps = this.props.selectedIps || {};
                 this.addresses = new Addresses({uuid: value});
                 this.addresses.fetch().done(function () {
-                    var freeIpAddresses = self.addresses.toJSON().filter(function (address) {
+                    var ips = {};
+                    self.addresses.toJSON().forEach(function (address) {
+                        ips[address.ip] = address;
+                    });
+
+                    function getIpParts(ip) {
+                        return ip.split('.');
+                    }
+
+                    var ipParts = getIpParts(network.provision_start_ip);
+                    var start = parseFloat(ipParts[3]);
+                    var end = parseFloat(getIpParts(network.provision_end_ip)[3]);
+                    var allProvisionIps = [];
+                    for (var i = start; end > i; i++) {
+                        ipParts[3] = i;
+                        var ip = ipParts.join('.');
+                        if (ips[ip]) {
+                            allProvisionIps.push(ips[ip]);
+                        } else {
+                            allProvisionIps.push({
+                                ip: ip,
+                                network_uuid: value,
+                                free: true,
+                                reserved: false
+                            });
+                        }
+                    }
+                    var freeIpAddresses = allProvisionIps.filter(function (address) {
                         return address.free && !address.reserved && !address.belongs_to_type && !selectedIps[address.ip];
                     });
                     self.setState({
