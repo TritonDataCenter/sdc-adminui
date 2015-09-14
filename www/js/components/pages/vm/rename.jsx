@@ -11,24 +11,28 @@
 var React = require('react');
 var Modal = require('../../modal');
 var VMModel = require('../../../models/vm');
-
+var ALIAS_RE = /^[a-zA-Z0-9][a-zA-Z0-9\_\.\-]*$/;
 
 var RenameVm = React.createClass({
     propTypes: {
         uuid: React.PropTypes.string.isRequired,
         onCancel: React.PropTypes.func.isRequired
     },
-    getInitialState: function() {
-        return { alias: '', error: null };
+    getInitialState: function () {
+        return {
+            alias: '',
+            error: null
+        };
     },
-    _onChangeInput: function(e) {
-        var alias = e.target.value.replace(/[^a-zA-Z0-9-]+/gi, "");
+    _onChangeInput: function (e) {
+        var value = e.target.value;
+        alias = ALIAS_RE.test(value) ? value : value.substring(0, value.length - 1);
         this.setState({alias: alias});
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         this.refs.input.getDOMNode().focus();
     },
-    _onSubmit: function(e) {
+    _onSubmit: function (e) {
         e.preventDefault();
         this.setState({error: null});
         var model = new VMModel({uuid: this.props.uuid});
