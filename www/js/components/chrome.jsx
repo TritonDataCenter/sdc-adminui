@@ -38,6 +38,7 @@ var Chrome = React.createClass({
     },
     componentWillUnmount: function () {
         adminui.vent.off('showjob', this.onShowjob);
+        React.unmountComponentAtNode(React.findDOMNode($('#content').children().get(0)));
     },
     onShowjob: function (job) {
         this.setState({job: job});

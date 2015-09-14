@@ -92,37 +92,25 @@ var ServersListItem = React.createClass({
     postRender: function () {
         var model = this.props.server;
         var $node = $(this.getDOMNode());
-        $node.find('.last-platform').tooltip({
-            title: _.str.sprintf('Platform Version', model.get('current_platform')),
-            placement: 'top',
-            container: 'body'
-        });
 
-        $node.find('.last-boot').tooltip({
-            title: _.str.sprintf('Last boot at %s',
-                moment(model.get('last_boot')).utc().format('LLL')),
-            placement: 'top',
-            container: 'body'
-        });
+        var setTooltip = function (tooltip, placement, container, title) {
+            $node.find(tooltip).tooltip({
+                title: '',
+                placement: placement,
+                container: container
+            }).attr('data-original-title', title);
+        };
 
-        $node.find('.last-heartbeat').tooltip({
-            title: _.str.sprintf('Last heartbeat at %s',
-                moment(model.get('last_heartbeat')).utc().format('LLL')),
-            placement: 'bottom',
-            container: 'body'
-        });
+        setTooltip('.last-platform', 'top', 'body', _.str.sprintf('Platform Version', model.get('current_platform')));
+        setTooltip('.last-boot', 'top', 'body', _.str.sprintf('Last boot at %s',
+                moment(model.get('last_boot')).utc().format('LLL')));
 
-        $node.find('.name .reserved').tooltip({
-            title: 'Provisioning Disabled',
-            placement: 'top',
-            container: 'body'
-        });
-
+        setTooltip('.name .reserved', 'top', 'body', 'Provisioning Disabled');
     },
     render: function () {
         var server = this.props.server.toJSON();
         server.last_boot = moment(server.last_boot).fromNow();
-        server.last_heartbeat = moment(server.last_heartbeat).fromNow();
+        server.last_heartbeat = _.str.sprintf(moment(server.last_heartbeat).utc().format('MMM Do, H:mm:ss'));
         server.memory_provisionable_mb = _.str.sprintf('%0.2f', server.memory_provisionable_bytes / 1048576);
         server.memory_total_mb = _.str.sprintf('%0.2f', server.memory_total_bytes / 1048576);
         server.memory_available_gb = _.str.sprintf('%0.2f', server.memory_available_bytes / 1073741824);
@@ -223,26 +211,62 @@ var ServersListItem = React.createClass({
 
 var ServersListComponent = React.createClass({
     getInitialState: function () {
+        var options = this.props.options;
         return {
             state: 'loading',
             selected: [],
-            updateCollection: false
+            updateCollection: false,
+            params: Object.keys(options).length ? options : {sort: 'hostname'},
+            collection: []
         };
-    },
-    componentWillMount: function () {
-        if (this.props.params) {
-            this.collection.params = this.props.params;
-        }
     },
 
     componentDidMount: function () {
-        this.collection = this.props.collection || new Servers();
-        this.collection.fetch();
+        var self = this;
+        var collection = new Servers(null, {
+            params: this.state.params
+        });
 
-        this.collection.on('sync', this._onSync, this);
-        this.collection.on('error', function () {
+        var _fetch = function () {
+            collection.fetch({
+                success: function (res) {
+                    self._onFetch(res);
+                }
+            });
+        };
+
+        collection.on('sync', this._onSync, this);
+        collection.on('error', function () {
             this.setState({'state': 'error'});
         }, this);
+
+        adminui.poller.start(_fetch);
+        
+        _fetch();
+
+        adminui.vent.listenTo(adminui.vent, 'query', this.query);
+    },
+
+    _onFetch: function (collection) {
+        this.setState({
+            collection: collection
+        });
+    },
+
+    query: function (params) {
+        var self = this;
+        var collection = this.state.collection;
+        if (params) {
+            if (params.reserved === 'false' && params.setup === '') {
+                params.setup = 'true';
+            }
+            collection.params = params;
+        }
+        collection.fetch({
+            success: function (res) {
+                self._onFetch(res);
+            }
+        });
     },
 
     _onSync: function () {
@@ -250,7 +274,7 @@ var ServersListComponent = React.createClass({
         var selected = state.selected;
         var remaningSelected = [];
         if (selected.length && this.props.collection.length) {
-            this.collection.each(function (model) {
+            this.state.collection.each(function (model) {
                 if (_.findWhere(selected, {uuid: model.id})) {
                     remaningSelected.push(model.toJSON());
                 }
@@ -261,7 +285,7 @@ var ServersListComponent = React.createClass({
 
     handleSelect: function (uuid, e) {
         var selected = this.state.selected;
-        var server = this.collection.get(uuid);
+        var server = this.state.collection.get(uuid);
         if (e.target.checked) {
             selected.push(server.toJSON());
         } else {
@@ -276,11 +300,11 @@ var ServersListComponent = React.createClass({
     },
 
     handleSelectAll: function (e) {
-        this.setState({selected: e.target.checked ? this.collection.toJSON() : []});
+        this.setState({selected: e.target.checked ? this.state.collection.toJSON() : []});
     },
 
     isSelectedAll: function () {
-        return this.state.selected.length === this.collection.length;
+        return this.state.selected.length === this.state.collection.length;
     },
 
     notificationSuccess: function (msg) {
@@ -450,13 +474,13 @@ var ServersListComponent = React.createClass({
                 <div className="server-list-header">
                     {adminui.user.role('operators') && <div className="select"><input onChange={this.handleSelectAll} type="checkbox" checked={this.isSelectedAll()} className="input" /></div>}
                     <div className="title">
-                        Showing {this.collection.length} Server{this.collection.length > 1 && 's'}<br/>
+                        Showing {this.state.collection.length} Server{this.state.collection.length > 1 && 's'}<br/>
                     </div>
                 </div>
                 {adminui.user.role('operators') && this.state.selected.length ? this.renderActionBar() : null}
                 {this.state.confirm && <BatchJobConfirm {...this.state.confirm} />}
                 {this.state.modalRatio && <ReservationRatioModal {...this.state.modalRatio} />}
-                {this.collection.map(function (server) {
+                {this.state.collection.map(function (server) {
                     var uuid = server.get('uuid');
                     var boundClick = this.handleSelect.bind(this, uuid);
                     var selected = _.findWhere(this.state.selected, {uuid: uuid});
