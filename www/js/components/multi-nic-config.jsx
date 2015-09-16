@@ -11,6 +11,7 @@
 /** @jsx React.DOM **/
 
 var React = require('react');
+var uuid = require('node-uuid');
 var _ = require('underscore');
 
 var NicConfigComponent = require('./nic-config');
@@ -23,7 +24,10 @@ var MultipleNicConfigComponent = React.createClass({
         onChange: React.PropTypes.func
     },
     getValue: function () {
-        return this.state.nics;
+        var nics = this.state.nics;
+        return Object.keys(nics).map(function (uuid) {
+            return nics[uuid];
+        });
     },
     getDefaultProps: function () {
         return {
@@ -35,56 +39,58 @@ var MultipleNicConfigComponent = React.createClass({
     getInitialState: function () {
         var state = {
             networks: [],
-            networkPools: []
+            networkPools: [],
+            nics: {}
         };
-        state.nics = this.props.nics || [];
+        this.props.nics.forEach(function (nic) {
+            state.nics[uuid.v4()] = nic;
+        });
         state.networkFilters = this.props.networkFilters;
         state.expandAntispoofOptions = this.props.expandAntispoofOptions;
         state.isIpAvailable = this.props.isIpAvailable || false;
         return state;
     },
-    componentWillReceiveProps: function (props) {
-        if (props.nics) {
-            this.setState({nics: props.nics});
-        }
-    },
-    onNicPropertyChange: function (prop, value, nic, com) {
+    onNicPropertyChange: function (prop, value, nic, nicUuid) {
         var nics = this.state.nics;
-        var self = this;
         var selectedIps = {};
-        nics[com.props.index] = nic;
-
-        nics = _.map(nics, function (n) {
+        nics[nicUuid] = nic;
+        var result = {};
+        Object.keys(nics).forEach(function (uuid) {
+            var currentNic = nics[uuid];
             if (prop === 'primary' && value === true) {
-                n.primary = n === nic;
+                currentNic.primary = currentNic === nic;
             }
-            if (self.state.isIpAvailable && n.ip) {
-                selectedIps[n.ip] = true;
+            if (this.state.isIpAvailable && currentNic.ip) {
+                selectedIps[currentNic.ip] = true;
             }
-            return n;
-        });
-
-        this.setState({nics: nics, selectedIps: selectedIps}, function () {
+            result[uuid] = currentNic;
+        }, this) 
+        this.setState({nics: result, selectedIps: selectedIps}, function () {
             if (this.props.onChange) {
-                this.props.onChange(nics);
+                this.props.onChange();
             }
-        }.bind(this));
+        }, this);
     },
     addNewNic: function () {
         var nics = this.state.nics;
-        nics.push({});
+        nics[uuid.v4()] = {};
         this.setState({nics: nics}, function () {
-            this.props.onChange(nics);
-        }.bind(this));
+            this.props.onChange();
+        }, this);
     },
-    removeNic: function (index) {
-        var nics = this.state.nics.splice(index, 1);
-        if (nics.length === 1) {
-            nics[0].primary = true;
+    removeNic: function (uuid) {
+        var nics = this.state.nics;
+        delete nics[uuid];
+        var nicUuids = Object.keys(nics);
+        var isPrimary = nicUuids.some(function (nic) {
+            return nics[nic].primary === true;
+        });
+        if (!isPrimary && nicUuids.length > 0) {
+            nics[nicUuids[0]].primary = true;
         }
         this.setState({nics: nics}, function () {
-            this.props.onChange(nics);
-        }.bind(this));
+            this.props.onChange();
+        }, this);
     },
     onLoadNetworks: function (networks, networkPools) {
         this.setState({
@@ -95,33 +101,39 @@ var MultipleNicConfigComponent = React.createClass({
     render: function () {
         var networks = this.state.networks;
         var networkPools = this.state.networkPools;
-        var nodes = _.map(this.state.nics, function (nic, i) {
-            return <div className="nic-config-component-container">
-                <div className="nic-config-action">
-                    <a className="remove" onClick={this.removeNic.bind(this, i)}>
-                        <i className="fa fa-trash-o"></i> Remove
-                    </a>
-                </div>
-                <div className="nic-config-component">
-                    <NicConfigComponent
-                        expandAntispoofOptions={this.state.expandAntispoofOptions}
-                        onPropertyChange={this.onNicPropertyChange}
-                        networkFilters={this.state.networkFilters}
-                        isIpAvailable={this.state.isIpAvailable}
-                        selectedIps={this.state.selectedIps}
-                        index={i}
-                        nic={nic}
-                        networks={networks}
-                        networkPools={networkPools}
-                        onLoadNetworks={this.onLoadNetworks} />
-                </div>
-            </div>;
-        }, this);
-
-        return (<div className="multiple-nic-config-component">
-            {nodes}
-            <a className="attach-network-interface" onClick={this.addNewNic}>Attach Another NIC</a>
-        </div>);
+        var removeNicLink = function (uuid) {
+            return (
+                <a className="remove" onClick={this.removeNic.bind(this, uuid)}>
+                    <i className="fa fa-trash-o"></i> Remove
+                </a>
+            )
+        }.bind(this);
+        return (
+            <div className="multiple-nic-config-component">
+                {_.map(Object.keys(this.state.nics), function (uuid) {
+                    return (
+                        <div key={uuid} className="nic-config-component-container">
+                            <div className="nic-config-action">
+                                {removeNicLink(uuid)}  
+                            </div>
+                            <div className="nic-config-component">
+                                <NicConfigComponent
+                                    expandAntispoofOptions={this.state.expandAntispoofOptions}
+                                    onPropertyChange={this.onNicPropertyChange}
+                                    networkFilters={this.state.networkFilters}
+                                    isIpAvailable={this.state.isIpAvailable}
+                                    selectedIps={this.state.selectedIps}
+                                    uuid={uuid}
+                                    networks={networks}
+                                    networkPools={networkPools}
+                                    nic={this.state.nics[uuid]} />
+                            </div>
+                        </div>
+                    );
+                }.bind(this))}
+                <a className="attach-network-interface" onClick={this.addNewNic}>Attach Another NIC</a>
+            </div>
+        );
     }
 });
 
