@@ -96,7 +96,9 @@ module.exports = Backbone.Marionette.ItemView.extend({
         var self = this;
 
         this.$('.alert').hide();
-        utils.validate(self.model, function (err) {
+        var validation = self.model.validation;
+        validation.password.required = this.mode !== 'edit';
+        utils.validate(this.model.attributes || this.model.toJSON, validation, function (err) {
             if (err) {
                 return self.showError(err);
             }
