@@ -130,7 +130,7 @@ var NicConfig = React.createClass({
 
                     var getIpParts = function (ip) {
                         return ip.split('.');
-                    }
+                    };
 
                     var ipParts = getIpParts(network.provision_start_ip);
                     var start = parseInt(ipParts[3], 10);
@@ -149,15 +149,14 @@ var NicConfig = React.createClass({
                     var freeIpAddresses = allProvisionIps.filter(function (address) {
                         return address.free && !address.reserved && !address.belongs_to_type && !selectedIps[address.ip];
                     });
-                    self.setState({
+                    this.setState({
                         loadingIp: false,
                         addresses: freeIpAddresses
                     });
-                });
+                }.bind(this));
             }
         }
-        this.setState({nic: nic});
-        this.props.onPropertyChange(prop, value, nic, this);
+        this.props.onPropertyChange(prop, value, nic, this.props.uuid);
     },
     onChangeIp: function (e) {
         var value;
@@ -172,8 +171,7 @@ var NicConfig = React.createClass({
         } else {
             delete nic.ip;
         }
-        this.setState({nic: nic});
-        this.props.onPropertyChange('ip', value, nic, this);
+        this.props.onPropertyChange('ip', value, nic, this.props.uuid);
     },
     getValue: function () {
         return this.state.nic;
@@ -192,32 +190,50 @@ var NicConfig = React.createClass({
             networks = this.state.networks;
             networkPools = this.state.networkPools;
         }
-        return <Chosen onChange={this.onChange}
+        return (
+            <Chosen onChange={this.onChange}
                 className="form-control"
                 name="network_uuid"
                 data-placeholder="Select a Network"
                 value={this.state.nic.network_uuid}>
-            <option value=""></option>
-            <optgroup label="Networks">
-                {
-                    networks.map(function (n) {
-                        return (<option key={n.uuid} value={n.uuid}>{n.name} - {n.subnet}</option>);
-                    })
-                }
-            </optgroup>
-            <optgroup label="Network Pools">
-                {
-                    networkPools.map(function (n) {
-                        return (<option key={n.uuid} value={n.uuid}>{n.name}</option>);
-                    })
-                }
-            </optgroup>
-        </Chosen>;
+                <option value=""></option>
+                <optgroup label="Networks">
+                    {
+                        networks.map(function (nic) {
+                            return (<option key={nic.uuid} value={nic.uuid}>{nic.name} - {nic.subnet}</option>);
+                        })
+                    }
+                </optgroup>
+                <optgroup label="Network Pools">
+                    {
+                        networkPools.map(function (nic) {
+                            return (<option key={nic.uuid} value={nic.uuid}>{nic.name}</option>);
+                        })
+                    }
+                </optgroup>
+            </Chosen>
+        );
     },
     render: function () {
         var nic = this.state.nic;
         var expandAntispoofOptions = (nic.allow_dhcp_spoofing || nic.allow_ip_spoofing ||
             nic.allow_mac_spoofing || nic.allow_restricted_traffic || this.state.expandAntispoofOptions);
+        var handleChange = function (event) {
+            this.onChange(event);
+        }.bind(this);
+        var openAntiSpoofingOptions = function (event) {
+            this.expandAntispoofOptions(event)
+        }.bind(this);
+        var primary = (<div className="form-group form-group-primary row">
+            <div className="control-label col-sm-4">
+            &nbsp;
+            </div>
+            <div className="controls col-sm-6">
+                <div className="checkbox">
+                    <label><input type="checkbox" className="primary" name="primary" onChange={handleChange} checked={this.state.nic.primary} /> Make this the primary NIC</label>
+                </div>
+            </div>
+        </div>);
         return (
             <div className="nic-config form-horizontal">
                 <div className="form-group form-group-network row">
@@ -243,39 +259,23 @@ var NicConfig = React.createClass({
                                             return (<option key={address.ip} value={address.ip}>{address.ip}</option>);
                                         })
                                     }
-                                </Chosen></div>
-                            }
+                                </Chosen></div>}
                         </div>
                     </div>
                 }
-                <div className="form-group form-group-primary row">
-                    <div className="control-label col-sm-4">
-                    &nbsp;
-                    </div>
-                    <div className="controls col-sm-6">
-                        <div className="checkbox">
-                            <label><input onChange={this.onChange} checked={this.state.nic.primary} type="checkbox" className="primary" name="primary" /> Make this the primary NIC</label>
-                        </div>
-                    </div>
-                </div>
-
+                {!this.state.loading ? primary : ''}
                 {
-                    (expandAntispoofOptions === false) ?
-                    (<a className="expand-antispoofing-options" onClick={this.expandAntispoofOptions}>Configure Anti-spoofing</a>) : ''
-                }
-
-                {
-
-                    (expandAntispoofOptions === true) ?
+                    (expandAntispoofOptions === false) ? 
+                        (<a className="expand-antispoofing-options" onClick={openAntiSpoofingOptions}>Configure Anti-spoofing</a>) : 
                         (<div className="form-group form-group-spoofing row">
                             <label className="control-label col-sm-4">Anti-Spoofing Options</label>
                             <div className="col-sm-5">
-                                <div className="checkbox"><label><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label></div>
-                                <div className="checkbox"><label><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label></div>
-                                <div className="checkbox"><label><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_mac_spoofing} name="allow_mac_spoofing" /> Allow MAC Spoofing</label></div>
-                                <div className="checkbox"><label><input type="checkbox" onChange={this.onChange} checked={this.state.nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow Restricted Traffic</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_mac_spoofing} name="allow_mac_spoofing" /> Allow MAC Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow Restricted Traffic</label></div>
                             </div>
-                        </div>) : ''
+                        </div>)
                 }
             </div>
         );
