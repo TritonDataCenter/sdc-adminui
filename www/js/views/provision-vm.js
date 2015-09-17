@@ -248,7 +248,7 @@ var View = Backbone.Marionette.Layout.extend({
         this.$('.no-sshkeys-warning').show();
     },
 
-    onNicConfigChange: function (nics) {
+    onNicConfigChange: function () {
         this.checkFields();
     },
 
