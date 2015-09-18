@@ -18,7 +18,7 @@ var React = require('react');
 var moment = require('moment');
 var Promise = require('promise');
 
-var AMON_POLL_INTERVAL = 3000;
+var AMON_POLL_INTERVAL = 5000;
 
 var AlarmsMenu = React.createClass({
     propTypes: {
@@ -37,11 +37,11 @@ var AlarmsMenu = React.createClass({
     },
 
     componentWillMount: function() {
+        this._probeFetches = {};
+        this._probeGroupFetches = {};
         this.fetchAlarms();
         adminui.vent.on('alarms:changed', this.fetchAlarms);
         this._interval = setInterval(this.fetchAlarms, AMON_POLL_INTERVAL);
-        this._probeFetches = {};
-        this._probeGroupFetches = {};
     },
 
     componentWillUnmount: function() {
@@ -104,42 +104,79 @@ var AlarmsMenu = React.createClass({
     },
 
     fetchAlarms: function () {
-        var user = this.props.user;
-        api.get('/api/amon/alarms').query({
-            user: user,
-            state:'open'
-        }).end(function (err, res) {
-            if (!err && res.ok) {
-                var alarms = res.body;
-                if (this.state.error) {
-                    adminui.vent.trigger('notification', {
-                        level: 'success',
-                        message: 'AdminUI: Connected.'
-                    });
-                }
-                this.setState({alarms: alarms, error: null});
-                alarms.map(function (alarm) {
-                    if (alarm.probe) {
-                        this.fetchProbe(alarm.probe);
-                    }
-                    if (alarm.probeGroup) {
-                        this.fetchProbeGroup(alarm.probeGroup);
-                    }
-                }.bind(this));
-            } else {
-                var message = 'AdminUI service stopped responding.';
-                if (err) {
-                    adminui.vent.trigger('notification', {
-                        level: 'error',
-                        message: message
-                    });
-                } else {
-                    console.error('Error fetching alarms', res.text);
-                    message = res && res.body;
-                }
-                this.setState({error: message});
+        var done = function (alarms) {
+            if (this.state.error) {
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: 'AdminUI: Connected.'
+                });
             }
-        }.bind(this));
+            this.setState({alarms: alarms, error: null});
+            alarms.map(function (alarm) {
+                if (alarm.probe) {
+                    this.fetchProbe(alarm.probe);
+                }
+                if (alarm.probeGroup) {
+                    this.fetchProbeGroup(alarm.probeGroup);
+                }
+            }.bind(this));
+        }.bind(this);
+
+        var storedAlarms = window.localStorage.alarms;
+        
+        if (typeof storedAlarms === 'string') {
+            try {
+                storedAlarms = JSON.parse(storedAlarms);
+            } catch (err) {
+                window.localStorage.removeItem(alarms);
+            }
+        }
+        var requestTimeStamp;
+        if (typeof storedAlarms === 'object') {
+            var getTime = function (key) {
+                var time = storedAlarms[key] && new Date(storedAlarms[key]);
+                if (time) {
+                    // Let request finish
+                    time.setSeconds(time.getSeconds() + 4);
+                }
+                return time;
+            }
+
+            var timeStamp = getTime('timeStamp');
+            if (timeStamp && timeStamp > new Date()) {
+                return done(storedAlarms.data);
+            }
+            
+            requestTimeStamp = getTime('requestTimeStamp');
+        }
+
+        var currentTime = new Date();
+        if (!requestTimeStamp || requestTimeStamp < currentTime) {
+            window.localStorage.setItem('alarms', JSON.stringify({requestTimeStamp: new Date()}));
+            var user = this.props.user;
+            api.get('/api/amon/alarms').query({
+                user: user,
+                state: 'open'
+            }).end(function (err, res) {
+                if (!err && res.ok) {
+                    var alarms = res.body;
+                    done(alarms);
+                    window.localStorage.setItem('alarms', JSON.stringify({timeStamp: new Date(), data: alarms}));
+                } else {
+                    var message = 'AdminUI service stopped responding.';
+                    if (err) {
+                        adminui.vent.trigger('notification', {
+                            level: 'error',
+                            message: message
+                        });
+                    } else {
+                        console.error('Error fetching alarms', res.text);
+                        message = res && res.body;
+                    }
+                    this.setState({error: message});
+                }
+            }.bind(this));
+        }
     },
 
     gotoAlarm: function (alarm) {
