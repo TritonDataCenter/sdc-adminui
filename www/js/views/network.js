@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
@@ -21,77 +21,10 @@ var React = require('react');
 var utils = require('../lib/utils');
 
 var Addresses = require('../models/addresses');
-var AddressesTableRowTemplate = require('../tpl/networks-detail-address-row.hbs');
 
 var NotesComponent = React.createFactory(require('../components/notes'));
 var RoutesList = React.createFactory(require('../components/pages/network/routes-list'));
-
-var AddressesTableRow = Backbone.Marionette.ItemView.extend({
-    tagName: "tr",
-
-    template: AddressesTableRowTemplate,
-
-    modelEvents: {
-        'sync': 'render'
-    },
-
-    events: {
-        'click .belongs-to a': 'navigateToItem',
-        'click .reserve': 'reserve',
-        'click .unreserve': 'unreserve'
-    },
-
-    reserve: function() {
-        this.model.save({reserved: true}, {patch: true});
-    },
-
-    unreserve: function() {
-        this.model.save({reserved: false}, {patch: true});
-    },
-
-    navigateToItem: function(e) {
-        if (e) {
-            e.preventDefault();
-        }
-
-        var uuid = this.model.get('belongs_to_uuid');
-        var type = this.model.get('belongs_to_type');
-        if (type === 'server') {
-            adminui.vent.trigger('showview', 'server', {uuid: uuid });
-        }
-        if (type === 'zone') {
-            adminui.router.showVm(uuid);
-        }
-    },
-
-    templateHelpers: {
-        belongs_to_url: function() {
-            var uuid = this.belongs_to_uuid;
-            var type = this.belongs_to_type;
-            var prefix;
-            if (type === 'server') {
-                prefix = 'servers';
-            } else if (type === 'zone') {
-                prefix = 'vms';
-            } else {
-                return null;
-            }
-            return _.str.sprintf('/%s/%s', prefix, uuid);
-        },
-    },
-    onRender: function() {
-        var networkUuid = this.model.collection.uuid;
-        var ip = this.model.get('ip');
-        var item = [networkUuid, ip].join('.');
-        React.render(
-            NotesComponent({item: item}),
-            this.$('.notes-component-container').get(0));
-    }
-});
-
-var AddressesTable = Backbone.Marionette.CollectionView.extend({
-    itemView: AddressesTableRow
-});
+var AddressesList = React.createFactory(require('../components/pages/network/addresses-list'));
 
 var NetworkForm = require('../views/networks-create');
 
@@ -109,9 +42,8 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function (options) {
-        this.addresses = new Addresses({uuid: this.model.get('uuid') });
+        this.addresses = new Addresses({uuid: this.model.get('uuid')});
         this.setOwners();
-        this.listenTo(this.addresses, 'sync', this.render, this);
     },
 
     setOwners: function () {
@@ -185,8 +117,9 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
 
     onRender: function () {
         adminui.vent.trigger('settitle', _.str.sprintf('network: %s %s', this.model.get('name')));
+        var networkUuid = this.model.get('uuid');
         React.render(
-            NotesComponent({item: this.model.get('uuid')}),
+            NotesComponent({item: networkUuid}),
             this.$('.notes-component-container').get(0)
         );
         var routes = this.model.get('routes');
@@ -195,12 +128,10 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
                 RoutesList({routes: routes}),
                 this.$('.routes-list').get(0));
         }
-        
-        this.addressesTable = new AddressesTable({
-            el: this.$(".addresses tbody"),
-            collection: this.addresses
-        });
-        this.addressesTable.render();
+        React.render(AddressesList({
+            collection: this.addresses,
+            networkUuid: networkUuid
+        }), this.$('.addresses').get(0));
     }
 });
 
