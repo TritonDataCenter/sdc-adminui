@@ -17,7 +17,7 @@ window.moment = require('moment');
 
 var $ = require('jquery');
 var jQuery = $;
-
+var Poller = require('./poller');
 window.jQuery = jQuery;
 
 require('jquery.chosen');
@@ -117,12 +117,12 @@ Handlebars.registerHelper('math', function (v1, operator, v2) {
     }
 });
 
-Handlebars.registerHelper('sizeList', function(context, options) {
+Handlebars.registerHelper('sizeList', function (context, options) {
     var ret = '';
-    for(var i = 0, j = context.length; i < j; i++) {
+    for (var i = 0, j = context.length; i < j; i++) {
         ret = ret + options.fn(context[i]) + (i < (j + 1) ? '|' : '');
     }
-    return ret ;
+    return ret;
 });
 var Pinger = require('./ping');
 
@@ -142,10 +142,10 @@ function _ajax_request(url, data, callback, type, method) {
 }
 
 jQuery.extend({
-    put: function(url, data, callback, type) {
+    put: function (url, data, callback, type) {
         return _ajax_request(url, data, callback, type, 'PUT');
     },
-    delete_: function(url, data, callback, type) {
+    delete_: function (url, data, callback, type) {
         return _ajax_request(url, data, callback, type, 'DELETE');
     }
 });
@@ -153,16 +153,21 @@ jQuery.extend({
 var adminui = window.$a = module.exports = new Backbone.Marionette.Application();
 adminui.version = require('../../package.json').version;
 
-adminui.addInitializer(function(options) {
+adminui.addInitializer(function (options) {
     var Router = require('./router');
     this.pinger = new Pinger();
+    this.poller = new Poller();
     this.state = new Backbone.Model();
-    this.router = new Router({app: adminui, state: this.state});
+    this.router = new Router({
+        app: adminui,
+        state: this.state
+    });
 });
 
-adminui.on('start', function() {
+adminui.on('start', function () {
     this.pinger.start();
     this.router.start();
-    Backbone.history.start({pushState: true});
+    Backbone.history.start({
+        pushState: true
+    });
 });
-
