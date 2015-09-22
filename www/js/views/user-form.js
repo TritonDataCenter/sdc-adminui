@@ -13,24 +13,20 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
+var adminui = require('../adminui');
 
 var User = require('../models/user');
 var Template = require('../tpl/user-form.hbs');
 var utils = require('../lib/utils');
 
 module.exports = Backbone.Marionette.ItemView.extend({
-
     template: Template,
-
     id: 'user-form',
-
-    attributes: {
-        'class': 'modal'
-    },
     modelEvents: {
         'error': 'onError'
     },
     events: {
+        'click button[type=cancel]': 'сancel',
         'submit': 'save'
     },
     bindings: {
@@ -61,12 +57,21 @@ module.exports = Backbone.Marionette.ItemView.extend({
         if (options && options.user) {
             this.model = options.user;
             this.mode = 'edit';
+
+            var userData = this.model.attributes;
+            if (userData.alias) {
+                this.model.set('login', userData.alias);
+            }
         } else {
             this.model = new User();
             if (options && options.account) {
                 this.model.set({'account': options.account});
             }
             this.mode = 'create';
+        }
+
+        if (options && options.redirect) {
+            this.redirect = options.redirect;
         }
     },
 
@@ -89,24 +94,37 @@ module.exports = Backbone.Marionette.ItemView.extend({
             .show();
     },
 
+    сancel: function (e) {
+        e.preventDefault();
+        if (this.model.isNew() && !this.redirect) {
+            adminui.vent.trigger('showview', 'users');
+        } else {
+            adminui.vent.trigger('showcomponent', 'user', this.redirect || {user: this.model});
+        }
+    },
+
     save: function (e) {
         e.preventDefault();
         e.stopPropagation();
 
         var self = this;
-
         this.$('.alert').hide();
-        var validation = self.model.validation;
-        validation.password.required = this.mode !== 'edit';
-        utils.validate(this.model.attributes || this.model.toJSON, validation, function (err) {
+        var validation = this.model.validation;
+        var model = this.model.toJSON();
+        validation.disableRequiredValidation = this.mode === 'edit';
+        utils.validate(model, validation, function (err) {
             if (err) {
                 return self.showError(err);
             }
+
             self.model.save(null, {
                 patch: true,
                 success: function (model, resp) {
-                    self.$el.modal('hide').remove();
-                    self.trigger('user:saved', self.model);
+                    adminui.vent.trigger('showcomponent', 'user', self.redirect || {user: self.model});
+                    adminui.vent.trigger('notification', {
+                        level: 'success',
+                        message: _.str.sprintf('%s <strong>%s</strong> saved successfully.', self.model.get('account') ? 'Sub-user' : 'User', self.model.get('login'))
+                    });
                 }
             });
         });
@@ -124,12 +142,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     onRender: function () {
         this.stickit();
-        this.$el.on('shown.bs.modal', _.bind(function () {
-            this.$('input:first').focus();
-        }, this));
-        this.$el.modal({keyboard: false});
+        this.$('input:first').focus();
         this.$('.alert').hide();
-
         return this;
     }
 

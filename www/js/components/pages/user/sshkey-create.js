@@ -5,64 +5,77 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
-var Backbone = require('backbone');
+'use strict';
+
+var React = require('react');
+var PropTypes = React.PropTypes;
 var _ = require('underscore');
-var adminui = require('adminui');
-var SSHKey = require('../../../models/sshkey');
+var $ = require('jquery');
+var ErrorAlert = require('../../error-alert');
 
-module.exports = Backbone.Marionette.ItemView.extend({
-    id: 'sshkey-create',
-    className: 'modal',
-    template: require('./sshkey-create.hbs'),
-    events: {
-        'click button.save': 'onClickSave',
-        'submit form': 'onClickSave'
+var SSHKeyForm = React.createClass({
+    propTypes: {
+        handleSave: PropTypes.func,
+        handleCancel: PropTypes.func
     },
-    modelEvents: {
-        'sync': 'onModelSync',
-        'error': 'onModelError'
+    getDefaultProps: function () {
+        return {
+            handleCancel: function () {},
+            error: null
+        };
     },
-
-    initialize: function(options) {
-        if (typeof(options.user) !== 'string') {
-            throw new TypeError('options.user {string} required');
-        }
-
-        this.model = new SSHKey({ account: options.account, user: options.user });
+    getInitialState: function () {
+        return {
+            name: '',
+            key: ''
+        };
     },
-
-    onModelSync: function(model) {
-        this.trigger('saved', model);
-        adminui.vent.trigger('notification', {
-            level: 'success',
-            message: 'SSH Key has been added to account.'
-        });
-        this.$el.modal('hide');
-        this.remove();
-    },
-
-    onModelError: function(model, xhr, error) {
-        this.$(".alert .alert-body").html(xhr.responseData.message);
-        this.$(".alert").show();
-    },
-
-    onClickSave: function(e) {
+    _handleSaveKey: function (e) {
         e.preventDefault();
-        var name = this.$('input[name=name]').val();
-        var key = this.$('textarea[name=key]').val();
+        var name = $('input[name=name]').val();
+        var key = $('textarea[name=key]').val();
 
-        name = _.str.trim(name);
-        key = _.str.trim(key).replace(/(\r\n|\n|\r)/gm, "");
-
-        this.model.save({ name: name, key: key });
+        var payload = {
+            name: _.str.trim(name),
+            key: _.str.trim(key).replace(/(\r\n|\n|\r)/gm, '')
+        };
+        this.props.handleSave(payload);
     },
+    render: function () {
+        return (
+            <div className="panel user-roles-form">
+                {this.props.error ? <ErrorAlert error={this.props.error} /> : ''}
+                <div className="panel-body">
+                    <div className="panel-title">Add an SSH Key</div>
+                    <form onSubmit={this._handleSaveKey} className="form form-horizontal">
+                        <div className="form-group">
+                        <label className="control-label col-sm-4">SSH Key Name</label>
+                            <div className="controls col-sm-6">
+                                <input name="name" className="form-control" placeholder="SSH Key Name" />
+                            </div>
+                        </div>
 
-    onRender: function() {
-        this.$el.modal();
-        this.$('.alert').hide();
-        this.$('input:first').focus();
+                        <div className="form-group">
+                            <label className="control-label col-sm-4">SSH Public Key</label>
+                            <div className="controls col-sm-6">
+                                <textarea name="key" className="form-control" rows="5" placeholder="SSH Public Key"></textarea>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <div className="input-group col-sm-offset-4 col-sm-6">
+                                <button type="submit" onClick={this._handleSaveKey} className="btn btn-primary">Save Key</button>
+                                <button type="button" onClick={this.props.handleCancel} className="btn btn-default">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        );
     }
 });
+
+module.exports = SSHKeyForm;
