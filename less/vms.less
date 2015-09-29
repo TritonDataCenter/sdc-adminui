@@ -12,16 +12,21 @@
 @import "__vms-list";
 
 #page-vms {
-  .filter-select {
+  .filter-options {
+    .widget-content;
+    label {
+      color: @gray;
+      font-size: 12px;
+      padding: 0 3px;
+      text-transform: uppercase;
+    }
     select {
       .pull-right;
     }
-    margin-top: -2px;
-    select { 
-      height: 24px;
-      padding: 0;
-    }
-    button.btn { height: 24px; line-height: 1; font-size: 12px; }
+    button.btn { margin-top: 25px; }
+  }
+  .panel-body {
+    padding: 0;
   }
   .vms-list { .__vms-list; }
 }
