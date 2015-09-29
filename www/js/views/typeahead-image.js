@@ -79,16 +79,15 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
                     tokens.push(tagKey);
                 });
             }
-
             return {
                 model: img,
                 uuid: image.uuid,
                 tokens: tokens,
                 name: image.name,
                 version: image.version,
-                tags: Object.keys(image.tags).join(', '),
+                tags: Object.keys(image.tags || {}).join(', '),
                 os: image.os,
-                type: image.type === 'docker' ? image.type : image.type === 'zvol' ? 'kvm' : 'container'
+                virt: image.virt
             };
         });
         this.engine = new Bloodhound({

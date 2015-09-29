@@ -13,10 +13,11 @@ var ImagesList = React.createClass({
         return false;
     },
 
-    renderItem: function(i) {
+    renderItem: function (i) {
         var img = i.toJSON();
-        var href = "/images/" + img.uuid;
-        var publish_date = moment(img.published_at).format("MM/DD/YYYY");
+        var href = '/images/' + img.uuid;
+        var publishDate = moment(img.published_at).format('MM/DD/YYYY');
+        var os = img.type === 'zvol' ? ('KVM, ' + img.os) : img.os;
 
         return <tr key={img.uuid}>
             <td className="state">
@@ -30,9 +31,9 @@ var ImagesList = React.createClass({
                 <span className="uuid selectable">{img.uuid}</span>
             </td>
             <td className="published">
-                {publish_date}
+                {publishDate}
             </td>
-            <td>{img.os}</td>
+            <td>{os}</td>
             <td className="visibility">
                 { img.public ?
                   <span className="public">public</span>
