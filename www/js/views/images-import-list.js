@@ -17,7 +17,7 @@ var ImagesImportListItem = Backbone.Marionette.ItemView.extend({
     events: {
         'click .import a': 'startImport'
     },
-    startImport: function(e) {
+    startImport: function (e) {
         e.preventDefault();
         var confirm = window.confirm('Confirm import image: ' + this.model.nameWithVersion());
         if (confirm === false) {
