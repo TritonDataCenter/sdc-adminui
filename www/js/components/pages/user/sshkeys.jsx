@@ -17,7 +17,7 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 var adminui = require('adminui');
 var SSHKeyListItemTemplate = require('./sshkeys-list-item.hbs');
-var SSHKeys = require('../../../models/sshKeys');
+var SSHKeys = require('../../../models/sshkeys');
 var SSHKey = require('../../../models/sshkey');
 
 var SSHKeysPage = React.createClass({
