@@ -61,6 +61,8 @@
     }
     li.error {
       background: @brand-danger;
+      word-wrap: break-word;
+      word-break: break-all;
       * {
         white-space: pre;
         color: #fff;
@@ -70,12 +72,12 @@
 
     .task {
       padding: 10px;
-      .make-xs-column(5);
+      .make-xs-column(6);
       .name { font-weight: bold; }
       .result { font-size: 12px; }
      }
     .time {
-      .make-xs-column(4);
+      .make-xs-column(3);
       padding: 10px;
       font-size: 12px;
       margin-top: 4px;

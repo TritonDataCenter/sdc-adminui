@@ -31,6 +31,10 @@
 
     li.error {
       background: @state-danger-bg;
+      .error {
+        word-wrap: break-word;
+        word-break: break-all;
+      }
     }
 
     li > * {
@@ -48,7 +52,11 @@
     .task {
        width: 280px;
        .name { font-weight: bold; }
-       .result { font-size: 10px; }
+       .result {
+         font-size: 10px;
+         word-wrap: break-word;
+         word-break: break-all;
+       }
    }
     .time { padding-right: 10px; color: @gray-light; font-size: 10px; text-align: right; }
     .duration {
