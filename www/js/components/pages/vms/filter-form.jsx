@@ -8,12 +8,8 @@ var app = require('adminui');
 var INPUT_TYPES = {};
 
 INPUT_TYPES.uuid = React.createClass({
-    statics: {label: 'UUID'},
     onChange: function (e) {
         this.props.onChange('uuid', e.target.value);
-    },
-    focusInput: function () {
-        this.refs.input.getDOMNode().focus();
     },
     render: function () {
         return (<div className="form-group col-md-3">
@@ -24,12 +20,8 @@ INPUT_TYPES.uuid = React.createClass({
 });
 
 INPUT_TYPES.alias = React.createClass({
-    statics: {label: 'Alias'},
     onChange: function(e) {
         this.props.onChange('alias', e.target.value);
-    },
-    focusInput: function () {
-        this.refs.input.getDOMNode().focus();
     },
     render: function () {
         return (<div className="form-group col-md-3">
@@ -40,13 +32,8 @@ INPUT_TYPES.alias = React.createClass({
 });
 
 INPUT_TYPES.package_name = React.createClass({
-    statics: {label: 'Package Name'},
-    label: 'Package Name',
     onChange: function (e) {
         this.props.onChange('package_name', e.target.value);
-    },
-    focusInput: function () {
-        this.refs.input.getDOMNode().focus();
     },
     render: function () {
         return (<div className="form-group col-md-3">
@@ -57,12 +44,8 @@ INPUT_TYPES.package_name = React.createClass({
 });
 
 INPUT_TYPES.ip = React.createClass({
-    statics: {label: 'IP Address'},
     onChange: function (e) {
         this.props.onChange('ip', e.target.value);
-    },
-    focusInput: function () {
-        this.refs.input.getDOMNode().focus();
     },
     render: function () {
         return (<div className="form-group col-md-3">
@@ -74,7 +57,6 @@ INPUT_TYPES.ip = React.createClass({
 
 var TypeaheadUser = require('../../../views/typeahead-user');
 INPUT_TYPES.owner_uuid = React.createClass({
-    statics: {label: 'Owner'},
     onSelectUser: function (user) {
         var uuid = null;
         if (user) {
@@ -82,9 +64,6 @@ INPUT_TYPES.owner_uuid = React.createClass({
         }
         this.props.value = uuid;
         this.props.onChange('owner_uuid', uuid);
-    },
-    focusInput: function () {
-        this.refs.input.getDOMNode().focus();
     },
     componentDidMount: function () {
         var node = this.refs.input.getDOMNode();
@@ -104,7 +83,6 @@ INPUT_TYPES.owner_uuid = React.createClass({
 });
 
 INPUT_TYPES.state = React.createClass({
-    statics: {label: 'State'},
     onChange: function (e) {
         this.props.onChange('state', e.target.value);
     },
@@ -135,7 +113,7 @@ var FilterForm = React.createClass({
         };
     },
     _onChange: function (prop, value) {
-        var values = this.state.values;
+        var values = this.state.values || {};
         values[prop] = value;
         this.setState({values: values});
     },

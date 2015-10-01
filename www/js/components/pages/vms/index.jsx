@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 "use strict";
@@ -16,16 +16,12 @@
 
 
 var React = require('react');
-// var _ = require('underscore');
-// var Backbone = require('backbone');
-
 var app = require('../../../adminui');
 
 var VmsListComponent = require('../../vms-list');
 var FilterForm = require('./filter-form');
 
 var Vms = require('../../../models/vms');
-
 
 var VmsPage = React.createClass({
     statics: {
@@ -35,17 +31,12 @@ var VmsPage = React.createClass({
             return location.pathname === '/vms' ? (url + location.search || '') : url;
         }
     },
-    getInitialState: function() {
-        return {
-            initialFilter: JSON.parse(window.localStorage.getItem('vms::last_filter')) || {}
-        };
-    },
-    componentWillMount: function() {
+    componentWillMount: function () {
         this.collection = new Vms(null, {perPage: 20});
-        this.query(this.props.params || this.state.initialFilter);
+        this.query(this.props.params);
         app.vent.trigger('settitle', 'vms');
     },
-    render: function() {
+    render: function () {
         return (
             <div className="page" id="page-vms">
                 <div className="page-header">
@@ -61,7 +52,7 @@ var VmsPage = React.createClass({
                 <div className="row">
                     <div className="col-md-12">
                         <section className="filter-form">
-                            <FilterForm initialParams={this.props.params || this.state.initialFilter} handleSearch={this.query} />
+                            <FilterForm initialParams={this.props.params} handleSearch={this.query} />
                         </section>
                     </div>
                 </div>
@@ -77,22 +68,18 @@ var VmsPage = React.createClass({
         );
     },
 
-    provision: function() {
+    provision: function () {
         app.vent.trigger('showview', 'provision', {});
     },
-    query: function(params) {
+    query: function (params) {
         this.collection.params = params;
         this.collection.firstPage();
-        this.collection.fetch({reset: true}).done(function() {
-            var val = JSON.stringify(params);
-            console.log('[vms] set vms::last_filter', val);
-            window.localStorage.setItem('vms::last_filter', val);
-        });
+        this.collection.fetch({reset: true});
     },
-    onMoreVms: function() {
+    onMoreVms: function () {
         this.next();
     },
-    next: function() {
+    next: function () {
         if (this.collection.hasNext()) {
             this.collection.next();
             this.collection.fetch({remove: false});
