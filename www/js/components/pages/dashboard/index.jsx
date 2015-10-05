@@ -34,19 +34,19 @@ var DashboardPage = React.createClass({
         },
         sidebar: 'dashboard'
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {};
     },
-    componentWillMount: function() {
+    componentWillMount: function () {
         this._requests = [];
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         adminui.vent.trigger('settitle', 'dashboard');
-
+        adminui.poller.start(this.fetchStats);
         this.fetchStats();
     },
-    fetchStats: function() {
-        this._requests.push(api.get('/api/stats/all').end(function(res) {
+    fetchStats: function () {
+        this._requests.push(api.get('/api/stats/all').end(function (res) {
             var body = res.body;
             var state = {};
             state.vmCount = body.vmCount.total;
@@ -66,11 +66,10 @@ var DashboardPage = React.createClass({
                 state.serverUtilization =  100;
             }
 
-
             this.setState(state);
         }.bind(this)));
 
-        this._requests.push(api.get("/api/users?per_page=1").end(function(res) {
+        this._requests.push(api.get("/api/users?per_page=1").end(function (res) {
             this.setState({userCount: res.headers['x-object-count']});
         }.bind(this)));
     },
@@ -82,7 +81,6 @@ var DashboardPage = React.createClass({
     render: function() {
         var stats = this.state;
         var haveStats = Object.keys(stats).length;
-
 
         return (
             <div id="page-dashboard">
