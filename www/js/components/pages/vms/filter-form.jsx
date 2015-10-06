@@ -4,6 +4,7 @@
 var React = require('react');
 var _ = require('underscore');
 var app = require('adminui');
+var utils = require('../../../lib/utils');
 
 var INPUT_TYPES = {};
 
@@ -143,8 +144,9 @@ var FilterForm = React.createClass({
     },
     _onSubmit: function (e) {
         e.preventDefault();
-        app.router.changeSearch(this.state.values);
-        this.props.handleSearch(this.state.values);
+        var searchParams = utils.getVmSearchParams(this.state.values);
+        app.router.changeSearch(searchParams);
+        this.props.handleSearch(searchParams);
     }
 
 });

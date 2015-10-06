@@ -19,6 +19,7 @@ var React = require('react');
 var app = require('../../../adminui');
 
 var VmsListComponent = require('../../vms-list');
+var utils = require('../../../lib/utils');
 var FilterForm = require('./filter-form');
 
 var Vms = require('../../../models/vms');
@@ -72,7 +73,7 @@ var VmsPage = React.createClass({
         app.vent.trigger('showview', 'provision', {});
     },
     query: function (params) {
-        this.collection.params = params;
+        this.collection.params = utils.getVmSearchParams(params);
         this.collection.firstPage();
         this.collection.fetch({reset: true});
     },
