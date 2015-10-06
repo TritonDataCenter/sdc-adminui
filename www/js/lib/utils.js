@@ -83,5 +83,15 @@ module.exports = {
             result.measure = sizes[i];
         }
         return result;
+    },
+    getVmSearchParams: function (params) {
+        params = params || {};
+        var searchParams = params;
+        Object.keys(params).forEach(function (key) {
+            if (!params[key]) {
+                delete searchParams[key];
+            }
+        });
+        return searchParams;
     }
 };
