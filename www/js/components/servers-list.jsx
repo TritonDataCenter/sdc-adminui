@@ -100,7 +100,7 @@ var ServersListItem = React.createClass({
 
         $node.find('.last-boot').tooltip({
             title: _.str.sprintf('Last boot at %s',
-                moment(model.get('last_boot')).utc().format('LLL')),
+                moment(model.get('last_boot')).utc().format('MMMM D H:mm') + 'Z'),
             placement: 'top',
             container: 'body'
         });
@@ -121,7 +121,7 @@ var ServersListItem = React.createClass({
     },
     render: function () {
         var server = this.props.server.toJSON();
-        server.last_boot = moment(server.last_boot).fromNow();
+        server.last_boot = moment(server.last_boot).utc().fromNow();
         server.last_heartbeat = moment(server.last_heartbeat).fromNow();
         server.memory_provisionable_mb = _.str.sprintf('%0.2f', server.memory_provisionable_bytes / 1048576);
         server.memory_total_mb = _.str.sprintf('%0.2f', server.memory_total_bytes / 1048576);
