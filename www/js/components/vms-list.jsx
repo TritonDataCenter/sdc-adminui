@@ -61,6 +61,19 @@ var VmsList = React.createClass({
         this._requests = [];
         this.props.collection.on('request', this._onRequest, this);
         this.props.collection.on('sync', this._onSync, this);
+        this.props.collection.on('error', function (model, xhr) {
+            var message = 'Failed to fetch vms: ';
+            try {
+                message += JSON.parse(xhr.responseText).message;
+            } catch (ex) {
+                message += ex;
+            }
+            adminui.vent.trigger('notification', {
+                level: 'error',
+                message: message
+            });
+            this.setState({loading: false});
+        }, this);
     },
     componentWillUnmount: function () {
         this.props.collection.off('request');
