@@ -7,10 +7,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 
 var Backbone = require('backbone');
 var _ = require('underscore');
@@ -24,28 +24,28 @@ var Job = require('../models/job');
 
 var JobDetailsComponent = React.createClass({
     mixins: [BackboneMixin],
-    getBackboneModels: function() {
+    getBackboneModels: function () {
         return [this.state.job];
     },
-    getInitialState: function() {
-        return {job: this.props.job };
+    getInitialState: function () {
+        return {job: this.props.job};
     },
 
-    handleCancel: function(e) {
+    handleCancel: function (e) {
         e.preventDefault();
         var job = this.state.job;
 
         job.set({state: 'canceling'});
         this.setState({job: this.state.job});
-        job.cancel(function(err, data) {
+        job.cancel(function (err, data) {
             console.log('cancel job response', err, data);
         });
     },
 
-    render: function() {
+    render: function () {
         var job = this.state.job.toJSON();
         job.finished = this.state.job.finished();
-        job.chain_results = _.map(job.chain_results, function(task) {
+        job.chain_results = _.map(job.chain_results, function (task) {
             var t = _.clone(task);
             t.started_at = moment(task.started_at).format('YYYY-MM-DD HH:mm:ss');
             t.finished_at = moment(task.finished_at).format('YYYY-MM-DD HH:mm:ss');
@@ -53,13 +53,13 @@ var JobDetailsComponent = React.createClass({
             return t;
         });
 
-        var chainResults = _.map(job.chain_results, function(task) {
+        var chainResults = _.map(job.chain_results, function (task) {
             return (
                 <li key={task.name} className={task.error ? 'error' : ''}>
                     <div className="task">
                         <div className="name">{task.name}</div>
                         <div className="result">{task.result}</div>
-                        { (task.error) ? <div className="error">{task.error.message ? task.error.message : task.error }</div> : '' }
+                        {task.error && <div className="error">{task.error.message ? task.error.message : task.error}</div>}
                     </div>
 
                     <div className="time">
@@ -72,71 +72,74 @@ var JobDetailsComponent = React.createClass({
             )
         });
 
-
-        return <div className="page-job">
-            <div className="page-header">
-                <div className="resource-status">
-                    <span className={'execution ' + job.execution}>{job.execution}</span>
-                    <div className="pull-right">
-                        {(! job.finished) ? <span className="wait">Working... <img src="/img/job-progress-loading.gif" /></span> : '' }
-                    </div>
+        var jobStatus = (
+            <div className="resource-status">
+                <span className={'execution ' + job.execution}>{job.execution}</span>
+                <div className="pull-right">
+                    {!job.finished && <span className="wait">Working... <img src="/img/job-progress-loading.gif" /></span>}
                 </div>
-
-                <h1>
-                    Job {job.name} <small className="uuid selectable">{job.uuid}</small>
-                    <div className="resource-actions">
-                    {
-                        (!job.execution !== 'canceled' && !job.finished) ?
-                        <button onClick={this.handleCancel}
-                                disabled={job.execution === 'canceling'}
-                                className={'btn ' + (job.execution !== 'canceling' ? 'btn-danger' : '')}>
-                            { (job.execution === 'canceling' ? 'Canceling...' : 'Cancel Job') }
-                        </button> : ''
-                    }
-                    </div>
-                </h1>
             </div>
+        );
 
-
-
-
-            <section>
-                {
-                    (job.params.vm_uuid) ?
-                      <div className="vm widget-content">
-                      <strong>Virtual Machine</strong>
-                      <span className="value"><a href={"/vms/" + job.params.vm_uuid}>{job.params.vm_uuid}</a></span>
-                      </div> : ''
-                }
-                {
-                    (job.params.server_uuid) ?
-                      <div className="server widget-content">
-                      <strong>Server</strong>
-                      <span className="value"><a href={"/servers/"+ job.params.server_uuid}>{job.params.server_uuid}</a></span>
-                      </div> : ''
-                }
-            </section>
-            <section>
-              <h2>Task Summary</h2>
-              <div className="summary">
-                <div className="chain-results">
-                  <ol className="list-unstyled">{chainResults}</ol>
+        return (
+            <div className="page-job">
+                <div className="page-header">
+                    {jobStatus}
+                    <h1>
+                        Job {job.name} <small className="uuid selectable">{job.uuid}</small>
+                        <div className="resource-actions">
+                        {!job.finished &&
+                            <button onClick={this.handleCancel}
+                                    disabled={job.execution === 'canceling'}
+                                    className={'btn ' + (job.execution !== 'canceling' ? 'btn-danger' : '')}>
+                                {job.execution === 'canceling' ? 'Canceling...' : 'Cancel Job'}
+                            </button>
+                        }
+                        </div>
+                    </h1>
                 </div>
-              </div>
-            </section>
-            <section>
-              <h2>Job Parameters</h2>
-              <JSONView className="params" json={this.state.job.attributes.params} />
-            </section>
-            <section>
-              <h2>Info Output</h2>
-              <div className="info"></div>
-            </section>
-            <section>
-              <h2>Raw Output</h2>
-              <JSONView className="raw" json={this.state.job.attributes} />
-            </section>
-        </div>
+
+                <section>
+                    {
+                        (job.params.vm_uuid) ?
+                          <div className="vm widget-content">
+                          <strong>Virtual Machine</strong>
+                          <span className="value"><a href={'/vms/' + job.params.vm_uuid}>{job.params.vm_uuid}</a></span>
+                          </div> : ''
+                    }
+                    {
+                        (job.params.server_uuid) ?
+                          <div className="server widget-content">
+                          <strong>Server</strong>
+                          <span className="value"><a href={'/servers/' + job.params.server_uuid}>{job.params.server_uuid}</a></span>
+                          </div> : ''
+                    }
+                </section>
+                <section>
+                    <h2>Task Summary</h2>
+                    <div className="summary">
+                        <div className="chain-results">
+                             <ol className="list-unstyled">{chainResults}</ol>
+                        </div>
+                    </div>
+                </section>
+                {jobStatus}
+                <section>
+                    <h2>Job Parameters</h2>
+                    <JSONView className="params" json={this.state.job.attributes.params} />
+                </section>
+                <section>
+                    <h2>Info Output</h2>
+                    <div className="info"></div>
+                </section>
+                {jobStatus}
+                <section>
+                    <h2>Raw Output</h2>
+                    <JSONView className="raw" json={this.state.job.attributes} />
+                </section>
+                {jobStatus}
+            </div>
+        );
     }
 });
 
@@ -148,7 +151,7 @@ var JobView = Backbone.Marionette.ItemView.extend({
         'id': 'page-job'
     },
 
-    url: function() {
+    url: function () {
         return _.str.sprintf('/jobs/%s', this.model.get('uuid'));
     },
 
@@ -162,13 +165,13 @@ var JobView = Backbone.Marionette.ItemView.extend({
         'error': 'onError'
     },
 
-    initialize: function(options)  {
+    initialize: function (options)  {
         if (options.uuid) {
             this.model = new Job({uuid: options.uuid});
         }
     },
 
-    navigateToServer: function(e) {
+    navigateToServer: function (e) {
         if (e.metaKey || e.ctrlKey) {
             return;
         }
@@ -176,7 +179,7 @@ var JobView = Backbone.Marionette.ItemView.extend({
         adminui.vent.trigger('showview', 'server', {uuid: this.model.get('params').server_uuid});
     },
 
-    navigateToVm: function(e) {
+    navigateToVm: function (e) {
         if (e.metaKey || e.ctrlKey) {
             return;
         }
@@ -184,7 +187,7 @@ var JobView = Backbone.Marionette.ItemView.extend({
         adminui.router.showVm(this.model.get('params').vm_uuid);
     },
 
-    onError: function(e, xhr, s) {
+    onError: function (e, xhr, s) {
         adminui.vent.trigger('notification', {
             level: 'error',
             message: 'Failed to fetch job: wfapi said: ' + xhr.responseData.message,
@@ -193,38 +196,38 @@ var JobView = Backbone.Marionette.ItemView.extend({
         this.close();
     },
 
-    onSync: function() {
+    onSync: function () {
         if (this.model.finished()) {
             this.model.stopWatching();
         }
     },
 
-    renderJobDetails: function() {
+    renderJobDetails: function () {
         React.render(
-            React.createFactory(JobDetailsComponent)({ job: this.model }),
+            React.createFactory(JobDetailsComponent)({job: this.model}),
             this.$el.get(0)
         );
     },
 
-    onRender: function() {
+    onRender: function () {
         this.renderJobDetails();
         this.model.getJobInfo(this.renderInfo.bind(this));
-        adminui.vent.trigger('settitle', _.str.sprintf('job: %s %s', this.model.get('name'), this.model.get('uuid') ));
+        adminui.vent.trigger('settitle', _.str.sprintf('job: %s %s', this.model.get('name'), this.model.get('uuid')));
     },
 
-    renderInfo: function(info) {
+    renderInfo: function (info) {
         React.render(
-            React.createFactory(JSONView)({ json: info }),
+            React.createFactory(JSONView)({json: info}),
             this.$('.info').get(0)
         );
     },
 
-    onShow: function() {
+    onShow: function () {
         this.model.fetch();
         this.model.startWatching();
     },
 
-    onClose: function() {
+    onClose: function () {
         this.model.stopWatching();
     }
 });
