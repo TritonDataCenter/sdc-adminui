@@ -47,16 +47,6 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
         });
     },
     onRender: function () {
-        this.stickit(this.model, {
-            '.custom-hostname': {
-                observe: 'customHostname'
-            },
-            '.custom-hostname-container': {
-                observe: 'customHostname',
-                updateView: false,
-                visible: true
-            }
-        });
         this.$el.modal().show();
     }
 });
