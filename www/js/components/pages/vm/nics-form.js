@@ -9,7 +9,7 @@
 /*
  * Copyright (c) 2015, Joyent, Inc.
  */
-"use strict";
+'use strict';
 
 var Backbone = require('backbone');
 var _ = require('underscore');
@@ -29,10 +29,11 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function (options) {
-        if (! this.model) {
+        if (!this.model) {
             this.model = new Backbone.Model();
         }
         this.vm = options.vm;
+        this.isPrimaryChoosingAvailable = options.isPrimaryChoosingAvailable;
     },
 
     onSubmit: function () {
@@ -41,8 +42,18 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
         var nic = this.nicConfig.getValue();
         nic.uuid = nic.network_uuid;
         delete nic.network_uuid;
-
+        var nics = vm.get('nics');
         if (!nic.mac) {
+            if (nic.primary && nics.length) {
+                var hasPrimaryNic = nics.some(function (nic) {
+                    return nic.primary;
+                });
+                if (hasPrimaryNic) {
+                    window.alert('You have a primary NIC already.');
+                    return;
+                }
+            }
+
             vm.addNics([nic], function (err, job) {
                 if (err) {
                     window.alert('Error adding network interface ' + err);
@@ -59,7 +70,6 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                 });
             });
         } else {
-            var nics = vm.get('nics');
             var existingNic = _.findWhere(nics, {mac: nic.mac});
 
             if (existingNic) {
@@ -83,6 +93,8 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                 delete n.uuid;
                 delete n.mtu;
                 delete n.cn_uuid;
+                delete n.model;
+                delete n.interface;
                 if (nic.primary && nic.mac !== n.mac) {
                     n.primary = false;
                 }
@@ -130,6 +142,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                 nic: this.model.toJSON(),
                 readonlyNetwork: !this.model.isNew(),
                 expandAntispoofOptions: false,
+                isPrimaryChoosingAvailable: this.isPrimaryChoosingAvailable,
                 onPropertyChange: this.onNicPropertyChange.bind(this)
             }),
             this.$('.nic-config-component').get(0));
