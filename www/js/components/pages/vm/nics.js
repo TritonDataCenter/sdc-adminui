@@ -81,7 +81,7 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
     onClickAddNic: function () {
         var nics = this.model.attributes.nics;
         var hasPrimaryNic = nics && nics.length && nics.some(function (nic) {
-                return nic.primary;
+            return nic.primary;
         });
         new AddNicView({
             vm: this.model,

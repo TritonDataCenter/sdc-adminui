@@ -49,7 +49,7 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                     return nic.primary;
                 });
                 if (hasPrimaryNic) {
-                    window.alert('You have a primary NIC already.');
+                    window.alert('You have primary NIC defined already.');
                     return;
                 }
             }
