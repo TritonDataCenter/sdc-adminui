@@ -52,13 +52,15 @@ var NicConfig = React.createClass({
             networkPools: this.props.networkPools || [],
             readonlyNetwork: this.props.readonlyNetwork === true,
             expandAntispoofOptions: this.props.expandAntispoofOptions,
-            isIpAvailable: this.props.isIpAvailable || false
+            isIpAvailable: this.props.isIpAvailable || false,
+            isPrimaryChoosingAvailable: typeof this.props.isPrimaryChoosingAvailable === 'boolean' ? this.props.isPrimaryChoosingAvailable : true
         };
 
         if (typeof(state.expandAntispoofOptions) !== 'boolean') {
             console.warn('[NicConfig] expandAntispoofOptions property is not a boolean, using defaults(true)');
             state.expandAntispoofOptions = true;
         }
+
         state.loading = true;
         return state;
     },
@@ -156,6 +158,7 @@ var NicConfig = React.createClass({
                 }.bind(this));
             }
         }
+        this.setState({nic: nic});
         this.props.onPropertyChange(prop, value, nic, this.props.uuid);
     },
     onChangeIp: function (e) {
@@ -230,7 +233,7 @@ var NicConfig = React.createClass({
             </div>
             <div className="controls col-sm-6">
                 <div className="checkbox">
-                    <label><input type="checkbox" className="primary" name="primary" onChange={handleChange} checked={this.state.nic.primary} /> Make this the primary NIC</label>
+                    <label><input type="checkbox" className="primary" name="primary" onChange={handleChange} checked={nic.primary} /> Make this the primary NIC</label>
                 </div>
             </div>
         </div>);
@@ -263,17 +266,17 @@ var NicConfig = React.createClass({
                         </div>
                     </div>
                 }
-                {!this.state.loading ? primary : ''}
+                {!this.state.loading && this.state.isPrimaryChoosingAvailable ? primary : ''}
                 {
                     (expandAntispoofOptions === false) ? 
                         (<a className="expand-antispoofing-options" onClick={openAntiSpoofingOptions}>Configure Anti-spoofing</a>) : 
                         (<div className="form-group form-group-spoofing row">
                             <label className="control-label col-sm-4">Anti-Spoofing Options</label>
                             <div className="col-sm-5">
-                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label></div>
-                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label></div>
-                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_mac_spoofing} name="allow_mac_spoofing" /> Allow MAC Spoofing</label></div>
-                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow Restricted Traffic</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={nic.allow_mac_spoofing} name="allow_mac_spoofing" /> Allow MAC Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow Restricted Traffic</label></div>
                             </div>
                         </div>)
                 }
