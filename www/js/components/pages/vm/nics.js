@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
@@ -20,14 +20,14 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
     itemView: NicsRowView,
     itemViewContainer: 'tbody',
     attributes: {
-        id: "vm-nics"
+        id: 'vm-nics'
     },
     events: {
         'click button.add-nic': 'onClickAddNic',
         'click button.remove-nics': 'onClickRemoveNics'
     },
 
-    initialize: function(options)  {
+    initialize: function (options)  {
         this.on('itemview:nic:configure', this.onConfigureNic, this);
         this.on('itemview:nic:select', this.onSelectNic, this);
         this.on('itemview:nic:deselect', this.onDeselectNic, this);
@@ -48,20 +48,18 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
 
     },
 
-    onConfigureNic: function(view, nic) {
-        console.log('on configure:nic', view, nic);
-
+    onConfigureNic: function (view, nic) {
         new AddNicView({
             vm: this.model,
             model: nic
         }).render();
     },
 
-    resetNics: function() {
+    resetNics: function () {
         this.collection.fetch();
     },
 
-    onClickRemoveNics: function() {
+    onClickRemoveNics: function () {
         var confirm = window.confirm('Are you sure you want to remove selected nics? This will reboot the VM.');
         if (! confirm) {
             return;
@@ -69,25 +67,29 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
 
         var self = this;
         var macs = this.selectedNics.pluck('mac');
-        this.model.removeNics(macs, function(job) {
+        this.model.removeNics(macs, function (job) {
             var jobView = new JobProgress({model: job});
             jobView.show();
 
-            self.listenTo(jobView, 'succeeded', function() {
-                self.selectedNics.each(this.collection.remove);
+            self.listenTo(jobView, 'succeeded', function () {
                 self.selectedNics.reset();
                 self.resetNics();
             });
         });
     },
 
-    onClickAddNic: function() {
-        var view = new AddNicView({vm: this.model});
-        view.render();
+    onClickAddNic: function () {
+        var nics = this.model.attributes.nics;
+        var hasPrimaryNic = nics && nics.length && nics.some(function (nic) {
+            return nic.primary;
+        });
+        new AddNicView({
+            vm: this.model,
+            isPrimaryChoosingAvailable: !hasPrimaryNic
+        }).render();
     },
 
-    onChangeSelectedNics: function() {
-        console.log('onChangeSelectNics');
+    onChangeSelectedNics: function () {
         if (this.selectedNics.length > 0) {
             this.enableActions();
         } else {
@@ -95,25 +97,23 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
         }
     },
 
-    enableActions: function() {
-        this.$(".remove-nics").show();
+    enableActions: function () {
+        this.$('.remove-nics').show();
     },
 
-    disableActions: function() {
-        this.$(".remove-nics").hide();
+    disableActions: function () {
+        this.$('.remove-nics').hide();
     },
 
-    onSelectNic: function(view, nic) {
-        console.log('on itemview:nic:select', view, nic);
+    onSelectNic: function (view, nic) {
         this.selectedNics.add(nic);
     },
 
-    onDeselectNic: function(view, nic) {
-        console.log('on itemview:nic:deselect', view, nic);
+    onDeselectNic: function (view, nic) {
         this.selectedNics.remove(nic);
     },
 
-    onRender: function() {
+    onRender: function () {
         this.disableActions();
     }
 

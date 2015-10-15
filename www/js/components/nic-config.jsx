@@ -35,39 +35,36 @@ var NicConfig = React.createClass({
     },
 
     getInitialState: function () {
-        if (! this.props.nic) {
-            this.props.nic = {};
-        }
+        var nic = this.props.nic || {};
 
         // normalize UUID to network_uuid
-        if (this.props.nic.uuid) {
-            this.props.nic.network_uuid = this.props.nic.uuid;
-            delete this.props.nic.uuid;
+        if (nic.uuid) {
+            nic.network_uuid = nic.uuid;
+            delete nic.uuid;
         }
 
         var state = {
-            nic: this.props.nic,
+            nic: nic,
             networkFilters: this.props.networkFilters || {},
             networks: this.props.networks || [],
             networkPools: this.props.networkPools || [],
             readonlyNetwork: this.props.readonlyNetwork === true,
-            expandAntispoofOptions: this.props.expandAntispoofOptions,
-            isIpAvailable: this.props.isIpAvailable || false
+            expandAntispoofOptions: nic.allow_dhcp_spoofing || nic.allow_ip_spoofing || nic.allow_mac_spoofing || nic.allow_restricted_traffic ||
+                (typeof this.props.expandAntispoofOptions === 'boolean' ? this.props.expandAntispoofOptions : true),
+            isIpAvailable: this.props.isIpAvailable || false,
+            isPrimaryChoosingAvailable: typeof this.props.isPrimaryChoosingAvailable === 'boolean' ? this.props.isPrimaryChoosingAvailable : true
         };
 
-        if (typeof(state.expandAntispoofOptions) !== 'boolean') {
-            console.warn('[NicConfig] expandAntispoofOptions property is not a boolean, using defaults(true)');
-            state.expandAntispoofOptions = true;
-        }
         state.loading = true;
         return state;
     },
     componentDidMount: function () {
-        var self = this;
+        var nic = this.state.nic || {};
         if (this.state.networks.length || this.state.networkPools.length) {
             this.setState({
                 loading: false
             });
+            this.loadIpAddresses(nic);
         } else {
             this.networks = new Networks();
             this.networkPools = new NetworkPools();
@@ -92,11 +89,65 @@ var NicConfig = React.createClass({
                 if (typeof this.props.onLoadNetworks === 'function') {
                     this.props.onLoadNetworks(networks, networkPools);
                 }
+                this.loadIpAddresses(nic);
+
             }.bind(this));
         }
     },
     expandAntispoofOptions: function () {
         this.setState({expandAntispoofOptions: true});
+    },
+    loadIpAddresses: function (nic) {
+        nic = nic || this.state.nic;
+        if (!nic.network_uuid || !this.state.isIpAvailable) {
+            return;
+        }
+        var network_uuid = nic.network_uuid;
+        delete nic.ip;
+        var network = this.state.networks.filter(function (network) {
+            if (network_uuid === network.uuid) {
+                return network;
+            }
+        })[0];
+        var isNetwork = !!network;
+        this.setState({loadingIp: true, showIpSelect: isNetwork});
+        if (isNetwork) {
+            var self = this;
+            var selectedIps = this.props.selectedIps || {};
+            this.addresses = new Addresses({uuid: network_uuid});
+            this.addresses.fetch().done(function () {
+                var ips = {};
+                self.addresses.toJSON().forEach(function (address) {
+                    ips[address.ip] = address;
+                });
+
+                var getIpParts = function (ip) {
+                    return ip.split('.');
+                };
+
+                var ipParts = getIpParts(network.provision_start_ip);
+                var start = parseInt(ipParts[3], 10);
+                var end = parseInt(getIpParts(network.provision_end_ip)[3], 10);
+                var allProvisionIps = [];
+                for (var i = start; i <= end; i++) {
+                    ipParts[3] = i;
+                    var ip = ipParts.join('.');
+                    allProvisionIps.push(ips[ip] || {
+                            ip: ip,
+                            network_uuid: network_uuid,
+                            free: true,
+                            reserved: false
+                        });
+                }
+                var freeIpAddresses = allProvisionIps.filter(function (address) {
+                    return address.free && !address.reserved && !address.belongs_to_type && !selectedIps[address.ip];
+                });
+                this.setState({
+                    loadingIp: false,
+                    addresses: freeIpAddresses
+                });
+            }.bind(this));
+        }
     },
     onChange: function (e) {
         var value;
@@ -110,52 +161,9 @@ var NicConfig = React.createClass({
         var nic = this.state.nic;
         nic[prop] = value;
         if (this.props.isIpAvailable && prop === 'network_uuid') {
-            delete nic.ip;
-            var network = this.state.networks.filter(function (network) {
-                if (value === network.uuid) {
-                    return network;
-                }
-            })[0];
-            var isNetwork = !!network;
-            this.setState({loadingIp: true, showIpSelect: isNetwork});
-            if (isNetwork) {
-                var self = this;
-                var selectedIps = this.props.selectedIps || {};
-                this.addresses = new Addresses({uuid: value});
-                this.addresses.fetch().done(function () {
-                    var ips = {};
-                    self.addresses.toJSON().forEach(function (address) {
-                        ips[address.ip] = address;
-                    });
-
-                    var getIpParts = function (ip) {
-                        return ip.split('.');
-                    };
-
-                    var ipParts = getIpParts(network.provision_start_ip);
-                    var start = parseInt(ipParts[3], 10);
-                    var end = parseInt(getIpParts(network.provision_end_ip)[3], 10);
-                    var allProvisionIps = [];
-                    for (var i = start; i <= end; i++) {
-                        ipParts[3] = i;
-                        var ip = ipParts.join('.');
-                        allProvisionIps.push(ips[ip] || {
-                            ip: ip,
-                            network_uuid: value,
-                            free: true,
-                            reserved: false
-                        });
-                    }
-                    var freeIpAddresses = allProvisionIps.filter(function (address) {
-                        return address.free && !address.reserved && !address.belongs_to_type && !selectedIps[address.ip];
-                    });
-                    this.setState({
-                        loadingIp: false,
-                        addresses: freeIpAddresses
-                    });
-                }.bind(this));
-            }
+            this.loadIpAddresses(nic);
         }
+        this.setState({nic: nic});
         this.props.onPropertyChange(prop, value, nic, this.props.uuid);
     },
     onChangeIp: function (e) {
@@ -216,8 +224,6 @@ var NicConfig = React.createClass({
     },
     render: function () {
         var nic = this.state.nic;
-        var expandAntispoofOptions = (nic.allow_dhcp_spoofing || nic.allow_ip_spoofing ||
-            nic.allow_mac_spoofing || nic.allow_restricted_traffic || this.state.expandAntispoofOptions);
         var handleChange = function (event) {
             this.onChange(event);
         }.bind(this);
@@ -230,7 +236,7 @@ var NicConfig = React.createClass({
             </div>
             <div className="controls col-sm-6">
                 <div className="checkbox">
-                    <label><input type="checkbox" className="primary" name="primary" onChange={handleChange} checked={this.state.nic.primary} /> Make this the primary NIC</label>
+                    <label><input type="checkbox" className="primary" name="primary" onChange={handleChange} checked={nic.primary} /> Make this the primary NIC</label>
                 </div>
             </div>
         </div>);
@@ -263,17 +269,17 @@ var NicConfig = React.createClass({
                         </div>
                     </div>
                 }
-                {!this.state.loading ? primary : ''}
+                {!this.state.loading && this.state.isPrimaryChoosingAvailable ? primary : ''}
                 {
-                    (expandAntispoofOptions === false) ? 
-                        (<a className="expand-antispoofing-options" onClick={openAntiSpoofingOptions}>Configure Anti-spoofing</a>) : 
+                    (!this.state.expandAntispoofOptions) ?
+                        (<a className="expand-antispoofing-options" onClick={openAntiSpoofingOptions}>Configure Anti-Spoofing</a>) :
                         (<div className="form-group form-group-spoofing row">
                             <label className="control-label col-sm-4">Anti-Spoofing Options</label>
                             <div className="col-sm-5">
-                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label></div>
-                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label></div>
-                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_mac_spoofing} name="allow_mac_spoofing" /> Allow MAC Spoofing</label></div>
-                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={this.state.nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow Restricted Traffic</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={nic.allow_dhcp_spoofing} name="allow_dhcp_spoofing" /> Allow DHCP Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={nic.allow_ip_spoofing} name="allow_ip_spoofing" /> Allow IP Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={nic.allow_mac_spoofing} name="allow_mac_spoofing" /> Allow MAC Spoofing</label></div>
+                                <div className="checkbox"><label><input type="checkbox" onChange={handleChange} checked={nic.allow_restricted_traffic} name="allow_restricted_traffic" /> Allow Restricted Traffic</label></div>
                             </div>
                         </div>)
                 }
