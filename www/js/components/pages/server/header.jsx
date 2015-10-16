@@ -30,7 +30,7 @@ var ServerPageHeader = React.createClass({
                     <span className={'server-state ' + server.get('status') }>{server.get('status')}</span>
                 }
             </div>
-            <h1>{server.get('hostname')}<small className="uuid selectable">{server.get('uuid')}</small></h1>
+            <h1>{server.get('hostname')}&nbsp;<small className="uuid selectable">{server.get('uuid')}</small></h1>
             {server.get('headnode') ? <span className="headnode">HEADNODE</span> : ''}
         </div>;
     }
