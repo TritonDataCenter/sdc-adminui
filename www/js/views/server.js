@@ -37,7 +37,6 @@ var ChangeRackForm = require('./server-change-rack');
 var ChangePlatformForm = require('./server-change-platform');
 var ServerSetup = require('./server-setup');
 
-var JobsList = require('./jobs-list');
 var ServerNicsEdit = require('./server-nics-edit');
 
 var ServerTemplate = require('../tpl/server.hbs');
@@ -46,8 +45,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
     sidebar: 'servers',
     template: ServerTemplate,
     regions: {
-        'vmsRegion': '.vms-region',
-        'jobsRegion': '.jobs-region'
+        'vmsRegion': '.vms-region'
     },
 
     events: {
@@ -464,21 +462,15 @@ var ServerView = Backbone.Marionette.Layout.extend({
     onRender: function () {
         app.vent.trigger('settitle', _.str.sprintf('server: %s', this.model.get('hostname')));
 
-        this.jobsListView = new JobsList({
-            perPage: 100,
-            params: {server_uuid: this.model.get('uuid')}
-        });
-        this.jobsRegion.show(this.jobsListView);
-
         if (this.model.get('headnode')) {
             this.$('.platform .boot .value').tooltip({
-                title: "Use 'sdcadm platform' to update the headnode's platform.",
+                title: 'Use \'sdcadm platform\' to update the headnode\'s platform.',
                 placement: 'top',
                 container: 'body'
             });
         }
         
-        this.$("[data-toggle=tooltip]").tooltip();
+        this.$('[data-toggle=tooltip]').tooltip();
         this.postRender();
     }
 });
