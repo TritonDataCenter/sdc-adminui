@@ -117,7 +117,7 @@ var NicConfig = React.createClass({
             var selectedIps = this.props.selectedIps || {};
             this.addresses = new Addresses({uuid: network_uuid});
             this.addresses.fetch().done(function () {
-                var allProvisionIps = utils.allNetworkIps(self.addresses, network_uuid);
+                var allProvisionIps = utils.getNetworkIpList(self.addresses, network_uuid);
                 var freeIpAddresses = allProvisionIps.filter(function (address) {
                     return address.free && !address.reserved && !address.belongs_to_type && !selectedIps[address.ip];
                 });

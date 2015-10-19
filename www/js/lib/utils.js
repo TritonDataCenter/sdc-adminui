@@ -132,25 +132,25 @@ module.exports = {
         }
         return range;
     },
-    allNetworkIps: function (addresses, network_uuid) {
+    getNetworkIpList: function (addresses, network_uuid) {
         var range = this.getRange(addresses);
         var ips = {};
         var allProvisionIps = [];
         addresses.toJSON().forEach(function (address) {
             ips[address.ip] = address;
         });
-        var start = '0x' + Number(range.startIpLong).toString(16);
-        var end = '0x' + Number(range.endIpLong).toString(16);
+        var start = '0x' + range.startIpLong.toString(16);
+        var end = '0x' + range.endIpLong.toString(16);
 
         for (var i = start; i <= end; i++) {
             var components = [(i>>24) & 0xff, (i>>16) & 0xff, (i>>8) & 0xff, i & 0xff];
             var ip = components.join('.');
             allProvisionIps.push(ips[ip] || {
-                    ip: ip,
-                    network_uuid: network_uuid,
-                    free: true,
-                    reserved: false
-                });
+                ip: ip,
+                network_uuid: network_uuid,
+                free: true,
+                reserved: false
+            });
         }
         return allProvisionIps;
     }
