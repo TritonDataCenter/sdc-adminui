@@ -12,25 +12,11 @@ var React = require('react');
 var adminui = require('../../../adminui');
 var $ = require('jquery');
 var _ = require('underscore');
+var utils = require('../../../lib/utils');
 
 var Addresses = require('../../../models/addresses');
 var NotesComponent = require('../../notes');
 var RESERVE = 'reserve';
-
-var ip2long = function (ip) {
-    var iplong = 0;
-    if (typeof ip === 'string') {
-        var components = ip.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
-        if (components) {
-            var power  = 1;
-            for (var i = 4; i >= 1; i--) {
-                iplong += power * parseInt(components[i], 10);
-                power *= 256;
-            }
-        }
-    }
-    return iplong;
-};
 
 var AddressesList = React.createClass({
     getInitialState: function () {
@@ -47,31 +33,8 @@ var AddressesList = React.createClass({
         this.collection = this.props.collection || new Addresses();
         this.collection.fetch();
         this.collection.on('sync',  function () {
-            var range = self.state.range;
-            if (!range){
-                var firstIpAddress = self.collection.first().id;
-                var lastIpAddress = self.collection.last().id;
-                var firstAddressComponents = firstIpAddress.split('.');
-                var lastAddressComponents = lastIpAddress.split('.');
-                range = {
-                    start: '',
-                    end: '',
-                    commonPart: firstAddressComponents[0] + '.',
-                    startIpLong: ip2long(firstIpAddress),
-                    endIpLong: ip2long(lastIpAddress)
-                };
-                for (var i = 1; i < 4; i++) {
-                    var first = firstAddressComponents[i] + (i === 3 ? '' :'.');
-                    var last = lastAddressComponents[i] + (i === 3 ? '' :'.');
-                    if (first === last && !range.start.length) {
-                        range.commonPart += first;
-                    } else {
-                        range.start += first;
-                        range.end += last;
-                    }
-                }
-            }
-           self.setState({state: 'done', range: range});
+            var range = self.state.range || utils.getRange(self.collection);
+            self.setState({state: 'done', range: range});
         }, this);
         this.collection.on('error', function () {
             this.setState({state: 'error'});
@@ -163,8 +126,8 @@ var AddressesList = React.createClass({
     _handleSelectRange: function (e) {
         e.preventDefault();
         var range = this.state.range;
-        var startIpLong = ip2long(range.commonPart + range.start);
-        var endIpLong = ip2long(range.commonPart + range.end);
+        var startIpLong = utils.ip2long(range.commonPart + range.start);
+        var endIpLong = utils.ip2long(range.commonPart + range.end);
         if (startIpLong && endIpLong && startIpLong <= endIpLong) {
             var collection = this.collection.toJSON();
             startIpLong = startIpLong < range.startIpLong ? range.startIpLong : startIpLong;
@@ -175,7 +138,7 @@ var AddressesList = React.createClass({
             }
             var selected = this.state.selected;
             collection.forEach(function (address) {
-                var ipLong = ip2long(address.ip);
+                var ipLong = utils.ip2long(address.ip);
                 if (ipLong <= endIpLong && ipLong >= startIpLong) {
                     var index = _.findIndex(selected, {ip: address.ip});
                     if (index === -1) {

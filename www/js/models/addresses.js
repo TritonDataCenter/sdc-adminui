@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
@@ -14,16 +14,16 @@ var Backbone = require('backbone');
 module.exports = Backbone.Collection.extend({
     model: Backbone.Model.extend({
         idAttribute: 'ip',
-        urlRoot: function() {
+        urlRoot: function () {
             this.collection.url();
-        },
+        }
     }),
 
-    url: function() {
+    url: function () {
         return '/api/networks/' + this.uuid + '/ips';
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
         this.uuid = options.uuid;
     }
 });

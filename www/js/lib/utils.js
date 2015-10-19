@@ -93,5 +93,65 @@ module.exports = {
             }
         });
         return searchParams;
+    },
+    ip2long: function (ip) {
+        var iplong = 0;
+        if (typeof ip === 'string') {
+            var components = ip.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+            if (components) {
+                var power = 1;
+                for (var i = 4; i >= 1; i--) {
+                    iplong += power * parseInt(components[i], 10);
+                    power *= 256;
+                }
+            }
+        }
+        return iplong;
+    },
+    getRange: function (addresses) {
+        var firstAddress = addresses.first().id;
+        var lastAddress = addresses.last().id;
+        var firstAddressComponents = firstAddress.split('.');
+        var lastAddressComponents = lastAddress.split('.');
+        var range = {
+            start: '',
+            end: '',
+            commonPart: firstAddressComponents[0] + '.',
+            startIpLong: this.ip2long(firstAddress),
+            endIpLong: this.ip2long(lastAddress)
+        };
+        for (var i = 1; i < 4; i++) {
+            var first = firstAddressComponents[i] + (i === 3 ? '' : '.');
+            var last = lastAddressComponents[i] + (i === 3 ? '' : '.');
+            if (first === last && !range.start.length) {
+                range.commonPart += first;
+            } else {
+                range.start += first;
+                range.end += last;
+            }
+        }
+        return range;
+    },
+    allNetworkIps: function (addresses, network_uuid) {
+        var range = this.getRange(addresses);
+        var ips = {};
+        var allProvisionIps = [];
+        addresses.toJSON().forEach(function (address) {
+            ips[address.ip] = address;
+        });
+        var start = '0x' + Number(range.startIpLong).toString(16);
+        var end = '0x' + Number(range.endIpLong).toString(16);
+
+        for (var i = start; i <= end; i++) {
+            var components = [(i>>24) & 0xff, (i>>16) & 0xff, (i>>8) & 0xff, i & 0xff];
+            var ip = components.join('.');
+            allProvisionIps.push(ips[ip] || {
+                    ip: ip,
+                    network_uuid: network_uuid,
+                    free: true,
+                    reserved: false
+                });
+        }
+        return allProvisionIps;
     }
 };
