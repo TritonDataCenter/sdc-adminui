@@ -242,6 +242,7 @@ var ServersListComponent = React.createClass({
 
         var _fetch = function () {
             collection.fetch({
+                cache: false,
                 success: function (res) {
                     self._onFetch(res);
                 }
