@@ -47,8 +47,8 @@ var JobDetailsComponent = React.createClass({
         job.finished = this.state.job.finished();
         job.chain_results = _.map(job.chain_results, function (task) {
             var t = _.clone(task);
-            t.started_at = moment(task.started_at).format('YYYY-MM-DD HH:mm:ss');
-            t.finished_at = moment(task.finished_at).format('YYYY-MM-DD HH:mm:ss');
+            t.started_at = moment(task.started_at).utc().format('YYYY-MM-DD HH:mm:ss');
+            t.finished_at = moment(task.finished_at).utc().format('YYYY-MM-DD HH:mm:ss');
             t.duration = moment(task.finished_at).diff(moment(task.started_at), 'seconds', true) + 's';
             return t;
         });
