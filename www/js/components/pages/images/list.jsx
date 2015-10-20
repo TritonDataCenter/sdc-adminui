@@ -16,7 +16,7 @@ var ImagesList = React.createClass({
     renderItem: function (i) {
         var img = i.toJSON();
         var href = '/images/' + img.uuid;
-        var publishDate = moment(img.published_at).format('MM/DD/YYYY');
+        var publishDate = moment(img.published_at).utc().format('MM/DD/YYYY');
         var os = img.type === 'zvol' ? ('KVM, ' + img.os) : img.os;
 
         return <tr key={img.uuid}>
