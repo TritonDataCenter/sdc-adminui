@@ -19,7 +19,9 @@ var $ = require('jquery');
 var React = require('react');
 var Chosen = require('react-chosen');
 var Jobs = require('../models/jobs');
+var Servers = require('../models/servers');
 var JobsList = require('./jobs-list');
+var ServerTypeahead = require('../components/server-typeahead');
 
 var adminui = require('../adminui');
 
@@ -73,33 +75,36 @@ var DatePicker = React.createClass({
 });
 
 var JobExecutionCriteria = React.createClass({
-    onChange: function(e, val) {
+    onChange: function (e, val) {
         if (this.props.onChange) {
-            this.props.onChange({value: val.selected});
+            this.props.onChange({execution: val.selected});
         }
     },
-    render: function() {
-
-        return <div className="form-group criteria criteria-execution">
-            <Chosen className="form-control" value={this.props.value} onChange={this.onChange} ref="chosen" name="execution">
-                <option value="">any</option>
-                <option value="succeeded">succeeded</option>
-                <option value="failed">failed</option>
-                <option value="running">running</option>
-                <option value="queued">queued</option>
-                <option value="canceled">canceled</option>
-            </Chosen>
-        </div>;
+    render: function () {
+        return (
+            <div className="form-group criteria criteria-execution">
+                <Chosen className="form-control" value={this.props.value} onChange={this.onChange} ref="chosen" name="execution">
+                    <option value="">any</option>
+                    <option value="succeeded">succeeded</option>
+                    <option value="failed">failed</option>
+                    <option value="running">running</option>
+                    <option value="queued">queued</option>
+                    <option value="canceled">canceled</option>
+                </Chosen>
+            </div>
+        );
     }
 });
 
 var JobDateCriteria = React.createClass({
-    onChange: function(e) {
+    onChange: function (e) {
         if (this.props.onChange) {
-            this.props.onChange({value: e.value});
+            var result = {};
+            result[this.props.name] = e.value;
+            this.props.onChange(result);
         }
     },
-    render: function() {
+    render: function () {
         var value;
         if (this.props.value) {
             if (typeof(this.props.value) === 'number') {
@@ -112,13 +117,12 @@ var JobDateCriteria = React.createClass({
             value = "";
         }
         var node = (<DatePicker onChange={this.onChange} value={value} />);
-        return <div className="criteria criteria-date">{node}</div>;
+        return (<div className="criteria criteria-date">{node}</div>);
     }
 });
 
-
 var JobCriterias = React.createFactory(React.createClass({
-    getInitialState: function() {
+    getInitialState: function () {
         var state = {};
         if (this.props.initialCriteria && this.props.initialCriteria.params) {
             state = this.props.initialCriteria.params();
@@ -127,38 +131,68 @@ var JobCriterias = React.createFactory(React.createClass({
         }
         return state;
     },
-    onExecutionChange: function(change) {
-        this.setState({execution: change.value});
-        if (this.props.onChange) {
-            this.props.onChange({
-                params: this.state
-            });
+    onChange: function (params) {
+        var self = this;
+        if (typeof params === 'object') {
+            self.setState(params);
         }
     },
-    onDateSinceChange: function(change) {
-        console.log('onDateSinceChange', change.value);
-        this.setState({since: change.value});
-        if (this.props.onChange) {
-            this.props.onChange({
-                params: this.state
-            });
-        }
+    onSelectServer: function (uuid) {
+        this.onChange({server_uuid: uuid});
     },
-    onDateUtilChange: function(change) {
-        console.log('onDateUntilChange', change.value);
-        this.setState({until: change.value});
-        if (this.props.onChange) {
-            this.props.onChange({
-                params: this.state
-            });
+    onSearch: function () {
+        var self = this;
+        var search = function () {
+            if (self.props.onChange) {
+                self.props.onChange({
+                    params: self.state
+                });
+            }
         }
+        this.setState({
+            name: React.findDOMNode(this.refs.jobNameField).value
+        }, search);
     },
-    render: function() {
-        return <ul className="list-unstyled row">
-            <li className="col-md-4"><span className="criteria-name">Execution</span><JobExecutionCriteria name="execution" onChange={this.onExecutionChange} value={this.state.execution} /></li>
-            <li className="col-md-4" style={ {paddingRight:0} }><span className="criteria-name">Since</span><JobDateCriteria name="since" onChange={this.onDateSinceChange} value={this.state.since} /></li>
-            <li className="col-md-4" style={ {paddingLeft:0} }><span className="criteria-name">Until</span><JobDateCriteria name="until" onChange={this.onDateUtilChange} value={this.state.until} /></li>
-        </ul>;
+    render: function () {
+        return (
+            <div>
+                <ul className="list-unstyled row">
+                    <li className="col-md-4">
+                        <span className="criteria-name">Execution</span>
+                        <JobExecutionCriteria name="execution" onChange={this.onChange} value={this.state.execution} />
+                    </li>
+                    <li className="col-md-4 since">
+                        <span className="criteria-name">Since</span>
+                        <JobDateCriteria name="since" onChange={this.onChange} value={this.state.since} />
+                    </li>
+                    <li className="col-md-4 until">
+                        <span className="criteria-name">Until</span>
+                        <JobDateCriteria name="until" onChange={this.onChange} value={this.state.until} />
+                    </li>
+                </ul>
+                <ul className="list-unstyled row">
+                    <li className="col-md-4">
+                        <span className="criteria-name">Server</span>
+                        <div className="form-group criteria">
+                            <ServerTypeahead className="form-control" onChange={this.onSelectServer} />
+                        </div>
+                    </li>
+                    <li className="col-md-4">
+                        <span className="criteria-name">Job Name</span>
+                        <div className="form-group">
+                            <input className="form-control" ref="jobNameField" type="text"></input>
+                        </div>
+                    </li>
+                    <li className="col-md-4">
+                        <div className="form-group">
+                            <button type="submit" onClick={this.onSearch} className="btn btn-sm btn-primary">
+                                <i className="fa fa-search"></i> Search Jobs
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        );
     }
 }));
 
@@ -169,44 +203,45 @@ var JobFiltersList = React.createFactory(React.createClass({
         filter: React.PropTypes.object,
         onFilter: React.PropTypes.func
     },
-    getInitialState: function() {
+    getInitialState: function () {
         var self = this;
         var counters = {};
-        this.props.filters.map(function(f) {
-            counters[f.name] = '?';
-            var j = new Jobs({perPage: 100});
-            j.params = f.params();
-            j.fetch().done(function(r) {
-                var c = (r.length > 99) ? '99+' : r.length;
+        this.props.filters.map(function (filter) {
+            counters[filter.name] = '?';
+            var jobs = new Jobs({perPage: 100});
+            jobs.params = filter.params();
+            jobs.fetch().done(function (result) {
                 var counters = _.clone(self.state.counters);
-                counters[f.name] = c;
+                counters[filter.name] = result.length > 99 ? '99+' : result.length;
                 self.setState({counters: counters});
             });
         });
-        return { counters: counters };
+        return {counters: counters};
     },
-    onFilter: function(f) {
-        var params = (typeof(f.params) === 'function') ? f.params() : f.params;
+    onFilter: function (filter) {
+        var params = typeof filter.params === 'function' ? filter.params() : filter.params;
         if (this.props.onFilter) {
-            this.props.onFilter({name: f.name, params: params});
+            this.props.onFilter({name: filter.name, params: params});
         }
     },
-    render: function() {
-        var liNodes = _.map(this.props.filters, function(f) {
-            var pieces = f.name.split('|');
+    render: function () {
+        var liNodes = _.map(this.props.filters, function (filter) {
+            var pieces = filter.name.split('|');
             var name = pieces[0];
             var time = pieces[1];
-            return <li key={f.name}>
-                    <a
-                        className={f.name === this.props.filter.name ? 'current' : ''}
-                        onClick={this.onFilter.bind(this, f)}>
-                        <span className="counter">{this.state.counters[f.name]}</span>
+            return (
+                <li key={filter.name}>
+                    <a className={filter.name === this.props.filter.name ? 'current' : ''}
+                        onClick={this.onFilter.bind(this, filter)}>
+                        <span className="counter">{this.state.counters[filter.name]}</span>
                         <span className="name"> {name} </span>
-                            <span className="timerange"> { time } </span>
-                    </a></li>;
+                        <span className="timerange"> {time} </span>
+                    </a>
+                </li>
+            );
         }, this);
 
-        return <ul className="list-unstyled">{liNodes}</ul>;
+        return (<ul className="list-unstyled">{liNodes}</ul>);
     }
 }));
 
@@ -223,31 +258,28 @@ var JobsView = Backbone.Marionette.Layout.extend({
         return '/jobs';
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
         options = options || {};
     },
 
-    onFilterChange: function(f) {
-        this.jobCriteras.replaceState(f.params);
-        this.jobFilters.setProps({filter: f});
-        for (var k in f.params) {
-            if (f.params[k] === "") {
-                delete f.params[k];
-            }
-            if (k === 'until' || k === 'since') {
-                if (typeof(f.params[k]) === 'object') {
-                    f.params[k] = moment(f.params[k]).utc().toDate().getTime();
-                }
+    onFilterChange: function (filter) {
+        this.jobCriteras.replaceState(filter.params);
+        this.jobFilters.setProps({filter: filter});
+        for (var key in filter.params) {
+            var value = filter.params[key];
+            if (value === '') {
+                delete filter.params[key];
+            } else if ((key === 'until' || key === 'since') && typeof value === 'object') {
+                filter.params[key] = moment(value).utc().toDate().getTime();
             }
         }
-        this.jobsList.query(f.params);
+        this.jobsList.query(filter.params);
     },
 
-    onShow: function() {
+    onShow: function () {
         var initialFilter = PRESET_FILTERS[0];
 
         adminui.vent.trigger('settitle', 'jobs');
-
 
         this.jobFilters = React.render(
             JobFiltersList({
@@ -263,7 +295,7 @@ var JobsView = Backbone.Marionette.Layout.extend({
                 initialCriteria: initialFilter
             }), this.$('.jobs-criteria-container').get(0));
 
-        this.jobsList = new JobsList({params: initialFilter.params() });
+        this.jobsList = new JobsList({params: initialFilter.params()});
         this.jobsListRegion.show(this.jobsList);
     },
 });
