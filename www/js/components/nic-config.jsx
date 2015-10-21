@@ -25,6 +25,7 @@ var Networks = require('../models/networks');
 var NetworkPools = require('../models/network-pools');
 var Addresses = require('../models/addresses');
 var Chosen = require('react-chosen');
+var utils = require('../lib/utils');
 
 var NicConfig = React.createClass({
     propTypes: {
@@ -116,29 +117,7 @@ var NicConfig = React.createClass({
             var selectedIps = this.props.selectedIps || {};
             this.addresses = new Addresses({uuid: network_uuid});
             this.addresses.fetch().done(function () {
-                var ips = {};
-                self.addresses.toJSON().forEach(function (address) {
-                    ips[address.ip] = address;
-                });
-
-                var getIpParts = function (ip) {
-                    return ip.split('.');
-                };
-
-                var ipParts = getIpParts(network.provision_start_ip);
-                var start = parseInt(ipParts[3], 10);
-                var end = parseInt(getIpParts(network.provision_end_ip)[3], 10);
-                var allProvisionIps = [];
-                for (var i = start; i <= end; i++) {
-                    ipParts[3] = i;
-                    var ip = ipParts.join('.');
-                    allProvisionIps.push(ips[ip] || {
-                            ip: ip,
-                            network_uuid: network_uuid,
-                            free: true,
-                            reserved: false
-                        });
-                }
+                var allProvisionIps = utils.getNetworkIpList(self.addresses, network_uuid);
                 var freeIpAddresses = allProvisionIps.filter(function (address) {
                     return address.free && !address.reserved && !address.belongs_to_type && !selectedIps[address.ip];
                 });
