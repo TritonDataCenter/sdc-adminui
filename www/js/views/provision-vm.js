@@ -18,6 +18,7 @@ var _ = require('underscore');
 var React = require('react');
 
 var MultiNicConfigComponent = React.createFactory(require('../components/multi-nic-config'));
+var ServerTypeahead = React.createFactory(require('../components/server-typeahead'));
 var Package = require('../models/package');
 var Packages = require('../models/packages');
 var SSHKeys = require('../models/sshkeys');
@@ -25,7 +26,6 @@ var User = require('../models/user');
 var Vm = require('../models/vm');
 var Job = require('../models/job');
 
-var TypeaheadServerView = require('./typeahead-server');
 var TypeaheadImageView = require('./typeahead-image');
 
 var JobProgressView = require('./job-progress');
@@ -284,15 +284,17 @@ var View = Backbone.Marionette.Layout.extend({
             el: this.$('[name=owner]')
         });
         this.listenTo(this.userInput, 'selected', this.onSelectUser, this);
-        this.userInput.render();
-
-        this.serverInput = new TypeaheadServerView({el: this.$('input[name=server]')});
-        this.serverInput.render();
+        this.userInput.render();         
 
         this.imageInput = new TypeaheadImageView({el: this.$('input[name=image]')});
         this.listenTo(this.imageInput, 'selected', this.onSelectImage, this);
         this.imageInput.render();
 
+        this.serverInput = React.render(
+            ServerTypeahead({
+                className: 'form-control'
+            }), this.$('#input-server').get(0)
+        );
 
         this.packageSelect.setElement(this.$('select[name=package]')).render();
         this.$('.form-group-networks').hide();
