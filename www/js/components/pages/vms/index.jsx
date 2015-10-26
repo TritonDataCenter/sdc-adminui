@@ -23,6 +23,7 @@ var utils = require('../../../lib/utils');
 var FilterForm = require('./filter-form');
 
 var Vms = require('../../../models/vms');
+var REQUEST_TIMEOUT = 120 * 1000;
 
 var VmsPage = React.createClass({
     statics: {
@@ -75,7 +76,10 @@ var VmsPage = React.createClass({
     query: function (params) {
         this.collection.params = utils.getVmSearchParams(params);
         this.collection.firstPage();
-        this.collection.fetch({reset: true});
+        this.collection.fetch({
+            reset: true,
+            timeout: REQUEST_TIMEOUT
+        });
     },
     onMoreVms: function () {
         this.next();
@@ -83,7 +87,10 @@ var VmsPage = React.createClass({
     next: function () {
         if (this.collection.hasNext()) {
             this.collection.next();
-            this.collection.fetch({remove: false});
+            this.collection.fetch({
+                remove: false,
+                timeout: REQUEST_TIMEOUT
+            });
         }
     }
 });

@@ -62,15 +62,19 @@ var VmsList = React.createClass({
         this.props.collection.on('request', this._onRequest, this);
         this.props.collection.on('sync', this._onSync, this);
         this.props.collection.on('error', function (model, xhr) {
-            var message = 'Failed to fetch vms: ';
-            try {
-                message += JSON.parse(xhr.responseText).message;
-            } catch (ex) {
-                message += ex;
+            var appendedText = '';
+            if (xhr.statusText === 'timeout') {
+                appendedText = 'Connection timed out - please try again.';
+            } else {
+                try {
+                    appendedText = JSON.parse(xhr.responseText).message;
+                } catch (ex) {
+                    appendedText = ex;
+                }
             }
             adminui.vent.trigger('notification', {
                 level: 'error',
-                message: message
+                message: 'Failed to fetch vms: ' + appendedText
             });
             this.setState({loading: false});
         }, this);
