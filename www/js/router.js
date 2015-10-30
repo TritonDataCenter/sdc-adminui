@@ -33,7 +33,8 @@ var Components = {
     'user': require('./components/pages/user'),
     'images': require('./components/pages/images'),
     'manta/agents': require('./components/pages/manta/agents'),
-    'dashboard': require('./components/pages/dashboard')
+    'dashboard': require('./components/pages/dashboard'),
+    'vlan-form': require('./components/pages/networking/fabric-vlan-form.jsx')
 };
 
 Object.keys(Components).forEach(function (k) {
@@ -73,6 +74,7 @@ var Views = {
 
     'nictag': require('./views/nictag'),
     'fabric-vlan': require('./views/fabric-vlan'),
+    'fabrics': require('./views/fabrics'),
 
     'services': require('./views/services')
 };
@@ -96,7 +98,6 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'nictags/:uuid(/)': 'showNicTag',
         'networking': 'showNetworking',
         'networking/:tab(/)': 'showNetworking',
-        'networking/:tab/:uuid(/)': 'showNetworking',
         'fabrics/:uuid/vlan/:id(/)': 'showFabricVlan',
         'fabrics/vlan/:id(/)': 'showFabricVlan',
         'fabrics/:owner_uuid/vlan/:id/networks/:uuid(/)': 'showFabricNetwork',
@@ -390,13 +391,14 @@ module.exports = Backbone.Marionette.AppRouter.extend({
     },
 
 
-    showNetworking: function (tab, uuid) {
+    showNetworking: function (tab, querystring) {
         this.authenticated().then(function () {
             var data = {
                 tab: tab
             };
-            if (uuid) {
-                data.owner_uuid = uuid;
+            if (querystring) {
+                data.query =  this.parseURI(querystring);
+                data.querystring = querystring;
             }
             this.presentView('networking', data);
         }.bind(this));

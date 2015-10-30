@@ -4,8 +4,9 @@
 var React = require('react');
 var _ = require('underscore');
 var app = require('adminui');
-var utils = require('../../../lib/utils');
-
+var utils = require('../lib/utils');
+var NicTags = require('../models/nictags');
+var FabricVlans = require('../models/fabrics-vlans');
 var INPUT_TYPES = {};
 
 INPUT_TYPES.uuid = React.createClass({
@@ -13,7 +14,7 @@ INPUT_TYPES.uuid = React.createClass({
         this.props.onChange('uuid', e.target.value);
     },
     render: function () {
-        return (<div className="form-group col-md-3">
+        return (<div className="form-group col-md-4">
             <label className="control-label">UUID</label>
             <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="uuid" placeholder="UUID" />
         </div>);
@@ -44,19 +45,32 @@ INPUT_TYPES.package_name = React.createClass({
     }
 });
 
+INPUT_TYPES.name = React.createClass({
+    onChange: function (e) {
+        this.props.onChange('name', e.target.value);
+    },
+    render: function () {
+        return (<div className="form-group col-md-3">
+            <label className="control-label">Name</label>
+            <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="name" placeholder="Name" />
+        </div>);
+    }
+});
+
+
 INPUT_TYPES.ip = React.createClass({
     onChange: function (e) {
         this.props.onChange('ip', e.target.value);
     },
     render: function () {
-        return (<div className="form-group col-md-3">
+        return (<div className="form-group col-md-2">
             <label className="control-label">IP Address</label>
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="ip" placeholder="IP Address" />
         </div>);
     }
 });
 
-var TypeaheadUser = require('../../../views/typeahead-user');
+var TypeaheadUser = require('../views/typeahead-user');
 INPUT_TYPES.owner_uuid = React.createClass({
     onSelectUser: function (user) {
         var uuid = null;
@@ -76,7 +90,7 @@ INPUT_TYPES.owner_uuid = React.createClass({
         this.typeahead.remove();
     },
     render: function () {
-        return (<div className="form-group col-md-3">
+        return (<div className="form-group col-md-4">
             <label className="control-label">Owner UUID</label>
                 <input ref="input" className="form-control" type="text" name="owner_uuid" placeholder="Search by login or uuid" />
         </div>);
@@ -103,6 +117,73 @@ INPUT_TYPES.state = React.createClass({
     }
 });
 
+INPUT_TYPES.nic_tag = React.createClass({
+    getInitialState: function () {
+        return {
+            nictags: []
+        };
+    },
+    onChange: function (e) {
+        this.props.onChange('nic_tag', e.target.value);
+    },
+    componentWillMount: function () {
+        var self = this;
+        var nictags = new NicTags();
+        nictags.fetch().done(function () {
+            self.setState({nictags: nictags.toJSON()});
+        });
+    },
+    render: function () {
+        return (<div className="form-group col-md-2">
+            <label className="control-label">NIC TAG</label>
+                <select onChange={this.onChange} name="nic_tag" className="form-control">
+                    <option value="">any</option>
+                    { this.state.nictags.map(function (nictag) {
+                        return (<option key={nictag.name} value={nictag.name}>{nictag.name}</option>)
+                    }) }
+                </select>
+        </div>);
+    }
+});
+
+INPUT_TYPES.vlan_id = React.createClass({
+    getInitialState: function () {
+        return {
+            vlans: []
+        };
+    },
+    onChange: function (e) {
+        this.props.onChange('vlan_id', e.target.value);
+    },
+    componentWillMount: function () {
+        this.vlans = new FabricVlans();
+        this.setData(this.props.data);
+    },
+    componentWillReceiveProps: function (params) {
+        if (params.data.owner_uuid !== this.props.data.owner_uuid) {
+            this.setData(params.data);
+        }
+    },
+    setData: function (params) {
+        var self = this;
+        this.vlans.params = params;
+        this.vlans.fetch().done(function () {
+            self.setState({vlans: self.vlans.toJSON()});
+        });
+    },
+    render: function () {
+        return (<div className="form-group col-md-2">
+            <label className="control-label">VLAN</label>
+            <select onChange={this.onChange} name="vlan" className="form-control" value={this.props.value}>
+                <option value="">any</option>
+                { this.state.vlans.map(function (vlan) {
+                    return (<option key={vlan.vlan_id} value={vlan.vlan_id}>{vlan.name} ({vlan.vlan_id})</option>)
+                }) }
+            </select>
+        </div>);
+    }
+});
+
 var FilterForm = React.createClass({
     propTypes: {
         initialParams: React.PropTypes.object,
@@ -110,19 +191,29 @@ var FilterForm = React.createClass({
     },
     getInitialState: function () {
         return {
-            values: this.props.initialParams
+            values: this.props.initialParams || {},
+            types: this.props.types || Object.keys(INPUT_TYPES),
+            buttonTitle: this.props.buttonTitle || 'Search'
         };
     },
     _onChange: function (prop, value) {
-        var values = this.state.values || {};
+        var values = this.state.values;
         values[prop] = value;
         this.setState({values: values});
     },
     renderFilterControls: function () {
-        return Object.keys(INPUT_TYPES).map(function (type) {
-            var TYPE = INPUT_TYPES[type];
-            var value = this.state.values && this.state.values[type] || '';
-            return <TYPE ref={type} key={type} onChange={this._onChange} value={value} />;
+        var self = this;
+        return this.state.types.map(function (type) {
+            var InputType = INPUT_TYPES[type];
+            if (type === 'vlan_id' && !self.state.values.owner_uuid) {
+                return;
+            }
+            if (InputType) {
+                var value = this.state.values[type] || '';
+                var data = type === 'vlan_id' ? {owner_uuid : self.state.values.owner_uuid} : null;
+                return <InputType data={data} ref={type} key={type} onChange={self._onChange} value={value} />;
+            }
+            return;
         }, this);
     },
     render: function () {
@@ -134,8 +225,8 @@ var FilterForm = React.createClass({
                 <form className="filter-options" onSubmit={this._onSubmit}>
                     <div className="row">
                     {this.renderFilterControls()}
-                        <div className="form-group col-md-3">
-                            <button type="submit" onClick={this._onSubmit} className="btn btn-sm btn-primary"><i className="fa fa-search"></i> Search Virtual Machines</button>
+                        <div className="form-group col-md-2">
+                            <button type="submit" onClick={this._onSubmit} className="btn btn-sm btn-primary"><i className="fa fa-search"></i> {this.state.buttonTitle}</button>
                         </div>
                     </div>
                 </form>

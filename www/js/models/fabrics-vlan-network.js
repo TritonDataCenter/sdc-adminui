@@ -15,16 +15,18 @@ module.exports = Model.extend({
     idAttribute: 'uuid',
     urlRoot: '/api/fabrics/vlan/networks',
     url: function () {
-        var owner_uuid = this.get('owner_uuid');
-        var vlan_id = this.get('vlan_id');
-        var uuid = this.get('uuid');
-        if (uuid && vlan_id || vlan_id >= 0) {
-            if (owner_uuid) {
-                return _.str.sprintf('/api/fabrics/%s/vlan/%s/networks/%s', owner_uuid, vlan_id, uuid);
+        var ownerUuid = this.get('owner_uuid') || this.get('owner_uuids') && this.get('owner_uuids')[0];
+        var vlanId = this.get('vlan_id');
+        var uuid = this.get('uuid') || '';
+        var url = this.urlRoot;
+        if (vlanId || vlanId >= 0) {
+            if (ownerUuid) {
+                url = _.str.sprintf('/api/fabrics/%s/vlan/%s/networks/%s', ownerUuid, vlanId, uuid);
+            } else {
+                url = _.str.sprintf('/api/fabrics/vlan/%s/networks/%s', vlanId, uuid);
             }
-            return _.str.sprintf('/api/fabrics/vlan/%s/networks/%s', vlan_id, uuid);
         }
-        return this.urlRoot;
+        return url;
     }
 });
 

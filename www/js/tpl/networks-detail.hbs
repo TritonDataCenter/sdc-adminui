@@ -42,10 +42,9 @@
     <li>
       <strong>Owners</strong>
       <div class="value owners">
-        {{#each owners}}
+        {{#each owner_uuids}}
           <div class="owner-details">
-            <a class="owner-link" data-owner-uuid="{{uuid}}" target="_tab" href="/users/{{uuid}}"><i class="fa fa-external-link"></i> {{uuid}}</a>
-            <span class="login"><i class="fa fa-user"></i> {{login}}</span>
+            <a class="owner-link" data-owner-uuid="{{this}}" target="_tab" href="/users/{{this}}"><i class="fa fa-external-link"></i> {{this}}</a>
           </div>
         {{/each}}
       </div>
@@ -54,7 +53,7 @@
 
     <li>
       <strong>VLAN ID</strong>
-      <div class="value" name="vlan_id">{{vlan_id}}</div>
+      <div class="value" name="vlan_id">{{vlan_id}} <span class="vlan-name"></span></div>
     </li>
 
     <li>

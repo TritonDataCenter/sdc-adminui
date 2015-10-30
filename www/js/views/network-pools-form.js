@@ -38,9 +38,14 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     initialize: function (options) {
         options = options || {};
-        this.networks = options.networks || new Networks();
+        this.networks = options.networks || [];
         this.model = this.networkPool = options.networkPool || new NetworkPool();
         this.userInput = new TypeaheadUser({showPreview: true});
+
+        if (!this.networks.length) {
+            this.networks = new Networks();
+            this.networks.fetch();
+        }
 
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
         this.listenTo(this.networks, 'sync', this.render);
