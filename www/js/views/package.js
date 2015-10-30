@@ -14,19 +14,16 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var adminui = require('adminui');
 var $ = require('jquery');
+var React = require('react');
 
 var Packages = require('../models/packages');
-var Networks = require('../models/networks');
 
 var User = require('../models/user');
 
-var NetworksList = require('../views/networks-list');
-var NetworkPools = require('../models/network-pools');
-var NetworkPoolsList = require('../views/network-pools-list');
+var NetworksList = React.createFactory(require('../components/pages/networking/networks-list'));
+var NetworkPoolsList = React.createFactory(require('../components/pages/networking/network-pool-list'));
 
 var TraitsEditor = require('./traits-editor');
-
-
 var PackageTemplate = require('../tpl/package.hbs');
 
 var React = require('react');
@@ -106,22 +103,13 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
         'click .login': 'navigateToUser'
     },
 
-    initialize: function(options) {
-        this.nets = _.map(this.model.get('networks') || [], function(uuid) {
-            return {uuid: uuid};
-        });
-
-        this.networks = new Networks(this.nets);
-        this.networksView = new NetworksList({ collection: this.networks });
-
+    initialize: function (options) {
         this.packageVersionsView = new PackageVersions({
             package: this.model
         });
-
-        this.listenTo(this.networksView, 'select', this.onSelectNetwork);
     },
 
-    serializeData: function() {
+    serializeData: function () {
         var data = _.clone(this.model.toJSON());
         var owner_uuid = this.model.get('owner_uuid');
 
@@ -132,30 +120,26 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
         return data;
     },
 
-    navigateToUser: function(e) {
+    navigateToUser: function (e) {
         e.preventDefault();
         adminui.vent.trigger('showcomponent', 'user', {uuid: $(e.target).attr('data-uuid')});
     },
 
-    onChangeOwner: function() {
+    onChangeOwner: function () {
         adminui.vent.trigger('showview', 'packages-form', {
             model: this.model,
             mode: 'change-owner'
         });
     },
 
-    onNewVersion: function() {
+    onNewVersion: function () {
         adminui.vent.trigger('showview', 'packages-form', {
             model: this.model,
             mode: 'new-version'
         });
     },
 
-    onSelectNetwork: function(model) {
-        adminui.vent.trigger('showview', 'network', {model: this.model });
-    },
-
-    onSaveTraits: function(traits) {
+    onSaveTraits: function (traits) {
         var that = this;
         this.model.save(
             { traits: traits },
@@ -169,7 +153,7 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
         });
     },
 
-    onTraits: function() {
+    onTraits: function () {
         this.traitsEditor = new TraitsEditor({
             data: this.model.get('traits'),
             title: _.str.sprintf('Traits Editor for package: %s', this.model.get('name'))
@@ -178,67 +162,18 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
         this.traitsEditor.show();
     },
 
-    renderNetworks: function() {
-        this.$('.networks-list').html(this.networksView.el);
-        this.networksView.render();
-        var networksView = this.networksView;
-        var networks = this.networks;
-
-        networks.each(function(n) {
-            n.fetch().done(function() {
-                networksView.children.findByModel(n).render();
-            }).fail(function() {
-                networksView.children.findByModel(n).remove();
-            });
-        });
-    },
-
-    renderNetworkPools: function() {
-        var self = this;
-        var networks = new Networks();
-        networks.fetch().done(done.bind(this));
-
-        function done() {
-
-            self.networkPools = new NetworkPools(self.nets);
-
-            var networkPools = self.networkPools;
-            var size = networkPools.length;
-            var n = 0;
-
-            networkPools.each(function(n) {
-                n.fetch().done(function() {
-                    ok();
-                }).fail(function() {
-                    networkPools.remove(n);
-                    ok();
-                });
-            });
-
-            function ok() {
-                n++;
-                if (n === size) {
-                    self.networkPoolsView = new NetworkPoolsList({
-                        networks: networks,
-                        collection: networkPools
-                    });
-                    self.$('.network-pools-list').html(self.networkPoolsView.el);
-                    self.networkPoolsView.render();
-                }
-            }
-
-        }
-    },
-    onShow: function() {
+    onShow: function () {
         this.versionsRegion.show(this.packageVersionsView);
     },
 
-
-    onRender: function() {
+    onRender: function () {
         adminui.vent.trigger('settitle', _.str.sprintf('package: %s', this.model.get('name'), this.model.get('version')));
-
-        if (0 === this.networks.length) {
+        var networks = this.model.get('networks') || [];
+        if (!networks.length) {
             this.$('.networks').hide();
+        } else {
+            React.render(new NetworksList({uuids: networks, showHeader: false}), this.$('.networks-list').get(0));
+            React.render(new NetworkPoolsList({uuids: networks}), this.$('.network-pools-list').get(0));
         }
 
         if (adminui.user.role('operators')) {
@@ -247,13 +182,9 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
                 this.$('.notes-component-container').get(0));
         }
 
-        this.renderNetworks();
-        this.renderNetworkPools();
-
-        this.$('.owner .login').each(function(i, elm) {
+        this.$('.owner .login').each(function (i, elm) {
             var user = new User({uuid: $(elm).attr('data-uuid')});
-            user.fetch().done(function(u) {
-                console.log(user);
+            user.fetch().done(function (u) {
                 $(elm).html(user.get('login'));
             });
         });

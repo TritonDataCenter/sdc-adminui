@@ -200,7 +200,7 @@ var VmsList = React.createClass({
             </td>
             <td className="package-image">
                 <div className="server">
-                    <ServerLink serverUuid={vm.server_uuid} />
+                    {vm.server_uuid ? <ServerLink serverUuid={vm.server_uuid} /> : null}
                 </div>
                 {vm.package_name &&
                     <div className="package">
@@ -210,7 +210,7 @@ var VmsList = React.createClass({
                     </div>
                 }
                 <div className="image">
-                    <ImageLnk imageUuid={vm.image_uuid} />
+                    {vm.image_uuid ? <ImageLnk imageUuid={vm.image_uuid} /> : null}
                 </div>
             </td>
         </tr>;

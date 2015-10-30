@@ -60,7 +60,7 @@ var UserTypeaheadView = Backbone.Marionette.View.extend({
     onOpened: function () {
         var user = this.preSelectedUser || this.$el.val();
         this.selectedUser = user;
-        this.trigger('selected', user);
+        this.trigger('opened', user);
     },
 
     onTypeaheadClosed: function (e, suggestion, dataset) {

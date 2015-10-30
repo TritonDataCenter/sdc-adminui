@@ -20,12 +20,17 @@ var app = require('../../../adminui');
 
 var VmsListComponent = require('../../vms-list');
 var utils = require('../../../lib/utils');
-var FilterForm = require('./filter-form');
+var FilterForm = require('./../../filter-form');
 
 var Vms = require('../../../models/vms');
 var REQUEST_TIMEOUT = 120 * 1000;
 
 var VmsPage = React.createClass({
+    getInitialState: function () {
+        return {
+            filterTypes: ['uuid', 'alias', 'package_name', 'ip', 'owner_uuid', 'state']
+        };
+    },
     statics: {
         sidebar: 'vms',
         url: function () {
@@ -54,7 +59,7 @@ var VmsPage = React.createClass({
                 <div className="row">
                     <div className="col-md-12">
                         <section className="filter-form">
-                            <FilterForm initialParams={this.props.params} handleSearch={this.query} />
+                            <FilterForm initialParams={this.props.params} handleSearch={this.query} buttonTitle='Search Virtual Machines' types={this.state.filterTypes} />
                         </section>
                     </div>
                 </div>

@@ -50,6 +50,7 @@
 @import "users.less";
 @import "user.less";
 
+@import "networking.less";
 @import "networks.less";
 @import "network.less";
 @import "fabrics.less";
@@ -464,27 +465,16 @@ h1.branding {
 
 } // rootnav
 
-
-
-
-
-
-
-
-
 .filter-panel {
   .box-sizing(border-box);
   padding: 10px;
 }
-
-
 
 .resize-vm {
   .modal-body {
     overflow: visible;
   }
 }
-
 
 .package-preview {
   background: #fff;
@@ -514,6 +504,9 @@ ul.attributes {
     .value {
       display: inline-block;
     }
+    .editable-field .editable-value {
+      margin-left: 50px;
+    }
     .uuid {
       font-family: @font-family-monospace;
       font-size: 12px;
@@ -521,28 +514,10 @@ ul.attributes {
   }
 }
 
-
-
 #network-create-modal {
   .add-route { display: block; margin: 5px; cursor: pointer;}
   .remove-route { cursor: pointer; padding-left: 5px; padding-right: 5px;}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .probes {
   ul { .clearfix; }
@@ -710,8 +685,6 @@ ul.attributes {
   button { float: right; width: 100px;}
 }
 
-
-
 #traits-editor {
   textarea {
     .box-sizing(border-box);
@@ -727,18 +700,12 @@ ul.attributes {
   .error { float: left; color: red; }
 }
 
-
-
-
-
 #application-create {
   margin-top: -360px;
   .modal-body {
     max-height: 800px;
   }
 }
-
-
 
 .json-export {
   textarea {

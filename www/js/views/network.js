@@ -18,13 +18,13 @@ var Template = require('../tpl/networks-detail.hbs');
 var $ = require('jquery');
 
 var React = require('react');
-var utils = require('../lib/utils');
 
 var Addresses = require('../models/addresses');
 
 var NotesComponent = React.createFactory(require('../components/notes'));
 var RoutesList = React.createFactory(require('../components/pages/network/routes-list'));
 var AddressesList = React.createFactory(require('../components/pages/network/addresses-list'));
+var FabricVlan = require('../models/fabrics-vlan');
 
 var NetworkDetailView = Backbone.Marionette.ItemView.extend({
 
@@ -40,13 +40,16 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     },
 
     initialize: function (options) {
-        this.addresses = new Addresses({uuid: this.model.get('uuid')});
-        this.setOwners();
-    },
-
-    setOwners: function () {
-        var data = this.model.attributes;
-        return utils.setOwnerData(data);
+        var network = this.model.toJSON();
+        this.addresses = new Addresses({uuid: network.uuid});
+        if (network.fabric) {
+            var firstOwner = network.owner_uuids && network.owner_uuids[0];
+            var owner_uuid = network.owner_uuid;
+            if (owner_uuid && !firstOwner) {
+                this.model.set('owner_uuids', [owner_uuid]);
+            }
+            this.vlan = new FabricVlan({vlan_id: network.vlan_id, owner_uuid: owner_uuid || firstOwner});
+        }
     },
 
     editNetwork: function () {
@@ -68,8 +71,9 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         var url = '';
         if (network.fabric) {
             url = 'fabrics/';
-            if (network.owner_uuid !== adminui.user.id) {
-                url += network.owner_uuid + '/';
+            var owner_uuid = network.owner_uuid || network.owner_uuids[0];
+            if (owner_uuid !== adminui.user.id) {
+                url += owner_uuid + '/';
             }
             url += 'vlan/' + network.vlan_id + '/';
         }
@@ -102,10 +106,11 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
     },
 
     onRender: function () {
-        adminui.vent.trigger('settitle', _.str.sprintf('network: %s %s', this.model.get('name')));
-        var networkUuid = this.model.get('uuid');
+        var self = this;
+        var network = this.model.toJSON();
+        adminui.vent.trigger('settitle', _.str.sprintf('network: %s %s', network.name));
         React.render(
-            NotesComponent({item: networkUuid}),
+            NotesComponent({item: network.uuid}),
             this.$('.notes-component-container').get(0)
         );
         var routes = this.model.get('routes');
@@ -116,8 +121,17 @@ var NetworkDetailView = Backbone.Marionette.ItemView.extend({
         }
         React.render(AddressesList({
             collection: this.addresses,
-            networkUuid: networkUuid
+            networkUuid: network.uuid
         }), this.$('.addresses').get(0));
+
+        if (this.vlan) {
+            this.vlan.fetch().done(function () {
+                var vlan = self.vlan.toJSON();
+                $('.vlan-name').html(
+                    _.str.sprintf('<a  href="/fabrics/%s/vlan/%s">%s</a>', vlan.owner_uuid, vlan.vlan_id, vlan.name)
+                );
+            });
+        }
     }
 });
 

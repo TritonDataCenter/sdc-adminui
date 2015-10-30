@@ -5,14 +5,13 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
 var Model = require('./model');
-var NicTag = require('./nictag');
 
 module.exports = Model.extend({
-    urlRoot: "/api/networks",
+    urlRoot: '/api/networks',
     idAttribute: 'uuid'
 });

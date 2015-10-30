@@ -20,6 +20,7 @@ var Template = require('../tpl/networks-form.hbs');
 var Network = require('../models/network');
 var NicTags = require('../models/nictags');
 var TypeaheadUserInput = require('./typeahead-user');
+var FabricVlans = require('../models/fabrics-vlans');
 var utils = require('../lib/utils');
 
 var NicTagSelectItem = Backbone.View.extend({
@@ -58,15 +59,20 @@ var View = Backbone.Marionette.Layout.extend({
         'createNewNicTagButton': '.create-new-nic-tag'
     },
 
-    initialize: function () {
+    initialize: function (options) {
+        this.options = options || {};
         if (!this.model) {
             this.model = new Network();
         }
-        this.nicTags = new NicTags();
-        this.nicTagsSelect = new Backbone.Marionette.CollectionView({
-            itemView: NicTagSelectItem,
-            collection: this.nicTags
-        });
+        if (this.options.isFabric) {
+            this.fabrics = new FabricVlans();
+        } else {
+            this.nicTags = new NicTags();
+            this.nicTagsSelect = new Backbone.Marionette.CollectionView({
+                itemView: NicTagSelectItem,
+                collection: this.nicTags
+            });
+        }
     },
 
     onChangeFabric: function (e) {
@@ -76,8 +82,14 @@ var View = Backbone.Marionette.Layout.extend({
 
     onCancel: function (e) {
         e.preventDefault();
-        var view = this.model.isNew() ? (this.options.isFabric ? 'fabric-vlan' : 'networking') : 'network';
-        adminui.vent.trigger('showview', view, {model: this.model});
+        var options = this.options;
+        var view = 'networking';
+        if (!options.tab) {
+            var fromVlan = options.isFabric && typeof this.model.get('vlan_id') === 'number';
+            view = this.model.isNew() ? (fromVlan ? 'fabric-vlan' : 'networking') : 'network';
+            options.model = fromVlan ? options.data : this.model;
+        }
+        adminui.vent.trigger('showview', view, options);
     },
 
     onClickCreateNewNicTag: function () {
@@ -114,9 +126,15 @@ var View = Backbone.Marionette.Layout.extend({
         var data = Backbone.Syphon.serialize(this);
         data.owner_uuids = _.compact(data.owner_uuids);
         data.resolvers = data.resolvers.split(" ");
+        var errors = null;
+        if (!data.name) {
+            errors = [{field: 'name', message: 'must not be empty'}];
+        } else if (data.name.length > 64) {
+            errors = [{field: 'name', message: 'must not be longer than 64 characters'}];
+        }
 
         var routes = {};
-        _.each(data.routes, function(data, i) {
+        _.each(data.routes, function(data) {
             if (data.subnet.length && data.gateway.length) {
                 routes[data.subnet] = data.gateway;
             }
@@ -138,58 +156,56 @@ var View = Backbone.Marionette.Layout.extend({
 
         if (this.options.isFabric) {
             var vlan = this.options.data || {};
-            data.owner_uuids = [vlan.owner_uuid];
-            data.vlan_id = vlan.vlan_id;
+            data.vlan_id = vlan.vlan_id || this.$('select[name=vlan_id]').val();
+            data.owner_uuid = data.owner_uuids[0] || data.owner_uuid;
             if (data['fabric-network']) {
                 data = _.extend(data, {
-                    fabric: true,
-                    owner_uuid: vlan.owner_uuid
+                    fabric: true
                 });
+                if (!data.owner_uuid) {
+                    errors = errors || [];
+                    errors.push({field: 'owner_uuids[]', message: 'must not be empty'});
+                }
+                if (!data.vlan_id) {
+                    errors = errors || [];
+                    errors.push({field: 'vlan_id', message: 'must not be empty'});
+                }
             } else {
                 this.model = new Network();
             }
         }
-
+        if (errors) {
+            this.showError(errors);
+            return;
+        }
         this.model.set(data);
         this.model.save().done(self.onSaved.bind(self)).fail(self.onError.bind(self));
     },
 
     onError: function (xhr) {
-        var fieldMap = {
-            name: '[name=name]',
-            subnet: '[name=subnet]',
-            gateway: '[name=gateway]',
-            provision_start_ip: '[name=provision_start_ip]',
-            provision_end_ip: '[name=provision_end_ip]',
-            resolvers: '[name=resolvers]',
-            owner_uuids: '[name="owner_uuids[]"]',
-            nic_tag: 'input[name=nic_tag]',
-            vlan_id: '[name=vlan_id]',
-            mtu: 'input[name=mtu]'
-        };
-        var err = xhr.responseData;
-        $('.form-groupo').removeClass('error');
-        $('.help-block', 'form-group').remove();
+        this.showError(xhr.responseData.errors);
+    },
 
-        _.each(err.errors, function (errObj) {
-            var $field = $(fieldMap[errObj.field]);
-            var $controlGroup = $field.parents('.form-group');
-            $controlGroup.addClass('has-error');
-            if (errObj.message) {
-                var errmsg = $("<div class='help-block text-danger'>").html(errObj.message);
-                $field.after(errmsg);
+    showError: function (errors) {
+        $('.form-group').removeClass('has-error');
+        var ul = $('<ul />');
+        _(errors).each(function (error) {
+            var $field = this.$('[name="' + error.field + '"]');
+            $field.parents('.form-group').addClass('has-error').find('.text-danger').remove();
+            if (error.message) {
+                $field.after($('<div class="help-block text-danger">').html(error.message));
             }
         }, this);
 
-        this.ui.alert.find('.error').html(err.message);
+        this.ui.alert.find('.error').html('Invalid parameters');
         this.ui.alert.show();
     },
 
     onAddRoute: function () {
         var l = $('.routes-controls').length.toString();
         var controls = $('.routes-controls:last').clone();
-        $('input:first', controls).attr('name', 'routes['+l+'][subnet]').val('');
-        $('input:last', controls).attr('name', 'routes['+l+'][gateway]').val('');
+        $('input:first', controls).attr('name', 'routes[' + l + '][subnet]').val('');
+        $('input:last', controls).attr('name', 'routes[' + l + '][gateway]').val('');
         $('.routes-controls:last').after(controls);
         $('.remove-route', controls).show();
     },
@@ -207,9 +223,11 @@ var View = Backbone.Marionette.Layout.extend({
         }
         data.isNotFabric = data.isNotFabric || !this.options.isFabric;
         if (this.options.isFabric) {
+            var optionsData = this.options.data || {};
+            data.owner_uuid = optionsData.owner_uuid;
             data.isFabric = true;
-            data.owner_uuid = this.options.data.owner_uuid;
-            data.vlan_id = this.options.data.vlan_id;
+            data.vlan_id = optionsData.vlan_id;
+            data.vlans = optionsData.vlans;
             data.internet_nat = data.hasOwnProperty('internet_nat') ? data.internet_nat : true;
             _.extend(this.model.attributes, data);
         }
@@ -244,19 +262,45 @@ var View = Backbone.Marionette.Layout.extend({
         $(e.target).parent().parent().remove();
     },
 
+    onSelectedOwner: function () {
+        var selectedUserId = this.userInput.selectedUser && this.userInput.selectedUser.id;
+        this.fabrics.fetch({params: {owner_uuid: selectedUserId}});
+        this.fabrics.on('sync', this.renderVlansDropdown, this);
+    },
+    renderVlansDropdown: function () {
+        var $select = this.$('select[name=vlan_id]');
+        $select.empty();
+        this.fabrics.each(function (fabric) {
+            var name = fabric.get('name');
+            var vlan = fabric.get('vlan_id');
+            var $option = $('<option />').attr('value', vlan).html(name + '(' + vlan + ')');
+            $select.append($option);
+        }, this);
+    },
+
     onRender: function () {
         var self = this;
 
         this.ui.alert.hide();
         this.ui.newNicTagForm.hide();
         
-        var $nicTagSelect = this.$('select[name=nic_tag]');
-        this.nicTagsSelect.setElement($nicTagSelect);
+        if (this.nicTags) {
+            var $nicTagSelect = this.$('select[name=nic_tag]');
+            this.nicTagsSelect.setElement($nicTagSelect);
+            this.nicTags.fetch().done(function () {
+                $nicTagSelect.val(self.model.get('nic_tag'));
+            });
+        }
 
         this.$('[name="owner_uuids[]"]').each(function () {
             var userInput = new TypeaheadUserInput({el: $(this), showPreview: true});
+            if (self.options.isFabric) {
+                self.userInput = userInput;
+                self.userInput.on('selected', self.onSelectedOwner, self);
+            }
             userInput.render();
         });
+// temp
         this.nicTags.fetch().done(function () {
             var nicTag = self.model.get('nic_tag');
             if (nicTag) {
@@ -264,6 +308,19 @@ var View = Backbone.Marionette.Layout.extend({
                 $nicTagSelect.attr("disabled", true);
             }
         });
+//
+
+        var query = this.options.query;
+
+        if (query && query.vlan_id) {
+            var vlanId = query.vlan_id;
+
+            var $vlanIdOption = this.$('select[name=vlan_id] option[value="' + vlanId + '"]');
+            if ($vlanIdOption) {
+                $vlanIdOption.attr('selected', 'selected');
+            }
+        }
+
         this.$('.remove-route:first').hide();
     }
 });
