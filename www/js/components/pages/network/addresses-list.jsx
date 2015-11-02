@@ -16,6 +16,8 @@ var utils = require('../../../lib/utils');
 
 var Addresses = require('../../../models/addresses');
 var NotesComponent = require('../../notes');
+var BB = require('../../bb');
+var PaginationView = require('../../../views/pagination');
 var RESERVE = 'reserve';
 
 var AddressesList = React.createClass({
@@ -24,27 +26,30 @@ var AddressesList = React.createClass({
             state: 'loading',
             networkUuid: this.props.networkUuid,
             selected: [],
-            updateCollection: false
+            updateCollection: false,
+            collection: this.props.collection || new Addresses()
         };
     },
 
-    componentDidMount: function () {
+    componentWillMount: function () {
         var self = this;
-        this.collection = this.props.collection || new Addresses();
-        this.collection.fetch();
-        this.collection.on('sync',  function () {
-            var range = self.state.range || utils.getRange(self.collection, null, null);
-            self.setState({state: 'done', range: range});
-        }, this);
-        this.collection.on('error', function () {
+        this.state.collection.fetch().done(function () {
+            var range = self.state.range || utils.getRange(self.state.collection.fullCollection, null, null);
+            self.setState({state: 'done', range: range, collection: self.state.collection});
+        });
+        this.state.collection.on('error', function () {
             this.setState({state: 'error'});
         }, this);
+
+        this.state.collection.on('reset', function () {
+            self.setState({collection: self.state.collection});
+        });
     },
 
     _handleSelectAddress: function (e) {
         var selected = this.state.selected;
         var ip = e.target.getAttribute('data-ip');
-        var address = this.collection.get(ip);
+        var address = this.state.collection.get(ip);
         if (e.target.checked) {
             selected.push(address.toJSON());
         } else {
@@ -57,7 +62,16 @@ var AddressesList = React.createClass({
     },
 
     _handleSelectAll: function (e) {
-        this.setState({selected: e.target.checked ? this.collection.toJSON() : []});
+        var selected = this.state.selected;
+        _.each(this.state.collection.toJSON(), function (address) {
+            var index = _.findIndex(selected, {ip: address.ip});
+            if (index >= 0 && !e.target.checked) {
+                selected.splice(index, 1);
+            } else if (index < 0 && e.target.checked) {
+                selected.push(address);
+            }
+        });
+        this.setState({selected: selected});
     },
 
     _handleClearSelection: function () {
@@ -65,7 +79,12 @@ var AddressesList = React.createClass({
     },
 
     _isSelectedAll: function () {
-        return this.state.selected.length === this.props.collection.length;
+        var selected = this.state.selected;
+        var collection = this.state.collection;
+        var addresses = collection.toJSON();
+        return selected.length && selected.length === collection.fullCollection.length || addresses.every(function (address) {
+            return _.findWhere(selected, {ip: address.ip});
+        });
     },
 
     notificationSuccess: function (message) {
@@ -84,12 +103,12 @@ var AddressesList = React.createClass({
         var confirm = window.confirm('Are you sure you want to ' + (reserve ? '' : 'un-') + 'reserve IP address(es)?');
         if (confirm) {
             var collection = selected.filter(function (item) {
-                return reserve && !item.reserved || item.reserved;
+                return reserve && !item.reserved || !reserve && item.reserved;
             });
             if (collection.length) {
                 var promises = [];
                 collection.forEach(function (item) {
-                    var address = self.collection.get(item.ip);
+                    var address = self.state.collection.fullCollection.get(item.ip);
                     promises.push(
                         address.save(
                             {reserved: reserve},
@@ -109,27 +128,28 @@ var AddressesList = React.createClass({
 
     reserve: function (model, reserve) {
         var self = this;
-        var selected = this.state.selected;
+        var selected = this.state.selected || [];
         model.save({reserved: reserve}, {patch: true}).done(function () {
             if (selected.length) {
                 var address = model.toJSON();
-
                 var index = _.findIndex(selected, {ip: address.ip});
                 if (index !== -1) {
                     selected[index] = address;
-                    self.setState({selected: selected});
                 }
             }
+            self.setState({selected: selected});
         });
     },
 
     _handleSelectRange: function (e) {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
         var range = this.state.range;
-        var startIpLong = utils.ip2long(range.commonPart + range.start);
-        var endIpLong = utils.ip2long(range.commonPart + range.end);
+        var startIpLong = utils.ip2long(range.startIp);
+        var endIpLong = utils.ip2long(range.endIp);
         if (startIpLong && endIpLong && startIpLong <= endIpLong) {
-            var collection = this.collection.toJSON();
+            var collection = this.state.collection.fullCollection.toJSON();
             startIpLong = startIpLong < range.startIpLong ? range.startIpLong : startIpLong;
             endIpLong = endIpLong > range.endIpLong ? range.endIpLong : endIpLong;
             if (startIpLong === range.startIpLong && endIpLong === range.endIpLong) {
@@ -152,10 +172,46 @@ var AddressesList = React.createClass({
         }
     },
 
+    _handleAddRange: function (e) {
+        if (e) {
+            e.preventDefault();
+        }
+        var self = this;
+        var confirm = window.confirm('Are you sure to display all IP addresses in this range? This action can take a while.');
+        if (confirm) {
+            var range = this.state.range;
+            var collection = this.state.collection;
+            var ipAddresses = utils.getNetworkIpList(collection, this.state.networkUuid, range.startIp, range.endIp, true);
+            var provisionIpRange = function () {
+                var promises = $.map(ipAddresses, function (address) {
+                    var deferred = $.Deferred();
+                    collection.create(address, {patch: true, wait: true, silent: true, success: function () {
+                        deferred.resolve();
+                    }});
+                    return deferred.promise();
+                });
+                $.when.apply(null, promises).done(function () {
+                    collection.fetch().done(function () {
+                        collection.getLastPage();
+                        self.notificationSuccess(ipAddresses.length + ' ip addresses successfully added.');
+                    });
+                });
+            };
+
+            if (ipAddresses.length) {
+                provisionIpRange();
+            } else {
+                self.notificationSuccess('All ip addresses from this range have been added.');
+            }
+        }
+    },
+
     _handleChangeRangeAddress: function (isLast, e) {
         var value = e.target.value;
         var range = this.state.range;
-        range[isLast ? 'end' : 'start'] = value;
+        var part = isLast ? 'end' : 'start';
+        range[part] = value;
+        range[part + 'Ip'] = range.commonPart + value;
         this.setState({range: range});
     },
 
@@ -183,7 +239,7 @@ var AddressesList = React.createClass({
         if (state === 'loading' || state === 'error') {
             return (<div className="addresses-list"><div className="zero-state">{state === 'error' ? 'Error ' : ''}Retrieving Addresses List</div></div>);
         } else {
-            var addressesRows = this.collection.map(function (addressModel) {
+            var addressesRows = this.state.collection.map(function (addressModel) {
                 var address = addressModel.toJSON();
                 var notesItem = self.state.networkUuid ? [self.state.networkUuid, address.ip].join('.') : false;
                 var selected = _.findWhere(self.state.selected, {ip: address.ip});
@@ -226,11 +282,12 @@ var AddressesList = React.createClass({
                         {adminui.user.role('operators') &&
                         <th className="select"><input type="checkbox" className="input" onChange={this._handleSelectAll} checked={this._isSelectedAll()} /></th>}
                         <th colSpan="4" className="title">
-                            Showing {this.collection.length} IP Addresses
+                            Showing {this.state.collection.length} IP Addresses
                             <div className="range-ips">
                                 {range.commonPart}<input type="text" value={range.start} onChange={self._handleChangeRangeAddress.bind(this, false)} /> -
                                 {range.commonPart}<input type="text" value={range.end} onChange={self._handleChangeRangeAddress.bind(this, true)} />
                                 <button type="button" className="btn btn-info" onClick={this._handleSelectRange}>Select Range</button>
+                                <button type="button" className="btn btn-info" onClick={this._handleAddRange}>Add IP Addresses</button>
                             </div>
                         </th>
                     </thead>
@@ -238,6 +295,7 @@ var AddressesList = React.createClass({
                         {addressesRows}
                     </tbody>
                 </table>
+                <BB view={new PaginationView({collection: this.state.collection})} />
             </div>);
         }
     }

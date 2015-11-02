@@ -130,9 +130,12 @@ module.exports = {
                 range.end += last;
             }
         }
+        range.startIp =  range.commonPart + range.start;
+        range.endIp =  range.commonPart + range.end;
         return range;
     },
-    getNetworkIpList: function (addresses, network_uuid, provision_start_ip, provision_end_ip) {
+    getNetworkIpList: function (addresses, network_uuid, provision_start_ip, provision_end_ip, notProvisioned) {
+        addresses = addresses.fullCollection || addresses;
         var range = this.getRange(addresses, provision_start_ip, provision_end_ip);
         var ips = {};
         var allProvisionIps = [];
@@ -144,6 +147,9 @@ module.exports = {
         for (var i = start; i <= end; i++) {
             var components = [(i>>24) & 0xff, (i>>16) & 0xff, (i>>8) & 0xff, i & 0xff];
             var ip = components.join('.');
+            if (notProvisioned && ips[ip]) {
+                continue;
+            }
             allProvisionIps.push(ips[ip] || {
                 ip: ip,
                 network_uuid: network_uuid,

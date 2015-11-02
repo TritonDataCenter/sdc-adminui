@@ -9,21 +9,25 @@
  */
 
 var Backbone = require('backbone');
+var PageableCollection = require('./pageableCollection');
 
 
-module.exports = Backbone.Collection.extend({
+module.exports = PageableCollection.extend({
     model: Backbone.Model.extend({
         idAttribute: 'ip',
         urlRoot: function () {
-            this.collection.url();
+            return '/api/networks/' + this.get('network_uuid') + '/ips'
         }
     }),
-
     url: function () {
         return '/api/networks/' + this.uuid + '/ips';
     },
-
     initialize: function (options) {
         this.uuid = options.uuid;
+    },
+    state: {
+        pageSize: 50,
+        pageSizes: [{size: 10}, {size: 25}, {size: 50}, {size: 100}, {size: 255}],
+        totalPages: null
     }
 });

@@ -33,13 +33,13 @@ var NotesPanelNode = React.createClass({
     propTypes: {
         note: React.PropTypes.object.isRequired
     },
-    handleArchive: function() {
+    handleArchive: function () {
         this.props.onArchive(this.props.note);
     },
-    handleUnarchive: function() {
+    handleUnarchive: function () {
         this.props.onUnarchive(this.props.note);
     },
-    render: function() {
+    render: function () {
         var note = this.props.note;
         var converter = new Showdown.converter();
         var htmlNote = converter.makeHtml(note.note);
@@ -49,7 +49,7 @@ var NotesPanelNode = React.createClass({
                 <div className="meta">
                     <div className="author">
                     <UserLink userUuid={note.owner_uuid} /></div>
-                    <div className="date">{moment(note.created).utc().format("LLL")}</div>
+                    <div className="date">{moment(note.created).utc().format('LLL')}</div>
                     <div className="actions">
                     {
                         (note.archived) ?
@@ -67,12 +67,10 @@ var NotesPanelNode = React.createClass({
 });
 
 var NotesPanel = React.createClass({
-    getInitialState: function() {
-        return {
-            disableButton: true
-        };
+    getInitialState: function () {
+        return {disableButton: true};
     },
-    handleSubmit: function(e) {
+    handleSubmit: function (e) {
         e.preventDefault();
         var value = _.str.trim(this.refs.input.getDOMNode().value);
         if (value.length === 0) {
@@ -82,30 +80,28 @@ var NotesPanel = React.createClass({
         this.refs.input.getDOMNode().value = '';
         this.setState({disableButton: true});
     },
-    handleArchive: function(note) {
-        console.log('[NotesPanel]', 'handleArchive', note);
+    handleArchive: function (note) {
         this.props.handleArchive(note);
     },
-    handleUnarchive: function(note) {
-        console.log('[NotesPanel]', 'handleUnarchive', note);
+    handleUnarchive: function (note) {
         this.props.handleUnarchive(note);
     },
-    focus: function() {
+    focus: function () {
         $(this.refs.input.getDOMNode()).focus();
     },
-    onInput: function(e) {
+    onInput: function (e) {
         if (e.target.value && e.target.value.length > 0) {
             this.setState({disableButton: false});
         } else {
             this.setState({disableButton: true});
         }
     },
-    render: function() {
+    render: function () {
         var nodes;
         if (this.props.notes.length === 0) {
             nodes = [<li className="no-notes">There are no notes to display.</li>];
         } else {
-            nodes = _.map(this.props.notes, function(note) {
+            nodes = _.map(this.props.notes, function (note) {
                 return <NotesPanelNode
                     key={note.uuid}
                     onArchive={this.handleArchive}
@@ -125,31 +121,27 @@ var NotesPanel = React.createClass({
 });
 
 var NotesDropdown = React.createClass({
-    getInitialState: function() {
-        return { notes: [] };
+    getInitialState: function () {
+        return {notes: []};
     },
     propTypes: {
         item: React.PropTypes.string.isRequired
     },
-    handleUnarchive: function(item) {
+    handleUnarchive: function (item) {
         var note = new Note(item);
         var req = note.save({archived: false});
-        console.info('NotesComponent: unarchiving note', item.uuid);
-        req.done(function() {
-            console.info('NotesComponent: unarchiving note done', item.uuid);
+        req.done(function () {
             this.fetchNotes();
         }.bind(this));
     },
-    handleArchive: function(item) {
+    handleArchive: function (item) {
         var note = new Note(item);
         var req = note.save({archived: true});
-        console.info('NotesComponent: archiving note', item.uuid);
-        req.done(function() {
-            console.info('NotesComponent: archiving note done', item.uuid);
+        req.done(function () {
             this.fetchNotes();
         }.bind(this));
     },
-    handleSave: function(item) {
+    handleSave: function (item) {
         var note = new Note({
             item_uuid: this.props.item,
             note: item.note
@@ -157,38 +149,38 @@ var NotesDropdown = React.createClass({
         var self = this;
 
         note.save(null, {
-            success: function() {
+            success: function () {
                 self.fetchNotes();
             }
         });
     },
-    panelDidOpen: function() {
-        $("body").on('click.notes-component', function(evt) {
+    panelDidOpen: function () {
+        $('body').on('click.notes-component', function (evt) {
             var closest = $(evt.target).closest(this.getDOMNode());
             if (closest.length === 0) {
                 this.setState({dropdown: false});
             }
         }.bind(this));
     },
-    panelDidClose: function() {
-        $("body").off('click.notes-component');
+    panelDidClose: function () {
+        $('body').off('click.notes-component');
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         this.fetchNotes();
     },
-    componentWillUnmount: function() {
-        $("body").off('click.notes-component');
+    componentWillUnmount: function () {
+        $('body').off('click.notes-component');
         if (this.req) {
             this.req.abort();
         }
     },
-    componentDidUpdate: function() {
+    componentDidUpdate: function () {
         if (this.state.dropdown) {
             this.repositionDropdown();
             this.refs.panel.focus();
         }
     },
-    repositionDropdown: function() {
+    repositionDropdown: function () {
         var $counts = $(this.refs.counts.getDOMNode());
         var $panel = $(this.refs.panel.getDOMNode());
 
@@ -207,23 +199,20 @@ var NotesDropdown = React.createClass({
         }
     },
 
-    fetchNotes: function() {
+    fetchNotes: function () {
         if (this.req) {
             this.req.abort();
         }
-
-        console.debug('[Notes] fetch ', this.props.item);
         var self = this;
         var collection = new Notes();
         collection.item_uuid = this.props.item;
         var req = collection.fetch();
-        req.done(function(notes) {
-            console.debug('[Notes] fetch', this.props.item, 'done', notes.length);
+        req.done(function (notes) {
             self.setState({notes: notes});
         }.bind(this));
         this.req = req;
     },
-    toggleDropdown: function() {
+    toggleDropdown: function () {
         var dropdown = !this.state.dropdown;
         if (dropdown) {
             this.panelDidOpen();
@@ -232,13 +221,13 @@ var NotesDropdown = React.createClass({
         }
         this.setState({dropdown: dropdown});
     },
-    render: function() {
+    render: function () {
         if (! this.props.item) {
             console.warn('[Notes] Missing `item` property for notes component, rendering nothing');
             return null;
         }
 
-        var classNames = ["notes-count btn btn-default"];
+        var classNames = ['notes-count btn btn-default'];
         var count = this.state.notes.length;
 
         if (count > 0) {
@@ -251,7 +240,7 @@ var NotesDropdown = React.createClass({
 
         return (
             <div className="notes-component">
-                <a onClick={this.toggleDropdown} ref="counts" className={classNames.join(" ")}><i className="fa fa-comment"></i>{count}</a>
+                <a onClick={this.toggleDropdown} ref="counts" className={classNames.join(' ')}><i className="fa fa-comment"></i>{count}</a>
                 {
                     this.state.dropdown ?
                     <NotesPanel
