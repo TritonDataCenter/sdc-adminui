@@ -25,7 +25,7 @@ var Networks = require('../models/networks');
 var NetworkPools = require('../models/network-pools');
 var Addresses = require('../models/addresses');
 var Chosen = require('react-chosen');
-var utils = require('../lib/utils');
+var IpView = require('./ip');
 
 var NicConfig = React.createClass({
     propTypes: {
@@ -111,22 +111,7 @@ var NicConfig = React.createClass({
             }
         })[0];
         var isNetwork = !!network;
-        this.setState({loadingIp: true, showIpSelect: isNetwork});
-        if (isNetwork) {
-            var self = this;
-            var selectedIps = this.props.selectedIps || {};
-            this.addresses = new Addresses({uuid: network_uuid});
-            this.addresses.fetch().done(function () {
-                var allProvisionIps = utils.getNetworkIpList(self.addresses, network_uuid, network.provision_start_ip, network.provision_end_ip);
-                var freeIpAddresses = allProvisionIps.filter(function (address) {
-                    return address.free && !address.reserved && !address.belongs_to_type && !selectedIps[address.ip];
-                });
-                this.setState({
-                    loadingIp: false,
-                    addresses: freeIpAddresses
-                });
-            }.bind(this));
-        }
+        this.setState({showIpSelect: isNetwork});
     },
     onChange: function (e) {
         var value;
@@ -145,13 +130,7 @@ var NicConfig = React.createClass({
         this.setState({nic: nic});
         this.props.onPropertyChange(prop, value, nic, this.props.uuid);
     },
-    onChangeIp: function (e) {
-        var value;
-        if (e.target.checked === true || e.target.checked === false) {
-            value = e.target.checked;
-        } else {
-            value = e.target.value;
-        }
+    onChangeIp: function (value) {
         var nic = this.state.nic;
         if (value) {
             nic.ip = value;
@@ -231,20 +210,12 @@ var NicConfig = React.createClass({
                     <div className="form-group form-group-network-ip row">
                         <label className="control-label col-sm-4">IP</label>
                         <div className="controls col-sm-5">
-                            {this.state.loadingIp && <div className="loading"><i className="fa fa-spinner fa-spin"></i> Retrieving Network IPs</div>}
-                            {!this.state.loadingIp && <div>
-                                <Chosen onChange={this.onChangeIp}
-                                        className="form-control"
-                                        name="ip"
-                                        data-placeholder="Select IP address"
-                                        value={this.state.nic.ip}>
-                                    <option value="">automatic</option>
-                                    {
-                                        this.state.addresses.map(function (address) {
-                                            return (<option key={address.ip} value={address.ip}>{address.ip}</option>);
-                                        })
-                                    }
-                                </Chosen></div>}
+                            {<div>
+                                <IpView
+                                    onChange={this.onChangeIp}
+                                    className="form-control"
+                                    name="ip"
+                                    uuid={this.state.nic.network_uuid} /></div>}
                         </div>
                     </div>
                 }
