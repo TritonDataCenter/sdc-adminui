@@ -92,7 +92,7 @@ var ReprovisionVm = React.createClass({
 
                     <div className="form-group">
                         <p className="text-danger"><strong>Confirm</strong> you want to proceed by typing &laquo;<strong>REPROVISION</strong>&raquo; in the box below: </p>
-                        <p><input type="text" placeholder="type: reprovision  to confirm" className="form-control" onChange={this.onChangeConfirmText} /></p>
+                        <p><input type="text" className="form-control" onChange={this.onChangeConfirmText} /></p>
                     </div>
                 </form>
             </div>
