@@ -249,14 +249,20 @@ var View = Backbone.Marionette.Layout.extend({
 
         this.ui.alert.hide();
         this.ui.newNicTagForm.hide();
-        this.nicTagsSelect.setElement(this.$('select[name=nic_tag]'));
+        
+        var $nicTagSelect = this.$('select[name=nic_tag]');
+        this.nicTagsSelect.setElement($nicTagSelect);
 
         this.$('[name="owner_uuids[]"]').each(function () {
             var userInput = new TypeaheadUserInput({el: $(this), showPreview: true});
             userInput.render();
         });
         this.nicTags.fetch().done(function () {
-            self.$('select[name=nic_tag]').val(self.model.get('nic_tag'));
+            var nicTag = self.model.get('nic_tag');
+            if (nicTag) {
+                $nicTagSelect.val(nicTag);
+                $nicTagSelect.attr("disabled", true);
+            }
         });
         this.$('.remove-route:first').hide();
     }
