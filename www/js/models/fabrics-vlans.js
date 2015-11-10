@@ -12,7 +12,13 @@ var Collection = require('./collection');
 var FabricsVlan = require('./fabrics-vlan');
 var FabricsVlans = Collection.extend({
     model: FabricsVlan,
-    url: '/api/fabrics'
+    url: function () {
+        var owner_uuid = this.get('owner_uuid') || this.params.owner_uuid;
+        if (owner_uuid) {
+            return '/api/fabrics/' + owner_uuid + '/vlans';
+        }
+        return '/api/fabrics'
+    }
 });
 
 module.exports = FabricsVlans;

@@ -45,6 +45,7 @@
                     {{#if owner_uuid}}
                         <input type="text"
                                value="{{owner_uuid}}"
+                               name="owner_uuid"
                                class="form-control package-owner"
                                readonly />
                     {{else}}
@@ -216,11 +217,20 @@
                 <label class="control-label col-sm-4" for="network-vlan-id">VLAN ID</label>
 
                 <div class="controls col-sm-5">
-                    <input type="text"
-                    {{#ifCond inUse '||' isFabric}} readonly {{/ifCond}}
-                    value="{{vlan_id}}"
-                    class="form-control"
-                    id="netework-vlan-id" name="vlan_id" placeholder="VLAN ID">
+                    {{#ifCond isFabric '&&' vlans}}
+                        <select class="form-control" name="vlan_id">
+                            {{#each vlans}}
+                                <option value="{{vlan_id}}">{{name}} ({{vlan_id}})</option>
+                            {{/each}}
+                        </select>
+                    {{else}}
+                        <input type="text"
+                            {{#ifCond inUse '||' isFabric}} readonly {{/ifCond}}
+                               value="{{vlan_id}}"
+                               class="form-control"
+                               id="netework-vlan-id" name="vlan_id" placeholder="VLAN ID" />
+                    {{/ifCond}}
+
                     {{#if isFabric}}
                         <div class="checkbox">
                             <label>

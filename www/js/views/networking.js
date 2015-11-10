@@ -31,8 +31,10 @@ var Networking = Backbone.Marionette.Layout.extend({
         var url = '/networking';
         if (this.options && this.options.tab) {
             url += '/' + this.options.tab;
-            if (this.options.owner_uuid) {
-                url += '/' + this.options.owner_uuid;
+            if (this.options.querystring) {
+                url += '?' + this.options.querystring;
+            } else if (this.options.query) {
+                url += '?' +  adminui.router.serialize(this.options.query);
             }
         } else {
             url += '/networks';
@@ -41,8 +43,7 @@ var Networking = Backbone.Marionette.Layout.extend({
     },
 
     initialize: function () {
-        var params = this.options.owner_uuid && adminui.user.attributes.roles.indexOf('operators') !== -1 ? {owner_uuid: this.options.owner_uuid} : null;
-        this.currentView = this.getCurrentView(this.options.tab, params);
+        this.currentView = this.getCurrentView(this.options.tab, this.options);
     },
 
     makeActive: function (view) {

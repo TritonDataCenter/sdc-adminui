@@ -16,13 +16,17 @@
     right: 0;
   }
   .editable-value {
-    float: right;
+    position: absolute;
+    right: 35px;
   }
   ul li input {
     width: 500px;
   }
   ul.attributes li li {
     padding: 0;
+  }
+  .networks-list {
+    #page-networks > .networks-list;
   }
 }
 .fabric-vlans {
@@ -31,70 +35,9 @@
   }
 }
 
-.fabric-vlans-list, .fabric-networks-list {
-  li {
-    &.hover {background: @state-warning-bg;}
-    .widget-content;
-    display: block;
-    padding: 10px;
-    margin-bottom: 1px;
-
-    &>div {
-      vertical-align:top;
-      display: inline-block;
-      width: 100px;
-    }
-    strong {display: block;}
-    .name {
-      width: 260px;
-      a {
-        display: block;
-        clear: both;
-        font-weight: bold;
-      }
-    }
-    .provision-ip-range {
-      width: 200px;
-    }
-    .resolvers {
-      width: 120px;
-    }
-    .description {
-      width: 400px;
-    }
-    strong {
-      font-size: 12px;
-      color: @gray-light;
-    }
-    .actions {
-      .edit {
-        margin-left: 20px;
-        font-weight: bold;
-        visibility: hidden;
-      };
-      .delete {
-        margin-left: 20px;
-        font-weight: bold;
-        color: @state-danger-text;
-        float: right;
-        visibility: hidden;
-      }
-      width: 150px;
-      float: right;
-      vertical-align: middle;
-      color: @state-danger-text;
-      visibility: hidden;
-    }
-
-    &:hover .delete, &:hover .edit {
-      text-decoration: none;
-      visibility: visible;
-    }
-
-    .value {
-      color: @gray-dark;
-      font-family: @font-family-monospace;
-      font-size: 10px;
-    }
+.fabric-vlans-list {
+  #page-networks > .networks-list;
+  .description {
+    width: 400px;
   }
 }

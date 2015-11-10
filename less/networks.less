@@ -10,36 +10,32 @@
 
 #page-networks {
   .network-pools-list {
-    li {
-      margin-bottom: 1em;
 
-      .network-pool-header {
-        .widget-header;
-        cursor: pointer;
-        font-size: 12px;
-        padding: 10px;
+    .network-pool-header {
+      .widget-header;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 10px;
 
-        .name {
-          margin-right: 20px;
-          width: 300px;
-          display: inline-block;
-          color: @link-color;
-          font-weight: bold;
-        }
-        .uuid {
-          float: right;
-          color: @gray-light;
-          font-family: @font-family-monospace;
-        }
-        .edit { margin-left: 20px; float: right; font-weight: bold; visibility: hidden;};
-        .delete { margin-left: 20px; font-weight: bold; color: @state-danger-text; float: right; visibility: hidden;}
-
-        &:hover .delete { text-decoration: none; visibility: visible; }
-        &:hover .edit { text-decoration: none; visibility: visible; }
-
-        .network-count { font-style: italic; font-size: 10px; text-transform: uppercase; color: @gray-light;}
+      .name {
+        margin-right: 20px;
+        width: 300px;
+        display: inline-block;
+        color: @link-color;
+        font-weight: bold;
       }
+      .uuid {
+        float: right;
+        color: @gray-light;
+        font-family: @font-family-monospace;
+      }
+      .edit { margin-left: 20px; float: right; font-weight: bold; visibility: hidden;};
+      .delete { margin-left: 20px; font-weight: bold; color: @state-danger-text; float: right; visibility: hidden;}
 
+      &:hover .delete { text-decoration: none; visibility: visible; }
+      &:hover .edit { text-decoration: none; visibility: visible; }
+
+      .network-count { font-style: italic; font-size: 10px; text-transform: uppercase; color: @gray-light;}
     }
   }
 
@@ -60,7 +56,7 @@
       .owners { width: 245px; }
       .gateway { width: 100px; }
       .name {
-        width: 260px;
+        width: 240px;
         a { display: block; clear: both; font-weight: bold; }
       }
       .subnet {
@@ -69,16 +65,17 @@
         font-size: 10px;
       }
       .vlan {
-        width: 50px;
+        width: 60px;
       }
       .mtu {
         width: 150px;
       }
-      strong { font-size: 12px; color: @gray-light;}
+      strong {font-size: 12px; color: @gray-light;}
       .actions {
-        a.delete-network { color: @state-danger-text; text-decoration: none;}
-       float: right; vertical-align: middle; color: @state-danger-text; visibility: hidden;}
-      &:hover .actions { visibility: visible; }
+        a.delete {color: @state-danger-text; text-decoration: none; font-weight: bold;}
+        float: right; vertical-align: middle; color: @state-danger-text; visibility: hidden;}
+        a.edit {margin-right: 10px;}
+      &:hover .actions {visibility: visible;}
       .value {
         color: @gray-dark;
         font-family: @font-family-monospace;
@@ -109,5 +106,6 @@
       }
     }
   }
+
 }
 

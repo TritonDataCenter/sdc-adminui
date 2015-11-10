@@ -1,0 +1,41 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+/*
+ * Copyright (c) 2015, Joyent, Inc.
+ */
+
+@import "__vms-list";
+
+#page-networking {
+  .panel-body {
+    padding: 0;
+  }
+  .filter-options {
+    .widget-content;
+    label {
+      color: @gray;
+      font-size: 12px;
+      padding: 0 3px;
+      text-transform: uppercase;
+    }
+    select {
+      .pull-right;
+    }
+    button.btn {
+      margin-top: 25px;
+    }
+  }
+  .actions button {
+    margin-left: 15px;
+  }
+
+  .networks-list {
+    #page-networks > .networks-list;
+  }
+}
+
+.list-header { .__vms-list > .vms-list-header; }

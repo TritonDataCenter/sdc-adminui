@@ -12,8 +12,9 @@ var React = require('react');
 
 var adminui = require('adminui');
 var Backbone = require('backbone');
-var Networks = require('../models/fabrics-vlan-networks');
-var NetworksComponent = React.createFactory(require('../components/fabric-networks'));
+var Networks = require('../models/networks');
+var Vlan = require('../models/fabrics-vlan');
+var NetworksComponent = React.createFactory(require('../components/pages/networking/networks-list.jsx'));
 var EditableField = React.createFactory(require('../components/editable-field'));
 
 module.exports = Backbone.Marionette.Layout.extend({
@@ -34,6 +35,9 @@ module.exports = Backbone.Marionette.Layout.extend({
     },
     initialize: function () {
         this.networks = new Networks();
+        if (this.model.vlan_id && this.model.owner_uuid) {
+            this.model = new Vlan(this.model);
+        }
         this.networks.url = '/api/fabrics/' + this.model.get('owner_uuid') + '/vlan/' + this.model.get('vlan_id') + '/networks';
     },
     vlanUpdate: function (params, callback) {
@@ -56,7 +60,7 @@ module.exports = Backbone.Marionette.Layout.extend({
         var vlan = this.model.toJSON();
         this.networks.fetch().done(function () {
             React.render(
-                NetworksComponent({collection: self.networks, data: self.model.toJSON()}),
+                NetworksComponent({collection: self.networks, data: vlan, showCreateButton: true, isFabricsView: true, showActions: true}),
                 self.$('.networks-region').get(0)
             );
         });
@@ -64,7 +68,7 @@ module.exports = Backbone.Marionette.Layout.extend({
             EditableField({
                 value: vlan.name,
                 title: 'Name',
-                onSave: this.vlanUpdateName.bind(self),
+                onSave: self.vlanUpdateName.bind(self),
                 params: vlan
             }), this.$('.name-field').get(0)
         );
@@ -72,7 +76,7 @@ module.exports = Backbone.Marionette.Layout.extend({
             EditableField({
                 value: vlan.description || '',
                 title: 'Description',
-                onSave: this.vlanUpdateDescription.bind(self),
+                onSave: self.vlanUpdateDescription.bind(self),
                 params: vlan
             }), this.$('.description-field').get(0)
         );
