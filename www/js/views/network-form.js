@@ -56,7 +56,8 @@ var View = Backbone.Marionette.Layout.extend({
         'alert': '.alert',
         'nicTagSelect': 'select[name=nic_tag]',
         'newNicTagForm': '.nic-tag-form',
-        'createNewNicTagButton': '.create-new-nic-tag'
+        'createNewNicTagButton': '.create-new-nic-tag',
+        'neteworkVlanIdField': '#netework-vlan-id'
     },
 
     initialize: function (options) {
@@ -288,7 +289,12 @@ var View = Backbone.Marionette.Layout.extend({
             var $nicTagSelect = this.$('select[name=nic_tag]');
             this.nicTagsSelect.setElement($nicTagSelect);
             this.nicTags.fetch().done(function () {
-                $nicTagSelect.val(self.model.get('nic_tag'));
+                var nicTag = self.model.get('nic_tag');
+                if (nicTag) {
+                    $nicTagSelect.val(self.model.get('nic_tag'));
+                    $nicTagSelect.attr('disabled', true);
+                    self.ui.createNewNicTagButton.hide();
+                }
             });
         }
 
@@ -300,15 +306,10 @@ var View = Backbone.Marionette.Layout.extend({
             }
             userInput.render();
         });
-// temp
-        this.nicTags.fetch().done(function () {
-            var nicTag = self.model.get('nic_tag');
-            if (nicTag) {
-                $nicTagSelect.val(nicTag);
-                $nicTagSelect.attr("disabled", true);
-            }
-        });
-//
+
+        if (typeof this.model.get('vlan_id') === 'number') {
+            this.ui.neteworkVlanIdField.attr('disabled', true);
+        }
 
         var query = this.options.query;
 
