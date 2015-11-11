@@ -5,19 +5,19 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
-var Collection = require('./collection');
 var Img = require('./image');
 var api = require('../request');
+var PageableCollection = require('./pageableCollection');
 
-var ImagesCollection = Collection.extend({
+var ImagesCollection = PageableCollection.extend({
     model: Img,
-    url: '/api/images',
+    url: '/api/images'
 });
-ImagesCollection.hasExternalNic = function(cb) {
-    api.get('/api/imgapi-external-nic-status').end(function(res) {
+ImagesCollection.hasExternalNic = function (cb) {
+    api.get('/api/imgapi-external-nic-status').end(function (res) {
         if (res.ok) {
             cb(null, res.body);
         } else {
