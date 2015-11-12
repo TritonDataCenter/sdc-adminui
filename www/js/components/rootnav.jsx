@@ -10,6 +10,7 @@
 
 var React = require('react');
 var AlarmsMenu = require('./alarms-menu.jsx');
+var Services = require('../models/services');
 var cx = require('classnames');
 
 var Rootnav = React.createClass({
@@ -24,9 +25,14 @@ var Rootnav = React.createClass({
         // handleSelectCurrentUser(userUuid)
         handleSelectCurrentUser: React.PropTypes.func
     },
-    classesFor: function(view) {
+    getInitialState: function () {
+        return {
+            inMaintenance: false
+        };
+    },
+    classesFor: function (view) {
         var attrs = {};
-        view.split(" ").forEach(function(v) {
+        view.split(' ').forEach(function (v) {
             attrs[v] = true;
             if (this.props.active === v) {
                 attrs.active = true;
@@ -47,8 +53,24 @@ var Rootnav = React.createClass({
         }
     },
 
-    componentDidMount: function() {
-        this.props.user.fetch().done(function() {
+    componentWillMount: function () {
+        var self = this;
+        var services = new Services();
+        services.params = {name: 'cloudapi'};
+        services.fetch();
+        services.on('sync', function (collection) {
+            var result = collection.toJSON();
+            var cloudapi = result[0];
+            if (cloudapi && cloudapi.metadata.CLOUDAPI_READONLY) {
+                self.setState({
+                    inMaintenance: true
+                });
+            }
+        });
+    },
+
+    componentDidMount: function () {
+        this.props.user.fetch().done(function () {
             this.forceUpdate();
         }.bind(this));
     },
@@ -72,6 +94,7 @@ var Rootnav = React.createClass({
                                 <li onClick={this._clickedMenuItem} data-component="dashboard" className={this.classesFor('datacenter dashboard')}>
                                     <a href="/dashboard" className="datacenter-name">
                                         <small>Datacenter</small> {this.props.currentDatacenter}
+                                        {this.state.inMaintenance ? <span className="navbar-alert"> In Maintenance</span> : ''}
                                     </a>
                                 </li>
 
@@ -82,7 +105,6 @@ var Rootnav = React.createClass({
                                     <a href="/users"><i className="fa fa-users fa-fw"></i> Users</a>
                                 </li>
                             </ul>
-
                             <ul className="nav navbar-nav main-nav navbar-right">
                                 {
                                     this.props.user.get('adminUuid') &&

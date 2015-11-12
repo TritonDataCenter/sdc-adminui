@@ -12,17 +12,8 @@ var $ = require('jquery');
 
 var Backbone = require('backbone');
 var adminui = require('../adminui');
-
-
-var Service = require('../models/model').extend({
-    idAttribute: 'uuid',
-    urlRoot: '/api/services'
-});
-
-var Services = require('../models/collection').extend({
-    model: Service,
-    url: '/api/services'
-});
+var Services = require('../models/services');
+var CollectionView = require('./collection');
 
 var Instance = require('../models/model').extend({
     idAttribute: 'uuid',
@@ -73,7 +64,7 @@ var InstanceView = Backbone.Marionette.ItemView.extend({
     }
 });
 
-var InstancesView = Backbone.Marionette.CollectionView.extend({
+var InstancesView = CollectionView.extend({
     itemView: InstanceView
 });
 
@@ -93,28 +84,29 @@ var ServicesListItemView = Backbone.Marionette.ItemView.extend({
     }
 });
 
-var ServicesListView = Backbone.Marionette.CollectionView.extend({
+var ServicesListView = CollectionView.extend({
     itemView: ServicesListItemView
 });
 
-var ApplicationsListView = Backbone.Marionette.CollectionView.extend({
+var ApplicationsListView = CollectionView.extend({
     itemView: Backbone.Marionette.ItemView.extend({
         template: require('../tpl/services-application.hbs'),
         attributes: {
             'class': 'application'
         },
-        onRender: function() {
+        initialize: function () {
             this.services = new Services();
+        },
+        onRender: function () {
+            var self = this;
             this.servicesView = new ServicesListView({
                 el: this.$('.services'),
                 collection: this.services
             });
-            var self = this;
-            this.services.params = { applications_uuid: this.model.get('uuid') };
-            this.services.fetch({ reset: true })
-                .done(function(res) {
-                    self.$('.number-of-services').html(res.length);
-                });
+            this.services.params = {applications_uuid: this.model.get('uuid')};
+            this.services.fetch({reset: true, success: function (res) {
+                self.$('.number-of-services').html(res.length);
+            }});
         }
     })
 });
