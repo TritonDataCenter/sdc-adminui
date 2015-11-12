@@ -84,10 +84,12 @@ var FabricVlansPage = React.createClass({
                 <div className="actions">
                     {!this.state.form && (<div>
                         <button type="button" className="btn btn-sm btn-info" onClick={this.createNetwork}>
-                            <i className="fa fa-plus"> New Fabric Network</i>
+                            <i className="fa fa-plus"></i>
+                            &nbsp;New Fabric Network
                         </button>
                         <button className="btn btn-sm btn-info" onClick={this.createVlan}>
-                            <i className="fa fa-plus"> New Fabric VLAN</i>
+                            <i className="fa fa-plus"></i>
+                            &nbsp;New Fabric VLAN
                         </button>
                     </div>)}
                 </div>

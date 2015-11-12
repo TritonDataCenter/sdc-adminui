@@ -58,8 +58,9 @@ var NicTagsPage = React.createClass({
             <h3>NIC Tags
                 <div className="actions">
                     {app.user.role('operators') &&  
-                    <button className="btn btn-info" onClick={this._showForm}>
-                        <i className="fa fa-plus"> New NIC Tag</i>
+                    <button className="btn btn-sm btn-info" onClick={this._showForm}>
+                        <i className="fa fa-plus"></i>
+                        &nbsp;New NIC Tag
                     </button>}
                 </div>
             </h3>
