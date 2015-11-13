@@ -54,23 +54,21 @@ var PRESET_FILTERS = [
 ];
 
 var DatePicker = React.createClass({
-    componentDidMount: function() {
-        var n = this.refs.datepicker.getDOMNode();
-        this.dateTimePicker = $(n).datetimepicker({language: 'en'});
+    componentDidMount: function () {
+        this.dateTimePicker = $(this.refs.datepicker.getDOMNode()).datetimepicker({language: 'en'});
         this.dateTimePicker.on('dp.change', this.onChange);
+        this.dateTimePicker.on('dp.show', this.onChange);
     },
-    onChange: function(e) {
-        this.props.onChange({value: e.date.utc().toDate() });
+    onChange: function (e) {
+        this.props.onChange({value: e.date.utc().toDate()});
     },
-    render: function() {
-        return (
-            <div className="form-group">
-                <div ref="datepicker" className="input-group date-picker" data-date-format="YYYY-MM-DD HH:mm:ss">
-                    <input ref="input" className="form-control" defaultValue={this.props.value}  type="text"></input>
-                    <span className="input-group-addon"><span className="fa fa-calendar"></span></span>
-                </div>
+    render: function () {
+        return (<div className="form-group">
+            <div ref="datepicker" className="input-group date-picker" data-date-format="YYYY-MM-DD HH:mm:ss">
+                <input ref="input" className="form-control" defaultValue={this.props.value} type="text"></input>
+                <span className="input-group-addon"><span className="fa fa-calendar"></span></span>
             </div>
-        );
+        </div>);
     }
 });
 
