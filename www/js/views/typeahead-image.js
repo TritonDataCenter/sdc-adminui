@@ -11,7 +11,6 @@
 var Backbone = require('backbone');
 var Bloodhound = require('bloodhound');
 
-var Images = require('../models/images');
 var Image = require('../models/image');
 
 var ImageTypeaheadTpl = require('../tpl/typeahead-image.hbs');
@@ -19,17 +18,10 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
     events: {
         'typeahead:selected': 'onTypeaheadSelect',
         'typeahead:opened': 'onOpened',
-        'typeahead:closed': 'onTypeaheadClosed',
-        'typeahead:cursorchanged': 'onCursorChanged'
+        'typeahead:closed': 'onTypeaheadClosed'
     },
 
     template: ImageTypeaheadTpl,
-
-    initialize: function (options) {
-        options = options || {};
-        this.imagesCollection = new Images(null);
-        this.listenTo(this.imagesCollection, 'sync', this.initializeEngine);
-    },
 
     clearField: function () {
         process.nextTick(function () {
@@ -62,38 +54,49 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         }
     },
 
-    initializeEngine: function (collection, response) {
-        var source = response.map(function (item) {
-            var model = new Image(item);
-            var image = model.toJSON();
-            var tokens = [image.uuid, image.version, image.name];
-            if (image.billing_tags && Array.isArray(image.billing_tags)) {
-                image.billing_tags.forEach(function (t) {
-                    tokens.push(t);
-                });
-            }
-
-            if (image.tags && typeof image.tags === 'object') {
-                var tags = image.tags;
-                Object.keys(tags).forEach(function (tagKey) {
-                    tagKey = tagKey.split(':')[0];
-                    tokens.push(tagKey);
-                });
-            }
-            return {
-                model: model,
-                uuid: image.uuid,
-                tokens: tokens,
-                name: image.name,
-                version: image.version,
-                tags: Object.keys(image.tags || {}).join(', '),
-                os: image.os,
-                virt: image.virt
-            };
-        });
+    initializeEngine: function () {
         this.engine = new Bloodhound({
             name: 'images',
-            local: source,
+            remote: {
+                url: '/api/images?q=%QUERY',
+                ajax: {
+                    beforeSend: function (xhr) {
+                        var token = !this.headers['x-adminui-token'] && app.user && app.user.getToken();
+                        if (token) {
+                            xhr.setRequestHeader('x-adminui-token', token);
+                        }
+                    }
+                },
+                filter: function (images) {
+                    var datums = images.map(function (img) {
+                        var model = new Image(img);
+                        var image = model.toJSON();
+                        var tokens = [image.uuid, image.name];
+                        if (image.billing_tags && Array.isArray(image.billing_tags)) {
+                            image.billing_tags.forEach(function (tag) {
+                                tokens.push(tag);
+                            });
+                        }
+                        var tags = image.tags;
+                        if (tags && typeof tags === 'object') {
+                            Object.keys(tags).forEach(function (key) {
+                                tokens.push(key + ':' + tags[key]);
+                            });
+                        }
+                        return {
+                            model: model,
+                            uuid: image.uuid,
+                            tokens: tokens,
+                            name: image.name,
+                            version: image.version,
+                            tags: Object.keys(image.tags || {}).join(', '),
+                            os: image.os,
+                            virt: image.virt
+                        };
+                    });
+                    return datums;
+                }
+            },
             datumTokenizer: function (datum) {
                 return datum.tokens;
             },
@@ -145,7 +148,7 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         {
             displayKey: 'uuid',
             name: 'images',
-            source: substringMatcher(this.engine.local, 'tokens'),
+            source: this.engine.ttAdapter(),
             templates: {
                 suggestion: ImageTypeaheadTpl
             }
@@ -153,7 +156,7 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
     },
 
     render: function () {
-        this.imagesCollection.fetch();
+        this.initializeEngine();
     }
 });
 
