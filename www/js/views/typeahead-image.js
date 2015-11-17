@@ -12,9 +12,9 @@ var Backbone = require('backbone');
 var Bloodhound = require('bloodhound');
 
 var Images = require('../models/images');
+var Image = require('../models/image');
 
 var ImageTypeaheadTpl = require('../tpl/typeahead-image.hbs');
-
 var ImageTypeaheadView = Backbone.Marionette.View.extend({
     events: {
         'typeahead:selected': 'onTypeaheadSelect',
@@ -27,7 +27,7 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
 
     initialize: function (options) {
         options = options || {};
-        this.imagesCollection = new Images();
+        this.imagesCollection = new Images(null);
         this.listenTo(this.imagesCollection, 'sync', this.initializeEngine);
     },
 
@@ -62,9 +62,10 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         }
     },
 
-    initializeEngine: function () {
-        var source = this.imagesCollection.map(function (img) {
-            var image = img.toJSON();
+    initializeEngine: function (collection, response) {
+        var source = response.map(function (item) {
+            var model = new Image(item);
+            var image = model.toJSON();
             var tokens = [image.uuid, image.version, image.name];
             if (image.billing_tags && Array.isArray(image.billing_tags)) {
                 image.billing_tags.forEach(function (t) {
@@ -80,7 +81,7 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
                 });
             }
             return {
-                model: img,
+                model: model,
                 uuid: image.uuid,
                 tokens: tokens,
                 name: image.name,
