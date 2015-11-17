@@ -2,20 +2,17 @@ var React = require('react');
 var BackboneMixin = require('../../_backbone-mixin');
 var app = require('../../../adminui');
 var moment = require('moment');
+var Image = require('../../../models/image');
 
 var ImagesList = React.createClass({
-    mixins: [BackboneMixin],
-    getBackboneModels: function() {
-        return [this.props.images];
-    },
-    _onClickImageName: function(i) {
-        app.vent.trigger('showview', 'image', {image: i});
+    _onClick: function (img) {
+        app.vent.trigger('showview', 'image', {image: img});
         return false;
     },
 
-    renderItem: function (i) {
-        var img = i.toJSON();
+    renderItem: function (img) {
         var href = '/images/' + img.uuid;
+        var model = new Image(img);
         var publishDate = moment(img.published_at).utc().format('MM/DD/YYYY');
         var os = img.type === 'zvol' ? ('KVM, ' + img.os) : img.os;
 
@@ -24,7 +21,7 @@ var ImagesList = React.createClass({
                 <span className={img.state}>{img.state}</span>
             </td>
             <td className="name">
-                <a data-uuid={img.uuid} onClick={this._onClickImageName.bind(null, i)} className="image-name" href={href}>
+                <a data-uuid={img.uuid} onClick={this._onClick.bind(null, model)} className="image-name" href={href}>
                     {img.name} <span className="version">{img.version}</span>
                 </a>
                 <br />

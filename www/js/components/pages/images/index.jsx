@@ -28,13 +28,17 @@ var ImagesView = React.createClass({
     getInitialState: function () {
         return {
             hasMore: false,
-            loaded: false
+            loaded: false,
+            images: []
         };
     },
-    _onSync: function (collection, objs) {
-        this.setState({loaded: true});
-        if (IMAGE_FETCH_SIZE === objs.length) {
-            var newMarker = objs[objs.length - 1].uuid;
+    _onSync: function (collection, list) {
+        this.setState({
+            loaded: true,
+            images: _.union(this.state.images, list)
+        });
+        if (IMAGE_FETCH_SIZE === list.length) {
+            var newMarker = list[list.length - 1].uuid;
             var oldMarker = this.images.params.marker;
             if (typeof oldMarker  === 'undefined' || newMarker !== oldMarker) {
                 this.setState({hasMore: true});
@@ -86,16 +90,18 @@ var ImagesView = React.createClass({
             
         }
         delete this.images.params.marker;
-        this._requests.push(this.images.fetch().done(function () {
-            var params = {};
-            if (value && value.length) {
-                params.q = value;
-            }
-            app.router.changeSearch(params);
-        }));
+        this.setState({images: [], loaded: false}, function () {
+            this._requests.push(this.images.fetch().done(function () {
+                var params = {};
+                if (value && value.length) {
+                    params.q = value;
+                }
+                app.router.changeSearch(params);
+            }));
+        }, this);
     },
     _loadMore: function () {
-        this.images.params.marker = this.images.at(this.images.length - 1).get('uuid');
+        this.images.params.marker = this.state.images[this.state.images.length - 1].uuid;
         this._requests.push(this.images.fetch({remove: false}));
     },
     onChangeSearchInput: function (e) {
@@ -126,7 +132,7 @@ var ImagesView = React.createClass({
                     </div>
                 </div>
             </div>
-            { this.state.loaded && <ImagesList images={this.images} /> }
+            { this.state.loaded && <ImagesList images={this.state.images} /> }
             { (this.state.hasMore) ? <button onClick={this._loadMore} className="btn btn-block btn-info load-more">Load More</button> : ''}
         </div>;
 
