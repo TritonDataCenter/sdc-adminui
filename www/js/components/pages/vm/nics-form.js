@@ -144,7 +144,10 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
                 readonlyNetwork: !this.model.isNew(),
                 expandAntispoofOptions: false,
                 isPrimaryChoosingAvailable: this.isPrimaryChoosingAvailable,
-                onPropertyChange: this.onNicPropertyChange.bind(this)
+                onPropertyChange: this.onNicPropertyChange.bind(this),
+                networkFilters: {
+                    provisionable_by: this.vm.get('owner_uuid')
+                }
             }),
             this.$('.nic-config-component').get(0));
 

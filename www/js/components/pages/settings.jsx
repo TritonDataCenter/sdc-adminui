@@ -189,7 +189,10 @@ var SettingsComponent = React.createClass({
                         <div className="panel-body">
                             <div className="form-group">
                                 <div className="nic-selection-container">
-                                    <MultipleNicConfigComponent ref="networkConfigComponent" nics={this.state['provision.preset_networks']} />
+                                    <MultipleNicConfigComponent 
+                                        ref="networkConfigComponent"
+                                        nics={this.state['provision.preset_networks']}
+                                        networkFilters={{provisionable_by: adminui.user.get('uuid')}} />
                                 </div>
                             </div>
                         </div>
