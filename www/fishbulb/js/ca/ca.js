@@ -35,7 +35,7 @@ var Rickshaw; /* XXX */
 var caUniqueId = 0;			/* unique widget identifier */
 var caDefaultBarColor = '#E57F44';	/* default color for bar graphs */
 var caDefaultHue = 22;			/* default hue for heat maps */
-
+var valueForCopy;
 /*
  * We use a set of secondary colors to highlight individual components in bar
  * charts or heatmaps.
@@ -1437,15 +1437,16 @@ function caWidgetChart(args)
 	$(this.cc_components).on('mousedown', function (event) {
 		widget.legendClicked(event);
 	});
-
 	$(this.cc_components).on('contextmenu', function (event) {
+		valueForCopy = event.target.textContent;
 		event.preventDefault();
 	});
-
 	$.contextMenu({
-	    'selector': '#caGraph' + this.cc_id + ' .caGraphLegendTable',
-	    'build': function (e) {
-		return (widget.legendMenu(e));
+	    selector: '#caGraph' + this.cc_id + ' .caGraphLegendTable',
+	    reposition: false,
+	    autoHide: true,
+	    build: function (e) {
+	    	return widget.legendMenu(e);
 	    }
 	});
 }
@@ -1487,7 +1488,6 @@ caWidgetChart.prototype.initMenu = function ()
 		});
 	}
 };
-
 caWidgetChart.prototype.initButton = function (elt, conf)
 {
 	var widget = this;
@@ -1781,8 +1781,21 @@ caWidgetChart.prototype.legendMenu = function (target)
 		}
 	}
 
+    if (valueForCopy) {
+        menu.copy = {
+            name: 'Copy to clipboard',
+            callback: function () {
+                var textarea = $('<textarea/>');
+                $('body').append(textarea);
+                textarea.val(valueForCopy);
+                textarea.focus();
+                document.execCommand('copy');
+                textarea.remove();
+            }
+        };
+    }
 	return ({
-	    'items': menu
+	    items: menu
 	});
 };
 
@@ -2801,3 +2814,13 @@ function caTickFormat(scale, y)
 
 	return (y);
 }
+
+document.addEventListener('copy', function (e) {
+    var value = e.target.value;
+    if (window.clipboardData) {
+        window.clipboardData.setData('Text', value);    
+    } else {
+        e.clipboardData.setData('text/plain', value);
+    }
+    e.preventDefault();
+});
