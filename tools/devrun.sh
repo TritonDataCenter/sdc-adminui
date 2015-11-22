@@ -10,6 +10,7 @@
 #
 
 port=$(cat `pwd`/etc/config.json | json sslport)
+export PATH="$(pwd)/build/node/bin:$PATH"
 
 echo "Will rebundle when needed";
 WATCH=true tools/build-js | ./node_modules/bunyan/bin/bunyan &

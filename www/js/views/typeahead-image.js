@@ -68,7 +68,7 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
                     }
                 },
                 filter: function (images) {
-                    var datums = images.map(function (img) {
+                    var datums = images.fullCollection.map(function (img) {
                         var model = new Image(img);
                         var image = model.toJSON();
                         var tokens = [image.uuid, image.name];
