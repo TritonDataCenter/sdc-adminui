@@ -132,7 +132,7 @@ var ImagesView = React.createClass({
                     </div>
                 </div>
             </div>
-            { this.state.loaded && <ImagesList images={this.state.images} /> }
+            { this.state.loaded && <ImagesList images={this.state.images.fullCollection} /> }
             { (this.state.hasMore) ? <button onClick={this._loadMore} className="btn btn-block btn-info load-more">Load More</button> : ''}
         </div>;
 
