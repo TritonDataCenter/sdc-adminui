@@ -13,6 +13,8 @@ var adminui = require('adminui');
 var SettingsModel = require('../../models/settings');
 var MultipleNicConfigComponent = require('../multi-nic-config');
 
+var PRESET_NETWORKS = 'provision.preset_networks';
+
 var SettingsComponent = React.createClass({
     statics: {
         sidebar: 'settings',
@@ -24,54 +26,50 @@ var SettingsComponent = React.createClass({
         this.fetchSettings();
     },
     fetchSettings: function() {
-        var self = this;
-        SettingsModel.fetch().done(function() {
-            var settings = SettingsModel.toJSON();
-            var networkPresets = settings['provision.preset_networks'] || [];
-            if (networkPresets.length > 0) {
-                networkPresets = networkPresets.map(function(n) {
-                    if (typeof(n) === 'string') {
-                        return {network_uuid: n};
-                    } else {
-                        return n;
-                    }
-                });
-                settings['provision.preset_networks'] = networkPresets;
-            }
-            console.log('[settings] read', settings);
-            self.setState(settings);
-        });
+        SettingsModel.fetch().done(this._onFetchSettings);
     },
-    getInitialState: function() {
-        return {certForm: false};
+    _onFetchSettings: function () {
+        var settings = SettingsModel.toJSON();
+        var networkPresets = settings[PRESET_NETWORKS] || [];
+        if (networkPresets.length > 0) {
+            networkPresets = networkPresets.map(function (network) {
+                return typeof network === 'string' ? {network_uuid: network} : network;
+            });
+            settings[PRESET_NETWORKS] = networkPresets;
+            settings.networks = networkPresets;
+            this.setState(settings, function () {
+                this.forceUpdate();
+            }, this);
+        }
     },
-    onChangeCertFile: function(e) {
+    getInitialState: function () {
+        return {
+            certForm: false,
+            networks: []
+        };
+    },
+    readFile: function (event, key) {
         var self = this;
         var reader = new FileReader();
-        var f = e.target.files[0];
-        reader.onload = function(e) {
-            console.log(e.target.result);
-            self.setState({'new_ssl_certificate': e.target.result});
+        var file = event.target.files[0];
+        reader.onload = function (loadEvent) {
+            var state = {};
+            state[key] = loadEvent.target.result;
+            self.setState(state);
         };
-
-        reader.readAsText(f, 'ascii');
+        reader.readAsText(file, 'ascii');
     },
-    onChangeKeyFile: function(e) {
-        var self = this;
-        var reader = new FileReader();
-        var f = e.target.files[0];
-        reader.onload = function(e) {
-            console.log(e.target.result);
-            self.setState({'new_ssl_key': e.target.result});
-        };
-
-        reader.readAsText(f, 'ascii');
+    onChangeCertFile: function (event) {
+        this.readFile(event, 'new_ssl_certificate')
+    },
+    onChangeKeyFile: function (event) {
+        this.readFile(event, 'new_ssl_key')
     },
     saveSettings: function() {
         var self = this;
         var networks = this.refs.networkConfigComponent.getValue();
-
-        var values = { 'provision.preset_networks': networks };
+        var values = {};
+        values[PRESET_NETWORKS] = networks;
 
         if (this.state.new_ssl_key && this.state.new_ssl_key.length &&
             this.state.new_ssl_certificate && this.state.new_ssl_certificate.length) {
@@ -104,7 +102,28 @@ var SettingsComponent = React.createClass({
             certForm: false
         });
     },
-    render: function() {
+    renderNics: function (nics) {
+        return (<div className="row">
+            <div className="col-sm-12">
+                <div className="panel panel-info">
+                    <div className="panel-heading">
+                        Default Networks - Default network configuration to be selected when provisioning
+                    </div>
+                    <div className="panel-body">
+                        <div className="form-group">
+                            <div className="nic-selection-container">
+                                <MultipleNicConfigComponent
+                                    ref="networkConfigComponent"
+                                    nics={nics}
+                                    networkFilters={{provisionable_by: adminui.user.get('uuid')}} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>);
+    },
+    render: function () {
         adminui.vent.trigger('settitle', 'settings');
 
         var certButtonClasses = 'btn btn-default btn-file';
@@ -115,7 +134,7 @@ var SettingsComponent = React.createClass({
         if (this.state.new_ssl_certificate) {
             certButtonClasses = certButtonClasses + ' btn-success';
         }
-
+        var nics = this.renderNics(this.state.networks);
         return <div id="page-settings">
             <div className="page-header">
                 <h1>Operations Portal Settings</h1>
@@ -173,32 +192,12 @@ var SettingsComponent = React.createClass({
                                         </div>
                                     </div>
                                 </div> : null }
-
                         </div>
                   </div>
                 </div>
             </div>
 
-
-            <div className="row">
-                <div className="col-sm-12">
-                    <div className="panel panel-info">
-                        <div className="panel-heading">
-                            Default Networks - Default network configuration to be selected when provisioning
-                        </div>
-                        <div className="panel-body">
-                            <div className="form-group">
-                                <div className="nic-selection-container">
-                                    <MultipleNicConfigComponent 
-                                        ref="networkConfigComponent"
-                                        nics={this.state['provision.preset_networks']}
-                                        networkFilters={{provisionable_by: adminui.user.get('uuid')}} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {nics}
 
             <button onClick={this.saveSettings} disabled={
                 this.state.certForm && (!this.state.new_ssl_key || !this.state.new_ssl_certificate)
