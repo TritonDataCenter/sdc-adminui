@@ -796,9 +796,7 @@ caPanel.prototype.fetchView = function (view)
 			view.cv_latest_start = lastpoint['end_time'];
 
 		if (start !== undefined) {
-			panel.onData(view.cv_instnid, resource, rparams,
-			    newdata);
-			view.onUpdate();
+			panel.onData(view, resource, rparams, newdata);
 		} else {
 			panel.fetchView(view);
 		}
@@ -810,11 +808,10 @@ caPanel.prototype.fetchView = function (view)
 	});
 };
 
-caPanel.prototype.onData = function (instnid, resource, rparams, data)
+caPanel.prototype.onData = function (view, resource, rparams, data)
 {
-	var instn, points, point;
-
-	instn = this.cp_instns[instnid];
+	var instnid = view.cv_instnid;
+	var instn = this.cp_instns[instnid];
 	if (!instn)
 		/* Already removed. */
 		return;
@@ -828,27 +825,26 @@ caPanel.prototype.onData = function (instnid, resource, rparams, data)
 	if (!this.cp_data[instnid][resource].hasOwnProperty(rparams))
 		this.cp_data[instnid][resource][rparams] = {};
 
-	points = this.cp_data[instnid][resource][rparams];
-
+	var points = this.cp_data[instnid][resource][rparams];
 	data.forEach(function (datum) {
-		point = {
-		    'isComplete': datum['nsources'] > 0 &&
-		        datum['minreporting'] === datum['nsources']
+		var point = {
+		    'isComplete': datum['nsources'] > 0,
+		    'isCorrect': datum['minreporting'] === datum['nsources']
 		};
-
-		points[datum['start_time']] = point;
 
 		if (instn.isNumericDecomposition()) {
 			point['image'] = datum['image'];
 			point['ymax'] = datum['ymax'];
 			point['ymin'] = datum['ymin'];
 			point['present'] = datum['present'];
+			points[datum['start_time']] = point;
 			return;
 		}
 
 		point['value'] = datum['value'];
 		if (typeof (datum['value']) == 'number') {
 			point['total'] = datum['value'];
+			points[datum['start_time']] = point;
 			return;
 		}
 
@@ -862,13 +858,16 @@ caPanel.prototype.onData = function (instnid, resource, rparams, data)
 
 		point['total'] = sum;
 		point['count'] = count;
+		points[datum['start_time']] = point;
 	});
+	this.cp_data[instnid][resource][rparams] = points;
+	view.onUpdate();
 };
 
 caPanel.prototype.data = function (view)
 {
-	var ostart, paramkey, instn, data, rv, complete;
-	var i, start, value, sum, count, sumby;
+	var ostart, paramkey, instn, data, rv;
+	var i, start, value, sum, count, sumby, countby;
 
 	ostart = view.cv_start || view.cv_window_start;
 	if (ostart === undefined)
@@ -885,16 +884,18 @@ caPanel.prototype.data = function (view)
 	data = this.cp_data[view.cv_instnid][view.cv_resource_name][
 	    paramkey];
 	rv = new Array(view.cv_npoints);
-	complete = true;
+	var isComplete = true;
+	var isCorrect = true;
 	sum = 0;
 	count = 0;
 	sumby = {};
+	countby = {};
 
 	for (i = 0; i < rv.length; i++) {
 		start = ostart + i * view.cv_duration;
 
 		if (data[start]) {
-			complete = complete && data[start]['isComplete'];
+			isComplete = isComplete && data[start]['isComplete'];
 
 			if (instn.isNumericDecomposition()) {
 				value = {
@@ -913,30 +914,36 @@ caPanel.prototype.data = function (view)
 
 				if (typeof (value) != 'number') {
 					for (var key in value) {
-						if (!sumby.hasOwnProperty(key))
-							sumby[key] = 0;
+						if (!sumby.hasOwnProperty(key)) {
+                                                        sumby[key] = 0;
+                                                        countby[key] = 0;
+                                                }
 
 						sumby[key] += value[key];
+                                                countby[key]++;
 					}
 				}
 			}
 		} else {
 			value = 0; /* XXX might be an object or heat map */
-			complete = false;
+			isComplete = false;
 		}
+
+		isCorrect = isCorrect && data[start]['isCorrect'];
 
 		rv[i] = { 'x': start, 'y': value };
 	}
 
 	for (key in sumby)
-		sumby[key] = count === 0 ? 0 :
-		    sumby[key] / (count * view.cv_duration);
+		sumby[key] = countby[key] === 0 ? 0 :
+		    sumby[key] / (countby[key] * view.cv_duration);
 
 	return ({
 	    'points': rv,
 	    'rangeAverage': count === 0 ? 0 :
 	        sum / (count * view.cv_duration),
-	    'isComplete': complete,
+	    'isComplete': isComplete,
+	    'isCorrect': isCorrect,
 	    'componentAverages': sumby
 	});
 };
@@ -2276,7 +2283,7 @@ caWidgetLineGraph.prototype.update = function ()
 	tabledata.push([
 	    'Range average', roundLegendValue(value['rangeAverage']), false, '' ]);
 	this.updateLegend(tabledata, { 'trim': true });
-	this.updateWarning(!value['isComplete']);
+	this.updateWarning(!value['isComplete'] || !value['isCorrect']);
 };
 
 
@@ -2724,8 +2731,15 @@ function caWidgetGenericGraph(args)
 	subsub.appendChild(jsCreateText(args['title']));
 	subdiv.appendChild(subsub);
 
+	var actions = jsCreateElement('div', 'caGraphActions');
+	subsub = jsCreateElement('div', 'caGraphWarning ui-icon ui-icon-alert');
+	subsub.title = 'Some data for the selected time interval is not ' +
+	    'available.';
+	actions.appendChild(subsub);
+
 	subsub = jsCreateElement('div', 'caGraphButtonClose');
-	subdiv.appendChild(subsub);
+	actions.appendChild(subsub);
+	subdiv.appendChild(actions);
 
 	$(subsub).button({
 	    'icons': {
@@ -2735,11 +2749,6 @@ function caWidgetGenericGraph(args)
 		if (args['onremove'])
 			args['onremove']();
 	});
-
-	subsub = jsCreateElement('div', 'caGraphWarning ui-icon ui-icon-alert');
-	subsub.title = 'Some data for the selected time interval is not ' +
-	    'available.';
-	subdiv.appendChild(subsub);
 
 	subdiv = jsCreateElement('div', 'caGraphToolbar');
 	div.appendChild(subdiv);
