@@ -39,14 +39,17 @@
 	color: #888;
 	font-size: 16px;
 	margin-right: 50px;
+	display: inline-block;
 }
-
-.caGraphButtonClose {
+.caGraphActions {
+	display: inline-block;
 	float: right;
-	width: 17px;
+	margin-right: 20px;
+	margin-top: 20px;
+}
+.caGraphButtonClose {
 	height: 17px;
-	left: -17px;
-	top: -42px; /* XXX Why would this be necessary? */
+	width: 17px;
 }
 
 .caGraphButtonClose > * {
@@ -54,14 +57,16 @@
 }
 
 .caGraphWarning {
-	float: right;
-	width: 17px;
-	height: 17px;
-	left: -37px;
-	top: -38px; /* XXX Why would this be necessary? */
-	width: 17px;
-	height: 17px;
-	position: relative;
+	zoom: 1.2;
+	-moz-transform: scale(1.2,1.2);
+	-moz-transform-origin: 23px;
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.caGraphWarning.ui-icon {
+	display: inline-block;
+	background-image: url(images/ui-icons_cd0a0a_256x240.png);
 }
 
 /*
