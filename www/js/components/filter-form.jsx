@@ -33,14 +33,18 @@ INPUT_TYPES.alias = React.createClass({
     }
 });
 
+var TypeaheadPackage = require('./package-typeahead');
 INPUT_TYPES.package_name = React.createClass({
-    onChange: function (e) {
-        this.props.onChange('package_name', e.target.value);
+    onSelect: function (uuid) {
+        this.props.onChange('billing_id', uuid);
+    },
+    componentDidUnmount: function () {
+        this.typeahead.remove();
     },
     render: function () {
-        return (<div className="form-group col-md-3">
-            <label className="control-label">Package Name</label>
-                <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="package_name" placeholder="Package Name" />
+        return (<div className="form-group col-md-4">
+            <label className="control-label">Package</label>
+                <TypeaheadPackage className="form-control" onChange={this.onSelect} value={this.props.value} />
         </div>);
     }
 });
@@ -211,6 +215,9 @@ var FilterForm = React.createClass({
             if (InputType) {
                 var value = this.state.values[type] || '';
                 var data = type === 'vlan_id' ? {owner_uuid : self.state.values.owner_uuid} : null;
+                if (type === 'package_name') {
+                    value = this.state.values['billing_id'] || '';
+                }
                 return <InputType data={data} ref={type} key={type} onChange={self._onChange} value={value} />;
             }
             return;
