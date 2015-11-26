@@ -23,6 +23,7 @@ var UserLink = require('./user-link');
 
 var Modal = require('./modal');
 var Vms = require('../models/vms');
+var Packages = require('../models/packages');
 var JSONExport = require('./json-export');
 var BatchJobProgress = require('./batch-job-progress');
 var BatchJobConfirm = require('./batch-job-confirm');
@@ -90,14 +91,32 @@ var VmsList = React.createClass({
     getInitialState: function () {
         return {
             loading: true,
-            selected: []
+            selected: [],
+            packages: {}
         };
     },
     _onRequest: function () {
-        this.setState({loading: true});
+        this.setState({loading: true, packages: {}});
     },
     _onSync: function () {
+        var self = this;
         this.setState({loading: false});
+        var vms = this.props.collection.toJSON();
+        var packages = {};
+        var pkglist = new Packages();
+        vms.map(function (vm) {
+            var pkgUuid = vm.billing_id;
+            if (!packages.hasOwnProperty(pkgUuid)) {
+                packages[pkgUuid] = {};
+            }
+        });
+        pkglist.params = {uuids: JSON.stringify(Object.keys(packages))};
+        pkglist.fetch().done(function () {
+            pkglist.toJSON().forEach(function (pkg) {
+                packages[pkg.uuid] = pkg;
+            });
+            self.setState({packages: packages});
+        });
     },
     _handleExport: function (e) {
         e.preventDefault();
@@ -163,6 +182,7 @@ var VmsList = React.createClass({
         var isDockerHost = vm.tags.JPC_tag === 'DockerHost';
         var ips = _.pluck(vm.nics, 'ip');
         var selected = _.findWhere(this.state.selected, {uuid: vm.uuid});
+        var packageId = vm.billing_id;
 
         return <tr key={vm.uuid} className={cx({selected: selected})}>
             <td className="select">
@@ -202,11 +222,11 @@ var VmsList = React.createClass({
                 <div className="server">
                     {vm.server_uuid ? <ServerLink serverUuid={vm.server_uuid} /> : null}
                 </div>
-                {vm.package_name &&
+                {this.state.packages[packageId] &&
                     <div className="package">
                         <i className="fa fa-codepen fa-fw"></i>
-                        <span className="package-name">{vm.package_name}</span>
-                        <span className="package-version">{vm.package_version}</span>
+                        <span className="package-name">{this.state.packages[packageId].name}</span>
+                        <span className="package-version">{this.state.packages[packageId].version}</span>
                     </div>
                 }
                 <div className="image">
