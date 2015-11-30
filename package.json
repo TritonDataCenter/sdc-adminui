@@ -29,7 +29,7 @@
     "kang": "0.0.8",
     "less": "1.7.5",
     "mime": "1.2.11",
-    "moray": "git+ssh://git@github.com:joyent/node-moray.git#57a3484dbfa6ed29dcbdab847d6d85b64e9eb4a6",
+    "moray": "git+ssh://git@github.com:joyent/node-moray.git#b84ef0e",
     "node-uuid": "1.4.3",
     "promise": "6.1.0",
     "react": "0.13.0",
