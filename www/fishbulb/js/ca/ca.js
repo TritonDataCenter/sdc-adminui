@@ -35,7 +35,7 @@ var Rickshaw; /* XXX */
 var caUniqueId = 0;			/* unique widget identifier */
 var caDefaultBarColor = '#E57F44';	/* default color for bar graphs */
 var caDefaultHue = 22;			/* default hue for heat maps */
-var valueForCopy;
+
 /*
  * We use a set of secondary colors to highlight individual components in bar
  * charts or heatmaps.
@@ -1412,18 +1412,22 @@ function caWidgetChart(args)
 	    this.cc_button_zoomout,
 	    this.cc_button_zoomin,
 	    {
-	        'icon': 'ui-icon-seek-prev',
-		'action': 'actionScrollLeft'
+	        icon: 'ui-icon-seek-prev',
+	        action: 'actionScrollLeft'
 	    }, {
-	        'icon': 'ui-icon-seek-next',
-		'action': 'actionScrollRight'
+	        icon: 'ui-icon-seek-next',
+	        action: 'actionScrollRight'
 	    }, {
-	        'icon': 'ui-icon-seek-end',
-		'action': 'actionScrollCurrent'
+	        icon: 'ui-icon-seek-end',
+	        action: 'actionScrollCurrent'
 	    }, {
-		'name': 'clone',
-		'id': 'caGraphButtonClone' + this.cc_id,
-	        'icon': 'ui-icon-wrench'
+	        name: 'clone',
+	        id: 'caGraphButtonClone' + this.cc_id,
+	        icon: 'ui-icon-wrench'
+	    }, {
+	    	name: 'export',
+	    	icon: 'ui-icon-arrowthickstop-1-s',
+	    	action: 'actionExport'
 	    }
 	];
 
@@ -1445,7 +1449,6 @@ function caWidgetChart(args)
 		widget.legendClicked(event);
 	});
 	$(this.cc_components).on('contextmenu', function (event) {
-		valueForCopy = event.target.textContent;
 		event.preventDefault();
 	});
 	$.contextMenu({
@@ -1511,6 +1514,12 @@ caWidgetChart.prototype.initButton = function (elt, conf)
 			widget[conf['action']]();
 		});
 	}
+
+	if (conf.name === 'export') {
+		$(elt).attr('title', 'export to csv').tooltip({
+			track: true
+		});
+	}
 };
 
 caWidgetChart.prototype.actionPause = function ()
@@ -1570,6 +1579,23 @@ caWidgetChart.prototype.actionScrollLeft = function ()
 
 	/* We may need to fetch more data. */
 	this.panel().tick(true);
+};
+
+caWidgetChart.prototype.actionExport = function () {
+	var csvContent = 'data:text/csv;charset=utf-8,';
+	this.cc_table.fnGetData().forEach(function (item) {
+		var name = item[0].replace(/<div>|<\/div>/gi, '');
+		if (name !== '&nbsp;') {
+			csvContent += name + ',' + item[1] + '\n';
+		}
+	});
+	var encodedUri = encodeURI(csvContent);
+	var link = document.createElement("a");
+	link.setAttribute("href", encodedUri);
+	link.setAttribute("target", "_blank");
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
 };
 
 caWidgetChart.prototype.actionScrollRight = function ()
@@ -1787,20 +1813,6 @@ caWidgetChart.prototype.legendMenu = function (target)
 			};
 		}
 	}
-
-    if (valueForCopy) {
-        menu.copy = {
-            name: 'Copy to clipboard',
-            callback: function () {
-                var textarea = $('<textarea/>');
-                $('body').append(textarea);
-                textarea.val(valueForCopy);
-                textarea.focus();
-                document.execCommand('copy');
-                textarea.remove();
-            }
-        };
-    }
 	return ({
 	    items: menu
 	});
@@ -2823,13 +2835,3 @@ function caTickFormat(scale, y)
 
 	return (y);
 }
-
-document.addEventListener('copy', function (e) {
-    var value = e.target.value;
-    if (window.clipboardData) {
-        window.clipboardData.setData('Text', value);    
-    } else {
-        e.clipboardData.setData('text/plain', value);
-    }
-    e.preventDefault();
-});
