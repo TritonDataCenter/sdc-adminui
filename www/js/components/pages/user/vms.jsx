@@ -24,7 +24,7 @@ var UserVmsComponent = React.createClass({
             params: {
                 owner_uuid: this.props.uuid,
                 state: 'active',
-                sort: 'create_timestamp.desc'
+                sort: 'create_timestamp.DESC'
             },
             perPage: 20
         });
