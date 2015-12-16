@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 /** @jsx React.DOM **/
@@ -23,55 +23,60 @@ var Component = React.createClass({
     propTypes: {
         server: React.PropTypes.string.isRequired
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             mode: 'list',
-            linkAggregations: []
+            linkAggregations: [],
+            nics: []
         };
     },
-    componentWillMount: function() {
+    componentWillMount: function () {
         this.refreshAggregations();
     },
-    refreshAggregations: function() {
-        api.get('/api/linkaggrs').query({belongs_to_uuid: this.props.server}).end(function(res) {
+    refreshAggregations: function () {
+        api.get('/api/linkaggrs').query({belongs_to_uuid: this.props.server}).end(function (res) {
             this.setState({linkAggregations: res.body});
         }.bind(this));
+
+        api.get('/api/nics').query({belongs_to_uuid: this.props.server}).end(function (err, res) {
+            this.setState({nics: res.body});
+        }.bind(this));
     },
-    newLinkAggr: function(e) {
+    newLinkAggr: function (e) {
         e.preventDefault();
         this.setState({
             mode: 'new',
             formValues: {}
         });
     },
-    onLinkAggregationFormBack: function() {
+    onLinkAggregationFormBack: function () {
         this.setState({mode: 'list'});
     },
-    onLinkAggregationSaved: function() {
+    onLinkAggregationSaved: function () {
         this.setState({mode: 'list'});
         this.refreshAggregations();
     },
-    handleDelete: function(aggr) {
-        var c = window.confirm("Confirm Deleting Aggregation ");
-        if (c) {
-            api.del('/api/linkaggrs/'+aggr.id).end(function() {
+    handleDelete: function (aggr) {
+        if (window.confirm('Confirm Deleting Aggregation')) {
+            api.del('/api/linkaggrs/' + aggr.id).end(function () {
                 this.refreshAggregations();
             }.bind(this));
         }
     },
-    handleEdit: function(aggr) {
+    handleEdit: function (aggr) {
         this.setState({
             mode: 'edit',
             formValues: aggr
         });
     },
-    render: function() {
+    render: function () {
         var nodes;
         if (this.state.mode === 'new') {
             nodes = [
                 <LinkAggregationForm
                     onSaved={this.onLinkAggregationSaved}
                     handleBack={this.onLinkAggregationFormBack}
+                    nics={this.state.nics}
                     server={this.props.server} />
             ];
         } else if (this.state.mode === 'edit') {
@@ -80,6 +85,7 @@ var Component = React.createClass({
                     onSaved={this.onLinkAggregationSaved}
                     handleBack={this.onLinkAggregationFormBack}
                     initialLinkAggr={this.state.formValues}
+                    nics={this.state.nics}
                     server={this.props.server} />
             ];
         } else if (this.state.mode === 'list') {
@@ -88,6 +94,7 @@ var Component = React.createClass({
                 <LinkAggregationsList
                     onEdit={this.handleEdit}
                     onDelete={this.handleDelete}
+                    nics={this.state.nics}
                     linkAggregations={this.state.linkAggregations} />,
                 <div className="buttons">
                 <button className="btn btn-default" data-dismiss="modal">Close</button>

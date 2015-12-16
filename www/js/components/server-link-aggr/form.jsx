@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var Chosen = require('react-chosen');
@@ -18,12 +18,12 @@ var LinkAggregationForm = React.createClass({
     propTypes: {
         server: React.PropTypes.string.isRequired,
         onSaved: React.PropTypes.func.isRequired,
+        nics: React.PropTypes.array,
         initialLinkAggr: React.PropTypes.object
     },
-    getInitialState: function() {
+    getInitialState: function () {
         var obj = {
-            nictags: [],
-            nics: []
+            nictags: []
         };
 
         if (this.props.initialLinkAggr) {
@@ -39,26 +39,16 @@ var LinkAggregationForm = React.createClass({
 
         return obj;
     },
-    componentWillMount: function() {
-        api.get('/api/nics')
-            .query({belongs_to_uuid: this.props.server})
-            .end(function(err, res) {
-                this.setState({nics: res.body});
-            }.bind(this));
-
+    componentWillMount: function () {
         api.get('/api/nic_tags')
-            .end(function(err, res) {
+            .end(function (err, res) {
                 this.setState({nictags: res.body });
             }.bind(this));
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         this.refs.nameInput.getDOMNode().focus();
     },
-
-
-
-
-    onChangeNicSelect: function(e) {
+    onChangeNicSelect: function (e) {
         var linkAggr = this.state.linkAggr;
         var originalMacs = this.state.linkAggr.macs;
         var mac = e.target.value;
@@ -71,17 +61,17 @@ var LinkAggregationForm = React.createClass({
         linkAggr.macs = macs;
         this.setState({linkAggr: linkAggr});
     },
-    onChangeName: function(e) {
+    onChangeName: function (e) {
         var linkAggr = this.state.linkAggr;
         linkAggr.name = e.target.value.replace(/[^a-zA-Z0-9]+$/g,'').toLowerCase();
         this.setState({linkAggr: linkAggr});
     },
-    onChangeLacpMode: function(e) {
+    onChangeLacpMode: function (e) {
         var linkAggr = this.state.linkAggr;
         linkAggr.lacp_mode = e.target.value;
         this.setState({linkAggr: linkAggr});
     },
-    onChangeNicTags: function(e, o) {
+    onChangeNicTags: function (e, o) {
         var linkAggr = this.state.linkAggr;
         linkAggr.nic_tags_provided = linkAggr.nic_tags_provided || [];
         if (o.selected) {
@@ -91,13 +81,13 @@ var LinkAggregationForm = React.createClass({
         }
         this.setState({linkAggr: linkAggr});
     },
-    handleSubmit: function() {
+    handleSubmit: function () {
         var req = this.state.linkAggr.id ?
-            api.put('/api/linkaggrs/'+this.state.linkAggr.id) :
+            api.put('/api/linkaggrs/' + this.state.linkAggr.id) :
             api.post('/api/linkaggrs');
 
         req.send(this.state.linkAggr)
-            .end(function(res) {
+            .end(function (res) {
                 if (res.ok) {
                     this.props.onSaved(res.body);
                 } else {
@@ -106,7 +96,7 @@ var LinkAggregationForm = React.createClass({
                 }
             }.bind(this));
     },
-    isValid: function() {
+    isValid: function () {
         var linkAggr = this.state.linkAggr;
         return (
             (linkAggr.name.length) &&
@@ -114,7 +104,7 @@ var LinkAggregationForm = React.createClass({
             (linkAggr.lacp_mode));
     },
 
-    render: function() {
+    render: function () {
         return (
             <div className="link-aggr-form">
             <div className="alert alert-warning"><strong>NOTE</strong> Any changes to Link Aggregations requires a reboot.</div>
@@ -144,7 +134,7 @@ var LinkAggregationForm = React.createClass({
                     <div className="controls col-sm-8">
                     <div className="nics">
                     {
-                        this.state.nics.map(function(nic) {
+                        this.props.nics.map(function (nic) {
                             var nicClasses = ['nic'];
                             var selected = this.state.linkAggr.macs.indexOf(nic.mac) !== -1;
 
@@ -171,7 +161,7 @@ var LinkAggregationForm = React.createClass({
                     <div className="controls col-sm-8">
                         <Chosen multiple="true" value={this.state.linkAggr.nic_tags_provided} onChange={this.onChangeNicTags}>
                         {
-                            this.state.nictags.map(function(nictag) {
+                            this.state.nictags.map(function (nictag) {
                                 return <option>{nictag.name}</option>;
                             }, this)
                         }

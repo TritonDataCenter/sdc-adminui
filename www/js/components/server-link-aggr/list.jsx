@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2015, Joyent, Inc.
  */
 
 var React = require('react');
@@ -13,24 +13,32 @@ var React = require('react');
 var LinkAggregationsList =  React.createClass({
     propTypes: {
         linkAggregations: React.PropTypes.array.isRequired,
+        nics: React.PropTypes.array,
         onEdit: React.PropTypes.func,
         onDelete: React.PropTypes.func
     },
-    render: function() {
+    render: function () {
+        var nics = this.props.nics;
+        var nicsMacAddresses = {};
+        if (nics && nics.length) {
+            nics.forEach(function (nic) {
+                nicsMacAddresses[nic.mac] = nic.nic_tag || '';
+            });
+        }
         return (<div className="link-aggr-list">
         {
             this.props.linkAggregations.length === 0 ? (
                 <div className="empty">There are no Aggregated Links on this node</div>
             )
             : (
-                this.props.linkAggregations.map(function(link) {
+                this.props.linkAggregations.map(function (link) {
                     return <div key={link.id} className="link-aggr">
                         <div className="link-aggr-name">{link.name}</div>
                         <div className="link-aggr-interfaces">
                         {
-                            link.macs.map(function(mac) {
+                            link.macs.map(function (mac) {
                                 return <div key={mac} className="link-aggr-interface">
-                                    {mac}
+                                    {mac} {nicsMacAddresses[mac]}
                                 </div>;
                             }, this)
                         }
