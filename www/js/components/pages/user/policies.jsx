@@ -42,7 +42,7 @@ var UserPolicies = React.createClass({
         var clonedPolicy = _.clone(policy);
         var req;
         if (clonedPolicy.uuid) {
-            req = api.put(_.str.sprintf('%s/%s', this._policiesApiUrl(), p.uuid));
+            req = api.put(_.str.sprintf('%s/%s', this._policiesApiUrl(), policy.uuid));
         } else {
             req = api.post(this._policiesApiUrl());
         }

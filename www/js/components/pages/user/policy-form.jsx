@@ -90,10 +90,10 @@ var UserPolicyForm = React.createClass({
     },
     _handleRemoveRule: function(e) {
         e.preventDefault();
-        var i = e.target.getAttribute('data-index');
+        var i = e.target.parentNode.getAttribute('data-index');
         if (i > -1)  {
             var rules = this.state.rules;
-            rules = rules.splice(i, 1);
+            rules.splice(i, 1);
             console.log(i, rules);
             this.setState({rules: rules});
         }
