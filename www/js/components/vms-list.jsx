@@ -103,20 +103,23 @@ var VmsList = React.createClass({
         this.setState({loading: false});
         var vms = this.props.collection.toJSON();
         var packages = {};
-        var pkglist = new Packages();
         vms.map(function (vm) {
             var pkgUuid = vm.billing_id;
             if (!packages.hasOwnProperty(pkgUuid)) {
                 packages[pkgUuid] = {};
             }
         });
-        pkglist.params = {uuids: JSON.stringify(Object.keys(packages))};
-        pkglist.fetch().done(function () {
-            pkglist.toJSON().forEach(function (pkg) {
-                packages[pkg.uuid] = pkg;
+        var packageUuids = Object.keys(packages);
+        if (packageUuids.length) {
+            var pkglist = new Packages();
+            pkglist.params = {uuids: JSON.stringify(packageUuids)};
+            pkglist.fetch().done(function () {
+                pkglist.toJSON().forEach(function (pkg) {
+                    packages[pkg.uuid] = pkg;
+                });
+                self.setState({packages: packages});
             });
-            self.setState({packages: packages});
-        });
+        }
     },
     _handleExport: function (e) {
         e.preventDefault();

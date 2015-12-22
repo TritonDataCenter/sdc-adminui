@@ -40,6 +40,31 @@ var ServerSetup = require('./server-setup');
 var ServerNicsEdit = require('./server-nics-edit');
 
 var ServerTemplate = require('../tpl/server.hbs');
+
+var getInterfaces = function (sysInfo) {
+    var result = {
+        nic: [],
+        vnic: [],
+        aggr: []
+    };
+    _.each({
+        nic: 'Network Interfaces',
+        vnic: 'Virtual Network Interfaces',
+        aggr: 'Link Aggregations'
+    }, function (key, kind) {
+        _.each(sysInfo[key], function(value, ifname) {
+            value.kind = kind;
+            value.ifname = ifname;
+            if (kind === 'aggr') {
+                var nic = _.findWhere(result.nic, {ifname: ifname}) || {};
+                value = _.extend(value, nic);
+            }
+            result[kind].push(value);
+        });
+    });
+    return result;
+}
+
 var ServerView = Backbone.Marionette.Layout.extend({
     id: 'page-server',
     sidebar: 'servers',
@@ -193,7 +218,8 @@ var ServerView = Backbone.Marionette.Layout.extend({
     showManageNics: function () {
         var view = new ServerNicsEdit({
             server: this.model,
-            nics: this.nics
+            nics: this.nics,
+            extendedNics: this.extendedNics
         });
         view.show();
     },
@@ -237,11 +263,13 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     showManageLinkAggr: function () {
-        var $node = $("<div id='server-link-aggr-modal' class='modal'><div class='modal-dialog'><div class='modal-content'><div class='modal-body'></div></div></div></div>");
+        var $node = $('<div id="server-link-aggr-modal" class="modal fade bs-example-modal-lg">' +
+            '<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-body"></div></div></div></div>');
         var container = $node.find('.modal-body').get(0);
 
         React.render(new ManageLinkAggr({
-            server: this.model.get('uuid')
+            server: this.model.get('uuid'),
+            nics: this.extendedNics.toJSON()
         }), container);
         $node.modal();
     },
@@ -431,27 +459,30 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
     onShow: function () {
         var self = this;
-        this._requests.push(this.model.fetch().done(function () {
+        $.when(self.model.fetch(), self.nics.fetch(), self.vms.fetch()).then(function () {
             self.render();
-            self.nics.fetch();
-            self.vms.fetch();
-        }));
+        }).fail(function () {
+            self.render();
+        });
     },
 
     postRender: function () {
         if (app.user.role('operators')) {
             React.render( new NotesComponent({item: this.model.get('uuid')}), this.$('.notes-component-container').get(0));
         }
-        React.render(ServerPageHeader({server: this.model }), this.$('.server-page-header').get(0));
+        this.extendedNics = this.nics.mergeSysInfo(this.model.get('sysinfo'));
+        this.interfaces = getInterfaces(this.model.get('sysinfo'));
+        React.render(ServerPageHeader({server: this.model}), this.$('.server-page-header').get(0));
 
         if (this.model.get('setup')) {
-            React.render(ServerMemoryOverview({ server: this.model }), this.$('.memory-overview-container').get(0));
-            React.render(ServerDiskOverview({server: this.model }), this.$('.disk-overview-container').get(0));
+            React.render(ServerMemoryOverview({ server: this.model}), this.$('.memory-overview-container').get(0));
+            React.render(ServerDiskOverview({server: this.model}), this.$('.disk-overview-container').get(0));
         }
 
         React.render(ServerNicsList({
             server: this.model,
-            nics: this.nics
+            interfaces: this.interfaces,
+            nics: this.extendedNics.toJSON()
         }), this.$('.server-nics').get(0));
 
         React.render(VmsList({

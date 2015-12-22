@@ -22,7 +22,10 @@ var LinkAggregationsList =  React.createClass({
         var nicsMacAddresses = {};
         if (nics && nics.length) {
             nics.forEach(function (nic) {
-                nicsMacAddresses[nic.mac] = nic.nic_tag || '';
+                nicsMacAddresses[nic.mac] = {
+                    nicTag: nic.nic_tag || '',
+                    ifname: nic.ifname || ''
+                };
             });
         }
         return (<div className="link-aggr-list">
@@ -32,18 +35,21 @@ var LinkAggregationsList =  React.createClass({
             )
             : (
                 this.props.linkAggregations.map(function (link) {
-                    return <div key={link.id} className="link-aggr">
-                        <div className="link-aggr-name">{link.name}</div>
-                        <div className="link-aggr-interfaces">
+                    return <div key={link.id} className="row link-aggr">
+                        <div className="col-xs-4 link-aggr-name">{link.name}</div>
+                        <div className="col-xs-5 link-aggr-interfaces">
                         {
                             link.macs.map(function (mac) {
-                                return <div key={mac} className="link-aggr-interface">
-                                    {mac} {nicsMacAddresses[mac]}
+                                var nic = nicsMacAddresses[mac];
+                                return <div key={mac} className="row link-aggr-interface">
+                                    {nic ? <span className="col-xs-2 link-aggr-ifname">{nicsMacAddresses[mac].ifname}</span> : ''}
+                                    <span className="col-xs-4 link-aggr-mac">{mac}</span>
+                                    {nic ? <span className="col-xs-4 link-aggr-nictag">{nicsMacAddresses[mac].nicTag}</span> : ''}
                                 </div>;
                             }, this)
                         }
                         </div>
-                        <div className="actions pull-right">
+                        <div className="col-xs-3 actions">
                             <button onClick={this.props.onEdit.bind(null, link)} className="btn btn-link btn-edit"><i className="fa fa-pencil"></i> Edit</button>
                             <button onClick={this.props.onDelete.bind(null, link)} className="btn btn-link btn-delete"><i className="fa fa-trash-o"></i> Delete</button>
                         </div>
