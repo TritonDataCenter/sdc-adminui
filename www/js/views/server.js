@@ -40,6 +40,36 @@ var ServerSetup = require('./server-setup');
 var ServerNicsEdit = require('./server-nics-edit');
 
 var ServerTemplate = require('../tpl/server.hbs');
+
+function mergeSysInfoAndNics(server, napiNics) {
+    var sysInfo = server.get('sysinfo');
+    var nics = [];
+    if (napiNics && napiNics.length) {
+        _.each(sysInfo['Network Interfaces'], function(el, i) {
+            el.kind = 'nic';
+            var nic = _.findWhere(napiNics, {mac: el['MAC Address']});
+            nic = _.extend(el, nic);
+            nic.ifname = i;
+            nics.push(nic);
+        });
+        _.each(sysInfo['Virtual Network Interfaces'], function(el, i) {
+            el.kind = 'vnic';
+            var nic = _.findWhere(napiNics, {mac: el['MAC Address']});
+            nic = _.extend(el, nic);
+            nic.ifname = i;
+            nics.push(nic);
+        });
+        _.each(sysInfo['Link Aggregations'], function(el, i) {
+            el.kind = 'aggr';
+            var nic = _.findWhere(napiNics, {mac: el['MAC Address']});
+            nic = _.extend(el, nic);
+            nic.ifname = i;
+            nics.push(nic);
+        });
+    }
+    return nics;
+}
+
 var ServerView = Backbone.Marionette.Layout.extend({
     id: 'page-server',
     sidebar: 'servers',
@@ -193,7 +223,8 @@ var ServerView = Backbone.Marionette.Layout.extend({
     showManageNics: function () {
         var view = new ServerNicsEdit({
             server: this.model,
-            nics: this.nics
+            nics: this.nics,
+            extendedNics: this.extendedNics
         });
         view.show();
     },
@@ -241,7 +272,8 @@ var ServerView = Backbone.Marionette.Layout.extend({
         var container = $node.find('.modal-body').get(0);
 
         React.render(new ManageLinkAggr({
-            server: this.model.get('uuid')
+            server: this.model.get('uuid'),
+            nics: this.extendedNics
         }), container);
         $node.modal();
     },
@@ -431,27 +463,28 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
     onShow: function () {
         var self = this;
-        this._requests.push(this.model.fetch().done(function () {
+        $.when(self.model.fetch(), self.nics.fetch(), self.vms.fetch()).then(function () {
             self.render();
-            self.nics.fetch();
-            self.vms.fetch();
-        }));
+        }).fail(function () {
+            self.render();
+        });
     },
 
     postRender: function () {
         if (app.user.role('operators')) {
             React.render( new NotesComponent({item: this.model.get('uuid')}), this.$('.notes-component-container').get(0));
         }
-        React.render(ServerPageHeader({server: this.model }), this.$('.server-page-header').get(0));
+        this.extendedNics = mergeSysInfoAndNics(this.model, this.nics.toJSON());
+        React.render(ServerPageHeader({server: this.model}), this.$('.server-page-header').get(0));
 
         if (this.model.get('setup')) {
-            React.render(ServerMemoryOverview({ server: this.model }), this.$('.memory-overview-container').get(0));
-            React.render(ServerDiskOverview({server: this.model }), this.$('.disk-overview-container').get(0));
+            React.render(ServerMemoryOverview({ server: this.model}), this.$('.memory-overview-container').get(0));
+            React.render(ServerDiskOverview({server: this.model}), this.$('.disk-overview-container').get(0));
         }
 
         React.render(ServerNicsList({
             server: this.model,
-            nics: this.nics
+            nics: this.extendedNics
         }), this.$('.server-nics').get(0));
 
         React.render(VmsList({
