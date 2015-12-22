@@ -10,8 +10,13 @@
 
 var Backbone = require('backbone');
 var Model = require('./model');
+var api = require('../request');
 
 module.exports = Model.extend({
     urlRoot: '/api/networks',
-    idAttribute: 'uuid'
+    idAttribute: 'uuid',
+
+    update: function(attrs, cb) {
+        api.put(this.url()).send(attrs).end(cb);
+    },
 });

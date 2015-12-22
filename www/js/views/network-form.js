@@ -23,6 +23,18 @@ var TypeaheadUserInput = require('./typeahead-user');
 var FabricVlans = require('../models/fabrics-vlans');
 var utils = require('../lib/utils');
 
+var EDITABLE_FIELDS = [
+    'name',
+    'gateway',
+    'provision_start_ip',
+    'provision_end_ip',
+    'resolvers',
+    'routes',
+    'owner_uuids',
+    'description',
+    'mtu'
+];
+
 var NicTagSelectItem = Backbone.View.extend({
     tagName: 'option',
     render: function() {
@@ -126,7 +138,8 @@ var View = Backbone.Marionette.Layout.extend({
         var self = this;
         var data = Backbone.Syphon.serialize(this);
         data.owner_uuids = _.compact(data.owner_uuids);
-        data.resolvers = data.resolvers.split(" ");
+        var resolvers = data.resolvers;
+        data.resolvers = resolvers && resolvers.length ? resolvers.split(" ") : [];
         var errors = null;
         if (!data.name) {
             errors = [{field: 'name', message: 'must not be empty'}];
@@ -140,7 +153,6 @@ var View = Backbone.Marionette.Layout.extend({
                 routes[data.subnet] = data.gateway;
             }
         });
-        utils.setOwnerData(data);
 
         var mtu = data.mtu;
         if (mtu !== '') {
@@ -179,8 +191,38 @@ var View = Backbone.Marionette.Layout.extend({
             this.showError(errors);
             return;
         }
-        this.model.set(data);
-        this.model.save().done(self.onSaved.bind(self)).fail(self.onError.bind(self));
+        var params = {};
+        var network = this.model.toJSON();
+
+        if (this.model.isNew()) {
+            this.model.set(data);
+            this.model.save().done(self.onSaved.bind(self)).fail(self.onError.bind(self));
+        } else {
+            Object.keys(data).forEach(function (key) {
+                var value = data[key];
+                var type = typeof value;
+                if ((type === 'string' || type === 'object') && !value.length && !this.model.get(key)) {
+                    delete data[key];
+                }
+            }, this);
+
+            EDITABLE_FIELDS.forEach(function (key) {
+                var newVal = data[key];
+                if (JSON.stringify(newVal) !== JSON.stringify(network[key])) {
+                    params[key] = newVal;
+                }
+            });
+
+            this.model.update(params, function (err, res) {
+                var err = err || !res.ok && res.body.errors;
+                if (err) {
+                    self.showError(err);
+                    return;
+                }
+                self.model.set(params);
+                self.onSaved();
+            });
+        }
     },
 
     onError: function (xhr) {
@@ -222,6 +264,7 @@ var View = Backbone.Marionette.Layout.extend({
         } else {
             data.inUse = false;
         }
+        data.isNotNew = !this.model.isNew();
         data.isNotFabric = data.isNotFabric || !this.options.isFabric;
         if (this.options.isFabric) {
             var optionsData = this.options.data || {};

@@ -78,7 +78,7 @@
 
                 <div class="controls col-sm-7">
                     <input type="text"
-                        {{#if inUse}} readonly {{/if}}
+                        {{#ifCond inUse '||' isNotNew}} readonly {{/ifCond}}
                         class="form-control"
                         id="netework-gateway"
                         value="{{subnet}}"
