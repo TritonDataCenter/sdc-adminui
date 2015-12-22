@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
@@ -15,29 +15,38 @@ var Collection = require('./collection');
 
 var Nics = Collection.extend({
     url: '/api/nics',
-    mergeSysinfo: function(sysinfo) {
-        _mergeSysinfo(sysinfo['Network Interfaces'], this, 'nic');
-        _mergeSysinfo(sysinfo['Virtual Network Interfaces'], this, 'vnic');
-        return this;
+    mergeSysInfo: function (sysinfo) {
+        var aggrs = sysinfo['Link Aggregations'] || {};
 
         function _mergeSysinfo(snics, nics, kind) {
-            console.log('napi nics', nics);
-            _.each(snics, function(n, nicName) {
-                var mac = n['MAC Address'];
-                var linkStatus = n['Link Status'];
+            _.each(snics, function (value, interfaceName) {
+                if (aggrs[interfaceName]) {
+                    return;
+                }
+                var mac = value['MAC Address'];
+                var linkStatus = value['Link Status'];
                 var params = {
-                    name: nicName,
-                    link_status: linkStatus
+                    ifname: interfaceName,
+                    link_status: linkStatus,
+                    ip4addr: value.ip4addr
                 };
+                
                 var nic = nics.findWhere({'mac': mac});
-                if (n['Host Interface']) {
-                    params.host_interface = n['Host Interface'];
+                if (!nic) {
+                    return;
+                }
+                if (value['Host Interface']) {
+                    params.host_interface = value['Host Interface'];
                 }
                 params.kind = kind;
-
                 nic.set(params);
             });
         }
+
+        _mergeSysinfo(sysinfo['Network Interfaces'], this, 'nic');
+        _mergeSysinfo(sysinfo['Virtual Network Interfaces'], this, 'vnic');
+
+        return this;
     }
 });
 module.exports = Nics;
