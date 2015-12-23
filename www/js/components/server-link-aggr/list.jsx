@@ -22,7 +22,10 @@ var LinkAggregationsList =  React.createClass({
         var nicsMacAddresses = {};
         if (nics && nics.length) {
             nics.forEach(function (nic) {
-                nicsMacAddresses[nic.mac] = nic.nic_tag || '';
+                nicsMacAddresses[nic.mac] = {
+                    nicTag: nic.nic_tag || '',
+                    ifname: nic.ifname || ''
+                };
             });
         }
         return (<div className="link-aggr-list">
@@ -38,7 +41,9 @@ var LinkAggregationsList =  React.createClass({
                         {
                             link.macs.map(function (mac) {
                                 return <div key={mac} className="link-aggr-interface">
-                                    {mac} {nicsMacAddresses[mac]}
+                                    <span className="link-aggr-ifname">{nicsMacAddresses[mac].ifname}</span>
+                                    <span className="link-aggr-mac">{mac}</span>
+                                    <span className="link-aggr-nictag">{nicsMacAddresses[mac].nicTag}</span>
                                 </div>;
                             }, this)
                         }

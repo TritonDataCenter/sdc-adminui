@@ -21,13 +21,13 @@ var LinkAggregationsList = require('./list.jsx');
 
 var Component = React.createClass({
     propTypes: {
-        server: React.PropTypes.string.isRequired
+        server: React.PropTypes.string.isRequired,
+        nics: React.PropTypes.array
     },
     getInitialState: function () {
         return {
             mode: 'list',
-            linkAggregations: [],
-            nics: []
+            linkAggregations: []
         };
     },
     componentWillMount: function () {
@@ -36,10 +36,6 @@ var Component = React.createClass({
     refreshAggregations: function () {
         api.get('/api/linkaggrs').query({belongs_to_uuid: this.props.server}).end(function (res) {
             this.setState({linkAggregations: res.body});
-        }.bind(this));
-
-        api.get('/api/nics').query({belongs_to_uuid: this.props.server}).end(function (err, res) {
-            this.setState({nics: res.body});
         }.bind(this));
     },
     newLinkAggr: function (e) {
@@ -76,7 +72,7 @@ var Component = React.createClass({
                 <LinkAggregationForm
                     onSaved={this.onLinkAggregationSaved}
                     handleBack={this.onLinkAggregationFormBack}
-                    nics={this.state.nics}
+                    nics={this.props.nics}
                     server={this.props.server} />
             ];
         } else if (this.state.mode === 'edit') {
@@ -85,7 +81,7 @@ var Component = React.createClass({
                     onSaved={this.onLinkAggregationSaved}
                     handleBack={this.onLinkAggregationFormBack}
                     initialLinkAggr={this.state.formValues}
-                    nics={this.state.nics}
+                    nics={this.props.nics}
                     server={this.props.server} />
             ];
         } else if (this.state.mode === 'list') {
@@ -94,7 +90,7 @@ var Component = React.createClass({
                 <LinkAggregationsList
                     onEdit={this.handleEdit}
                     onDelete={this.handleDelete}
-                    nics={this.state.nics}
+                    nics={this.props.nics}
                     linkAggregations={this.state.linkAggregations} />,
                 <div className="buttons">
                 <button className="btn btn-default" data-dismiss="modal">Close</button>

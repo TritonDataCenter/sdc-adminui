@@ -19,7 +19,7 @@ var ReactBackboneMixin = require('../components/_backbone-mixin');
 
 
 var ServerNicAggr = React.createClass({
-    render: function() {
+    render: function () {
         var aggr = this.props.aggr;
         var linkStatusClass = ("aggr-link-status link-status " + aggr['Link Status']);
         return <li key={aggr.ifname}>
@@ -37,7 +37,7 @@ var ServerNicAggr = React.createClass({
                 NICTAGS
                 <div className="nictags">
                 {
-                    aggr['NIC Names'] ? aggr['NIC Names'].map(function(i) {
+                    aggr['NIC Names'] ? aggr['NIC Names'].map(function (i) {
                         return <span key={i} className="nictag">{i}</span>;
                     }) : ''
                 }
@@ -53,7 +53,7 @@ var ServerNicAggr = React.createClass({
                 Interfaces
                 <div className="interfaces">
                 {
-                    aggr['Interfaces'].map(function(i) {
+                    aggr['Interfaces'].map(function (i) {
                         return <span key={i} className="interface">{i}</span>;
                     })
                 }
@@ -64,7 +64,7 @@ var ServerNicAggr = React.createClass({
 });
 
 var ServerNic = React.createClass({
-    render: function() {
+    render: function () {
         var nic = this.props.nic;
         return (
             <li key={nic.mac}>
@@ -100,69 +100,30 @@ var ServerNic = React.createClass({
     }
 });
 
-function mergeSysinfo(sysinfo, napinics) {
-    var nics = [];
-    _.each(sysinfo['Network Interfaces'], function(el, i) {
-        el.kind = "nic";
-        var n = _.findWhere(napinics, {mac: el['MAC Address']});
-        var nic = _.extend(el, n);
-        nic.ifname = i;
-        nics.push(nic);
-    });
-    _.each(sysinfo['Virtual Network Interfaces'], function(el, i) {
-        el.kind = "vnic";
-        var n = _.findWhere(napinics, {mac: el['MAC Address']});
-        var nic = _.extend(el, n);
-        nic.ifname = i;
-        nics.push(nic);
-    });
-    _.each(sysinfo['Link Aggregations'], function(el, i) {
-        var napiAggr = _.findWhere(napinics, {mac: el['MAC Address']});
-        var sysinfoAggrUnderNics = sysinfo['Network Interfaces'][i];
-        console.log('sysinfoAggrUnderNics', sysinfoAggrUnderNics);
-
-        var nic = _.extend(el, napiAggr, sysinfoAggrUnderNics);
-        nic.kind = "aggr";
-        nic.ifname = i;
-        nics.push(nic);
-    });
-
-    return nics;
-}
-
-
 var ServerNicsList = React.createClass({
-    mixins: [ReactBackboneMixin],
-
-    getBackboneModels: function() {
-        return [this.props.nics];
-    },
-
-    render: function() {
-        var allnics = this.props.nics.toJSON();
-        var sysinfo = this.props.server.get('sysinfo');
-
-        var res = mergeSysinfo(sysinfo, allnics);
-
-        var nics = res.filter(function(n) {
-            return n.kind === 'nic';
+    render: function () {
+        var nics = [];
+        var vnics = [];
+        var aggrs = [];
+        this.props.nics.forEach(function (nic) {
+            if (nic.kind === 'nic') {
+                nics.push(nic)
+            } else if (nic.kind === 'vnic') {
+                vnics.push(nic);
+            } else if (nic.kind === 'aggr') {
+                aggrs.push(nic);
+            }
         });
-        var nicsNodes = nics.length ? nics.map(function(nic, i) {
-            return <ServerNic key={'nic-'+nic.ifname} nic={nic} />;
+
+        var nicsNodes = nics.length ? nics.map(function (nic) {
+            return <ServerNic key={'nic-' + nic.ifname} nic={nic} />;
         }) : <li className="empty">No Network Interfaces Found</li>;
 
-        var vnics = res.filter(function(n) {
-            return n.kind === 'vnic';
-        });
-        var vnicsNodes = vnics.length ? vnics.map(function(nic, i) {
-            return <ServerNic key={'vnic-'+ nic.ifname} nic={nic} />;
+        var vnicsNodes = vnics.length ? vnics.map(function (nic) {
+            return <ServerNic key={'vnic-' + nic.ifname} nic={nic} />;
         }) : <li className="empty">No Virtual Nics Found</li>;
 
-        var aggrs = res.filter(function(n) {
-            return n.kind === 'aggr';
-        });
-
-        var aggrsNodes = aggrs.length ? aggrs.map(function(aggr, ifname) {
+        var aggrsNodes = aggrs.length ? aggrs.map(function (aggr, ifname) {
             return <ServerNicAggr key={'aggr-' + ifname} aggr={aggr} />;
         }) : <li className="empty">No Link Aggregations Found</li>;
 
@@ -178,6 +139,5 @@ var ServerNicsList = React.createClass({
         </div>;
     }
 });
-
 
 module.exports = ServerNicsList;

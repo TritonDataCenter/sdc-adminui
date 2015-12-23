@@ -145,9 +145,10 @@ var LinkAggregationForm = React.createClass({
                                 <div className={ nicClasses.join(' ')} key={nic.mac}>
                                     <label>
                                         <input checked={selected} type="checkbox" onChange={this.onChangeNicSelect} value={nic.mac} />
-                                        <span className="mac">{nic.mac}</span>
+                                        <span className="link-aggr-ifname">{nic.ifname}</span>
+                                        <span className="link-aggr-mac">{nic.mac}</span>
+                                        <span className="link-aggr-nictag">{nic.nic_tag}</span>
                                     </label>
-                                    <div className="tag">{nic.nic_tag}</div>
                                 </div>
                             );
                         }, this)
