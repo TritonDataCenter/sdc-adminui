@@ -31,11 +31,6 @@ var SSHKeysPage = React.createClass({
             account: this.props.account,
             user: this.props.user
         });
-        this.sshKey = new SSHKey({
-            account: this.props.account,
-            user: this.props.user
-        });
-        
         this.sshKeysList = new SSHKeysList({collection: this.sshKeys});
 
         this.view = new SSHKeysList({collection: this.sshKeys});
@@ -47,14 +42,18 @@ var SSHKeysPage = React.createClass({
         this.sshKeys.fetch();
     },
     _handleCancel: function () {
-        this.setState({keyForm: false});
+        this.setState({keyForm: false, keyFormError: false});
     },
     _handleNewKey: function () {
         this.setState({keyForm: true});
     },
     _handleSave: function (key) {
         var self = this;
-        this.sshKey.save(key).done(function (key) {
+        var sshKey = new SSHKey({
+            account: this.props.account,
+            user: this.props.user
+        });
+        sshKey.save(key).done(function (key) {
                 key.user = self.props.user;
                 self.sshKeys.add(key);
                 adminui.vent.trigger('notification', {
