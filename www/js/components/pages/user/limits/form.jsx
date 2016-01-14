@@ -78,7 +78,7 @@ var LimitsForm = React.createClass({
         this.setState({criteriaType: criteriaType.selected});
     },
     handleChangeCriteriaValue: function (e, criteriaValue) {
-        if (c) {
+        if (criteriaValue.selected) {
             this.setState({criteriaValue: criteriaValue.selected});
         } else {
             this.setState({criteriaValue: e.target.value});
