@@ -120,13 +120,25 @@ var VmsList = React.createClass({
     },
     _handleExport: function (e) {
         e.preventDefault();
-        var vms = new Vms(null, {params: this.props.collection.params});
-        vms.exportGroupedByCustomer().done(function (exported) {
-            this.setState({'exported': exported});
-        }.bind(this));
+        var props = this.props;
+        if (this.props.userPage) {
+            var exported = props.collection.toJSON().map(function (vm) {
+                delete vm.customer_metadata;
+                delete vm.internal_metadata;
+                return vm;
+            });
+            this.setState({exported: exported});
+        } else {
+            var collection = props.collection;
+            var pagingParams = collection.pagingParams;
+            var vms = new Vms(null, {params: collection.params, perPage: pagingParams.perPage, page: pagingParams.page});
+            vms.exportGroupedByCustomer().done(function (exported) {
+                this.setState({exported: exported});
+            }.bind(this));
+        }
     },
     _HandleDismissExport: function () {
-        this.setState({'exported': false});
+        this.setState({exported: false});
     },
 
     _handleLoadMore: function () {
