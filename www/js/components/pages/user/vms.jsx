@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
 /** @jsx React.DOM */
@@ -19,7 +19,7 @@ var VmsList = require('../../../components/vms-list');
 var VmsFilter = require('../../../views/user-vms-filter');
 
 var UserVmsComponent = React.createClass({
-    componentWillMount: function() {
+    componentWillMount: function () {
         this.vms = new Vms(null, {
             params: {
                 owner_uuid: this.props.uuid,
@@ -29,25 +29,24 @@ var UserVmsComponent = React.createClass({
             perPage: 20
         });
 
-        this.vmsList = new VmsList({collection: this.vms });
         this.vmsFilter = new VmsFilter();
         this.vmsFilter.on('query', this._onVmsFilter, this);
         this.vms.fetch();
     },
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         this.vmsFilter.off('query');
     },
-    _onVmsFilter: function(params) {
+    _onVmsFilter: function (params) {
         this.vms.fetch({params: params});
     },
-    render: function() {
+    render: function () {
         var vmsFilter = this.vmsFilter;
 
         return <div className="row">
             <div className="col-md-12">
                 <h3>Virtual Machines</h3>
                 <div className="vms-filter-region"><BB key="filter" view={vmsFilter} /></div>
-                <div className="vms-region"><VmsList collection={this.vms} /></div>
+                <div className="vms-region"><VmsList collection={this.vms} userPage={true} /></div>
             </div>
         </div>;
     }

@@ -5,10 +5,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 
 var _ = require('underscore');
 
@@ -19,9 +19,9 @@ var Promise = require('promise');
 module.exports = Collection.extend({
     model: Vm,
 
-    url: "/api/vms",
+    url: '/api/vms',
 
-    initialize: function(models, options) {
+    initialize: function (models, options) {
         this.options = options || {};
         this.pagingParams = {
             page: this.options.page || 1,
@@ -29,7 +29,7 @@ module.exports = Collection.extend({
         };
     },
 
-    parse: function(resp, options) {
+    parse: function (resp, options) {
         this.objectCount = options.xhr.getResponseHeader('x-object-count');
         if (this.objectCount) {
             this.objectCount = Number(this.objectCount);
@@ -37,44 +37,43 @@ module.exports = Collection.extend({
         return Collection.prototype.parse.apply(this, arguments);
     },
 
-    firstPage: function() {
+    firstPage: function () {
         this.pagingParams.page = 1;
     },
 
-    next: function() {
+    next: function () {
         if (this.hasNext()) {
             this.pagingParams.page = this.pagingParams.page + 1;
         }
     },
 
-    pages: function() {
+    pages: function () {
         return Math.ceil(this.objectCount / this.pagingParams.perPage);
     },
 
-    hasNext: function() {
+    hasNext: function () {
         return (this.pagingParams.page * this.pagingParams.perPage) < this.objectCount;
     },
 
-    hasPrev: function() {
+    hasPrev: function () {
         return this.pagingParams.page > 0;
     },
 
-    prev: function() {
+    prev: function () {
         if (this.hasPrev()) {
             this.pagingParams.page = this.pagingParams.page - 1;
         }
     },
-    exportGroupedByCustomer: function() {
+    exportGroupedByCustomer: function () {
         var collection = this;
-        this.pagingParams = {perPage: null};
-        return new Promise(function(resolve, reject) {
-            collection.fetch({url: '/api/vms/groupedByCustomer'}).done(function(res) {
+        return new Promise(function (resolve, reject) {
+            collection.fetch({url: '/api/vms/groupedByCustomer'}).done(function (res) {
                 resolve(res);
             });
         });
     },
 
-    fetch: function(opts) {
+    fetch: function (opts) {
         opts = opts || {};
         opts.params = opts.params || {};
         _.extend(opts.params, this.pagingParams);
