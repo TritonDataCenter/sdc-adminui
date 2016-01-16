@@ -89,40 +89,41 @@ var ServersListItem = React.createClass({
         this.postRender();
     },
 
+    isHeartbeatRecent: function (time) {
+        return this.props.server.toJSON().status === 'running' && new Date() - new Date(time) < 2 * 60000;
+    },
+
+    convertLastHeartbeat: function (value) {
+        return _.str.sprintf(moment(value).utc().format('MMMM D H:mm') + 'Z');
+    },
+
     postRender: function () {
         var model = this.props.server;
         var $node = $(this.getDOMNode());
-        $node.find('.last-platform').tooltip({
-            title: _.str.sprintf('Platform Version', model.get('current_platform')),
-            placement: 'top',
-            container: 'body'
-        });
+        var setTooltip = function (tooltip, placement, container, title) {
+            $node.find(tooltip).tooltip({
+                title: '',
+                placement: placement,
+                container: container
+            }).attr('data-original-title', title);
+        };
 
-        $node.find('.last-boot').tooltip({
-            title: _.str.sprintf('Booted at %s',
-                moment(model.get('last_boot')).utc().format('MMMM D H:mm') + 'Z'),
-            placement: 'top',
-            container: 'body'
-        });
+        setTooltip('.last-platform', 'top', 'body', _.str.sprintf('Platform Version', model.get('current_platform')));
+        setTooltip('.last-boot', 'top', 'body', _.str.sprintf('Last boot at %s',
+                moment(model.get('last_boot')).utc().format('MMMM D H:mm') + 'Z'));
 
-        $node.find('.last-heartbeat').tooltip({
-            title: _.str.sprintf('Last heartbeat at %s',
-                moment(model.get('last_heartbeat')).utc().format('LLL')),
-            placement: 'bottom',
-            container: 'body'
-        });
+        var last_heartbeat = model.get('last_heartbeat');
+        if (this.isHeartbeatRecent(last_heartbeat)) {
+            setTooltip('.last-heartbeat', 'bottom', 'body', this.convertLastHeartbeat(last_heartbeat));
+        }
 
-        $node.find('.name .reserved').tooltip({
-            title: 'Provisioning Disabled',
-            placement: 'top',
-            container: 'body'
-        });
-
+        setTooltip('.name .reserved', 'top', 'body', 'Provisioning Disabled');
     },
     render: function () {
         var server = this.props.server.toJSON();
+        var last_heartbeat = server.last_heartbeat;
         server.last_boot = moment(server.last_boot).utc().fromNow();
-        server.last_heartbeat = moment(server.last_heartbeat).fromNow();
+        server.last_heartbeat = this.isHeartbeatRecent(last_heartbeat) ? 'Recent heartbeat' : this.convertLastHeartbeat(last_heartbeat);
         server.memory_provisionable_mb = _.str.sprintf('%0.2f', server.memory_provisionable_bytes / 1048576);
         server.memory_total_mb = _.str.sprintf('%0.2f', server.memory_total_bytes / 1048576);
         server.memory_available_gb = _.str.sprintf('%0.2f', server.memory_available_bytes / 1073741824);
@@ -212,9 +213,9 @@ var ServersListItem = React.createClass({
                     <div className="last-boot">
                         <strong><i className="fa fa-fw fa-power-off"></i></strong> <span>{server.last_boot}</span>
                     </div>
-                    <div className="last-heartbeat">
+                    {last_heartbeat && <div className="last-heartbeat">
                         <strong><i className="fa fa-fw fa-heart"></i></strong> <span>{server.last_heartbeat}</span>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </div>;
@@ -223,26 +224,63 @@ var ServersListItem = React.createClass({
 
 var ServersListComponent = React.createClass({
     getInitialState: function () {
+        var options = this.props.options;
         return {
             state: 'loading',
             selected: [],
-            updateCollection: false
+            updateCollection: false,
+            params: Object.keys(options).length ? options : {sort: 'hostname'},
+            collection: []
         };
-    },
-    componentWillMount: function () {
-        if (this.props.params) {
-            this.collection.params = this.props.params;
-        }
     },
 
     componentDidMount: function () {
-        this.collection = this.props.collection || new Servers();
-        this.collection.fetch();
+        var self = this;
+        var collection = new Servers(null, {
+            params: this.state.params
+        });
 
-        this.collection.on('sync', this._onSync, this);
-        this.collection.on('error', function () {
+        var _fetch = function () {
+            collection.fetch({
+                cache: false,
+                success: function (res) {
+                    self._onFetch(res);
+                }
+            });
+        };
+
+        collection.on('sync', this._onSync, this);
+        collection.on('error', function () {
             this.setState({'state': 'error'});
         }, this);
+
+        adminui.poller.start(_fetch);
+        
+        _fetch();
+
+        adminui.vent.listenTo(adminui.vent, 'query', this.query);
+    },
+
+    _onFetch: function (collection) {
+        this.setState({
+            collection: collection
+        });
+    },
+
+    query: function (params) {
+        var self = this;
+        var collection = this.state.collection;
+        if (params) {
+            if (params.reserved === 'false' && params.setup === '') {
+                params.setup = 'true';
+            }
+            collection.params = params;
+        }
+        collection.fetch({
+            success: function (res) {
+                self._onFetch(res);
+            }
+        });
     },
 
     _onSync: function () {
@@ -250,7 +288,7 @@ var ServersListComponent = React.createClass({
         var selected = state.selected;
         var remaningSelected = [];
         if (selected.length && this.props.collection.length) {
-            this.collection.each(function (model) {
+            this.state.collection.each(function (model) {
                 if (_.findWhere(selected, {uuid: model.id})) {
                     remaningSelected.push(model.toJSON());
                 }
@@ -261,7 +299,7 @@ var ServersListComponent = React.createClass({
 
     handleSelect: function (uuid, e) {
         var selected = this.state.selected;
-        var server = this.collection.get(uuid);
+        var server = this.state.collection.get(uuid);
         if (e.target.checked) {
             selected.push(server.toJSON());
         } else {
@@ -276,11 +314,11 @@ var ServersListComponent = React.createClass({
     },
 
     handleSelectAll: function (e) {
-        this.setState({selected: e.target.checked ? this.collection.toJSON() : []});
+        this.setState({selected: e.target.checked ? this.state.collection.toJSON() : []});
     },
 
     isSelectedAll: function () {
-        return this.state.selected.length === this.collection.length;
+        return this.state.selected.length === this.state.collection.length;
     },
 
     notificationSuccess: function (msg) {
@@ -450,13 +488,13 @@ var ServersListComponent = React.createClass({
                 <div className="server-list-header">
                     {adminui.user.role('operators') && <div className="select"><input onChange={this.handleSelectAll} type="checkbox" checked={this.isSelectedAll()} className="input" /></div>}
                     <div className="title">
-                        Showing {this.collection.length} Server{this.collection.length > 1 && 's'}<br/>
+                        Showing {this.state.collection.length} Server{this.state.collection.length > 1 && 's'}<br/>
                     </div>
                 </div>
                 {adminui.user.role('operators') && this.state.selected.length ? this.renderActionBar() : null}
                 {this.state.confirm && <BatchJobConfirm {...this.state.confirm} />}
                 {this.state.modalRatio && <ReservationRatioModal {...this.state.modalRatio} />}
-                {this.collection.map(function (server) {
+                {this.state.collection.map(function (server) {
                     var uuid = server.get('uuid');
                     var boundClick = this.handleSelect.bind(this, uuid);
                     var selected = _.findWhere(this.state.selected, {uuid: uuid});

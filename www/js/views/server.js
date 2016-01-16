@@ -73,7 +73,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
     },
 
     onClose: function () {
-        clearInterval(this._timer);
         this._requests.forEach(function (r) {
             r.abort();
         });
@@ -98,10 +97,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
         this._requests = [];
         this.model = options.server || new Server({uuid: options.uuid});
         window.server = this.model;
-        this._timer = setInterval(function () {
-            this._requests.push(this.model.fetch());
-        }.bind(this), 10000);
-
         this.nics = new Nics(null, {
             params: {
                 belongs_to_type: 'server',
@@ -431,6 +426,9 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
     onShow: function () {
         var self = this;
+        app.poller.start(function () {
+            self._requests.push(self.model.fetch());
+        });
         this._requests.push(this.model.fetch().done(function () {
             self.render();
             self.nics.fetch();
