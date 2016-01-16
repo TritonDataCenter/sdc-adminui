@@ -139,14 +139,11 @@
                             class="form-control" placeholder="Gateway">
                         </div>
                         <div class="col-sm-2">
-                            {{#unless inUse}}
                             <a class="remove-route"><i class="fa fa-trash-o"></i></a>
-                            {{/unless}}
                         </div>
                     </div>
                     {{/each}}
                     {{else}}
-                        {{#unless inUse}}
                         <div class="routes-controls row">
                             <div class="col-sm-5">
                                 <input type="text" name="routes[0][subnet]" class="form-control" placeholder="IP or Subnet">
@@ -154,25 +151,13 @@
                             <div class="col-sm-5">
                                 <input type="text" name="routes[0][gateway]" class="form-control" placeholder="Gateway">
                             </div>
-                            <div class="col-sm-2">
-                                <a class="remove-route"><i class="fa fa-trash-o"></i></a>
-                            </div>
                         </div>
-                        {{else}}
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-control-static">No routes assigned</div>
-                            </div>
-                        </div>
-                        {{/unless}}
                     {{/if}}
-                    {{#unless inUse}}
                     <div class="row">
                         <div class="col-sm-12">
                             <a class="add-route">Add another route</a>
                         </div>
                     </div>
-                    {{/unless}}
                 </div>
             </div>
 

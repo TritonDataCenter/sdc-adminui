@@ -254,7 +254,7 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     onRemoveRoute: function (e) {
-        $(e.currentTarget).parent('.routes-controls').remove();
+        $(e.currentTarget).parent().parent('.routes-controls').remove();
     },
 
     serializeData: function () {
