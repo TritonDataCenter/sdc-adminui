@@ -23,21 +23,28 @@ var SnapshotRow = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
     template: SnapshotRowTemplate,
     events: {
-        'click .rollback': 'rollbackToSnapshot'
+        'click .rollback': 'rollbackToSnapshot',
+        'click .delete': 'deleteSnapshot'
     },
-    rollbackToSnapshot: function() {
-        var name = this.model.get('name');
+    rollbackToSnapshot: function () {
+        if (window.confirm('Are you sure you want to roll back to this snapshot?')) {
+            this.vm.rollbackSnapshot(this.model.get('name'), this._onJob.bind(this));
+        }
+    },
+    deleteSnapshot: function () {
+        if (window.confirm('Are you sure you want to delete this snapshot?')) {
+            this.vm.deleteSnapshot(this.model.get('name'), this._onJob.bind(this));
+        }
+    },
+    _onJob: function (job) {
         var self = this;
-        var vm = this.vm;
-        vm.rollbackSnapshot(name, function(job) {
-            var jobView = new JobProgressView({model: job});
-            self.listenTo(jobView, 'execution', function(exec) {
-                if (exec === 'succeeded') {
-                    vm.fetch();
-                }
-            });
-            jobView.show();
+        var jobView = new JobProgressView({model: job});
+        this.listenTo(jobView, 'execution', function (exec) {
+            if (exec === 'succeeded') {
+                self.vm.fetch();
+            }
         });
+        jobView.show();
     }
 });
 
