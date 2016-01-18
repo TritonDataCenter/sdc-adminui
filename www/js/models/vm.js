@@ -100,11 +100,21 @@ var Vm = Model.extend({
         });
     },
 
-    reprovision: function(imageUuid, cb) {
+    deleteSnapshot: function (snapshotName, cb) {
+        $.post(this.url() + '?action=delete_snapshot', {
+            name: snapshotName
+        }, function (data) {
+            cb(new Job({
+                uuid: data.job_uuid
+            }));
+        });
+    },
+
+    reprovision: function (imageUuid, cb) {
         var req = $.post(this.url() + '?action=reprovision', {
             image_uuid: imageUuid
         });
-        req.done(function(data) {
+        req.done(function (data) {
             var job = new Job({
                 uuid: data.job_uuid
             });
