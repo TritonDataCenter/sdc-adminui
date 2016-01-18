@@ -276,6 +276,12 @@ var VMPage = React.createClass({
                                 </tr>
                             : null}
                             <tr>
+                                <th>Zone Brand</th>
+                                <td>
+                                    <span>{vm.brand}</span>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>Created</th>
                                 <td>
                                     <span className="created">
