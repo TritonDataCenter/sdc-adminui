@@ -12,3 +12,4 @@ www/app.js*
 www/app.css*
 www/libs.js*
 npm-debug.log
+.idea/*
