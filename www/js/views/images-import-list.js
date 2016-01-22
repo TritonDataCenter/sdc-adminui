@@ -50,7 +50,7 @@ var ImagesImport = Backbone.Marionette.CompositeView.extend({
     },
     emptyView: require('./empty').extend({columns: 3}),
     itemViewOptions: function() {
-        return { emptyViewModel: this.collection };
+        return { emptyViewModel: this.collection.fullCollection };
     },
     initialize: function() {
         this.collection.comparator = function(i) {
