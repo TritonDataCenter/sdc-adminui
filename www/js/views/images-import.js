@@ -14,6 +14,8 @@ var app = require('../adminui');
 var Images = require('../models/images');
 var ImportImageSelector = require('./images-import-list');
 
+var PAGE_SIZE = 25;
+
 var ImageImportView = Backbone.Marionette.Layout.extend({
     id: 'page-image-import',
     sidebar: 'images',
@@ -25,7 +27,8 @@ var ImageImportView = Backbone.Marionette.Layout.extend({
     events: {
         'form submit': 'onQuery',
         'click .search': 'onQuery',
-        'click button.import': 'importImage'
+        'click button.import': 'importImage',
+        'click button.load-more': 'loadMore'
     },
 
     showError: function(message) {
@@ -50,6 +53,12 @@ var ImageImportView = Backbone.Marionette.Layout.extend({
         });
     },
 
+    loadMore: function() {
+        this.imagesListView.collection.state.pageSize += PAGE_SIZE;
+        this.$('button.load-more').hide();
+        this.imagesListView.collection.fetch();
+    },
+
     onQuery: function(e) {
         e.preventDefault();
 
@@ -65,14 +74,23 @@ var ImageImportView = Backbone.Marionette.Layout.extend({
         }
 
         var collection = new Images([], { params:  params });
-        var imagesListView = new ImportImageSelector({collection: collection });
-        this.imagesList.show(imagesListView);
+        collection.state.pageSize = PAGE_SIZE;
+        this.imagesListView = new ImportImageSelector({collection: collection});
+        this.imagesList.show(this.imagesListView);
         this.$('h3').html('Showing images on: ' + repo).show();
+        this.listenTo(this.imagesListView.collection, 'sync', this.onSync);
+    },
+
+    onSync: function(collection) {
+        if (collection.fullCollection.length > collection.state.pageSize) {
+            this.$('button.load-more').show();
+        }
     },
 
     onShow: function() {
         this.$('h3').hide();
         this.$('[name=name]').focus();
+        this.$('button.load-more').hide();
         this.checkImgapiExternalNic();
     }
 
