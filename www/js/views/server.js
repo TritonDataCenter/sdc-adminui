@@ -459,7 +459,7 @@ var ServerView = Backbone.Marionette.Layout.extend({
 
     onShow: function () {
         var self = this;
-        $.when(self.model.fetch(), self.nics.fetch(), self.vms.fetch()).then(function () {
+        $.when(this.model.fetch(), this.nics.fetch(), this.vms.fetch()).then(function () {
             self.render();
         }).fail(function () {
             self.render();

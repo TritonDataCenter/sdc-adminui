@@ -80,6 +80,11 @@ var VmsList = React.createClass({
             this.setState({loading: false});
         }, this);
     },
+    componentWillMount: function () {
+        if (this.props.collection.fetched) {
+            this._onSync();
+        }
+    },
     componentWillUnmount: function () {
         this.props.collection.off('request');
         this.props.collection.off('sync');
