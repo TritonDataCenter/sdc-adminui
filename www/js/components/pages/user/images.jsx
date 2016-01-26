@@ -36,7 +36,7 @@ var UserImagesList = React.createClass({
     render: function () {
         return (<div className="user-images-list">
             <h3>Images owned by this user</h3>
-            <ImagesList images={this.state.images} />
+            <ImagesList images={this.state.images.toJSON()} />
             <BB view={new PaginationView({collection: this.state.images})} />
         </div>);
     }
