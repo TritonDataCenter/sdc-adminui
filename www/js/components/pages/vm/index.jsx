@@ -203,7 +203,7 @@ var VMPage = React.createClass({
                                         <div className="vm-disk-quota-kvm">
                                             Total: {quota} GB
                                             <span className="details">
-                                                [<span className="img">IMG: {vm.disks[0].image_size/1024} GB</span>{vm.disks[1] ? + <span className="pkg">PKG: {vm.disks[1].size / 1024} GB</span> : '' }]
+                                                [<span className="img">IMG: {vm.disks[0].image_size/1024} GB</span>{vm.disks[1] ? <span className="img">, PKG: {vm.disks[1].size/1024} GB</span> : <span></span> }]
                                             </span>
                                         </div>
                                     : <div>
@@ -252,13 +252,13 @@ var VMPage = React.createClass({
                             <tr>
                                 <th>Package</th>
                                 <td>
-                                    {pkg ? <a className="package" href={'/packages/' + vm.billing_id} onClick={function (e) {
+                                    <a className="package" href={'/packages/' + vm.billing_id} onClick={function (e) {
                                         e.preventDefault();
                                         adminui.router.showPackage(vm.billing_id);
                                     }}>
                                         <span className="package-name">{pkg.name}</span> &nbsp;
                                         <span className="package-version">{pkg.version}</span>
-                                    </a> : <span>N/a</span>}
+                                    </a>
                                     <span className="billing-id selectable">{vm.billing_id}</span>
                                 </td>
                             </tr>
