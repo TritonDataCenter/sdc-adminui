@@ -50,7 +50,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
         '[name=givenname]': 'givenname',
         '[name="groups"]': 'groups',
         '[name=approved_for_provisioning]': 'approved_for_provisioning',
-        '[name=registered_developer]': 'registered_developer'
+        '[name=registered_developer]': 'registered_developer',
+        '[name=triton_cns_enabled]': 'triton_cns_enabled'
     },
 
     initialize: function (options) {
