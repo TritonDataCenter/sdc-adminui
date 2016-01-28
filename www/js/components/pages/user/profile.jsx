@@ -115,13 +115,15 @@ var UserProfile = React.createClass({
                             <tr>
                                 <th>Provisioning</th>
                                 <td>
-                                    <span className={'provisioning ' + (user.approved_for_provisioning === "true" ? 'approved': 'disabled') }>
-                                    {
-                                        user.approved_for_provisioning === "true" ?
-                                        <span><i className="fa fa-check"></i> yes</span> :
-                                        <span><i className="fa fa-times"></i> no</span>
+                                    {user.approved_for_provisioning === 'true' ?
+                                        <span className='provisioning approved'>
+                                            <span><i className="fa fa-check"></i> yes</span>
+                                        </span>
+                                        :
+                                        <span className='provisioning disabled'>
+                                            <span><i className="fa fa-times"></i> no</span>
+                                        </span>
                                     }
-                                    </span>
                                 </td>
                             </tr>
                             : null }
@@ -130,12 +132,32 @@ var UserProfile = React.createClass({
                             <tr>
                                 <th>Registered Developer</th>
                                 <td>
-                                    <span className={'registered-developer ' + (user.registered_developer === "true" ? 'yes' : 'no')}>
-                                        {
-                                            user.registered_developer === 'true' ?
-                                            <span><i className="fa fa-check"></i> yes</span> : <span><i className="fa fa-times"></i> no</span>
-                                        }
-                                    </span>
+                                    {user.registered_developer === 'true' ?
+                                        <span className='registered-developer yes'>
+                                            <span><i className="fa fa-check"></i> yes</span>
+                                        </span>
+                                        :
+                                        <span className='registered-developer no'>
+                                            <span><i className="fa fa-times"></i> no</span>
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                            : null }
+
+                            { isTopLevelAccount ?
+                            <tr>
+                                <th>Use Container Naming Service</th>
+                                <td>
+                                    {user.triton_cns_enabled === 'true' ?
+                                        <span className='triton-cns-enabled yes'>
+                                            <span><i className="fa fa-check"></i> yes</span>
+                                        </span>
+                                        :
+                                        <span className='triton-cns-enabled no'>
+                                            <span><i className="fa fa-times"></i> no</span>
+                                        </span>
+                                    }
                                 </td>
                             </tr>
                             : null }
