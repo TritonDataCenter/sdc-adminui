@@ -124,8 +124,8 @@ var ServerNicsList = React.createClass({
             <div className="title">Virtual</div>
             <ul className="list-unstyled">{vnicsNodes}</ul>
 
-            {! this.props.server.get('headnode') && <div className="title">Aggregates</div> }
-            {! this.props.server.get('headnode') && <ul className="list-unstyled">{aggrsNodes}</ul> }
+            <div className="title">Aggregates</div>
+            <ul className="list-unstyled">{aggrsNodes}</ul>
         </div>;
     }
 });
