@@ -61,16 +61,6 @@ var VMNicForm = Backbone.Marionette.ItemView.extend({
         delete nic.network_uuid;
         var nics = vm.get('nics');
         if (!nic.mac) {
-            if (nic.primary && nics.length) {
-                var hasPrimaryNic = nics.some(function (nic) {
-                    return nic.primary;
-                });
-                if (hasPrimaryNic) {
-                    window.alert('You have primary NIC defined already.');
-                    return;
-                }
-            }
-
             vm.addNics([nic], function (err, job) {
                 if (err) {
                     window.alert('Error adding network interface ' + err);
