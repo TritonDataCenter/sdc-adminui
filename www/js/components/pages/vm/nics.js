@@ -51,12 +51,15 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
     onConfigureNic: function (view, nic) {
         new AddNicView({
             vm: this.model,
-            model: nic
+            model: nic,
+            isPrimaryChoosingAvailable: !nic.attributes.primary
         }).render();
     },
 
     resetNics: function () {
+        this.model.fetch();
         this.collection.fetch();
+        this.selectedNics.reset();
     },
 
     onClickRemoveNics: function () {
@@ -72,20 +75,15 @@ var NicsView = Backbone.Marionette.CompositeView.extend({
             jobView.show();
 
             self.listenTo(jobView, 'succeeded', function () {
-                self.selectedNics.reset();
                 self.resetNics();
             });
         });
     },
 
     onClickAddNic: function () {
-        var nics = this.model.attributes.nics;
-        var hasPrimaryNic = nics && nics.length && nics.some(function (nic) {
-            return nic.primary;
-        });
         new AddNicView({
             vm: this.model,
-            isPrimaryChoosingAvailable: !hasPrimaryNic
+            isPrimaryChoosingAvailable: true
         }).render();
     },
 
