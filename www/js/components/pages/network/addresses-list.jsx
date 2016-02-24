@@ -236,11 +236,32 @@ var AddressesList = React.createClass({
     render: function () {
         var state = this.state.state;
         var self = this;
+
+        var getAddressUrl = function (address) {
+            var type = address.belongs_to_type;
+            if (type === 'zone' || type === 'server') {
+                return _.str.sprintf('/%s/%s', type === 'zone' ? 'vms' : 'servers', address.belongs_to_uuid);
+            }
+        };
+
+        var navigateToAddress = function (address, event) {
+            if (event.metaKey || event.ctrlKey) {
+                return;
+            }
+            event.preventDefault();
+
+            var type = address.belongs_to_type;
+            if (type === 'zone' || type === 'server') {
+                adminui.router[type === 'zone' ? 'showVm' : 'showServer'](address.belongs_to_uuid);
+            }
+        };
+
         if (state === 'loading' || state === 'error') {
             return (<div className="addresses-list"><div className="zero-state">{state === 'error' ? 'Error ' : ''}Retrieving Addresses List</div></div>);
         } else {
             var addressesRows = this.state.collection.map(function (addressModel) {
                 var address = addressModel.toJSON();
+                var addressUrl = getAddressUrl(address);
                 var notesItem = self.state.networkUuid ? [self.state.networkUuid, address.ip].join('.') : false;
                 var selected = _.findWhere(self.state.selected, {ip: address.ip});
                 return (<tr>
@@ -249,8 +270,8 @@ var AddressesList = React.createClass({
                         <td>{address.ip}</td>
                         <td className="belongs-to">
                             <strong>{address.belongs_to_type}</strong>
-                            {address.belongs_to_url ?
-                                <a href="{address.belongs_to_url}">
+                            {addressUrl ?
+                                <a href={addressUrl} onClick={navigateToAddress.bind(null, address)}>
                                     <small>{address.belongs_to_uuid}</small>
                                 </a>
                                 :
