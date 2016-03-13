@@ -137,9 +137,7 @@ var ServersView = Backbone.Marionette.Layout.extend({
     },
 
     initialize: function (options) {
-        this.collection = new Servers(null, {
-            params: Object.keys(options || {}).length ? options : {}
-        });
+        this.collection = new Servers(null, {});
         this.filterForm = new FilterForm(options);
 
         this.listenTo(this.collection, 'request', this.onRequest);
