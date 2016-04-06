@@ -48,7 +48,10 @@ module.exports = Backbone.Marionette.ItemView.extend({
         }
 
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
-        this.listenTo(this.networks, 'sync', this.render);
+        this.listenTo(this.networks, 'sync', function () {
+            this.networks = this.networks.fullCollection;
+            this.render();
+        });
         this.listenTo(this.networkPool, 'sync', this.onSaved);
         this.listenTo(this.networkPool, 'error', this.onSyncError);
 
