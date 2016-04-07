@@ -133,15 +133,13 @@ var NetworksList = React.createClass({
             _.str.sprintf('Are you sure you want to delete the network "%s" ?', model.get('name'))
         );
         if (confirm) {
-            var self = this;
             var network = model.toJSON();
-            model.destroy({contentType: 'application/json', data: JSON.stringify(network)}).done(function () {
+            model.destroy({contentType: 'application/json', data: JSON.stringify(network), wait: true}).done(function () {
                 var notifyMsg = _.str.sprintf('Network <strong>%s</strong> deleted successfully.', network.name);
                 adminui.vent.trigger('notification', {
                     level: 'success',
                     message: notifyMsg
                 });
-                self.state.collection.remove(model);
             }).fail(function (error) {
                 adminui.vent.trigger('notification', {
                     level: 'error',
