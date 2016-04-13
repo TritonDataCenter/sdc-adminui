@@ -18,6 +18,7 @@ var moment = require('moment');
 var $ = require('jquery');
 var React = require('react');
 var Chosen = require('react-chosen');
+var Job = require('../models/job');
 var Jobs = require('../models/jobs');
 var Servers = require('../models/servers');
 var JobsList = require('./jobs-list');
@@ -25,6 +26,7 @@ var ServerTypeahead = require('../components/server-typeahead');
 
 var adminui = require('../adminui');
 
+var UUID_REGEXP = /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/;
 var PRESET_FILTERS = [
     {
         name: 'Recent Jobs | last 24 hours',
@@ -146,7 +148,7 @@ var JobCriterias = React.createFactory(React.createClass({
                     params: self.state
                 });
             }
-        }
+        };
         this.setState({
             name: React.findDOMNode(this.refs.jobNameField).value
         }, search);
@@ -178,7 +180,12 @@ var JobCriterias = React.createFactory(React.createClass({
                     <li className="col-md-4">
                         <span className="criteria-name">Job Name</span>
                         <div className="form-group">
-                            <input className="form-control" ref="jobNameField" type="text"></input>
+                            <input
+                                className="form-control"
+                                placeholder="Enter UUID or search by name"
+                                ref="jobNameField"
+                                type="text">
+                            </input>
                         </div>
                     </li>
                     <li className="col-md-4">
@@ -269,6 +276,17 @@ var JobsView = Backbone.Marionette.Layout.extend({
                 delete filter.params[key];
             } else if ((key === 'until' || key === 'since') && typeof value === 'object') {
                 filter.params[key] = moment(value).utc().toDate().getTime();
+            } else if (key === 'name' && UUID_REGEXP.test(filter.params[key])) {
+                var self = this;
+                var job = new Job({
+                    uuid: filter.params.name
+                });
+                this.listenToOnce(job, 'error', self.jobsList.onError);
+                return job.fetch().always(function () {
+                    self.jobsList.collection.reset();
+                }).done(function () {
+                    self.jobsList.collection.set([job]);
+                });
             }
         }
         this.jobsList.query(filter.params);
@@ -295,8 +313,7 @@ var JobsView = Backbone.Marionette.Layout.extend({
 
         this.jobsList = new JobsList({params: initialFilter.params()});
         this.jobsListRegion.show(this.jobsList);
-    },
+    }
 });
-
 
 module.exports = JobsView;
