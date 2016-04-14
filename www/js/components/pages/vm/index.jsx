@@ -11,6 +11,7 @@
 'use strict';
 
 var React = require('react');
+var adminui = require('../../../adminui');
 var cx = require('classnames');
 var moment = require('moment');
 var _ = require('underscore');
@@ -543,9 +544,24 @@ var VMPage = React.createClass({
         this.setState({editing: false});
     },
     _handleTagsSave: function (data) {
+        var TRITON_CNS_DISABLE_TAG_KEY = 'triton.cns.disable';
         var vm = new VMModel({uuid: this.state.vm.uuid});
         var self = this;
-        vm.update({tags: data}, function (job, err) {
+        for (var key in data) {
+            var value = data[key];
+            if (value === 'true') {
+                data[key] = true;
+            } else if (value === 'false') {
+                data[key] = false;
+            }
+            if (key === TRITON_CNS_DISABLE_TAG_KEY && data[key] !== Boolean(data[key])) {
+                return adminui.vent.trigger('notification', {
+                    level:'error',
+                    message: 'Invalid value for \'' + TRITON_CNS_DISABLE_TAG_KEY + '\' tag. Possible values are: true, false.'
+                });
+            }
+        }
+        vm.updateTags(data, function (job, err) {
             if (job) {
                 self.setState({currentJob: job});
                 job.on('finished', function () {

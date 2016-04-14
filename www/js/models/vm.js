@@ -33,6 +33,18 @@ var Vm = Model.extend({
         });
     },
 
+    updateTags: function (tags, cb) {
+        var req = api.put(this.url() + '/tags').send(tags);
+        req.end(function(res) {
+            if (res.ok) {
+                var job = new Job({ uuid: res.body.job_uuid });
+                cb(job);
+            } else {
+                cb(null, res.body);
+            }
+        });
+    },
+
     start: function(cb) {
         $.post(this.url() + '?action=start', {}, function(data) {
             var job = new Job({

@@ -76,9 +76,9 @@
                             <td className="value">
                             {
                                 editing ?
-                                <textarea name="value" className="form-control value" defaultValue={m.value}></textarea>
+                                <textarea name="value" className="form-control value" defaultValue={String(m.value)}></textarea>
                                 :
-                                <span className="value" type="text">{m.value}</span>
+                                <span className="value" type="text">{String(m.value)}</span>
                             }
                             </td>
                         </tr>;
