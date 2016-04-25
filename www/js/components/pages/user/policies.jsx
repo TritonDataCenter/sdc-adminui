@@ -41,6 +41,7 @@ var UserPolicies = React.createClass({
     _handleSavePolicy: function (policy) {
         var clonedPolicy = _.clone(policy);
         var req;
+        var self = this;
         if (clonedPolicy.uuid) {
             req = api.put(_.str.sprintf('%s/%s', this._policiesApiUrl(), policy.uuid));
         } else {
@@ -48,7 +49,7 @@ var UserPolicies = React.createClass({
         }
         req.send(clonedPolicy).end(function (res) {
             if (res.ok) {
-                this.setState({
+                self.setState({
                     policyFormError: null,
                     policyFormInitialPolicy: null,
                     policyForm: false
@@ -57,9 +58,9 @@ var UserPolicies = React.createClass({
                     level: 'success',
                     message: _.str.sprintf('Policy %s saved successfully.', res.body.name)
                 });
-                this._fetchPolicies();
+                self._fetchPolicies();
             } else {
-                this.setState({policyFormError: res.body});
+                self.setState({policyFormError: res.body});
             }
         }.bind(this));
     },
@@ -144,13 +145,19 @@ var UserPolicies = React.createClass({
         var confirm = window.confirm(msg);
         if (confirm) {
             var url = _.str.sprintf('%s/%s', this._policiesApiUrl(), policy.uuid);
+            var self = this;
             api.del(url).end(function (res) {
                 if (res.ok) {
                     adminui.vent.trigger('notification', {
                         level: 'success',
                         message: _.str.sprintf('Policy %s removed successfully.', policy.name)
                     });
-                    this._fetchPolicies();
+                    self._fetchPolicies();
+                } else {
+                    adminui.vent.trigger('notification', {
+                        level: 'error',
+                        message: _.str.sprintf('Error removing policy <stong>%s</stong>. ',  policy.name) + (res.body.message || '')
+                    });
                 }
             });
         }

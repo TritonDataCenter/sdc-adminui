@@ -167,7 +167,7 @@ var LimitsForm = React.createClass({
                 <div className="panel-title">
                     {this.props.initialLimit ? ('Update Limit for ' + this.props.initialLimit.datacenter) : 'Add New Limit'}
                 </div>
-                {this.state.formError ? <ErrorAlert error={this.form.formError} /> : ''}
+                {this.state.formError ? <ErrorAlert error={this.state.formError} /> : ''}
                 <form onSubmit={this.handleSave} className="form-horizontal">
                     <div className="form-group">
                         <label className="col-md-4 control-label">Datacenter</label>

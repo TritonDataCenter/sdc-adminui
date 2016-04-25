@@ -117,7 +117,19 @@ var SSHKeyListItem = Backbone.Marionette.ItemView.extend({
         e.preventDefault();
         var confirm = window.confirm('Are you sure you want to remove this SSH Key?');
         if (confirm) {
-            this.model.destroy();
+            var model = this.model;
+            var sshKey = model.toJSON();
+            model.destroy({contentType: 'application/json', data: JSON.stringify(sshKey), wait: true}).done(function () {
+                adminui.vent.trigger('notification', {
+                    level: 'success',
+                    message: 'SSH Key removed successfully.'
+                });
+            }).fail(function (error) {
+                adminui.vent.trigger('notification', {
+                    level: 'error',
+                    message: 'Error deleting SSH Key. ' + (error.responseData.message || error.responseText || '')
+                });
+            });
         }
     }
 });

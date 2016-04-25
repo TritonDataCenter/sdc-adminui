@@ -117,15 +117,15 @@ var UserSubusers = React.createClass({
             user.destroy().then(function success() {
                 adminui.vent.trigger('notification', {
                     level: 'success',
-                    message: _.str.sprintf('User <strong>%s</strong> deleted successfully', user.get('login'))
+                    message: _.str.sprintf('User <strong>%s</strong> deleted successfully', u.login)
                 });
                 self._load();
             }, function error(xhr) {
                 adminui.vent.trigger('notification', {
                     level: 'error',
-                    message: _.str.sprintf('Error deleting user <strong>%s</strong>, because: ', user.get('login'), xhr.responseText)
+                    message: _.str.sprintf('Error deleting user <strong>%s</strong>.  %s', u.login,
+                        xhr.responseData.message || xhr.responseText || '')
                 });
-                console.error('Error deleting user', xhr);
             });
         }
     },

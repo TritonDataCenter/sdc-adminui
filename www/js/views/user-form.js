@@ -77,7 +77,16 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
 
     onError: function (model, xhr) {
-        this.showError(xhr.responseData.errors);
+        var errors = xhr.responseData && Array.isArray(xhr.responseData.errors) && xhr.responseData.errors;
+        if (errors) {
+            this.showError(errors);
+            return;
+        }
+        var message = xhr.responseData.message || 'An error occurred while add/edit user data';
+        this.$('.alert')
+            .empty()
+            .append('<h4 class="alert-heading">' + message + '</h4>')
+            .show();
     },
 
     showError: function (errors) {

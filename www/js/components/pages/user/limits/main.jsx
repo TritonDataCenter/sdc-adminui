@@ -39,7 +39,7 @@ var ProvisioningLimits = React.createClass({
     },
     handleDelete: function (limit) {
         var url = _.str.sprintf('/api/users/%s/limits/%s', this.props.user, limit.datacenter);
-        api.del(url).query(limit).end(function (res) {
+        api.del(url).query(limit).end(function (err, res) {
             if (res.ok) {
                 adminui.vent.trigger('notification', {
                     message: _.str.sprintf('Successfully removed a limit for %s', limit.datacenter)
@@ -48,7 +48,7 @@ var ProvisioningLimits = React.createClass({
             } else {
                 adminui.vent.trigger('notification', {
                     level: 'error',
-                    message: _.str.sprintf('Error removing limit for %s', limit.datacenter)
+                    message: _.str.sprintf('Error removing limit for %s. ', limit.datacenter) + (res.body.message || '')
                 });
             }
         }.bind(this));
