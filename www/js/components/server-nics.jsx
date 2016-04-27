@@ -109,8 +109,10 @@ var ServerNicsList = React.createClass({
             return <ServerNic key={'nic-' + pnic.ifname} nic={pnic} />;
         }) : <li className="empty">No Network Interfaces Found</li>;
 
-        var vnicsNodes = vnics.length ? vnics.map(function (nic) {
-            return <ServerNic key={'vnic-' + nic.ifname} nic={nic} />;
+        var vnicsNodes = vnics.length ? vnics.map(function (vnic) {
+            var extendNic = _.findWhere(nics, {'ifname': vnic.ifname}) || {};
+            vnic = _.extend(vnic, extendNic);
+            return <ServerNic key={'vnic-' + vnic.ifname} nic={vnic} />;
         }) : <li className="empty">No Virtual Nics Found</li>;
 
         var aggrsNodes = aggrs.length ? aggrs.map(function (aggr, ifname) {
