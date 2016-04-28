@@ -203,9 +203,14 @@ var VMPage = React.createClass({
                                     {vm.brand === 'kvm' ?
                                         <div className="vm-disk-quota-kvm">
                                             Total: {quota} GB
-                                            <span className="details">
-                                                [<span className="img">IMG: {vm.disks[0].image_size/1024} GB</span>{vm.disks[1] ? <span className="img">, PKG: {vm.disks[1].size/1024} GB</span> : <span></span> }]
-                                            </span>
+                                            {vm.disks && vm.disks.length && vm.disks[0].image_size ?
+                                                <span className="details">
+                                                    [<span className="img">IMG: {vm.disks[0].image_size/1024} GB</span>
+                                                    {vm.disks[1] ?
+                                                        <span className="img">, PKG: {vm.disks[1].size/1024} GB</span>
+                                                        : <span></span> }]
+                                                </span>
+                                                : <span></span>}
                                         </div>
                                     : <div>
                                         {quota} GB
