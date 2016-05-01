@@ -257,16 +257,20 @@ var VMPage = React.createClass({
 
                             <tr>
                                 <th>Package</th>
-                                <td>
-                                    <a className="package" href={'/packages/' + vm.billing_id} onClick={function (e) {
-                                        e.preventDefault();
-                                        adminui.router.showPackage(vm.billing_id);
-                                    }}>
-                                        <span className="package-name">{pkg.name}</span> &nbsp;
-                                        <span className="package-version">{pkg.version}</span>
-                                    </a>
-                                    <span className="billing-id selectable">{vm.billing_id}</span>
-                                </td>
+                                {pkg ?
+                                    <td>
+                                        <a className="package" href={'/packages/' + vm.billing_id} onClick={function (e) {
+                                            e.preventDefault();
+                                            adminui.router.showPackage(vm.billing_id);
+                                        }}>
+                                            <span className="package-name">{pkg.name}</span> &nbsp;
+                                            <span className="package-version">{pkg.version}</span>
+                                        </a>
+                                        <span className="billing-id selectable">{vm.billing_id}</span>
+                                    </td>
+                                    :
+                                    <td><span className="package-name error">Error retrieving Package information</span></td>
+                                }
                             </tr>
 
                             {vm.datasets.length ?
