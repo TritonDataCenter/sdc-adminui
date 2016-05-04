@@ -146,8 +146,8 @@ var User = module.exports = Model.extend({
             minLength: 3,
             maxLength: 32,
             pattern: {
-                regex: /^[A-Za-z]+[A-Za-z0-9\.\_]*$/,
-                msg: "Must start with a letter, and contain letters, numbers and signs like '.' and '_'."
+                regex: /^[A-Za-z]+[A-Za-z0-9\.\_\@]*$/,
+                msg: "Must start with a letter, and may contain letters, numbers, '@', '.' and '_'."
             }
 
         },
