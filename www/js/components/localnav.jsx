@@ -20,7 +20,7 @@ var SecondaryNav = React.createClass({
         handleMenuSelect: React.PropTypes.func.isRequired,
         active: React.PropTypes.string
     },
-    _clickedMenuItem: function(e) {
+    _clickedMenuItem: function (e) {
         if (e.metaKey || e.ctrlKey) {
             return;
         }
@@ -37,12 +37,12 @@ var SecondaryNav = React.createClass({
             return;
         }
     },
-    _classesFor: function(v) {
+    _classesFor: function (v) {
         return cx({
             active: (this.props.active === v)
         });
     },
-    mantaNav: function() {
+    mantaNav: function () {
         if (adminui.state.get('manta')) {
             return [
                 <li className="nav-header">Storage (Manta)</li>,
@@ -50,17 +50,22 @@ var SecondaryNav = React.createClass({
             ];
         }
     },
-    render: function() {
+    render: function () {
         return (<div id="localnav">
             <ul className="nav">
                 <li className="nav-header">Compute</li>
                 <li className={this._classesFor('dashboard')} onClick={this._clickedMenuItem} data-component="dashboard"><a href="/dashboard"><i className="fa fa-home"></i> Dashboard</a></li>
                 <li className={this._classesFor('vms')} onClick={this._clickedMenuItem} data-component="vms"><a href="/vms"><i className="fa fa-cubes"></i> Virtual Machines</a></li>
+
+                {adminui.state.get('volapiEnabled') &&
+                    <li className={this._classesFor('volumes')} onClick={this._clickedMenuItem} data-component="volumes"><a href="/volumes"><i className="fa fa-th-large"></i> Volumes</a></li>
+                }
+
                 <li className={this._classesFor('servers')} onClick={this._clickedMenuItem} data-view="servers"><a href="/servers"><i className="fa fa-list"></i> Servers</a></li>
                 <li className={this._classesFor('images')} onClick={this._clickedMenuItem} data-component="images"><a href="/images"><i className="fa fa-photo"></i> Images</a></li>
                 <li className={this._classesFor('packages')} onClick={this._clickedMenuItem} data-view="packages"><a href="/packages"><i className="fa fa-codepen"></i> Packages</a></li>
 
-                { this.mantaNav() }
+                {this.mantaNav()}
 
                 <li className="nav-header">Infrastructure</li>
                 <li className={this._classesFor('networking')} onClick={this._clickedMenuItem} data-view="networking"><a href="/networks">Networking</a></li>

@@ -5,18 +5,17 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
-var Backbone = require('backbone');
 var Package = require('./package');
 var Collection = require('./collection');
 
 var Packages = Collection.extend({
     model: Package,
     url: '/api/packages',
-    fetchActive: function() {
-        return this.fetch({params:{active: true}});
+    fetchActive: function () {
+        return this.fetch({params: {active: true}});
     }
 });
 

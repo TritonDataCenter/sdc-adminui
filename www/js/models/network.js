@@ -8,7 +8,6 @@
  * Copyright (c) 2015, Joyent, Inc.
  */
 
-var Backbone = require('backbone');
 var Model = require('./model');
 var api = require('../request');
 
@@ -18,5 +17,5 @@ module.exports = Model.extend({
 
     update: function(attrs, cb) {
         api.put(this.url()).send(attrs).end(cb);
-    },
+    }
 });

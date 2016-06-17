@@ -8,13 +8,27 @@ var utils = require('../lib/utils');
 var NicTags = require('../models/nictags');
 var FabricVlans = require('../models/fabrics-vlans');
 var INPUT_TYPES = {};
+var DEFAULT_WIDTH = {
+    uuid: 4,
+    owner_uuid: 4,
+    alias: 3,
+    name: 3,
+    package_name: 3,
+    state: 3,
+    tag: 3,
+    type: 3,
+    volume_state: 3,
+    ip: 2,
+    nic_tag: 2,
+    vlan_id: 2
+};
 
 INPUT_TYPES.uuid = React.createClass({
     onChange: function (e) {
         this.props.onChange('uuid', e.target.value);
     },
     render: function () {
-        return (<div className="form-group col-md-4">
+        return (<div className={'form-group col-md-' + this.props.width}>
             <label className="control-label">UUID</label>
             <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="uuid" placeholder="UUID" />
         </div>);
@@ -26,7 +40,7 @@ INPUT_TYPES.alias = React.createClass({
         this.props.onChange('alias', e.target.value);
     },
     render: function () {
-        return (<div className="form-group col-md-3">
+        return (<div className={'form-group col-md-' + this.props.width}>
             <label className="control-label">Alias</label>
             <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="alias" placeholder="vm alias" />
         </div>);
@@ -42,7 +56,7 @@ INPUT_TYPES.package_name = React.createClass({
         this.typeahead.remove();
     },
     render: function () {
-        return (<div className="form-group col-md-4">
+        return (<div className={'form-group col-md-' + this.props.width}>
             <label className="control-label">Package</label>
                 <TypeaheadPackage className="form-control" onChange={this.onSelect} value={this.props.value} />
         </div>);
@@ -54,20 +68,43 @@ INPUT_TYPES.name = React.createClass({
         this.props.onChange('name', e.target.value);
     },
     render: function () {
-        return (<div className="form-group col-md-3">
+        return (<div className={'form-group col-md-' + this.props.width}>
             <label className="control-label">Name</label>
             <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="name" placeholder="Name" />
         </div>);
     }
 });
 
+INPUT_TYPES.tag = React.createClass({
+    onChange: function (e) {
+        this.props.onChange('tag', e.target.value);
+    },
+    render: function () {
+        return (<div className={'form-group col-md-' + this.props.width}>
+            <label className="control-label">Tag</label>
+            <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="tag" placeholder="<key>: <value> or just <key>" />
+        </div>);
+    }
+});
+
+INPUT_TYPES.type = React.createClass({
+    onChange: function (e) {
+        this.props.onChange('type', e.target.value);
+    },
+    render: function () {
+        return (<div className={'form-group col-md-' + this.props.width}>
+            <label className="control-label">Type</label>
+            <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="type" placeholder="Type" />
+        </div>);
+    }
+});
 
 INPUT_TYPES.ip = React.createClass({
     onChange: function (e) {
         this.props.onChange('ip', e.target.value);
     },
     render: function () {
-        return (<div className="form-group col-md-2">
+        return (<div className={'form-group col-md-' + this.props.width}>
             <label className="control-label">IP Address</label>
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="ip" placeholder="IP Address" />
         </div>);
@@ -106,7 +143,7 @@ INPUT_TYPES.state = React.createClass({
         this.props.onChange('state', e.target.value);
     },
     render: function () {
-        return (<div className="form-group col-md-3">
+        return (<div className={'form-group col-md-' + this.props.width}>
             <label className="control-label">State</label>
                 <select onChange={this.onChange} value={this.props.value} name="state" className="form-control">
                     <option value="">any</option>
@@ -117,6 +154,22 @@ INPUT_TYPES.state = React.createClass({
                     <option value="failed">failed</option>
                     <option value="destroyed">destroyed</option>
                 </select>
+        </div>);
+    }
+});
+
+INPUT_TYPES.volume_state = React.createClass({
+    onChange: function (e) {
+        this.props.onChange('state', e.target.value);
+    },
+    render: function () {
+        return (<div className={'form-group col-md-' + this.props.width}>
+            <label className="control-label">State</label>
+            <select onChange={this.onChange} value={this.props.value} name="state" className="form-control">
+                <option value="">any</option>
+                <option value="ready">ready</option>
+                <option value="failed">failed</option>
+            </select>
         </div>);
     }
 });
@@ -138,7 +191,7 @@ INPUT_TYPES.nic_tag = React.createClass({
         });
     },
     render: function () {
-        return (<div className="form-group col-md-2">
+        return (<div className={'form-group col-md-' + this.props.width}>
             <label className="control-label">NIC TAG</label>
                 <select onChange={this.onChange} name="nic_tag" className="form-control">
                     <option value="">any</option>
@@ -176,7 +229,7 @@ INPUT_TYPES.vlan_id = React.createClass({
         });
     },
     render: function () {
-        return (<div className="form-group col-md-2">
+        return (<div className={'form-group col-md-' + this.props.width}>
             <label className="control-label">VLAN</label>
             <select onChange={this.onChange} name="vlan" className="form-control" value={this.props.value}>
                 <option value="">any</option>
@@ -197,7 +250,8 @@ var FilterForm = React.createClass({
         return {
             values: this.props.initialParams || {},
             types: this.props.types || Object.keys(INPUT_TYPES),
-            buttonTitle: this.props.buttonTitle || 'Search'
+            buttonTitle: this.props.buttonTitle || 'Search',
+            typeWidth: this.props.typeWidth || {}
         };
     },
     _onChange: function (prop, value) {
@@ -215,10 +269,13 @@ var FilterForm = React.createClass({
             if (InputType) {
                 var value = this.state.values[type] || '';
                 var data = type === 'vlan_id' ? {owner_uuid : self.state.values.owner_uuid} : null;
+                var width = this.state.typeWidth[type] || DEFAULT_WIDTH[type];
                 if (type === 'package_name') {
                     value = this.state.values['billing_id'] || '';
+                } else if (type === 'volume_state') {
+                    value = this.state.values['state'] || '';
                 }
-                return <InputType data={data} ref={type} key={type} onChange={self._onChange} value={value} />;
+                return <InputType data={data} ref={type} onChange={self._onChange} value={value} width={width} />;
             }
             return;
         }, this);

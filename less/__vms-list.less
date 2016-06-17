@@ -42,7 +42,8 @@
 }
 
 .__vms-list {
-  .vms-list-header {
+  .vms-list-header,
+  .list-header {
     .make-row(0);
     background: @state-info-bg;
     .select {
@@ -139,7 +140,7 @@
     text-transform: uppercase;
     &.stopped { background-color: @gray-light; color: #fff; }
     &.failed { background-color: @brand-danger; color: #fff; }
-    &.running { background-color: @brand-success; color: #fff; }
-    &.destroyed { background-color: @gray-dark; color: #fff; }
+    &.running, &.ready { background-color: @brand-success; color: #fff; }
+    &.destroyed, &.unknown { background-color: @gray-dark; color: #fff; }
   }
 }

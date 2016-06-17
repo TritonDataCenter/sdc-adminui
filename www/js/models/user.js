@@ -5,10 +5,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 /**
  * models/user
  */
@@ -19,7 +19,7 @@ var api = require('../request');
 
 
 var User = module.exports = Model.extend({
-    url: function() {
+    url: function () {
         if (this.get('uuid') && this.get('account')) {
             return _.str.sprintf('/api/users/%s/%s', this.get('account'), this.get('uuid'));
         }
@@ -30,54 +30,53 @@ var User = module.exports = Model.extend({
     },
     urlRoot: '/api/users',
     idAttribute: 'uuid',
-    parse: function(resp) {
+    parse: function (resp) {
         var data = Model.prototype.parse.apply(this, arguments);
         data.groups = this.parseGroups(data.memberof);
         return data;
     },
 
-    parseGroups: function(memberof) {
-        return _.map(memberof, function(dn) {
+    parseGroups: function (memberof) {
+        return _.map(memberof, function (dn) {
             var p = dn.match(/^cn=(\w+)/);
             return p[1];
         });
     },
 
-    authenticated: function() {
+    authenticated: function () {
         return window.localStorage.getItem('api-token') !== null;
     },
 
-    getToken: function() {
+    getToken: function () {
         return window.localStorage.getItem('api-token');
     },
 
-    getAdminUuid: function() {
+    getAdminUuid: function () {
         return window.localStorage.getItem('admin-uuid');
     },
 
-    role: function(r) {
+    role: function (r) {
         return this.getRoles().indexOf(r) >= 0;
     },
 
-    getRoles: function() {
+    getRoles: function () {
         var roles = window.localStorage.getItem('user-roles');
         return JSON.parse(roles);
     },
 
-    getManta: function() {
-        var m = window.localStorage.getItem('manta');
-        if (m === "true") {
-            return true;
-        } else {
-            return false;
-        }
+    getManta: function () {
+        return window.localStorage.getItem('manta') === 'true';
     },
 
-    getDatacenter: function() {
+    isVolapiEnabled: function () {
+        return window.localStorage.getItem('volapi-enabled') === 'true';
+    },
+
+    getDatacenter: function () {
         return window.localStorage.getItem('dc');
     },
 
-    authenticate: function(user, pass) {
+    authenticate: function (user, pass) {
         var self = this;
 
         if (user.length === 0 || pass.length === 0) {
@@ -90,12 +89,11 @@ var User = module.exports = Model.extend({
             password: pass
         };
 
-        var req = api.post("/api/auth");
+        var req = api.post('/api/auth');
         req.timeout(10000);
         req.send(authData);
-        req.end(function(err, res) {
+        req.end(function (err, res) {
             if (err) {
-                console.log('auth error', err);
                 if (err.timeout) {
                     self.trigger('error', 'Server Error (request timeout)');
                 }
@@ -109,7 +107,7 @@ var User = module.exports = Model.extend({
                 window.localStorage.setItem('dc', data.dc);
                 window.localStorage.setItem('admin-uuid', data.adminUuid);
                 window.localStorage.setItem('manta', data.manta);
-
+                window.localStorage.setItem('volapi-enabled', data.volapiEnabled);
                 window.localStorage.setItem('user-roles', JSON.stringify(data.roles));
                 window.localStorage.setItem('user-uuid', data.user.uuid);
                 window.localStorage.setItem('user-login', data.user.login);
@@ -117,6 +115,7 @@ var User = module.exports = Model.extend({
                 self.trigger('authenticated', {
                     user: self,
                     adminUuid: data.adminUuid,
+                    volapiEnabled: data.volapiEnabled,
                     manta: data.manta,
                     dc: data.dc
                 });
@@ -126,9 +125,9 @@ var User = module.exports = Model.extend({
         });
     },
 
-    signout: function() {
+    signout: function () {
         var self = this;
-        api.del('/api/auth').end(function(res) {
+        api.del('/api/auth').end(function (res) {
             if (res.ok) {
                 window.localStorage.removeItem('api-token');
                 window.localStorage.removeItem('user-roles');
@@ -173,7 +172,7 @@ var User = module.exports = Model.extend({
     }
 });
 
-User.currentUser = function() {
+User.currentUser = function () {
     var roles = [];
     try {
         roles = JSON.parse(window.localStorage.getItem('user-roles'));

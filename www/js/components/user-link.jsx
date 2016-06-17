@@ -18,21 +18,23 @@ var UserLink =  React.createClass({
         'userUuid': React.PropTypes.string.isRequired,
         'handleClick': React.PropTypes.func
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {
-            user: {},
-            loaded: false
+            user: this.props.user || {},
+            loaded: !!this.props.user
         };
     },
-    componentDidMount: function() {
-        var user = this.user = new User({uuid: this.props.userUuid});
-        var self = this;
-        var req = this.user.fetch();
-        req.done(function() {
-            self.setState({user: user, loaded: true});
-        });
+    componentDidMount: function () {
+        var user = this.user = this.props.user || new User({uuid: this.props.userUuid});
+        if (!this.props.user) {
+            var self = this;
+            var req = this.user.fetch();
+            req.done(function () {
+                self.setState({user: user, loaded: true});
+            });
+        }
     },
-    handleClick: function(e) {
+    handleClick: function (e) {
         if (e.metaKey || e.ctrlKey) {
             return;
         }
@@ -41,21 +43,22 @@ var UserLink =  React.createClass({
             this.props.handleClick(this.user);
         }
     },
-    render: function() {
+    render: function () {
         var userIcon = this.props.icon ? <i className="fa fa-user fa-fw"></i> : null;
 
         if (this.state.loaded) {
             var user = this.state.user.toJSON();
+            user.cn = user.cn || user.givenname + ' ' + user.sn;
+
             var company = this.props.company && user.company && user.company.length ?
                 <div className="user-link-company">
                     { this.props.icon ? <span className="fa fa-building fa-fw"></span> : null}
                     <div className="owner-company">{user.company}</div>
                 </div> : null;
 
-
             return <div className="user-link-component">
                 { userIcon }
-                <a onClick={this.handleClick} href={"/users/" + this.props.userUuid}>{user.cn}</a>
+                <a onClick={this.handleClick} href={"/users/" + user.uuid}>{user.cn}</a>
                 { company }
             </div>;
         } else {

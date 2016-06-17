@@ -33,7 +33,7 @@ var Ip = React.createClass({
                 isLoaded: true,
                 error: error || ''
             });
-        }
+        };
         if (ipParts.length === 4 && ipParts[3].length) {
             this.setState({
                 isLoaded: false
