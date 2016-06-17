@@ -1,0 +1,19 @@
+
+@import "vm";
+@import "networks";
+@import "__vms-list";
+
+.volumes-list {
+  .__vms-list;
+  td.status {width: 90px;}
+  a.delete {color: @state-danger-text; text-decoration: none; font-weight: bold; visibility: hidden; float: right;}
+  tr:hover .actions a, .actions:hover a {visibility: visible;}
+}
+
+#page-volume {
+  #page-vm;
+}
+.networks-list {
+  #page-networks > .networks-list;
+}
+
