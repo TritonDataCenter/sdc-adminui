@@ -5,30 +5,32 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 var React = require('react');
 var ErrorAlert =  React.createClass({
-    propTypes: {
-        error: React.PropTypes.object
-    },
-    render: function() {
+    render: function () {
         var error = this.props.error;
-
-        if (!error || !error.code) {
-            return <div className="error-alert alert alert-danger" style={ {display: 'none'} }></div>;
+        if (!error) {
+            return <div className="error-alert alert alert-danger" style={{display: 'none'}}></div>;
         }
+
+        var errorMessage = error.message || (error.errors ? null : error);
 
         return (<div className="error-alert alert alert-danger">
             {
-                error.message ? <div><strong>{error.message}</strong></div>: ''
+                errorMessage ? <div><strong>{errorMessage}</strong></div> : ''
             }
             {
-                error.errors && error.errors.length ? <ul>{error.errors.map(function(err) {
-                    return <li><strong>{err.field}</strong> - {err.message}</li>;
-                }) }</ul> : ''
+                error.errors && error.errors.length ? <ul>
+                    {
+                        error.errors.map(function (err) {
+                            return <li><strong>{err.field}</strong> - {err.message}</li>;
+                        })
+                    }
+                </ul> : ''
             }
         </div>);
     }

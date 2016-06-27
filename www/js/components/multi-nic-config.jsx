@@ -83,7 +83,7 @@ var MultipleNicConfigComponent = React.createClass({
                 selectedIps[currentNic.ip] = true;
             }
             result[uuid] = currentNic;
-        }, this) 
+        }, this);
         this.setState({nics: result, selectedIps: selectedIps}, function () {
             if (this.props.onChange) {
                 this.props.onChange();
@@ -120,7 +120,7 @@ var MultipleNicConfigComponent = React.createClass({
             var nic = this.state.nics[uuid];
             var filter = function (network) {
                 return network.uuid === nic.network_uuid;
-            }
+            };
             if (networks.some(filter) || networkPools.some(filter)) {
                 nics[uuid] = nic;
             }

@@ -29,12 +29,14 @@ var Components = {
     'alarms': require('./components/pages/alarms'),
     'vm': require('./components/pages/vm'),
     'vms': require('./components/pages/vms'),
+    'volumes': require('./components/pages/volumes'),
+    'volume': require('./components/pages/volumes/volume'),
     'settings': require('./components/pages/settings'),
     'user': require('./components/pages/user'),
     'images': require('./components/pages/images'),
     'manta/agents': require('./components/pages/manta/agents'),
     'dashboard': require('./components/pages/dashboard'),
-    'vlan-form': require('./components/pages/networking/fabric-vlan-form.jsx')
+    'vlan-form': require('./components/pages/networking/fabric-vlan-form')
 };
 
 Object.keys(Components).forEach(function (k) {
@@ -85,6 +87,8 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'vms': 'showVms',
         'vms/:uuid(/)': 'showVm',
         'vms2/:uuid(/)': 'showVm2',
+        'volumes': 'showVolumes',
+        'volumes/:uuid(/)': 'showVolume',
         'users/:uuid(/)': 'showUser',
         'users/:uuid/:tab(/)': 'showUser',
         'users/:account/:uuid/:tab(/)': 'showUser',
@@ -132,6 +136,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
 
         this.state.set({
             manta: this.user.getManta(),
+            volapiEnabled: this.user.isVolapiEnabled(),
             datacenter: this.user.getDatacenter()
         });
     },
@@ -145,7 +150,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                 $.ajax({
                     type: 'GET',
                     timeout: 15000,
-                    url: '/api/auth',
+                    url: '/api/auth'
                 }).fail(function (xhr, t, m) {
                     reject();
                     self.showSignin();
@@ -387,6 +392,21 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         }
         this.authenticated().then(function () {
             this.presentComponent('vms', args ? {params: args} : {});
+        }.bind(this));
+    },
+
+    showVolumes: function (args) {
+        if (typeof args === 'string') {
+            args = this.parseURI(args);
+        }
+        this.authenticated().then(function () {
+            this.presentComponent('volumes', args ? {params: args} : {});
+        }.bind(this));
+    },
+
+    showVolume: function (uuid) {
+        this.authenticated().then(function () {
+            this.presentComponent('volume', uuid ? {uuid: uuid} : {});
         }.bind(this));
     },
 

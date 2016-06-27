@@ -121,6 +121,22 @@ INPUT_TYPES.state = React.createClass({
     }
 });
 
+INPUT_TYPES.volume_state = React.createClass({
+    onChange: function (e) {
+        this.props.onChange('state', e.target.value);
+    },
+    render: function () {
+        return (<div className="form-group col-md-3">
+            <label className="control-label">State</label>
+            <select onChange={this.onChange} value={this.props.value} name="state" className="form-control">
+                <option value="">any</option>
+                <option value="ready">ready</option>
+                <option value="failed">failed</option>
+            </select>
+        </div>);
+    }
+});
+
 INPUT_TYPES.nic_tag = React.createClass({
     getInitialState: function () {
         return {
@@ -217,6 +233,8 @@ var FilterForm = React.createClass({
                 var data = type === 'vlan_id' ? {owner_uuid : self.state.values.owner_uuid} : null;
                 if (type === 'package_name') {
                     value = this.state.values['billing_id'] || '';
+                } else if (type === 'volume_state') {
+                    value = this.state.values['state'] || '';
                 }
                 return <InputType data={data} ref={type} key={type} onChange={self._onChange} value={value} />;
             }
