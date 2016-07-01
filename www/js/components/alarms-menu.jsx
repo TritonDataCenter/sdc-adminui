@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
 /**
@@ -47,6 +47,16 @@ var AlarmsMenu = React.createClass({
     componentWillUnmount: function() {
         adminui.vent.off('alarms:changed', this.fetchAlarms);
         clearInterval(this._interval);
+    },
+    
+    componentDidMount: function () {
+        this.alarmsMenuContainer = $('div.alarms-menu-container');
+        this.alarmsMenuContainer.tooltip({
+            title: 'Most recent 500 alarms',
+            placement: 'bottom',
+            container: 'body',
+            trigger: 'hover'
+        }).tooltip('disable');
     },
 
     fetchProbeGroup: function(id) {
@@ -111,6 +121,8 @@ var AlarmsMenu = React.createClass({
                     message: 'AdminUI: Connected.'
                 });
             }
+            var state = alarms.length >= 500 ? 'enable' : 'disable';
+            this.alarmsMenuContainer.tooltip(state);
             this.setState({alarms: alarms, error: null});
             alarms.map(function (alarm) {
                 if (alarm.probe) {
@@ -140,7 +152,7 @@ var AlarmsMenu = React.createClass({
                     time.setSeconds(time.getSeconds() + 4);
                 }
                 return time;
-            }
+            };
 
             var timeStamp = getTime('timeStamp');
             if (timeStamp && timeStamp > new Date()) {
