@@ -5,41 +5,52 @@
 -->
 
 <!--
-    Copyright (c) 2014, Joyent, Inc.
+    Copyright (c) 2016, Joyent, Inc.
 -->
 
 # sdc-adminui
 
-This repository is part of the Joyent SmartDataCenter project (SDC).  For
-contribution guidelines, issues, and general documentation, visit the main
-[SDC](http://github.com/joyent/sdc) project page.
+This repository is part of the Joyent Triton project (formerly known as SDC).
+For contribution guidelines, issues, and general documentation, visit the main
+[Triton](http://github.com/joyent/triton) project page.
 
-Adminui is a the SDC Operations Portal -- web frontend to SDC for managing many
-aspects of an SDC installation.
-
-Most recent docs: <https://docs.joyent.com/sdc7/operations-portal-walkthrough>
-(Note that screenshots can get out of date.)
+AdminUI is the Operations Portal for Triton -- the web frontend that provides an
+interface to the internal APIs. There is some functionality of Triton that is
+not available in AdminUI and has to be executed through the appropriate API.
 
 
 # Development
 
-You can build adminui locally on a Mac (or SmartOS) and run it against
-SDC services running in
-[CoaL](https://github.com/joyent/sdc/blob/master/docs/glossary.md#coal):
+You can build sdc-adminui locally on a Mac (or SmartOS) and run it against
+services running in
+[CoaL](https://github.com/joyent/triton/blob/master/docs/glossary.md#coal):
 
+- first-time setup:
+    ```
     git clone git@github.com:joyent/sdc-adminui.git
-    cd adminui
+    cd sdc-adminui
 
     make dev
 
     cp etc/config.json.in etc/config.json
     # Modify etc/config.json if you don't use the default coal answers file
 
-    # run adminui with, devrun automatically restarts node process and
-    # incrementally re-builds assets
-    make devrun
+    # Generate key file
+    openssl req -x509 -nodes -subj '/CN=*' -newkey rsa:4096 -sha256 -days 365 \
+      -keyout etc/ssl/default.pem -out etc/ssl/default.pem
+    ```
 
-    open https://localhost:4443
+- building:
+    ```
+    make check
+
+    make devrun
+    # devrun automatically restarts node process and incrementally re-builds assets
+    ```
+
+- testing:
+
+    Open https://localhost:4443 on the browser to access your AdminUI.
 
 
 # License
