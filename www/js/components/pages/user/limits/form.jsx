@@ -233,7 +233,7 @@ var LimitsForm = React.createClass({
 
                     <div className="form-group">
                         <div className="input-group col-sm-offset-4 col-sm-6">
-                            <button disabled={this.isValid() ? '' : 'disabled'} onClick={this.handleSave} className="btn btn-primary" type="submit">Save Limit</button>
+                            <button disabled={(this.state.datacenter && this.isValid()) ? '' : 'disabled'} onClick={this.handleSave} className="btn btn-primary" type="submit">Save Limit</button>
                             <button type="button" onClick={this.props.handleCancel} className="btn btn-default">Cancel</button>
                         </div>
                     </div>
