@@ -22,7 +22,7 @@ INPUT_TYPES.uuid = React.createClass({
 });
 
 INPUT_TYPES.alias = React.createClass({
-    onChange: function(e) {
+    onChange: function (e) {
         this.props.onChange('alias', e.target.value);
     },
     render: function () {
@@ -61,7 +61,6 @@ INPUT_TYPES.name = React.createClass({
     }
 });
 
-
 INPUT_TYPES.ip = React.createClass({
     onChange: function (e) {
         this.props.onChange('ip', e.target.value);
@@ -70,6 +69,19 @@ INPUT_TYPES.ip = React.createClass({
         return (<div className="form-group col-md-2">
             <label className="control-label">IP Address</label>
                 <input ref="input" value={this.props.value} onChange={this.onChange} className="form-control" type="text" name="ip" placeholder="IP Address" />
+        </div>);
+    }
+});
+
+INPUT_TYPES.mac = React.createClass({
+    onChange: function (e) {
+        this.props.onChange('mac', e.target.value);
+    },
+    render: function () {
+        return (<div className="form-group col-md-2">
+            <label className="control-label">MAC Address</label>
+            <input ref="input" value={this.props.value} onChange={this.onChange}
+                   className="form-control" type="text" name="mac" placeholder="MAC Address" />
         </div>);
     }
 });
@@ -94,7 +106,7 @@ INPUT_TYPES.owner_uuid = React.createClass({
         this.typeahead.remove();
     },
     render: function () {
-        return (<div className="form-group col-md-4">
+        return (<div className="form-group col-md-3">
             <label className="control-label">Owner UUID</label>
                 <input ref="input" className="form-control" type="text" name="owner_uuid" placeholder="Search by login or uuid" />
         </div>);
@@ -106,7 +118,7 @@ INPUT_TYPES.state = React.createClass({
         this.props.onChange('state', e.target.value);
     },
     render: function () {
-        return (<div className="form-group col-md-3">
+        return (<div className="form-group col-md-2">
             <label className="control-label">State</label>
                 <select onChange={this.onChange} value={this.props.value} name="state" className="form-control">
                     <option value="">any</option>

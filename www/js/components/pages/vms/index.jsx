@@ -28,7 +28,7 @@ var REQUEST_TIMEOUT = 120 * 1000;
 var VmsPage = React.createClass({
     getInitialState: function () {
         return {
-            filterTypes: ['uuid', 'alias', 'package_name', 'ip', 'owner_uuid', 'state']
+            filterTypes: ['uuid', 'alias', 'package_name', 'ip', 'mac', 'owner_uuid', 'state']
         };
     },
     statics: {
