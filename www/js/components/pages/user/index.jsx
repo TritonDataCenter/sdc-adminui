@@ -94,7 +94,6 @@ var PageUser = React.createClass({
             });
             this.fetchUser();
         }
-        console.log('componentWillReceiveProps', props);
     },
 
     componentDidMount: function () {

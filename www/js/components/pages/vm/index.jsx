@@ -185,8 +185,7 @@ var VMPage = React.createClass({
                                         <span className="value vm-alias">{vm.alias || vm.uuid}</span>
                                     </span>
 
-                                    <span className="vm-uuid selectable">{vm.uuid}</span>
-                                </td>
+                                    <span className="vm-uuid selectable">{vm.uuid}</span></td>
                             </tr>
 
                             <tr>
