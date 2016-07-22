@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
 var React = require('react');
@@ -20,25 +20,10 @@ var ServerDiskOverview = React.createClass({
     },
     render: function() {
         var server = this.props.server.toJSON();
-        if (!server.vms) {
-            return null;
-        }
 
-        var total = server.disk_pool_size_bytes;
-
-        var usedInGB = 0;
-
-        Object.keys(server.vms).forEach(function(uuid) {
-            var vm = server.vms[uuid];
-            usedInGB += vm.quota;
-        });
-
-        var usedBytes = usedInGB * 1024 * 1024 * 1024;
-
-        var unusedBytes = total - usedBytes;
-        var used = utils.getReadableSize(usedBytes);
-        var unused = utils.getReadableSize(this.props.server.getProvisionableValue());
-        var diskPoolSize = utils.getReadableSize(server.disk_pool_size_bytes);
+        var provisionable = utils.getReadableSize(server.unreserved_disk * 1048576);
+        var provisioned = utils.getReadableSize(server.disk_pool_size_bytes - (server.unreserved_disk * 1048576));
+        var total = utils.getReadableSize(server.disk_pool_size_bytes);
 
         return <div className="disk-overview">
             <div className="row">
@@ -51,16 +36,16 @@ var ServerDiskOverview = React.createClass({
                     <ServerDiskUtilizationCircle diameter="120px" inner="38" server={this.props.server} />
                 </div>
                 <div className="provisionable-disk">
-                    <div className="value">{unused.value + ' ' + unused.measure}</div>
+                    <div className="value">{provisionable.value + ' ' + provisionable.measure}</div>
                     <div className="title">Provisionable</div>
                 </div>
                 <div className="provisioned-disk">
-                    <div className="value">{used.value + ' ' + used.measure}</div>
+                    <div className="value">{provisioned.value + ' ' + provisioned.measure}</div>
                     <div className="title">Provisioned</div>
                 </div>
 
                 <div className="total-disk">
-                    <div className="value">{diskPoolSize.value + ' ' + diskPoolSize.measure}</div>
+                    <div className="value">{total.value + ' ' + total.measure}</div>
                     <div className="title">Total</div>
                 </div>
             </div>

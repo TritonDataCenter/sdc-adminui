@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
 .server-disk-utilization-circle {
@@ -16,10 +16,10 @@
     height: 100%;
     .layer.provisionable text,
     .layer.reserved text,
-    .layer.used text { display: none; }
+    .layer.provisioned text { display: none; }
 
     .layer.provisionable path { fill: #00d295; }
-    .layer.used path { fill: #ec7676; }
+    .layer.provisioned path { fill: #ec7676; }
     .layer.reserved path { fill: #aaa; }
   }
   & > .percent {

@@ -80,16 +80,6 @@ var Server = Model.extend({
             cb();
         });
     },
-    getProvisionableValue: function () {
-        var attributes = this.attributes;
-        return attributes.disk_pool_size_bytes -
-            attributes.disk_kvm_zvol_used_bytes -
-            attributes.disk_kvm_quota_used_bytes -
-            attributes.disk_cores_quota_used_bytes -
-            attributes.disk_zone_quota_used_bytes -
-            attributes.disk_system_used_bytes -
-            attributes.disk_installed_images_used_bytes;
-    }
 });
 
 module.exports = Server;
