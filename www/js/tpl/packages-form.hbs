@@ -34,7 +34,7 @@
       <div class="form-group">
         <p class="help-block col-md-offset-1">
           Name and version of the package is used to uniquely identify a package. Once a package with a specific version has been created, the properties making up the package cannot be modified. A new version must be created with the new properties.
-          </p>
+        </p>
       </div>
 
       <div class="form-group">
@@ -60,48 +60,49 @@
         </div>
       </div>
 
-        <div class="form-group">
-            <label class="control-label col-sm-4" for="package-group">Group</label>
-            <div class="col-sm-5">
-                <input type="text"
-                name="group"
-                class="form-control"
-                value="{{group}}"
-                id="package-group"
-                placeholder="Package Group">
-                <p class="help-block">For similar packages grouping</p>
-            </div>
+      <div class="form-group">
+        <label class="control-label col-sm-4" for="package-group">Group</label>
+        <div class="col-sm-6">
+          <input type="text"
+              name="group"
+              class="form-control"
+              value="{{group}}"
+              id="package-group"
+              placeholder="Package Group">
+          <p class="help-block">For similar packages grouping</p>
         </div>
+      </div>
+
       {{#unless changeOwnerMode}}
       <div class="form-group">
         <label class="control-label col-sm-4" for="package-version">Version</label>
-
         <div class="controls col-sm-3">
+
           {{#if newVersionMode}}
           <p class="original-version">
             Original Version {{version}} <br/>
             Please specify a new version.
           </p>
           {{/if}}
-          <input type="text"
+            <input type="text"
           {{#unless newVersionMode}}
-          value="{{version}}"
+            value="{{version}}"
           {{/unless}}
-          id="package-version"
-          class="form-control"
-          name="version" placeholder="Version">
+            id="package-version"
+            class="form-control"
+            name="version" placeholder="Version">
         </div>
       </div>
       {{/unless}}
 
-    <div class="form-group package-owners">
+      <div class="form-group package-owners">
         <label class="control-label col-sm-4" for="package-owner">Owners</label>
         <div class="col-sm-6">
             {{#unless owner_uuids.length}}
-              <input type="text"
-              class="form-control input-xl package-owner"
-              name="owner_uuids[]"
-              placeholder="Search by login, email, uuid">
+            <input type="text"
+                 class="form-control input-xl package-owner"
+                 name="owner_uuids[]"
+                 placeholder="Search by login, email, uuid">
             {{else}}
 
             {{#each owner_uuids}}
@@ -117,10 +118,9 @@
         <div class="col-sm-6 col-sm-offset-4">
             <a class="add-owner-entry"><i class="fa fa-plus"></i> Add Another Owner</a>
         </div>
-    </div>
+      </div>
 
       {{#unless changeOwnerMode}}
-
       <legend>CPU &amp; Memory</legend>
       <div class="form-group">
         <label class="control-label col-sm-4" for="package-memory">Memory</label>
@@ -131,7 +131,7 @@
                     value="{{max_physical_memory}}" placeholder="memory">
                 <span class="input-group-addon">MB</span>
             </div>
-        </div>
+         </div>
       </div>
 
       <div class="form-group">
@@ -146,35 +146,43 @@
       </div>
 
       <div class="form-group">
-        <label class="control-label col-sm-4" for="package-vcpus">Number of CPUs</label>
+        <label class="control-label col-sm-4" for="package-vcpus">Number of vCPUs</label>
         <div class="col-sm-5">
-            <div class="input-group">
-                <input type="number"
-                value="{{vcpus}}"
-                class="form-control"
-                id="package-vcpus"
-                name="vcpus" placeholder="cores">
-                <span class="input-group-addon">cores</span>
-            </div>
-        </div>
-    </div>
-
-
-      <div class="form-group">
-        <label class="control-label col-sm-4" for="package-cap-cpu">CPU Cap</label>
-        <div class="col-sm-6">
           <input type="number"
-              value="{{cpu_cap}}"
+              value="{{vcpus}}"
               class="form-control"
-              id="package-cpu-cap"
-              name="cpu_cap"
-              min="20" max="10000" placeholder="cpu cap">
-          <p class="help-block">Min 20. This is = to % of CPU. 400% = 4 CPUs</p>
+              id="package-vcpus"
+              name="vcpus" placeholder="cpus">
+          <p class="help-block">Applies to KVMs only.
+            <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+              title="Number of virtual CPUs presented to the guest OS. Required when creating a KVM.">
+              What is this?</a>
+          </p>
         </div>
       </div>
 
       <div class="form-group">
-        <label class="control-label col-sm-4" for="package-vcpus">Max Lightweight Processes</label>
+        <label class="control-label col-sm-4" for="package-cap-cpu">CPU Cap</label>
+        <div class="col-sm-5">
+          <div class="input-group">
+            <input type="number"
+                value="{{cpu_cap}}"
+                class="form-control"
+                id="package-cpu-cap"
+                name="cpu_cap"
+                min="20" max="10000" placeholder="cpu cap">
+            <span class="input-group-addon">%</span>
+          </div>
+          <p class="help-block">Minimum: 20%
+            <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+              title="Upper bound for the computational time the instance can use. Applies to all instance types. For example, 200% would give the instance up to 2 vCPUs worth of computational time. To account for CPU time taken by system tasks, set this higher than the number of vCPUs the instance requires.">
+              What is this?</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-sm-4" for="package-vcpus">Max Threads</label>
         <div class="col-sm-5">
           <input type="number"
               value="{{max_lwps}}"
@@ -184,58 +192,57 @@
       </div>
 
       <legend>Disk</legend>
-
         <div class="form-group">
-            <label class="control-label col-sm-4" for="package-quota">Disk Quota</label>
+          <label class="control-label col-sm-4" for="package-quota">Disk Quota</label>
             <div class="col-sm-5">
                 <div class="input-group">
-                    <input type="number"
-                    value="{{quota}}"
-                    class="form-control" name="quota" id="package-quota"
-                    min="1"
-                    placeholder="disk quota">
-                    <span class="input-group-addon">MB</span>
+                  <input type="number"
+                      value="{{quota}}"
+                      class="form-control" name="quota" id="package-quota"
+                      min="1"
+                      placeholder="disk quota">
+                  <span class="input-group-addon">MB</span>
                 </div>
-                <p class="help-block">must be a multiple of 1024</p>
+                <p class="help-block">Must be a multiple of 1024</p>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="control-label col-sm-4" for="package-io-prioirty">IO Priority</label>
+          <label class="control-label col-sm-4" for="package-io-prioirty">IO Priority</label>
             <div class="col-sm-5">
-                <input type="number"
-                name="zfs_io_priority"
-                class="form-control"
-                value="{{zfs_io_priority}}"
-                id="package-io-priority"
-                min="1"
-                max="16383"
-                placeholder="Disk IO Priority">
-                <p class="help-block">1 for minimum, 16383 for maximum</p>
+              <input type="number"
+                  name="zfs_io_priority"
+                  class="form-control"
+                  value="{{zfs_io_priority}}"
+                  id="package-io-priority"
+                  min="1"
+                  max="16383"
+                  placeholder="Disk IO Priority">
+              <p class="help-block">1 for minimum, 16383 for maximum</p>
             </div>
         </div>
 
-        {{/unless}}
+      {{/unless}}
 
       <div class="form-group">
         <div class="col-sm-offset-4 col-sm-8">
-            <div class="checkbox">
-                <label><input type="checkbox" {{#if active}}checked{{/if}} name="active"> Activate Package</label>
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox" {{#if default}}checked{{/if}} name="default"> Make this the Default Package</label>
-            </div>
+          <div class="checkbox">
+            <label><input type="checkbox" {{#if active}}checked{{/if}} name="active"> Activate Package</label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" {{#if default}}checked{{/if}} name="default"> Make this the Default Package</label>
+          </div>
         </div>
       </div>
 
-    <div class="form-group">
+      <div class="form-group">
         <div class="col-sm-offset-4 col-sm-8">
-            <button type="submit" class="btn btn-primary">
-              {{#if uuid}} Save Package {{else}} Create Package {{/if}}
-            </button>
-            <button type="cancel" class="btn btn-default">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            {{#if uuid}} Save Package {{else}} Create Package {{/if}}
+          </button>
+          <button type="cancel" class="btn btn-default">Cancel</button>
         </div>
-    </div>
+      </div>
     </form>
   </div>
 </div>

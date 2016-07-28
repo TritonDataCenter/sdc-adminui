@@ -150,6 +150,7 @@ var PackageForm = Backbone.Marionette.ItemView.extend({
         } else {
             this.$('input:first').focus();
         }
+        $('[data-toggle="tooltip"]').tooltip();
     }
 });
 
