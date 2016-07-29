@@ -172,7 +172,7 @@ var LimitsForm = React.createClass({
                     <div className="form-group">
                         <label className="col-md-4 control-label">Datacenter</label>
                         <div className="col-md-7">
-                            <Chosen className="form-control" placeholder="Select a Datacenter" value={this.state.datacenter} onChange={this.handleChangeDatacenter}>
+                            <Chosen className="form-control" placeholder="Select a Datacenter" value={this.state.datacenter} onChange={this.handleChangeDatacenter} disabled={this.props.initialLimit}>
                             <option value=""></option>
                             {
                                 this.state.datacenters.map(function (dc) {
@@ -233,7 +233,7 @@ var LimitsForm = React.createClass({
 
                     <div className="form-group">
                         <div className="input-group col-sm-offset-4 col-sm-6">
-                            <button disabled={(this.state.datacenter && this.isValid()) ? '' : 'disabled'} onClick={this.handleSave} className="btn btn-primary" type="submit">Save Limit</button>
+                            <button disabled={!(this.state.datacenter && this.isValid())} onClick={this.handleSave} className="btn btn-primary" type="submit">Save Limit</button>
                             <button type="button" onClick={this.props.handleCancel} className="btn btn-default">Cancel</button>
                         </div>
                     </div>

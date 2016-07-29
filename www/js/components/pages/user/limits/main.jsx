@@ -90,7 +90,7 @@ var ProvisioningLimits = React.createClass({
                 <h3>Provisioning Limits
                     {adminui.user.role('operators') &&
                         <div className="actions">
-                            <button onClick={this.showNewLimitForm} className="btn btn-sm btn-info"><i className="fa fa-plus"></i> New Limit</button>
+                            <button onClick={this.showNewLimitForm} className="btn btn-sm btn-info" disabled={this.state.form}><i className="fa fa-plus"></i> New Limit</button>
                         </div>}
                 </h3>
                 <ProvisioningLimitsList
