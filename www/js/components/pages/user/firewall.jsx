@@ -27,7 +27,6 @@ var UserFirewall = React.createClass({
     },
     componentWillMount: function() {
         this.fwrulesList = new FWRulesList({
-            app: adminui,
             user: this.props.user
         });
 

@@ -66,7 +66,6 @@ var VMPage = React.createClass({
     },
     componentDidMount: function () {
         this.fwrulesList = new FWRulesList({
-            app: this.props.adminui,
             vm: new VMModel({uuid: this.props.vmUuid})
         });
         this.fwrulesList.on('itemview:edit:rule', function (iv) {
