@@ -5,13 +5,15 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
 var $ = require('jquery');
 var FWRules = require('../../../models/fwrules');
 var _ = require('underscore');
+var adminui = require('../../../adminui');
+var FWRuleWarning = require('./rule-warning');
 
 var FWRulesListItem = Backbone.Marionette.ItemView.extend({
     tagName: 'li',
@@ -22,20 +24,40 @@ var FWRulesListItem = Backbone.Marionette.ItemView.extend({
         'click .disable-rule': 'onDisableRule',
         'click .delete-rule': 'onDeleteRule'
     },
-    onEnableRule: function() {
-        this.trigger('enable:rule');
+    showRuleActionWarning: function (action) {
+        var self = this;
+        var isGlobal = this.model.attributes.global;
+        var isDeleteAction = action === 'delete';
+
+        function openWarning(doubleVerification) {
+            new FWRuleWarning({
+                action: action,
+                isGlobal: isGlobal,
+                doubleVerification: doubleVerification,
+                onSubmit: function () {
+                    doubleVerification ? openWarning(false) : self.trigger(action + ':rule');
+                }
+            }).render();
+        }
+        if (isDeleteAction || isGlobal) {
+            openWarning(isDeleteAction && isGlobal);
+            return;
+        }
+        this.trigger(action + ':rule');
     },
-    onDisableRule: function() {
-        this.trigger('disable:rule');
+    onEnableRule: function () {
+        this.showRuleActionWarning('enable');
     },
-    onDeleteRule: function() {
-        this.trigger('delete:rule');
+    onDisableRule: function () {
+        this.showRuleActionWarning('disable');
     },
-    onEditRule: function() {
+    onDeleteRule: function () {
+        this.showRuleActionWarning('delete');
+    },
+    onEditRule: function () {
         this.trigger('edit:rule');
     },
-
-    serializeData: function() {
+    serializeData: function () {
         var rule = this.model.tokenizeRule();
         var vars = this.model.toJSON();
 
@@ -55,76 +77,67 @@ var FWRulesList = require('../../../views/collection').extend({
     attributes: {
         'class': 'list-unstyled fwrules-list'
     },
-
     itemView: FWRulesListItem,
-
-    itemViewOptions: function() {
+    itemViewOptions: function () {
         return {
             emptyViewModel: this.collection
         };
     },
-
     emptyView: require('../../../views/empty').extend({
         loadingMessage: 'Loading Firewall Rules...',
         emptyMessage: 'No Firewall Rules'
     }),
-
     /**
      * Constructor
      * @param  {Object} options.vm VM object to scope fw rules
      * @param  {string} options.user User UUID to scope fw rules
      */
-    initialize: function(options) {
-        var app = this.app = options.app;
+    initialize: function (options) {
         if (options.vm) {
-            this.collection = new FWRules(null, {params: { vm_uuid: options.vm.get('uuid') }});
+            this.collection = new FWRules(null, {params: {vm_uuid: options.vm.get('uuid')}});
         } else if (options.user) {
-            this.collection = new FWRules(null, {params: { owner_uuid: options.user }});
+            this.collection = new FWRules(null, {params: {owner_uuid: options.user}});
         } else {
             this.collection = new FWRules();
         }
 
-        this.on('itemview:disable:rule', function(iv) {
-            iv.model.on('sync', function() {
-                app.vent.trigger('notification', {
-                    level: 'success',
-                    message: "Firewall rule disabled successfully."
-                });
-                this.collection.fetch({reset: true});
-            }, this);
-            iv.model.set({enabled: false});
-            iv.model.save();
-        }, this);
-
-        this.on('itemview:enable:rule', function(iv) {
-            iv.model.on('sync', function() {
-                app.vent.trigger('notification', {
-                    level: 'success',
-                    message: "Firewall rule enabled successfully."
-                });
-                this.collection.fetch({reset: true});
-            }, this);
-            iv.model.set({enabled: true});
-            iv.model.save();
-        }, this);
-
-        var self = this;
-        this.on('itemview:delete:rule', function(iv) {
-            $.delete_(iv.model.url(), function(data) {
-                app.vent.trigger('notification', {
-                    level: 'success',
-                    message: "Firewall rule deleted successfully."
-                });
-                self.collection.fetch({reset: true});
-            });
-        }, this);
+        this.on('itemview:disable:rule', this.actionHandler('disable'), this);
+        this.on('itemview:enable:rule', this.actionHandler('enable'), this);
+        this.on('itemview:delete:rule', this.actionHandler('delete'), this);
     },
+    actionHandler: function (action) {
+        var self = this;
 
-    refresh: function() {
+        var callback = function () {
+            adminui.vent.trigger('notification', {
+                level: 'success',
+                message: 'Firewall rule ' + action + 'd successfully.'
+            });
+            self.collection.fetch({reset: true});
+        };
+
+        return function (rule) {
+            rule.model.on('error', function (model, res) {
+                adminui.vent.trigger('notification', {
+                    level: 'error',
+                    message: 'Failed to ' + action + ' rule: ' + res.statusText
+                });
+            }, this);
+            
+            if (action === 'delete') {
+                $.delete_(rule.model.url(), callback);
+                return;
+            }
+            rule.model.on('sync', callback, this);
+            rule.model.set({enabled: action === 'enable'});
+            rule.model.save();
+        }
+    },
+    refresh: function () {
         this.collection.fetch({reset: true});
     },
 
-    onShow: function() {
+    onShow: function () {
         this.collection.fetch();
     }
 });
