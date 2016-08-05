@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
 var Backbone = require('backbone');
@@ -14,6 +14,7 @@ var adminui = require('../../../adminui');
 
 var sprintf = _.str.sprintf;
 var FWRule = require('../../../models/fwrule');
+var FWRuleWarning = require('./rule-warning');
 
 var FWRulesForm = Backbone.Marionette.ItemView.extend({
     attributes: {
@@ -23,7 +24,8 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
     events: {
         'submit form': 'onSubmit',
         'click button[type=submit]': 'onSubmit',
-        'click button.cancel': 'onDismiss'
+        'click button.cancel': 'onDismiss',
+        'mousedown div.checkbox.enabled': 'onRuleWarning'
     },
 
     modelEvents: {
@@ -33,7 +35,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
 
     template: require('./fwrules-form.hbs'),
 
-    initialize: function(options) {
+    initialize: function (options) {
         if (!options.model) {
             this.model = new FWRule();
         }
@@ -51,7 +53,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
         }
     },
 
-    onRender: function() {
+    onRender: function () {
         var data = this.model.toJSON();
         _.extend(data, this.model.tokenizeRule());
         Backbone.Syphon.deserialize(this, data);
@@ -60,7 +62,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
             node.hide();
         }
     },
-    onError: function(model, xhr) {
+    onError: function (model, xhr) {
         var errors = xhr.responseData.errors;
         if (xhr.responseData.errors) {
             var messages = _.pluck(errors, 'message');
@@ -68,25 +70,38 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
         }
     },
 
-    onShow: function() {
+    onShow: function () {
         var $el = this.$el;
-        $el.hide().slideDown(200, function() {
+        $el.hide().slideDown(200, function () {
             $el.find('input:first').focus();
         });
     },
 
-    onDismiss: function() {
+    onDismiss: function () {
         this.trigger('close');
     },
 
-    close: function() {
+    onRuleWarning: function (event) {
+        if (this.model.attributes.global) {
+            var action = !event.target.control.checked ? 'enable' : 'disable';
+            new FWRuleWarning({
+                action: action,
+                isGlobal: true,
+                onSubmit: function () {
+                    event.target.control.checked = !event.target.control.checked;
+                }
+            }).render();
+        }
+    },
+
+    close: function () {
         var self = this;
-        this.$el.slideUp(200, function() {
+        this.$el.slideUp(200, function () {
             Backbone.Marionette.ItemView.prototype.close.call(self);
         });
     },
 
-    onSync: function(model, resp, options) {
+    onSync: function () {
         adminui.vent.trigger('notification', {
             level: 'success',
             message: "Firewall rule saved successfully."
@@ -96,7 +111,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
         this.trigger('close');
     },
 
-    onSubmit: function(e) {
+    onSubmit: function (e) {
         e.preventDefault();
 
         var data = Backbone.Syphon.serialize(this);

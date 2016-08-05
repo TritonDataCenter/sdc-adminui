@@ -1,0 +1,32 @@
+<!--
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
+<!--
+    Copyright (c) 2016, Joyent, Inc.
+-->
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Warning: {{titleAction}} firewall rule</h3>
+        </div>
+        <div class="modal-body">
+            {{#if message}}
+                <p class="alert alert-warning">{{message}}</p>
+            {{else}}
+                <p class="alert alert-warning">
+                    You are attempting to {{action}} a Global firewall rule.
+                    This action will immediately affect ALL VM's with firewall enabled in this data center.
+                    Are you sure you want to do this?
+                </p>
+            {{/if}}
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal">No</button>
+            <button class="btn btn-danger" data-dismiss="modal" type="submit">Yes</button>
+        </div>
+    </div>
+</div>
