@@ -10,9 +10,10 @@
 
 # sdc-adminui
 
-This repository is part of the Joyent Triton project (formerly known as SDC).
-For contribution guidelines, issues, and general documentation, visit the main
-[Triton](http://github.com/joyent/triton) project page.
+This repository is part of the Joyent Triton project. See the [contribution
+guidelines](https://github.com/joyent/triton/blob/master/CONTRIBUTING.md) --
+*Triton does not use GitHub PRs* -- and general documentation at the main
+[Triton project](https://github.com/joyent/triton) page.
 
 AdminUI is the Operations Portal for Triton -- the web frontend that provides an
 interface to the internal APIs. There is some functionality of Triton that is
