@@ -20,9 +20,23 @@ var ServerDiskOverview = React.createClass({
     },
     render: function() {
         var server = this.props.server.toJSON();
+        if (!server.vms) {
+            return null;
+        }
 
-        var provisionable = utils.getReadableSize(server.unreserved_disk * 1048576);
-        var provisioned = utils.getReadableSize(server.disk_pool_size_bytes - (server.unreserved_disk * 1048576));
+        var provisioned = server.disk_pool_size_bytes - (server.unreserved_disk * 1048576);
+        var provisionable = server.unreserved_disk * 1048576;
+        var total = server.disk_pool_size_bytes;
+        
+        if (provisioned < 0 || !provisioned) { provisioned = 0; }
+        if (provisionable < 0 || !provisionable) {
+            if (!provisionable && server.disk_pool_size_bytes) { provisionable = server.disk_pool_size_bytes; }
+            else { provisionable = 0; }
+        }
+        if (total < 0 || !provisionable) { total = 0; }
+
+        var provisioned = utils.getReadableSize(provisioned);
+        var provisionable = utils.getReadableSize(provisionable);
         var total = utils.getReadableSize(server.disk_pool_size_bytes);
 
         return <div className="disk-overview">

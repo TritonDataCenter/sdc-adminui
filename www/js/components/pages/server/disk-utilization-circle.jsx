@@ -31,8 +31,11 @@ var ServerMemoryUtilizationCircle = React.createClass({
         var provisioned = server.disk_pool_size_bytes - (server.unreserved_disk * 1048576);
         var provisionable = server.unreserved_disk * 1048576;
 
-        if (provisioned < 0) { provisioned = 0; }
-        if (provisionable < 0) { provisionable = 0; }
+        if (provisioned < 0 || !provisioned) { provisioned = 0; }
+        if (provisionable < 0 || !provisionable) {
+            if (!provisionable && server.disk_pool_size_bytes) { provisionable = server.disk_pool_size_bytes; }
+            else { provisionable = 0; }
+        }
 
         var pieData = [
             {label: 'Provisioned', value: provisioned },
@@ -72,8 +75,10 @@ var ServerMemoryUtilizationCircle = React.createClass({
         var provisioned = server.disk_pool_size_bytes - (server.unreserved_disk * 1048576);
         var total = server.disk_pool_size_bytes;
 
-        var util_percent = Math.round(provisioned / total * 100);
-        if (util_percent < 0) { util_percent = 0; }
+        if (provisioned < 0 || !provisioned) { provisioned = 0; }
+        if (total < 0 || !server.unreserved_disk) { total = 0; } 
+
+        var util_percent = (provisioned && total > 0) ? Math.round(provisioned / total * 100) : 0;
 
         var pctSize, labelSize;
         if (diameter > 100) {
