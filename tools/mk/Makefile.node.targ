@@ -29,9 +29,8 @@ else
 $(NODE_EXEC) $(NPM_EXEC) $(NODE_WAF_EXEC):
 	(mkdir -p $(BUILD) \
 		&& cd $(BUILD) \
-		&& [[ -d src-node ]] && (cd src-node && git checkout master && git pull) || git clone git://github.com/joyent/node.git src-node \
+		&& [[ -d src-node ]] && (cd src-node && git checkout master && git pull) || git clone git@github.com:nodejs/node.git --branch $(NODE_PREBUILT_VERSION) --single-branch src-node  \
 		&& cd src-node \
-		&& git checkout $(NODE_PREBUILT_VERSION) \
 		&& ./configure $(NODE_CONFIG_FLAGS) \
 		&& $(MAKE) && $(MAKE) install)
 endif
