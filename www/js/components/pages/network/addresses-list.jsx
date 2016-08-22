@@ -27,6 +27,7 @@ var AddressesList = React.createClass({
             networkUuid: this.props.networkUuid,
             selected: [],
             updateCollection: false,
+            count: this.props.count || 10,
             collection: this.props.collection || new Addresses()
         };
     },
@@ -172,47 +173,56 @@ var AddressesList = React.createClass({
         }
     },
 
-    _handleAddRange: function (e) {
-        if (e) {
-            e.preventDefault();
+    _handleAddRange: function (event) {
+        var MAX_IP_COUNT = 100;
+        if (event) {
+            event.preventDefault();
         }
         var self = this;
-        var confirm = window.confirm('Are you sure you want to expose all IP addresses in this range? This action may take a while.');
-        if (confirm) {
-            var range = this.state.range;
-            var collection = this.state.collection;
-            var ipAddresses = utils.getNetworkIpList(collection, this.state.networkUuid, range.startIp, range.endIp, true);
-            var provisionIpRange = function () {
-                var promises = $.map(ipAddresses, function (address) {
-                    var deferred = $.Deferred();
-                    collection.create(address, {patch: true, wait: true, silent: true, success: function () {
-                        deferred.resolve();
-                    }});
-                    return deferred.promise();
+        var count = this.state.count;
+        if (count > MAX_IP_COUNT) {
+            window.alert('IP Addresses count can\'t be more than' + MAX_IP_COUNT + '.');
+            return;
+        }
+        var range = this.state.range;
+        var collection = this.state.collection;
+        var ipAddresses = utils.getNetworkIpList(collection, this.state.networkUuid, range.startIp, count, true);
+        var provisionIpRange = function () {
+            var promises = $.map(ipAddresses, function (address) {
+                var deferred = $.Deferred();
+                collection.create(address, {patch: true, wait: true, silent: true, success: function () {
+                    deferred.resolve();
+                }});
+                return deferred.promise();
+            });
+            $.when.apply(null, promises).done(function () {
+                collection.fetch().done(function () {
+                    collection.getLastPage();
+                    var plural = ipAddresses.length > 1 ? 'addresses have' : 'address has';
+                    self.notificationSuccess(ipAddresses.length + ' IP ' + plural + ' been successfully added.');
                 });
-                $.when.apply(null, promises).done(function () {
-                    collection.fetch().done(function () {
-                        collection.getLastPage();
-                        self.notificationSuccess(ipAddresses.length + ' IP addresses successfully added.');
-                    });
-                });
-            };
+            });
+        };
 
-            if (ipAddresses.length) {
-                provisionIpRange();
-            } else {
-                self.notificationSuccess('All IP addresses in this range have been added.');
-            }
+        if (ipAddresses.length) {
+            provisionIpRange();
+        } else {
+            self.notificationSuccess('All IP addresses in this range have been added.');
         }
     },
 
-    _handleChangeRangeAddress: function (isLast, e) {
-        var value = e.target.value;
+    _handleChangeRangeAddress: function (event) {
+        var value = event.target.value;
         var range = this.state.range;
-        var part = isLast ? 'end' : 'start';
-        range[part] = value;
-        range[part + 'Ip'] = range.commonPart + value;
+        range.start = value;
+        range.startIp = range.commonPart + value;
         this.setState({range: range});
+    },
+
+    _handleChangeAddressCount: function (event) {
+        var value = event.target.value;
+        value = value.replace(/\D/g, '');
+        this.setState({count: value});
     },
 
     renderActionBar: function () {
@@ -305,8 +315,8 @@ var AddressesList = React.createClass({
                         <th colSpan="4" className="title">
                             Showing {this.state.collection.length} IP Addresses
                             <div className="range-ips">
-                                {range.commonPart}<input type="text" value={range.start} onChange={self._handleChangeRangeAddress.bind(this, false)} /> -
-                                {range.commonPart}<input type="text" value={range.end} onChange={self._handleChangeRangeAddress.bind(this, true)} />
+                                {range.commonPart}<input type="text" value={range.start} onChange={self._handleChangeRangeAddress} />
+                                <span> Count </span><input type="text" value={this.state.count} onChange={self._handleChangeAddressCount} />
                                 <button type="button" className="btn btn-info" onClick={this._handleSelectRange}>Select Range</button>
                                 <button type="button" className="btn btn-info" onClick={this._handleAddRange}>Add IP Addresses</button>
                             </div>

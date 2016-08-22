@@ -161,42 +161,59 @@ var NetworksList = React.createClass({
                 <i className="fa fa-external-link"> {uuid}</i>
             </a>)
         });
-        return (<li>
-            <div className="name"><a onClick={this.showNetwork.bind(this, model)}>{network.name}</a> <span classNmae="subnet">{network.subnet}</span></div>
-            <div className="vlan">
-                <strong>VLAN ID</strong>
-                <span className="value">{network.vlan_id}</span>
-            </div>
-            <div className="gateway">
-                <strong>Gateway</strong>
-                <span className="value">{network.gateway || '-'}</span>
-            </div>
-            <div className="provision-ip-range">
-                <strong>Range</strong>
-                <span className="value">{network.provision_start_ip} - {network.provision_end_ip}</span>
-            </div>
-            <div className="resolvers">
-                <strong>Resolvers</strong>
-                <span className="value">
-                    {resolvers}
-                </span>
-            </div>
-            <div className="owners">
-                <strong>Owners</strong>
-                <span className="value">
-                    {owners.length ? owners : '-'}
-                </span>
-            </div>
-            <div className="mtu">
-                <strong>MTU / NIC Tag MTU</strong>
-                <span className="value">{network.mtu} / {this.nicTagsMtu[network.nic_tag]}</span>
-            </div>
+        return (<tr>
+            <td>
+                <div className="name">
+                    <a onClick={this.showNetwork.bind(this, model)}>{network.name}</a>
+                    <span classNmae="subnet">{network.subnet}</span>
+                </div>
+            </td>
+            <td>
+                <div className="vlan">
+                    <strong>VLAN ID</strong>
+                    <span className="value">{network.vlan_id}</span>
+                </div>
+            </td>
+            <td>
+                <div className="gateway">
+                    <strong>Gateway</strong>
+                    <span className="value">{network.gateway || '-'}</span>
+                </div>
+            </td>
+            <td>
+                <div className="provision-ip-range">
+                    <strong>Range</strong>
+                    <span className="value">{network.provision_start_ip} - {network.provision_end_ip}</span>
+                </div>
+            </td>
+            <td>
+                <div className="resolvers">
+                    <strong>Resolvers</strong>
+                    <span className="value">{resolvers}</span>
+                </div>
+            </td>
+            <td>
+                <div className="owners">
+                    <strong>Owners</strong>
+                    <span className="value">{owners.length ? owners : '-'}</span>
+                </div>
+            </td>
+            <td>
+                <div className="mtu">
+                    <strong>MTU / NIC Tag MTU</strong>
+                    <span className="value">{network.mtu} / {this.nicTagsMtu[network.nic_tag]}</span>
+                </div>
+            </td>
             {this.props.showActions && adminui.user.role('operators') || adminui.user.role('readers') ?
-                (<div className="actions">
-                    <a onClick={this.deleteNetwork.bind(this, model)} className="delete"><i className="fa fa-trash-o"></i> Delete</a>
-                </div>)
+                (<td>
+                    <div className="actions">
+                        <a onClick={this.deleteNetwork.bind(this, model)} className="delete">
+                            <i className="fa fa-trash-o"></i> Delete
+                        </a>
+                    </div>
+                </td>)
             : null}
-        </li>);
+        </tr>);
     },
 
     render: function () {
@@ -219,9 +236,11 @@ var NetworksList = React.createClass({
                 <div className="title">{title}</div>
             </div>}
             {networksCount > 0 ? (<div className="networks-list">
-                <ul className="list-unstyled networks-list">
-                    {networksCollection.map(this.renderNetwork)}
-                </ul>
+                <div>
+                    <table className="list-unstyled networks-list">
+                        <tbody>{networksCollection.map(this.renderNetwork)}</tbody>
+                    </table>
+                </div>
                 {pagination}
             </div>) : null}
         </div>;

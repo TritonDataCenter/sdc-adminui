@@ -24,11 +24,18 @@ var MultipleNicConfigComponent = React.createClass({
         onChange: React.PropTypes.func
     },
     getValue: function () {
+        var self = this;
         var nics = this.state.nics;
         var result = [];
         Object.keys(nics).forEach(function (uuid) {
             var nic = nics[uuid];
             if (Object.keys(nic).length) {
+                self.state.networks.find(function (network) {
+                    if (network.uuid === nic.network_uuid) {
+                        nic.subnet = network.subnet;
+                        return true;
+                    }
+                });
                 result.push(nic);
             }
         });

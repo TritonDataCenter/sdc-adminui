@@ -16,6 +16,7 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 var _ = require('underscore');
 var React = require('react');
+var utils = require('../lib/utils');
 
 var MultiNicConfigComponent = React.createFactory(require('../components/multi-nic-config'));
 var ServerTypeahead = React.createFactory(require('../components/server-typeahead'));
@@ -397,7 +398,8 @@ var View = Backbone.Marionette.Layout.extend({
         }
 
         _.map(values.networks, function (n) {
-            if (typeof n.ipv4_uuid !== 'string' || n.ipv4_uuid.length === 0) {
+            var ip_uuid = n.ipv4_uuid || n.ipv6_uuid;
+            if (typeof ip_uuid !== 'string' || ip_uuid.length === 0) {
                 valid = false;
             }
         });
@@ -478,12 +480,14 @@ var View = Backbone.Marionette.Layout.extend({
         if (this.multiNicConfigComponent) {
             values.networks = _.map(this.multiNicConfigComponent.getValue(), function (nic) {
                 var net = _.clone(nic);
+                var IpVersion = typeof net.subnet === 'string' && utils.isIPv6(net.subnet.split('/')[0]) ? 'ipv6' : 'ipv4';
                 if (net.ip) {
-                    net.ipv4_ips = [net.ip];
+                    net[IpVersion + '_ips'] = [net.ip];
                     delete net.ip;
                 }
-                net.ipv4_uuid = net.network_uuid;
+                net[IpVersion + '_uuid'] = net.network_uuid;
                 delete net.network_uuid;
+                delete net.subnet;
 
                 return net;
             });

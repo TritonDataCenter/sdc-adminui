@@ -62,17 +62,18 @@ var SigninComponent = React.createClass({
         this.pinger.stop();
         this.pinger.removeListener('ping', this.onPing);
         this.props.userModel.off('error', this._onSigninError);
+        $(window).off('resize', this.centerSigninBox);
     },
-    centerSigninBox: function() {
-        var $v = $(this.refs.view.getDOMNode());
-        var w = $(window).width();
-        var h = $(window).height();
-        var x = (w/2)-$v.width()/2;
-        var y = (h/2)-$v.height()/2;
-        if (y < 0) { y = 0; }
-        $v.css({
-            left: x + 'px',
-            top: y + 'px'
+    centerSigninBox: function () {
+        var view = $(this.refs.view.getDOMNode());
+        var windowWidth = $(window).width();
+        var windowHeight = $(window).height();
+        var abscissa = (windowWidth / 2) - view.width() / 2;
+        var ordinate = (windowHeight / 2) - view.height() / 2;
+        ordinate = ordinate < 0 ? 0 : ordinate;
+        view.css({
+            left: abscissa + 'px',
+            top: ordinate + 'px'
         });
     },
     focusFirstInput: function() {

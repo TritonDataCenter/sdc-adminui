@@ -13,6 +13,7 @@
 'use strict';
 var React = require('react');
 var $ = require('jquery');
+var utils = require('../lib/utils');
 
 var Ip = React.createClass({
     getInitialState: function () {
@@ -33,8 +34,8 @@ var Ip = React.createClass({
                 isLoaded: true,
                 error: error || ''
             });
-        }
-        if (ipParts.length === 4 && ipParts[3].length) {
+        };
+        if (ipParts.length === 4 && ipParts[3].length || utils.isIPv6(ip)) {
             this.setState({
                 isLoaded: false
             });

@@ -63,25 +63,33 @@ var FabricVlansListItem = React.createClass({
     },
     render: function () {
         var data = this.state.model.toJSON();
-        return (<li className='vlan-item'>
-                <div className="name">
-                    <a onClick={this.handleClick}>{data.name}</a>
-                </div>
-                <div className="vlan">
-                    <strong>VLAN ID</strong>
-                    <span className="value">{data.vlan_id}</span>
-                </div>
-                <div className="description">
-                    <strong>Description</strong>
-                    <span className="value">{data.description}</span>
-                </div>
-                {adminui.user.role('operators') || adminui.user.role('readers') ?
-                    <div className="actions">
-                        <a onClick={this.handleEdit} className="edit"><i className="fa fa-pencil"></i> Edit</a>
-                        <a onClick={this.deleteVlan} className="delete"><i className="fa fa-trash-o"></i> Delete</a>
+        return (<tr className='vlan-item'>
+                <td>
+                    <div className="name">
+                        <a onClick={this.handleClick}>{data.name}</a>
                     </div>
+                </td>
+                <td>
+                    <div className="vlan">
+                        <strong>VLAN ID</strong>
+                        <span className="value">{data.vlan_id}</span>
+                    </div>
+                </td>
+                <td>
+                    <div className="description">
+                        <strong>Description</strong>
+                        <span className="value">{data.description}</span>
+                    </div>
+                </td>
+                {adminui.user.role('operators') || adminui.user.role('readers') ?
+                    <td>
+                        <div className="actions">
+                            <a onClick={this.handleEdit} className="edit"><i className="fa fa-pencil"></i> Edit</a>
+                            <a onClick={this.deleteVlan} className="delete"><i className="fa fa-trash-o"></i> Delete</a>
+                        </div>
+                    </td>
                     : null}
-            </li>
+            </tr>
         );
     }
 });
@@ -118,7 +126,7 @@ var FabricVlansList = React.createClass({
                     </div>
                 </div>
                 <div className="vlans-list">
-                    <ul className="list-unstyled fabric-vlans-list">{nodes}</ul>
+                    <table className="list-unstyled fabric-vlans-list">{nodes}</table>
                 </div>
             </div>);
         }

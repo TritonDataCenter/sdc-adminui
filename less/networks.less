@@ -40,24 +40,51 @@
   }
 
   .networks-list {
-    li {
-      &.hover { background: @state-warning-bg; }
+    &>div {
+      overflow-x: auto;
+    }
+    tr {
+      &.hover {
+        background: @state-warning-bg;
+      }
       .widget-content;
-      display: block;
       padding: 10px;
       margin-bottom: 1px;
 
-      &>div { vertical-align:top; display: inline-block; }
-      strong { display: block; }
+      &>td {
+        &:last-child {
+          width: 100%
+        }
+        table-layout: fixed;
+        vertical-align: top;
+        padding: 10px;
+      }
+      strong {
+        display: block;
+      }
       .provision-ip-range {
+        min-width: 200px;
+        max-width: 256px;
+      }
+      .resolvers {
+        min-width: 120px;
+        max-width: 250px;
+      }
+      .owners {
         width: 200px;
       }
-      .resolvers { width: 120px; }
-      .owners { width: 245px; }
-      .gateway { width: 100px; }
+      .gateway {
+        min-width: 100px;
+        max-width: 245px;
+      }
       .name {
-        width: 240px;
-        a { display: block; clear: both; font-weight: bold; }
+        min-width: 140px;
+        max-width: 320px;
+        a {
+          display: block;
+          clear: both;
+          font-weight: bold;
+        }
       }
       .subnet {
         color: @gray-dark;
@@ -68,14 +95,29 @@
         width: 60px;
       }
       .mtu {
-        width: 150px;
+        width: 125px;
       }
-      strong {font-size: 12px; color: @gray-light;}
+      strong {
+        font-size: 12px;
+        color: @gray-light;
+      }
       .actions {
-        a.delete {color: @state-danger-text; text-decoration: none; font-weight: bold;}
-        float: right; vertical-align: middle; color: @state-danger-text; visibility: hidden;}
-        a.edit {margin-right: 10px;}
-      &:hover .actions {visibility: visible;}
+        a.delete {
+          color: @state-danger-text;
+          text-decoration: none;
+          font-weight: bold;
+        }
+        float: right;
+        vertical-align: middle;
+        color: @state-danger-text;
+        visibility: hidden;
+      }
+        a.edit {
+          margin-right: 10px;
+        }
+      &:hover .actions {
+        visibility: visible;
+      }
       .value {
         color: @gray-dark;
         font-family: @font-family-monospace;
