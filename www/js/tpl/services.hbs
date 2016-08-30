@@ -13,9 +13,38 @@
 </div>
 
 <ul class="nav nav-tabs">
-    <li><a data-service-type="all" href="#">All</a></li>
-    <li><a data-service-type="sdc" href="#">SDC</a></li>
-    <li><a data-service-type="manta" href="#">Manta</a></li>
+    <li data-section-type="all"><a>All</a></li>
+    <li data-section-type="sdc"><a>SDC</a></li>
+    <li data-section-type="manta"><a>Manta</a></li>
 </ul>
 
-<div class="applications"></div>
+<div class="row">
+    <div class="info col-sm-3">
+        <ul class="service-filters">
+            <li service-filter-type="all" class="active">
+                <a>
+                    <span class="number-of-services all"></span>
+                    <span class="name"> All </span>
+                </a>
+            </li>
+            <li service-filter-type="agent">
+                <a>
+                    <span class="number-of-services agent"></span>
+                    <span class="name"> Agents </span>
+                </a>
+            </li>
+            <li service-filter-type="vm">
+                <a>
+                    <span class="number-of-services vm"></span>
+                    <span class="name"> VMs </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="applications col-sm-9">
+        <div class="application">
+            <div class="services"></div>
+        </div>
+    </div>
+</div>
+

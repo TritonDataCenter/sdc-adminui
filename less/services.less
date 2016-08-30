@@ -5,37 +5,79 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
+@import "__vms-list";
+
 #page-services {
-  .application {
-    .info {
-      h4 {
-        color: #555;
-        text-transform: uppercase;
+  ul.service-filters {
+    padding: 20px;
+    li {
+      font-size: 12px;
+      display: block;
+      padding: 5px;
+      a:hover {
+        text-decoration: none;
+      }
+      .number-of-services {
+        font-weight: bold;
+        width: 22px;
+        text-align: right;
+        padding-right: 5px;
+        padding-top: 5px;
+        padding-bottom: 4px;
+        font-size: 9px;
+        background: #b8b8b8;
+        color: #fff;
+        line-height: 1;
+        display: inline-block;
       }
     }
-    margin-bottom: 1em;
-    clear: both;
-    overflow: hidden;
+    li:hover {
+      cursor: pointer;
+    }
+    li.active {
+      background: #fff;
+      a {
+        color: #333;
+      }
+    }
   }
   .services {
     .service-name {
       .widget-header;
-      font-size: 12px;
-      padding: 5px 10px;
+      padding: 6px;
+      .service-type {
+        width: 60px;
+        margin: 0 10px;
+        display: inline-block;
+        background-color: @gray-light;
+        font-size: 12px;
+        color: #fff;
+        text-align: center;
+        text-transform: uppercase;
+      }
     }
   }
-  .service+.service { margin-top: 1em;}
   .instance {
+    a {color: #0098b2; cursor: pointer;}
     .widget-content;
     font-size: 12px;
-    padding: 8px;
-    .state { color: @state-danger-text; }
-    .state.running { color: @state-success-text; }
-    .alias, .uuid, .state, .ram { display: inline-block;}
-    .alias { color: @gray-light; width: 100px;}
+    padding: 1% 0 1% 15%;
+    .state {
+      width: 70px;
+      margin: 0 10px;
+      vertical-align: top;
+      text-align: center;
+      .__vms-list.state;
+    }
+    .alias, .uuid, .state, .ram {display: inline-block;}
+    .alias {
+      width: 280px;
+      margin-left: 30px;
+      vertical-align: top;
+    }
     .uuid {
       width: 280px;
       font-style: italic;
@@ -45,12 +87,39 @@
       font-weight: normal;
       line-height: 1.2;
     }
-    .state { width: 100px;}
-    a {
-      cursor: pointer;
-    }
-
     .ram { width: 100px;}
   }
 }
 
+#page-service {
+  h1 .type {
+    margin-top: -10px;
+    padding: 3px 4px;
+    color: #FFF;
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: 10px;
+    background: #00a8ff;
+  }
+  .overview {
+    .table;
+    th { padding-left: 13px; }
+    tbody {
+      th { width: 120px; }
+      td .mutate { visibility: hidden; }
+      td:hover .mutate { visibility: visible; }
+      td>*:first-child {
+        max-height: 360px;
+        width: 100%;
+        display: inline-block;
+        overflow: auto;
+        white-space: pre;
+      };
+    }
+    .uuid {
+      font-size: 8px;
+      margin-top: 4px;
+      color: @gray-light;
+    }
+  }
+}

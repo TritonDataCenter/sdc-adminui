@@ -5,14 +5,24 @@
  */
 
 /*
- * Copyright (c) 2015, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
 var Model = require('./model');
+var api = require('../request');
 
 var Service = Model.extend({
     idAttribute: 'uuid',
-    urlRoot: '/api/services'
+    urlRoot: '/api/services',
+    update: function (attrs, cb) {
+        var req = api.post(this.url()).send(attrs);
+        req.end(function (res) {
+            if (res.ok) {
+                return cb(null, res.body);
+            }
+            cb(res.body);
+        });
+    }
 });
 
 module.exports = Service;
