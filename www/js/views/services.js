@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright (c) 2016, Joyent, Inc.
  */
 
 var $ = require('jquery');
@@ -16,7 +16,12 @@ var Services = require('../models/services');
 var Model = require('../models/model');
 var Collection = require('../models/collection');
 var CollectionView = require('./collection');
-var DEFAULT_TYPE = 'all';
+
+var TYPES = {
+    default: 'all',
+    vm: 'vm',
+    agent: 'agent'
+};
 
 var Instance = Model.extend({
     idAttribute: 'uuid',
@@ -35,15 +40,18 @@ var Application = Model.extend({
 
 var Applications = Collection.extend({
     model: Application,
-    url: '/api/applications',
+    url: '/api/applications'
+});
+
+Services = Services.extend({
     filterByType: function (type) {
-        var applications = null;
-        if (type !== DEFAULT_TYPE) {
-            applications = this.filter(function (application) {
-                return application.attributes.name.toLowerCase() === type;
+        var services = null;
+        if (type !== TYPES.default) {
+            services = this.filter(function (service) {
+                return service.attributes.type.toLowerCase() === type;
             });
         }
-        return applications && new Applications(applications) || this;
+        return services && new this.constructor(services) || this;
     }
 });
 
@@ -62,11 +70,12 @@ var InstanceView = Backbone.Marionette.ItemView.extend({
         var data = this.model.toJSON();
         data.vm = data.type === 'vm';
         data.agent = data.type === 'agent';
+        data.name = data.params && data.params.alias || data.uuid;
         return data;
     },
     onRender: function () {
         var self = this;
-        if (this.model.get('type') === 'vm') {
+        if (this.model.get('type') === TYPES.vm) {
             $.get('/api/vms/' + this.model.get('uuid')).done(function (res) {
                 self.$('.state').addClass(res.state).html(res.state);
                 self.$('.ram').addClass(res.state).html(res.ram + ' MB');
@@ -81,90 +90,116 @@ var InstancesView = CollectionView.extend({
 
 var ServicesListItemView = Backbone.Marionette.ItemView.extend({
     template: require('../tpl/services-item.hbs'),
+    events: {
+        'click a.service-link': 'navigateToService'
+    },
     attributes: {class: 'service'},
     initialize: function () {
         this.instances = new Instances();
+    },
+    navigateToService: function () {
+        adminui.router.showService(this.model.get('uuid'));
     },
     onRender: function () {
         new InstancesView({
             el: this.$('.instances'),
             collection: this.instances
         });
+
         this.instances.params = {service_uuid: this.model.get('uuid')};
         this.instances.fetch({reset: true});
     }
 });
 
-var ServicesListView = CollectionView.extend({
-    itemView: ServicesListItemView
-});
-
-var NoApplicationsView = Backbone.Marionette.ItemView.extend({
+var NoServicesView = Backbone.Marionette.ItemView.extend({
     template: function () {
         return _.template('<div class="zero-state">No services available.</div>');
     }
 });
 
-var ApplicationsListView = CollectionView.extend({
-    itemView: Backbone.Marionette.ItemView.extend({
-        template: require('../tpl/services-application.hbs'),
-        attributes: {
-            'class': 'application'
-        },
-        initialize: function () {
-            this.services = new Services();
-        },
-        onRender: function () {
-            var self = this;
-            new ServicesListView({
-                el: this.$('.services'),
-                collection: this.services
-            });
-            this.services.params = {application_uuid: this.model.get('uuid')};
-            this.services.fetch({reset: true, success: function (res) {
-                self.$('.number-of-services').html(res.length);
-            }});
-        }
-    }),
-    emptyView: NoApplicationsView
+var ServicesListView = CollectionView.extend({
+    itemView: ServicesListItemView,
+    emptyView: NoServicesView
 });
 
 var View = Backbone.Marionette.ItemView.extend({
     id: 'page-services',
     template: require('../tpl/services.hbs'),
     events: {
-        'click a[data-service-type]': 'onChangeView'
+        'click li[data-section-type]': 'onChangeSection',
+        'click li[service-filter-type]': 'onChangeServiceFilter'
     },
     name: 'services',
     url: function () {
         return '/services';
     },
     initialize: function () {
+        this.services = new Services();
+        this.sectionServices = this.services;
         this.applications = new Applications();
-        this.type = DEFAULT_TYPE;
+        this.sectionType = TYPES.default;
+        this.filterType = TYPES.default;
     },
-    makeActive: function (type) {
-        this.$('[data-service-type=' + type + ']').parent().addClass('active').siblings().removeClass('active');
+    makeActive: function (selector) {
+        this.$(selector).addClass('active').siblings().removeClass('active');
     },
-    onChangeView: function (e) {
-        e.preventDefault();
-        var newType = e.target.getAttribute('data-service-type');
-        if (this.type !== newType) {
-            this.type = newType;
-            this.makeActive(newType);
-            this.applicationsView.collection = this.applications.filterByType(newType);
-            this.applicationsView.render();
+    onChangeSection: function (event) {
+        event.preventDefault();
+        var newType = event.currentTarget.getAttribute('data-section-type');
+        if (this.sectionType !== newType) {
+            var self = this;
+            var services;
+            this.sectionType = newType;
+            this.makeActive('[data-section-type=' + newType + ']');
+            if (newType !== TYPES.default) {
+                services = this.services.filter(function (service) {
+                    return self.applications[newType] && self.applications[newType] === service.attributes.application_uuid;
+                });
+            }
+            this.computeServicesCount(services || this.services);
+            this.sectionServices = services && new Services(services) || this.services;
+            var filterType = $('.service-filters .active').attr('service-filter-type');
+            this.servicesListView.collection = filterType === TYPES.default ? this.sectionServices :
+                this.sectionServices.filterByType(filterType);
+
+            this.servicesListView.render();
         }
     },
-    onRender: function () {
-        adminui.vent.trigger('settitle', 'services');
-        this.makeActive(DEFAULT_TYPE);
+    onChangeServiceFilter: function (event) {
+        event.preventDefault();
+        var filterType = event.currentTarget.getAttribute('service-filter-type');
+        if (filterType !== this.filterType) {
+            this.filterType = filterType;
+            this.makeActive('li[service-filter-type=' + filterType + ']');
+            this.servicesListView.collection = this.sectionServices.filterByType(filterType);
+            this.servicesListView.render();
+        }
+    },
+    computeServicesCount: function (services) {
+        var vmsCount = services.filter(function (service) {
+            var type = service.type || service.attributes.type;
+            return type === TYPES.vm;
+        }).length;
 
-        this.applicationsView = new ApplicationsListView({
-            el: this.$('.applications'),
-            collection: this.applications
+        this.$('.number-of-services.vm').html(vmsCount);
+        this.$('.number-of-services.agent').html(services.length - vmsCount);
+        this.$('.number-of-services.all').html(services.length);
+    },
+    onRender: function () {
+        var self = this;
+        adminui.vent.trigger('settitle', 'services');
+        this.makeActive('[data-section-type=' + TYPES.default + ']');
+        this.applications.fetch({reset: true}).then(function (applications) {
+            self.applications = {};
+            applications.forEach(function (application) {
+                self.applications[application.name] = application.uuid;
+            });
         });
-        this.applications.fetch({reset: true});
+        this.servicesListView = new ServicesListView({
+            el: this.$('.services'),
+            collection: this.services
+        });
+        this.services.fetch({reset: true}).then(this.computeServicesCount.bind(this));
     }
 });
 

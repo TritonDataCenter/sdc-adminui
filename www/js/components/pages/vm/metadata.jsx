@@ -15,31 +15,39 @@
     propTypes: {
         onCancel: React.PropTypes.func.isRequired,
         onSave: React.PropTypes.func.isRequired,
+        permanentKeys: React.PropTypes.array,
         metadata: React.PropTypes.object.isRequired
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {};
     },
-    _onCancel: function(e) {
+    _onCancel: function () {
         this.props.onCancel();
     },
-    _onSave: function() {
+    _onSave: function () {
         var data = {};
+        var metadata = this.props.metadata;
         var $node = $(this.getDOMNode());
-        $node.find('tbody tr').each(function(index, tr) {
+        $node.find('tbody tr').each(function (index, tr) {
             var $tr = $(tr);
-            console.log($tr);
             var k = $tr.find('[name=key]').val();
             var v = $tr.find('[name=value]').val();
             if (k && v && k.length && v.length) {
                 data[k] = v;
             }
         });
-        console.log(data);
+        var permanentKeys = this.props.permanentKeys;
+        if (permanentKeys && permanentKeys.length) {
+            permanentKeys.forEach(function (key) {
+                if (metadata[key]) {
+                    data[key] = metadata[key];
+                }
+            });
+        }
         this.props.onSave(data);
     },
-    render: function() {
-        var metadata = Object.keys(this.props.metadata).map(function(key) {
+    render: function () {
+        var metadata = Object.keys(this.props.metadata).map(function (key) {
             return {
                 key: key,
                 value: this.props.metadata[key]
@@ -47,6 +55,7 @@
         }.bind(this));
 
         var editing = this.props.editing || false;
+        var permanentKeys = this.props.permanentKeys || [];
 
         if (!metadata.length && !editing) {
             return <div className="zero-state">No data to display.</div>;
@@ -62,29 +71,29 @@
 
                 <tbody className="unstyled">
                 {
-                    metadata.map(function(m) {
-                        return <tr key={m.key}>
+                    metadata.map(function (data) {
+                        var editable = editing && permanentKeys.indexOf(data.key) === -1;
+                        return <tr key={data.key}>
                             <td className="key">
                             {
-                                editing ?
-                                <input type="text" name="key" className="form-control" defaultValue={m.key} />
+                                editable ?
+                                <input type="text" name="key" className="form-control" defaultValue={data.key} />
                                 :
-                                <span className="value" type="text">{m.key}</span>
+                                <span className="value" type="text">{data.key}</span>
                             }
                             </td>
 
                             <td className="value">
                             {
-                                editing ?
-                                <textarea name="value" className="form-control value" defaultValue={String(m.value)}></textarea>
+                                editable ?
+                                <textarea name="value" className="form-control value" defaultValue={String(data.value)}></textarea>
                                 :
-                                <span className="value" type="text">{String(m.value)}</span>
+                                <span className="value" type="text">{String(data.value)}</span>
                             }
                             </td>
                         </tr>;
                     })
                 }
-
 
                 {
                     editing ?

@@ -28,6 +28,7 @@ var Components = {
     'alarm': require('./components/pages/alarm'),
     'alarms': require('./components/pages/alarms'),
     'vm': require('./components/pages/vm'),
+    'service': require('./components/pages/service'),
     'vms': require('./components/pages/vms'),
     'settings': require('./components/pages/settings'),
     'user': require('./components/pages/user'),
@@ -91,6 +92,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
         'image-import': 'showImageImport',
         'images': 'showImages',
         'images/:uuid(/)': 'showImage',
+        'services/:uuid(/)': 'showService',
         'jobs/:uuid(/)': 'showJob',
         'networks/:uuid(/)': 'showNetwork',
         'packages/:uuid(/)': 'showPackage',
@@ -551,6 +553,14 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                     },
                     xhr: xhr
                 });
+            });
+        }.bind(this));
+    },
+
+    showService: function (uuid) {
+        this.authenticated().then(function () {
+            this.presentComponent('service', {
+                uuid: uuid
             });
         }.bind(this));
     },

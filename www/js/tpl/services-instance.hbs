@@ -5,16 +5,18 @@
 -->
 
 <!--
-    Copyright (c) 2014, Joyent, Inc.
+    Copyright (c) 2016, Joyent, Inc.
 -->
 
-<div class="alias">{{params.alias}}</div>
-<div class="uuid">
-    {{#if vm}}
-    <a class="{{type}}">{{uuid}}</a>
-    {{else}}
-    {{uuid}} (agent)
-    {{/if}}
-</div>
 <div class="state"></div>
-<div class="ram"></div>
+<div class="alias">
+    {{#if vm}}
+        <a class="vm">{{name}}</a>
+    {{/if}}
+    <div class="uuid selectable">{{uuid}}</div>
+</div>
+
+{{#if vm}}
+    <i class="fa fa-codepen fa-fw"></i>
+    <div class="ram"></div>
+{{/if}}
