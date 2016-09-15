@@ -11,13 +11,13 @@ var SigninComponent = React.createClass({
     propTypes: {
         userModel: React.PropTypes.object.isRequired
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             errorMessage: false
         };
     },
-    _onAuthenticate: function(e) {
-        e.preventDefault();
+    _onAuthenticate: function (event) {
+        event.preventDefault();
         this.setState({
             signingIn: true,
             errorMessage: false
@@ -26,7 +26,7 @@ var SigninComponent = React.createClass({
         var password = this.refs.password.getDOMNode().value;
         this.props.userModel.authenticate(username, password);
     },
-    _onSigninError: function(err) {
+    _onSigninError: function (err) {
         this.setState({
             errorMessage: err,
             signingIn: false
@@ -48,7 +48,7 @@ var SigninComponent = React.createClass({
     onConnectionLost: function (err) {
         this.setState({disableSignin: true, signingIn: false});
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         this.pinger = new Pinger({interval: 5*1000});
         this.pinger.on('ping', this.onPing);
         this.pinger.on('connectionLost', this.onConnectionLost);
@@ -62,24 +62,25 @@ var SigninComponent = React.createClass({
         this.pinger.stop();
         this.pinger.removeListener('ping', this.onPing);
         this.props.userModel.off('error', this._onSigninError);
+        $(window).off('resize', this.centerSigninBox);
     },
-    centerSigninBox: function() {
-        var $v = $(this.refs.view.getDOMNode());
-        var w = $(window).width();
-        var h = $(window).height();
-        var x = (w/2)-$v.width()/2;
-        var y = (h/2)-$v.height()/2;
-        if (y < 0) { y = 0; }
-        $v.css({
-            left: x + 'px',
-            top: y + 'px'
+    centerSigninBox: function () {
+        var view = $(this.refs.view.getDOMNode());
+        var windowWidth = $(window).width();
+        var windowHeight = $(window).height();
+        var abscissa = (windowWidth / 2) - view.width() / 2;
+        var ordinate = (windowHeight / 2) - view.height() / 2;
+        ordinate = ordinate < 0 ? 0 : ordinate;
+        view.css({
+            left: abscissa + 'px',
+            top: ordinate + 'px'
         });
     },
-    focusFirstInput: function() {
+    focusFirstInput: function () {
         var $v = $(this.refs.view.getDOMNode());
         $v.find("input[value='']:not(:checkbox,:button):visible:first").focus();
     },
-    render: function() {
+    render: function () {
         var login = this.props.userModel.get('login') || '';
         var dc = this.props.userModel.getDatacenter();
         var buttonClasses = cx({
@@ -94,18 +95,17 @@ var SigninComponent = React.createClass({
                     <span className="sdc">SDC</span> <span className="product">ADMINUI</span> <span className="datacenter">{dc}</span>
                 </h1>
 
-                { this.state.disableSignin ?
+                {this.state.disableSignin ?
                 <div className="alert alert-danger">
                     <span className="msg">
                         Services required for authentication are currently unavailable. Signin will be re-enabled when service is restored
                     </span>
-                </div> : null }
+                </div> : null}
 
-
-                { this.state.errorMessage ?
+                {this.state.errorMessage ?
                 <div className="alert alert-danger">
                     <span className="msg">{this.state.errorMessage}</span>
-                </div> : null }
+                </div> : null}
 
                 <form className="form" onSubmit={this._onAuthenticate}>
                     <div className="form-group">
@@ -114,24 +114,20 @@ var SigninComponent = React.createClass({
                             type="text" ref="username" defaultValue={login}
                             placeholder="Enter operator login name" autoComplete="off" name="username" />
                     </div>
-
                     <div className="form-group">
                         <label className="control-label">Password</label>
                         <input className="form-control input-lg" ref="password" defaultValue="" type="password" placeholder="Enter operator password" name="password" />
                     </div>
-
                     <div className="controls">
                         <button type="submit" disabled={this.state.disableSignin || this.state.signingIn} className={buttonClasses}>
-                        { this.state.disableSignin ? 'Signin Disabled - Monitoring Service Availability' :
-                            this.state.signingIn ? 'Hold on, Signing in...' : 'Sign In to SmartDataCenter'
-                        }
+                        {this.state.disableSignin ? 'Signin Disabled - Monitoring Service Availability' :
+                            this.state.signingIn ? 'Hold on, Signing in...' : 'Sign In to SmartDataCenter'}
                         </button>
                     </div>
                 </form>
             </div>
         );
     }
-
 });
 
 module.exports = SigninComponent;

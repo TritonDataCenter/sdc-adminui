@@ -36,7 +36,7 @@ var AlarmsMenu = React.createClass({
         this.setState({menu: !this.state.menu});
     },
 
-    componentWillMount: function() {
+    componentWillMount: function () {
         this._probeFetches = {};
         this._probeGroupFetches = {};
         this.fetchAlarms();
@@ -44,11 +44,11 @@ var AlarmsMenu = React.createClass({
         this._interval = setInterval(this.fetchAlarms, AMON_POLL_INTERVAL);
     },
 
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         adminui.vent.off('alarms:changed', this.fetchAlarms);
         clearInterval(this._interval);
     },
-    
+
     componentDidMount: function () {
         this.alarmsMenuContainer = $('div.alarms-menu-container');
         this.alarmsMenuContainer.tooltip({
@@ -57,15 +57,16 @@ var AlarmsMenu = React.createClass({
             container: 'body',
             trigger: 'hover'
         }).tooltip('disable');
+        this.alarmsMenuContainer.tooltip(this.state.alarms.length >= 500 ? 'enable' : 'disable');
     },
 
-    fetchProbeGroup: function(id) {
+    fetchProbeGroup: function (id) {
         if (this._probeGroupFetches[id]) {
             return;
         }
         this.setState({loading: true});
-        var p = new Promise(function(resolve, reject) {
-            api.get('/api/amon/probegroups/'+this.props.user + '/' + id).end(function(err, res) {
+        var probeGroupsPromise = new Promise(function (resolve, reject) {
+            api.get('/api/amon/probegroups/' + this.props.user + '/' + id).end(function (err, res) {
                 if (res.ok) {
                     resolve(res.body);
                 } else {
@@ -74,26 +75,23 @@ var AlarmsMenu = React.createClass({
             }.bind(this));
         }.bind(this));
 
-        console.debug('[AlarmsMenu] fetching', id);
-        this._probeGroupFetches[id] = p;
-
-        p.then(function(res) {
+        this._probeGroupFetches[id] = probeGroupsPromise;
+        probeGroupsPromise.then(function (res) {
             var probes = this.state.probes;
             probes[id] = res;
             this.setState({probes: probes});
-            console.debug('[AlarmsMenu] fetch', id, 'done');
         }.bind(this));
     },
 
-    fetchProbe: function(id) {
+    fetchProbe: function (id) {
         if (this._probeFetches[id]) {
             return;
         }
 
         this.setState({loading: true});
 
-        var p = new Promise(function(resolve, reject) {
-            api.get('/api/amon/probes/'+this.props.user + '/' + id).end(function(err, res) {
+        var probesPromise = new Promise(function (resolve, reject) {
+            api.get('/api/amon/probes/' + this.props.user + '/' + id).end(function (err, res) {
                 if (res.ok) {
                     resolve(res.body);
                 } else {
@@ -102,14 +100,11 @@ var AlarmsMenu = React.createClass({
             }.bind(this));
         }.bind(this));
 
-        console.debug('fetching', id);
-        this._probeFetches[id] = p;
-
-        p.then(function(res) {
+        this._probeFetches[id] = probesPromise;
+        probesPromise.then(function (res) {
             var probes = this.state.probes;
             probes[id] = res;
             this.setState({probes: probes});
-            console.debug('fetch', id, 'done');
         }.bind(this));
     },
 
@@ -121,8 +116,7 @@ var AlarmsMenu = React.createClass({
                     message: 'AdminUI: Connected.'
                 });
             }
-            var state = alarms.length >= 500 ? 'enable' : 'disable';
-            this.alarmsMenuContainer.tooltip(state);
+            this.alarmsMenuContainer && this.alarmsMenuContainer.tooltip(alarms.length >= 500 ? 'enable' : 'disable');
             this.setState({alarms: alarms, error: null});
             alarms.map(function (alarm) {
                 if (alarm.probe) {
@@ -135,7 +129,7 @@ var AlarmsMenu = React.createClass({
         }.bind(this);
 
         var storedAlarms = window.localStorage.alarms;
-        
+
         if (typeof storedAlarms === 'string') {
             try {
                 storedAlarms = JSON.parse(storedAlarms);
@@ -158,7 +152,7 @@ var AlarmsMenu = React.createClass({
             if (timeStamp && timeStamp > new Date()) {
                 return done(storedAlarms.data);
             }
-            
+
             requestTimeStamp = getTime('requestTimeStamp');
         }
 
@@ -193,9 +187,9 @@ var AlarmsMenu = React.createClass({
 
     gotoAlarm: function (alarm) {
         console.log('go to alarm', alarm);
-        adminui.vent.trigger('showcomponent', 'alarm', { user: alarm.user, id: alarm.id.toString() });
+        adminui.vent.trigger('showcomponent', 'alarm', {user: alarm.user, id: alarm.id.toString()});
     },
-    renderMenuItem: function(alarm) {
+    renderMenuItem: function (alarm) {
         var probe = this.state.probes[alarm.probe || alarm.probeGroup];
         console.log('probe', probe);
 
@@ -213,19 +207,19 @@ var AlarmsMenu = React.createClass({
                     <a onClick={this.gotoAlarm.bind(null, alarm)} className="probe"><span className="probe-name">??</span></a>
                 }
                 <div className="alarm-lastevent">
-                <i className="fa fa-clock-o"></i> { moment(alarm.timeLastEvent).fromNow() }
+                    <i className="fa fa-clock-o"></i> {moment(alarm.timeLastEvent).fromNow()}
                 </div>
             </div>
             <div className="alarm-menu-item-content">
                 <div className="faults">
-                {alarm.faults.map(function(f) {
+                {alarm.faults.map(function (f) {
                     return <div key={f.event.uuid} className="fault">{f.event.data.message}</div>;
                 })}
                 </div>
             </div>
         </div>);
     },
-    menu: function() {
+    menu: function () {
         if (this.state.menu) {
             if (this.state.error) {
                 return <div className="alarms-menu-wrapper open">
@@ -266,15 +260,15 @@ var AlarmsMenu = React.createClass({
             return '';
         }
     },
-    render: function() {
+    render: function () {
         var toggleMenu = this.state.error ?
             <a onClick={this.toggleMenu} className={
-                ('toggle ' + (this.state.menu ? ' active ' : '' ) + (this.state.error ? ' has-error' : '' ))
+                ('toggle ' + (this.state.menu ? ' active ' : '') + (this.state.error ? ' has-error' : ''))
             }><i className="fa fa-warning"></i> E</a>
             :
             <a onClick={this.toggleMenu} className={
-                ('toggle ' + (this.state.menu ? ' active ' : '' ) + (this.state.alarms.length ? ' has-alarms ' : '' ))
-            }><i className="fa fa-bell"></i> { this.state.alarms.length }</a>;
+                ('toggle ' + (this.state.menu ? ' active ' : '') + (this.state.alarms.length ? ' has-alarms ' : ''))
+            }><i className="fa fa-bell"></i> {this.state.alarms.length}</a>;
 
         return <div className="alarms-menu-container">
             {toggleMenu}
@@ -282,6 +276,5 @@ var AlarmsMenu = React.createClass({
         </div>;
     }
 });
-
 
 module.exports = AlarmsMenu;
