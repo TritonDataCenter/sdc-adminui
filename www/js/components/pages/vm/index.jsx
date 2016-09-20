@@ -569,7 +569,20 @@ var VMPage = React.createClass({
                 });
             }
         }
-        vm.updateTags(data, function (job, err) {
+        vm.updateTags(data, function (job, error) {
+            if (error) {
+                var message = error.message || error;
+                if (error.errors) {
+                    var tagsError = error.errors.find(function (errorObject) {
+                        return errorObject.field === 'tags';
+                    });
+                    message = tagsError && tagsError.message || message;
+                }
+                adminui.vent.trigger('notification', {
+                    level: 'error',
+                    message: message
+                });
+            }
             if (job) {
                 self.setState({currentJob: job});
                 job.on('finished', function () {
