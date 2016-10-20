@@ -39,7 +39,7 @@ JSSTYLE_FLAGS    = -o "indent=2,doxygen,unparenthesized-return=0,line-length=120
 REPO_MODULES	 =
 SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
 
-NODE_PREBUILT_VERSION=v0.10.47
+NODE_PREBUILT_VERSION=v0.10.48
 NODE_PREBUILT_TAG=zone
 NODE_PREBUILT_IMAGE=fd2cc906-8938-11e3-beab-4359c665ac99
 
