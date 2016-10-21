@@ -154,6 +154,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.stickit();
         this.$('input:first').focus();
         this.$('.alert').hide();
+        this.$('[data-toggle="tooltip"]').tooltip();
         return this;
     }
 
