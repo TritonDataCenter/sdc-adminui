@@ -9,7 +9,12 @@
 	"ufdsMaster": {
 		"url": "ldaps://{{^ufds_remote_ip}}{{{ufds_domain}}}{{/ufds_remote_ip}}{{{ufds_remote_ip}}}",
 		"bindDN": "{{{ufds_ldap_root_dn}}}",
+		{{^ufds_remote_ldap_root_pw}}
 		"bindPassword": "{{{ufds_ldap_root_pw}}}",
+		{{/ufds_remote_ldap_root_pw}}
+		{{#ufds_remote_ldap_root_pw}}
+		"bindPassword": "{{{ufds_remote_ldap_root_pw}}}",
+		{{/ufds_remote_ldap_root_pw}}
 		"clientTimeout": 240000,
 		"cache": {
 			"size": 5000,
