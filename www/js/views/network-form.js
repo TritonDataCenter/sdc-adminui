@@ -167,6 +167,10 @@ var View = Backbone.Marionette.Layout.extend({
         data.routes = routes;
         data.nic_tag = this.$('select[name=nic_tag]').val();
 
+        if (!data.description) {
+            delete data.description;
+        }
+
         if (this.options.isFabric) {
             var vlan = this.options.data || {};
             data.vlan_id = vlan.vlan_id || this.$('select[name=vlan_id]').val();
