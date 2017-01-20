@@ -81,6 +81,12 @@ var Vm = Model.extend({
         });
     },
 
+    getSync: function(cb) {
+        $.get(this.url() + '?sync=true', {}, function(data) {
+            cb(data.state);
+        });
+    },
+
     createSnapshot: function(cb) {
         var req = $.post(this.url() + '?action=create_snapshot', {});
         req.done(function(data) {

@@ -167,6 +167,7 @@ var VMPage = React.createClass({
                         : null }
 
                         <li className="divider"></li>
+                        <li><a onClick={this._handleSyncVm} className="sync">Sync</a></li>
                         <li><a onClick={this._handleDeleteVm} className="delete">Delete</a></li>
                     </ul>
                 </div>
@@ -505,6 +506,16 @@ var VMPage = React.createClass({
     },
     _handleResizeJobCreated: function (job) {
         this.setState({currentJob: job});
+    },
+    _handleSyncVm: function () {
+        var vm = new VMModel({uuid: this.state.vm.uuid});
+        vm.getSync(function (state) {
+            if (state) {
+                window.alert('VM data synchronized from compute node. (Current state: ' + state + ')');
+            } else {
+                window.alert('VM data failed to be synchronized.');
+            }
+        });
     },
     _handleDeleteVm: function () {
         if (window.confirm('Are you sure you want to delete this VM?')) {
