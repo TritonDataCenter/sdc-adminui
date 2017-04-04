@@ -175,6 +175,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.ui.saveButton.prop('disabled', true);
         this.stickit(this.networkPool, {
             'input[name=name]': 'name',
+            'input[name=description]': 'description',
             'input[name="owner_uuids[]"]': 'owner_uuids'
         });
         this.$('select').chosen({
