@@ -7,14 +7,14 @@
 #
 
 #
-# Copyright (c) 2014, Joyent, Inc.
+# Copyright (c) 2017, Joyent, Inc.
 #
 
 export PS4='[\D{%FT%TZ}] ${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 set -o xtrace
 
 echo "Updating adminui service manifest"
-$(/opt/local/bin/gsed -i"" \
+$(/usr/bin/sed -i"" \
   -e "s/@@PREFIX@@/\/opt\/smartdc\/adminui/g" \
   /opt/smartdc/adminui/smf/manifests/adminui.xml)
 

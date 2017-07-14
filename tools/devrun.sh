@@ -6,12 +6,12 @@
 #
 
 #
-# Copyright (c) 2014, Joyent, Inc.
+# Copyright (c) 2017, Joyent, Inc.
 #
 
 port=$(cat `pwd`/etc/config.json | json sslport)
 
-echo "Will rebundle when needed";
-WATCH=true tools/build-js | ./node_modules/bunyan/bin/bunyan &
-echo "***** Starting adminui server on port $port"
-./node_modules/.bin/node-dev server.js NODE=$(which node) | ./node_modules/.bin/bunyan
+echo "***** Bundling client-side assets"
+tools/build-js | ./node_modules/bunyan/bin/bunyan
+echo "***** Starting server on port $port"
+node server.js | ./node_modules/.bin/bunyan

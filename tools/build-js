@@ -16,8 +16,7 @@ var LOG = require('bunyan').createLogger({name:'bundler'});
 var async = require('async');
 var fs = require('fs');
 var path = require('path');
-var browserify = require('watchify/node_modules/browserify');
-var watchify = require('watchify');
+var browserify = require('browserify');
 
 var shim = require('browserify-shim');
 var format = require('util').format;
@@ -111,8 +110,13 @@ Object.keys(shimConfig).forEach(function(k) {
 });
 
 var prepAppBundle = function() {
-    var bundler = process.env.WATCH ? watchify : browserify;
-    var bundle = shim(bundler({ extensions: ['.js', '.jsx'] }), shimConfig);
+    var opts = {
+        extensions: ['.js', '.jsx'],
+        debug: true
+    };
+
+    var bundle = shim(browserify(opts), shimConfig);
+
     bundle
         .transform(require.resolve(join(root, './transforms/tpl')))
         .transform(require('reactify'))
@@ -132,8 +136,11 @@ var prepAppBundle = function() {
 };
 
 function prepLibsBundle() {
-    var opts = {noParse: [ require.resolve(join(root, './lib/epoch.0.5.2.min')) ]};
-    var blibs = process.env.WATCH ? watchify(opts) : browserify(opts);
+    var opts = {
+        noParse: [ require.resolve(join(root, './lib/epoch.0.5.2.min')) ]
+    };
+
+    var blibs = browserify(opts);
     blibs.require('react');
     blibs.require('underscore');
     blibs.require('underscore.string');
@@ -203,7 +210,7 @@ function bundle(bundler, out, cb) {
 
     LOG.info('[%s] building', out);
 
-    var bs = bundler.bundle({debug:true});
+    var bs = bundler.bundle();
 
     var bytes, time;
     bundler.on('bytes', function(b) { bytes = b; });

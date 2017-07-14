@@ -82,13 +82,15 @@ Object.keys(deps).forEach(function(k) {
             process.exit(code);
         }
 
-        var val;
-        eval('val = ' + json);
+        var val = JSON.parse(json);
 
         deps[k] = val['dist-tags'].latest;
         wait--;
     });
 });
 
-return (wait === 0 ? done() : waitForDone());
-
+if (wait === 0) {
+    done();
+} else {
+    waitForDone();
+}
