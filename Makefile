@@ -5,7 +5,7 @@
 #
 
 #
-# Copyright (c) 2014, Joyent, Inc.
+# Copyright (c) 2017, Joyent, Inc.
 #
 
 #
@@ -21,16 +21,12 @@
 # other projects too, you should add these to the original versions of the
 # included Makefiles (in eng.git) so that other teams can use them too.
 #
-
-#
-# Tools
-#
-MOCHA_PHANTOMJS	:= ./node_modules/.bin/mocha-phantomjs
+NAME		:= adminui
 
 #
 # Files
 #
-JS_FILES	:= $(shell ls *.js) $(shell find lib test -name '*.js')
+JS_FILES	:= $(shell ls *.js) $(shell find lib -name '*.js')
 JSL_CONF_NODE	 = tools/jsl.node.conf
 JSL_FILES_NODE   = $(JS_FILES)
 JSSTYLE_FILES	 = $(JS_FILES)
@@ -39,10 +35,11 @@ JSSTYLE_FLAGS    = -o "indent=2,doxygen,unparenthesized-return=0,line-length=120
 REPO_MODULES	 =
 SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
 
-NODE_PREBUILT_VERSION=v0.10.48
-NODE_PREBUILT_TAG=zone
-NODE_PREBUILT_IMAGE=fd2cc906-8938-11e3-beab-4359c665ac99
-
+NODE_PREBUILT_VERSION=v4.8.4
+ifeq ($(shell uname -s),SunOS)
+	NODE_PREBUILT_IMAGE=18b094b0-eb01-11e5-80c1-175dac7ddf02
+	NODE_PREBUILT_TAG=zone
+endif
 
 
 include ./tools/mk/Makefile.defs
@@ -53,8 +50,15 @@ else
 endif
 include ./tools/mk/Makefile.smf.defs
 
+
+#
+# Variables
+#
+
+# Mountain Gorilla-spec'd versioning.
+
 ROOT            := $(shell pwd)
-RELEASE_TARBALL := adminui-pkg-$(STAMP).tar.bz2
+RELEASE_TARBALL := $(NAME)-pkg-$(STAMP).tar.bz2
 RELSTAGEDIR          := /tmp/$(STAMP)
 
 
@@ -73,7 +77,7 @@ all: $(SMF_MANIFESTS) node_modules js sdc-scripts
 .PHONY: dev
 dev: node_modules_dev sdc-scripts
 
-.PHONY: node_modules
+.PHONY: node_modules node_modules_dev
 node_modules: | $(NPM_EXEC)
 	$(NPM) install --production
 
@@ -103,13 +107,13 @@ test: | $(JS_BUNDLE)
 .PHONY: release
 release: all deps docs $(SMF_MANIFESTS)
 	@echo "Building $(RELEASE_TARBALL)"
-	@mkdir -p $(RELSTAGEDIR)/root/opt/smartdc/adminui
+	@mkdir -p $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)
 	@mkdir -p $(RELSTAGEDIR)/site
 	@touch $(RELSTAGEDIR)/site/.do-not-delete-me
-	cp -r $(ROOT)/* $(RELSTAGEDIR)/root/opt/smartdc/adminui/
-	rm $(RELSTAGEDIR)/root/opt/smartdc/adminui/image-version.json
-	@echo "{\"version\": \"$(STAMP)\"}" >> $(RELSTAGEDIR)/root/opt/smartdc/adminui/image-version.json
-	rm -rf $(RELSTAGEDIR)/root/opt/smartdc/adminui/deps
+	cp -r $(ROOT)/* $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/
+	rm $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/image-version.json
+	@echo "{\"version\": \"$(STAMP)\"}" >> $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/image-version.json
+	rm -rf $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/deps
 	mkdir -p $(RELSTAGEDIR)/root/opt/smartdc/boot
 	cp -R $(ROOT)/deps/sdc-scripts/* $(RELSTAGEDIR)/root/opt/smartdc/boot/
 	cp -R $(ROOT)/boot/* $(RELSTAGEDIR)/root/opt/smartdc/boot/
@@ -123,8 +127,8 @@ publish: release
 		echo "error: 'BITS_DIR' must be set for 'publish' target"; \
 		exit 1; \
 	fi
-	mkdir -p $(BITS_DIR)/adminui
-	cp $(ROOT)/$(RELEASE_TARBALL) $(BITS_DIR)/adminui/$(RELEASE_TARBALL)
+	mkdir -p $(BITS_DIR)/$(NAME)
+	cp $(ROOT)/$(RELEASE_TARBALL) $(BITS_DIR)/$(NAME)/$(RELEASE_TARBALL)
 
 
 

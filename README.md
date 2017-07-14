@@ -46,7 +46,7 @@ services running in
     make check
 
     make devrun
-    # devrun automatically restarts node process and incrementally re-builds assets
+    # devrun rebuilds client-side assets and runs server
     ```
 
 - testing:
