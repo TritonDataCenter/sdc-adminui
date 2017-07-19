@@ -26,7 +26,7 @@ NAME		:= adminui
 #
 # Files
 #
-JS_FILES	:= $(shell ls *.js) $(shell find lib -name '*.js')
+JS_FILES	:= $(shell ls *.js) $(shell find lib tools -name '*.js')
 JSL_CONF_NODE	 = tools/jsl.node.conf
 JSL_FILES_NODE   = $(JS_FILES)
 JSSTYLE_FILES	 = $(JS_FILES)
@@ -68,7 +68,7 @@ RELSTAGEDIR          := /tmp/$(STAMP)
 
 JS_BUNDLE = ./www/app.js
 JS_BUNDLE_FILES	:= $(shell find www/js -name '*.js' -o -name '*.hbs')
-JS_BUNDLE_FILES	+= ./tools/build-js
+JS_BUNDLE_FILES	+= ./tools/bundle.js
 
 
 .PHONY: all
@@ -92,7 +92,7 @@ js: $(JS_BUNDLE)
 
 $(JS_BUNDLE): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
 	@echo "Building js bundle"
-	MINIFY=true $(NODE) tools/build-js | bunyan
+	MINIFY=true $(NODE) tools/bundle.js | bunyan
 
 
 .PHONY: devrun

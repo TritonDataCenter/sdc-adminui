@@ -12,6 +12,6 @@
 port=$(cat `pwd`/etc/config.json | json sslport)
 
 echo "***** Bundling client-side assets"
-tools/build-js | ./node_modules/bunyan/bin/bunyan
+tools/bundle.js | ./node_modules/bunyan/bin/bunyan
 echo "***** Starting server on port $port"
 node server.js | ./node_modules/.bin/bunyan
