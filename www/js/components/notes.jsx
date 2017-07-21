@@ -122,10 +122,20 @@ var NotesPanel = React.createClass({
 
 var NotesDropdown = React.createClass({
     getInitialState: function () {
-        return {notes: []};
+        return {
+            notes: [],
+            item: this.props.item
+        };
     },
     propTypes: {
         item: React.PropTypes.string.isRequired
+    },
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.item !== this.props.item) {
+            this.setState({item: nextProps.item}, function () {
+                this.fetchNotes();
+            });
+        }
     },
     handleUnarchive: function (item) {
         var note = new Note(item);
@@ -143,7 +153,7 @@ var NotesDropdown = React.createClass({
     },
     handleSave: function (item) {
         var note = new Note({
-            item_uuid: this.props.item,
+            item_uuid: this.state.item,
             note: item.note
         });
         var self = this;
@@ -205,7 +215,7 @@ var NotesDropdown = React.createClass({
         }
         var self = this;
         var collection = new Notes();
-        collection.item_uuid = this.props.item;
+        collection.item_uuid = this.state.item;
         var req = collection.fetch();
         req.done(function (notes) {
             self.setState({notes: notes});
@@ -222,7 +232,7 @@ var NotesDropdown = React.createClass({
         this.setState({dropdown: dropdown});
     },
     render: function () {
-        if (! this.props.item) {
+        if (!this.props.item) {
             console.warn('[Notes] Missing `item` property for notes component, rendering nothing');
             return null;
         }
