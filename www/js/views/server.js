@@ -183,11 +183,11 @@ var ServerView = Backbone.Marionette.Layout.extend({
             data.total_quota += v['Size in GB'];
         });
 
-
         data.disks = _.map(data.sysinfo['Disks'], function (v, k) {
             return {
                 name: k,
-                size: v['Size in GB']
+                size: v['Size in GB'],
+                profile: data.sysinfo['Zpool Profile']
             };
         });
         data.traits = _.map(data.traits, function (v, k) {
