@@ -16,6 +16,7 @@ var BackboneMixin = require('../../_backbone-mixin');
 var moment = require('moment');
 var UserForm = require('../../../views/user-form');
 var BB = require('../../bb');
+var DATE_FORMAT = 'D MMMM, YYYY HH:mm:ss z';
 
 var UserProfile = React.createClass({
     mixins: [BackboneMixin],
@@ -42,6 +43,7 @@ var UserProfile = React.createClass({
         var isTopLevelAccount = !user.account;
 
         var locked = user.pwdaccountlockedtime && (new Date()).getTime() < user.pwdaccountlockedtime;
+        var accountLockedTime = moment(new Date(Number(user.pwdaccountlockedtime || 0))).utc().format(DATE_FORMAT);
         var pwdfailuretimes = [];
         if (user.pwdfailuretimes) {
             if (! Array.isArray(user.pwdfailuretimes)) {
@@ -55,10 +57,12 @@ var UserProfile = React.createClass({
         pwdfailuretimes = pwdfailuretimes.map(function (m) {
             var date = moment(new Date(Number(m)));
             return {
-                absolute: date.utc().format('D MMMM, YYYY HH:mm:ss z'),
+                absolute: date.utc().format(DATE_FORMAT),
                 relative: date.fromNow()
             };
         });
+        var created = moment.unix(user['created_at'] / 1000).utc().format(DATE_FORMAT);
+        var updated = moment.unix(user['updated_at'] / 1000).utc().format(DATE_FORMAT);
 
         return (
             <div className="row">
@@ -68,10 +72,13 @@ var UserProfile = React.createClass({
                             <div className="alert alert-warning">
                                 <h5><strong>User Account Temporarily Locked</strong></h5>
                                 <p>
-                                    This account is locked until <strong>{moment(new Date(Number(user.pwdaccountlockedtime))).utc().format('D MMMM, YYYY HH:mm:ss z')}</strong> due to too many failed password attempts.
+                                    This account is locked until <strong>{accountLockedTime}</strong>
+                                    &nbsp;due to too many failed password attempts.
                                 </p>
                                 <p>
-                                <a onClick={this.props.handleUnlockUser} className="btn btn-default"><i className="fa fa-unlock"></i> Unlock User Now</a>
+                                <a onClick={this.props.handleUnlockUser} className="btn btn-default">
+                                    <i className="fa fa-unlock"></i> Unlock User Now
+                                </a>
                                 </p>
                             </div>
                         : null }
@@ -79,7 +86,9 @@ var UserProfile = React.createClass({
                             {
                                 adminui.user.role('operators') ?
                                 <div className="actions">
-                                    <button onClick={this.props.handleModifyUser} className="edit-user btn btn-sm btn-info"><i className="fa fa-pencil"></i> Edit User Profile</button>
+                                    <button onClick={this.props.handleModifyUser} className="edit-user btn btn-sm btn-info">
+                                        <i className="fa fa-pencil"></i> Edit User Profile
+                                    </button>
                                 </div> : null
                             }
                         </h3>
@@ -92,7 +101,11 @@ var UserProfile = React.createClass({
                             </tr>
                             <tr>
                                 <th>Email</th>
-                                <td><a href={'mailto:'+user.email}><i class="fa fa-envelope"></i> <span className="email selectable">{user.email}</span></a></td>
+                                <td>
+                                    <a href={'mailto:'+user.email}><i class="fa fa-envelope"></i>
+                                        <span className="email selectable">{user.email}</span>
+                                    </a>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Company</th>
@@ -110,6 +123,16 @@ var UserProfile = React.createClass({
                                 <th>Phone</th>
                                 <td><span className="phone">{user.phone}</span></td>
                             </tr> : null }
+
+                            <tr>
+                                <th>Created</th>
+                                <td><span className="created">{created}</span></td>
+                            </tr>
+
+                            <tr>
+                                <th>Updated</th>
+                                <td><span className="updated">{updated}</span></td>
+                            </tr>
 
                             { isTopLevelAccount ?
                             <tr>
@@ -174,7 +197,10 @@ var UserProfile = React.createClass({
                                         }
                                     </span>
                                     &nbsp;
-                                    { twoFactorAuth ? <a onClick={this.props.handleToggleTwoFactorAuth} className="disable-2fa">Disable Two Factor Auth</a> : '' }
+                                    { twoFactorAuth ?
+                                        <a onClick={this.props.handleToggleTwoFactorAuth} className="disable-2fa">
+                                            Disable Two Factor Auth
+                                        </a> : '' }
                                 </td>
                             </tr>
                             : null }
