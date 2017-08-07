@@ -218,7 +218,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
         var self = this;
         var getValue = function (name) {
             return $((name === 'active' ? 'select' : 'input') + '[name=' + name + ']').val();
-        }
+        };
 
         var data = {
             active: getValue('active'),
@@ -226,13 +226,15 @@ var PackagesView = Backbone.Marionette.Layout.extend({
             traits: getValue('traits'),
             group: getValue('group'),
             billing_id: getValue('billing_id')
-        }
+        };
+
         Object.keys(data).forEach(function (key) {
             var value = data[key];
             if (value && ((key === 'active' && value === 'true' || value === 'false') || key !== 'active')) {
-                return self.filterOptions[key] = value;
+                self.filterOptions[key] = value;
+            } else {
+                delete self.filterOptions[key];
             }
-            delete self.filterOptions[key];
         });
 
         var ram_val = this.$('input[name="ram-value"]').val();

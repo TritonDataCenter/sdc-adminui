@@ -65,7 +65,7 @@ var EditingView = Backbone.Marionette.ItemView.extend({
         this.tag.name = this.$('input[name=name]').val();
         this.tag.value = this.$('input[name=value]').val();
         if ((!this.tag.name.length) || (!this.tag.value.length)) {
-            return false;
+            return;
         }
         this.trigger('save', this.tag);
         this.model.set({editing: false});
@@ -193,10 +193,10 @@ var TagsList = Backbone.Marionette.ItemView.extend({
             var tv = val[1];
             var view = new EditingView({ name: tn, value: tv });
             view.on('save', function(tag) {
-                var tags = this.getTags();
-                delete tags[tn];
-                tags[tag.name] = tag.value;
-                this.saveTags(tags);
+                var modifiedTags = this.getTags();
+                delete modifiedTags[tn];
+                modifiedTags[tag.name] = tag.value;
+                this.saveTags(modifiedTags);
             }, this);
 
             view.on('change:editing', this.onEditMode, this);
@@ -207,10 +207,10 @@ var TagsList = Backbone.Marionette.ItemView.extend({
                     return;
                 }
 
-                var tags = this.getTags();
-                delete tags[tag.name];
+                var modifiedTags = this.getTags();
+                delete modifiedTags[tag.name];
 
-                this.saveTags(tags).done(function() {
+                this.saveTags(modifiedTags).done(function() {
                     view.$el.fadeOut(200, function() {
                         view.remove();
                     });

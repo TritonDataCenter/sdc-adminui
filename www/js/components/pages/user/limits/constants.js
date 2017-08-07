@@ -16,7 +16,7 @@ module.exports.OPERATING_SYSTEMS = [
     "windows",
     "bsd",
     "illumos",
-    "other",
+    "other"
 ];
 
 module.exports.DATACENTERS = [

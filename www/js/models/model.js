@@ -18,7 +18,7 @@ var Model = Backbone.Model.extend({
         options.error = function(xhr, err, statusText) {
             var contentType = xhr.getResponseHeader('content-type');
             if (contentType === 'application/json') {
-                xhr.responseData = jQuery.parseJSON(xhr.responseText);
+                xhr.responseData = JSON.parse(xhr.responseText);
             }
             model.trigger('error', model, xhr, options);
         };

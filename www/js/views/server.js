@@ -63,7 +63,7 @@ var getInterfaces = function (sysInfo) {
         });
     });
     return result;
-}
+};
 
 var ServerView = Backbone.Marionette.Layout.extend({
     id: 'page-server',

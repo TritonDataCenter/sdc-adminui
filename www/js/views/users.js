@@ -29,7 +29,7 @@ var UsersListItem = Backbone.Marionette.ItemView.extend({
     },
     events: {
         'click a.login-link': 'onClickLoginName',
-        'click a.account-link': 'onClickAccountName',
+        'click a.account-link': 'onClickAccountName'
     },
     onRender: function () {
         var container = this.$('.groups-container').get(0);

@@ -26,11 +26,12 @@ NAME		:= adminui
 #
 # Files
 #
-JS_FILES	:= $(shell ls *.js) $(shell find lib tools -name '*.js')
 JSL_CONF_NODE	 = tools/jsl.node.conf
-JSL_FILES_NODE   = $(JS_FILES)
-JSSTYLE_FILES	 = $(JS_FILES)
-JSSTYLE_FLAGS    = -o "indent=2,doxygen,unparenthesized-return=0,line-length=120"
+JSL_CONF_WEB	 = tools/jsl.web.conf
+JSL_FILES_NODE	 = $(shell ls *.js) $(shell find lib tools -name '*.js')
+JSL_FILES_WEB	 = $(shell find www/js -name '*.js' | grep -v www/js/lib)
+JSSTYLE_FILES	 = $(JSL_FILES_NODE)
+JSSTYLE_FLAGS	 = -o "indent=2,doxygen,unparenthesized-return=0,line-length=120"
 
 REPO_MODULES	 =
 SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in

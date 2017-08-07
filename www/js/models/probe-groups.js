@@ -10,6 +10,7 @@
 
 var ProbeGroup = require('./probe-group');
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 var ProbeGroups = Backbone.Collection.extend({
     model: ProbeGroup,

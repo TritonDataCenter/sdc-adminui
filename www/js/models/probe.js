@@ -9,6 +9,7 @@
  */
 
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 
 var Probe = Backbone.Model.extend({
@@ -41,6 +42,8 @@ var Probe = Backbone.Model.extend({
         if (_.size(errors) > 0) {
             return errors;
         }
+
+        return null;
     }
 });
 

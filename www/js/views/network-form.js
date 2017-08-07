@@ -148,9 +148,9 @@ var View = Backbone.Marionette.Layout.extend({
         }
 
         var routes = {};
-        _.each(data.routes, function(data) {
-            if (data.subnet.length && data.gateway.length) {
-                routes[data.subnet] = data.gateway;
+        _.each(data.routes, function(datum) {
+            if (datum.subnet.length && datum.gateway.length) {
+                routes[datum.subnet] = datum.gateway;
             }
         });
 
@@ -218,7 +218,7 @@ var View = Backbone.Marionette.Layout.extend({
             });
 
             this.model.update(params, function (err, res) {
-                var err = err || !res.ok && res.body.errors;
+                err = err || !res.ok && res.body.errors;
                 if (err) {
                     self.showError(err);
                     return;
@@ -235,7 +235,6 @@ var View = Backbone.Marionette.Layout.extend({
 
     showError: function (errors) {
         $('.form-group').removeClass('has-error');
-        var ul = $('<ul />');
         _(errors).each(function (error) {
             var $field = this.$('[name="' + error.field + '"]');
             $field.parents('.form-group').addClass('has-error').find('.text-danger').remove();

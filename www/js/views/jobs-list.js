@@ -74,7 +74,7 @@ var JobsItemView = Backbone.Marionette.ItemView.extend({
 
 var JobsItemEmptyView = require('./empty').extend({
     emptyMessage: "No Jobs found with the selected criteria",
-    columns: 3,
+    columns: 3
 });
 
 var JobsList = Backbone.Marionette.CompositeView.extend({

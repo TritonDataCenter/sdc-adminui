@@ -10,6 +10,7 @@
 
 var Backbone = require('backbone');
 var Bloodhound = require('bloodhound');
+var app = require('adminui');
 
 var Image = require('../models/image');
 
@@ -125,21 +126,6 @@ var ImageTypeaheadView = Backbone.Marionette.View.extend({
         this.$el.parent().parent().find(".tt-loading").hide();
     },
     renderInput: function () {
-        var self = this;
-        var substringMatcher = function (strs, property) {
-            return function findMatches(q, cb) {
-                var matches = [];
-                var substrRegex = new RegExp(q, 'i');
-                strs.forEach(function (str) {
-                    if (substrRegex.test(property ? str[property] : str.toString())) {
-                        matches.push(str);
-                    }
-                });
-
-                cb(matches.sort(self.engine.sorter).slice(0, self.engine.limit));
-            };
-        };
-
         this.$el.typeahead({
             name: 'images',
             minLength: 3,

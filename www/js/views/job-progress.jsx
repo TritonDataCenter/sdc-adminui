@@ -63,6 +63,8 @@ var JobProgressSummary = React.createClass({
                                         </div>
                                     );
                                 }
+
+                                return '';
                             })()}
                         </li>);
                     })}
