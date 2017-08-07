@@ -9,6 +9,8 @@
  */
 
 var Backbone = require('backbone');
+var _ = require('underscore');
+
 var Platforms = Backbone.Collection.extend({
     url: '/api/platforms',
     parse: function (res) {

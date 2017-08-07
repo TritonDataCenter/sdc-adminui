@@ -17,7 +17,7 @@ var FabricsVlans = Collection.extend({
         if (owner_uuid) {
             return '/api/fabrics/' + owner_uuid + '/vlans';
         }
-        return '/api/fabrics'
+        return '/api/fabrics';
     }
 });
 

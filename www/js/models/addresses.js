@@ -16,7 +16,7 @@ module.exports = PageableCollection.extend({
     model: Backbone.Model.extend({
         idAttribute: 'ip',
         urlRoot: function () {
-            return '/api/networks/' + this.get('network_uuid') + '/ips'
+            return '/api/networks/' + this.get('network_uuid') + '/ips';
         }
     }),
     url: function () {

@@ -124,12 +124,13 @@ module.exports = Backbone.Marionette.ItemView.extend({
         validation.disableRequiredValidation = this.mode === 'edit';
         utils.validate(model, validation, function (err) {
             if (err) {
-                return self.showError(err);
+                self.showError(err);
+                return;
             }
 
             self.model.save(null, {
                 patch: true,
-                success: function (model, resp) {
+                success: function (_model, resp) {
                     adminui.vent.trigger('showcomponent', 'user', self.redirect || {user: self.model});
                     adminui.vent.trigger('notification', {
                         level: 'success',

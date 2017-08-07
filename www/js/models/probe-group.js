@@ -9,6 +9,8 @@
  */
 
 var Backbone = require('backbone');
+var _ = require('underscore');
+
 var ProbeGroup = Backbone.Model.extend({
     idAttribute: 'uuid',
     url: function() {

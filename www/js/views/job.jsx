@@ -69,7 +69,7 @@ var JobDetailsComponent = React.createClass({
 
                     <div className="duration"><i className="fa fa-clock-o"></i><div className="value">{task.duration}</div></div>
                 </li>
-            )
+            );
         });
 
         var jobStatus = (

@@ -12,6 +12,7 @@
 
 var adminui = require('adminui');
 
+var Backbone = require('backbone');
 var React = require('react');
 var NicTags = require('../models/nictags');
 var ErrorAlert = require('../components/error-alert');

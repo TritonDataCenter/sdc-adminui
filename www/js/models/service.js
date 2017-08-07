@@ -18,7 +18,8 @@ var Service = Model.extend({
         var req = api.post(this.url()).send(attrs);
         req.end(function (res) {
             if (res.ok) {
-                return cb(null, res.body);
+                cb(null, res.body);
+                return;
             }
             cb(res.body);
         });

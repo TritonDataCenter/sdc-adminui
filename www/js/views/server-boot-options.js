@@ -55,7 +55,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
     onInputKeyup: _.debounce(function () {
         var text = this.$('textarea').val();
         try {
-            var json = JSON.parse(text);
+            JSON.parse(text);
             this.$('.error').text();
             this.$('.error').hide();
             this.$('.save').prop('disabled', false);

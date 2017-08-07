@@ -82,7 +82,7 @@ var User = module.exports = Model.extend({
 
         if (user.length === 0 || pass.length === 0) {
             this.trigger('error', 'Username and Password Required');
-            return false;
+            return;
         }
 
         var authData = {

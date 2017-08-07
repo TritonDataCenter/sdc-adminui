@@ -18,5 +18,5 @@ module.exports = Model.extend({
 
     update: function(attrs, cb) {
         api.put(this.url()).send(attrs).end(cb);
-    },
+    }
 });

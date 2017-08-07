@@ -43,6 +43,7 @@ var View = Backbone.Marionette.ItemView.extend({
         } catch (e) {
             this.$('.btn-primary').attr('disabled', 'disabled');
             this.showError('JSON Error: ' + e.message);
+            return null;
         }
     },
     onClickSave: function() {

@@ -16,7 +16,7 @@ var app = require('adminui');
 var $ = require('jquery');
 var Servers = require('../models/servers');
 var ServerBootOptionsView = require('./server-boot-options');
-var utils = require('../lib/utils')
+var utils = require('../lib/utils');
 var NicTags = require('../models/nictags');
 
 var GLYPH_ICON_CLASS = 'glyphicon';

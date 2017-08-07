@@ -10,6 +10,7 @@
 
 var adminui = require('adminui');
 
+var Backbone = require('backbone');
 var React = require('react');
 var FabricVlans = require('../models/fabrics-vlans');
 var $ = require('jquery');

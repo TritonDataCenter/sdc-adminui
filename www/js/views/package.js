@@ -26,7 +26,6 @@ var NetworkPoolsList = React.createFactory(require('../components/pages/networki
 var TraitsEditor = require('./traits-editor');
 var PackageTemplate = require('../tpl/package.hbs');
 
-var React = require('react');
 var NotesComponent = React.createFactory(require('../components/notes'));
 
 var Handlebars = require('handlebars');

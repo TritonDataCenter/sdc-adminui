@@ -94,6 +94,7 @@ Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
             break;
         default:
             condition = false;
+            break;
     }
     return condition ? options.fn(this) : options.inverse(this);
 });
@@ -153,7 +154,7 @@ jQuery.extend({
 var adminui = window.$a = module.exports = new Backbone.Marionette.Application();
 adminui.version = require('../../package.json').version;
 
-adminui.addInitializer(function(options) {
+adminui.addInitializer(function (options) {
     var Router = require('./router');
     this.pinger = new Pinger();
     this.state = new Backbone.Model();

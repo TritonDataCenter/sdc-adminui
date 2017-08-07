@@ -79,7 +79,7 @@ var Server = Model.extend({
         $.delete_(this.url(), {}, function (data) {
             cb();
         });
-    },
+    }
 });
 
 module.exports = Server;

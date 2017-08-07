@@ -173,7 +173,7 @@ var View = Backbone.Marionette.Layout.extend({
     removeNic: function (nic) {
         if (this.nicSelects.length === 1) {
             window.alert('Cannot Remove last Network Interface');
-            return false;
+            return;
         }
         var self = this;
         React.unmountComponentAtNode(nic.getDOMNode());
@@ -195,7 +195,7 @@ var View = Backbone.Marionette.Layout.extend({
             this.userPreview.close();
             this.removeAllNics();
             this.checkFields();
-            return;
+            return null;
         }
         if (this.selectedUser && this.selectedUser.id === user.id) {
             return this.userPreview.show(new UserPreview({model: user}));
@@ -231,6 +231,8 @@ var View = Backbone.Marionette.Layout.extend({
         this.sshKeys = new SSHKeys(null, {user: user});
         this.listenTo(this.sshKeys, 'sync', this.onFetchKeys);
         this.sshKeys.fetch();
+
+        return null;
     },
 
     onFetchKeys: function (collection) {
@@ -364,7 +366,6 @@ var View = Backbone.Marionette.Layout.extend({
 
         var values = this.extractFormValues();
         var valid;
-        var image_uuid;
 
         if (!values.owner_uuid ||
             !values.owner_uuid.length ||
@@ -386,7 +387,6 @@ var View = Backbone.Marionette.Layout.extend({
         if (!values.image_uuid && (!values.disks || !values.disks[0] || !values.disks[0].image_uuid)) {
             valid = valid && false;
         } else {
-            image_uuid = values['image_uuid'] || values['disks'][0]['image_uuid'];
             valid = valid && true;
         }
 

@@ -131,7 +131,7 @@ var FWRulesList = require('../../../views/collection').extend({
             rule.model.on('sync', callback, this);
             rule.model.set({enabled: action === 'enable'});
             rule.model.save();
-        }
+        };
     },
     refresh: function () {
         this.collection.fetch({reset: true});
