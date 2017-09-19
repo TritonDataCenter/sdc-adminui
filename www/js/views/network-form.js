@@ -14,6 +14,7 @@ require('backbone.syphon');
 
 var _ = require('underscore');
 var $ = require('jquery');
+var ipaddr = require('ipaddr.js');
 var adminui = require('../adminui');
 
 var Template = require('../tpl/networks-form.hbs');
@@ -197,6 +198,32 @@ var View = Backbone.Marionette.Layout.extend({
         }
         var params = {};
         var network = this.model.toJSON();
+
+        var subnetType;
+        try {
+            subnetType = data.subnet && ipaddr.parse(data.subnet.substr(0, data.subnet.indexOf('/'))).kind();
+        } catch (ex) {
+            // ignore
+        }
+        if (!subnetType) {
+            this.showError([{field: 'subnet', message: 'Subnet must be in CIDR form'}]);
+            return;
+        }
+        var resolversError = data.resolvers.some(function (resolver) {
+            var addrType;
+            try {
+                addrType = ipaddr.parse(resolver).kind();
+            } catch (ex) {
+                // ignore
+            }
+
+            return !addrType || subnetType !== addrType;
+        });
+
+        if (resolversError) {
+            this.showError([{field: 'resolvers', message: 'resolvers should match subnet type'}]);
+            return;
+        }
 
         if (this.model.isNew()) {
             this.model.set(data);
