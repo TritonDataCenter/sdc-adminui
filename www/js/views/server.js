@@ -172,6 +172,9 @@ var ServerView = Backbone.Marionette.Layout.extend({
         },
         total_memory: function () {
             return this.sysinfo['MiB of Memory'];
+        },
+        disk_layout: function () {
+            return this.sysinfo['Zpool Profile'];
         }
     },
 
@@ -182,7 +185,6 @@ var ServerView = Backbone.Marionette.Layout.extend({
         _.each(data.sysinfo['Disks'], function (v, k) {
             data.total_quota += v['Size in GB'];
         });
-
 
         data.disks = _.map(data.sysinfo['Disks'], function (v, k) {
             return {
