@@ -191,7 +191,7 @@ var NetworksList = React.createClass({
                 <strong>MTU / NIC Tag MTU</strong>
                 <span className="value">{network.mtu} / {this.nicTagsMtu[network.nic_tag]}</span>
             </div>
-            {this.props.showActions && adminui.user.role('operators') || adminui.user.role('readers') ?
+            {this.props.showActions && adminui.user.role('operators') ?
                 (<div className="actions">
                     <a onClick={this.deleteNetwork.bind(this, model)} className="delete"><i className="fa fa-trash-o"></i> Delete</a>
                 </div>)

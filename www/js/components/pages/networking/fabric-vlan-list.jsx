@@ -75,7 +75,7 @@ var FabricVlansListItem = React.createClass({
                     <strong>Description</strong>
                     <span className="value">{data.description}</span>
                 </div>
-                {adminui.user.role('operators') || adminui.user.role('readers') ?
+                {adminui.user.role('operators') ?
                     <div className="actions">
                         <a onClick={this.handleEdit} className="edit"><i className="fa fa-pencil"></i> Edit</a>
                         <a onClick={this.deleteVlan} className="delete"><i className="fa fa-trash-o"></i> Delete</a>
