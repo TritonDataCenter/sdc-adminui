@@ -222,7 +222,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
 
         var data = {
             active: getValue('active'),
-            name: getValue('name'),
+            name_substring: getValue('name'),
             traits: getValue('traits'),
             group: getValue('group'),
             billing_id: getValue('billing_id')
