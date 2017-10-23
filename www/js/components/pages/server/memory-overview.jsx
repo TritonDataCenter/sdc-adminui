@@ -40,23 +40,48 @@ var ServerMemoryOverview = React.createClass({
                 </div>
                 <div className="provisionable-memory">
                     <div className="value">{provisionable.value + ' ' + provisionable.measure}</div>
-                    <div className="title">Provisionable</div>
+                    <div className="title">
+                        <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+                            title="Amount of memory currently available for provisioning.">
+                            Provisionable
+                        </a>
+                    </div>
                 </div>
                 <div className="provisioned-memory">
                     <div className="value">{provisioned.value + ' ' + provisioned.measure}</div>
-                    <div className="title">Provisioned</div>
+                    <div className="title">
+                        <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+                            title="Amount of memory already committed to provisioned instances.">
+                            Provisioned
+                        </a>
+                    </div>
                 </div>
                 <div className="reserved-memory">
                     <div className="value">{reserved.value + ' ' + reserved.measure}</div>
-                    <div className="title">Reserved</div>
+                    <div className="title">
+                        <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+                            title="Amount of memory reserved for system use.">
+                            Reserved
+                        </a>
+                    </div>
                 </div>
                 <div className="unreserved-memory">
                     <div className="value">{unreserved.value + ' ' + unreserved.measure}</div>
-                    <div className="title">Unreserved</div>
+                    <div className="title">
+                        <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+                            title="Total DRAM minus memory reserved for system use.">
+                            Unreserved
+                        </a>
+                    </div>
                 </div>
                 <div className="total-memory">
                     <div className="value">{total.value + ' ' + total.measure}</div>
-                    <div className="title">Total</div>
+                    <div className="title">
+                        <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+                            title="Total DRAM on the server.">
+                            Total
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>;

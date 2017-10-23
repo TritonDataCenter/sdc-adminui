@@ -12,6 +12,7 @@ var React = require('react');
 var BackboneMixin = require('../../_backbone-mixin');
 var ServerDiskUtilizationCircle = require('./disk-utilization-circle');
 var utils = require('../../../lib/utils');
+var POOL_USABLE_RATIO = 0.94;
 
 var ServerDiskOverview = React.createClass({
     mixins: [BackboneMixin],
@@ -24,10 +25,15 @@ var ServerDiskOverview = React.createClass({
             return null;
         }
 
-        var provisioned = server.disk_pool_size_bytes - (server.unreserved_disk * 1048576);
+//      DAPI applies a pool usage ratio in its calculation of provisionable disk.
+//      Unfortunately that's named unreserved_disk which is different from what it means
+//      in this context. Here "unreserved" means what is not reserved by the system.
+        var unreserved = server.disk_pool_size_bytes * POOL_USABLE_RATIO;
+        var reserved = server.disk_pool_size_bytes - unreserved;
         var provisionable = server.unreserved_disk * 1048576;
+        var provisioned = unreserved - provisionable;
         var total = server.disk_pool_size_bytes;
-        
+
         if (provisioned < 0 || !provisioned) { provisioned = 0; }
         if (provisionable < 0 || !provisionable) {
             if (!provisionable && server.disk_pool_size_bytes) { provisionable = server.disk_pool_size_bytes; }
@@ -37,6 +43,8 @@ var ServerDiskOverview = React.createClass({
 
         var provisioned = utils.getReadableSize(provisioned);
         var provisionable = utils.getReadableSize(provisionable);
+        var reserved = utils.getReadableSize(reserved);
+        var unreserved = utils.getReadableSize(unreserved);
         var total = utils.getReadableSize(server.disk_pool_size_bytes);
 
         return <div className="disk-overview">
@@ -51,16 +59,48 @@ var ServerDiskOverview = React.createClass({
                 </div>
                 <div className="provisionable-disk">
                     <div className="value">{provisionable.value + ' ' + provisionable.measure}</div>
-                    <div className="title">Provisionable</div>
+                    <div className="title">
+                        <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+                            title="Amount of disk currently available for provisioning.">
+                            Provisionable
+                        </a>
+                    </div>
                 </div>
                 <div className="provisioned-disk">
                     <div className="value">{provisioned.value + ' ' + provisioned.measure}</div>
-                    <div className="title">Provisioned</div>
+                    <div className="title">
+                        <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+                            title="Amount of disk already committed to provisioned instances.">
+                            Provisioned
+                        </a>
+                    </div>
                 </div>
-
+                <div className="reserved-disk">
+                    <div className="value">{reserved.value + ' ' + reserved.measure}</div>
+                    <div className="title">
+                        <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+                            title="Amount of disk reserved for system use.">
+                            Reserved
+                        </a>
+                    </div>
+                </div>
+                <div className="unreserved-disk">
+                    <div className="value">{unreserved.value + ' ' + unreserved.measure}</div>
+                    <div className="title">
+                        <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+                            title="Total pool size minus disk reserved for system use.">
+                            Unreserved
+                        </a>
+                    </div>
+                </div>
                 <div className="total-disk">
                     <div className="value">{total.value + ' ' + total.measure}</div>
-                    <div className="title">Total</div>
+                    <div className="title">
+                        <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+                            title="Total disk pool size.">
+                            Total
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>;

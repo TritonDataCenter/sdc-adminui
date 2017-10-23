@@ -12,6 +12,7 @@ var $ = require('jquery');
 require('epoch');
 var React = require('react');
 var BackboneMixin = require('../../_backbone-mixin');
+var POOL_USABLE_RATIO = 0.94;
 
 var ServerMemoryUtilizationCircle = React.createClass({
     mixins: [BackboneMixin],
@@ -28,8 +29,9 @@ var ServerMemoryUtilizationCircle = React.createClass({
     getChartData: function() {
         var server = this.props.server.toJSON();
 
-        var provisioned = server.disk_pool_size_bytes - (server.unreserved_disk * 1048576);
+        var reserved = server.disk_pool_size_bytes * (1 - POOL_USABLE_RATIO);
         var provisionable = server.unreserved_disk * 1048576;
+        var provisioned = server.disk_pool_size_bytes - reserved - provisionable;
 
         if (provisioned < 0 || !provisioned) { provisioned = 0; }
         if (provisionable < 0 || !provisionable) {
@@ -38,6 +40,7 @@ var ServerMemoryUtilizationCircle = React.createClass({
         }
 
         var pieData = [
+            {label: 'Reserved', value: reserved },
             {label: 'Provisioned', value: provisioned },
             {label: 'Provisionable', value: provisionable },
         ];
@@ -72,7 +75,7 @@ var ServerMemoryUtilizationCircle = React.createClass({
         var percentmTop = (-(diameter/2) - 9) + 'px';
         var server = this.props.server.toJSON();
 
-        var provisioned = server.disk_pool_size_bytes - (server.unreserved_disk * 1048576);
+        var provisioned = server.disk_pool_size_bytes * POOL_USABLE_RATIO - (server.unreserved_disk * 1048576);
         var total = server.disk_pool_size_bytes;
 
         if (provisioned < 0 || !provisioned) { provisioned = 0; }

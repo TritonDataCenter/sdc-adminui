@@ -22,6 +22,7 @@
   .provisionable-disk,
   .provisioned-disk,
   .total-disk,
+  .unreserved-disk,
   .reserved-disk {
     .make-sm-column(2, 0);
 
@@ -31,7 +32,7 @@
     .title { text-transform: uppercase; color: #666;  font-size: 12px; }
   }
 
-  .total-disk { opacity: 0.5; }
+  .unreserved-disk, .total-disk { opacity: 0.5; }
 
   .memory-overview h5 {
     text-transform: uppercase;
@@ -67,6 +68,7 @@
 
   .provisionable-disk .value,
   .provisioned-disk .value,
+  .reserved-disk .value,
   .provisionable-memory .value,
   .provisioned-memory .value,
   .reserved-memory .value {
@@ -77,14 +79,18 @@
   .provisioned-disk .value,
   .provisionable-memory .value,
   .provisioned-memory .value,
+  .reserved-disk .value,
   .reserved-memory .value,
   .total-disk .value,
+  .unreserved-disk .value,
   .unreserved-memory .value,
   .total-memory .value {
     color: #888;
   }
 
   .unreserved-memory, .total-memory { opacity: 0.5; }
+
+  .unreserved-disk,
   .unreserved-memory {
     border-left: 1px solid #aaa;
   }
