@@ -152,7 +152,7 @@ module.exports = Backbone.Marionette.AppRouter.extend({
                     reject();
                     self.showSignin();
                     if (t === "timeout") {
-                        window.alert("One more the services required for Authentication Timed out.");
+                        window.alert("Some of the services required for authentication timed out.");
                     }
                 }).done(function () {
                     resolve();
