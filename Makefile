@@ -36,7 +36,7 @@ JSSTYLE_FLAGS	 = -o "indent=2,doxygen,unparenthesized-return=0,line-length=120"
 REPO_MODULES	 =
 SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
 
-NODE_PREBUILT_VERSION=v4.8.5
+NODE_PREBUILT_VERSION=v4.8.7
 ifeq ($(shell uname -s),SunOS)
 	NODE_PREBUILT_IMAGE=18b094b0-eb01-11e5-80c1-175dac7ddf02
 	NODE_PREBUILT_TAG=zone
