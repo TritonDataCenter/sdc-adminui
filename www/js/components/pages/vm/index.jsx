@@ -110,7 +110,7 @@ var VMPage = React.createClass({
         var vm = this.state.vm;
 
         var quota = 0;
-        if (vm.brand === 'kvm') {
+        if (vm.brand === 'kvm' || vm.brand === 'bhyve') {
             vm.disks.forEach(function (k) {
                 if (k.size && typeof(k.size) === 'number' && k.size > 0) {
                     quota = quota + (k.size/1024); // disk.size is in mib
@@ -158,7 +158,7 @@ var VMPage = React.createClass({
                         <li className="divider"></li>
                         <li><a onClick={this._handleRenameVm} className="rename">Rename Alias</a></li>
 
-                        { vm.brand !== 'kvm' ?
+                        { vm.brand !== 'kvm' && vm.brand !== 'bhyve' ?
                             [
                                 <li key="1" className="divider"></li>,
                                 <li key="2"><a onClick={this._handleReprovisionVm} className="reprovision">Reprovision</a></li>,
@@ -200,7 +200,7 @@ var VMPage = React.createClass({
                                 <th>Disk</th>
                                 <td>
                                     <span className="vm-disk-quota">
-                                    {vm.brand === 'kvm' ?
+                                    {vm.brand === 'kvm' || vm.brand === 'bhyve' ?
                                         <div className="vm-disk-quota-kvm">
                                             Total: {quota} GB
                                             {vm.disks && vm.disks.length && vm.disks[0].image_size ?

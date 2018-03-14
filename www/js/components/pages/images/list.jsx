@@ -14,7 +14,7 @@ var ImagesList = React.createClass({
         var href = '/images/' + img.uuid;
         var model = new Image(img);
         var publishDate = moment(img.published_at).utc().format('MM/DD/YYYY');
-        var os = img.type === 'zvol' ? ('KVM, ' + img.os) : img.os;
+        var os = img.type === 'zvol' ? ('HVM, ' + img.os) : img.os;
 
         return <tr key={img.uuid}>
             <td className="state">

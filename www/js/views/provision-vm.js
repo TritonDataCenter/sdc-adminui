@@ -335,10 +335,10 @@ var View = Backbone.Marionette.Layout.extend({
                 this.disableBrands('joyent', 'joyent-minimal', 'lx', 'sngl');
             } else if (image.get('type') === 'lx-dataset') {
                 this.setBrand('lx');
-                this.disableBrands('joyent', 'joyent-minimal', 'kvm', 'sngl');
+                this.disableBrands('joyent', 'joyent-minimal', 'kvm', 'bhyve', 'sngl');
             } else if (image.get('type') === 'zone-dataset') {
                 this.setBrand('joyent');
-                this.disableBrands('kvm', 'lx', 'sngl');
+                this.disableBrands('kvm', 'bhyve', 'lx', 'sngl');
             } else {
                 this.disableBrands(false);
             }
@@ -450,7 +450,7 @@ var View = Backbone.Marionette.Layout.extend({
             }
 
 
-            if (values['brand'] === 'kvm') {
+            if (values['brand'] === 'kvm' || values['brand'] === 'bhyve') {
                 // disk size passed in as MiB.
                 values['disks'] = [
                     {'image_uuid': values['image_uuid']},
@@ -464,7 +464,7 @@ var View = Backbone.Marionette.Layout.extend({
 
         }
 
-        if ((values['brand'] === 'kvm' || values['brand'] === 'lx') && this.userKeys) {
+        if ((values['brand'] === 'kvm' || values['brand'] === 'bhyve' || values['brand'] === 'lx') && this.userKeys) {
             values.customer_metadata = {
                 root_authorized_keys: this.userKeys.map(function (k) {
                     return  _.str.trim(k).replace(/(\r\n|\n|\r)/gm, '');
