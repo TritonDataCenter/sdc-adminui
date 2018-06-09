@@ -7,7 +7,7 @@
  */
 
 /*
- * Copyright (c) 2015, Joyent, Inc.
+ * Copyright (c) 2018, Joyent, Inc.
  */
 
 'use strict';
@@ -123,6 +123,8 @@ var View = Backbone.Marionette.Layout.extend({
 
         this.packageSelect.on('select', function (pkg) {
             this.selectedPackage.set(pkg.attributes);
+            this.resetImage();
+            this.ui.brandControls.hide();
         }, this);
 
         this.packages.fetchActive();
@@ -323,6 +325,19 @@ var View = Backbone.Marionette.Layout.extend({
             return;
         }
 
+/*
+ *      Both image and package have an optional brand attribute.
+ *      If brand is set in the image, it'll always take precedence.
+ *      If it isn't, use the package brand after checking that it's
+ *      consistent with the image type. If neither the image nor the
+ *      package has a brand defined, default to the more common brand.
+ */
+        var formData = this.ui.form.serializeObject();
+        var pkg = this.packages.get(formData['package']);
+        if (pkg) {
+            var pkgBrand = pkg.get('brand');
+        }
+
         if (image &&
             image.requirements &&
             image.requirements.brand &&
@@ -331,19 +346,28 @@ var View = Backbone.Marionette.Layout.extend({
             this.ui.brandControls.prop('disabled', 'disabled');
         } else {
             if (image.get('type') === 'zvol') {
-                this.setBrand('kvm');
+                if (pkgBrand && pkgBrand === 'bhyve') {
+                    this.setBrand(pkgBrand);
+                } else {
+                    this.setBrand('kvm');
+                }
                 this.disableBrands('joyent', 'joyent-minimal', 'lx', 'sngl');
             } else if (image.get('type') === 'lx-dataset') {
                 this.setBrand('lx');
                 this.disableBrands('joyent', 'joyent-minimal', 'kvm', 'bhyve', 'sngl');
             } else if (image.get('type') === 'zone-dataset') {
-                this.setBrand('joyent');
+                if (pkgBrand && pkgBrand === 'joyent-minimal') {
+                    this.setBrand(pkgBrand);
+                } else {
+                    this.setBrand('joyent');
+                }
                 this.disableBrands('kvm', 'bhyve', 'lx', 'sngl');
             } else {
                 this.disableBrands(false);
             }
         }
         this.ui.brandControls.show();
+        this.checkFields();
     },
 
     disableBrands: function () {
@@ -359,6 +383,10 @@ var View = Backbone.Marionette.Layout.extend({
 
     setBrand: function (brand) {
         this.$('.form-group-brand').find('[name=brand]').val(brand);
+    },
+
+    resetImage: function () {
+        this.$('#input-image').val('');
     },
 
     checkFields: function () {
@@ -378,6 +406,11 @@ var View = Backbone.Marionette.Layout.extend({
 
         if (!values.billing_id) {
             valid = false;
+        }
+
+        if (values.pkgBrand && values.pkgBrand != values.brand) {
+            valid = false;
+            console.log("package brand mismatch: ", values.pkgBrand);
         }
 
         // if (values.alias && values.alias.length != 0) {
@@ -441,6 +474,7 @@ var View = Backbone.Marionette.Layout.extend({
 
         if (pkg) {
             values['billing_id'] = pkg.get('uuid');
+            values['pkgBrand'] = pkg.get('brand') || '';
 
             // quota value needs to be in GiB
             var quotaMib = pkg.get('quota');
