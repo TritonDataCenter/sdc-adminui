@@ -5,7 +5,7 @@
 -->
 
 <!--
-    Copyright (c) 2014, Joyent, Inc.
+    Copyright (c) 2018, Joyent, Inc.
 -->
 
 <div class="page-header">
@@ -238,6 +238,20 @@
         <span class="value">
           {{#each requirements.users}} {{this}} {{/each}}
         </span>
+      </li>
+      {{/if}}
+
+      {{#if requirements.bootrom}}
+      <li>
+        <strong>BootROM</strong>
+        <span class="value">{{requirements.bootrom}}</span>
+      </li>
+      {{/if}}
+
+      {{#if requirements.brand}}
+      <li>
+        <strong>Brand</strong>
+        <span class="value">{{requirements.brand}}</span>
       </li>
       {{/if}}
     </ul>
