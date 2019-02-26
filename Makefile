@@ -5,7 +5,7 @@
 #
 
 #
-# Copyright (c) 2017, Joyent, Inc.
+# Copyright (c) 2019, Joyent, Inc.
 #
 
 #
@@ -42,14 +42,16 @@ ifeq ($(shell uname -s),SunOS)
 	NODE_PREBUILT_TAG=zone
 endif
 
-
-include ./tools/mk/Makefile.defs
+ENGBLD_USE_BUILDIMAGE	= true
+ENGBLD_REQUIRE		:= $(shell git submodule update --init deps/eng)
+include ./deps/eng/tools/mk/Makefile.defs
 ifeq ($(shell uname -s),SunOS)
-	include ./tools/mk/Makefile.node_prebuilt.defs
+	include ./deps/eng/tools/mk/Makefile.node_prebuilt.defs
+	include ./deps/eng/tools/mk/Makefile.agent_prebuilt.defs
 else
-	include ./tools/mk/Makefile.node.defs
+	include ./deps/eng/tools/mk/Makefile.node.defs
 endif
-include ./tools/mk/Makefile.smf.defs
+include ./deps/eng/tools/mk/Makefile.smf.defs
 
 
 #
@@ -59,9 +61,13 @@ include ./tools/mk/Makefile.smf.defs
 # Mountain Gorilla-spec'd versioning.
 
 ROOT            := $(shell pwd)
-RELEASE_TARBALL := $(NAME)-pkg-$(STAMP).tar.bz2
-RELSTAGEDIR          := /tmp/$(STAMP)
+RELEASE_TARBALL := $(NAME)-pkg-$(STAMP).tar.gz
+RELSTAGEDIR          := /tmp/$(NAME)-$(STAMP)
 
+BASE_IMAGE_UUID = 04a48d7d-6bb5-4e83-8c3b-e60a99e0f48f
+BUILDIMAGE_NAME = $(NAME)
+BUILDIMAGE_DESC	= SDC AdminUI
+AGENTS		= amon config registrar
 
 #
 # Repo-specific targets
@@ -95,7 +101,6 @@ $(JS_BUNDLE): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
 	@echo "Building js bundle"
 	MINIFY=true $(NODE) tools/bundle.js | bunyan
 
-
 .PHONY: devrun
 devrun:
 	@./tools/devrun.sh
@@ -112,34 +117,31 @@ release: all deps docs $(SMF_MANIFESTS)
 	@mkdir -p $(RELSTAGEDIR)/site
 	@touch $(RELSTAGEDIR)/site/.do-not-delete-me
 	cp -r $(ROOT)/* $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/
+	rm -rf $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/*.gz
 	rm $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/image-version.json
 	@echo "{\"version\": \"$(STAMP)\"}" >> $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/image-version.json
 	rm -rf $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/deps
 	mkdir -p $(RELSTAGEDIR)/root/opt/smartdc/boot
 	cp -R $(ROOT)/deps/sdc-scripts/* $(RELSTAGEDIR)/root/opt/smartdc/boot/
 	cp -R $(ROOT)/boot/* $(RELSTAGEDIR)/root/opt/smartdc/boot/
-	(cd $(RELSTAGEDIR) && $(TAR) -jcf $(ROOT)/$(RELEASE_TARBALL) root site)
+	(cd $(RELSTAGEDIR) && $(TAR) -I pigz -cf $(ROOT)/$(RELEASE_TARBALL) root site)
 	@rm -rf $(RELSTAGEDIR)
 
 
 .PHONY: publish
 publish: release
-	@if [[ -z "$(BITS_DIR)" ]]; then \
-		echo "error: 'BITS_DIR' must be set for 'publish' target"; \
-		exit 1; \
-	fi
-	mkdir -p $(BITS_DIR)/$(NAME)
-	cp $(ROOT)/$(RELEASE_TARBALL) $(BITS_DIR)/$(NAME)/$(RELEASE_TARBALL)
+	mkdir -p $(ENGBLD_BITS_DIR)/$(NAME)
+	cp $(ROOT)/$(RELEASE_TARBALL) $(ENGBLD_BITS_DIR)/$(NAME)/$(RELEASE_TARBALL)
 
 
-
-include ./tools/mk/Makefile.deps
-include ./tools/mk/Makefile.targ
+include ./deps/eng/tools/mk/Makefile.deps
+include ./deps/eng/tools/mk/Makefile.targ
 ifeq ($(shell uname -s),SunOS)
-	include ./tools/mk/Makefile.node_prebuilt.targ
+	include ./deps/eng/tools/mk/Makefile.node_prebuilt.targ
+	include ./deps/eng/tools/mk/Makefile.agent_prebuilt.targ
 else
-	include ./tools/mk/Makefile.node.targ
+	include ./deps/eng/tools/mk/Makefile.node.targ
 endif
-include ./tools/mk/Makefile.smf.targ
+include ./deps/eng/tools/mk/Makefile.smf.targ
 
 sdc-scripts: deps/sdc-scripts/.git
