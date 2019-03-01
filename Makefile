@@ -113,14 +113,29 @@ test: | $(JS_BUNDLE)
 .PHONY: release
 release: all deps docs $(SMF_MANIFESTS)
 	@echo "Building $(RELEASE_TARBALL)"
-	@mkdir -p $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)
-	@mkdir -p $(RELSTAGEDIR)/site
-	@touch $(RELSTAGEDIR)/site/.do-not-delete-me
-	cp -r $(ROOT)/* $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/
-	rm -rf $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/*.gz
-	rm $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/image-version.json
-	@echo "{\"version\": \"$(STAMP)\"}" >> $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/image-version.json
-	rm -rf $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/deps
+	mkdir -p $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)
+	mkdir -p $(RELSTAGEDIR)/site
+	touch $(RELSTAGEDIR)/site/.do-not-delete-me
+	cp -r \
+		$(ROOT)/bootstrap \
+		$(ROOT)/etc \
+		$(ROOT)/less \
+		$(ROOT)/lib \
+		$(ROOT)/LICENSE \
+		$(ROOT)/node_modules \
+		$(ROOT)/package.json \
+		$(ROOT)/README.md \
+		$(ROOT)/sapi_manifests \
+		$(ROOT)/server.js \
+		$(ROOT)/smf \
+		$(ROOT)/views \
+		$(ROOT)/www \
+		$(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/
+	mkdir -p $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/build
+	cp -PR \
+		$(TOP)/build/node \
+		$(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/build
+	@echo "{\"version\": \"$(STAMP)\"}" > $(RELSTAGEDIR)/root/opt/smartdc/$(NAME)/image-version.json
 	mkdir -p $(RELSTAGEDIR)/root/opt/smartdc/boot
 	cp -R $(ROOT)/deps/sdc-scripts/* $(RELSTAGEDIR)/root/opt/smartdc/boot/
 	cp -R $(ROOT)/boot/* $(RELSTAGEDIR)/root/opt/smartdc/boot/
