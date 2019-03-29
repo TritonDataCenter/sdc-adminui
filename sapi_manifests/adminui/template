@@ -37,12 +37,9 @@
 		"{{datacenter_name}}": {
 			"rabbitmq": "{{{rabbitmq}}}",
 			"moray": {
-				"host": "{{{MORAY_SERVICE}}}",
-				"port": 2020,
-				"connectTimeout": 200,
-				"retry": {
-					"retries": 2,
-					"minTimeout": 500
+				"srvDomain": "{{{MORAY_SERVICE}}}",
+				"cueballOptions": {
+					"resolvers": [ "{{{BINDER_SERVICE}}}" ]
 				}
 			},
 			"amon": {
