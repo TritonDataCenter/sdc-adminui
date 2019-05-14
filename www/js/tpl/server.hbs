@@ -5,7 +5,7 @@
 -->
 
 <!--
-    Copyright (c) 2014, Joyent, Inc.
+    Copyright 2019 Joyent, Inc.
 -->
 
 <div class="server-page-header"></div>
@@ -149,12 +149,16 @@
           <td>{{cpu_type}}</td>
         </tr>
         <tr>
-          <th>Physical CPUs</th>
-          <td>{{cpu_physical_cores}}</td>
+          <th>CPU Sockets / Cores</th>
+          <td>{{cpu_sockets}} / {{cpu_cores}}</td>
         </tr>
         <tr>
-          <th>Total CPU Cores</th>
-          <td>{{cpu_total_cores}}</td>
+          <th>Online CPUs</th>
+          <td>{{cpu_online_cpus}}</td>
+        </tr>
+        <tr>
+          <th>Simultaneous multi-threading enabled</th>
+          <td>{{smt_enabled}}</td>
         </tr>
         <tr>
           <th>Serial Number</th>

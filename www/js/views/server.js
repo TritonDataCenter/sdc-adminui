@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015, Joyent, Inc.
+ * Copyright 2019 Joyent, Inc.
  */
 
 'use strict';
@@ -161,11 +161,28 @@ var ServerView = Backbone.Marionette.Layout.extend({
         cpu_type: function () {
             return this.sysinfo['CPU Type'];
         },
-        cpu_physical_cores: function () {
+        cpu_sockets: function () {
+            if (this.sysinfo.hasOwnProperty('CPU Socket Count'))
+                return this.sysinfo['CPU Socket Count'];
+            // legacy value: this is really number of sockets
             return this.sysinfo['CPU Physical Cores'];
         },
-        cpu_total_cores: function () {
+        cpu_cores: function () {
+            if (this.sysinfo.hasOwnProperty('CPU Core Count'))
+                return this.sysinfo['CPU Core Count'];
+            return 'unknown';
+        },
+        cpu_online_cpus: function () {
+            if (this.sysinfo.hasOwnProperty('CPU Online Count'))
+                return this.sysinfo['CPU Online Count'];
+            // legacy value: this is really *all* *CPUs*
             return this.sysinfo['CPU Total Cores'];
+        },
+        smt_enabled: function () {
+            if (this.sysinfo.hasOwnProperty('Psrinfo'))
+                return this.sysinfo.Psrinfo.smt_enabled;
+            // legacy value: SMT is - probably - enabled
+            return 'true';
         },
         serial_number: function () {
             return this.sysinfo['Serial Number'];
