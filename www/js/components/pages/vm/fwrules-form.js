@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016, Joyent, Inc.
+ * Copyright 2019 Joyent, Inc.
  */
 
 var Backbone = require('backbone');
@@ -46,7 +46,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
         }
         if (this.model.isNew()) {
             if (options.vm) {
-                this.model.set({rule: 'FROM any TO vm '+options.vm.get('uuid') + ' ALLOW '});
+                this.model.set({rule: 'FROM any TO vm ' + options.vm.get('uuid') + ' ALLOW '});
             } else if (options.user) {
                 this.model.set({rule: 'FROM any TO all vms ALLOW '});
             }
@@ -66,7 +66,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
         var errors = xhr.responseData.errors;
         if (xhr.responseData.errors) {
             var messages = _.pluck(errors, 'message');
-            window.alert("Error Saving Firewall Rule \n" + messages.join("\n"));
+            window.alert('Error Saving Firewall Rule \n' + messages.join('\n'));
         }
     },
 
@@ -106,7 +106,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
     onSync: function () {
         adminui.vent.trigger('notification', {
             level: 'success',
-            message: "Firewall rule saved successfully."
+            message: 'Firewall rule saved successfully.'
         });
 
         this.trigger('rule:saved');
@@ -127,6 +127,7 @@ var FWRulesForm = Backbone.Marionette.ItemView.extend({
         this.model.set({
             global: data.global,
             enabled: data.enabled,
+            log: data.log,
             rule: rule,
             owner_uuid: data.owner_uuid
         });
