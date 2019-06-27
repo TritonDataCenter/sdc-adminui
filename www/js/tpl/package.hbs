@@ -5,7 +5,7 @@
 -->
 
 <!--
-    Copyright (c) 2014, Joyent, Inc.
+    Copyright 2019 Joyent, Inc.
 -->
 
 <div class="page-header">
@@ -101,6 +101,31 @@
     <strong>Brand</strong>
     <div class="value">{{brand}}</div>
   </div>
+
+  {{#ifeq brand "bhyve"}}
+  <div class="flexible-disk">
+    <strong>Flexible disk</strong>
+    <div class="value">{{flexible_disk}}</div>
+  </div>
+
+
+  {{#if disks}}
+  <div class="disks">
+    <h4>Disks</h4>
+    <div class="disk-size">
+      {{#each disks}}
+        <strong>Size</strong>
+        {{#if this.size}}
+        <div class="value">{{this.size}}</div>
+        {{else}}
+        <div class="value">OS disk (size set by image)</div>
+        {{/if}}
+        <br />
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+  {{/ifeq}}
 
   <section class="networks">
     <h3>Networks</h3>

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright 2019 Joyent, Inc.
  */
 
 var Backbone = require('backbone');
@@ -27,10 +27,10 @@ var Handlebars = require('handlebars');
 Handlebars.registerHelper('normalize', function (v) {
     v = Number(v);
     if (v % 1024 === 0) {
-        return _.str.sprintf("%d GB", v / 1024);
+        return _.str.sprintf('%d GB', v / 1024);
     }
 
-    return _.str.sprintf("%d MB", v);
+    return _.str.sprintf('%d MB', v);
 });
 
 var PackagesListItemView = Backbone.Marionette.ItemView.extend({
@@ -79,7 +79,7 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     },
 
     attributes: {
-        id: "page-packages"
+        id: 'page-packages'
     },
 
     events: {
@@ -102,7 +102,8 @@ var PackagesView = Backbone.Marionette.Layout.extend({
 
     url: function () {
         var url = 'packages';
-        return location.pathname === '/packages' ? (url + location.search || '') : url;
+        return location.pathname === '/packages' ?
+            (url + location.search || '') : url;
     },
     template: PackagesTemplate,
 
@@ -206,7 +207,8 @@ var PackagesView = Backbone.Marionette.Layout.extend({
                 if (key.match(field)) {
                     var target = field === 'quota' ? 'disk' : 'ram';
                     $('select[name=' + target +  '-op] option[value="' +
-                        key.replace(/([a-z&\]&\[&\_])/g, '') + '"]').attr('selected', 'true');
+                        key.replace(/([a-z&\]&\[&\_])/g, '') + '"]').attr(
+                            'selected', 'true');
 
                     $('input[name=' + target +  '-value]').val(options[key]);
                 }
@@ -217,7 +219,8 @@ var PackagesView = Backbone.Marionette.Layout.extend({
     getFilterOptions: function () {
         var self = this;
         var getValue = function (name) {
-            return $((name === 'active' ? 'select' : 'input') + '[name=' + name + ']').val();
+            return $((name === 'active' ? 'select' : 'input') +
+                '[name=' + name + ']').val();
         };
 
         var data = {
@@ -230,7 +233,8 @@ var PackagesView = Backbone.Marionette.Layout.extend({
 
         Object.keys(data).forEach(function (key) {
             var value = data[key];
-            if (value && ((key === 'active' && value === 'true' || value === 'false') || key !== 'active')) {
+            if (value && ((key === 'active' && value === 'true' ||
+                value === 'false') || key !== 'active')) {
                 self.filterOptions[key] = value;
             } else {
                 delete self.filterOptions[key];
@@ -259,14 +263,12 @@ var PackagesView = Backbone.Marionette.Layout.extend({
 
     showForm: function (model) {
         if (!model) {
-            this.$(".sidebar").animate({
+            this.$('.sidebar').animate({
                 opacity: 0.4
             });
             this.list.currentView.deselect();
         }
-
     }
-
 });
 
 

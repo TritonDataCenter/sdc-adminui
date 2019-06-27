@@ -5,10 +5,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright 2019 Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 
 var Backbone = require('backbone');
 var _ = require('underscore');
@@ -20,8 +20,10 @@ var Packages = require('../models/packages');
 
 var User = require('../models/user');
 
-var NetworksList = React.createFactory(require('../components/pages/networking/networks-list'));
-var NetworkPoolsList = React.createFactory(require('../components/pages/networking/network-pool-list'));
+var NetworksList = React.createFactory(
+    require('../components/pages/networking/networks-list'));
+var NetworkPoolsList = React.createFactory(
+    require('../components/pages/networking/network-pool-list'));
 
 var TraitsEditor = require('./traits-editor');
 var PackageTemplate = require('../tpl/package.hbs');
@@ -29,15 +31,24 @@ var PackageTemplate = require('../tpl/package.hbs');
 var NotesComponent = React.createFactory(require('../components/notes'));
 
 var Handlebars = require('handlebars');
-Handlebars.registerHelper('normalize', function(v) {
+Handlebars.registerHelper('normalize', function (v) {
     v = Number(v);
     if (v % 1024 === 0) {
-        return _.str.sprintf("%d GB", v / 1024);
+        return _.str.sprintf('%d GB', v / 1024);
     }
 
-    return _.str.sprintf("%d MB", v);
+    return _.str.sprintf('%d MB', v);
 });
 
+Handlebars.registerHelper('ifeq', function (a, b, options) {
+    if (a == b) { return options.fn(this); }
+    return options.inverse(this);
+});
+
+Handlebars.registerHelper('ifnoteq', function (a, b, options) {
+    if (a != b) { return options.fn(this); }
+    return options.inverse(this);
+});
 
 
 var PackageVersions = Backbone.Marionette.CompositeView.extend({
@@ -51,10 +62,10 @@ var PackageVersions = Backbone.Marionette.CompositeView.extend({
         events: {
             'click a': 'onClickPackageVersion'
         },
-        onClickPackageVersion: function() {
+        onClickPackageVersion: function () {
             adminui.vent.trigger('showview', 'package', {model: this.model });
         },
-        onRender: function() {
+        onRender: function () {
             if (this.package.get('uuid') === this.model.get('uuid')) {
                 this.$el.addClass('active');
                 console.log(this.model);
@@ -62,17 +73,17 @@ var PackageVersions = Backbone.Marionette.CompositeView.extend({
         }
     }),
     itemViewContainer: 'ul',
-    initialize: function(options) {
-        if (typeof(options.package) !== 'object') {
+    initialize: function (options) {
+        if (typeof (options.package) !== 'object') {
             throw TypeError('options.package should be a package model');
         }
         this.package = options.package;
         this.collection = new Packages();
     },
-    onBeforeItemAdded: function(iv) {
+    onBeforeItemAdded: function (iv) {
         iv.package = this.package;
     },
-    onShow: function() {
+    onShow: function () {
         this.collection.fetch({params: {name: this.package.get('name')}});
     }
 });
@@ -90,7 +101,7 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
 
     sidebar: 'packages',
 
-    url: function() {
+    url: function () {
         return ('packages/' + this.model.get('uuid'));
     },
 
@@ -102,7 +113,7 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
         'click .login': 'navigateToUser'
     },
 
-    initialize: function (options) {
+    initialize: function (_options) {
         this.packageVersionsView = new PackageVersions({
             package: this.model
         });
@@ -112,7 +123,7 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
         var data = _.clone(this.model.toJSON());
         var owner_uuid = this.model.get('owner_uuid');
 
-        if (typeof(owner_uuid) === 'string') {
+        if (typeof (owner_uuid) === 'string') {
             data.owner_uuid = [owner_uuid];
         }
 
@@ -121,7 +132,9 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
 
     navigateToUser: function (e) {
         e.preventDefault();
-        adminui.vent.trigger('showcomponent', 'user', {uuid: $(e.target).attr('data-uuid')});
+        adminui.vent.trigger('showcomponent', 'user', {
+            uuid: $(e.target).attr('data-uuid')
+        });
     },
 
     onChangeOwner: function () {
@@ -139,23 +152,24 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
     },
 
     onSaveTraits: function (traits) {
-        var that = this;
+        var self = this;
         this.model.save(
             { traits: traits },
             { patch: true }
-        ).done(function() {
+        ).done(function () {
             adminui.vent.trigger('notification', {
                 level: 'success',
                 message: 'Package traits saved successfully.'
             });
-            that.traitsEditor.close();
+            self.traitsEditor.close();
         });
     },
 
     onTraits: function () {
         this.traitsEditor = new TraitsEditor({
             data: this.model.get('traits'),
-            title: _.str.sprintf('Traits Editor for package: %s', this.model.get('name'))
+            title: _.str.sprintf('Traits Editor for package: %s',
+                this.model.get('name'))
         });
         this.listenTo(this.traitsEditor, 'save', this.onSaveTraits, this);
         this.traitsEditor.show();
@@ -166,13 +180,18 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function () {
-        adminui.vent.trigger('settitle', _.str.sprintf('package: %s', this.model.get('name'), this.model.get('version')));
+        adminui.vent.trigger('settitle', _.str.sprintf(
+            'package: %s', this.model.get('name'), this.model.get('version')));
         var networks = this.model.get('networks') || [];
         if (!networks.length) {
             this.$('.networks').hide();
         } else {
-            React.render(new NetworksList({uuids: networks, showHeader: false}), this.$('.networks-list').get(0));
-            React.render(new NetworkPoolsList({uuids: networks}), this.$('.network-pools-list').get(0));
+            React.render(new NetworksList({
+                uuids: networks, showHeader: false
+            }), this.$('.networks-list').get(0));
+            React.render(new NetworkPoolsList({
+                uuids: networks
+            }), this.$('.network-pools-list').get(0));
         }
 
         if (adminui.user.role('operators')) {
@@ -181,9 +200,9 @@ var PackageDetail = Backbone.Marionette.Layout.extend({
                 this.$('.notes-component-container').get(0));
         }
 
-        this.$('.owner .login').each(function (i, elm) {
+        this.$('.owner .login').each(function (_i, elm) {
             var user = new User({uuid: $(elm).attr('data-uuid')});
-            user.fetch().done(function (u) {
+            user.fetch().done(function (_u) {
                 $(elm).html(user.get('login'));
             });
         });

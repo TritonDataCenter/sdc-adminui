@@ -5,7 +5,7 @@
 -->
 
 <!--
-    Copyright (c) 2014, Joyent, Inc.
+    Copyright 2019 Joyent, Inc.
 -->
 
 <div class="row">
@@ -229,14 +229,40 @@
             <div class="col-md-7">
                 <select class="form-control" name="brand">
                     <option></option>
-                    <option value="joyent">joyent</option>
-                    <option value="joyent-minimal">joyent-minimal</option>
-                    <option value="kvm">kvm</option>
-                    <option value="bhyve">bhyve</option>
-                    <option value="lx">lx</option>
+                    <option value="bhyve" {{#ifeq brand "bhyve"}}selected{{/ifeq}}>bhyve</option>
+                    <option value="joyent" {{#ifeq brand "joyent"}}selected{{/ifeq}}>joyent</option>
+                    <option value="joyent-minimal"> {{#ifeq brand "joyent-minimal"}}selected{{/ifeq}}joyent-minimal</option>
+                    <option value="kvm"> {{#ifeq brand "kvm"}}selected{{/ifeq}}kvm</option>
+                    <option value="lx" {{#ifeq brand "lx"}}selected{{/ifeq}}>lx</option>
                 </select>
             </div>
         </div>
+
+
+      <div class="form-group package-disks">
+        <label class="control-label col-sm-4" for="package-disk">Disks</label>
+        <div class="col-sm-6">
+            {{#unless disks.length}}
+            <input type="text"
+                 class="form-control input-xl package-disk"
+                 name="disks[]"
+                 placeholder="Disk size in MiB">
+            {{else}}
+
+            {{#each disks}}
+              <input type="text"
+                  value="{{size}}"
+                  class="form-control package-disk"
+                  name="disks[]"
+                  placeholder="Disk size in MiB">
+            {{/each}}
+            {{/unless}}
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-sm-6 col-sm-offset-4">
+            <a class="add-disk-entry"><i class="fa fa-plus"></i> Add Another Disk (Bhyve only)</a>
+        </div>
+      </div>
 
       {{/unless}}
 
@@ -248,6 +274,11 @@
           <div class="checkbox">
             <label><input type="checkbox" {{#if default}}checked{{/if}} name="default"> Make this the Default Package</label>
           </div>
+          {{#unless changeOwnerMode}}
+          <div class="checkbox">
+            <label><input type="checkbox" {{#if flexible_disk}}checked{{/if}} name="flexible_disk" {{#ifnoteq brand "bhyve"}}disabled{{/ifnoteq}}> Flexible Disk (Bhyve only)</label>
+          </div>
+          {{/unless}}
         </div>
       </div>
 

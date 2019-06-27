@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright 2019 Joyent, Inc.
  */
 
 #page-package {
@@ -82,8 +82,9 @@
 
   form .package-owners .controls { margin-bottom: 1em; }
   form .package-owners .add-owner-entry { clear: both; margin-left: 180px;}
+  form .disks .add-disk-entry { clear: both; margin-left: 180px; }
 
-  .owner, .description, .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority, .brand {
+  .owner, .description, .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority, .brand, .flexible-disk, .disk-size {
     .widget-content;
 
     strong {
@@ -97,7 +98,6 @@
       display: inline-block;
     }
   }
-
 
   .description {
     font-weight: bold;
@@ -123,7 +123,7 @@
 }
 
 #page-package-form {
-  .add-owner-entry {
+  .add-owner-entry, .add-disk-entry {
     padding: 10px;
     display: block;
   }
