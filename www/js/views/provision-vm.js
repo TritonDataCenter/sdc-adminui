@@ -7,7 +7,7 @@
  */
 
 /*
- * Copyright (c) 2018, Joyent, Inc.
+ * Copyright 2019 Joyent, Inc.
  */
 
 'use strict';
@@ -17,10 +17,13 @@ var $ = require('jquery');
 var _ = require('underscore');
 var React = require('react');
 
-var MultiNicConfigComponent = React.createFactory(require('../components/multi-nic-config'));
-var ServerTypeahead = React.createFactory(require('../components/server-typeahead'));
+var MultiNicConfigComponent = React.createFactory(
+    require('../components/multi-nic-config'));
+var ServerTypeahead = React.createFactory(
+    require('../components/server-typeahead'));
 var Package = require('../models/package');
 var Packages = require('../models/packages');
+var Images = require('../models/images');
 var SSHKeys = require('../models/sshkeys');
 var User = require('../models/user');
 var Vm = require('../models/vm');
@@ -35,6 +38,7 @@ var UserPreview = require('./user-preview');
 var adminui = require('../adminui');
 var JSONEditor = require('./traits-editor');
 
+var HVM_BRANDS = ['bhyve', 'kvm'];
 
 var PackageSelectOption = Backbone.Marionette.ItemView.extend({
     attributes: function () {
@@ -58,7 +62,7 @@ var PackageSelect = Backbone.Marionette.CollectionView.extend({
     events: {
         'change': 'onChange'
     },
-    onSync: function (e) {
+    onSync: function (_e) {
         this.$el.trigger('chosen:updated');
     },
     onRender: function () {
@@ -102,13 +106,15 @@ var View = Backbone.Marionette.Layout.extend({
         'brandControls': '.form-group-brand'
     },
 
-    initialize: function (options) {
+    initialize: function (_options) {
+        var self = this;
         this.vent = adminui.vent;
         this.model = new Vm();
         this.packages = new Packages();
         this.packageSelect = new PackageSelect({
             collection: this.packages
         });
+        this.images = new Images();
 
         this.nicSelects = [];
 
@@ -118,13 +124,13 @@ var View = Backbone.Marionette.Layout.extend({
         this.packagePreview = new PackagePreview({model: this.selectedPackage});
 
         this.packages.on('reset', function (collection) {
-            this.selectedPackage.set(collection.models[0].attributes);
+            self.selectedPackage.set(collection.models[0].attributes);
         }, this);
 
         this.packageSelect.on('select', function (pkg) {
-            this.selectedPackage.set(pkg.attributes);
-            this.resetImage();
-            this.ui.brandControls.hide();
+            self.selectedPackage.set(pkg.attributes);
+            self.resetImage();
+            self.ui.brandControls.hide();
         }, this);
 
         this.packages.fetchActive();
@@ -134,7 +140,7 @@ var View = Backbone.Marionette.Layout.extend({
         adminui.vent.trigger('showcomponent', 'vms');
     },
 
-    onBlurOwnerField: function (e) {
+    onBlurOwnerField: function (_e) {
         var $field = this.ui.ownerInput;
         var self = this;
 
@@ -155,17 +161,18 @@ var View = Backbone.Marionette.Layout.extend({
     showConfigureMetadata: function (e) {
         e.preventDefault();
         var view = new JSONEditor({
-            title: "Metadata",
-            description: "Metadata to include in the provisioned Virtual Machine, stored into customer_metadata property.",
+            title: 'Metadata',
+            description: 'Metadata to include in the provisioned Virtual' +
+                ' Machine, stored into customer_metadata property.',
             data: this.customer_metadata
         });
         view.on('save', function (data) {
             if (Object.keys(data).length) {
-                this.$('.configure-metadata').addClass("btn-success");
+                this.$('.configure-metadata').addClass('btn-success');
             } else {
-                this.$('.configure-metadata').removeClass("btn-success");
+                this.$('.configure-metadata').removeClass('btn-success');
             }
-            console.log("Configured metadata", data);
+            console.log('Configured metadata', data);
             this.customer_metadata = data;
             view.close();
         }.bind(this));
@@ -179,11 +186,13 @@ var View = Backbone.Marionette.Layout.extend({
         }
         var self = this;
         React.unmountComponentAtNode(nic.getDOMNode());
-        $(nic.getDOMNode()).closest('.nic-config-container').fadeOut(function () {
-            this.remove();
+        $(nic.getDOMNode()).closest('.nic-config-container').fadeOut(
+            function () {
+            self.remove();
             self.nicSelects = _.without(self.nicSelects, nic);
         });
     },
+
     removeAllNics: function () {
         _.each(this.nicSelects, function (nic) {
             React.unmountComponentAtNode(nic.getDOMNode());
@@ -202,7 +211,7 @@ var View = Backbone.Marionette.Layout.extend({
         if (this.selectedUser && this.selectedUser.id === user.id) {
             return this.userPreview.show(new UserPreview({model: user}));
         }
-        
+
         this.selectedUser = user;
         this.userPreview.show(new UserPreview({model: user}));
         this.removeAllNics();
@@ -214,7 +223,8 @@ var View = Backbone.Marionette.Layout.extend({
         $.when(
             this.settings.fetch()
         ).then(function () {
-            var networkPresets = settings.get('provision.preset_networks') || [];
+            var networkPresets =
+                settings.get('provision.preset_networks') || [];
 
             while (networkPresets.length < 1) {
                 networkPresets.push({primary: true});
@@ -237,7 +247,7 @@ var View = Backbone.Marionette.Layout.extend({
         return null;
     },
 
-    onFetchKeys: function (collection) {
+    onFetchKeys: function (_collection) {
         if (this.sshKeys.length === 0) {
             this.$('.no-sshkeys-warning').show();
         } else {
@@ -258,7 +268,7 @@ var View = Backbone.Marionette.Layout.extend({
 
     renderMultiNicSelect: function (nics) {
         nics = nics.map(function (nic) {
-            if (typeof(nic) === 'string') {
+            if (typeof (nic) === 'string') {
                 nic = {network_uuid: nic};
             }
             return nic;
@@ -273,7 +283,8 @@ var View = Backbone.Marionette.Layout.extend({
         if (this.multiNicConfigComponent) {
             React.unmountComponentAtNode(this.$('.network-selection').get(0));
         }
-        this.multiNicConfigComponent = React.render(new MultiNicConfigComponent(props),
+        this.multiNicConfigComponent = React.render(
+            new MultiNicConfigComponent(props),
             this.$('.network-selection').get(0));
         this.$('.form-group-networks').show();
         this.$('.form-group-primary-network').show();
@@ -288,9 +299,11 @@ var View = Backbone.Marionette.Layout.extend({
             el: this.$('[name=owner]')
         });
         this.listenTo(this.userInput, 'selected', this.onSelectUser, this);
-        this.userInput.render();         
+        this.userInput.render();
 
-        this.imageInput = new TypeaheadImageView({el: this.$('input[name=image]')});
+        this.imageInput = new TypeaheadImageView({
+            el: this.$('input[name=image]')
+        });
         this.listenTo(this.imageInput, 'selected', this.onSelectImage, this);
         this.imageInput.render();
 
@@ -302,7 +315,8 @@ var View = Backbone.Marionette.Layout.extend({
 
         this.packageSelect.setElement(this.$('select[name=package]')).render();
         this.$('.form-group-networks').hide();
-        this.$('.package-preview-container').append(this.packagePreview.render().el);
+        this.$('.package-preview-container').append(
+            this.packagePreview.render().el);
 
         this.hideError();
         this.$('.no-sshkeys-warning').hide();
@@ -341,7 +355,7 @@ var View = Backbone.Marionette.Layout.extend({
         if (image &&
             image.requirements &&
             image.requirements.brand &&
-            typeof(image.requirements.brand) === 'string') {
+            typeof (image.requirements.brand) === 'string') {
             this.setBrand(image.requirements.brand);
             this.ui.brandControls.prop('disabled', 'disabled');
         } else {
@@ -354,7 +368,8 @@ var View = Backbone.Marionette.Layout.extend({
                 this.disableBrands('joyent', 'joyent-minimal', 'lx', 'sngl');
             } else if (image.get('type') === 'lx-dataset') {
                 this.setBrand('lx');
-                this.disableBrands('joyent', 'joyent-minimal', 'kvm', 'bhyve', 'sngl');
+                this.disableBrands(
+                    'joyent', 'joyent-minimal', 'kvm', 'bhyve', 'sngl');
             } else if (image.get('type') === 'zone-dataset') {
                 if (pkgBrand && pkgBrand === 'joyent-minimal') {
                     this.setBrand(pkgBrand);
@@ -375,9 +390,11 @@ var View = Backbone.Marionette.Layout.extend({
         if (arguments[0] !== false) {
             brands = arguments;
         }
+        var self = this;
         this.$('.form-group-brand option').removeAttr('disabled');
         _.each(brands, function (b) {
-            this.$('.form-group-brand option[value=' + b + ']').attr('disabled', true);
+            self.$('.form-group-brand option[value=' + b + ']').attr(
+                'disabled', true);
         }, this);
     },
 
@@ -408,16 +425,18 @@ var View = Backbone.Marionette.Layout.extend({
             valid = false;
         }
 
-        if (values.pkgBrand && values.pkgBrand != values.brand) {
+        if (values.pkgBrand && values.pkgBrand !== values.brand) {
             valid = false;
-            console.log("package brand mismatch: ", values.pkgBrand);
+            console.log('package brand mismatch: ', values.pkgBrand);
         }
 
         // if (values.alias && values.alias.length != 0) {
         //     delete values.alias;
         // }
 
-        if (!values.image_uuid && (!values.disks || !values.disks[0] || !values.disks[0].image_uuid)) {
+        if (!values.image_uuid &&
+            (!values.disks || !values.disks[0] ||
+                !values.disks[0].image_uuid)) {
             valid = valid && false;
         } else {
             valid = valid && true;
@@ -471,6 +490,7 @@ var View = Backbone.Marionette.Layout.extend({
         }
 
         var pkg = this.packages.get(formData['package']);
+        var img = this.images.get(formData['image_uuid']);
 
         if (pkg) {
             values['billing_id'] = pkg.get('uuid');
@@ -484,33 +504,49 @@ var View = Backbone.Marionette.Layout.extend({
             }
 
 
-            if (values['brand'] === 'kvm' || values['brand'] === 'bhyve') {
-                // disk size passed in as MiB.
-                values['disks'] = [
-                    {'image_uuid': values['image_uuid']},
-                    {'size': quotaMib}
-                ];
+            if (HVM_BRANDS.indexOf(values['brand']) !== -1) {
+                var flexible_disk = pkg.get('flexible_disk');
+                if (flexible_disk && values['brand'] === 'bhyve') {
+                    var disks = pkg.get('disks');
+                    if (disks) {
+                        disks[0].image_uuid = values.image_uuid;
+                        values['disks'] = disks;
+                    } else {
+                        values['disks'] = [
+                            {'image_uuid': values['image_uuid']},
+                            {'size': quotaMib - img.image_size }
+                        ];
+                    }
+                } else {
+                    // disk size passed in as MiB.
+                    values['disks'] = [
+                        {'image_uuid': values['image_uuid']},
+                        {'size': quotaMib}
+                    ];
+                }
 
                 // KVM does not need top level image_uuid and quota passed in
                 delete values['image_uuid'];
                 delete values['quota'];
             }
-
         }
 
-        if ((values['brand'] === 'kvm' || values['brand'] === 'bhyve' || values['brand'] === 'lx') && this.userKeys) {
+        if (['kvm', 'bhyve', 'lx'].indexOf(values['brand']) !== -1 &&
+            this.userKeys) {
             values.customer_metadata = {
                 root_authorized_keys: this.userKeys.map(function (k) {
-                    return  _.str.trim(k).replace(/(\r\n|\n|\r)/gm, '');
+                    return _.str.trim(k).replace(/(\r\n|\n|\r)/gm, '');
                 }).join('\n')
             };
         }
 
         values.customer_metadata = values.customer_metadata || {};
-        values.customer_metadata = _.extend(values.customer_metadata, this.customer_metadata);
+        values.customer_metadata = _.extend(values.customer_metadata,
+            this.customer_metadata);
 
         if (this.multiNicConfigComponent) {
-            values.networks = _.map(this.multiNicConfigComponent.getValue(), function (nic) {
+            values.networks = _.map(this.multiNicConfigComponent.getValue(),
+                function (nic) {
                 var net = _.clone(nic);
                 if (net.ip) {
                     net.ipv4_ips = [net.ip];
@@ -530,7 +566,7 @@ var View = Backbone.Marionette.Layout.extend({
         this.ui.alert.hide();
     },
 
-    onError: function (model, xhr, options) {
+    onError: function (_model, xhr, _options) {
         var fieldMap = {
             'image_uuid': '[name=image]',
             'alias': '[name=alias]',
@@ -560,7 +596,7 @@ var View = Backbone.Marionette.Layout.extend({
         e.preventDefault();
 
         this.model.save(this.extractFormValues(), {
-            success: function (m, obj) {
+            success: function (_m, obj) {
                 var job = new Job({uuid: obj.job_uuid});
                 var jobView = new JobProgressView({model: job});
                 self.listenTo(jobView, 'succeeded', function () {
