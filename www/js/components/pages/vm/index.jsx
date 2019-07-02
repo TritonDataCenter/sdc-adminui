@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015, Joyent, Inc.
+ * Copyright 2019 Joyent, Inc.
  */
 
 'use strict';
@@ -33,6 +33,7 @@ var FWRulesList = require('./fwrules-list');
 var FWRulesForm = require('./fwrules-form');
 var SnapshotsList = require('./snapshots');
 var NicsList = require('./nics');
+var DisksList = require('./disks');
 
 
 var Metadata =  require('./metadata');
@@ -119,6 +120,8 @@ var VMPage = React.createClass({
         } else {
             quota = vm.quota;
         }
+
+        var flexible_disk_size = vm.flexible_disk_size ? vm.flexible_disk_size/1024 : null;
 
         var ips;
         if (vm.nics.length) {
@@ -219,6 +222,20 @@ var VMPage = React.createClass({
                                     </span>
                                 </td>
                             </tr>
+
+                            {vm.brand === 'bhyve' ?
+                            <tr>
+                                <th>Flexible Disk</th>
+                                <td>
+                                    <span className="vm-flexible-disk">
+                                        <div className="vm-disk-quota-kvm">
+                                            {flexible_disk_size} GB
+                                        </div>
+                                    </span>
+                                </td>
+                            </tr>
+                            : null
+                            }
 
                             <tr>
                               <th>IP Addresses</th>
@@ -337,6 +354,17 @@ var VMPage = React.createClass({
                 </div>
             </section>
 
+            {vm.brand === 'kvm' || vm.brand === 'bhyve' ?
+            <section>
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="disks-region">
+                            <BB view={new DisksList({vm: new VMModel(this.state.vm)})} />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            : null }
 
             <section>
                 <div className="row">
