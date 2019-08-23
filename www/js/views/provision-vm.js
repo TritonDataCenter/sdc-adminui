@@ -330,6 +330,7 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     onSelectImage: function (image) {
+        var self = this;
         if (!image) {
             var imgValue = this.imageInput.$el.val();
             if (!imgValue || imgValue && imgValue.length !== 36) {
@@ -337,6 +338,10 @@ var View = Backbone.Marionette.Layout.extend({
                 this.checkFields();
             }
             return;
+        }
+
+        if (image) {
+            self.selectedImage = image.attributes;
         }
 
 /*
@@ -470,16 +475,17 @@ var View = Backbone.Marionette.Layout.extend({
     },
 
     extractFormValues: function () {
+        var self = this;
         var formData = this.ui.form.serializeObject();
         var values = {
             image_uuid: formData.image,
             owner_uuid: formData.owner,
             brand: formData.brand
         };
+
         if (formData.delegate_dataset) {
             values.delegate_dataset = true;
         }
-
 
         if (formData.alias && formData.alias.length) {
             values.alias = formData.alias;
@@ -490,7 +496,7 @@ var View = Backbone.Marionette.Layout.extend({
         }
 
         var pkg = this.packages.get(formData['package']);
-        var img = this.images.get(formData['image_uuid']);
+        var img = self.selectedImage;
 
         if (pkg) {
             values['billing_id'] = pkg.get('uuid');
@@ -511,7 +517,7 @@ var View = Backbone.Marionette.Layout.extend({
                     if (disks) {
                         disks[0].image_uuid = values.image_uuid;
                         values['disks'] = disks;
-                    } else {
+                    } else if (img) {
                         values['disks'] = [
                             {'image_uuid': values['image_uuid']},
                             {'size': quotaMib - img.image_size }

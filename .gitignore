@@ -17,3 +17,4 @@ www/libs.js*
 npm-debug.log
 .idea/*
 adminui-pkg-*.gz
+*.vim
