@@ -49,7 +49,17 @@
             <div class="item">
               <div class="item-label">Hostname</div>
               <div class="item-content">{{hostname}}</div>
-          </div>
+            </div>
+
+          {{#if encrypted}}
+              <div class="item">
+                <div class="item-label">Zpool Encrypted</div>
+                <div class="item-content">
+                      <span class="enabled"><i class="fa fa-check"></i>Encrypted</span>
+                </div>
+              </div>
+          {{/if}}
+
           <div class="item rack">
             <div class="item-label">Rack</div>
             <div class="item-content">
