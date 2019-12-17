@@ -35,7 +35,7 @@ var ServerSetupView = Backbone.Marionette.ItemView.extend({
         var encryption_enabled = this.$('input[name=encryption_enabled]');
         this.model.setup({
             hostname: hostname,
-            encryption_enabled: encryption_enabled.is(':checked') || false
+            encryption_enabled: encryption_enabled.is(':checked')
         }, function (job) {
             self.$el.modal('hide').remove();
             app.vent.trigger('showjob', job);
