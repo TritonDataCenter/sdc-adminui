@@ -9,6 +9,7 @@
  */
 
 'use strict';
+/* eslint-disable max-len */
 
 var $ = require('jquery');
 var Backbone = require('backbone');
@@ -22,7 +23,6 @@ var Vms = require('../models/vms');
 
 
 var React = require('react');
-
 var ServerPageHeader = React.createFactory(require('../components/pages/server/header.jsx'));
 
 var NotesComponent =  React.createFactory(require('../components/notes'));
@@ -192,6 +192,9 @@ var ServerView = Backbone.Marionette.Layout.extend({
         },
         disk_layout: function () {
             return this.sysinfo['Zpool Profile'];
+        },
+        encrypted: function () {
+            return (this.sysinfo['Zpool Encrypted'] || false);
         }
     },
 
