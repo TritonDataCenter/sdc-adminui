@@ -5,10 +5,10 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright 2019 Joyent, Inc.
  */
 
-"use strict";
+'use strict';
 
 var _ = require('underscore');
 var $ = require('jquery');
@@ -208,7 +208,8 @@ var Vm = Model.extend({
     },
 
     saveCustomerMetadata: function(cb) {
-        $.put(this.url() + '/customer_metadata', this.get('customer_metadata'), function(data) {
+        $.put(this.url() + '/customer_metadata',
+            this.get('customer_metadata'), function(data) {
             var job = new Job({ uuid: data.job_uuid });
             cb(null, job);
         }).fail(function(err) {
@@ -219,6 +220,41 @@ var Vm = Model.extend({
     ips: function() {
         return this.get('nics').map(function(n) {
             return n.ip;
+        });
+    },
+
+    createDisk: function (disk, cb) {
+        $.post(this.url() + '?action=create_disk', disk, function(data) {
+            var job = new Job({
+                uuid: data.job_uuid
+            });
+            cb(null, job);
+        }).fail(function (err) {
+            cb(err);
+        });
+    },
+
+    removeDisk: function (disk, cb) {
+        $.post(this.url() + '?action=delete_disk', {
+            pci_slot: disk
+        }, function(data) {
+            var job = new Job({
+                uuid: data.job_uuid
+            });
+            cb(null, job);
+        }).fail(function (err) {
+            cb(err);
+        });
+    },
+
+    resizeDisk: function (disk, cb) {
+        $.post(this.url() + '?action=resize_disk', disk, function(data) {
+            var job = new Job({
+                uuid: data.job_uuid
+            });
+            cb(null, job);
+        }).fail(function (err) {
+            cb(err);
         });
     }
 });

@@ -12,18 +12,27 @@
 <h3>Disks</h3>
 
 <table class="table">
+
+{{#if hasDisks}}
   <thead>
     <tr>
-      <th style="width: 20px"></th>
       <th>Disk</th>
       <th style="width: 120px;">size</th>
       <th style="width: 120px;">pci_slot</th>
       <th style="width: 120px;">boot</th>
       <th style="width: 120px;">model</th>
       <th></th>
+      <th></th>
     </tr>
   </thead>
 
+{{/if}}
+
   <tbody></tbody>
 
+  {{#role "operators"}}
+  <tfoot>
+    <td><button class="btn btn-info btn-sm show-disks-form"><i class="fa fa-plus"></i>Add Disk</button> </h3></td>
+  </tfoot>
+  {{/role}}
 </table>
