@@ -19,6 +19,7 @@ var JobProgressView = require('../../../views/job-progress');
 var DisksFormView = require('./disks-form');
 var DiskRowTemplate = require('./disks-row.hbs');
 
+var adminui = require('../../../adminui');
 var DiskRow = Backbone.Marionette.ItemView.extend({
     tagName: 'tr',
     template: DiskRowTemplate,
@@ -29,7 +30,6 @@ var DiskRow = Backbone.Marionette.ItemView.extend({
 
     deleteDisk: function () {
         if (window.confirm('Are you sure you want to delete this disk?')) {
-            var dsk = this.model.get('pci_slot');
             this.vm.removeDisk(this.model.get('pci_slot'),
                 this._onJob.bind(this));
         }

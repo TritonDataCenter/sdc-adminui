@@ -56,7 +56,7 @@ var DisksFormView = Backbone.Marionette.ItemView.extend({
             if (dangerous_allow_shrink) {
                 opts.dangerous_allow_shrink = true;
             }
-            self.vm.resizeDisk(opts, this._onJob.bind(this))
+            self.vm.resizeDisk(opts, this._onJob.bind(this));
         } else {
             self.vm.createDisk(opts, this._onJob.bind(this));
         }
