@@ -36,15 +36,10 @@ var DisksFormView = Backbone.Marionette.ItemView.extend({
         if (options.vm) {
             this.vm = options.vm;
         }
-
-        if (!options.model) {
-            this.model = new ViewModel({ size: 0 });
-        }
     },
 
     doDiskAction: function (e) {
         e.preventDefault();
-        var self = this;
         var size = this.$('input[name=size]').val();
         var pci_slot = this.$('input[name=pci_slot]').val();
         var dangerous_allow_shrink = this.$('input[name=dangerous_allow_shrink]').is(':checked');
@@ -56,9 +51,9 @@ var DisksFormView = Backbone.Marionette.ItemView.extend({
             if (dangerous_allow_shrink) {
                 opts.dangerous_allow_shrink = true;
             }
-            self.vm.resizeDisk(opts, this._onJob.bind(this));
+            this.vm.resizeDisk(opts, this._onJob.bind(this));
         } else {
-            self.vm.createDisk(opts, this._onJob.bind(this));
+            this.vm.createDisk(opts, this._onJob.bind(this));
         }
     },
 
@@ -68,11 +63,14 @@ var DisksFormView = Backbone.Marionette.ItemView.extend({
             var msg = (err.responseText) ?
                     JSON.parse(err.responseText).message:
                     'Error creating job';
-            window.alert(msg);
+            app.vent.trigger('notification', {
+                level:'error',
+                message: msg
+            });
             return;
         }
         var self = this;
-        self.$el.modal('hide').remove();
+        this.$el.modal('hide').remove();
         var jobView = new JobProgressView({model: job});
         this.listenTo(jobView, 'execution', function (exec) {
             if (exec === 'succeeded') {

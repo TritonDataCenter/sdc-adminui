@@ -40,7 +40,10 @@ var DiskRow = Backbone.Marionette.ItemView.extend({
             var msg = (err.responseText) ?
                     JSON.parse(err.responseText).message:
                     'Error creating job';
-            window.alert(msg);
+            adminui.vent.trigger('notification', {
+                level:'error',
+                message: msg
+            });
             return;
         }
         var self = this;
