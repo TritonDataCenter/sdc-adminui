@@ -1,0 +1,62 @@
+<!--
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
+<!--
+    Copyright 2019 Joyent, Inc.
+-->
+
+<div class="modal-dialog">
+    <div class="modal-content">
+            <div class="modal-header">
+                {{#if uuid}}
+                    <h4 class="modal-title">Resize Disk</h4>
+                {{else}}
+                    <h4 class="modal-title">Add Disk</h4>
+                {{/if}}
+            </div>
+        <div class="modal-body">
+            <form class="form form-horizontal">
+                <div class="form-group">
+                    <div class="controls col-sm-offset-2 col-sm-8">
+                        <div>
+                            <label>SIZE:</label>
+                        </div>
+                        <div>
+
+                        {{#if uuid}}
+                            <input type="hidden" name="pci_slot" value="{{pci_slot}}" />
+                            <input type="text" class="form-control" name="size" value="{{size}}" />
+                        {{else}}
+                            <input type="text" class="form-control" name="size" />
+                        {{/if}}
+                            <p class="help-block"><span class="label label-warning">Size in mebibytes or "remaining"</span></p>
+                        </div>
+
+                        {{#if uuid}}
+                        <div class="checkbox">
+                                <label><input name="dangerous_allow_shrink" type="checkbox">Allow Shrink</label>
+                                <p class="help-block">
+                                        Allows the disk size to be reduced. This will
+                                        truncate the disk. Any data previously written to
+                                        the truncated area is permanently lost. Snapshots
+                                        will not be useful to recover from this operation.
+                                </p>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                {{#if uuid}}
+                        <button class="btn btn-primary resize">Resize Disk</button>
+                {{else}}
+                        <button class="btn btn-primary add">Add Disk</button>
+                {{/if}}
+        </div>
+    </div>
+</div>

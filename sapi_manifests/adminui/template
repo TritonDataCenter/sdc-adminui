@@ -67,7 +67,8 @@
 				"url": "http://{{{PAPI_SERVICE}}}"
 			},
 			"sapi": {
-				"url": "http://{{{SAPI_SERVICE}}}"
+				"url": "http://{{{SAPI_SERVICE}}}",
+				"version": "~2"
 			},
 			"workflow": {
 				"url": "http://{{{WORKFLOW_SERVICE}}}"
