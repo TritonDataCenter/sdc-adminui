@@ -54,9 +54,6 @@
 			"napi": {
 				"url": "http://{{{NAPI_SERVICE}}}"
 			},
-			"ca": {
-				"url": "http://{{{CA_SERVICE}}}:23181"
-			},
 			"fwapi": {
 				"url": "http://{{{FWAPI_SERVICE}}}"
 			},
