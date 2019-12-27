@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014, Joyent, Inc.
+ * Copyright 2019 Joyent, Inc.
  */
 
 var React = require('react');
@@ -97,9 +97,6 @@ var Rootnav = React.createClass({
                                         {this.state.inMaintenance ? <span className="navbar-alert"> In Maintenance</span> : ''}
                                     </a>
                                 </li>
-
-                                <li className="fishbulb"><a title="Cloud Analytics" href="/fishbulb" target="fishbulb">
-                                <i className="fa fa-bar-chart-o fa-fw"></i> Analytics</a></li>
 
                                 <li onClick={this._clickedMenuItem} className={this.classesFor('users')} data-view="users">
                                     <a href="/users"><i className="fa fa-users fa-fw"></i> Users</a>
