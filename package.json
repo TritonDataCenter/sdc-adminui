@@ -14,7 +14,6 @@
   "main": "./server.js",
   "dependencies": {
     "assert-plus": "1.0.0",
-    "async": "0.2.10",
     "backbone": "1.1.2",
     "backbone.paginator": "2.0.2",
     "browserify": "3.46.1",
