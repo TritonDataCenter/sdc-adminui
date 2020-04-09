@@ -6,7 +6,7 @@
  */
 
 /*
- * Copyright (c) 2017, Joyent, Inc.
+ * Copyright 2020 Joyent, Inc.
  */
 
 /*
@@ -22,7 +22,7 @@
  */
 
 var assert = require('assert-plus');
-var async = require('async');
+var vasync = require('vasync');
 var bunyan = require('bunyan');
 var browserify = require('browserify');
 var fs = require('fs');
@@ -38,7 +38,6 @@ var join = path.join;
 var CSS_FILE = 'app.css';
 var APP_FILE = 'app.js';
 var LIB_FILE = 'libs.js';
-var CONCUR_LIMIT = 20;
 var JS_ROOT = path.resolve(__dirname, '..', 'www', 'js');
 var CSS_ROOT = path.resolve(__dirname, '..', 'less');
 var LOG = bunyan.createLogger({name:'bundler'});
@@ -244,41 +243,41 @@ function bundle(bundler, outFilename, cb) {
 function rebundle(cb) {
     assert.func(cb, 'cb');
 
-    function buildCss(next) {
-        LOG.info('[%s] building', CSS_FILE);
+    vasync.parallel({funcs: [
+        function buildCss(next) {
+            LOG.info('[%s] building', CSS_FILE);
 
-        assets.buildLESS(function onBuild(err, css) {
-            if (err) {
-                LOG.fatal(err, '[%s] build error', CSS_FILE);
-                next(err);
-                return;
-            }
-
-            var cssPath = join(JS_ROOT, '..', CSS_FILE);
-            fs.writeFile(cssPath, css, function onWrite(err2) {
-                if (err2) {
-                    next(err2);
+            assets.buildLESS(function onBuild(err, css) {
+                if (err) {
+                    LOG.fatal(err, '[%s] build error', CSS_FILE);
+                    next(err);
                     return;
                 }
 
-                LOG.info('[%s] OK (%d bytes)', CSS_FILE, css.length);
+                var cssPath = join(JS_ROOT, '..', CSS_FILE);
+                fs.writeFile(cssPath, css, function onWrite(err2) {
+                    if (err2) {
+                        next(err2);
+                        return;
+                    }
 
-                next();
+                    LOG.info('[%s] OK (%d bytes)', CSS_FILE, css.length);
+
+                    next();
+                });
             });
-        });
-    }
+        },
 
-    function buildApp(next) {
-        var ba = prepAppBundle();
-        bundle(ba, APP_FILE, next);
-    }
+        function buildApp(next) {
+            var ba = prepAppBundle();
+            bundle(ba, APP_FILE, next);
+        },
 
-    function buildLibs(next) {
-       var bl = prepLibsBundle();
-       bundle(bl, LIB_FILE, next);
-    }
-
-    async.parallel([buildCss, buildApp, buildLibs], cb);
+        function buildLibs(next) {
+           var bl = prepLibsBundle();
+           bundle(bl, LIB_FILE, next);
+        }
+    ]}, cb);
 }
 
 
@@ -292,17 +291,29 @@ function findNewestFileStat(dirPath, cb) {
             return;
         }
 
-        async.mapLimit(filenames, CONCUR_LIMIT, function onMap(filename, next) {
-            var filePath = join(dirPath, filename);
+        var stats = [];
+        vasync.forEachParallel({
+            inputs: filenames,
+            func: function onMap(filename, next) {
+                var filePath = join(dirPath, filename);
 
-            fs.stat(filePath, function onStat(err2, stat) {
-                if (stat.isDirectory()) {
-                    findNewestFileStat(filePath, next);
-                } else {
-                    next(null, stat);
-                }
-            });
-        }, function onMapDone(err2, stats) {
+                fs.stat(filePath, function onStat(err2, stat) {
+                    if (stat.isDirectory()) {
+                        findNewestFileStat(filePath, function (err3, st) {
+                            if (err3) {
+                                next(err3);
+                                return;
+                            }
+                            stats.push(st);
+                            next();
+                        });
+                    } else {
+                        stats.push(stat);
+                        next();
+                    }
+                });
+            }
+        }, function onMapDone(err2) {
             if (err2) {
                 cb(err2);
                 return;
