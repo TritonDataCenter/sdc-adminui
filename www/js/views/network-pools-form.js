@@ -29,7 +29,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
     events: {
         'input input': 'checkInput',
-        'change select': 'checkInput',
+        'change select': 'onNetworksChange',
         'blur input[name="owner_uuids[]"]': 'onBlurOwnerField',
         'focus input[name="owner_uuids[]"]': 'onFocusOwnerField',
         'click button[type=cancel]': 'onCancel',
@@ -39,6 +39,9 @@ module.exports = Backbone.Marionette.ItemView.extend({
     initialize: function (options) {
         options = options || {};
         this.networks = options.networks || [];
+        this.allNetworks = [];
+        this.IPv4Networks = new Networks();
+        this.IPv6Networks = new Networks();
         this.model = this.networkPool = options.networkPool || new NetworkPool();
         this.userInput = new TypeaheadUser({showPreview: true});
 
@@ -49,13 +52,35 @@ module.exports = Backbone.Marionette.ItemView.extend({
 
         this.listenTo(this.userInput, 'selected', this.onSelectUser);
         this.listenTo(this.networks, 'sync', function () {
-            this.networks = this.networks.fullCollection;
+            var self = this;
+            this.allNetworks = this.networks.fullCollection;
+            this.allNetworks.forEach(function (network) {
+                if (network.attributes.subnet.indexOf(':') > -1) {
+                    self.IPv6Networks.push(network);
+                } else {
+                    self.IPv4Networks.push(network);
+                }
+            });
+            this.networks = this.allNetworks;
             this.render();
         });
         this.listenTo(this.networkPool, 'sync', this.onSaved);
         this.listenTo(this.networkPool, 'error', this.onSyncError);
 
         this.selectedUser = null;
+    },
+
+    onNetworksChange: function () {
+        this.checkInput();
+        var data = Backbone.Syphon.serialize(this);
+        if (!data.networks) {
+            this.networks = this.allNetworks;
+            this.selectedNetworks = [];
+            this.render();
+        } else if (data.networks.length === 1 && (!this.selectedNetworks || this.selectedNetworks.length === 0)) {
+            this.selectedNetworks = data.networks;
+            this.render();
+        }
     },
 
     checkInput: function () {
@@ -92,13 +117,21 @@ module.exports = Backbone.Marionette.ItemView.extend({
     serializeData: function () {
         var networkPool = this.networkPool.toJSON();
         var networks = this.networks.toJSON();
+        var poolNetworks = this.selectedNetworks || networkPool.networks;
 
-        if (networkPool.networks) {
-            _.each(networks, function (d) {
-                if (networkPool.networks.indexOf(d.uuid) !== -1) {
-                    d.selected = true;
-                }
+        if (poolNetworks) {
+            var selectedNetwork = _.find(networks, function (network) {
+                return poolNetworks.indexOf(network.uuid) > -1;
             });
+            if (selectedNetwork) {
+                networks = selectedNetwork.subnet.indexOf(':') > -1 ? this.IPv6Networks : this.IPv4Networks;
+                networks = networks.fullCollection.toJSON();
+                _.each(networks, function (network) {
+                    if (poolNetworks.indexOf(network.uuid) > -1) {
+                        network.selected = true;
+                    }
+                });
+            }
         }
         return {
             networkPool: networkPool,
