@@ -6,6 +6,7 @@
 
 /*
  * Copyright (c) 2015, Joyent, Inc.
+ * Copyright 2022 MNX Cloud, Inc.
  */
 
 "use strict";
@@ -64,7 +65,7 @@ var LimitsForm = React.createClass({
     },
     loadImages: function () {
         var collection = new Images([], {
-            params: {repository: 'https://images.joyent.com'}
+            params: {repository: 'https://images.smartos.org'}
         });
         this.request = collection.fetch().done(function (images) {
             var imageNames = _.pluck(images, 'name');

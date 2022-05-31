@@ -6,6 +6,7 @@
 
 /*
  * Copyright (c) 2015, Joyent, Inc.
+ * Copyright 2022 MNX Cloud, Inc.
  */
 
 var React = require('react');
@@ -47,8 +48,8 @@ var UserSubusers = React.createClass({
             "account":"930896af-bf8c-48d4-885c-6573a94b1853",
             "approved_for_provisioning":"false",
             "cn":"John Doe",
-            "company":"Joyent",
-            "email":"subuser@joyent.com",
+            "company":"Acme Corp",
+            "email":"subuser@example.com",
             "givenname":"John",
             "objectclass":"sdcperson",
             "phone":"7788558522",
