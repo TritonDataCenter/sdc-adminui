@@ -6,6 +6,7 @@
 
 /*
  * Copyright (c) 2015, Joyent, Inc.
+ * Copyright 2023 MNX Cloud, Inc.
  */
 
 var Backbone = require('backbone');
@@ -18,7 +19,7 @@ var platformsSelectItem = Backbone.View.extend({
     render: function () {
         var platform = this.model.toJSON();
         this.$el.attr('value', platform.version);
-        this.$el.text(platform.label);
+        this.$el.text(platform.os + ' ' + platform.label);
     }
 });
 

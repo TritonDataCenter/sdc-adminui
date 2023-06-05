@@ -7,11 +7,12 @@
 
 #
 # Copyright (c) 2017, Joyent, Inc.
+# Copyright 2023 MNX Cloud, Inc.
 #
 
 port=$(cat `pwd`/etc/config.json | json sslport)
 
 echo "***** Bundling client-side assets"
-tools/bundle.js | ./node_modules/bunyan/bin/bunyan
+build/node/bin/node tools/bundle.js | ./node_modules/bunyan/bin/bunyan
 echo "***** Starting server on port $port"
-node server.js | ./node_modules/.bin/bunyan
+build/node/bin/node server.js | ./node_modules/.bin/bunyan

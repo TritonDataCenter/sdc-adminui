@@ -6,6 +6,7 @@
 
 /*
  * Copyright (c) 2015, Joyent, Inc.
+ * Copyright 2023 MNX Cloud, Inc.
  */
 
 var Backbone = require('backbone');
@@ -30,7 +31,10 @@ var ChangePlatformForm = Backbone.Marionette.ItemView.extend({
     },
     initialize: function (options) {
         this.platforms = new Platforms();
-        this.platforms.params = {for_server: true};
+        this.platforms.params = {
+            for_server: true,
+            server: this.model
+        };
         this.platforms.fetch();
         this.listenTo(this.platforms, 'sync', this.applyBindings);
         this.viewModel = new ViewModel();
@@ -56,13 +60,29 @@ var ChangePlatformForm = Backbone.Marionette.ItemView.extend({
     },
     applyBindings: function () {
         this.stickit(this.viewModel, {
-            'select': {
+            select: {
                 observe: 'platform',
                 initialize: function ($el, model, options) {
                     $el.chosen();
                 },
                 selectOptions: {
-                    collection: 'this.platforms',
+                    collection: function () {
+                        function filterOS(os) {
+                            return function (platform) {
+                                return (platform.attributes.os === os);
+                            };
+                        }
+                        function mapAttrs(platform) {
+                            return platform.attributes;
+                        }
+                        return {
+                            opt_labels: ['smartos', 'linux'],
+                            smartos: this.platforms.filter(filterOS('smartos'))
+                                .map(mapAttrs),
+                            linux: this.platforms.filter(filterOS('linux'))
+                                .map(mapAttrs)
+                        };
+                    },
                     labelPath: 'label',
                     valuePath: 'version'
                 }
