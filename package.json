@@ -1,11 +1,12 @@
 {
-  "author": "Joyent Inc.",
+  "author": "MNX Cloud (mnx.io)",
   "name": "adminui",
   "description": "Triton Operations Portal",
   "version": "1.2.0",
   "private": true,
   "repository": {
-    "git": "git@git.github.com:joyent/sdc-adminui.git"
+    "type": "git",
+    "url": "https://github.com/TritonDataCenter/sdc-adminui.git"
   },
   "engines": {
     "node": ">=0.10"
