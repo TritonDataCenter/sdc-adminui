@@ -41,19 +41,10 @@ var Platforms = Backbone.Collection.extend({
             results.push({
                 version: version,
                 latest: platform.latest,
-                label: version,
+                label: platform.latest ?
+                    'latest (' + version + ')' : version,
                 os: platform.os
             });
-
-            // If this platform is the latest, push an alias for version "latest"
-            if (platform.latest) {
-                results.push({
-                    version: version,
-                    latest: platform.latest,
-                    label: 'latest (' + version + ')',
-                    os: platform.os
-                });
-            }
 
         });
 
