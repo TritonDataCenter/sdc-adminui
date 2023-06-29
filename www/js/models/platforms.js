@@ -6,31 +6,49 @@
 
 /*
  * Copyright (c) 2015, Joyent, Inc.
+ * Copyright 2023 MNX Cloud, Inc.
  */
 
 var Backbone = require('backbone');
-var _ = require('underscore');
+
+// Sort by os, then platform image version
+function sortPlatforms (a, b) {
+    if (a.os === b.os) {
+        return a.version > b.version ? -1 : 1;
+    }
+    return a.os > b.os ? -1 : 1;
+}
 
 var Platforms = Backbone.Collection.extend({
     url: '/api/platforms',
-    parse: function (res) {
-        var arr = [];
-        var forServer = this.params && this.params.for_server;
-        _.each(res, function(n, d) {
-            arr.push({
-                version: d,
-                latest: n.latest,
-                label: n.latest && !forServer ? 'latest (' + d + ')' : d
-            });
-            if (n.latest && forServer) {
-                arr.push({
-                    version: 'latest',
-                    latest: n.latest,
-                    label: 'latest (' + d + ')'
-                });
+    parse: function (platforms) {
+        var results = [];
+
+        // `true` if this collection is intended to be shown for a server
+        var server = this.params && this.params.for_server &&
+            this.params.server && this.params.server.attributes;
+
+        Object.keys(platforms).forEach(function(version) {
+            var platform = platforms[version];
+
+            // If server is already setup, skip platforms intended for other
+            // operating systems
+            if (server && server.setup &&
+                server.current_platform_os.toLowerCase() !== platform.os) {
+                return;
             }
+
+            results.push({
+                version: version,
+                latest: platform.latest,
+                label: platform.latest ?
+                    'latest (' + version + ')' : version,
+                os: platform.os
+            });
+
         });
-        return arr.reverse();
+
+        return results.sort(sortPlatforms);
     }
 });
 

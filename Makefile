@@ -6,6 +6,7 @@
 
 #
 # Copyright 2020 Joyent, Inc.
+# Copyright 2023 MNX Cloud, Inc.
 #
 
 #
@@ -106,7 +107,7 @@ $(JS_BUNDLE): $(JS_BUNDLE_FILES) | $(NODE_EXEC)
 	MINIFY=true $(NODE) tools/bundle.js | bunyan
 
 .PHONY: devrun
-devrun:
+devrun: node_modules
 	@./tools/devrun.sh
 
 .PHONY: test
