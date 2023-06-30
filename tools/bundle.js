@@ -173,7 +173,7 @@ function prepLibsBundle() {
     blibs.require('backbone');
     blibs.require('superagent');
     blibs.require(join(JS_ROOT, './lib/jquery'), { expose: 'jquery' });
-    blibs.require(join(JS_ROOT, './lib/moment.min'), { expose: 'moment' });
+    blibs.require('moment');
     blibs.require(join(JS_ROOT, './lib/epoch.0.5.2.min'), { expose: 'epoch' });
     blibs.require(join(JS_ROOT, './lib/bootstrap-datetimepicker'), {
         expose: 'bootstrap.datetimepicker'
