@@ -39,7 +39,7 @@
     "through": "2.3.4",
     "trace-event": "1.3.0",
     "triton-netconfig": "1.3.0",
-    "ufds": "git+https://github.com/TritonDataCenter/node-ufds.git#f29980a1853888a22255d934fe7246ba118f3223",
+    "ufds": "1.8.0",
     "uglify-js": "2.8.29",
     "underscore": "1.13.1",
     "underscore.string": "3.3.5",
