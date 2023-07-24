@@ -2,6 +2,8 @@
 <!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
 <!--
   Copyright (c) 2012, Joyent, Inc. All rights reserved.
+  Copyright 2023 MNX Cloud, Inc.
+
   This is a sample SMF manifest. If you want to actually use it, you'll
   need to replace @@PREFIX@@ in the *generated* file with the path to
   whereever this package gets installed.
@@ -25,7 +27,6 @@
         <method_credential user="nobody" group="nobody" privileges="basic,net_privaddr"/>
         <method_environment>
           <envvar name="PATH" value="@@PREFIX@@/build/node/bin:/opt/local/bin:/usr/bin:/usr/sbin:/bin"/>
-          <envvar name="LD_PRELOAD_32" value="/usr/lib/extendedFILE.so.1" />
         </method_environment>
       </method_context>
     </exec_method>

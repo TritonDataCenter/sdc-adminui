@@ -37,15 +37,18 @@ JSSTYLE_FLAGS	 = -o "indent=2,doxygen,unparenthesized-return=0,line-length=120"
 REPO_MODULES	 =
 SMF_MANIFESTS_IN = smf/manifests/adminui.xml.in
 
-NODE_PREBUILT_VERSION=v4.9.0
+NODE_PREBUILT_VERSION=v6.17.1
 ifeq ($(shell uname -s),SunOS)
-	NODE_PREBUILT_IMAGE=18b094b0-eb01-11e5-80c1-175dac7ddf02
-	NODE_PREBUILT_TAG=zone
+	# minimal-64-lts@21.4.0
+	NODE_PREBUILT_IMAGE=a7199134-7e94-11ec-be67-db6f482136c2
+	NODE_PREBUILT_TAG=zone64
 endif
 
 ENGBLD_USE_BUILDIMAGE	= true
 ENGBLD_REQUIRE		:= $(shell git submodule update --init deps/eng)
 include ./deps/eng/tools/mk/Makefile.defs
+BUILD_PLATFORM		= 20210826T002459Z
+
 ifeq ($(shell uname -s),SunOS)
 	include ./deps/eng/tools/mk/Makefile.node_prebuilt.defs
 	include ./deps/eng/tools/mk/Makefile.agent_prebuilt.defs
@@ -69,7 +72,8 @@ ROOT            := $(shell pwd)
 RELEASE_TARBALL := $(NAME)-pkg-$(STAMP).tar.gz
 RELSTAGEDIR          := /tmp/$(NAME)-$(STAMP)
 
-BASE_IMAGE_UUID = 04a48d7d-6bb5-4e83-8c3b-e60a99e0f48f
+# triton-origin-x86_64-21.4.0
+BASE_IMAGE_UUID = 502eeef2-8267-489f-b19c-a206906f57ef
 BUILDIMAGE_NAME = $(NAME)
 BUILDIMAGE_DESC	= SDC AdminUI
 AGENTS		= amon config registrar

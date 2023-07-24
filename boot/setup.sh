@@ -7,6 +7,7 @@
 
 #
 # Copyright (c) 2018, Joyent, Inc.
+# Copyright 2023 MNX Cloud, Inc.
 #
 
 PS4='[\D{%FT%TZ}] ${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
@@ -40,6 +41,7 @@ echo "Generating SSL Certificate"
     -newkey rsa:4096 -sha256 -days 365 \
     -keyout "$prefix/etc/ssl/default.pem" \
     -out "$prefix/etc/ssl/default.pem"
+chmod a+r "$prefix/etc/ssl/default.pem"
 
 #
 # Amend the PATH in the stock root user profile with the location of tools for
