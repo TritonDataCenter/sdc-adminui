@@ -267,6 +267,23 @@
       {{/unless}}
 
       <div class="form-group">
+        <label class="control-label col-sm-4" for="package-name">Billing Tag</label>
+        <div class="controls col-sm-6">
+          <input type="text"
+                 value="{{billing_tag}}"
+                 id="package-billing-tag"
+                 name="billing_tag"
+                 class="form-control col-sm-8">
+          <p class="help-block">
+            <a data-toggle="tooltip" data-placement="bottom" data-trigger="hover"
+              title="Arbitrary tag that can be used by ops for billing purposes; it has no intrinsic meaning to Triton.">
+              What is this?
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <div class="form-group">
         <div class="col-sm-offset-4 col-sm-8">
           <div class="checkbox">
             <label><input type="checkbox" {{#if active}}checked{{/if}} name="active"> Activate Package</label>
