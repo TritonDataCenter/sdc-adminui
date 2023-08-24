@@ -6,6 +6,7 @@
 
 /*
  * Copyright 2019 Joyent, Inc.
+ * Copyright 2023 Spearhead Systems SRL.
  */
 
 #page-package {
@@ -84,7 +85,7 @@
   form .package-owners .add-owner-entry { clear: both; margin-left: 180px;}
   form .disks .add-disk-entry { clear: both; margin-left: 180px; }
 
-  .owner, .description, .billing-id, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority, .brand, .flexible-disk, .disk-size {
+  .owner, .description, .billing-id, .billing-tag, .memory, .quota, .vcpus, .swap, .max-processes, .cpu-cap, .io-priority, .brand, .flexible-disk, .disk-size {
     .widget-content;
 
     strong {
@@ -108,6 +109,15 @@
     line-height: 1.5em;
   }
 
+  .billing-tag {
+    strong {
+      vertical-align: top;
+    }
+
+    .value {
+      white-space: pre-wrap;
+    }
+  }
 
   .owners {
     display: inline-block;

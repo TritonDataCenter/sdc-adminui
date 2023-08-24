@@ -6,6 +6,7 @@
 
 <!--
     Copyright 2019 Joyent, Inc.
+    Copyright 2023 Spearhead Systems SRL.
 -->
 
 <div class="page-header">
@@ -126,6 +127,13 @@
   </div>
   {{/if}}
   {{/ifeq}}
+
+  {{#if billing_tag}}
+  <div class="billing-tag">
+    <strong>Billing Tag</strong>
+    <div class="value">{{billing_tag}}</div>
+  </div>
+  {{/if}}
 
   <section class="networks">
     <h3>Networks</h3>
