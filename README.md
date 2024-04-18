@@ -6,14 +6,15 @@
 
 <!--
     Copyright 2019 Joyent, Inc.
+    Copyright 2024 MNX Cloud, Inc.
 -->
 
 # sdc-adminui
 
-This repository is part of the Joyent Triton project. See the [contribution
-guidelines](https://github.com/joyent/triton/blob/master/CONTRIBUTING.md)
+This repository is part of the Triton Data Center project. See the [contribution
+guidelines](https://github.com/TritonDataCenter/triton/blob/master/CONTRIBUTING.md)
 and general documentation at the main
-[Triton project](https://github.com/joyent/triton) page.
+[Triton project](https://github.com/TritonDataCenter/triton) page.
 
 AdminUI is the Operations Portal for Triton -- the web frontend that provides an
 interface to the internal APIs. There is some functionality of Triton that is
@@ -24,11 +25,11 @@ not available in AdminUI and has to be executed through the appropriate API.
 
 You can build sdc-adminui locally on a Mac (or SmartOS) and run it against
 services running in
-[CoaL](https://github.com/joyent/triton/blob/master/docs/glossary.md#coal):
+[CoaL](https://github.com/TritonDataCenter/triton/blob/master/docs/glossary.md#coal):
 
 - first-time setup:
     ```
-    git clone git@github.com:joyent/sdc-adminui.git
+    git clone git@github.com:TritonDataCenter/sdc-adminui.git
     cd sdc-adminui
 
     make dev

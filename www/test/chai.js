@@ -2830,7 +2830,7 @@
 
   require.register("chai/utils/eql.js", function(module, exports, require){
     // This is (almost) directly from Node.js assert
-    // https://github.com/joyent/node/blob/f8c335d0caf47f16d31413f89aa28eda3878e3aa/lib/assert.js
+    // https://github.com/TritonDatacenter/node/blob/f8c335d0caf47f16d31413f89aa28eda3878e3aa/lib/assert.js
 
     module.exports = _deepEqual;
 
@@ -3380,7 +3380,7 @@
 
   require.register("chai/utils/inspect.js", function(module, exports, require){
     // This is (almost) directly from Node.js utils
-    // https://github.com/joyent/node/blob/f8c335d0caf47f16d31413f89aa28eda3878e3aa/lib/util.js
+    // https://github.com/TritonDatacenter/node/blob/f8c335d0caf47f16d31413f89aa28eda3878e3aa/lib/util.js
 
     var getName = require('./getName');
     var getProperties = require('./getProperties');
