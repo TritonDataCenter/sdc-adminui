@@ -131,7 +131,7 @@ var FabricVlanForm = React.createClass({
                         <div className="form-group">
                             <label className="control-label col-sm-4">Name</label>
                             <div className="controls col-sm-7">
-                                <input placeholder="name of Fabric VLAN (eg: acme-admin)" onChange={this._onChangeName} type="text" value={this.state.name} className="form-control" name="name" />
+                                <input placeholder="name of Fabric VLAN (eg: acme_admin)" onChange={this._onChangeName} type="text" value={this.state.name} className="form-control" name="name" />
                             </div>
                         </div>
                         <div className="form-group">
