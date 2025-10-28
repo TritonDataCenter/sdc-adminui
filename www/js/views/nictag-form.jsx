@@ -6,6 +6,7 @@
 
 /*
  * Copyright (c) 2014, Joyent, Inc.
+ * Copyright 2025 Edgecast Cloud LLC.
  */
 
 var React = require('react');
@@ -32,7 +33,7 @@ var NicTagForm = React.createClass({
                     <div className="form-group">
                         <label className="control-label col-sm-5">NIC Tag Name</label>
                         <div className="col-sm-5">
-                            <input placeholder="name of NIC Tag (eg: acme-admin)" onChange={this._onChangeName} type="text" value={this.state.name} className="form-control" />
+                            <input placeholder="name of NIC Tag (eg: acme_admin)" onChange={this._onChangeName} type="text" value={this.state.name} className="form-control" />
                         </div>
                     </div>
                     <div className="form-group">
