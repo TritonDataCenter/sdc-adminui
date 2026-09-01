@@ -6,6 +6,7 @@
 
 /*
  * Copyright 2019 Joyent, Inc.
+ * Copyright 2026 Edgecast Cloud LLC.
  */
 
 'use strict';
@@ -41,10 +42,12 @@ var DisksFormView = Backbone.Marionette.ItemView.extend({
     doDiskAction: function (e) {
         e.preventDefault();
         var size = this.$('input[name=size]').val();
+        var block_size = this.$('input[name=block_size]').val() || undefined;
         var pci_slot = this.$('input[name=pci_slot]').val();
         var dangerous_allow_shrink = this.$('input[name=dangerous_allow_shrink]').is(':checked');
         var opts = {
-            size: Number(size)
+            size: Number(size),
+            block_size: block_size
         };
         if (pci_slot) {
             opts.pci_slot = pci_slot;
