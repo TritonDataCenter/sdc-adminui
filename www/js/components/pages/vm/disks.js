@@ -7,7 +7,6 @@
 
 /*
  * Copyright 2019 Joyent, Inc.
- * Copyright 2026 Edgecast Cloud LLC.
  */
 
 var Backbone = require('backbone');
