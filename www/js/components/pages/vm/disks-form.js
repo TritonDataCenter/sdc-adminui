@@ -62,6 +62,7 @@ var DisksFormView = Backbone.Marionette.ItemView.extend({
     },
 
     _onJob: function (err, job) {
+        var self = this;
         if (err) {
             console.log('[job error]: ', err);
             var msg = 'Error creating job';
@@ -78,18 +79,16 @@ var DisksFormView = Backbone.Marionette.ItemView.extend({
                     var field = e.field || 'unknown';
                     var message = e.message || 'unknown';
                     msg += field + ' ' + message + '. ';
-                })
+                });
             }
 
             app.vent.trigger('notification', {
                 level:'error',
                 message: msg
             });
-            var self = this;
             this.$el.modal('hide').remove();
             return;
         }
-        var self = this;
         this.$el.modal('hide').remove();
         var jobView = new JobProgressView({model: job});
         this.listenTo(jobView, 'execution', function (exec) {
