@@ -6,6 +6,7 @@
 
 /*
  * Copyright 2019 Joyent, Inc.
+ * Copyright 2026 Edgecast Cloud LLC.
  */
 
 'use strict';
@@ -224,13 +225,14 @@ var Vm = Model.extend({
     },
 
     createDisk: function (disk, cb) {
-        $.post(this.url() + '?action=create_disk', disk, function(data) {
-            var job = new Job({
-                uuid: data.job_uuid
-            });
-            cb(null, job);
-        }).fail(function (err) {
-            cb(err);
+        var req = api.post(this.url() + '?action=create_disk').send(disk);
+        req.end(function(res) {
+            if (res.ok) {
+                var job = new Job({ uuid: res.body.job_uuid });
+                cb(null, job);
+            } else {
+                cb(res.body);
+            }
         });
     },
 

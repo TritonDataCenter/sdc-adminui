@@ -42,7 +42,8 @@ var DisksFormView = Backbone.Marionette.ItemView.extend({
     doDiskAction: function (e) {
         e.preventDefault();
         var size = this.$('input[name=size]').val();
-        var block_size = this.$('input[name=block_size]').val() || undefined;
+        var block_size_val = this.$('input[name=block_size]').val();
+        var block_size = (block_size_val) ? Number(block_size_val) : undefined; 
         var pci_slot = this.$('input[name=pci_slot]').val();
         var dangerous_allow_shrink = this.$('input[name=dangerous_allow_shrink]').is(':checked');
         var opts = {
@@ -63,13 +64,29 @@ var DisksFormView = Backbone.Marionette.ItemView.extend({
     _onJob: function (err, job) {
         if (err) {
             console.log('[job error]: ', err);
-            var msg = (err.responseText) ?
-                    JSON.parse(err.responseText).message:
-                    'Error creating job';
+            var msg = 'Error creating job';
+
+            if (err.responseText) {
+                try {
+                    msg = JSON.parse(err.responseText).message;
+                } catch (e) {
+                    console.log('[response parse error]', e);
+                }
+            } else if (err.message && err.errors) {
+                msg = '<b>' + err.message + ':</b> ';
+                err.errors.forEach(function (e) {
+                    var field = e.field || 'unknown';
+                    var message = e.message || 'unknown';
+                    msg += field + ' ' + message + '. ';
+                })
+            }
+
             app.vent.trigger('notification', {
                 level:'error',
                 message: msg
             });
+            var self = this;
+            this.$el.modal('hide').remove();
             return;
         }
         var self = this;
