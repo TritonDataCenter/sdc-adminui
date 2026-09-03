@@ -6,6 +6,7 @@
 
 <!--
     Copyright 2019 Joyent, Inc.
+    Copyright 2026 Edgecast Cloud LLC.
 -->
 
 <div class="modal-dialog">
@@ -35,6 +36,20 @@
                             <p class="help-block"><span class="label label-warning">Size in mebibytes or "remaining"</span></p>
                         </div>
 
+                        {{#unless uuid}}
+                        <div>
+                            <label>BLOCK SIZE:</label>
+                        </div>
+                        <div>
+                            <input type="text" class="form-control" name="block_size" />
+                            <p class="help-block">
+                                <span class="label label-warning">
+                                    Block Size must be a power of 2 or left empty.
+                                </span>
+                            </p>
+                        </div>
+                        {{/unless}}
+
                         {{#if uuid}}
                         <div class="checkbox">
                                 <label><input name="dangerous_allow_shrink" type="checkbox">Allow Shrink</label>
@@ -60,3 +75,4 @@
         </div>
     </div>
 </div>
+
