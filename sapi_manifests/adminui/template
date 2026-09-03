@@ -46,6 +46,9 @@
 				"url": "http://{{{AMON_SERVICE}}}"
 			},
 			"vmapi": {
+				{{#adminui_enable_default_firewall}}
+				"enableDefaultFirewall": true,
+				{{/adminui_enable_default_firewall}}
 				"url": "http://{{{VMAPI_SERVICE}}}"
 			},
 			"cnapi": {
